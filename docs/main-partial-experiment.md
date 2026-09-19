@@ -297,3 +297,9 @@ extent and remains `DIFFER` only at a late register/layout decision.
 
 
 `uninit_game` is independently recovered as the exact 646-byte shutdown path at `0x40e288`. It saves the configuration and active profile when initialization completed, releases testers, every sound group, custom-character bitmaps, the datafile, swap surface, high-score tables, and the active player, then switches to text mode and exits Allegro. The original log literals, including the leading newline before `UNINIT`, are preserved; its COFF relocation-resolved body is a `FUNCTION_MATCH`.
+
+`_mangled_main` remains missing, but its 1,938-byte entrypoint state machine,
+DWARF locals, direct callee surface, and ordinary-link dependency position are
+now recorded in [the entrypoint recovery map](mangled-main-recovery.md). This
+preserves the recovered initialization, menu, replay, and shutdown phases as
+source-recovery constraints without introducing a synthetic entrypoint.
