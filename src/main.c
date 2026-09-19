@@ -388,7 +388,7 @@ void new_srand(int s)
 
 void set_current_avatar(void);
 
-void syncProfileFromOptions(void)
+inline void syncProfileFromOptions(void)
 {
     profile->msc_volume = options.msc_volume;
     profile->snd_volume = options.snd_volume;
