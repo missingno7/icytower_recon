@@ -31,6 +31,20 @@ unsigned int hash(unsigned int a)
     return a;
 }
 
+typedef struct Treplay_post {
+    char *full_path;
+    char directory;
+    char parent;
+    char reserved[2];
+    int version;
+    int score;
+    int floor;
+    int combo;
+} Treplay_post;
+
+extern int stricmp(const char *a, const char *b);
+extern int get_replay_property(const char *file_name, int property);
+
 typedef struct Treplay_data {
     unsigned char type;
     char reserved[3];
@@ -92,4 +106,27 @@ int calc_replay_checksum_131(Treplay *r)
     for (i = 0; i < r->size; i++)
         sum += (r->data[i].type * 5 + r->data[i].value * 3) * i;
     return sum;
+}
+
+int my_strcmp(const void *c, const void *d)
+{
+    Treplay_post *a;
+    Treplay_post *b;
+    int av, bv;
+
+    a = (Treplay_post *)c;
+    b = (Treplay_post *)d;
+    if (a->directory != b->directory) {
+        if (a->directory)
+            return -1;
+        return 1;
+    }
+    if (!a->directory && sort_method >= 2 && sort_method <= 4) {
+        av = get_replay_property(a->full_path, sort_method);
+        bv = get_replay_property(b->full_path, sort_method);
+        if (av > bv)
+            return -1;
+        return 1;
+    }
+    return stricmp(a->full_path, b->full_path);
 }
