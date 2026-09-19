@@ -9,8 +9,8 @@
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
  * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
  * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
- * UNKNOWN: profile_data_page_basic @ 0x004193d0, 637 bytes
- * DIFFER: profile_data_page_extra @ 0x00419650, 85 bytes (CODEGEN_SIMILAR)
+ * EXACT: profile_data_page_basic @ 0x004193d0, 637 bytes
+ * EXACT: profile_data_page_extra @ 0x00419650, 85 bytes
  * UNKNOWN: profile_data_page_general @ 0x004196a8, 1091 bytes
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
@@ -102,45 +102,70 @@ char *profile_data_page_extra(Tprofile_extra *p)
     return data;
 }
 
-typedef struct Tprofile_datafile {
-    void *dat;
-    int type;
-    long size;
-    void *prop;
-} Tprofile_datafile;
+typedef struct Tprofile_basic {
+    unsigned char before_games_played[0x2c];
+    int games_played;
+    unsigned char before_total_floors[0xc];
+    int total_floors;
+    int total_score;
+    int total_combos;
+    int total_combo_floors;
+    int best_floor;
+    int best_combo;
+    int best_score;
+    int no_combo_top_floor;
+    int biggest_lost_combo;
+    unsigned char before_jc[0x3c];
+    int jc[5];
+} Tprofile_basic;
 
-extern Tprofile_datafile *data;
-extern int makecol(int r, int g, int b);
-extern void textprintf_ex(void *dst, void *font, int x, int y, int color,
-                          int background, const char *format, ...);
+extern char *jcLabels[5];
 
-int draw_buffer(void *bmp, char *buffer, int x, int y)
+char *profile_data_page_basic(Tprofile_basic *p)
 {
-    int pos;
-    char tempBuf[256];
-    int tempPos;
-    char c;
+    char *data;
+    int i;
 
-    pos = y;
-    tempPos = 0;
-    c = *buffer;
-    while (c) {
-        if (c == '\n') {
-            tempBuf[tempPos] = 0;
-            textprintf_ex(bmp, data[53].dat, x, pos, makecol(30, 20, 10),
-                          -1, "%s", tempBuf);
-            pos += 10;
-            tempPos = 0;
-        } else {
-            tempBuf[tempPos] = c;
-            tempPos++;
-        }
-        c = buffer[1];
-        buffer++;
+    data = malloc(2048);
+    data[0] = 0;
+    sprintf(data, "%sBest score ever:    %7d\n", data, p->best_score);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg score per game: %7d\n", data,
+                p->total_score / p->games_played);
+    sprintf(data, "%sTotal score:        %7d\n", data, p->total_score);
+    sprintf(data, "%s\n", data);
+    sprintf(data, "%sHighest floor ever: %7d\n", data, p->best_floor);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg floors per game:%7d\n", data,
+                p->total_floors / p->games_played);
+    sprintf(data, "%sFloors jumped:      %7d\n", data, p->total_floors);
+    sprintf(data, "%s\n", data);
+    if (p->no_combo_top_floor) {
+        sprintf(data, "%sTop Floor, No Combo:%7d\n", data,
+                p->no_combo_top_floor);
+        sprintf(data, "%s\n", data);
     }
-    return pos;
+    sprintf(data, "%sBest combo ever:    %7d\n", data, p->best_combo);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg combos per game:%7d\n", data,
+                p->total_combos / p->games_played);
+    if (p->total_combos > 0)
+        sprintf(data, "%sAvg combo length:   %7d\n", data,
+                p->total_combo_floors / p->total_combos);
+    sprintf(data, "%sCombos jumped:      %7d\n", data, p->total_combos);
+    sprintf(data, "%s\n", data);
+    if (p->biggest_lost_combo > 0) {
+        sprintf(data, "%sLongest Lost Combo: %7d\n", data,
+                p->biggest_lost_combo);
+        sprintf(data, "%s\n", data);
+    }
+    for (i = 0; i < 5; i++)
+        if (p->jc[i] > 0)
+            sprintf(data, "%s%s%7d\n", data, jcLabels[i], p->jc[i]);
+    if (p->jc[0] + p->jc[1] + p->jc[2] + p->jc[3] + p->jc[4] > 0)
+        sprintf(data, "%s\n", data);
+    return data;
 }
-
 typedef struct Tprofile_advanced {
     unsigned char before_ccc_num[0x60];
     int cccNum[5];
@@ -182,4 +207,43 @@ char *profile_data_page_advanced(Tprofile_advanced *p)
     if (rows)
         sprintf(data, "%s\n", data);
     return data;
+}
+
+typedef struct Tprofile_datafile {
+    void *dat;
+    int type;
+    long size;
+    void *prop;
+} Tprofile_datafile;
+
+extern Tprofile_datafile *data;
+extern int makecol(int r, int g, int b);
+extern void textprintf_ex(void *dst, void *font, int x, int y, int color,
+                          int background, const char *format, ...);
+
+int draw_buffer(void *bmp, char *buffer, int x, int y)
+{
+    int pos;
+    char tempBuf[256];
+    int tempPos;
+    char c;
+
+    pos = y;
+    tempPos = 0;
+    c = *buffer;
+    while (c) {
+        if (c == '\n') {
+            tempBuf[tempPos] = 0;
+            textprintf_ex(bmp, data[53].dat, x, pos, makecol(30, 20, 10),
+                          -1, "%s", tempBuf);
+            pos += 10;
+            tempPos = 0;
+        } else {
+            tempBuf[tempPos] = c;
+            tempPos++;
+        }
+        c = buffer[1];
+        buffer++;
+    }
+    return pos;
 }
