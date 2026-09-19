@@ -30,6 +30,9 @@ Current results:
 - particle.c: all three functions and the complete 304-byte text contribution
   match; its recovered `new_rand` dependency resolves in the separate synthetic
   custom-audio PE.
+- main.c: `get_version_str`, `get_demo`, `get_controls`, `new_rand`,
+  `new_srand`, and `getSampleFromOggDatafile` match at -O2; the other main
+  functions remain explicit partial-CU work.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.
@@ -49,7 +52,7 @@ Current results:
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Twenty-one validation tests include wrong relocation targets, altered code and
+- Twenty-two validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),

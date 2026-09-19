@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <pthread.h>
 #include <allegro.h>
+#include "control.h"
 #include "directories.h"
 #include "game_services.h"
 
@@ -12,6 +13,25 @@ SAMPLE *logg_load_memory(void *pData, size_t iSize);
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
 double seed;
+
+typedef struct Treplay Treplay;
+Treplay *demo;
+Tcontrol ctrl;
+
+char *get_version_str(void)
+{
+    return "1.5.1";
+}
+
+Treplay *get_demo(void)
+{
+    return demo;
+}
+
+Tcontrol *get_controls(void)
+{
+    return &ctrl;
+}
 
 int new_rand(void)
 {

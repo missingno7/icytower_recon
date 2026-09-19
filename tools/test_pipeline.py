@@ -81,6 +81,14 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(seed['status'],'FUNCTION_MATCH')
         self.assertEqual(seed['candidate_size'],14)
 
+    def test_main_accessors_are_exact(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        for name in ('get_version_str','get_demo','get_controls'):
+            accessor=next(f for f in r['functions'] if f['name']==name)
+            self.assertEqual(accessor['status'],'FUNCTION_MATCH')
+            self.assertEqual(accessor['candidate_size'],10)
+
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)

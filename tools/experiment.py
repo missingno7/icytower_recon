@@ -65,16 +65,25 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             section_bases.setdefault(s['section'],set()).add(matches[0]['va']-s['value'])
     sections_by_index={s['index']:s for s in obj.sections}
     def unique_literal_target(sym,addend,instruction):
-        """Resolve an anonymous x87 literal by unique content, not its field."""
+        """Resolve an anonymous read-only literal by unique content, not its field."""
         sizes={b'\xdd\x05':8,b'\xdc\x0d':8,b'\xd9\x05':4,b'\xd8\x0d':4}
-        size=sizes.get(instruction)
-        if size is None or sym['name']!='.rdata' or sym['section']<=0:
+        if sym['name']!='.rdata' or sym['section']<=0:
             return None
         section=sections_by_index.get(sym['section'])
         if section is None: return None
         content=obj.section_bytes(section)
-        if addend<0 or addend+size>len(content): return None
-        literal=content[addend:addend+size]
+        if addend<0 or addend>=len(content): return None
+        size=sizes.get(instruction)
+        if size is not None:
+            if addend+size>len(content): return None
+            literal=content[addend:addend+size]
+        elif instruction.endswith(b'\xb8'):
+            end=content.find(b'\0',addend)
+            if end<0 or end-addend>255: return None
+            literal=content[addend:end+1]
+            if not literal or any(c<32 or c>126 for c in literal[:-1]): return None
+        else:
+            return None
         locations=[]
         for original_section in exe.sections:
             if original_section['name']!='.rdata': continue
