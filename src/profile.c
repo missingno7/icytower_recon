@@ -8,7 +8,7 @@
  * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
  * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
- * UNKNOWN: profile_data_page_advanced @ 0x00419284, 332 bytes
+ * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
  * UNKNOWN: profile_data_page_basic @ 0x004193d0, 637 bytes
  * DIFFER: profile_data_page_extra @ 0x00419650, 85 bytes (CODEGEN_SIMILAR)
  * UNKNOWN: profile_data_page_general @ 0x004196a8, 1091 bytes
@@ -139,4 +139,47 @@ int draw_buffer(void *bmp, char *buffer, int x, int y)
         buffer++;
     }
     return pos;
+}
+
+typedef struct Tprofile_advanced {
+    unsigned char before_ccc_num[0x60];
+    int cccNum[5];
+    int cccTotal[5];
+    int ccc[5];
+    int jc[5];
+    int rewards[10];
+} Tprofile_advanced;
+
+extern char *comboNames[10];
+
+char *profile_data_page_advanced(Tprofile_advanced *p)
+{
+    char *data;
+    int i;
+    int rows;
+
+    data = malloc(2048);
+    data[0] = 0;
+    for (i = 1; i < 6; i++)
+        if (p->ccc[i - 1] > 0)
+            sprintf(data, "%sClock Challenge %d:  %7d\n", data, i,
+                    p->ccc[i - 1]);
+    if (p->ccc[0] > 0)
+        sprintf(data, "%s\n", data);
+    for (i = 1; i < 6; i++)
+        if (p->ccc[i - 1] > 0 && p->cccNum[i - 1] > 0)
+            sprintf(data, "%sAverage CC %d:       %7d\n", data, i,
+                    p->cccTotal[i - 1] / p->cccNum[i - 1]);
+    if (p->cccTotal[0] > 0)
+        sprintf(data, "%s\n", data);
+    rows = 0;
+    for (i = 0; i < 10; i++)
+        if (p->rewards[i] > 0) {
+            sprintf(data, "%s%-12s        %7d\n", data, comboNames[i],
+                    p->rewards[i]);
+            rows++;
+        }
+    if (rows)
+        sprintf(data, "%s\n", data);
+    return data;
 }
