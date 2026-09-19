@@ -82,6 +82,12 @@ int is_custom_replay(Treplay *r)
            r->start_speed != 5 || r->speed_increase != 1 || r->gravity != 1;
 }
 
+int show_name(char *name, int attribs)
+{
+    allegro_message("Caught `%s', attribs %d\n", name, attribs);
+    return 0;
+}
+
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)
 {
     return logg_load_memory(df[id].dat, df[id].size);

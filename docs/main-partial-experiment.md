@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers eleven historical helpers while the remaining
+`src/main.c` currently recovers twelve historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -14,6 +14,10 @@ unique NUL-terminated bytes in the original read-only data; `get_demo` and
 `is_custom_replay` matches its 66-byte predicate over the five recovered
 `Treplay` settings fields: floor shrink, floor size, start speed, speed
 increase, and gravity.
+
+`show_name` matches its 36-byte Allegro-message wrapper. Its format string is
+resolved by unique printable, NUL-terminated read-only bytes, allowing
+embedded newlines and any direct `.rdata` pointer instruction form.
 
 `getSampleFromOggDatafile` matches its complete
 32-byte body at -O2, including the tail call to `logg_load_memory`: it passes

@@ -77,13 +77,11 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         if size is not None:
             if addend+size>len(content): return None
             literal=content[addend:addend+size]
-        elif instruction.endswith(b'\xb8'):
+        else:
             end=content.find(b'\0',addend)
             if end<0 or end-addend>255: return None
             literal=content[addend:end+1]
-            if not literal or any(c<32 or c>126 for c in literal[:-1]): return None
-        else:
-            return None
+            if not literal or any((c<32 and c not in (9,10,13)) or c>126 for c in literal[:-1]): return None
         locations=[]
         for original_section in exe.sections:
             if original_section['name']!='.rdata': continue
