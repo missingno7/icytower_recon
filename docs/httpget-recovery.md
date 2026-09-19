@@ -29,7 +29,8 @@ headers, or no matching header returns zero.
 
 The 35-byte public `strptime` wrapper is recovered separately with its
 historical `regparm(3)` parser ABI; its 2028-byte `__strptime` body remains a
-dependency for the timestamp helper.
+dependency for the timestamp helper. The 84-byte `timegm` compatibility unit
+is separately recovered with whole-text equality.
 
 The two 27-byte public request wrappers are complete:
 

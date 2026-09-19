@@ -1,5 +1,15 @@
 /* Historical CU: F:\projects\icytower\trunk\source\timecompat.c
  * Ownership: VENDORED_UPSTREAM
- * Source recovery pending. This file intentionally defines no fallback code.
- * UNKNOWN: timegm @ 0x0041fe50, 84 bytes
+ * Partial recovery: timegm is independently matched.
  */
+#include <time.h>
+
+time_t timegm(struct tm *ptm)
+{
+    time_t now = time(NULL);
+    time_t nowlocal = mktime(localtime(&now));
+    time_t nowgm = mktime(gmtime(&now));
+    int diff = nowlocal - nowgm;
+
+    return mktime(ptm) + diff;
+}
