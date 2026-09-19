@@ -31,6 +31,7 @@ Tcmdline cmdline;
 double seed;
 int hasFocus;
 int closeButtonClicked;
+int window;
 int lastFocus;
 int in_replay_menu;
 Tbeta *testers;
@@ -141,7 +142,8 @@ typedef struct Toptions {
     int flash;
     unsigned char reserved0[4];
     int jump_hold;
-    unsigned char reserved1[24];
+    int full_screen;
+    unsigned char reserved1[20];
     int msc_volume;
     int snd_volume;
     unsigned char reserved2[548];
@@ -450,6 +452,42 @@ void switchedToProgram(void)
 void clickedCloseButton(void)
 {
     closeButtonClicked = 1;
+}
+
+void testWindowResolution(void)
+{
+    if (window) {
+        if (!options.full_screen)
+            return;
+        {
+            PALETTE pal;
+            log2file("Switching to fullscreen (640x480)");
+            get_palette(pal);
+            show_mouse(NULL);
+            set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0);
+            set_palette(pal);
+            window=0;
+            set_display_switch_mode(SWITCH_BACKGROUND);
+            set_display_switch_callback(SWITCH_IN,switchedToProgram);
+            set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
+            if (window)
+                return;
+        }
+    }
+    if (options.full_screen)
+        return;
+    {
+        PALETTE pal;
+        log2file("Switching to window (640x480)");
+        get_palette(pal);
+        set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0);
+        set_palette(pal);
+        window=1;
+        set_display_switch_mode(SWITCH_PAUSE);
+        set_display_switch_callback(SWITCH_IN,switchedToProgram);
+        set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
+        show_mouse(mouse_sprite);
+    }
 }
 
 int is_custom_replay(Treplay *r)
