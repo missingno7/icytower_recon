@@ -67,6 +67,28 @@ send call even though it is first consumed in the receive loop. These details
 are preserved here as an implementation boundary; the transport body remains
 unrecovered until an ordinary C candidate matches all 594 historical bytes.
 
+The line program fixes the original source shape more tightly than the
+disassembly alone. `HTTPFetchInternal` begins at source line 149, with
+`dataPtr`, `sBufferSize`, `rBufferSize`, and `sock` on lines 150--153. Four
+success scopes begin at lines 155, 161, 167, and 172: valid socket, resolved
+host, successful connect, and successful send. `totBytes` and `bytesRead` are
+lines 174--175; the realloc, null test, copy, and increment are lines
+177--185; `rtv`, `free(dataPtr)`, and the successful return are lines
+190--194. The four logged failure paths belong to lines 202, 207, 212, and
+217, and their shared null return is line 220. This rules out candidates that
+give the receive VLA a separate lifetime.
+
+The parser call itself uses the target's observed two-register ABI:
+`extractHTTPResponse(dataPtr, totBytes)` receives `dataPtr` in `EAX` and the
+byte count in `EDX`, consistent with a GCC `regparm(2)` declaration. A scoped
+candidate with that declaration reproduces the 594-byte extent, all external
+relocation targets, the VLA layout, and the receive loop. It is still not
+admitted: its stack-alignment filler after `gethostbyname` is `push %ebx`,
+where the oracle has `push %ecx`. Candidates that reproduce the latter
+instruction rearrange the failure blocks and differ elsewhere. This one-byte
+difference is retained as a source-form constraint, never normalized or
+patched.
+
 This map gives the next implementation a closed evidence boundary: recover the
 entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
