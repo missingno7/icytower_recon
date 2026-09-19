@@ -32,7 +32,8 @@ def main(with_custom=False):
     game=[]
     if with_custom:
         for target in ['game-custom','game-directories','game-main-partial','game-particle']:
-            game.append(compile_target(target,dest=out/target,compiler=compiler))
+            flags=['-O2','-DICYTOWER_SYNTHETIC_LINK'] if target=='game-main-partial' else None
+            game.append(compile_target(target,flags=flags,dest=out/target,compiler=compiler))
     args=[tc/'bin/gcc.exe','-O2','-g','-mfpmath=387','-mwindows',
           'tools/audio_probe.c',*[o for o,_ in game],obj,xdir/'libvorbisfile.a',xdir/'libvorbis.a',xdir/'libogg.a',adir/'liballeg.a',
           '-lkernel32','-luser32','-lgdi32','-lcomdlg32','-lole32','-ldinput','-lddraw',

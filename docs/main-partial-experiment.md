@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-three historical helpers while the remaining
+`src/main.c` currently recovers twenty-four historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -70,6 +70,12 @@ Allegro `delete_file`. Its non-relocation code and both call relocations match.
 The short format string is duplicated in original read-only data and the
 partial CU cannot independently establish its table position, so it is
 `CODEGEN_SIMILAR` and receives no exact-function credit.
+
+`WinMain` matches its full 50-byte entry-point wrapper. The historical
+Allegro `END_OF_MAIN()` macro emits this wrapper, which passes the address of
+the still-unimplemented `_mangled_main` symbol to `__WinMain`. Its two
+relocations resolve by their named symbols; the forward declaration comes from
+DWARF and supplies no missing game-function body.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy

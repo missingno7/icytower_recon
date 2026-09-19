@@ -250,3 +250,10 @@ void myDeleteFile(char *path, char *file)
     sprintf(buf, "%s%s", path, file);
     delete_file(buf);
 }
+
+/* DWARF signature for the remaining historical main body. */
+int _mangled_main(int argc, char **argv);
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+END_OF_MAIN()
+#endif
