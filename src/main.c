@@ -243,3 +243,10 @@ inline void update_reward(void)
         reward_scale -= 6554;
     reward_time--;
 }
+
+void myDeleteFile(char *path, char *file)
+{
+    char buf[2048];
+    sprintf(buf, "%s%s", path, file);
+    delete_file(buf);
+}

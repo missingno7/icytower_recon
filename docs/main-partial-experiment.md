@@ -64,6 +64,13 @@ subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
 has the original operands and relocations but a 54-byte equivalent branch
 layout rather than the original 55-byte layout, so it also remains `DIFFER`.
 
+`myDeleteFile` recovers the 63-byte path/file deletion wrapper: it formats the
+two input strings into a 2048-byte local buffer with `"%s%s"`, then calls
+Allegro `delete_file`. Its non-relocation code and both call relocations match.
+The short format string is duplicated in original read-only data and the
+partial CU cannot independently establish its table position, so it is
+`CODEGEN_SIMILAR` and receives no exact-function credit.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
