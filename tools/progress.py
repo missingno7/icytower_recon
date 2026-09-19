@@ -1,0 +1,123 @@
+"""Publish reviewable experiment snapshots and explicitly scoped metrics."""
+from pathlib import Path
+from common import ROOT, identity, read_json, write_json
+
+def main():
+    units=read_json(ROOT/'src/units.json')
+    reports={}
+    for target in ['game-control','game-timer','allegro-timer','allegro-color','allegro-blit']:
+        p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
+        r=read_json(p)
+        for name,expected in r['build']['local_inputs'].items():
+            if identity(ROOT/name)!=expected:
+                raise ValueError('Stale experiment local input: '+name)
+        if r['build']['toolchain_lock']!=identity(ROOT/'toolchain/lock.json'):
+            raise ValueError('Stale experiment toolchain lock')
+        if r['build']['candidate_toolchain_lock']!=identity(ROOT/'toolchain/tdm-2-lock.json'):
+            raise ValueError('Stale candidate toolchain lock')
+        reports[target]=r
+        write_json(ROOT/'docs/experiments'/f'{target}-O2.json',r)
+    write_json(ROOT/'docs/experiments/optimization-matrix.json',read_json(ROOT/'build/experiments/tdm-2/summary.json'))
+    link=read_json(ROOT/'build/link-probe/tdm-2/report.json')
+    write_json(ROOT/'docs/experiments/link-probe.json',link)
+    timer=reports['game-timer']
+    game_units=[u for u in units if u['classification']=='GAME']
+    game_functions=[f for u in game_units for f in u['functions']]
+    games=[reports['game-control'],timer]
+    matched=[f for r in games for f in r['functions'] if f['status']=='FUNCTION_MATCH']
+    library_matches=[r for key,r in reports.items() if key.startswith('allegro-') and r['whole_text_contribution_equal']]
+    data_bytes=sum(s['logical_size'] for r in reports.values() for s in r['initialized_data_comparison'] if s['content_equal'])
+    summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
+    recovery={}
+    for target in ['game-control','game-timer']:
+        report=reports[target]
+        recovery['src/'+target[5:]+'.c']={
+            'state':'RECOVERED_EXACT_FUNCTIONS',
+            'functions':{f['name']:f['status'] for f in report['functions']},
+            'function_complete':report['function_matches']==report['functions_total'],
+            'text_contribution_equal':report['whole_text_contribution_equal'],
+            'object_match':False,'cu_match':False,'report':'docs/experiments/'+target+'-O2.json'}
+    integration=read_json(ROOT/'build/integration/tdm-2/build.json')
+    write_json(ROOT/'docs/experiments/integration-link.json',integration)
+    library=read_json(ROOT/'build/allegro/tdm-2/build.json')
+    write_json(ROOT/'docs/experiments/allegro-build.json',library)
+    write_json(ROOT/'src/recovery.json',recovery)
+    metrics={
+        'schema':1,
+        'scope':'Current independent reconstruction; inherited behavioral promotions are not counted as reconstructed functions.',
+        'game_tree_cus_total':len(units),'game_tree_cus_skeletonized':len(units),
+        'game_owned_cus_total':len(game_units),'ambiguous_cus_recovery_owned':2,
+        'game_cus_partially_recovered':0,'game_cus_function_complete':len(games),'game_cus_object_exact':0,
+        'game_cus_complete_text_equal':sum(r['whole_text_contribution_equal'] for r in games),
+        'game_functions_total':len(game_functions),'game_functions_recovered':len(matched),
+        'game_text_bytes_reconstructed':sum(f['original_size'] for f in matched),
+        'game_complete_cu_text_bytes':sum(r['original_cu_span'] for r in games if r['whole_text_contribution_equal']),
+        'unknown_game_text_bytes':sum(f['size'] for f in game_functions)-sum(f['original_size'] for f in matched),
+        'ambiguous_functions_not_in_game_denominator':16,'ambiguous_text_bytes_not_in_game_denominator':2998,
+        'known_upstream_game_tree_files_populated':3,
+        'upstream_library_cus_identified':137,'upstream_library_cu_scope':'115 Allegro (including 9 data-only) plus 22 Xiph; excludes CRT', 'allegro_core_cus_built':len(library['units']),'upstream_library_cus_reproduced':0,
+        'upstream_library_cus_complete_text_equal':len(library_matches),
+        'upstream_library_text_bytes_reproduced':sum(r['original_cu_span'] for r in library_matches),
+        'data_bytes_structured_and_content_verified':data_bytes,
+        'game_bss_globals_typed':6,'game_bss_semantic_bytes':164,'game_common_allocation_bytes':224,
+        'dwarf_type_dies_recovered':len(read_json(ROOT/'evidence/census/types.json')),
+        'dwarf_type_count_scope':'Type DIE census including duplicate declarations; not a count of emitted canonical C types.',
+        'dwarf_total_dies':summary['die_count'],'dwarf_unresolved_origins':len(summary['unresolved_origin_specification']),
+        'linker_resolved_game_functions':len(matched),'linker_resolved_game_bytes':sum(f['original_size'] for f in matched),'linker_resolution_scope':'Synthetic integration link only; no original game layout equality','natural_game_layout_prefix_length':0,
+        'probe_startup_addresses_matching':sum(r['address_equal'] for r in link['startup_functions']),
+        'probe_startup_address_and_extent_prefix_length':link['natural_startup_address_prefix_bytes'],
+        'probe_strict_text_byte_prefix':link['strict_text_byte_prefix'],
+        'pe_sections_matching':0,'whole_executable_status':'GAME_NOT_LINKED: synthetic control/timer plus Allegro integration PE links',
+        'first_current_blocker':'B004: remaining game CUs and vendor dependencies; B002: debug metadata and common layout',
+        'proof_policy':'docs/proof-levels.md',
+    }
+    write_json(ROOT/'docs/progress.json',metrics)
+    blockers=[
+        {'id':'B001','target':'Historical startup/link prefix',
+         'current_evidence':'The archived compiler reports TDM-1 4.4.1 SJLJ. Seven startup symbol addresses match; the first 704 bytes have matching function starts and spans.',
+         'first_mismatch':{'function':'___gcc_register_frame','address':'0x4012c6','original_byte':'e8','candidate_byte':'8b',
+                           'detail':'Original calls ___cmshared_create_or_grab; archived crtbegin.o starts a global load. Next function is 4 bytes early.'},
+         'hypotheses':['Original cross-built TDM runtime differs from archived native mingw32 runtime despite the same version label','Code::Blocks carried a patched CRT/libgcc set'],
+         'experiments_tried':['Real gcc -mwindows link with archived crt2.o/crtbegin.o/import archives','Compared original and linked startup disassembly','gcc -v confirms --enable-sjlj-exceptions; archived libgcc.a symbol search lacks cmshared'],
+         'missing_artifact':'crtbegin.o and matching libgcc from the original c:/crossdev/b4.4.1-tdm-1/build-sjlj toolchain',
+         'next_experiment':'Inspect archived Code::Blocks 10.05 MinGW runtime or exact TDM cross-build sources for cmshared; compare crtbegin.o before any broad relink.'},
+        {'id':'B002','target':'Game timer.c full object/CU match',
+         'current_evidence':'All 3 functions and complete 152-byte text contribution match at -O2/-O3; five volatile int commons inventoried.',
+         'first_mismatch':{'section':'.debug_info','detail':'Historical source path/line/header layout not reproduced; no original .o available for direct record comparison.'},
+         'hypotheses':['Reconstructed source/header layout accounts for debug differences','Common ordering must be established with all game objects'],
+         'experiments_tried':['All five optimization levels','All text relocations resolved independently','All functions, symbols, section contributions and common allocations inventoried'],
+         'missing_artifact':'Exact historical declarations/include/line configuration or original timer.o',
+         'next_experiment':'Use CU source-file table and DIE graph to recover declarations and line placement, then compare debug contribution and common layout in a multi-CU link.'},
+        {'id':'B003','target':'Allegro blit.c',
+         'current_evidence':'5/7 exact function bodies at -O2. Full candidate text is 15894 bytes versus original 15890.',
+         'first_mismatch':{'function':'masked_blit','address':'0x4561c8','detail':'Direct branch displacement differs because a later blit function is 4 bytes longer. blit first differing field at 0x456297; instruction-selection difference at original 0x4562ee (add versus lea).'},
+         'hypotheses':['Compiler build/register allocation difference','Source/header expansion or compiler flags differ; simple length slicing was already corrected'],
+         'experiments_tried':['-O0/-O1/-O2/-O3/-Os, all functions','DWARF body extents instead of next-symbol padding','Relocation targets and anonymous read-only data resolved independently'],
+         'missing_artifact':'Exact compiler/header/flag combination for this CU',
+         'next_experiment':'Compare -O2 assembly around add/lea selection with the original cross-built compiler; sweep scheduling and alignment flags separately.'},
+        {'id':'B004','target':'Remaining game tree and library dependencies',
+         'current_evidence':'25 historical CUs mapped; 3 loadpng files populated; libvorbis 1.2.0 and libogg 1.1.3 publisher-verified sources available.',
+         'first_mismatch':None,
+         'hypotheses':['libogg 1.1.3 source is the correct candidate','logg memory extension is local vendor code'],
+         'experiments_tried':['Imported ownership/provenance and behavioral promotion evidence','Recovered complete timer.c before further isolated functions'],
+         'missing_artifact':'GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; logg extension; exact strptime/timecompat provenance; remaining game CUs',
+         'next_experiment':'Assign existing recovered bodies to complete historical control.c and recover its missing entities; obtain old libogg compiler independently.'},
+        {'id':'B005','target':'PE resources',
+         'current_evidence':'Two leaves and complete directory metadata freshly parsed; payload hashes recorded.',
+         'first_mismatch':None,'hypotheses':['ALLEGRO_ICON names a custom resource icon rather than the available shooter example'],
+         'experiments_tried':['Compared source-tree ICO image hashes to RT_ICON payload; no match'],
+         'missing_artifact':'Original icon source/resource script and historical resource timestamp rules',
+         'next_experiment':'Supply/extract the icon as a local user-owned fixture, compile a structural .rc with locked windres and compare resource directory ordering and timestamps.'},
+    ]
+    blockers[0].update(status='RESOLVED_FOR_STARTUP_TEXT',
+        current_evidence='TDM-2 crt2.o and crtbegin.o text including padding match after independently resolved relocations. Eight startup starts/spans match, 792 bytes.',
+        missing_artifact=None,
+        next_experiment='Validate remaining runtime contributions as the game link grows; exact compiler distribution identity remains unproven.')
+    blockers[0]['historical_first_mismatch']=blockers[0].pop('first_mismatch')
+    blockers[0]['experiments_tried'].append('Imported hash-pinned TDM-2; compared both startup COFF objects and a real synthetic link')
+    blockers[3].update(current_evidence='Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.',
+        next_experiment='Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies.')
+    write_json(ROOT/'docs/blockers.json',blockers)
+    print(metrics)
+
+if __name__=='__main__': main()

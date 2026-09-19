@@ -1,0 +1,98 @@
+[
+  {
+    "id": "B001",
+    "target": "Historical startup/link prefix",
+    "current_evidence": "TDM-2 crt2.o and crtbegin.o text including padding match after independently resolved relocations. Eight startup starts/spans match, 792 bytes.",
+    "hypotheses": [
+      "Original cross-built TDM runtime differs from archived native mingw32 runtime despite the same version label",
+      "Code::Blocks carried a patched CRT/libgcc set"
+    ],
+    "experiments_tried": [
+      "Real gcc -mwindows link with archived crt2.o/crtbegin.o/import archives",
+      "Compared original and linked startup disassembly",
+      "gcc -v confirms --enable-sjlj-exceptions; archived libgcc.a symbol search lacks cmshared",
+      "Imported hash-pinned TDM-2; compared both startup COFF objects and a real synthetic link"
+    ],
+    "missing_artifact": null,
+    "next_experiment": "Validate remaining runtime contributions as the game link grows; exact compiler distribution identity remains unproven.",
+    "status": "RESOLVED_FOR_STARTUP_TEXT",
+    "historical_first_mismatch": {
+      "function": "___gcc_register_frame",
+      "address": "0x4012c6",
+      "original_byte": "e8",
+      "candidate_byte": "8b",
+      "detail": "Original calls ___cmshared_create_or_grab; archived crtbegin.o starts a global load. Next function is 4 bytes early."
+    }
+  },
+  {
+    "id": "B002",
+    "target": "Game timer.c full object/CU match",
+    "current_evidence": "All 3 functions and complete 152-byte text contribution match at -O2/-O3; five volatile int commons inventoried.",
+    "first_mismatch": {
+      "section": ".debug_info",
+      "detail": "Historical source path/line/header layout not reproduced; no original .o available for direct record comparison."
+    },
+    "hypotheses": [
+      "Reconstructed source/header layout accounts for debug differences",
+      "Common ordering must be established with all game objects"
+    ],
+    "experiments_tried": [
+      "All five optimization levels",
+      "All text relocations resolved independently",
+      "All functions, symbols, section contributions and common allocations inventoried"
+    ],
+    "missing_artifact": "Exact historical declarations/include/line configuration or original timer.o",
+    "next_experiment": "Use CU source-file table and DIE graph to recover declarations and line placement, then compare debug contribution and common layout in a multi-CU link."
+  },
+  {
+    "id": "B003",
+    "target": "Allegro blit.c",
+    "current_evidence": "5/7 exact function bodies at -O2. Full candidate text is 15894 bytes versus original 15890.",
+    "first_mismatch": {
+      "function": "masked_blit",
+      "address": "0x4561c8",
+      "detail": "Direct branch displacement differs because a later blit function is 4 bytes longer. blit first differing field at 0x456297; instruction-selection difference at original 0x4562ee (add versus lea)."
+    },
+    "hypotheses": [
+      "Compiler build/register allocation difference",
+      "Source/header expansion or compiler flags differ; simple length slicing was already corrected"
+    ],
+    "experiments_tried": [
+      "-O0/-O1/-O2/-O3/-Os, all functions",
+      "DWARF body extents instead of next-symbol padding",
+      "Relocation targets and anonymous read-only data resolved independently"
+    ],
+    "missing_artifact": "Exact compiler/header/flag combination for this CU",
+    "next_experiment": "Compare -O2 assembly around add/lea selection with the original cross-built compiler; sweep scheduling and alignment flags separately."
+  },
+  {
+    "id": "B004",
+    "target": "Remaining game tree and library dependencies",
+    "current_evidence": "Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.",
+    "first_mismatch": null,
+    "hypotheses": [
+      "libogg 1.1.3 source is the correct candidate",
+      "logg memory extension is local vendor code"
+    ],
+    "experiments_tried": [
+      "Imported ownership/provenance and behavioral promotion evidence",
+      "Recovered complete timer.c before further isolated functions"
+    ],
+    "missing_artifact": "GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; logg extension; exact strptime/timecompat provenance; remaining game CUs",
+    "next_experiment": "Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies."
+  },
+  {
+    "id": "B005",
+    "target": "PE resources",
+    "current_evidence": "Two leaves and complete directory metadata freshly parsed; payload hashes recorded.",
+    "first_mismatch": null,
+    "hypotheses": [
+      "ALLEGRO_ICON names a custom resource icon rather than the available shooter example"
+    ],
+    "experiments_tried": [
+      "Compared source-tree ICO image hashes to RT_ICON payload; no match"
+    ],
+    "missing_artifact": "Original icon source/resource script and historical resource timestamp rules",
+    "next_experiment": "Supply/extract the icon as a local user-owned fixture, compile a structural .rc with locked windres and compare resource directory ordering and timestamps."
+  }
+]
