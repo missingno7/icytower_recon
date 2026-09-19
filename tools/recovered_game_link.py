@@ -18,6 +18,7 @@ GAME_TARGETS = [
     'game-stars', 'game-options', 'game-replay', 'game-main-partial',
     'game-map', 'game-scroller', 'game-particle', 'game-fld-adspot',
     'game-hisc', 'game-menu', 'game-game-data', 'game-profile', 'game-custom',
+    'game-strptime', 'game-timecompat',
 ]
 
 
