@@ -90,7 +90,7 @@ class PipelineTests(unittest.TestCase):
                      'datafile_callback','color_map_callback','syncProfileFromOptions',
                      'startMenuMusic','stopMenuMusic',
                      'replaceBadCharacters','pwd_garble_string','line_intersect','WinMain',
-                     'set_current_avatar','for_each_directory'):
+                     'set_current_avatar','for_each_directory','get_gamepad_value'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
@@ -104,6 +104,7 @@ class PipelineTests(unittest.TestCase):
                              else 50 if name=='WinMain'
                              else 96 if name=='set_current_avatar'
                              else 109 if name=='for_each_directory'
+                             else 166 if name=='get_gamepad_value'
                              else 33 if name=='datafile_callback_slow'
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 

@@ -166,6 +166,22 @@ void syncOptionsFromProfile(void)
     strcat(replay_directory, "replays/");
 }
 
+int get_gamepad_value(char *dir)
+{
+    char *action = get_config_string(NULL, dir, "nothing");
+    if (!stricmp(action, "up"))
+        return 4;
+    if (!stricmp(action, "down"))
+        return 8;
+    if (!stricmp(action, "left"))
+        return 1;
+    if (!stricmp(action, "right"))
+        return 2;
+    if (!stricmp(action, "jump"))
+        return 16;
+    return 0;
+}
+
 int ok_to_play(void)
 {
     return 1;

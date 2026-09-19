@@ -136,6 +136,13 @@ selects the saved avatar, and rebuilds the profile replay directory with its
 same-CU avatar call and a duplicated suffix literal remain layout-dependent;
 it is therefore recorded as `DIFFER`.
 
+`get_gamepad_value` matches its complete 166-byte configuration-action parser.
+It reads the requested action with the fallback `"nothing"`, maps `up`,
+`down`, `left`, `right`, and `jump` to their five input-bit values, and returns
+zero for every other value. Its strings resolve through the verifier's unique
+read-only-data checks and all six configuration/string API calls resolve by
+name.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
