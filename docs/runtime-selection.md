@@ -12,9 +12,13 @@ matches eight startup starts and spans across 792 bytes. Its literal byte
 prefix is only seven bytes because references point to its own layout.
 Neither result proves exact compiler-distribution or full-object identity.
 
-All 114 original Allegro core CUs compile into liballeg.a, including nine
-data-only driver/vtable CUs absent from the old function-only ownership
-count. The modified logg addon is excluded and still needs recovery.
+All 114 Allegro core CUs observed in the original debug census compile into
+liballeg.a, including nine data-only driver/vtable CUs absent from the old
+function-only ownership count. The archive also includes pinned Allegro 4.4.1
+`inline.c` and `math3d.c`: neither has a debug-CU record in the original, but
+the original game directly calls the former's `_draw_sprite` and `_rectfill`
+exports, and the latter owns the perspective globals referenced by that
+member. The modified logg addon is recovered separately.
 
 The DirectX header candidate is dx80_mgw.zip from Allegro's official archive:
 https://liballeg.org/old.html (download https://liballeg.org/files/dx80_mgw.zip).
@@ -45,10 +49,10 @@ comparison results remain separately scoped.
 main-partial's own historical `WinMain` wrapper. It records the ordinary
 linker's result in `build/recovered-game/tdm-2/link.json` without any
 synthetic entrypoint, stubs, original-code input, or execution. The current
-frontier starts with `HTTPFetchInternal`, then `_mangled_main`, profile and
-game-flow routines (`select_profile`, `new_game`, `play`), presentation,
-audio, ad-HTTP, and profile-table dependencies. This failed link is a
-dependency measurement, not a game executable.
+frontier begins with `HTTPFetchInternal`, then `_mangled_main`, profile and
+game-flow routines (`select_profile`, `new_game`, `play`), presentation, the
+alert loop, and `_strptime`. This failed link is a dependency measurement,
+not a game executable.
 
 The three loadpng source files are exact Allegro 4.4.1 inputs. The project now
 pins the publisher's Windows libpng 1.2.34 sources and zlib 1.2.3 sources in
