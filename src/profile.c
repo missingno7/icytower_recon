@@ -6,7 +6,7 @@
  * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
  * DIFFER: get_rank @ 0x00418ad0, 82 bytes
  * DIFFER: set_next_rank_message @ 0x00418b24, 431 bytes
- * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
+ * Partial reconstruction: draw_profile_selector @ 0x00418cd4.
  * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
  * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
  * EXACT: profile_data_page_basic @ 0x004193d0, 637 bytes
@@ -220,6 +220,69 @@ extern Tprofile_datafile *data;
 extern int makecol(int r, int g, int b);
 extern void textprintf_ex(void *dst, void *font, int x, int y, int color,
                           int background, const char *format, ...);
+extern void *font;
+extern int text_height(void *font);
+extern int stricmp(const char *s1, const char *s2);
+extern void draw_sprite(void *bmp, void *sprite, int x, int y);
+extern void set_trans_blender(int r, int g, int b, int a);
+extern void drawing_mode(int mode, void *pattern, int x_anchor, int y_anchor);
+extern void solid_mode(void);
+extern void rectfill(void *bmp, int x1, int y1, int x2, int y2, int color);
+extern void set_clip_rect(void *bmp, int x1, int y1, int x2, int y2);
+
+void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
+                           int numProfiles, int selection, int offset,
+                           int max_posts, int x, int y)
+{
+    int fh;
+    int fg;
+    float view_percentage;
+    int height;
+    int scroll_height;
+    int view_offset;
+    int i;
+    int profile_index;
+    int row_y;
+    char *profile_name;
+    char *current;
+
+    fh=text_height(font);
+    fg=makecol(25,25,25);
+    view_percentage=(float)selection/(float)max_posts;
+    if (view_percentage>1.0f)
+        view_percentage=1.0f;
+
+    draw_sprite(bmp,data[86].dat,x-15,y-15);
+    set_trans_blender(0,0,0,150);
+    drawing_mode(5,0,0,0);
+    rectfill(bmp,x+5,y+30,x+265,y+329,fg);
+    height=y+329-(y+30);
+    scroll_height=(int)(height*0.25f);
+    view_offset=y+32+(int)((height-scroll_height)*view_percentage);
+    rectfill(bmp,x+257,view_offset,x+263,view_offset+scroll_height,fg);
+    solid_mode();
+    textout_ex(bmp,data[51].dat,x+10,y-12,-1,-1,"SELECT PROFILE");
+    draw_sprite(bmp,data[73].dat,x+270,y+24);
+    set_clip_rect(bmp,x+6,0,x+290,((int *)bmp)[1]-1);
+
+    row_y=y+fh+31;
+    for (i=1,profile_index=offset;
+         i<=max_posts && profile_index<numProfiles;
+         i++,profile_index++,row_y+=fh) {
+        profile_name=profiles+profile_index*32;
+        current=stricmp(profile_name,current_profile)==0 ? "(current)" : "";
+        if (profile_index==selection) {
+            drawing_mode(5,0,0,0);
+            set_trans_blender(0,0,0,50);
+            rectfill(bmp,x+7,row_y-47,x+263,row_y+fh,fg);
+            solid_mode();
+        }
+        textprintf_ex(bmp,data[51].dat,x+8,row_y,fg,-1,"%c %c %s %s.",
+                      profile_index==selection ? '>' : ' ',
+                      profile_index<1 ? '~' : '{',profile_name,current);
+    }
+    set_clip_rect(bmp,0,0,((int *)bmp)[0]-1,((int *)bmp)[1]-1);
+}
 
 int draw_buffer(void *bmp, char *buffer, int x, int y)
 {
