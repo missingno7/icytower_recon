@@ -494,6 +494,7 @@ void end_game(void)
     destroy_custom_data(&custom);
 }
 
+#ifndef ICYTOWER_SYNTHETIC_LINK
 void save_config(void)
 {
     FILE *fp;
@@ -531,6 +532,8 @@ void change_profile(void)
         rebuild_profile_list(0);
     }
 }
+
+#endif
 
 inline void update_reward(void)
 {
@@ -629,6 +632,7 @@ void play_jump_sound(Tplayer *p)
 }
 #endif
 
+#ifndef ICYTOWER_SYNTHETIC_LINK
 void run_demo(char *file_name)
 {
     int fo;
@@ -655,6 +659,8 @@ void run_demo(char *file_name)
         }
     }
 }
+
+#endif
 
 int add_profile(const char *filename, int attrib, void *param)
 {
@@ -696,6 +702,7 @@ int rebuild_profile_list(Tavailable_profile **profs)
     return numProfiles;
 }
 
+#ifndef ICYTOWER_SYNTHETIC_LINK
 BITMAP *loadScrambled(char *fileName)
 {
     int fileSize;
@@ -734,6 +741,9 @@ BITMAP *loadScrambled(char *fileName)
     return png;
 }
 
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
 int check_beta_tester(void)
 {
     int i;
@@ -761,6 +771,8 @@ int check_beta_tester(void)
     log2file("no tester match found");
     return 0;
 }
+
+#endif
 
 int check_characters(void)
 {
