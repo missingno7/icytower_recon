@@ -41,6 +41,10 @@ typedef struct Toptions {
     unsigned char reserved1[24];
     int msc_volume;
     int snd_volume;
+    unsigned char reserved2[548];
+    int posterSize;
+    char lastProfile[32];
+    int timesStarted;
 } Toptions;
 
 typedef struct Tprofile {
@@ -130,6 +134,10 @@ void *hisc_tables[15];
 
 extern void save_options(Toptions *o, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
+extern void save_profile(Tprofile *profile);
+extern Tprofile *select_profile(Tprofile *current_profile, Tprofile **profiles,
+                                int numProfiles, Tcontrol *ctrl);
+extern void rebuild_profile_list(int selection);
 
 char *get_version_str(void)
 {
@@ -473,6 +481,25 @@ void save_config(void)
         pack_fclose(fp);
     } else {
         log2file("    *** failed");
+    }
+}
+
+void change_profile(void)
+{
+    Tprofile *newProfile;
+
+    if (profile) {
+        syncProfileFromOptions();
+        save_profile(profile);
+    }
+    newProfile = select_profile(profile, profiles, numProfiles, &ctrl);
+    if (newProfile) {
+        if (profile) free(profile);
+        profile = newProfile;
+        strcpy(options.lastProfile, profile->name);
+        syncOptionsFromProfile();
+        save_config();
+        rebuild_profile_list(0);
     }
 }
 

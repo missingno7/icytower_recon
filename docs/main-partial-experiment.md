@@ -63,6 +63,15 @@ and calls `destroy_custom_data` on the typed main-CU `custom` global.
 path, opens it in historical `"wp"` mode, saves options and all fifteen score
 tables, closes the packed file, and logs the failure path when opening fails.
 
+`change_profile` now recovers the profile-switch workflow. It persists an
+existing profile after synchronizing options, opens the selector with the
+typed profile list and controls, replaces the active allocation, records the
+selected name in `options.lastProfile`, synchronizes the selected settings,
+saves configuration, and rebuilds the profile list. The candidate has the
+observed calls, fields, and 188-byte semantic path, but the compiler places
+the null-profile setup in a 196-byte tail block instead of the original
+fall-through block; it remains `DIFFER` pending a source-level explanation.
+
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
 subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
