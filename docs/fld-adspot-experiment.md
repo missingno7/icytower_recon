@@ -7,6 +7,12 @@ slash scan returns the filename following the final slash, and
 before releasing the cache allocation. `fldads_start` also matches exactly: it
 starts the historical ad worker through `pthread_create`.
 
+`fldads_get_random_ad` now reproduces the 192-byte weighted selector body. It
+computes the cumulative frequency under the cache mutex, chooses a scaled
+random threshold, and walks the cache in source order. The function is
+`CODEGEN_SIMILAR`; its anonymous `RAND_MAX` floating literal has no
+independent section placement proof.
+
 `fldads_load_cache_from_csv` accepts only three-field rows, rejects entries
 whose cached image is absent, duplicates the remote/local/visit strings,
 parses its frequency, and atomically replaces the old cache under the
@@ -19,6 +25,8 @@ image, reloads the cache, and persists the accepted rows.
 `fldads_update_local_adimg` has its historical 230-byte extent: it compares a
 local image timestamp with HTTP metadata, downloads stale or missing payloads,
 and writes successful responses in binary mode.
+`fldads_threadmain` loads the local cache, refreshes a listing older than three
+days, validates the HTTP response and payload, and reports the final count.
 The cache-path helper retains its 64-byte masked body. The URL wrapper and
 local-cache loader have their historical extents but differ in local branch
 layout. No original code or object content is linked into this target.
