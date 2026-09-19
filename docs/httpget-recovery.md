@@ -90,6 +90,14 @@ instruction rearrange the failure blocks and differ elsewhere. This one-byte
 difference is retained as a source-form constraint, never normalized or
 patched.
 
+The scoped candidate was compiled independently with both pinned historical
+packages, `tdm-gcc-4.4.1` and `tdm-gcc-4.4.1-tdm-2`. After ordinary relocation
+masking, each produces the same three alignment-register differences from the
+oracle: byte offsets 127 (`push %ebx` versus `push %ecx`), 164 (`push %ecx`
+versus `push %edx`), and 444 (`push %edx` versus `push %esi`). The source form
+therefore remains the recovery variable; changing only the selected pinned
+compiler cannot establish a `FUNCTION_MATCH`.
+
 The cold-block layout provides one further scope check. In the oracle, the
 send-failure handler calls `getSocketError` and `log2file` before the saved
 variable-length stack pointer is restored at the shared exit. A candidate that
