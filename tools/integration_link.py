@@ -26,7 +26,7 @@ def main():
     (out/'build.json').unlink(missing_ok=True)
     objects=[]
     reports=[]
-    for target in ['game-control','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-directories','game-timer']:
         obj,report=compile_target(target,dest=out/target,compiler=a.compiler)
         objects.append(obj)
         reports.append(report)
@@ -37,7 +37,7 @@ def main():
           '-Wl,-Map,'+str(out/'link.map'),'-Wl,--cref','-o',exe]
     run(args,toolchain=tc)
     run([tc/'bin/objdump.exe','-x',exe],out/'pe.txt',toolchain=tc)
-    write_json(out/'build.json',{'scope':'Synthetic main; real recovered control/timer CUs and upstream library; NOT icytower15.exe',
+    write_json(out/'build.json',{'scope':'Synthetic main; recovered beta/control/csv/directories/timer CUs and upstream library; NOT icytower15.exe',
                'compiler':a.compiler,'command':[str(x) for x in args], 'executable':identity(exe),
                'library_report':identity(libdir/'build.json'),'source':identity(ROOT/'tools/integration_probe.c'),
                'game_objects':reports,'executed':False})

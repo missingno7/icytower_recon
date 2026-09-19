@@ -12,6 +12,20 @@ from binary import Binary
 from dwarf import parse
 from build import TARGETS, COMPILERS, verify_inputs, compile_target
 
+def original_contributions(exe, cu_file, text_va):
+    """Select one COFF FILE group by filename AND its text contribution VA."""
+    groups=[]
+    group=[]
+    for symbol in exe.symbols:
+        if symbol['storage_class']==103:
+            if group: groups.append(group)
+            group=[]
+        group.append(symbol)
+    if group: groups.append(group)
+    matches=[g for g in groups if any(s['name']=='.text' and s.get('va')==text_va
+             and s['file']==cu_file and s['storage_class']==3 and s['aux_count'] for s in g)]
+    return matches[0] if len(matches)==1 else []
+
 def compare(obj_path,cu_path,exe_path,analysis_objdump):
     obj,exe=Binary(obj_path),Binary(exe_path)
     original=[f for f in read_json(ROOT/'evidence/census/functions.json') if f['compile_unit']==cu_path]
@@ -27,6 +41,19 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             orig_symbols.setdefault(s['name'],[]).append(s)
     cu_file=cu_path.replace('\\','/').split('/')[-1]
     section_bases={}
+    contribution_evidence={}
+    owned=original_contributions(exe,cu_file,cu['low_pc'])
+    for section in obj.sections:
+        if section['name'] not in ('.data','.rdata','.bss'): continue
+        anchors=[s for s in owned if s['name']==section['name'] and s['storage_class']==3 and s['aux_count']]
+        candidate=[s for s in obj.symbols if s['name']==section['name'] and s['aux_count'] and s['section']==section['index']]
+        if len(anchors)==1 and len(candidate)==1:
+            old_size=struct.unpack_from('<I',bytes.fromhex(anchors[0]['aux_hex']))[0]
+            new_size=struct.unpack_from('<I',bytes.fromhex(candidate[0]['aux_hex']))[0]
+            if old_size==new_size and new_size:
+                section_bases.setdefault(section['index'],set()).add(anchors[0]['va'])
+                contribution_evidence[section['index']]={'symbol_index':anchors[0]['index'],
+                    'file':cu_file,'text_anchor_va':cu['low_pc'],'va':anchors[0]['va'],'logical_size':old_size}
     # Section bases can be inferred from independent named symbol positions,
     # but conflicting evidence is never silently resolved.
     for s in obj.symbols:
@@ -47,7 +74,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             return None,'unknown .text addend'
         if sym['name'].startswith('.') and sym['section']>0:
             bases=section_bases.get(sym['section'],set())
-            if len(bases)==1: return next(iter(bases))+addend,'named data-symbol base'
+            if len(bases)==1: return next(iter(bases))+addend,'independent section base (COFF ownership, symbol, or unique content)'
             return None,'section base not independently established'
         matches=orig_symbols.get(sym['name'],[])
         own=[s for s in matches if s['file']==cu_file]
@@ -94,7 +121,9 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                               'unique_content_va':locations[0] if len(locations)==1 else None,
                               'matching_location_count':len(locations),'unresolved_relocations':pending,
                               'section_bases':sorted(section_bases.get(section['index'],set())),
-                              'content_equal':len(locations)==1 and len(section_bases[section['index']])==1})
+                              'coff_contribution':contribution_evidence.get(section['index']),
+                              'content_equal':not pending and len(section_bases.get(section['index'],set()))==1
+                                  and next(iter(section_bases[section['index']])) in locations})
     rows=[]
     for f in original:
         d=candidates.get(f['name'])

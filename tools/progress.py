@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-control','game-timer','allegro-timer','allegro-color','allegro-blit']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-timer','allegro-timer','allegro-color','allegro-blit']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -23,21 +23,24 @@ def main():
     timer=reports['game-timer']
     game_units=[u for u in units if u['classification']=='GAME']
     game_functions=[f for u in game_units for f in u['functions']]
-    games=[reports['game-control'],timer]
+    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],timer]
     matched=[f for r in games for f in r['functions'] if f['status']=='FUNCTION_MATCH']
     library_matches=[r for key,r in reports.items() if key.startswith('allegro-') and r['whole_text_contribution_equal']]
     data_bytes=sum(s['logical_size'] for r in reports.values() for s in r['initialized_data_comparison'] if s['content_equal'])
     summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
     recovery={}
-    for target in ['game-control','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-timer']:
         report=reports[target]
         recovery['src/'+target[5:]+'.c']={
-            'state':'RECOVERED_EXACT_FUNCTIONS',
+            'state':'RECOVERED_EXACT_FUNCTIONS' if report['function_matches']==report['functions_total'] else 'PARTIALLY_MATCHED',
             'functions':{f['name']:f['status'] for f in report['functions']},
             'function_complete':report['function_matches']==report['functions_total'],
             'text_contribution_equal':report['whole_text_contribution_equal'],
             'object_match':False,'cu_match':False,'report':'docs/experiments/'+target+'-O2.json'}
     integration=read_json(ROOT/'build/integration/tdm-2/build.json')
+    layout=read_json(ROOT/'docs/experiments/integration-layout.json')
+    if layout['build_report']!=identity(ROOT/'build/integration/tdm-2/build.json'):
+        raise ValueError('Stale integration layout report')
     write_json(ROOT/'docs/experiments/integration-link.json',integration)
     library=read_json(ROOT/'build/allegro/tdm-2/build.json')
     write_json(ROOT/'docs/experiments/allegro-build.json',library)
@@ -47,28 +50,37 @@ def main():
         'scope':'Current independent reconstruction; inherited behavioral promotions are not counted as reconstructed functions.',
         'game_tree_cus_total':len(units),'game_tree_cus_skeletonized':len(units),
         'game_owned_cus_total':len(game_units),'ambiguous_cus_recovery_owned':2,
-        'game_cus_partially_recovered':0,'game_cus_function_complete':len(games),'game_cus_object_exact':0,
+        'game_cus_partially_recovered':sum(0<r['function_matches']<r['functions_total'] for r in games),
+        'game_cus_function_complete':sum(r['function_matches']==r['functions_total'] for r in games),'game_cus_object_exact':0,
         'game_cus_complete_text_equal':sum(r['whole_text_contribution_equal'] for r in games),
         'game_functions_total':len(game_functions),'game_functions_recovered':len(matched),
         'game_text_bytes_reconstructed':sum(f['original_size'] for f in matched),
         'game_complete_cu_text_bytes':sum(r['original_cu_span'] for r in games if r['whole_text_contribution_equal']),
         'unknown_game_text_bytes':sum(f['size'] for f in game_functions)-sum(f['original_size'] for f in matched),
         'ambiguous_functions_not_in_game_denominator':16,'ambiguous_text_bytes_not_in_game_denominator':2998,
+        'ambiguous_cus_complete_text_equal':int(reports['game-csv']['whole_text_contribution_equal']),
+        'ambiguous_functions_recovered':reports['game-csv']['function_matches'],
+        'ambiguous_complete_cu_text_bytes':reports['game-csv']['original_cu_span'] if reports['game-csv']['whole_text_contribution_equal'] else 0,
         'known_upstream_game_tree_files_populated':3,
         'upstream_library_cus_identified':137,'upstream_library_cu_scope':'115 Allegro (including 9 data-only) plus 22 Xiph; excludes CRT', 'allegro_core_cus_built':len(library['units']),'upstream_library_cus_reproduced':0,
         'upstream_library_cus_complete_text_equal':len(library_matches),
         'upstream_library_text_bytes_reproduced':sum(r['original_cu_span'] for r in library_matches),
         'data_bytes_structured_and_content_verified':data_bytes,
-        'game_bss_globals_typed':6,'game_bss_semantic_bytes':164,'game_common_allocation_bytes':224,
+        'game_bss_globals_typed':7,'game_bss_semantic_bytes':168,'game_common_allocation_bytes':240,
         'dwarf_type_dies_recovered':len(read_json(ROOT/'evidence/census/types.json')),
         'dwarf_type_count_scope':'Type DIE census including duplicate declarations; not a count of emitted canonical C types.',
         'dwarf_total_dies':summary['die_count'],'dwarf_unresolved_origins':len(summary['unresolved_origin_specification']),
-        'linker_resolved_game_functions':len(matched),'linker_resolved_game_bytes':sum(f['original_size'] for f in matched),'linker_resolution_scope':'Synthetic integration link only; no original game layout equality','natural_game_layout_prefix_length':0,
+        'linker_resolved_game_functions':sum(f['classification']=='GAME' for f in layout['functions']),
+        'linker_resolved_game_bytes':sum(f['candidate_body_size'] for f in layout['functions'] if f['classification']=='GAME'),
+        'linker_resolved_ambiguous_functions':sum(f['classification']=='AMBIGUOUS' for f in layout['functions']),
+        'linker_resolution_scope':'Synthetic integration link only; bytes count candidate function bodies, not exact matches',
+        'natural_game_layout_prefix_length':layout['natural_game_address_extent_prefix_bytes'],
+        'natural_game_layout_prefix_scope':'Matching function addresses and body extents; excludes padding after last matching body; not linked byte equality',
         'probe_startup_addresses_matching':sum(r['address_equal'] for r in link['startup_functions']),
         'probe_startup_address_and_extent_prefix_length':link['natural_startup_address_prefix_bytes'],
         'probe_strict_text_byte_prefix':link['strict_text_byte_prefix'],
-        'pe_sections_matching':0,'whole_executable_status':'GAME_NOT_LINKED: synthetic control/timer plus Allegro integration PE links',
-        'first_current_blocker':'B004: remaining game CUs and vendor dependencies; B002: debug metadata and common layout',
+        'pe_sections_matching':0,'whole_executable_status':'GAME_NOT_LINKED: synthetic beta/control/csv/directories/timer plus Allegro integration PE links',
+        'first_current_blocker':'B007: custom.c load_character_bmp differs; custom link dependencies and remaining CUs/debug metadata unresolved',
         'proof_policy':'docs/proof-levels.md',
     }
     write_json(ROOT/'docs/progress.json',metrics)
@@ -117,6 +129,23 @@ def main():
     blockers[0]['experiments_tried'].append('Imported hash-pinned TDM-2; compared both startup COFF objects and a real synthetic link')
     blockers[3].update(current_evidence='Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.',
         next_experiment='Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies.')
+    blockers[3]['current_evidence']='Complete beta/control/directories/timer and ambiguous csv text; all 114 Allegro core CUs built and linked with five historical game-tree CUs.'
+    blockers[3]['next_experiment']='Recover original logg/main helper dependencies before adding custom.c to the natural integration link.'
+    custom=reports['game-custom']
+    blockers.append({'id':'B007','target':'custom.c complete text',
+        'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; not yet integrated.',
+        'first_mismatch':next(({'function':f['name'], 'detail':f['first_difference']} for f in custom['functions'] if f['status']!='FUNCTION_MATCH'),None),
+        'experiments_tried':['Original DWARF function order and lexical scopes','Explicit fgets prefetch control flow','Historical Allegro inline draw_sprite expansion','All five optimization levels'],
+        'next_experiment':'Compare load_character_bmp error paths, lexical scopes and return-value allocation against original disassembly.',
+        'missing_artifact':None})
+    beta=reports['game-beta']
+    blockers.append({'id':'B006','target':'beta.c complete text and natural game prefix',
+        'status':'RESOLVED_FOR_COMPLETE_TEXT',
+        'current_evidence':'All seven functions and full 1141-byte text equal at -O2. The source guard i < 8 produces the original allocator decisions.',
+        'historical_mismatch_report':'docs/experiments/game-beta-before-loader-fix.json',
+        'experiments_tried':['All five optimization levels','Original source function order from DWARF','Checksum operand order and chained node assignments','Iterative and recursive cleanup forms; original matches explicit first-node free followed by loop'],
+        'next_experiment':'Recover historical source line/header layout for debug equality.',
+        'missing_artifact':None})
     write_json(ROOT/'docs/blockers.json',blockers)
     print(metrics)
 

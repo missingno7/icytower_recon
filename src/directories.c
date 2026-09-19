@@ -1,11 +1,42 @@
-/* Historical CU: F:\projects\icytower\trunk\source\directories.c
- * Ownership: GAME
- * Source recovery pending. This file intentionally defines no fallback code.
- * UNKNOWN: get_custom_characters_dir @ 0x00403994, 13 bytes
- * UNKNOWN: get_adcache_dir @ 0x004039a4, 39 bytes
- * UNKNOWN: get_configfile_path @ 0x004039cc, 39 bytes
- * UNKNOWN: get_logfile_path @ 0x004039f4, 39 bytes
- * UNKNOWN: get_profiles_dir @ 0x00403a1c, 39 bytes
- * UNKNOWN: get_profile_dir_for_profile @ 0x00403a44, 63 bytes
- * UNKNOWN: get_character_dir @ 0x00403a84, 67 bytes
- */
+/* Historical directory policy, recovered from this CU's DWARF and code. */
+#include <stdio.h>
+#include <string.h>
+#include <allegro.h>
+#include "directories.h"
+
+int get_profiles_dir(char *buffer, size_t buflen)
+{
+    strncpy(buffer, "profiles", buflen);
+    return 1;
+}
+int get_custom_characters_dir(char *buffer, size_t buflen)
+{
+    buffer[0] = 0;
+    return 0;
+}
+int get_logfile_path(char *buffer, size_t buflen)
+{
+    strncpy(buffer, "log.txt", buflen);
+    return 1;
+}
+int get_configfile_path(char *buffer, size_t buflen)
+{
+    strncpy(buffer, "tower.cfg", buflen);
+    return 1;
+}
+int get_character_dir(char *buffer, size_t buflen, const char *charactername)
+{
+    snprintf(buffer, buflen, "characters/%s/", charactername);
+    return file_exists(buffer, FA_DIREC, NULL);
+}
+int get_adcache_dir(char *buffer, size_t buflen)
+{
+    strncpy(buffer, "cache/", buflen);
+    return 1;
+}
+int get_profile_dir_for_profile(char *buffer, size_t buflen, const char *profile)
+{
+    get_profiles_dir(buffer, buflen);
+    sprintf(buffer, "%s/%s/", buffer, profile);
+    return 1;
+}

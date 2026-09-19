@@ -1,5 +1,5 @@
 {
-  "scope": "Synthetic main; real recovered control/timer CUs and upstream library; NOT icytower15.exe",
+  "scope": "Synthetic main; recovered beta/control/csv/directories/timer CUs and upstream library; NOT icytower15.exe",
   "compiler": "tdm-2",
   "command": [
     "D:\\Prog\\icytower_recon\\toolchain\\tdm-gcc-4.4.1-tdm-2\\bin\\gcc.exe",
@@ -10,7 +10,10 @@
     "-Iinclude",
     "-Ithird_party/allegro-4.4.1/include",
     "-mwindows",
+    "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-beta\\unit.o",
     "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-control\\unit.o",
+    "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-csv\\unit.o",
+    "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-directories\\unit.o",
     "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-timer\\unit.o",
     "tools/integration_probe.c",
     "D:\\Prog\\icytower_recon\\build\\allegro\\tdm-2\\liballeg.a",
@@ -30,8 +33,8 @@
     "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\integration-probe.exe"
   ],
   "executable": {
-    "size": 2478654,
-    "sha256": "60d2209f258b60d9f0a726abee6bd4d8cad8df1761063432e46986481d39c989"
+    "size": 2529054,
+    "sha256": "c37e79c3b227b4c60fb1509b0d86dfac24809c8face3c86f065e9f605c85e77f"
   },
   "library_report": {
     "size": 129036,
@@ -42,6 +45,84 @@
     "sha256": "3e42fa26961ebdb7ccebe40c39a36488f7fade74850f7aed7513ea2f8027b06a"
   },
   "game_objects": [
+    {
+      "target": "game-beta",
+      "historical_cu": "F:\\projects\\icytower\\trunk\\source\\beta.c",
+      "flags": [
+        "-O2"
+      ],
+      "compiler": "tdm-2",
+      "command": [
+        "D:\\Prog\\icytower_recon\\toolchain\\tdm-gcc-4.4.1-tdm-2\\bin\\gcc.exe",
+        "-O2",
+        "-g",
+        "-mfpmath=387",
+        "-DALLEGRO_STATICLINK",
+        "-Iinclude",
+        "-Ithird_party/allegro-4.4.1/include",
+        "-MMD",
+        "-MF",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-beta\\unit.d",
+        "-c",
+        "src/beta.c",
+        "-o",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-beta\\unit.o"
+      ],
+      "object": {
+        "size": 14555,
+        "sha256": "55ff4587314cc894d37298650f812a04224465668d8ed522ad01f0fa17112f68"
+      },
+      "toolchain_lock": {
+        "size": 1007801,
+        "sha256": "ab5d391a35c4ac48cb5036c52a7af1b1ce2a8775e0a2ea75d8f8794b1e4bdf19"
+      },
+      "local_inputs": {
+        "src/beta.c": {
+          "size": 2466,
+          "sha256": "c1578a0417cb0619a8460d2d2706003f45d65a8d26b657edb7b020299b89df27"
+        },
+        "include/allegro/platform/alplatf.h": {
+          "size": 152,
+          "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
+        },
+        "include/beta.h": {
+          "size": 444,
+          "sha256": "d3a56eb7e52fd740fba45123470fef278d691d4a5fe63b304358b1b6bc637a33"
+        },
+        "include/control.h": {
+          "size": 1016,
+          "sha256": "5438ea33a977d26b0d36f67481afb55d248e9372d0877734153e4827068572d7"
+        },
+        "include/csv.h": {
+          "size": 565,
+          "sha256": "6371d6f12fd58adb09ec712a1dd56460ffa51c11945b4074be32fd41f72f667e"
+        },
+        "include/custom.h": {
+          "size": 864,
+          "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+        },
+        "include/directories.h": {
+          "size": 517,
+          "sha256": "d95fb6717ad0258315ee3f5b3c197f8a341f6dd7acd4da2dbdd0797c55c2048e"
+        },
+        "include/game_services.h": {
+          "size": 432,
+          "sha256": "d869b1b3af07c79f46843cd981648e93d91b1f05ab97402019d28faa60780140"
+        },
+        "include/loadpng.h": {
+          "size": 2159,
+          "sha256": "0b7a400969ca9931d27c6af8e29d82217ef7aa1f43607ac796a65d435b3664f3"
+        },
+        "include/timer.h": {
+          "size": 370,
+          "sha256": "1ec02328f8013a59f5f26daf7e6e83cef9f34fd44aea6438c03fd0e72625af6c"
+        }
+      },
+      "candidate_toolchain_lock": {
+        "size": 512134,
+        "sha256": "dfde67e60d23238d9489b5898bd3ebf758d6ebb871721cc16804b49c93bd9b22"
+      }
+    },
     {
       "target": "game-control",
       "historical_cu": "F:\\projects\\icytower\\trunk\\source\\control.c",
@@ -82,9 +163,185 @@
           "size": 152,
           "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
         },
+        "include/beta.h": {
+          "size": 444,
+          "sha256": "d3a56eb7e52fd740fba45123470fef278d691d4a5fe63b304358b1b6bc637a33"
+        },
         "include/control.h": {
           "size": 1016,
           "sha256": "5438ea33a977d26b0d36f67481afb55d248e9372d0877734153e4827068572d7"
+        },
+        "include/csv.h": {
+          "size": 565,
+          "sha256": "6371d6f12fd58adb09ec712a1dd56460ffa51c11945b4074be32fd41f72f667e"
+        },
+        "include/custom.h": {
+          "size": 864,
+          "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+        },
+        "include/directories.h": {
+          "size": 517,
+          "sha256": "d95fb6717ad0258315ee3f5b3c197f8a341f6dd7acd4da2dbdd0797c55c2048e"
+        },
+        "include/game_services.h": {
+          "size": 432,
+          "sha256": "d869b1b3af07c79f46843cd981648e93d91b1f05ab97402019d28faa60780140"
+        },
+        "include/loadpng.h": {
+          "size": 2159,
+          "sha256": "0b7a400969ca9931d27c6af8e29d82217ef7aa1f43607ac796a65d435b3664f3"
+        },
+        "include/timer.h": {
+          "size": 370,
+          "sha256": "1ec02328f8013a59f5f26daf7e6e83cef9f34fd44aea6438c03fd0e72625af6c"
+        }
+      },
+      "candidate_toolchain_lock": {
+        "size": 512134,
+        "sha256": "dfde67e60d23238d9489b5898bd3ebf758d6ebb871721cc16804b49c93bd9b22"
+      }
+    },
+    {
+      "target": "game-csv",
+      "historical_cu": "F:\\projects\\icytower\\trunk\\source\\csv.c",
+      "flags": [
+        "-O2"
+      ],
+      "compiler": "tdm-2",
+      "command": [
+        "D:\\Prog\\icytower_recon\\toolchain\\tdm-gcc-4.4.1-tdm-2\\bin\\gcc.exe",
+        "-O2",
+        "-g",
+        "-mfpmath=387",
+        "-DALLEGRO_STATICLINK",
+        "-Iinclude",
+        "-Ithird_party/allegro-4.4.1/include",
+        "-MMD",
+        "-MF",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-csv\\unit.d",
+        "-c",
+        "src/csv.c",
+        "-o",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-csv\\unit.o"
+      ],
+      "object": {
+        "size": 5805,
+        "sha256": "d8db958a75d80e59f959f63397572b92dd7f89d45e21b4d56487122dcce18dd6"
+      },
+      "toolchain_lock": {
+        "size": 1007801,
+        "sha256": "ab5d391a35c4ac48cb5036c52a7af1b1ce2a8775e0a2ea75d8f8794b1e4bdf19"
+      },
+      "local_inputs": {
+        "src/csv.c": {
+          "size": 2555,
+          "sha256": "38c29791c0a0892e26b5e475c33b7bd773dfd3b9dd96e7f4e7cd5cac771a7ba9"
+        },
+        "include/allegro/platform/alplatf.h": {
+          "size": 152,
+          "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
+        },
+        "include/beta.h": {
+          "size": 444,
+          "sha256": "d3a56eb7e52fd740fba45123470fef278d691d4a5fe63b304358b1b6bc637a33"
+        },
+        "include/control.h": {
+          "size": 1016,
+          "sha256": "5438ea33a977d26b0d36f67481afb55d248e9372d0877734153e4827068572d7"
+        },
+        "include/csv.h": {
+          "size": 565,
+          "sha256": "6371d6f12fd58adb09ec712a1dd56460ffa51c11945b4074be32fd41f72f667e"
+        },
+        "include/custom.h": {
+          "size": 864,
+          "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+        },
+        "include/directories.h": {
+          "size": 517,
+          "sha256": "d95fb6717ad0258315ee3f5b3c197f8a341f6dd7acd4da2dbdd0797c55c2048e"
+        },
+        "include/game_services.h": {
+          "size": 432,
+          "sha256": "d869b1b3af07c79f46843cd981648e93d91b1f05ab97402019d28faa60780140"
+        },
+        "include/loadpng.h": {
+          "size": 2159,
+          "sha256": "0b7a400969ca9931d27c6af8e29d82217ef7aa1f43607ac796a65d435b3664f3"
+        },
+        "include/timer.h": {
+          "size": 370,
+          "sha256": "1ec02328f8013a59f5f26daf7e6e83cef9f34fd44aea6438c03fd0e72625af6c"
+        }
+      },
+      "candidate_toolchain_lock": {
+        "size": 512134,
+        "sha256": "dfde67e60d23238d9489b5898bd3ebf758d6ebb871721cc16804b49c93bd9b22"
+      }
+    },
+    {
+      "target": "game-directories",
+      "historical_cu": "F:\\projects\\icytower\\trunk\\source\\directories.c",
+      "flags": [
+        "-O2"
+      ],
+      "compiler": "tdm-2",
+      "command": [
+        "D:\\Prog\\icytower_recon\\toolchain\\tdm-gcc-4.4.1-tdm-2\\bin\\gcc.exe",
+        "-O2",
+        "-g",
+        "-mfpmath=387",
+        "-DALLEGRO_STATICLINK",
+        "-Iinclude",
+        "-Ithird_party/allegro-4.4.1/include",
+        "-MMD",
+        "-MF",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-directories\\unit.d",
+        "-c",
+        "src/directories.c",
+        "-o",
+        "D:\\Prog\\icytower_recon\\build\\integration\\tdm-2\\game-directories\\unit.o"
+      ],
+      "object": {
+        "size": 12440,
+        "sha256": "942894497d1660a9970abd888784890d7bf210ff275db02347a8d71b09d17e58"
+      },
+      "toolchain_lock": {
+        "size": 1007801,
+        "sha256": "ab5d391a35c4ac48cb5036c52a7af1b1ce2a8775e0a2ea75d8f8794b1e4bdf19"
+      },
+      "local_inputs": {
+        "src/directories.c": {
+          "size": 1115,
+          "sha256": "80dafb8a613331d8e165fc450295ea2b41216b884886d4c3d326bd2e277b1e2c"
+        },
+        "include/allegro/platform/alplatf.h": {
+          "size": 152,
+          "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
+        },
+        "include/beta.h": {
+          "size": 444,
+          "sha256": "d3a56eb7e52fd740fba45123470fef278d691d4a5fe63b304358b1b6bc637a33"
+        },
+        "include/control.h": {
+          "size": 1016,
+          "sha256": "5438ea33a977d26b0d36f67481afb55d248e9372d0877734153e4827068572d7"
+        },
+        "include/csv.h": {
+          "size": 565,
+          "sha256": "6371d6f12fd58adb09ec712a1dd56460ffa51c11945b4074be32fd41f72f667e"
+        },
+        "include/custom.h": {
+          "size": 864,
+          "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+        },
+        "include/directories.h": {
+          "size": 517,
+          "sha256": "d95fb6717ad0258315ee3f5b3c197f8a341f6dd7acd4da2dbdd0797c55c2048e"
+        },
+        "include/game_services.h": {
+          "size": 432,
+          "sha256": "d869b1b3af07c79f46843cd981648e93d91b1f05ab97402019d28faa60780140"
         },
         "include/loadpng.h": {
           "size": 2159,
@@ -140,9 +397,29 @@
           "size": 152,
           "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
         },
+        "include/beta.h": {
+          "size": 444,
+          "sha256": "d3a56eb7e52fd740fba45123470fef278d691d4a5fe63b304358b1b6bc637a33"
+        },
         "include/control.h": {
           "size": 1016,
           "sha256": "5438ea33a977d26b0d36f67481afb55d248e9372d0877734153e4827068572d7"
+        },
+        "include/csv.h": {
+          "size": 565,
+          "sha256": "6371d6f12fd58adb09ec712a1dd56460ffa51c11945b4074be32fd41f72f667e"
+        },
+        "include/custom.h": {
+          "size": 864,
+          "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+        },
+        "include/directories.h": {
+          "size": 517,
+          "sha256": "d95fb6717ad0258315ee3f5b3c197f8a341f6dd7acd4da2dbdd0797c55c2048e"
+        },
+        "include/game_services.h": {
+          "size": 432,
+          "sha256": "d869b1b3af07c79f46843cd981648e93d91b1f05ab97402019d28faa60780140"
         },
         "include/loadpng.h": {
           "size": 2159,

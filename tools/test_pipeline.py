@@ -50,6 +50,55 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(r['candidate_text_logical_size'],750)
         self.assertFalse(r['object_match'])
 
+    def test_complete_directories_text_and_data(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],7)
+        self.assertEqual(r['function_matches'],7)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        self.assertTrue(all(s['content_equal'] for s in r['initialized_data_comparison']))
+        self.assertFalse(r['object_match'])
+
+    def test_complete_beta_text(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\beta.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],7)
+        self.assertEqual(r['function_matches'],7)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        loader=next(f for f in r['functions'] if f['name']=='load_plain_data')
+        self.assertEqual(loader['candidate_size'],loader['original_size'])
+
+    def test_csv_duplicate_string_uses_coff_owner_not_tested_operand(self):
+        obj=ROOT/'build/experiments/tdm-2/game-csv/O2/unit.o'
+        original=ROOT/'assets/icytower15.exe'
+        cu='F:\\projects\\icytower\\trunk\\source\\csv.c'
+        r=compare(obj,cu,original,OBJDUMP)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        data=r['initialized_data_comparison'][0]
+        self.assertGreater(data['matching_location_count'],1)
+        self.assertIsNotNone(data['coff_contribution'])
+        # Move only CSV's COFF data anchor to another identical rb string.
+        # Original instruction bytes stay unchanged: masked equality is not proof.
+        b=Binary(original)
+        index=data['coff_contribution']['symbol_index']
+        contents=bytearray(original.read_bytes())
+        symbol=b.by_index[index]
+        struct.pack_into('<I',contents,b.header['symbol_table_pointer']+index*18+8,symbol['value']-5)
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+            altered=Path(folder)/'altered.exe'
+            altered.write_bytes(contents)
+            wrong=compare(obj,cu,altered,OBJDUMP)
+        self.assertEqual(wrong['masked_matches'],6)
+        self.assertEqual(wrong['function_matches'],5)
+        self.assertFalse(wrong['whole_text_contribution_equal'])
+
+    def test_integration_layout_preserves_first_mismatch(self):
+        r=read_json(ROOT/'docs/experiments/integration-layout.json')
+        self.assertEqual(r['build_report'],identity(ROOT/'build/integration/tdm-2/build.json'))
+        first=r['first_layout_mismatch']
+        self.assertEqual(r['natural_game_address_extent_prefix_bytes'],2576)
+        self.assertFalse(first['address_equal'])
+
     def test_wrong_relocation_target_is_rejected_despite_masked_equality(self):
         def mutate(data,b):
             sec=b.sections[0]

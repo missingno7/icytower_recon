@@ -18,8 +18,15 @@ Current results:
 - All 25 historical game source filenames generated; 18 GAME, 5
   VENDORED_UPSTREAM (two exact revisions unresolved), and 2 AMBIGUOUS.
   Three loadpng source files are populated verbatim from Allegro 4.4.1.
-- Complete game control.c and timer.c: all 18 functions and their entire
-  902-byte text contributions match, including padding and resolved relocations.
+- Complete game beta.c, control.c and timer.c: all 25 functions and their entire
+  2043-byte text contributions match, including padding and resolved relocations.
+- custom.c has all ten source implementations, with nine exact function bodies
+  at -O2. `load_character_bmp` still differs; custom is not integrated yet.
+- directories.c: all seven functions and the complete 307-byte text contribution
+  match, and the CU is included in the synthetic integration build.
+- csv.c: all six functions and its 680-byte text contribution match. Its
+  upstream ownership remains ambiguous and separate from game-owned totals.
+  The natural beta/control/csv address-and-extent prefix spans 2576 bytes.
 - All 114 historical Allegro core CUs build into a static library. The recovered
   game CUs link against it with a synthetic main and no fallback code.
 - Allegro 4.4.1 timer.c and color.c: complete text contributions match at
@@ -27,13 +34,14 @@ Current results:
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Nine validation tests include wrong relocation targets, altered code and
+- Thirteen validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),
 [blockers](docs/blockers.json), [proof levels](docs/proof-levels.md), and
 [the timer experiment](docs/timer-experiment.md),
-[control recovery](docs/control-experiment.md), and
+[control recovery](docs/control-experiment.md), [beta recovery](docs/beta-experiment.md),
+[custom recovery](docs/custom-experiment.md), and
 [runtime selection and integration](docs/runtime-selection.md). Measurements and full
 symbol/relocation records are retained in [docs/experiments](docs/experiments).
 
@@ -59,15 +67,17 @@ normal compilation has no dependency on the research repository or assets.
 Normal compilation of complete CUs:
 
 ```powershell
-python tools/build.py game-control game-timer allegro-timer allegro-color allegro-blit --compiler tdm-2
+python tools/build.py game-beta game-control game-csv game-timer allegro-timer allegro-color allegro-blit --compiler tdm-2
 ```
 
 Verification and experiments (these explicitly read the original fixture):
 
 ```powershell
 python tools/census.py --objdump C:\msys64\mingw64\bin\objdump.exe
-python tools/experiment.py game-control game-timer allegro-timer allegro-color allegro-blit --matrix --compiler tdm-2
+python tools/experiment.py game-beta game-control game-csv game-timer allegro-timer allegro-color allegro-blit --matrix --compiler tdm-2
 python tools/link_probe.py --compiler tdm-2
+python tools/integration_link.py --compiler tdm-2
+python tools/verify_integration.py
 python tools/test_pipeline.py
 python tools/progress.py
 python tools/audit.py
