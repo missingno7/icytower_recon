@@ -88,25 +88,22 @@ class PipelineTests(unittest.TestCase):
                      'switchedFromProgram','switchedToProgram','clickedCloseButton',
                      'is_custom_replay','show_name','datafile_callback_slow',
                      'datafile_callback','color_map_callback','syncProfileFromOptions',
-                     'startMenuMusic','play_menu_select','play_menu_move','stopMenuMusic',
+                     'startMenuMusic','stopMenuMusic',
                      'replaceBadCharacters','pwd_garble_string','line_intersect','WinMain',
-                     'set_current_avatar','for_each_directory','play_jump_sound'):
+                     'set_current_avatar','for_each_directory'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
                              10 if name in ('get_version_str','get_demo','get_controls','ok_to_play')
                              else 66 if name=='is_custom_replay' else 36 if name=='show_name'
                              else 58 if name=='syncProfileFromOptions'
-                             else 59 if name=='startMenuMusic'
-                             else 37 if name in ('play_menu_select','play_menu_move')
-                             else 25 if name=='stopMenuMusic'
+                             else 59 if name=='startMenuMusic' else 25 if name=='stopMenuMusic'
                              else 125 if name=='replaceBadCharacters'
                              else 52 if name=='pwd_garble_string'
                              else 302 if name=='line_intersect'
                              else 50 if name=='WinMain'
                              else 96 if name=='set_current_avatar'
                              else 109 if name=='for_each_directory'
-                             else 141 if name=='play_jump_sound'
                              else 33 if name=='datafile_callback_slow'
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 
@@ -138,6 +135,7 @@ class PipelineTests(unittest.TestCase):
         exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
         jump=next(f for f in exact['functions'] if f['name']=='play_jump_sound')
         relocation=jump['relocations'][0]
+        self.assertTrue(relocation['equal'])
         b=Binary(obj)
         section=next(s for s in b.sections if s['index']==relocation['section'])
         with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
@@ -150,8 +148,7 @@ class PipelineTests(unittest.TestCase):
             altered.write_bytes(contents)
             wrong=compare(altered,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
         jump=next(f for f in wrong['functions'] if f['name']=='play_jump_sound')
-        self.assertTrue(jump['masked_equal'])
-        self.assertFalse(jump['relocation_resolved_equal'])
+        self.assertFalse(jump['relocations'][0]['equal'])
         self.assertNotEqual(jump['status'],'FUNCTION_MATCH')
 
     def test_complete_directories_text_and_data(self):

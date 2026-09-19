@@ -42,7 +42,9 @@ Current results:
   `END_OF_MAIN()` macro emits the exact 50-byte `WinMain` wrapper.
   `set_current_avatar` also matches its complete 96-byte profile-avatar scan,
   `for_each_directory` matches its 109-byte Allegro enumeration wrapper, and
-  `play_jump_sound` matches its complete 141-byte threshold selector.
+  `play_sound` plus its 141-byte `play_jump_sound` threshold selector are
+  recovered source bodies whose direct same-CU call displacements remain
+  layout-dependent in this partial build.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.

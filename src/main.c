@@ -61,7 +61,9 @@ typedef struct Tcharacter {
 } Tcharacter;
 
 typedef struct Tplayer {
-    unsigned char reserved0[0x18];
+    double x;
+    double y;
+    double sx;
     double sy;
     unsigned char reserved1[0x1c];
     int frame;
@@ -85,6 +87,9 @@ int curr_char;
 int play_char;
 Tplayer *ply[1000];
 int player_id;
+int any11;
+int fast_forward;
+int fast_fast_forward;
 
 char *get_version_str(void)
 {
@@ -161,7 +166,27 @@ void startMenuMusic(void)
         play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
 }
 
-void play_sound(SAMPLE *sound, int randomized, int panned);
+#ifndef ICYTOWER_SYNTHETIC_LINK
+void play_sound(SAMPLE *s, int pitch, int please_pan)
+{
+    int pan;
+    int pit;
+    if (itrcheck) return;
+    if (pitch) pit=new_rand()%300+925;
+    else pit=1000;
+    if (!s || !options.snd_volume) return;
+    if (please_pan) {
+        pan=(int)((float)(ply[player_id]->x/640.0f)*192.0f+32.0f);
+        any11=pan;
+    }
+    else pan=128;
+    if (fast_forward) pit<<=1;
+    if (fast_fast_forward) pit<<=1;
+    play_sample(s,options.snd_volume,pan,pit,0);
+}
+#else
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+#endif
 
 void play_menu_select(void)
 {

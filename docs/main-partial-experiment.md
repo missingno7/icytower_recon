@@ -103,12 +103,23 @@ a layout-dependent displacement, so it remains `DIFFER` without exact credit.
 directory into its DWARF-sized local buffer, appends `"*"`, and invokes the
 named Allegro `for_each_file_ex` callback API with directory attributes.
 
-`play_jump_sound` matches its full 141-byte body. It selects one of the three
-typed `custom.jump_sound` entries from the player vertical-speed thresholds
-`-22.0f` and `-15.0f`, then calls the declared game sound helper. The first
-threshold is repeated in original read-only data, so the verifier anchors it
-through the unique succeeding two-float sequence; a shifted relocation is
-covered by a mutation regression.
+`play_sound` recovers its full 215-byte source body. It preserves the
+`itrcheck` gate, randomized pitch, sound-volume guard, player-x pan conversion,
+fast-forward pitch doubling, and Allegro `play_sample` call. Every symbolic
+reference and instruction sequence matches, but its direct call to the now
+recovered same-CU `new_rand` body has a source-layout-dependent displacement,
+so the partial build records it as `DIFFER`.
+
+`play_jump_sound` similarly recovers its full 141-byte threshold selector. It
+selects one of the three typed `custom.jump_sound` entries from the player
+vertical-speed thresholds `-22.0f` and `-15.0f`, then calls recovered
+`play_sound`. The first threshold is repeated in original read-only data, so
+the verifier anchors it through the unique succeeding two-float sequence; a
+shifted relocation is covered by a mutation regression. Its direct same-CU
+sound call remains layout-dependent in this partial build, so it is `DIFFER`.
+The two 37-byte menu-sound selectors now make the same direct call, so their
+otherwise identical bodies are likewise recorded as `DIFFER` until the full
+translation-unit layout is recovered.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
