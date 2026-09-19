@@ -29,3 +29,10 @@ toggles boolean options, captures control keys, and handles profile actions.
 The original return-code table and menu data tables establish these actions.
 The candidate is 1,034 bytes against the historical 1,120-byte function and
 is recorded as `DIFFER`.
+
+`key_to_str` is reconstructed from its complete 108-case scan-code dispatch
+at `0x416a9c`. It copies the original key labels and uses `"undefined"` for
+all unlisted scan codes; scan code 18 intentionally produces lower-case `"r"`,
+and code 105 is the separate semicolon case. The historical cases use numeric
+scan codes so their observed 1.5.1 layout remains independent of the installed
+Allegro headers.
