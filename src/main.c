@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <pthread.h>
 #include <allegro.h>
+#include "loadpng.h"
 #include "control.h"
 #include "custom.h"
 #include "directories.h"
@@ -680,6 +681,44 @@ int rebuild_profile_list(Tavailable_profile **profs)
     if (profs)
         *profs = profiles;
     return numProfiles;
+}
+
+BITMAP *loadScrambled(char *fileName)
+{
+    int fileSize;
+    char *data;
+    FILE *fp;
+    char *password;
+    int pLen;
+    int i;
+    int j;
+    char *newFile;
+    PALETTE pal;
+    BITMAP *png;
+
+    fileSize = file_size_ex(fileName);
+    data = malloc(fileSize);
+    if (!data)
+        return NULL;
+    fp = fopen(fileName, "rb");
+    if (!fp)
+        return NULL;
+    fread(data, fileSize, 1, fp);
+    fclose(fp);
+    password = "%2hJd8#9NsM/";
+    pLen = strlen(password);
+    for (i = 0; i < fileSize; i += pLen)
+        for (j = 0; j < pLen; j++)
+            data[i + j] ^= password[j];
+    newFile = "data/com/temp.dat";
+    fp = fopen(newFile, "wb");
+    if (!fp)
+        return NULL;
+    fwrite(data, fileSize, 1, fp);
+    fclose(fp);
+    png = load_png(newFile, pal);
+    delete_file(newFile);
+    return png;
 }
 
 /* DWARF signature for the remaining historical main body. */

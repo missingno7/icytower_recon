@@ -95,6 +95,15 @@ Its code and all non-literal transfer targets match, while the initial handle
 literal has two original read-only-data occurrences; it remains
 `CODEGEN_SIMILAR` under the same proof policy.
 
+`loadScrambled` reconstructs the complete 247-byte PNG decode bridge. It
+loads the source into a heap buffer, XORs each twelve-byte group with the
+historical password, writes the temporary `data/com/temp.dat`, loads it with
+the typed PNG reader and palette, and deletes the temporary file. DWARF
+establishes all ten locals and the disassembly fixes the password loop and
+error paths. The bytecode and every named or uniquely resolved literal target
+match; the original contains repeated `"rb"` mode strings, so the remaining
+literal relocation leaves it `CODEGEN_SIMILAR`.
+
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
 subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
