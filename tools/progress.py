@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
+    for target in ['game-beta','game-control','game-csv','game-httpget','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -30,7 +30,7 @@ def main():
     summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
     recovery={}
     recovery_sources={'game-fld-adspot':'src/fld_adspot.c','game-game-data':'src/game_data.c'}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-httpget','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer']:
         report=reports[target]
         recovery[recovery_sources.get(target,'src/'+target[5:]+'.c')]={
             'state':'RECOVERED_EXACT_FUNCTIONS' if report['function_matches']==report['functions_total'] else 'PARTIALLY_MATCHED',
@@ -72,7 +72,7 @@ def main():
         'unknown_game_text_bytes':sum(f['size'] for f in game_functions)-sum(f['original_size'] for f in matched),
         'ambiguous_functions_not_in_game_denominator':16,'ambiguous_text_bytes_not_in_game_denominator':2998,
         'ambiguous_cus_complete_text_equal':int(reports['game-csv']['whole_text_contribution_equal']),
-        'ambiguous_functions_recovered':reports['game-csv']['function_matches'],
+        'ambiguous_functions_recovered':reports['game-csv']['function_matches']+reports['game-httpget']['function_matches'],
         'ambiguous_complete_cu_text_bytes':reports['game-csv']['original_cu_span'] if reports['game-csv']['whole_text_contribution_equal'] else 0,
         'known_upstream_game_tree_files_populated':3,
         'upstream_library_cus_identified':137,'upstream_library_cu_scope':'115 Allegro (including 9 data-only) plus 22 Xiph; excludes CRT', 'allegro_core_cus_built':len(library['units']),'upstream_library_cus_reproduced':0,

@@ -14,7 +14,7 @@ from build import COMPILERS, compile_target, verify_inputs
 
 
 GAME_TARGETS = [
-    'game-beta', 'game-control', 'game-csv', 'game-directories', 'game-timer',
+    'game-beta', 'game-control', 'game-csv', 'game-httpget', 'game-directories', 'game-timer',
     'game-stars', 'game-options', 'game-replay', 'game-main-partial',
     'game-map', 'game-scroller', 'game-particle', 'game-fld-adspot',
     'game-hisc', 'game-menu', 'game-game-data', 'game-profile', 'game-custom',
@@ -52,7 +52,7 @@ def main(compiler='tdm-2'):
         tc / 'bin/gcc.exe', '-O2', '-g', '-mfpmath=387', '-DALLEGRO_STATICLINK',
         '-Iinclude', '-Ithird_party/allegro-4.4.1/include', '-mwindows', *objects,
         library, '-lkernel32', '-luser32', '-lgdi32', '-lcomdlg32', '-lole32',
-        '-ldinput', '-lddraw', '-ldxguid', '-lwinmm', '-ldsound', '-lpthread', '-lm',
+        '-ldinput', '-lddraw', '-ldxguid', '-lwinmm', '-ldsound', '-lws2_32', '-lpthread', '-lm',
         '-Wl,-Map,' + str(link_map), '-Wl,--cref', '-o', exe,
     ]
     env = os.environ.copy()

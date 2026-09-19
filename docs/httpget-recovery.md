@@ -1,9 +1,10 @@
 # `httpget.c` recovery map
 
 `src/httpget.c` remains recovery-owned. The historical compilation unit spans
-`0x405890` through `0x4061af` in the original executable. Its source has not
-yet been promoted into the ordinary build; this document records the
-oracle-derived map needed to do that work without importing a substitute HTTP
+`0x405890` through `0x4061af` in the original executable. Three independently
+recovered functions now compile in its ordinary partial-object target; the
+remaining source is deliberately absent. This document records the
+oracle-derived map needed to continue without importing a substitute HTTP
 implementation.
 
 The public response is a 20-byte allocation with this layout:
@@ -53,3 +54,10 @@ This map gives the next implementation a closed evidence boundary: recover the
 entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
 the original program code.
+
+The initial `game-httpget` TDM-2 build verifies three of the ten historical
+functions as `FUNCTION_MATCH`: `getSocketError` (12 bytes), `HTTPHead` (27),
+and `HTTPGet` (27). The comparison resolves the Winsock tail jump, each unique
+method literal, and both direct calls to `HTTPRequest` independently. Its
+68-byte partial text cannot establish a complete-CU match; the full record is
+in `docs/experiments/game-httpget-O2.json`.

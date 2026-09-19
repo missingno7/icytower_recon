@@ -25,6 +25,7 @@ TARGETS={
     'game-directories': {'source':'src/directories.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\directories.c','default':'-O2'},
     'game-custom': {'source':'src/custom.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\custom.c','default':'-O2'},
     'game-csv': {'source':'src/csv.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\csv.c','default':'-O2'},
+    'game-httpget': {'source':'src/httpget.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\httpget.c','default':'-O2'},
     'game-beta': {'source':'src/beta.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\beta.c','default':'-O2'},
     'game-control': {'source':'src/control.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\control.c','default':'-O2'},
     'game-timer': {'source':'src/timer.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\timer.c','default':'-O2'},
