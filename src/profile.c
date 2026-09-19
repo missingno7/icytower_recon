@@ -5,7 +5,7 @@
  * DIFFER: generate_profile_checksum @ 0x00418a14, 112 bytes
  * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
  * DIFFER: get_rank @ 0x00418ad0, 82 bytes
- * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
+ * DIFFER: set_next_rank_message @ 0x00418b24, 431 bytes
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
  * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
  * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
@@ -246,4 +246,34 @@ int draw_buffer(void *bmp, char *buffer, int x, int y)
         buffer++;
     }
     return pos;
+}
+
+void set_next_rank_message(char *buf, Tprofile_rank *p)
+{
+    int current_rank;
+    int next_rank;
+    int next_floor;
+    int next_combo;
+    int next_nml;
+    int next_ccc;
+
+    buf[0] = 0;
+    current_rank = get_rank_id(p);
+    if (current_rank == 11)
+        return;
+    next_rank = current_rank + 1;
+    next_floor = rankFloors[next_rank];
+    next_combo = rankCombos[next_rank];
+    next_nml = rankNMLs[next_rank];
+    next_ccc = rankCCCs[next_rank];
+    if (next_floor > p->score && next_floor)
+        sprintf(buf, "%s\n - Get to floor %d!", buf, next_floor);
+    if (next_combo > p->combo && next_combo)
+        sprintf(buf, "%s\n - Make a %d floor combo!", buf, next_combo);
+    if (next_ccc > p->no_combo_lost && next_ccc)
+        sprintf(buf, "%s\n - Reach floor %d before 1st Hurry Up!", buf,
+                next_ccc);
+    if (next_nml > p->ccc && next_nml)
+        sprintf(buf, "%s\n - Reach floor %d without combos!", buf,
+                next_nml);
 }

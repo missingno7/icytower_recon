@@ -15,3 +15,5 @@ draw_buffer is behaviorally recovered. It splits newline-terminated lines into a
 profile_data_page_advanced is behaviorally recovered. It formats Clock Challenge counts and averages for all populated entries, followed by each named earned reward. Its candidate is recorded as `DIFFER` because its average-loop register allocation differs from the historical body.
 
 profile_data_page_basic is an exact 637-byte match. It formats score, floor, combo, no-combo, and jump statistics from the recovered profile layout. Its cold no-combo branch is represented as one source block, matching the historical compiler layout.
+
+set_next_rank_message is behaviorally recovered. It chooses the next rank and updates the supplied buffer with the highest-priority unmet nonzero floor, combo, CCC, or no-combo-floor requirement. Its 345-byte candidate retains a different inline rank-scan and branch layout from the 431-byte historical body, so it is recorded as `DIFFER`.
