@@ -14,7 +14,7 @@
  * UNKNOWN: profile_data_page_general @ 0x004196a8, 1091 bytes
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
- * UNKNOWN: load_profile @ 0x0041a7ec, 188 bytes
+ * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
  * UNKNOWN: delete_profile @ 0x0041a8a8, 222 bytes
  * UNKNOWN: create_profile @ 0x0041a988, 823 bytes
  * UNKNOWN: select_profile @ 0x0041acc0, 3070 bytes
@@ -276,4 +276,39 @@ void set_next_rank_message(char *buf, Tprofile_rank *p)
     if (next_nml > p->ccc && next_nml)
         sprintf(buf, "%s\n - Reach floor %d without combos!", buf,
                 next_nml);
+}
+
+typedef struct Tprofile_load {
+    unsigned char before_checksum[0x28];
+    int checksum;
+    unsigned char remainder[0x550 - 0x2c];
+} Tprofile_load;
+
+extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
+                                       const char *profile);
+extern void *get_controls(void);
+extern void load_control(void *control, void *fp);
+
+Tprofile_load *load_profile(char *handle)
+{
+    char file[1024];
+    void *fp;
+    Tprofile_load *p;
+    int cs;
+
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itp", file, handle);
+    fp = fopen(file, "rb");
+    if (!fp)
+        return 0;
+    p = malloc(0x550);
+    fread(p, 0x550, 1, fp);
+    load_control(get_controls(), fp);
+    fclose(fp);
+    cs = generate_profile_checksum(p);
+    if (cs != p->checksum) {
+        free(p);
+        p = 0;
+    }
+    return p;
 }

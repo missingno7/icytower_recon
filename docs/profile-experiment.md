@@ -17,3 +17,5 @@ profile_data_page_advanced is behaviorally recovered. It formats Clock Challenge
 profile_data_page_basic is an exact 637-byte match. It formats score, floor, combo, no-combo, and jump statistics from the recovered profile layout. Its cold no-combo branch is represented as one source block, matching the historical compiler layout.
 
 set_next_rank_message is behaviorally recovered. It chooses the next rank and updates the supplied buffer with the highest-priority unmet nonzero floor, combo, CCC, or no-combo-floor requirement. Its 345-byte candidate retains a different inline rank-scan and branch layout from the 431-byte historical body, so it is recorded as `DIFFER`.
+
+load_profile is behaviorally recovered as a 188-byte candidate, equal in size and control-flow shape to the historical function. It creates the profile path, reads the 0x550-byte profile plus controls, checks the stored checksum at offset 0x28, and frees rejected data. The only comparison differences are the two unverified read-only-data addresses for its locally reconstructed pathname and file-mode literals, so the routine is recorded as `DIFFER`.
