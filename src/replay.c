@@ -11,7 +11,7 @@
  * EXACT: update_file_list @ 0x0041bda0, 184 bytes
  * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
  * DIFFER: create_replay @ 0x0041cce8, 254 bytes
- * UNKNOWN: load_replay @ 0x0041cde8, 1136 bytes
+ * DIFFER: load_replay @ 0x0041cde8, 1136 bytes
  * UNKNOWN: replay_selector @ 0x0041d258, 2845 bytes
  * UNKNOWN: save_replay @ 0x0041dd78, 1227 bytes
  * UNKNOWN: get_replay_property @ 0x0041e244, 1147 bytes
@@ -51,6 +51,7 @@ extern int get_replay_property(const char *file_name, int property);
 extern int for_each_file_ex(const char *pattern, int in_attrib, int out_attrib,
                             int (*callback)(const char *, int, void *), void *param);
 extern int add_itr_file(const char *filename, int attrib, void *param);
+extern int my_strcmp(const void *c, const void *d);
 extern void qsort(void *base, size_t count, size_t size,
                   int (*compare)(const void *, const void *));
 extern char *get_filename(const char *path);
@@ -99,14 +100,11 @@ typedef struct Treplay {
 } Treplay;
 
 extern void free(void *ptr);
-
-void destroy_replay(Treplay *r)
-{
-    if (r) {
-        if (r->data) free(r->data);
-        free(r);
-    }
-}
+extern void *pack_fopen(const char *filename, const char *mode);
+extern long pack_fread(void *buffer, long bytes, void *fp);
+extern void pack_fclose(void *fp);
+extern int memcmp(const void *a, const void *b, size_t size);
+extern void log2file(const char *format, ...);
 
 int calc_replay_checksum_131(Treplay *r)
 {
@@ -155,6 +153,130 @@ int calc_replay_checksum(Treplay *r)
     return hash(sum);
 }
 
+void destroy_replay(Treplay *r)
+{
+    if (r) {
+        if (r->data) free(r->data);
+        free(r);
+    }
+}
+
+void update_file_list(char *path)
+{
+    int i;
+    char full_path[1024];
+
+    for (i = 0; i < num_itr_files; i++) {
+        free(itr_file_list[i].full_path);
+        itr_file_list[i].parent = 0;
+        itr_file_list[i].directory = 0;
+    }
+    num_itr_files = 0;
+    sprintf(full_path, "%s/*", path);
+    for_each_file_ex(full_path, 0, 0, add_itr_file, 0);
+    qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);
+}
+
+Treplay *create_replay(int size)
+{
+    Treplay *r;
+    int i;
+
+    r = malloc(sizeof(Treplay));
+    if (!r)
+        return 0;
+    strncpy(r->header, "ITR140", 6);
+    r->comment[0] = 0;
+    r->size = size;
+    r->combo = 0;
+    r->floor = 0;
+    r->score = 0;
+    for (i = 0; i < 32; i++)
+        r->name[i] = 0;
+    for (i = 0; i < 32; i++)
+        r->name[i] = 0;
+    strcpy(r->name, "replay");
+    strcpy(r->date, "no date");
+    r->data = malloc(size * sizeof(Treplay_data) + 32);
+    if (!r->data) {
+        free(r);
+        return 0;
+    }
+    for (i = 0; i < size; i++) {
+        r->data[i].type = 0;
+        r->data[i].value = 0;
+    }
+    return r;
+}
+
+Treplay *load_replay(char *filename)
+{
+    void *pf;
+    Treplay r_temp;
+    Treplay *r;
+    int i;
+    int sum;
+    int cs;
+
+    pf = pack_fopen(filename, "rb");
+    if (!pf)
+        return 0;
+    pack_fread(r_temp.header, 6, pf);
+    pack_fread(&r_temp.size, 4, pf);
+    pack_fclose(pf);
+    if (memcmp(r_temp.header, "ITR140", 6))
+        return 0;
+    r = create_replay(r_temp.size);
+    if (!r)
+        return 0;
+    pf = pack_fopen(filename, "rb");
+    if (!pf)
+        goto error;
+    pack_fread(r->header, 6, pf);
+    pack_fread(&r->size, 4, pf);
+    pack_fread(r->name, 32, pf);
+    pack_fread(r->date, 32, pf);
+    pack_fread(&r->score, 4, pf);
+    pack_fread(&r->floor, 4, pf);
+    pack_fread(&r->combo, 4, pf);
+    pack_fread(&r->no_combo_top_floor, 4, pf);
+    pack_fread(&r->biggest_lost_combo, 4, pf);
+    for (i = 0; i < 5; i++)
+        pack_fread(&r->ccc[i], 4, pf);
+    for (i = 0; i < 5; i++)
+        pack_fread(&r->jc[i], 4, pf);
+    pack_fread(&r->floor_shrink, 4, pf);
+    pack_fread(&r->floor_size, 4, pf);
+    pack_fread(&r->start_speed, 4, pf);
+    pack_fread(&r->speed_increase, 4, pf);
+    pack_fread(&r->gravity, 4, pf);
+    pack_fread(&r->rejump, 4, pf);
+    pack_fread(&r->random_seed, 4, pf);
+    pack_fread(r->comment, 42, pf);
+    pack_fread(&r->checksum, 4, pf);
+    pack_fread(&r->tc_posts, 4, pf);
+    for (i = 0; i < 100; i++) {
+        pack_fread(&r->tc_c_data[i], 4, pf);
+        pack_fread(&r->tc_q_data[i], 4, pf);
+        pack_fread(&r->tc_t_data[i], 4, pf);
+        pack_fread(&r->tc_s_data[i], 4, pf);
+        pack_fread(&r->tc_f_data[i], 4, pf);
+    }
+    for (i = 0; i < r->size; i++) {
+        pack_fread(&r->data[i].value, 4, pf);
+        pack_fread(&r->data[i].type, 1, pf);
+    }
+    pack_fclose(pf);
+    cs = r->checksum;
+    r->checksum = 0;
+    sum = calc_replay_checksum(r);
+    if (cs == sum)
+        return r;
+    log2file("Checksum failed for %s: got %d, expected %d", filename, sum, cs);
+error:
+    destroy_replay(r);
+    return 0;
+}
 int my_strcmp(const void *c, const void *d)
 {
     Treplay_post *a;
@@ -176,22 +298,6 @@ int my_strcmp(const void *c, const void *d)
         return 1;
     }
     return stricmp(a->full_path, b->full_path);
-}
-
-void update_file_list(char *path)
-{
-    int i;
-    char full_path[1024];
-
-    for (i = 0; i < num_itr_files; i++) {
-        free(itr_file_list[i].full_path);
-        itr_file_list[i].parent = 0;
-        itr_file_list[i].directory = 0;
-    }
-    num_itr_files = 0;
-    sprintf(full_path, "%s/*", path);
-    for_each_file_ex(full_path, 0, 0, add_itr_file, 0);
-    qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);
 }
 
 int add_itr_file(const char *filename, int attrib, void *param)
@@ -233,36 +339,4 @@ bad_replay:
         goto done;
     itr_file_list[num_itr_files].version = -1000 - res;
     goto copy_replay;
-}
-
-Treplay *create_replay(int size)
-{
-    Treplay *r;
-    int i;
-
-    r = malloc(sizeof(Treplay));
-    if (!r)
-        return 0;
-    strncpy(r->header, "ITR140", 6);
-    r->comment[0] = 0;
-    r->size = size;
-    r->combo = 0;
-    r->floor = 0;
-    r->score = 0;
-    for (i = 0; i < 32; i++)
-        r->name[i] = 0;
-    for (i = 0; i < 32; i++)
-        r->name[i] = 0;
-    strcpy(r->name, "replay");
-    strcpy(r->date, "no date");
-    r->data = malloc(size * sizeof(Treplay_data) + 32);
-    if (!r->data) {
-        free(r);
-        return 0;
-    }
-    for (i = 0; i < size; i++) {
-        r->data[i].type = 0;
-        r->data[i].value = 0;
-    }
-    return r;
 }

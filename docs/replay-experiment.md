@@ -18,6 +18,13 @@ name/date/comment bytes, and packed input records, before applying the local
 hash mixer. The `-O2` candidate is 656 bytes; its arithmetic scheduling differs
 from the historical body, so the inventory records it as `DIFFER`.
 
+`load_replay` now reconstructs the ITR140 reader. It opens once to validate the
+six-byte header and allocate the event buffer from its size, then reopens and
+loads every persisted field in historical wire order. It rejects invalid headers,
+failed second opens, and checksum mismatches after logging the stored and
+computed values. The candidate is the original 1,136-byte length but remains
+`DIFFER` because its setup and call scheduling differ.
+
 `my_strcmp` now recovers the 24-byte replay-post layout and comparator behavior: directory entries rank ahead of replay files, file rows use the selected score/floor/combo property when sorting modes 2–4 are active, and the remaining names compare case-insensitively. Its candidate is 127 bytes against the historical 128 because the compiler places the directory-mismatch return path differently; the comparison inventory records it as `DIFFER`.
 
 `update_file_list` matches its complete 184-byte body. It frees and clears all existing 24-byte posts, resets the independently typed 1,024-entry list, scans the original `"%s/*"` pattern through `add_itr_file`, and sorts with `my_strcmp`. Every data, string, callback, and call relocation resolves exactly.
