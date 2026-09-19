@@ -102,7 +102,7 @@ void add_floor(Tmap *m)
     }
 
     if ((m->room[31].level-1)%50==0)
-        m->room[31].sign=m->room[31].level/10;
+        m->room[31].sign=m->room[31].level/5;
     else
         m->room[31].sign=0;
 }

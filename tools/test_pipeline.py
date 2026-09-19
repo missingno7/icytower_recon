@@ -179,7 +179,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(floor['candidate_size'],107)
         add_floor=next(f for f in r['functions'] if f['name']=='add_floor')
         self.assertEqual(add_floor['status'],'DIFFER')
-        self.assertEqual(add_floor['candidate_size'],593)
+        self.assertEqual(add_floor['candidate_size'],592)
 
     def test_complete_beta_text(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
