@@ -7,7 +7,7 @@
  * DIFFER: get_rank @ 0x00418ad0, 82 bytes
  * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
- * UNKNOWN: draw_buffer @ 0x004191c8, 185 bytes
+ * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
  * UNKNOWN: profile_data_page_advanced @ 0x00419284, 332 bytes
  * UNKNOWN: profile_data_page_basic @ 0x004193d0, 637 bytes
  * DIFFER: profile_data_page_extra @ 0x00419650, 85 bytes (CODEGEN_SIMILAR)
@@ -100,4 +100,43 @@ char *profile_data_page_extra(Tprofile_extra *p)
     sprintf(data, "%sTotal jumps:    %d\n", data, p->total_jumps);
     sprintf(data, "%s\n", data);
     return data;
+}
+
+typedef struct Tprofile_datafile {
+    void *dat;
+    int type;
+    long size;
+    void *prop;
+} Tprofile_datafile;
+
+extern Tprofile_datafile *data;
+extern int makecol(int r, int g, int b);
+extern void textprintf_ex(void *dst, void *font, int x, int y, int color,
+                          int background, const char *format, ...);
+
+int draw_buffer(void *bmp, char *buffer, int x, int y)
+{
+    int pos;
+    char tempBuf[256];
+    int tempPos;
+    char c;
+
+    pos = y;
+    tempPos = 0;
+    c = *buffer;
+    while (c) {
+        if (c == '\n') {
+            tempBuf[tempPos] = 0;
+            textprintf_ex(bmp, data[53].dat, x, pos, makecol(30, 20, 10),
+                          -1, "%s", tempBuf);
+            pos += 10;
+            tempPos = 0;
+        } else {
+            tempBuf[tempPos] = c;
+            tempPos++;
+        }
+        c = buffer[1];
+        buffer++;
+    }
+    return pos;
 }
