@@ -1,6 +1,8 @@
 /* Partial historical menu.c recovery.
  * DIFFER: build_menu_string @ 0x004174dc, 415 bytes
+ * DIFFER: update_game_menu @ 0x00417adc, 583 bytes
  */
+#include "control.h"
 typedef struct Tmenu_slider {
     int value;
     int min;
@@ -76,6 +78,14 @@ typedef struct Tmenu_selection_data {
 } Tmenu_selection_data;
 
 extern void key_to_str(int key, char *dest);
+extern void draw_menu(void *bmp, Tmenu *m, Tmenu_params *mp, int x, int y,
+                      int step_in);
+extern void play_menu_move(void);
+extern int stepIn;
+extern volatile unsigned char key[];
+#ifndef KEY_F1
+#define KEY_F1 59
+#endif
 
 void build_menu_string(Tmenu *m, char *dest)
 {
@@ -109,4 +119,54 @@ void build_menu_string(Tmenu *m, char *dest)
         sprintf(dest, "%s:", m->caption);
     } else
         strcpy(dest, m->caption);
+}
+
+int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
+                     int x, int y, int *data)
+{
+    int num_posts;
+    int old_pos;
+    int pos;
+    int return_value;
+
+    pos = 0;
+    num_posts = -1;
+    do {
+        num_posts++;
+        if (m[num_posts].flags & 1)
+            pos = num_posts;
+    } while (!(m[num_posts].flags & 0x80000000));
+    old_pos = pos;
+    draw_menu(bmp, m, mp, x, y, stepIn);
+    if (ctrl) {
+        if (is_up(ctrl) || is_up((Tcontrol *)&mp->ctrl[0])) {
+            pos--;
+            if (pos < 0)
+                pos = num_posts;
+        } else if (is_down(ctrl) || is_down((Tcontrol *)&mp->ctrl[0])) {
+            pos++;
+            if (pos > num_posts)
+                pos = 0;
+        }
+    }
+    if (key[KEY_F1] && pos != num_posts)
+        pos = num_posts;
+    return_value = 0;
+    if (old_pos != pos) {
+        m[old_pos].flags &= ~1;
+        m[pos].flags |= 1;
+        play_menu_move();
+    }
+    if (ctrl) {
+        if (is_fire(ctrl) || is_enter((Tcontrol *)&mp->ctrl[0]) ||
+            is_fire((Tcontrol *)&mp->ctrl[0]))
+            return_value = m[pos].return_select;
+        else if (is_left(ctrl) || is_left((Tcontrol *)&mp->ctrl[0]))
+            return_value = m[pos].return_left;
+        else if (is_right(ctrl) || is_right((Tcontrol *)&mp->ctrl[0]))
+            return_value = m[pos].return_right;
+    }
+    *data = (int)m[pos].data;
+    mp->pos = pos;
+    return return_value;
 }
