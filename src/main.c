@@ -141,13 +141,21 @@ void show_instructions(void)
 
 typedef struct Toptions {
     int flash;
-    unsigned char reserved0[4];
+    int checksum;
     int jump_hold;
     int full_screen;
-    unsigned char reserved1[20];
+    int floor_shrink;
+    int floor_size;
+    int start_speed;
+    int speed_increase;
+    int gravity;
     int msc_volume;
     int snd_volume;
-    unsigned char reserved2[548];
+    int sort_method;
+    char updateDate[16];
+    char posterDate[16];
+    char posterUrl[256];
+    char posterSrc[256];
     int posterSize;
     char lastProfile[32];
     int timesStarted;
