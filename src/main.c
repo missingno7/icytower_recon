@@ -182,6 +182,16 @@ int get_gamepad_value(char *dir)
     return 0;
 }
 
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y)
+{
+    if (bmp)
+        textprintf_ex(bmp, font, 0, y, 15, -1, "loading: %s", fname);
+    *dest = load_wav(fname);
+    if (*dest)
+        return;
+    alert("load_sound(): file not found", fname, NULL, "OK", NULL, 0, 0);
+}
+
 int ok_to_play(void)
 {
     return 1;

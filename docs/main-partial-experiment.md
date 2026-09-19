@@ -143,6 +143,12 @@ zero for every other value. Its strings resolve through the verifier's unique
 read-only-data checks and all six configuration/string API calls resolve by
 name.
 
+`load_sound` matches its complete 166-byte loading helper. It conditionally
+draws its loading message, stores the WAV result through the supplied pointer,
+and shows the original seven-argument failure dialog only when loading fails.
+Its UI, audio, dialog, font, and read-only-string references all resolve
+exactly.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
