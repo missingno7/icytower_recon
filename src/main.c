@@ -59,6 +59,10 @@ typedef struct Tprofile {
     int snd_volume;
 } Tprofile;
 
+typedef struct Tavailable_profile {
+    char handle[32];
+} Tavailable_profile;
+
 typedef struct Tmenu_slider {
     int value;
     int min;
@@ -112,7 +116,7 @@ typedef struct Tplayer {
 
 Toptions options;
 Tprofile *profile;
-Tprofile **profiles;
+Tavailable_profile *profiles;
 int numProfiles;
 SAMPLE *bg_menu;
 SAMPLE *menu_sounds[2];
@@ -142,7 +146,7 @@ void *hisc_tables[15];
 extern void save_options(Toptions *o, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
 extern void save_profile(Tprofile *profile);
-extern Tprofile *select_profile(Tprofile *current_profile, Tprofile **profiles,
+extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
 extern void rebuild_profile_list(int selection);
 extern void destroy_replay(Treplay *r);
@@ -636,6 +640,27 @@ void run_demo(char *file_name)
             floors.value = fo;
         }
     }
+}
+
+int add_profile(const char *filename, int attrib, void *param)
+{
+    char buf[1024];
+    char *file;
+
+    file = get_filename(filename);
+    if (*file != '.') {
+        get_profile_dir_for_profile(buf, sizeof(buf), file);
+        sprintf(buf, "%s%s", buf, file);
+        if (exists(buf)) {
+            numProfiles++;
+            if (profiles)
+                profiles = realloc(profiles, numProfiles * sizeof(*profiles));
+            else
+                profiles = malloc(sizeof(*profiles));
+            strcpy(profiles[numProfiles - 1].handle, file);
+        }
+    }
+    return 0;
 }
 
 /* DWARF signature for the remaining historical main body. */

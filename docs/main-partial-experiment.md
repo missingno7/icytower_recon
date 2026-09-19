@@ -79,6 +79,14 @@ execution. DWARF establishes the `file_name` parameter and `fo` local, while
 the disassembly establishes the two `itrcheck` paths and the exact field
 offsets; all external and direct same-CU transfer targets resolve by identity.
 
+`add_profile` recovers the 195-byte profile-directory callback. It ignores dot
+entries, builds the profile path in its DWARF-sized 1024-byte local buffer,
+adds a valid handle to the typed 32-byte `Tavailable_profile` array, and
+returns zero. Its executable instructions and named data and call targets are
+identical; the `"%s%s"` format literal occurs three times in the original
+read-only data and cannot be independently located in this partial CU, so the
+verifier records it as `CODEGEN_SIMILAR` rather than exact.
+
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
 subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
