@@ -143,6 +143,16 @@ void stopMenuMusic(void)
         stop_sample(bg_menu);
 }
 
+void replaceBadCharacters(char *string, char newChar)
+{
+    int i;
+    char letters[63] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    for (i = 0; i < (int)strlen(string); i++)
+        if (!strchr(letters, string[i]))
+            string[i] = newChar;
+}
+
 void draw_progress_bar(void);
 
 void datafile_callback_slow(DATAFILE *d)

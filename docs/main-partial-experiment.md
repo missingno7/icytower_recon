@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty historical helpers while the remaining
+`src/main.c` currently recovers twenty-one historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -36,6 +36,10 @@ current profile at their independently recovered DWARF offsets. `startMenuMusic`
 `stopMenuMusic`, `play_menu_select`, and `play_menu_move` match their 59-,
 25-, 37-, and 37-byte bodies, respectively; each resolves its sample global
 and call target by name.
+
+`replaceBadCharacters` matches its 125-byte body. Its 63-byte local alphabet
+and signed `strlen` loop bound come from DWARF and the original control flow;
+the latter is required to preserve the historical signed comparison branch.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
