@@ -156,10 +156,10 @@ def main():
     blockers[3]['missing_artifact']='GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; exact strptime/timecompat provenance; remaining game CUs'
     custom=reports['game-custom']
     blockers.append({'id':'B007','target':'custom.c complete text',
-        'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; dependencies resolve in the separate synthetic custom-audio PE.',
+        'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; dependencies resolve in the separate synthetic custom-audio PE. load_character_bmp is behaviorally reconstructed at 1993 bytes against 1992 original bytes. DWARF confirms its nested error buffers, color-conversion block, frame-cropping block, and datafile block; the remaining mismatch is a one-byte code-generation/layout delta.',
         'first_mismatch':next(({'function':f['name'], 'detail':f['first_difference']} for f in custom['functions'] if f['status']!='FUNCTION_MATCH'),None),
-        'experiments_tried':['Original DWARF function order and lexical scopes','Explicit fgets prefetch control flow','Historical Allegro inline draw_sprite expansion','All five optimization levels'],
-        'next_experiment':'Compare load_character_bmp error paths, lexical scopes and return-value allocation against original disassembly.',
+        'experiments_tried':['Original DWARF function order and lexical scopes','Explicit fgets prefetch control flow','Historical Allegro inline draw_sprite expansion','All five optimization levels','DWARF lexical-scope and error-path audit: all three failure buffers and both image/datafile recovery blocks match original ownership; no missing semantic branch found.','Declaration placement preserved the 1993-byte candidate; an equivalent outer if (fp) form grew it to 2009 bytes and lost an additional exact body. The remaining extra byte is an alignment NOP at the second text-parser loop head.'],
+        'next_experiment':'Compare source branch forms around the first file-open error and datafile fallback to reproduce historical basic-block order without changing locked build flags.',
         'missing_artifact':None})
     scroller=reports['game-scroller']
     blockers.append({'id':'B008','target':'scroller.c complete text',
