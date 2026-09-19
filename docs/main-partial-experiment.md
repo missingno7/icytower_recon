@@ -162,6 +162,12 @@ calls the stdcall `ShellExecuteA` API through `rundll32` with show mode 4. The
 local logging call and a duplicated empty string make the partial-CU candidate
 layout-dependent, so it remains `DIFFER`.
 
+`load_new_ad_image` recovers the complete 100-byte application-side ad bridge.
+It selects an `FLDAdSpot`, logs its typed local image path, destroys the prior
+bitmap, loads the replacement, and retains the selected ad pointer. All ad-CU,
+bitmap, and global references resolve by name; the same-CU logging call leaves
+the partial build `DIFFER`.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The

@@ -67,6 +67,14 @@ typedef struct Tmenu_selection {
     char caption[128];
 } Tmenu_selection;
 
+typedef struct FLDAdSpot {
+    const char *pRemoteImageURL;
+    const char *pLocalImagePath;
+    const char *pVisitURL;
+    float fFrequency;
+} FLDAdSpot;
+extern const FLDAdSpot *fldads_get_random_ad(void);
+
 typedef struct Tavatar_profile {
     unsigned char reserved[0x4e4];
     char avatar[1];
@@ -114,6 +122,8 @@ Tmenu_slider snd_volume_slider;
 Tmenu_slider msc_volume_slider;
 Tmenu_selection eyecandy_selection;
 char replay_directory[1024];
+BITMAP *pFLDAdBitmap;
+const FLDAdSpot *pFLDAd;
 
 char *get_version_str(void)
 {
@@ -228,6 +238,22 @@ void open_web_browser(char *pURL)
     sprintf(cmd, "url.dll, FileProtocolHandler %s", pURL);
     log2file(" calling '%s'", cmd);
     ShellExecuteA(NULL, "open", "rundll32", cmd, "", 4);
+}
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+void load_new_ad_image(void)
+{
+    const FLDAdSpot *pAd = fldads_get_random_ad();
+    if (pAd) {
+        log2file("Got ad: %s", pAd->pLocalImagePath);
+        if (pFLDAdBitmap) {
+            destroy_bitmap(pFLDAdBitmap);
+            pFLDAdBitmap = NULL;
+        }
+        pFLDAdBitmap = load_bitmap(pAd->pLocalImagePath, NULL);
+        pFLDAd = pAd;
+    }
 }
 #endif
 
