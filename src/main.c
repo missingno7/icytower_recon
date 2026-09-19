@@ -148,6 +148,7 @@ Tmenu_floor_selection floors;
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
+DATAFILE *data;
 void *hisc_tables[15];
 static int count;
 
@@ -817,6 +818,14 @@ int load_character(const char *filename, int attrib, void *param)
         }
     }
     return 0;
+}
+
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
+{
+    textout_ex(dst, data[54].dat, title, x, y - 16, makecol(0, 0, 0), -1);
+    rectfill(dst, x - 1, y - 1, x + 340, y + 18, makecol(255, 255, 255));
+    rect(dst, x - 1, y - 1, x + 340, y + 18, makecol(80, 80, 80));
+    textout_ex(dst, data[54].dat, text, x + 2, y, color, -1);
 }
 
 /* DWARF signature for the remaining historical main body. */
