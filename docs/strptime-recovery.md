@@ -47,6 +47,17 @@ come from the KTH family. Public family revisions are therefore research
 references only: no candidate body is adopted unless its TDM-GCC comparison
 reports `FUNCTION_MATCH` for the complete 2028-byte `_strptime` extent.
 
+The public MapServer `rel-5-6-6` source revision
+`d0da3829d7e189e3d49c231e687cbb4ee8671fa9` establishes the closest concrete
+family provenance found so far. Its `strptime.c` declares the same five tables
+and `tm_year_base` in the same order, and its parser loop begins at source line
+204, five lines before the original internal parser's line 209. It is still
+rejected as a body candidate: it exposes only a three-argument public
+`strptime`, has no `_strptime` state interface or wrapper, spells the full
+month `"Mars"`, and retains a different multi-year `first_day` calculation.
+Those independently observable differences rule out treating source
+provenance as a whole-body recovery.
+
 Research references: the [2002 Newlib import](https://github.com/mirror/newlib-cygwin/blob/dea7e25ca71e6a6c690f09a43b04f2858c1c348d/newlib/libc/time/strptime.c), the
 [1999 Heimdal source](https://github.com/heimdal/heimdal/blob/0d3fc31121aa/lib/roken/strptime.c), and the
 [FreeBSD-style stateful parser](https://git.brainchurts.com/uBixOS/ubixos/blob/f6a7e39c29077265516ce890cf998c46b957136e/src/lib/libc/stdtime/strptime.c).
