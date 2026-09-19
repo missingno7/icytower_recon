@@ -124,6 +124,10 @@ Tmenu_selection eyecandy_selection;
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
+void *hisc_tables[15];
+
+extern void save_options(Toptions *o, PACKFILE *fp);
+extern void save_hisc_table(void *table, PACKFILE *fp);
 
 char *get_version_str(void)
 {
@@ -430,7 +434,7 @@ void log2file(const char *format, ...)
     static pthread_mutex_t sLogMutex = PTHREAD_MUTEX_INITIALIZER;
     static char logfilename[1024];
     va_list ptr;
-    FILE *fp;
+    PACKFILE *fp;
     if (itrcheck) return;
     pthread_mutex_lock(&sLogMutex);
     if (!logfilename[0]) get_logfile_path(logfilename, sizeof(logfilename));
@@ -449,6 +453,25 @@ void end_game(void)
 {
     log2file(" freeing custom data");
     destroy_custom_data(&custom);
+}
+
+void save_config(void)
+{
+    FILE *fp;
+    char cfgfilename[256];
+
+    log2file("  saving config and scores");
+    get_configfile_path(cfgfilename, sizeof(cfgfilename));
+    fp = pack_fopen(cfgfilename, "wp");
+    if (fp) {
+        int i;
+        save_options(&options, fp);
+        for (i = 0; i < 15; i++)
+            save_hisc_table(hisc_tables[i], fp);
+        pack_fclose(fp);
+    } else {
+        log2file("    *** failed");
+    }
 }
 
 inline void update_reward(void)

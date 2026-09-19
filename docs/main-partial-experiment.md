@@ -1,11 +1,16 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-seven historical helpers while the remaining
+`src/main.c` currently recovers thirty-four historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
 unique NUL-terminated bytes in the original read-only data; `get_demo` and
 `get_controls` resolve their `demo` and `ctrl` globals by name.
+
+Direct `E8` calls and `E9` tail jumps are resolved when they land exactly on a
+candidate same-unit function with a unique historical identity. This proves
+the callee independently of its layout-dependent relative operand; it does
+not establish whole-CU layout or object equality.
 
 `ok_to_play` returns the original constant `1`, while `switchedFromProgram`,
 `switchedToProgram`, and `clickedCloseButton` exactly update the named
@@ -51,12 +56,12 @@ is repeated in the original; the verifier establishes its address from the
 unique preceding 12-byte read-only float-table neighbourhood, then derives the
 literal's target from that independently established table position.
 
-`end_game` has a recovered 32-byte source body: it logs `" freeing custom
-data"` and calls `destroy_custom_data` on the typed main-CU `custom` global.
-Its read-only-data and `custom` relocations resolve exactly. The direct call to
-the separately defined `log2file` has no COFF relocation, so its displacement
-remains layout-dependent while the rest of historical main.c is absent; it is
-therefore recorded as `DIFFER`, with no exact-function credit.
+`end_game` has an exact 32-byte source body: it logs `" freeing custom data"`
+and calls `destroy_custom_data` on the typed main-CU `custom` global.
+
+`save_config` is exact at 154 bytes. It builds the 256-byte configuration
+path, opens it in historical `"wp"` mode, saves options and all fifteen score
+tables, closes the packed file, and logs the failure path when opening fails.
 
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
@@ -93,22 +98,20 @@ globals. The candidate has the historical 59-byte extent but chooses different
 dead registers for the first two loads, so it is also `DIFFER` without exact
 credit.
 
-`check_dir` recovers the 103-byte directory-enumeration callback: it logs the
+`check_dir` exactly reproduces the 103-byte directory-enumeration callback: it logs the
 candidate path, accepts non-dot directories, checks for `"%s/%s.txt"`, and
 counts a matching character. Its external calls, format string, and
-`num_chars` reference resolve exactly. The direct same-CU `log2file` call has
-a layout-dependent displacement, so it remains `DIFFER` without exact credit.
+`num_chars` reference and direct same-CU logging target resolve exactly.
 
 `for_each_directory` matches its full 109-byte wrapper. It copies the base
 directory into its DWARF-sized local buffer, appends `"*"`, and invokes the
 named Allegro `for_each_file_ex` callback API with directory attributes.
 
-`play_sound` recovers its full 215-byte source body. It preserves the
+`play_sound` exactly recovers its full 215-byte source body. It preserves the
 `itrcheck` gate, randomized pitch, sound-volume guard, player-x pan conversion,
 fast-forward pitch doubling, and Allegro `play_sample` call. Every symbolic
-reference and instruction sequence matches, but its direct call to the now
-recovered same-CU `new_rand` body has a source-layout-dependent displacement,
-so the partial build records it as `DIFFER`.
+reference and instruction sequence matches, including the direct same-CU
+`new_rand` target.
 
 `play_jump_sound` similarly recovers its full 141-byte threshold selector. It
 selects one of the three typed `custom.jump_sound` entries from the player

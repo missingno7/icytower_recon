@@ -242,6 +242,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                               'content_equal':not pending and len(section_bases.get(section['index'],set()))==1
                                   and next(iter(section_bases[section['index']])) in locations})
     rows=[]
+    candidate_by_start={d['low_pc']:d for d in candidates.values()}
     for f in original:
         d=candidates.get(f['name'])
         if d is None:
@@ -252,9 +253,11 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         reference=exe.at_va(f['va'],f['size'])
         masked,masked_ref=bytearray(code),bytearray(reference)
         relocs=[]
+        relocation_offsets=set()
         for r in obj.relocations:
             if r['section']!=text['index'] or not low<=r['offset']<high: continue
             p=r['offset']-low
+            relocation_offsets.add(p)
             sym=obj.by_index[r['symbol_index']]
             addend=struct.unpack_from('<I',code,p)[0]
             target,reason=target_address(sym,addend)
@@ -270,13 +273,31 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             if p+4<=len(masked_ref): masked_ref[p:p+4]=b'\0'*4
             relocs.append({**r,'function_offset':p,'addend':addend,'target_va':target,'resolution':reason,
                            'resolved_value':expected,'original_value':actual,'equal':expected is not None and expected==actual})
+        # GCC resolves calls and tail jumps within the same COFF .text section
+        # directly, so they have no relocation records.  Map only E8/E9 rel32
+        # transfers that land exactly on a candidate function with a unique
+        # historical function identity; this is independent of the operand
+        # being verified and mirrors the named-symbol resolution above.
+        direct_transfers=[]
+        for op in range(len(code)-4):
+            if code[op] not in (0xe8,0xe9) or op+1 in relocation_offsets: continue
+            p=op+1
+            displacement=struct.unpack_from('<i',code,p)[0]
+            target=candidate_by_start.get(low+op+5+displacement)
+            if target is None or target['name'] not in original_by_name: continue
+            expected=(original_by_name[target['name']]['va']-f['va']-p-4)&0xffffffff
+            actual=struct.unpack_from('<I',reference,p)[0] if p+4<=len(reference) else None
+            struct.pack_into('<I',code,p,expected)
+            direct_transfers.append({'function_offset':p,'opcode':code[op],
+                'target_function':target['name'],'target_va':original_by_name[target['name']]['va'],
+                'resolved_value':expected,'original_value':actual,'equal':expected==actual})
         masked_equal=masked==masked_ref
-        exact=code==reference and all(r['equal'] for r in relocs)
+        exact=code==reference and all(r['equal'] for r in relocs) and all(t['equal'] for t in direct_transfers)
         differences=[i for i,(x,y) in enumerate(zip(code,reference)) if x!=y]
         first=differences[0] if differences else min(len(code),len(reference)) if len(code)!=len(reference) else None
         rows.append({'name':f['name'],'va':f['va'],'original_size':f['size'],'candidate_offset':low,'candidate_size':high-low,
                      'relative_layout_equal':low==f['va']-cu['low_pc'], 'masked_equal':masked_equal,
-                     'relocation_resolved_equal':exact,'relocations':relocs,
+                     'relocation_resolved_equal':exact,'relocations':relocs,'direct_transfers':direct_transfers,
                      'first_difference':None if first is None else {'offset':first,'original_va':f['va']+first,
                          'candidate_byte':code[first] if first<len(code) else None,'original_byte':reference[first] if first<len(reference) else None},
                      'status':'FUNCTION_MATCH' if exact else 'CODEGEN_SIMILAR' if masked_equal else 'DIFFER'})
