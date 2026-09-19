@@ -11,3 +11,9 @@ calls. It remains DIFFER at the first vertical `set_clip_rect` argument setup:
 the candidate uses equivalent registers in a different order. This is not a
 complete-text, object, or CU claim. See
 `docs/experiments/game-scroller-O2.json` for the full comparison record.
+
+The original line program places the vertical bounds return, clip setup, and
+row loop on consecutive lines. The recovered source now preserves that relative
+layout (`else` and its opening brace on separate lines, one blank line before
+`i`, and a one-line vertical bounds return). This improves source/debug fidelity
+without changing the tested machine body.
