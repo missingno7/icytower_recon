@@ -6,7 +6,7 @@
  * The remaining functions below are still pending reconstruction:
  * PARTIAL: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
  * UNKNOWN: calc_replay_checksum @ 0x0041bac4, 676 bytes
- * UNKNOWN: update_file_list @ 0x0041bda0, 184 bytes
+ * EXACT: update_file_list @ 0x0041bda0, 184 bytes
  * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
  * UNKNOWN: create_replay @ 0x0041cce8, 254 bytes
  * UNKNOWN: load_replay @ 0x0041cde8, 1136 bytes
