@@ -11,7 +11,7 @@
  * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
  * EXACT: profile_data_page_basic @ 0x004193d0, 637 bytes
  * EXACT: profile_data_page_extra @ 0x00419650, 85 bytes
- * UNKNOWN: profile_data_page_general @ 0x004196a8, 1091 bytes
+ * DIFFER: profile_data_page_general @ 0x004196a8, 1091 bytes
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
  * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
@@ -458,4 +458,67 @@ Tprofile_create *create_profile(char *handle, int overwrite)
         return 0;
     }
     return p;
+}
+
+typedef struct Tprofile_general {
+    unsigned char before_games_played[0x2c];
+    int games_played;
+    int custom_games_played;
+    int games_quit;
+    int seconds_spent_playing;
+    unsigned char before_creation_date[0x530 - 0x3c];
+    char creationDate[16];
+} Tprofile_general;
+
+char *profile_data_page_general(Tprofile_general *p, char *filler)
+{
+    char *data;
+    int seconds;
+    int minutes;
+    int hours;
+    int days;
+    char timeSpent[256];
+    char buf[100];
+    int len;
+    int i;
+
+    data = malloc(2048);
+    data[0] = 0;
+    sprintf(data, "%sCreated:     %s%s\n", data, filler, p->creationDate);
+    sprintf(data, "%s\n", data);
+    seconds = p->seconds_spent_playing % 60;
+    minutes = p->seconds_spent_playing / 60;
+    hours = minutes / 60;
+    minutes %= 60;
+    days = hours / 24;
+    hours %= 24;
+    strcpy(timeSpent, "none");
+    if (seconds > 0)
+        sprintf(timeSpent, "%d second%s", seconds, seconds == 1 ? "" : "s");
+    if (minutes > 0)
+        sprintf(timeSpent, "%d minute%s, %d second%s", minutes,
+                minutes == 1 ? "" : "s", seconds,
+                seconds == 1 ? "" : "s");
+    if (hours > 0)
+        sprintf(timeSpent, "%d hour%s, %d minute%s, %d second%s", hours,
+                hours == 1 ? "" : "s", minutes,
+                minutes == 1 ? "" : "s", seconds,
+                seconds == 1 ? "" : "s");
+    if (days > 0)
+        sprintf(timeSpent, "%d day%s, %d hour%s, %d minute%s, %d second%s",
+                days, days == 1 ? "" : "s", hours,
+                hours == 1 ? "" : "s", minutes,
+                minutes == 1 ? "" : "s", seconds,
+                seconds == 1 ? "" : "s");
+    sprintf(data, "%sTime played:    %s%s\n", data, filler, timeSpent);
+    sprintf(buf, "%d", p->games_played);
+    len = strlen(buf);
+    buf[0] = 0;
+    for (i = 10; i >= len; i--)
+        strcat(buf, " ");
+    sprintf(data, "%sGames played:    %s%d     %s  Custom games played:  %5d\n",
+            data, filler, p->games_played, buf, p->custom_games_played);
+    sprintf(data, "%sGames quit:     %s%d\n", data, filler, p->games_quit);
+    sprintf(data, "%s\n", data);
+    return data;
 }
