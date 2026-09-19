@@ -5,6 +5,7 @@
 #include <direct.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <time.h>
 #include "directories.h"
 #include "csv.h"
 
@@ -14,6 +15,19 @@ typedef struct FLDAdSpot {
     char *pVisitURL;
     float fFrequency;
 } FLDAdSpot;
+
+typedef struct HTTPResponse {
+    int iStatusCode;
+    int iNumHeaders;
+    void *pHeaders;
+    unsigned char *pPayload;
+    int iPayloadSize;
+} HTTPResponse;
+
+extern HTTPResponse *HTTPHead(char *pURL);
+extern HTTPResponse *HTTPGet(char *pURL);
+extern time_t httpGetLastModified(HTTPResponse *pResponse);
+extern void destroyHTTPResponse(HTTPResponse *pResponse);
 
 pthread_t gFLDADThread;
 pthread_mutex_t gFLDADMutex;
@@ -114,6 +128,37 @@ void fldads_load_local_cache(void)
         fldads_load_cache_from_csv(pCsv);
         csv_destroy(pCsv);
     }
+}
+
+void fldads_update_local_adimg(char *pRemoteName)
+{
+    char *localFilename = fldads_get_local_filename_from_url(pRemoteName);
+    struct stat localStat;
+    HTTPResponse *pResponse;
+
+    if (!stat(localFilename, &localStat)) {
+        time_t lastModified;
+        HTTPResponse *pHead = HTTPHead(pRemoteName);
+        if (pHead && pHead->iStatusCode == 200) {
+            lastModified = httpGetLastModified(pHead);
+            if (lastModified && localStat.st_mtime >= lastModified) {
+                log2file("Local file %s is newer (%d) than server (%d), using local",
+                         localFilename, localStat.st_mtime, lastModified);
+                return;
+            }
+        }
+    }
+
+    pResponse = HTTPGet(pRemoteName);
+    log2file("Downloading %s -> %s", pRemoteName, localFilename);
+    if (pResponse && pResponse->iStatusCode == 200) {
+        FILE *fp = fopen(localFilename, "wb");
+        if (fp) {
+            fwrite(pResponse->pPayload, 1, pResponse->iPayloadSize, fp);
+            fclose(fp);
+        }
+    }
+    destroyHTTPResponse(pResponse);
 }
 
 void fldads_update_cache(unsigned char *pData, int iDataSize)

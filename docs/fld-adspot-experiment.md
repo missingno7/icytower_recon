@@ -16,6 +16,9 @@ partial CU's local layout and anonymous string section remain unproven.
 `fldads_dump_local_cache` recreates `ads.csv` while holding the same mutex.
 `fldads_update_cache` parses a downloaded CSV response, updates each local
 image, reloads the cache, and persists the accepted rows.
+`fldads_update_local_adimg` has its historical 230-byte extent: it compares a
+local image timestamp with HTTP metadata, downloads stale or missing payloads,
+and writes successful responses in binary mode.
 The cache-path helper retains its 64-byte masked body. The URL wrapper and
 local-cache loader have their historical extents but differ in local branch
 layout. No original code or object content is linked into this target.
