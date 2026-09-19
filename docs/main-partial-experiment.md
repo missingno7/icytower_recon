@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers fifteen historical helpers while the remaining
+`src/main.c` currently recovers twenty historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -29,6 +29,13 @@ every-sixteenth-entry form, and `datafile_callback_slow` is the 33-byte
 counter-based variant. Its private `p` counter is resolved through the unique
 DWARF static variable owned by the already shape-matched function, not its
 relocation operand; the compiler's serialised local COFF name is not stable.
+
+`syncProfileFromOptions` matches its 58-byte body, copying the four named
+options settings (flash, jump hold, music volume, and sound volume) into the
+current profile at their independently recovered DWARF offsets. `startMenuMusic`,
+`stopMenuMusic`, `play_menu_select`, and `play_menu_move` match their 59-,
+25-, 37-, and 37-byte bodies, respectively; each resolves its sample global
+and call target by name.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy

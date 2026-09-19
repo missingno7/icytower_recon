@@ -87,12 +87,17 @@ class PipelineTests(unittest.TestCase):
         for name in ('get_version_str','get_demo','get_controls','ok_to_play',
                      'switchedFromProgram','switchedToProgram','clickedCloseButton',
                      'is_custom_replay','show_name','datafile_callback_slow',
-                     'datafile_callback','color_map_callback'):
+                     'datafile_callback','color_map_callback','syncProfileFromOptions',
+                     'startMenuMusic','play_menu_select','play_menu_move','stopMenuMusic'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
                              10 if name in ('get_version_str','get_demo','get_controls','ok_to_play')
                              else 66 if name=='is_custom_replay' else 36 if name=='show_name'
+                             else 58 if name=='syncProfileFromOptions'
+                             else 59 if name=='startMenuMusic'
+                             else 37 if name in ('play_menu_select','play_menu_move')
+                             else 25 if name=='stopMenuMusic'
                              else 33 if name=='datafile_callback_slow'
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 

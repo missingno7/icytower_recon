@@ -33,8 +33,9 @@ Current results:
 - main.c: `get_version_str`, `get_demo`, `get_controls`, `new_rand`,
   `new_srand`, `ok_to_play`, the three focus/close callbacks, and
   `is_custom_replay`, `show_name`, `getSampleFromOggDatafile`, and the three
-  progress callbacks match at -O2; the other main functions remain explicit
-  partial-CU work.
+  progress callbacks match at -O2. `syncProfileFromOptions`, menu-music
+  start/stop, and the two menu-sound wrappers also match; the other main
+  functions remain explicit partial-CU work.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.

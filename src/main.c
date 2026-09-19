@@ -27,6 +27,29 @@ typedef struct Treplay {
 Treplay *demo;
 Tcontrol ctrl;
 
+typedef struct Toptions {
+    int flash;
+    unsigned char reserved0[4];
+    int jump_hold;
+    unsigned char reserved1[24];
+    int msc_volume;
+    int snd_volume;
+} Toptions;
+
+typedef struct Tprofile {
+    unsigned char reserved0[1244];
+    int flash;
+    int jump_hold;
+    unsigned char reserved1[68];
+    int msc_volume;
+    int snd_volume;
+} Tprofile;
+
+Toptions options;
+Tprofile *profile;
+SAMPLE *bg_menu;
+SAMPLE *menu_sounds[2];
+
 char *get_version_str(void)
 {
     return "1.5.1";
@@ -54,6 +77,14 @@ int new_rand(void)
 void new_srand(int s)
 {
     seed=s;
+}
+
+void syncProfileFromOptions(void)
+{
+    profile->msc_volume = options.msc_volume;
+    profile->snd_volume = options.snd_volume;
+    profile->jump_hold = options.jump_hold;
+    profile->flash = options.flash;
 }
 
 int ok_to_play(void)
@@ -86,6 +117,30 @@ int show_name(char *name, int attribs)
 {
     allegro_message("Caught `%s', attribs %d\n", name, attribs);
     return 0;
+}
+
+void startMenuMusic(void)
+{
+    if (bg_menu)
+        play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
+}
+
+void play_sound(SAMPLE *sound, int randomized, int panned);
+
+void play_menu_select(void)
+{
+    play_sound(menu_sounds[0], 0, 0);
+}
+
+void play_menu_move(void)
+{
+    play_sound(menu_sounds[1], 0, 0);
+}
+
+void stopMenuMusic(void)
+{
+    if (bg_menu)
+        stop_sample(bg_menu);
 }
 
 void draw_progress_bar(void);
