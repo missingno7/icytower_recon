@@ -21,6 +21,7 @@ extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
+int init_ok;
 char last_log[1024];
 typedef struct {
     int jumps;
@@ -273,6 +274,9 @@ Tavailable_profile *profiles;
 int numProfiles;
 SAMPLE *bg_menu;
 SAMPLE *menu_sounds[2];
+SAMPLE *jump_sound[3];
+SAMPLE *speaker[3];
+SAMPLE *sounds[9];
 Tcustom custom;
 int reward_time;
 fixed reward_scale;
@@ -734,6 +738,51 @@ void end_game(void)
 {
     log2file(" freeing custom data");
     destroy_custom_data(&custom);
+}
+
+void uninit_game(void)
+{
+    int i;
+
+    log2file("\nUNINIT");
+    if (init_ok) {
+        log2file("Saving config");
+        save_config();
+        log2file("Saving profile '%s'",profile->handle);
+        syncProfileFromOptions();
+        save_profile(profile);
+    }
+    if (testers)
+        destroy_all(testers);
+    log2file("Freeing sound memory");
+    for (i=0;i<10;i++)
+        if (combo_sound[i]) destroy_sample(combo_sound[i]);
+    for (i=0;i<3;i++)
+        if (jump_sound[i]) destroy_sample(jump_sound[i]);
+    for (i=0;i<3;i++)
+        if (speaker[i]) destroy_sample(speaker[i]);
+    if (menu_sounds[0]) destroy_sample(menu_sounds[0]);
+    if (menu_sounds[1]) destroy_sample(menu_sounds[1]);
+    for (i=0;i<9;i++)
+        if (sounds[i]) destroy_sample(sounds[i]);
+    if (bg_beat) destroy_sample(bg_beat);
+    if (bg_menu) destroy_sample(bg_menu);
+    log2file("Freeing custom character memory");
+    for (i=0;i<num_chars;i++)
+        if (characters[i].bmp) destroy_bitmap(characters[i].bmp);
+    free(characters);
+    log2file("Unloading datafile");
+    if (data) unload_datafile(data);
+    log2file("Free buffer memory");
+    if (swap_screen) destroy_bitmap(swap_screen);
+    log2file("Free highscore tables");
+    for (i=0;i<15;i++)
+        if (hisc_tables[i]) destroy_hisc_table(hisc_tables[i]);
+    log2file("Free player");
+    if (ply[player_id]) free(ply[player_id]);
+    set_gfx_mode(GFX_TEXT,0,0,0,0);
+    log2file("Exiting Allegro");
+    allegro_exit();
 }
 
 #ifndef ICYTOWER_SYNTHETIC_LINK
