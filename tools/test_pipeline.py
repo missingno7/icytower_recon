@@ -60,6 +60,17 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(sum(s['logical_size'] for s in r['initialized_data_comparison'] if s['content_equal']),80)
         self.assertFalse(r['object_match'])
 
+    def test_main_datafile_helper_is_exact(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        helper=next(f for f in r['functions'] if f['name']=='getSampleFromOggDatafile')
+        self.assertEqual(helper['status'],'FUNCTION_MATCH')
+        self.assertEqual(helper['candidate_size'],32)
+        log=next(f for f in r['functions'] if f['name']=='log2file')
+        self.assertEqual(log['candidate_size'],189)
+        self.assertEqual(log['original_size'],189)
+        self.assertNotEqual(log['status'],'FUNCTION_MATCH')
+
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)
@@ -175,9 +186,13 @@ class PipelineTests(unittest.TestCase):
             report=build_library()
             self.assertEqual(len(report['units']),22)
             link_audio()
+            link_audio(True)
         linked=read_json(ROOT/'build/audio/tdm-2/build.json')
         self.assertFalse(linked['executed'])
         self.assertEqual(linked['executable'],identity(ROOT/'build/audio/tdm-2/audio-probe.exe'))
+        custom=read_json(ROOT/'build/custom-audio/tdm-2/build.json')
+        self.assertEqual(len(custom['game_objects']),3)
+        self.assertFalse(custom['executed'])
 
     def test_normal_object_build_never_reads_assets_or_evidence(self):
         original_open=Path.open

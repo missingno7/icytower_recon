@@ -22,8 +22,9 @@ The initial six-match attempt is retained in
 symbol and relocation inventory is `docs/experiments/game-custom-O2.json`.
 The five optimization levels are recorded in the optimization matrix.
 
-Custom is not included in the synthetic integration executable yet. Its real
-directory dependency is recovered; logging and modified logg dependencies
-must still be reconstructed.
+Custom remains outside the natural integration executable, but its real
+directory, main-helper, logg and audio-library dependencies now resolve in a
+separate synthetic custom-audio link. Its one differing function and natural
+layout work remain unresolved.
 No substitutes or original-code fallbacks were added. Historical source lines,
 debug metadata and final common/data ordering remain unproven.

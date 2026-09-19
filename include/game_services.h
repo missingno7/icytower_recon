@@ -8,4 +8,5 @@
 void log2file(const char *format, ...);
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
 SAMPLE *logg_load(const char *filename);
+SAMPLE *logg_load_memory(void *pData, size_t iSize);
 #endif

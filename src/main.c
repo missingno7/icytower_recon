@@ -1,86 +1,38 @@
-/* Historical CU: F:\projects\icytower\trunk\source\main.c
- * Ownership: GAME
- * Source recovery pending. This file intentionally defines no fallback code.
- * UNKNOWN: get_version_str @ 0x00406960, 10 bytes
- * UNKNOWN: get_demo @ 0x0040696c, 10 bytes
- * UNKNOWN: get_controls @ 0x00406978, 10 bytes
- * UNKNOWN: new_rand @ 0x00406984, 128 bytes
- * UNKNOWN: new_srand @ 0x00406a04, 14 bytes
- * UNKNOWN: syncProfileFromOptions @ 0x00406a14, 58 bytes
- * UNKNOWN: ok_to_play @ 0x00406a50, 10 bytes
- * UNKNOWN: switchedFromProgram @ 0x00406a5c, 15 bytes
- * UNKNOWN: switchedToProgram @ 0x00406a6c, 15 bytes
- * UNKNOWN: clickedCloseButton @ 0x00406a7c, 15 bytes
- * UNKNOWN: update_reward @ 0x00406a8c, 55 bytes
- * UNKNOWN: update_frame @ 0x00406ac4, 120 bytes
- * UNKNOWN: is_custom_replay @ 0x00406b3c, 66 bytes
- * UNKNOWN: line_intersect @ 0x00406b80, 302 bytes
- * UNKNOWN: WinMain @ 0x00406cb0, 50 bytes
- * UNKNOWN: set_current_avatar @ 0x00406ce4, 96 bytes
- * UNKNOWN: show_name @ 0x00406d44, 36 bytes
- * UNKNOWN: startMenuMusic @ 0x00406d68, 59 bytes
- * UNKNOWN: play_sound @ 0x00406da4, 215 bytes
- * UNKNOWN: play_menu_select @ 0x00406e7c, 37 bytes
- * UNKNOWN: play_menu_move @ 0x00406ea4, 37 bytes
- * UNKNOWN: play_jump_sound @ 0x00406ecc, 141 bytes
- * UNKNOWN: stopMenuMusic @ 0x00406f5c, 25 bytes
- * UNKNOWN: checkMenuFocus @ 0x00406f78, 59 bytes
- * UNKNOWN: drawSlot @ 0x00406fb4, 328 bytes
- * UNKNOWN: draw_reward @ 0x004070fc, 581 bytes
- * UNKNOWN: replaceBadCharacters @ 0x00407344, 125 bytes
- * UNKNOWN: pwd_garble_string @ 0x004073c4, 52 bytes
- * UNKNOWN: replay_menu_callback @ 0x004073f8, 712 bytes
- * UNKNOWN: draw_results @ 0x004076c0, 839 bytes
- * UNKNOWN: draw_progress_bar @ 0x00407a08, 486 bytes
- * UNKNOWN: datafile_callback_slow @ 0x00407bf0, 33 bytes
- * UNKNOWN: datafile_callback @ 0x00407c14, 12 bytes
- * UNKNOWN: color_map_callback @ 0x00407c20, 22 bytes
- * UNKNOWN: start_reward @ 0x00407c38, 472 bytes
- * UNKNOWN: handle_player_collision_original @ 0x00407e10, 456 bytes
- * UNKNOWN: handle_player_collision_old @ 0x00407fd8, 894 bytes
- * UNKNOWN: handle_player_collision_combo @ 0x00408358, 1390 bytes
- * UNKNOWN: handle_player_collision_vector_2 @ 0x004088c8, 1086 bytes
- * UNKNOWN: handle_player_collision_vector @ 0x00408d08, 1071 bytes
- * UNKNOWN: line_alert @ 0x00409138, 353 bytes
- * UNKNOWN: draw_frame @ 0x0040929c, 8518 bytes
- * UNKNOWN: handle_player_input @ 0x0040b3e4, 728 bytes
- * UNKNOWN: blit_to_screen @ 0x0040b6bc, 1415 bytes
- * UNKNOWN: get_string @ 0x0040bc44, 790 bytes
- * UNKNOWN: fadeOut @ 0x0040bf5c, 609 bytes
- * UNKNOWN: fadeIn @ 0x0040c1c0, 424 bytes
- * UNKNOWN: show_instructions @ 0x0040c368, 370 bytes
- * UNKNOWN: show_credits @ 0x0040c4dc, 634 bytes
- * UNKNOWN: rebuild_profile_list @ 0x0040c758, 198 bytes
- * UNKNOWN: syncOptionsFromProfile @ 0x0040c820, 157 bytes
- * UNKNOWN: add_profile @ 0x0040c8c0, 195 bytes
- * UNKNOWN: get_gamepad_value @ 0x0040c984, 166 bytes
- * UNKNOWN: getSampleFromOggDatafile @ 0x0040ca2c, 32 bytes
- * UNKNOWN: load_sound @ 0x0040ca4c, 166 bytes
- * UNKNOWN: stopGameMusic @ 0x0040caf4, 58 bytes
- * UNKNOWN: startGameMusic @ 0x0040cb30, 144 bytes
- * UNKNOWN: for_each_directory @ 0x0040cbc0, 109 bytes
- * UNKNOWN: loadScrambled @ 0x0040cc30, 247 bytes
- * UNKNOWN: myDeleteFile @ 0x0040cd28, 63 bytes
- * UNKNOWN: my_alert @ 0x0040cd68, 1770 bytes
- * UNKNOWN: force_create_profile @ 0x0040d454, 1538 bytes
- * UNKNOWN: log2file @ 0x0040da58, 189 bytes
- * UNKNOWN: testWindowResolution @ 0x0040db18, 388 bytes
- * UNKNOWN: new_game @ 0x0040dc9c, 1139 bytes
- * UNKNOWN: end_game @ 0x0040e110, 32 bytes
- * UNKNOWN: save_config @ 0x0040e130, 154 bytes
- * UNKNOWN: change_profile @ 0x0040e1cc, 188 bytes
- * UNKNOWN: uninit_game @ 0x0040e288, 646 bytes
- * UNKNOWN: open_web_browser @ 0x0040e510, 111 bytes
- * UNKNOWN: check_beta_tester @ 0x0040e580, 254 bytes
- * UNKNOWN: check_characters @ 0x0040e680, 345 bytes
- * UNKNOWN: init_game @ 0x0040e7dc, 5788 bytes
- * UNKNOWN: load_character @ 0x0040fe78, 330 bytes
- * UNKNOWN: check_dir @ 0x0040ffc4, 103 bytes
- * UNKNOWN: take_screenshot @ 0x0041002c, 203 bytes
- * UNKNOWN: main_menu_callback @ 0x004100f8, 3741 bytes
- * UNKNOWN: do_replay_menu @ 0x00410f98, 2661 bytes
- * UNKNOWN: play @ 0x00411a00, 17420 bytes
- * UNKNOWN: run_demo @ 0x00415e0c, 159 bytes
- * UNKNOWN: load_new_ad_image @ 0x00415eac, 100 bytes
- * UNKNOWN: _mangled_main @ 0x00415f10, 1938 bytes
- */
+/* Partial historical main.c recovery. Other original entities remain absent. */
+#include <stdio.h>
+#include <stdarg.h>
+#include <pthread.h>
+#include <allegro.h>
+#include "directories.h"
+#include "game_services.h"
+
+/* This exported extension belongs to the separately reconstructed logg CU. */
+SAMPLE *logg_load_memory(void *pData, size_t iSize);
+
+/* Declared at original line 92; log2file suppresses output while it is set. */
+int itrcheck;
+
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)
+{
+    return logg_load_memory(df[id].dat, df[id].size);
+}
+
+void log2file(const char *format, ...)
+{
+    static pthread_mutex_t sLogMutex = PTHREAD_MUTEX_INITIALIZER;
+    static char logfilename[1024];
+    va_list ptr;
+    FILE *fp;
+    if (itrcheck) return;
+    pthread_mutex_lock(&sLogMutex);
+    if (!logfilename[0]) get_logfile_path(logfilename, sizeof(logfilename));
+    fp = fopen(logfilename, "at");
+    if (fp) {
+        va_start(ptr, format);
+        vfprintf(fp, format, ptr);
+        vsprintf(allegro_error, format, ptr);
+        fputc('\n', fp);
+        fclose(fp);
+    }
+    pthread_mutex_unlock(&sLogMutex);
+}

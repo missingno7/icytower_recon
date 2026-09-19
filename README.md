@@ -21,7 +21,8 @@ Current results:
 - Complete game beta.c, control.c and timer.c: all 25 functions and their entire
   2043-byte text contributions match, including padding and resolved relocations.
 - custom.c has all ten source implementations, with nine exact function bodies
-  at -O2. `load_character_bmp` still differs; custom is not integrated yet.
+  at -O2. `load_character_bmp` still differs; its reconstructed dependencies
+  link in a separate synthetic audio PE but it is not naturally integrated yet.
 - directories.c: all seven functions and the complete 307-byte text contribution
   match, and the CU is included in the synthetic integration build.
 - csv.c: all six functions and its 680-byte text contribution match. Its
@@ -38,7 +39,7 @@ Current results:
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Fifteen validation tests include wrong relocation targets, altered code and
+- Sixteen validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),
