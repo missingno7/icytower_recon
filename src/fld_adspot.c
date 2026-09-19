@@ -21,6 +21,8 @@ int giAdCacheSize;
 FLDAdSpot *gpAdCache;
 
 static char localFilename[256];
+void fldads_update_local_adimg(char *pRemoteName);
+void *fldads_threadmain(void *data);
 
 void fldads_destroy_cache(void)
 {
@@ -112,4 +114,24 @@ void fldads_load_local_cache(void)
         fldads_load_cache_from_csv(pCsv);
         csv_destroy(pCsv);
     }
+}
+
+void fldads_update_cache(unsigned char *pData, int iDataSize)
+{
+    CSVParseContext *pCsv = csv_begin(pData, iDataSize);
+    if (!pCsv) {
+        log2file("Failed to start parsing CSV");
+    }
+    while (csv_next(pCsv) == 3) {
+        fldads_update_local_adimg(pCsv->pFieldPtrs[0]);
+    }
+    csv_rewind(pCsv);
+    fldads_load_cache_from_csv(pCsv);
+    csv_destroy(pCsv);
+    fldads_dump_local_cache();
+}
+
+void fldads_start(void)
+{
+    pthread_create(&gFLDADThread, NULL, fldads_threadmain, NULL);
 }
