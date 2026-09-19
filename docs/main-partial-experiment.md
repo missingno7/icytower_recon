@@ -156,6 +156,12 @@ saves a sub-bitmap with the current palette, and waits for F12 release. Its
 static counter allocation and direct same-CU logging call remain
 layout-dependent, so it is recorded as `DIFFER`.
 
+`open_web_browser` recovers its complete 111-byte URL-launch helper. It builds
+the historical `url.dll, FileProtocolHandler` argument, logs the command, and
+calls the stdcall `ShellExecuteA` API through `rundll32` with show mode 4. The
+local logging call and a duplicated empty string make the partial-CU candidate
+layout-dependent, so it remains `DIFFER`.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The

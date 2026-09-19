@@ -11,6 +11,9 @@
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
+extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
+    const char *operation, const char *file, const char *parameters,
+    const char *directory, int show);
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
@@ -217,6 +220,16 @@ void take_screenshot(BITMAP *bmp)
     while (key[KEY_F12])
         ;
 }
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+void open_web_browser(char *pURL)
+{
+    char cmd[256];
+    sprintf(cmd, "url.dll, FileProtocolHandler %s", pURL);
+    log2file(" calling '%s'", cmd);
+    ShellExecuteA(NULL, "open", "rundll32", cmd, "", 4);
+}
+#endif
 
 int ok_to_play(void)
 {
