@@ -270,3 +270,10 @@ line_alert is reconstructed from the 0x409138 overlay sequence. It applies the o
 
 
 show_instructions is reconstructed from 0x40c368. It blits assets 126 and 70 to the screen, clears held controls, fades in, then pumps focus and control state until fire, Escape, or window close before the matching fade out.
+
+`fadeOut` is recovered from its 0x40bf5c body and the DWARF-owned
+`swap_screen` bitmap. It copies the display, blends the copy over the swap
+buffer from alpha 0 through 255 at the requested rate, presents each frame
+after a timer tick, then clears the display. The new independent body is 578
+bytes against the historical 609 bytes and remains `DIFFER` while its local
+and basic-block allocation is recovered.
