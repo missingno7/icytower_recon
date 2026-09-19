@@ -6,6 +6,7 @@
 #include <winsock2.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct HTTPHeader {
     char *pHeader;
@@ -25,6 +26,26 @@ int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
                                 char *pMethod);
 void log2file(char *fmt, ...);
+char *strptime(const char *s, const char *format, struct tm *tm);
+time_t timegm(struct tm *tm);
+
+time_t httpGetLastModified(HTTPResponse *pResponse)
+{
+    if (pResponse) {
+        int i;
+
+        for (i = 0; i < pResponse->iNumHeaders; i++) {
+            if (!strcmp(pResponse->pHeaders[i].pHeader, "Last-Modified")) {
+                struct tm stm;
+
+                strptime(pResponse->pHeaders[i].pValue,
+                         "%a, %e %b %Y %H:%M:%S", &stm);
+                return timegm(&stm);
+            }
+        }
+    }
+    return 0;
+}
 
 int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)
 {

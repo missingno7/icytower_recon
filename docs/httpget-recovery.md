@@ -1,7 +1,7 @@
 # `httpget.c` recovery map
 
 `src/httpget.c` remains recovery-owned. The historical compilation unit spans
-`0x405890` through `0x4061af` in the original executable. Six independently
+`0x405890` through `0x4061af` in the original executable. Seven independently
 recovered functions now compile in its ordinary partial-object target; the
 remaining source is deliberately absent. This document records the
 oracle-derived map needed to continue without importing a substitute HTTP
@@ -25,7 +25,8 @@ every header, then the header array, payload, and response.
 `httpGetLastModified` searches the header array for the exact
 `"Last-Modified"` name and converts its value using the format
 `"%a, %e %b %Y %H:%M:%S"`, `strptime`, and `timegm`; a null response, no
-headers, or no matching header returns zero.
+headers, or no matching header returns zero. Its 126-byte body is recovered
+with independently resolved string, `strptime`, and `timegm` relocations.
 
 The 35-byte public `strptime` wrapper is recovered separately with its
 historical `regparm(3)` parser ABI; its 2028-byte `__strptime` body remains a
@@ -102,12 +103,13 @@ entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
 the original program code.
 
-The current `game-httpget` TDM-2 build verifies six of the ten historical
-functions as `FUNCTION_MATCH`: `destroyHTTPResponse` (116 bytes),
-`SplitURL` (267), `getSocketError` (12), `HTTPRequest` (136), `HTTPHead`
-(27), and `HTTPGet` (27). The comparison resolves all five `free` calls, the
+The current `game-httpget` TDM-2 build verifies seven of the ten historical
+functions as `FUNCTION_MATCH`: `httpGetLastModified` (126 bytes),
+`destroyHTTPResponse` (116), `SplitURL` (267), `getSocketError` (12),
+`HTTPRequest` (136), `HTTPHead` (27), and `HTTPGet` (27). The comparison
+resolves all five `free` calls, the URL parser's `strptime`/`timegm` calls, the
 URL parsing helper's allocator and string-library calls, the Winsock tail
 jump, each unique method literal, the original failure string, and every
-request-helper call independently. Its 587-byte partial text cannot
+request-helper call independently. Its 714-byte partial text cannot
 establish a complete-CU match; the full record is
 in `docs/experiments/game-httpget-O2.json`.
