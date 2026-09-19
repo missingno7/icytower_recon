@@ -5,6 +5,7 @@ length plus every byte after independently resolving each relocation symbol.
 No original bytes are used by compilation, only by this verifier.
 """
 import argparse
+import json
 import struct
 from pathlib import Path
 from common import ROOT, identity, read_json, run, write_json
@@ -35,6 +36,17 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     dies,_=parse(run([analysis_objdump,'--dwarf=info',obj_path],obj_path.parent/'dwarf.txt'))
     candidates={d['name']:d for d in dies.values() if d['tag']=='DW_TAG_subprogram' and d['low_pc'] is not None and d['high_pc'] is not None}
     original_by_name={f['name']:f for f in original}
+    def masked_code_equal(d,f):
+        """Compare code shape without consulting relocation operands."""
+        code=bytearray(raw[d['low_pc']:d['high_pc']])
+        reference=bytearray(exe.at_va(f['va'],f['size']))
+        if len(code)!=len(reference): return False
+        for r in obj.relocations:
+            if r['section']!=text['index'] or not d['low_pc']<=r['offset']<d['high_pc']: continue
+            p=r['offset']-d['low_pc']
+            code[p:p+4]=b'\0'*4
+            reference[p:p+4]=b'\0'*4
+        return code==reference
     orig_symbols={}
     for s in exe.symbols:
         if s.get('va') is not None:
@@ -63,6 +75,36 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         matches=own or matches
         if len({x['va'] for x in matches})==1:
             section_bases.setdefault(s['section'],set()).add(matches[0]['va']-s['value'])
+    # A function-scoped static has no stable COFF name: TDM appends a serial
+    # number.  Bind it by its DWARF source identity and independently matched
+    # owning function, never by the relocation operand being checked.
+    original_dies={}
+    for line in (ROOT/'evidence/census/dwarf-dies.jsonl').read_text(encoding='utf-8').splitlines():
+        d=json.loads(line)
+        original_dies[d['offset']]=d
+    static_evidence=[]
+    for d in dies.values():
+        if d['tag']!='DW_TAG_variable' or d['address'] is None: continue
+        parent=dies.get(d['parent'])
+        if parent is None or parent['tag']!='DW_TAG_subprogram': continue
+        function=original_by_name.get(parent['name'])
+        if function is None or not masked_code_equal(parent,function): continue
+        targets=[]
+        for old in original_dies.values():
+            if old['tag']!='DW_TAG_variable' or old.get('address') is None or old.get('name')!=d['name']: continue
+            old_parent=original_dies.get(old.get('parent'))
+            if old_parent is None or old_parent.get('tag')!='DW_TAG_subprogram' or old_parent.get('name')!=parent['name']: continue
+            if Path(old.get('decl_file_path','')).name==cu_file:
+                targets.append(old)
+        symbols=[s for s in obj.symbols if s['section']>0 and s['storage_class']==3
+                 and s['value']==d['address'] and not s['name'].startswith('.')]
+        addresses={old['address'] for old in targets}
+        if len(addresses)==1 and len(symbols)==1:
+            base=next(iter(addresses))-d['address']
+            section_bases.setdefault(symbols[0]['section'],set()).add(base)
+            static_evidence.append({'function':parent['name'],'name':d['name'],'candidate_offset':d['address'],
+                                    'original_va':next(iter(addresses)),'section':symbols[0]['name'],
+                                    'section_base':base})
     sections_by_index={s['index']:s for s in obj.sections}
     def unique_literal_target(sym,addend,instruction):
         """Resolve an anonymous read-only literal by unique content, not its field."""
@@ -218,6 +260,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             'object_sections':obj.sections,'object_symbols':obj.symbols,'object_relocations':obj.relocations,
             'common_allocations':[s for s in obj.symbols if s['section']==0 and s['value']>0],
             'initialized_data_comparison':data_evidence,
+            'static_data_evidence':static_evidence,
             'original_defined_globals':[g for g in read_json(ROOT/'evidence/census/globals.json') if g['cu']==cu_path and g['address'] is not None],
             'object_match':False,'cu_match':False,
             'limits':['Original .o files unavailable; original relocation records cannot be compared directly.',

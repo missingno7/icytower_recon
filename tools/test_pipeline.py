@@ -86,12 +86,15 @@ class PipelineTests(unittest.TestCase):
                   'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         for name in ('get_version_str','get_demo','get_controls','ok_to_play',
                      'switchedFromProgram','switchedToProgram','clickedCloseButton',
-                     'is_custom_replay','show_name'):
+                     'is_custom_replay','show_name','datafile_callback_slow',
+                     'datafile_callback','color_map_callback'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
                              10 if name in ('get_version_str','get_demo','get_controls','ok_to_play')
-                             else 66 if name=='is_custom_replay' else 36 if name=='show_name' else 15)
+                             else 66 if name=='is_custom_replay' else 36 if name=='show_name'
+                             else 33 if name=='datafile_callback_slow'
+                             else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',

@@ -88,6 +88,28 @@ int show_name(char *name, int attribs)
     return 0;
 }
 
+void draw_progress_bar(void);
+
+void datafile_callback_slow(DATAFILE *d)
+{
+    static int p;
+
+    if (!(p & 15))
+        draw_progress_bar();
+    p++;
+}
+
+void datafile_callback(DATAFILE *d)
+{
+    draw_progress_bar();
+}
+
+void color_map_callback(int pos)
+{
+    if (!(pos & 15))
+        draw_progress_bar();
+}
+
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)
 {
     return logg_load_memory(df[id].dat, df[id].size);
