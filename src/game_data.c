@@ -1,8 +1,6 @@
 /* Historical CU: F:\projects\icytower\trunk\source\game_data.c
  * Ownership: GAME
  * Partial source recovery.
- * UNKNOWN: add_jump_sequence @ 0x004040f4, 87 bytes
- * UNKNOWN: add_combo @ 0x0040414c, 62 bytes
  * UNKNOWN: getGameDataXML @ 0x00404254, 1855 bytes
  */
 
@@ -22,6 +20,26 @@ typedef struct {
 
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
+
+void add_jump_sequence(Tgame_data *gd,Tgd_jump_sequence *js)
+{
+    if (js->num && gd->jumpPosts<5000) {
+        gd->jumps[gd->jumpPosts].num=js->num;
+        gd->jumps[gd->jumpPosts].dist=js->dist;
+        gd->jumps[gd->jumpPosts].start=js->start;
+        gd->jumpPosts++;
+    }
+}
+
+void add_combo(Tgame_data *gd,Tgd_combo *c)
+{
+    if (gd->comboPosts<5000) {
+        gd->combos[gd->comboPosts].end=c->end;
+        gd->combos[gd->comboPosts].start=c->start;
+        gd->combos[gd->comboPosts].length=c->length;
+        gd->comboPosts++;
+    }
+}
 
 void destroy_game_data(void *gd) { free(gd); }
 
