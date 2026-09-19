@@ -89,6 +89,14 @@ instruction rearrange the failure blocks and differ elsewhere. This one-byte
 difference is retained as a source-form constraint, never normalized or
 patched.
 
+The cold-block layout provides one further scope check. In the oracle, the
+send-failure handler calls `getSocketError` and `log2file` before the saved
+variable-length stack pointer is restored at the shared exit. A candidate that
+uses labels outside the VLA scope emits that restore before `getSocketError`;
+it is rejected even though it has the same error messages and total transport
+behavior. The source must keep that handler within the VLA lifetime while also
+producing the oracle's cold-block ordering.
+
 This map gives the next implementation a closed evidence boundary: recover the
 entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
