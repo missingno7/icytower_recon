@@ -14,7 +14,7 @@
  * DIFFER: load_replay @ 0x0041cde8, 1136 bytes
  * UNKNOWN: replay_selector @ 0x0041d258, 2845 bytes
  * UNKNOWN: save_replay @ 0x0041dd78, 1227 bytes
- * UNKNOWN: get_replay_property @ 0x0041e244, 1147 bytes
+ * DIFFER: get_replay_property @ 0x0041e244, 1147 bytes
  * UNKNOWN: my_strcmp @ 0x0041e6c0, 128 bytes
  * DIFFER: add_itr_file @ 0x0041e740, 360 bytes
  */
@@ -276,6 +276,82 @@ Treplay *load_replay(char *filename)
 error:
     destroy_replay(r);
     return 0;
+}
+
+int get_replay_property(const char *filename, int property)
+{
+    void *pf;
+    Treplay r_temp;
+    Treplay *r;
+    int i;
+    int retval;
+
+    pf = pack_fopen(filename, "rb");
+    if (!pf) {
+        log2file("Couldn't open %s", filename);
+        return 0;
+    }
+    pack_fread(r_temp.header, 6, pf);
+    pack_fread(&r_temp.size, 4, pf);
+    pack_fclose(pf);
+    if (memcmp(r_temp.header, "ITR", 3)) {
+        log2file("%s has wrong first 3 bytes of header", filename);
+        return -1000;
+    }
+    if (r_temp.header[3] != '1' || r_temp.header[4] != '4' ||
+        r_temp.header[5] != '0') {
+        log2file("%s has wrong header version", filename);
+        if (r_temp.header[3] == '0' && r_temp.header[4] == '1' &&
+            r_temp.header[5] == '1')
+            return -1001;
+        if (r_temp.header[3] == '1' && r_temp.header[4] == '3' &&
+            r_temp.header[5] == '0')
+            return -1130;
+        return -1000;
+    }
+    r = create_replay(r_temp.size);
+    if (!r) {
+        log2file("Couldn't create a replay object");
+        return -1;
+    }
+    pf = pack_fopen(filename, "rb");
+    if (!pf) {
+        log2file("Can't open %s", filename);
+        destroy_replay(r);
+        return -1;
+    }
+    pack_fread(r->header, 6, pf);
+    pack_fread(&r->size, 4, pf);
+    pack_fread(r->name, 32, pf);
+    pack_fread(r->date, 32, pf);
+    pack_fread(&r->score, 4, pf);
+    pack_fread(&r->floor, 4, pf);
+    pack_fread(&r->combo, 4, pf);
+    pack_fread(&r->no_combo_top_floor, 4, pf);
+    pack_fread(&r->biggest_lost_combo, 4, pf);
+    for (i = 0; i < 5; i++)
+        pack_fread(&r->ccc[i], 4, pf);
+    for (i = 0; i < 5; i++)
+        pack_fread(&r->jc[i], 4, pf);
+    pack_fread(&r->floor_shrink, 4, pf);
+    pack_fread(&r->floor_size, 4, pf);
+    pack_fread(&r->start_speed, 4, pf);
+    pack_fread(&r->speed_increase, 4, pf);
+    pack_fread(&r->gravity, 4, pf);
+    pack_fclose(pf);
+    retval = 0;
+    if (property == 2) {
+        retval = r->score;
+        log2file("%s:score=%d", filename, retval);
+    } else if (property == 3) {
+        retval = r->combo;
+        log2file("%s:combo=%d", filename, retval);
+    } else if (property == 4) {
+        retval = r->floor;
+        log2file("%s:floor=%d", filename, retval);
+    }
+    destroy_replay(r);
+    return retval;
 }
 int my_strcmp(const void *c, const void *d)
 {
