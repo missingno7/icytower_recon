@@ -1,4 +1,15 @@
 #include "map.h"
+#include <stdlib.h>
+
+typedef struct Tmap_replay {
+    unsigned char reserved[140];
+    int floor_shrink;
+    int floor_size;
+} Tmap_replay;
+
+Tmap_replay *get_demo(void);
+
+int floor_size_modifiers[5] = {2, 0, -2, -4, -6};
 
 void reset_map(Tmap *m)
 {
@@ -40,4 +51,58 @@ void getFloorData(Tmap *m, int cy, int *fy, int *fx1, int *fx2)
     *fy = (y << 4) + (m->offset % 16);
 }
 
-/* add_floor @ 0x004167dc, 608 bytes: recovery pending. */
+void add_floor(Tmap *m)
+{
+    int i;
+    int width;
+
+    for (i=0; i<31; i++)
+        m->room[i]=m->room[i+1];
+
+    m->room[31].tiles = m->offset>4999 ? 10 : m->offset/500;
+    if ((m->offset%250==0 && m->offset<=5004) || m->offset%2500==0) {
+        m->room[31].empty=0;
+        m->offset++;
+        m->room[31].start_tile=0;
+        m->room[31].end_tile=40;
+    }
+    else if (m->offset%5==0) {
+        m->room[31].empty=0;
+        m->offset++;
+        if (get_demo()->floor_shrink) {
+            if (m->offset>2999) {
+                if (m->offset>5004) {
+                    if (m->offset<=7504) width=5;
+                    else if (m->offset<=10004) width=4;
+                    else width=m->offset<50005 ? 3 : 2;
+                }
+                else width=6;
+            }
+            else {
+                width=(int)(10.0f*(300-m->offset/5)/300.0f);
+                if (width<1) width=6;
+                else width=rand()%width+6;
+            }
+        }
+        else width=rand()%10+6;
+
+        width+=floor_size_modifiers[get_demo()->floor_size];
+        if (width>0) {
+            m->room[31].start_tile=rand()%(30-width)+5;
+            m->room[31].end_tile=m->room[31].start_tile+width;
+        }
+        else {
+            m->room[31].start_tile=rand()%29+5;
+            m->room[31].end_tile=m->room[31].start_tile+1;
+        }
+    }
+    else {
+        m->room[31].empty=-1;
+        m->offset++;
+    }
+
+    if ((m->offset-1)%50==0)
+        m->room[31].tiles=m->offset/10;
+    else
+        m->room[31].tiles=0;
+}
