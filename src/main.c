@@ -51,6 +51,8 @@ Tprofile *profile;
 SAMPLE *bg_menu;
 SAMPLE *menu_sounds[2];
 Tcustom custom;
+int reward_time;
+fixed reward_scale;
 
 char *get_version_str(void)
 {
@@ -231,4 +233,13 @@ void end_game(void)
 {
     log2file(" freeing custom data");
     destroy_custom_data(&custom);
+}
+
+inline void update_reward(void)
+{
+    if (reward_time > 60)
+        reward_scale += 3277;
+    else if (reward_time <= 9)
+        reward_scale -= 6554;
+    reward_time--;
 }

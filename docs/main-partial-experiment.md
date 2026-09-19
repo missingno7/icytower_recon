@@ -58,6 +58,12 @@ the separately defined `log2file` has no COFF relocation, so its displacement
 remains layout-dependent while the rest of historical main.c is absent; it is
 therefore recorded as `DIFFER`, with no exact-function credit.
 
+`update_reward` recovers the inline fixed-point reward transition over the
+typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
+subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
+has the original operands and relocations but a 54-byte equivalent branch
+layout rather than the original 55-byte layout, so it also remains `DIFFER`.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
