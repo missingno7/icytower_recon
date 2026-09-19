@@ -69,11 +69,29 @@ void line_alert(char *text)
     textprintf_centre_ex(screen,data[51].dat,320,220,-1,-1,"%s",text);
 }
 
-extern void fadeIn(BITMAP *bmp, int speed);
 void blit_to_screen(BITMAP *bmp);
 void checkMenuFocus(void);
 
 BITMAP *swap_screen;
+
+void fadeIn(BITMAP *bmp, int speed)
+{
+    int a;
+    BITMAP *mybmp;
+
+    mybmp=create_bitmap(SCREEN_W,SCREEN_H);
+    for (a=255;a>0;a-=speed) {
+        cycle_count=0;
+        draw_sprite(mybmp,bmp,0,0);
+        set_trans_blender(0,0,0,a);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(mybmp,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+        blit_to_screen(mybmp);
+        while (!cycle_count) rest(2);
+    }
+    destroy_bitmap(mybmp);
+}
 
 void fadeOut(int speed)
 {

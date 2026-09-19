@@ -277,3 +277,9 @@ buffer from alpha 0 through 255 at the requested rate, presents each frame
 after a timer tick, then clears the display. The new independent body is 578
 bytes against the historical 609 bytes and remains `DIFFER` while its local
 and basic-block allocation is recovered.
+
+`fadeIn` is recovered from 0x40c1c0. It mirrors the transition in reverse:
+it draws the supplied bitmap into a temporary surface, blends it from alpha
+255 toward transparent, presents each timer-driven frame, and destroys the
+temporary. Its independently compiled body has the exact 424-byte historical
+extent and remains `DIFFER` only at a late register/layout decision.
