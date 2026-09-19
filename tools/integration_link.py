@@ -26,7 +26,7 @@ def main():
     (out/'build.json').unlink(missing_ok=True)
     objects=[]
     reports=[]
-    for target in ['game-beta','game-control','game-csv','game-directories','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-directories','game-timer','game-stars']:
         obj,report=compile_target(target,dest=out/target,compiler=a.compiler)
         objects.append(obj)
         reports.append(report)

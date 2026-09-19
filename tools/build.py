@@ -7,6 +7,7 @@ from pathlib import Path
 from common import ROOT, TC, identity, read_json, run, write_json
 
 TARGETS={
+    'game-stars': {'source':'src/stars.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\stars.c','default':'-O2'},
     'game-main-partial': {'source':'src/main.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\main.c','default':'-O2'},
     'allegro-logg': {'source':'third_party/recovered/logg.c','historical_cu':'C:\\Lib\\allegro4\\addons\\logg\\logg.c','default':'-O2',
                      'includes':['third_party/allegro-4.4.1/addons/logg','third_party/libvorbis-1.2.0/include','third_party/libogg-1.1.3/include']},

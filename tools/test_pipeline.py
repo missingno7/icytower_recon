@@ -80,6 +80,15 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(all(s['content_equal'] for s in r['initialized_data_comparison']))
         self.assertFalse(r['object_match'])
 
+    def test_complete_stars_text(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-stars/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\stars.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],3)
+        self.assertEqual(r['function_matches'],3)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        self.assertEqual(r['candidate_text_logical_size'],643)
+        self.assertFalse(r['object_match'])
+
     def test_complete_beta_text(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\beta.c',ROOT/'assets/icytower15.exe',OBJDUMP)

@@ -25,6 +25,8 @@ Current results:
   link in a separate synthetic audio PE but it is not naturally integrated yet.
 - directories.c: all seven functions and the complete 307-byte text contribution
   match, and the CU is included in the synthetic integration build.
+- stars.c: all three functions and the complete 643-byte text contribution
+  match, including the historical x87 star-scrolling arithmetic.
 - csv.c: all six functions and its 680-byte text contribution match. Its
   upstream ownership remains ambiguous and separate from game-owned totals.
   The natural beta/control/csv address-and-extent prefix spans 2576 bytes.
@@ -39,7 +41,7 @@ Current results:
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Sixteen validation tests include wrong relocation targets, altered code and
+- Seventeen validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),
