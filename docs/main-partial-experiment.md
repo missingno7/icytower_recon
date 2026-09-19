@@ -129,6 +129,13 @@ all symbolic targets resolve. The compiler chooses a different register for a
 MIDI guard, so both remain `DIFFER` pending the original full-CU register
 allocation.
 
+`syncOptionsFromProfile` recovers its full 157-byte reverse profile sync. It
+copies the four persisted option fields, updates the three menu-control values,
+selects the saved avatar, and rebuilds the profile replay directory with its
+`"replays/"` suffix. All named data references resolve, while the direct
+same-CU avatar call and a duplicated suffix literal remain layout-dependent;
+it is therefore recorded as `DIFFER`.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The

@@ -41,13 +41,28 @@ typedef struct Toptions {
 } Toptions;
 
 typedef struct Tprofile {
-    unsigned char reserved0[1244];
+    unsigned char reserved0[6];
+    char name[1];
+    unsigned char reserved1[0x4dc-7];
     int flash;
     int jump_hold;
-    unsigned char reserved1[68];
+    unsigned char reserved2[68];
     int msc_volume;
     int snd_volume;
 } Tprofile;
+
+typedef struct Tmenu_slider {
+    int value;
+    int min;
+    int max;
+    int step;
+} Tmenu_slider;
+
+typedef struct Tmenu_selection {
+    int value;
+    int size;
+    char caption[128];
+} Tmenu_selection;
 
 typedef struct Tavatar_profile {
     unsigned char reserved[0x4e4];
@@ -92,6 +107,10 @@ int fast_forward;
 int fast_fast_forward;
 int gameMusicVoiceID;
 SAMPLE *bg_beat;
+Tmenu_slider snd_volume_slider;
+Tmenu_slider msc_volume_slider;
+Tmenu_selection eyecandy_selection;
+char replay_directory[1024];
 
 char *get_version_str(void)
 {
@@ -122,12 +141,29 @@ void new_srand(int s)
     seed=s;
 }
 
+void set_current_avatar(void);
+
 void syncProfileFromOptions(void)
 {
     profile->msc_volume = options.msc_volume;
     profile->snd_volume = options.snd_volume;
     profile->jump_hold = options.jump_hold;
     profile->flash = options.flash;
+}
+
+void syncOptionsFromProfile(void)
+{
+    options.msc_volume = profile->msc_volume;
+    options.snd_volume = profile->snd_volume;
+    options.jump_hold = profile->jump_hold;
+    options.flash = profile->flash;
+    snd_volume_slider.value = options.snd_volume;
+    msc_volume_slider.value = options.msc_volume;
+    eyecandy_selection.value = options.flash;
+    set_current_avatar();
+    get_profile_dir_for_profile(replay_directory, sizeof(replay_directory),
+                                profile->name);
+    strcat(replay_directory, "replays/");
 }
 
 int ok_to_play(void)
