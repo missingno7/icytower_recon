@@ -21,3 +21,11 @@ bullet, and renders the three-piece and movable slider assets through Allegro's
 historical inline `draw_sprite` dispatch. The candidate is 952 bytes against
 the historical 1,118-byte function and is recorded as `DIFFER`; its shorter
 code results from equivalent compiler register allocation and branch folding.
+
+handle_menu now reconstructs the menu event loop. It resets the selected entry,
+draws through an optional callback, debounces both controls, dispatches nested
+menus, adjusts sliders and each selection type within its historical bounds,
+toggles boolean options, captures control keys, and handles profile actions.
+The original return-code table and menu data tables establish these actions.
+The candidate is 1,034 bytes against the historical 1,120-byte function and
+is recorded as `DIFFER`.

@@ -4,6 +4,7 @@
  */
 #include <allegro.h>
 #include "control.h"
+#include "timer.h"
 typedef struct Tmenu_slider {
     int value;
     int min;
@@ -13,8 +14,21 @@ typedef struct Tmenu_slider {
 
 typedef struct Tmenu_selection {
     int value;
-    int max;
+    int size;
+    char caption[128];
 } Tmenu_selection;
+
+typedef struct Tmenu_floor_selection {
+    int value;
+    int max;
+} Tmenu_floor_selection;
+
+typedef struct Tmenu_char_selection {
+    int value;
+    int max;
+    BITMAP *bmp;
+    PALETTE pal;
+} Tmenu_char_selection;
 
 typedef struct Tmenu {
     char caption[128];
@@ -48,7 +62,7 @@ int get_selection_value(Tmenu_selection *s) { return s->value; }
 
 int set_selection_value(Tmenu_selection *s, int v)
 {
-    if (v < 0 || v >= s->max) return 0;
+    if (v < 0 || v >= s->size) return 0;
     s->value = v;
     return -1;
 }
@@ -80,11 +94,21 @@ extern void key_to_str(int key, char *dest);
 extern void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int x, int y,
                       int step_in);
 extern void play_menu_move(void);
+extern void play_menu_select(void);
+extern void checkMenuFocus(void);
+extern void blit_to_screen(BITMAP *bmp);
+extern void line_alert(char *text);
+extern void view_profile(void *p);
+extern void change_profile(void);
+extern void *profile;
+extern int closeButtonClicked;
 extern int stepIn;
 extern volatile char key[];
-#ifndef KEY_F1
-#define KEY_F1 59
+/* Icy Tower was built against an older Allegro scancode layout. */
+#ifdef KEY_F1
+#undef KEY_F1
 #endif
+#define KEY_F1 59
 
 void build_menu_string(Tmenu *m, char *dest);
 
@@ -218,4 +242,154 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
     *data = (int)m[pos].data;
     mp->pos = pos;
     return return_value;
+}
+
+int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp,
+                void (*callback)(void), int x, int y, int dx)
+{
+    int menu_return;
+    int handle_keys;
+    int data;
+    int key_counter;
+
+    stepIn = dx;
+    data = 0;
+    reset_menu(menu, mp, mp->pos);
+    handle_keys = 0;
+    key_counter = 0;
+    menu_return = 0;
+    while (!closeButtonClicked) {
+        cycle_count = 0;
+        checkMenuFocus();
+        if (callback)
+            callback();
+        else
+            clear(bmp);
+        if (handle_keys)
+            menu_return = update_game_menu(bmp, menu, mp, ctrl, x, y, &data);
+        else
+            menu_return = 0;
+        blit_to_screen(bmp);
+
+        if (is_any(ctrl) || is_any((Tcontrol *)&mp->ctrl[0]) || key[KEY_F1]) {
+            if (key_counter)
+                key_counter--;
+            else
+                key_counter = 39;
+            handle_keys = key_counter ? 0 : -1;
+        } else {
+            key_counter = 0;
+            handle_keys = -1;
+        }
+        poll_control(ctrl, 1);
+        poll_control((Tcontrol *)&mp->ctrl[0], 0);
+
+        if (menu_return) {
+            play_menu_select();
+            switch (menu_return) {
+            case 101:
+            case 104:
+            case 105:
+            case 107:
+            case 108:
+            case 122:
+            case 123:
+            case 124:
+            case 133:
+                return menu_return;
+            case 103: {
+                int sub_ret;
+
+                mp->pos = 0;
+                sub_ret = handle_menu((Tmenu *)data, mp, ctrl, bmp, callback,
+                                      x, y, dx);
+                if (sub_ret && sub_ret != 108)
+                    return sub_ret;
+                break;
+            }
+            case 109: {
+                Tmenu_slider *sld = (Tmenu_slider *)data;
+
+                sld->value += sld->step;
+                if (sld->value > sld->max)
+                    sld->value = sld->max;
+                break;
+            }
+            case 110: {
+                Tmenu_slider *sld = (Tmenu_slider *)data;
+
+                sld->value -= sld->step;
+                if (sld->value < sld->min)
+                    sld->value = sld->min;
+                break;
+            }
+            case 111:
+            case 118:
+            case 120:
+                if (--*(int *)data < 0)
+                    *(int *)data = 0;
+                break;
+            case 112: {
+                Tmenu_selection *sel = (Tmenu_selection *)data;
+
+                if (++sel->value > sel->size - 1)
+                    sel->value = sel->size - 1;
+                break;
+            }
+            case 113:
+                *(int *)data = *(int *)data < 1 ? -1 : 0;
+                break;
+            case 114: {
+                int k;
+                int kp;
+                char txt[256];
+
+                sprintf(txt, "press key for %s", menu[mp->pos].caption);
+                line_alert(txt);
+                for (k = 0; k < 128; k++)
+                    key[k] = 0;
+                for (;;) {
+                    k = 0;
+                    for (kp = 0; kp < 128; kp++)
+                        if (key[kp])
+                            k = kp;
+                    if (k == KEY_F1)
+                        k = *(int *)data;
+                    rest(2);
+                    if (k)
+                        break;
+                }
+                for (kp = 0; kp < 128; kp++)
+                    key[kp] = 0;
+                *(int *)data = k;
+                play_menu_select();
+                break;
+            }
+            case 119:
+            case 121: {
+                Tmenu_floor_selection *sel = (Tmenu_floor_selection *)data;
+
+                if (++sel->value > sel->max)
+                    sel->value = sel->max;
+                break;
+            }
+            case 131:
+                view_profile(profile);
+                break;
+            case 132:
+                change_profile();
+                break;
+            default: {
+                char buf[256];
+
+                sprintf(buf, "unknown return value: %d", menu_return);
+                my_alert("handle_menu", buf, NULL, "OK", NULL, 0, 0);
+                break;
+            }
+            }
+        }
+        while (!cycle_count)
+            rest(2);
+    }
+    return menu_return;
 }
