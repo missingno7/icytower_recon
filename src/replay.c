@@ -1,8 +1,7 @@
-/* Historical CU: F:\projects\icytower\trunk\source\replay.c
- * Ownership: GAME
- * Source recovery pending. This file intentionally defines no fallback code.
- * UNKNOWN: get_sort_method @ 0x0041b9ac, 10 bytes
- * UNKNOWN: set_sort_method @ 0x0041b9b8, 13 bytes
+/* Partial historical replay.c recovery.
+ * Ownership: GAME.
+ *
+ * The remaining functions below are still pending reconstruction:
  * UNKNOWN: hash @ 0x0041b9c8, 71 bytes
  * UNKNOWN: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
  * UNKNOWN: calc_replay_checksum @ 0x0041bac4, 676 bytes
@@ -17,3 +16,9 @@
  * UNKNOWN: my_strcmp @ 0x0041e6c0, 128 bytes
  * UNKNOWN: add_itr_file @ 0x0041e740, 360 bytes
  */
+
+int sort_method;
+
+int get_sort_method(void) { return sort_method; }
+
+void set_sort_method(int sm) { sort_method = sm; }
