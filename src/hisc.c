@@ -1,6 +1,5 @@
 /* Historical CU: F:\projects\icytower\trunk\source\hisc.c
  * Ownership: GAME
- * UNKNOWN: draw_table @ 0x00404a7c, 441 bytes
  * UNKNOWN: view_scores @ 0x00404c38, 2552 bytes
  */
 
@@ -14,11 +13,22 @@ typedef struct {
     Thisc_post *posts;
 } Thisc_table;
 
+typedef struct {
+    void *dat;
+    int type;
+    long size;
+    void *prop;
+} DATAFILE;
+
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
 extern char *strcpy(char *dst,const char *src);
 extern long pack_fread(void *buffer,long bytes,void *fp);
 extern long pack_fwrite(const void *buffer,long bytes,void *fp);
+extern DATAFILE *data;
+extern int makecol(int r,int g,int b);
+extern void textprintf_ex(void *dst,void *font,int x,int y,int color,int bg,const char *fmt,...);
+extern void textprintf_right_ex(void *dst,void *font,int x,int y,int color,int bg,const char *fmt,...);
 
 void destroy_hisc_table(Thisc_table *table)
 {
@@ -87,6 +97,27 @@ void sort_hisc_table(Thisc_table *table)
             table->posts[j]=table->posts[j-1];
         table->posts[j]=post;
     }
+}
+
+int draw_table(void *dst,int x,int y,char *header,Thisc_table *table)
+{
+    int i;
+    int yPos;
+    int col;
+
+    col=makecol(30,20,10);
+    if (dst) textprintf_ex(dst,data[51].dat,x,y-20,-1,-1,"%s",header);
+    for (yPos=y+15,i=0;i<5;i++) {
+        if (table->posts[i].value) {
+            if (dst) {
+                textprintf_right_ex(dst,data[53].dat,x+20,yPos,col,-1,"%d.",i+1);
+                textprintf_ex(dst,data[53].dat,x+25,yPos,col,-1,"%s",table->posts[i].name);
+                textprintf_right_ex(dst,data[53].dat,x+220,yPos,col,-1,"%d",table->posts[i].value);
+            }
+            yPos+=12;
+        }
+    }
+    return yPos;
 }
 
 void enter_hisc_table(Thisc_table *table,int value,char *name)
