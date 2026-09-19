@@ -34,7 +34,17 @@ python tools/link_probe.py --compiler tdm-2
 python tools/runtime_compare.py
 ```
 
-The integration executable uses a synthetic main and real control/timer
-objects plus the rebuilt archive. It has linked successfully but has not
-been run. Building the archive does not establish byte equality of all its
-CUs; the selected timer/color/blit comparison results remain separately scoped.
+The integration executable uses a synthetic main and the recovered
+beta/control/csv/directories/timer/stars objects plus the rebuilt archive. It
+has linked successfully but has not been run. Building the archive does not
+establish byte equality of all its CUs; the selected timer/color/blit
+comparison results remain separately scoped.
+
+An expanded ordinary TDM-2 link that adds options, replay, and main-partial
+reaches those recovered objects without any original-code input. Once
+main-partial resolves replay's `log2file` calls, the linker exposes the next
+real dependency frontier: custom image loading, pthread mutex imports,
+profile and high-score persistence, game flow, map/particle/ad paths,
+presentation, and logg audio. The synthetic probe also supplies an
+`END_OF_MAIN()` wrapper, so it cannot accompany main-partial's historical
+wrapper. This failed link is a dependency measurement, not a game executable.

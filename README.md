@@ -32,8 +32,10 @@ Current results:
   custom-audio PE.
 - main.c: `get_version_str`, `get_demo`, `get_controls`, `new_rand`,
   `new_srand`, `ok_to_play`, the three focus/close callbacks, and
-  `is_custom_replay`, `show_name`, `getSampleFromOggDatafile`, and the three
-  progress callbacks match at -O2. `syncProfileFromOptions`, menu-music
+  `is_custom_replay`, `show_name`, `getSampleFromOggDatafile`, and two
+  progress callbacks match at -O2. `datafile_callback_slow` retains its
+  original 33-byte counter body but is not exact while partial-CU BSS-static
+  ordering remains unresolved. `syncProfileFromOptions`, menu-music
   start/stop, and the two menu-sound wrappers also match; the other main
   functions remain explicit partial-CU work. `replaceBadCharacters` also
   matches its complete signed string-filtering loop, and `pwd_garble_string`
@@ -42,6 +44,7 @@ Current results:
   `END_OF_MAIN()` macro emits the exact 50-byte `WinMain` wrapper.
   `set_current_avatar` also matches its complete 96-byte profile-avatar scan,
   `for_each_directory` matches its 109-byte Allegro enumeration wrapper, and
+  `run_demo` and `uninit_game` match their complete 159- and 646-byte bodies.
   `play_sound` plus its 141-byte `play_jump_sound` threshold selector are
   recovered source bodies whose direct same-CU call displacements remain
   layout-dependent in this partial build.
