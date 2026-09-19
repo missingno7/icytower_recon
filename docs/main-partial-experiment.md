@@ -44,6 +44,12 @@ the latter is required to preserve the historical signed comparison branch.
 `pwd_garble_string` matches its complete 52-byte in-place XOR loop. The
 independently recovered `len_i` local preserves the original signed loop bound.
 
+`line_intersect` has a source-derived partial candidate: its ten integer
+parameters, two integer outputs, three float locals, and segment-endpoint
+tests are recovered from DWARF and x87 disassembly. It currently emits 322
+bytes versus the original 302, so it remains `DIFFER`; no geometry recovery
+credit is claimed until its exact x87 comparison schedule is matched.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The

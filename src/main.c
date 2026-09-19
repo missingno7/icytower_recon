@@ -163,6 +163,21 @@ void pwd_garble_string(char *str, int key)
         str[i] ^= key - i;
 }
 
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy,
+                   int *ix, int *iy)
+{
+    float r, s, denom;
+
+    denom = (dy - cy) * (bx - ax) + (cx - dx) * (by - ay);
+    r = ((dx - cx) * (ay - cy) + (cy - dy) * (ax - cx)) / denom;
+    s = ((ay - cy) * (bx - ax) + (ay - by) * (ax - cx)) / denom;
+    if (r == 0.0f || s == 0.0f || r == 1.0f || s == 1.0f)
+        return 0;
+    *ix = ax + (int)(r * (bx - ax) + 0.5);
+    *iy = ay + (int)(r * (by - ay) + 0.5);
+    return 1;
+}
+
 void draw_progress_bar(void);
 
 void datafile_callback_slow(DATAFILE *d)
