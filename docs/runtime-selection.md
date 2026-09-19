@@ -45,9 +45,9 @@ comparison results remain separately scoped.
 main-partial's own historical `WinMain` wrapper. It records the ordinary
 linker's result in `build/recovered-game/tdm-2/link.json` without any
 synthetic entrypoint, stubs, original-code input, or execution. The current
-frontier starts with `SplitURL` and `HTTPFetchInternal`, then `_mangled_main`,
-custom image loading, profile/game-flow/presentation routines, remaining ad
-HTTP support, profile data tables, and logg audio. This failed link is a
+frontier starts with `HTTPFetchInternal`, then `_mangled_main`, profile and
+game-flow routines (`select_profile`, `new_game`, `play`), presentation,
+audio, ad-HTTP, and profile-table dependencies. This failed link is a
 dependency measurement, not a game executable.
 
 The three loadpng source files are exact Allegro 4.4.1 inputs. The project now
