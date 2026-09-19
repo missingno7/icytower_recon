@@ -69,6 +69,33 @@ void line_alert(char *text)
     textprintf_centre_ex(screen,data[51].dat,320,220,-1,-1,"%s",text);
 }
 
+extern void fadeIn(BITMAP *bmp, int speed);
+extern void fadeOut(int speed);
+void checkMenuFocus(void);
+
+void show_instructions(void)
+{
+    int done;
+
+    blit(data[126].dat,screen,0,0,0,0,640,480);
+    masked_blit(data[70].dat,screen,0,0,0,0,640,480);
+    while (is_any(&ctrl))
+        poll_control(&ctrl,0);
+    fadeIn(screen,16);
+    done=0;
+    while (!closeButtonClicked && !done) {
+        cycle_count=0;
+        checkMenuFocus();
+        poll_control(&ctrl,0);
+        done=is_fire(&ctrl);
+        if (key[KEY_ESC])
+            done=1;
+        if (!cycle_count)
+            rest(2);
+    }
+    fadeOut(16);
+}
+
 typedef struct Toptions {
     int flash;
     unsigned char reserved0[4];
