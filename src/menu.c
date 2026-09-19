@@ -50,6 +50,8 @@ typedef struct Tmenu_params {
     int fo;
 } Tmenu_params;
 
+int stepIn;
+
 int get_slider_value(Tmenu_slider *s) { return s->value; }
 
 int set_slider_value(Tmenu_slider *s, int v)
