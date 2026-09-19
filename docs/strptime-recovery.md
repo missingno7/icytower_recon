@@ -21,3 +21,22 @@ unrecovered caller is absent; the retention annotations do not alter their
 emitted function bytes. The current comparison reports `FUNCTION_MATCH` for
 all three recovered functions. `__strptime` (2028 bytes) remains unrecovered,
 so this compilation unit is not yet complete.
+
+## Provenance frontier
+
+The observed table names, `match_string` and `first_day` structures identify the
+KTH/Newlib/Heimdal `strptime` family. The independently matched helper bytes
+also establish the historical compiler's interpretation of the family's
+weekday expression. The original string table uses `"March"`, placing its
+lineage after the early `"Mars"` spelling found in the 1999 source.
+
+The remaining parser is not an unmodified drop of a published revision. Its
+fourth `gmt` state argument and `%Z` path share the older FreeBSD-style
+`_strptime` timezone handling, while its English tables and week-number helpers
+come from the KTH family. Public family revisions are therefore research
+references only: no candidate body is adopted unless its TDM-GCC comparison
+reports `FUNCTION_MATCH` for the complete 2028-byte `_strptime` extent.
+
+Research references: the [2002 Newlib import](https://github.com/mirror/newlib-cygwin/blob/dea7e25ca71e6a6c690f09a43b04f2858c1c348d/newlib/libc/time/strptime.c), the
+[1999 Heimdal source](https://github.com/heimdal/heimdal/blob/0d3fc31121aa/lib/roken/strptime.c), and the
+[FreeBSD-style stateful parser](https://git.brainchurts.com/uBixOS/ubixos/blob/f6a7e39c29077265516ce890cf998c46b957136e/src/lib/libc/stdtime/strptime.c).
