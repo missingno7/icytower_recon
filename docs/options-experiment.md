@@ -1,7 +1,9 @@
 # Partial `options.c` experiment
 
-`hash3` is byte-exact at `-O2`. Its shift/xor and multiply recurrence is
-verified against the original historical CU through
+`hash3` and `reset_options` are byte-exact at `-O2`. The reset recovery
+includes the full `Toptions` layout, default string buffers, `file_size_ex`
+call, and original field-assignment order. The hash's shift/xor and multiply
+recurrence is verified against the original historical CU through
 `build/experiments/tdm-2/game-options/O2`.
 
 The remaining options functions are explicit unknowns, with original text used
