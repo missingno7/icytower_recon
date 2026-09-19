@@ -59,27 +59,27 @@ void add_floor(Tmap *m)
     for (i=0; i<31; i++)
         m->room[i]=m->room[i+1];
 
-    m->room[31].tiles = m->offset>4999 ? 10 : m->offset/500;
-    if ((m->offset%250==0 && m->offset<=5004) || m->offset%2500==0) {
+    m->room[31].tiles = m->room[31].level>4999 ? 10 : m->room[31].level/500;
+    if ((m->room[31].level%250==0 && m->room[31].level<=5004) || m->room[31].level%2500==0) {
         m->room[31].empty=0;
-        m->offset++;
+        m->room[31].level++;
         m->room[31].start_tile=0;
         m->room[31].end_tile=40;
     }
-    else if (m->offset%5==0) {
+    else if (m->room[31].level%5==0) {
         m->room[31].empty=0;
-        m->offset++;
+        m->room[31].level++;
         if (get_demo()->floor_shrink) {
-            if (m->offset>2999) {
-                if (m->offset>5004) {
-                    if (m->offset<=7504) width=5;
-                    else if (m->offset<=10004) width=4;
-                    else width=m->offset<50005 ? 3 : 2;
+            if (m->room[31].level>2999) {
+                if (m->room[31].level>5004) {
+                    if (m->room[31].level<=7504) width=5;
+                    else if (m->room[31].level<=10004) width=4;
+                    else width=m->room[31].level<50005 ? 3 : 2;
                 }
                 else width=6;
             }
             else {
-                width=(int)(10.0f*(300-m->offset/5)/300.0f);
+                width=(int)(10.0f*(300-m->room[31].level/5)/300.0f);
                 if (width<1) width=6;
                 else width=rand()%width+6;
             }
@@ -98,11 +98,11 @@ void add_floor(Tmap *m)
     }
     else {
         m->room[31].empty=-1;
-        m->offset++;
+        m->room[31].level++;
     }
 
-    if ((m->offset-1)%50==0)
-        m->room[31].tiles=m->offset/10;
+    if ((m->room[31].level-1)%50==0)
+        m->room[31].sign=m->room[31].level/10;
     else
-        m->room[31].tiles=0;
+        m->room[31].sign=0;
 }
