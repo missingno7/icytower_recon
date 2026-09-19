@@ -6,13 +6,39 @@
 #include <winsock2.h>
 #include <stdlib.h>
 
-typedef struct HTTPResponse HTTPResponse;
+typedef struct HTTPHeader {
+    char *pHeader;
+    char *pValue;
+} HTTPHeader;
+
+typedef struct HTTPResponse {
+    int iStatusCode;
+    unsigned int iNumHeaders;
+    HTTPHeader *pHeaders;
+    unsigned char *pPayload;
+    unsigned int iPayloadSize;
+} HTTPResponse;
 
 HTTPResponse *HTTPRequest(char *pURL, char *pMethod);
 int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
                                 char *pMethod);
 void log2file(char *fmt, ...);
+
+void destroyHTTPResponse(HTTPResponse *pResponse)
+{
+    if (pResponse) {
+        int i;
+
+        for (i = 0; i < pResponse->iNumHeaders; i++) {
+            free(pResponse->pHeaders[i].pHeader);
+            free(pResponse->pHeaders[i].pValue);
+        }
+        free(pResponse->pHeaders);
+        free(pResponse->pPayload);
+        free(pResponse);
+    }
+}
 
 int getSocketError(void)
 {
