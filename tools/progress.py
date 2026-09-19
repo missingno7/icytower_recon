@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-scroller','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -23,13 +23,13 @@ def main():
     timer=reports['game-timer']
     game_units=[u for u in units if u['classification']=='GAME']
     game_functions=[f for u in game_units for f in u['functions']]
-    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-main-partial'],reports['game-particle'],reports['game-stars'],timer]
+    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-main-partial'],reports['game-particle'],reports['game-scroller'],reports['game-stars'],timer]
     matched=[f for r in games for f in r['functions'] if f['status']=='FUNCTION_MATCH']
     library_matches=[r for key,r in reports.items() if key.startswith('allegro-') and r['whole_text_contribution_equal']]
     data_bytes=sum(s['logical_size'] for r in reports.values() for s in r['initialized_data_comparison'] if s['content_equal'])
     summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
     recovery={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-stars','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-scroller','game-stars','game-timer']:
         report=reports[target]
         recovery['src/'+target[5:]+'.c']={
             'state':'RECOVERED_EXACT_FUNCTIONS' if report['function_matches']==report['functions_total'] else 'PARTIALLY_MATCHED',
@@ -159,6 +159,13 @@ def main():
         'first_mismatch':next(({'function':f['name'], 'detail':f['first_difference']} for f in custom['functions'] if f['status']!='FUNCTION_MATCH'),None),
         'experiments_tried':['Original DWARF function order and lexical scopes','Explicit fgets prefetch control flow','Historical Allegro inline draw_sprite expansion','All five optimization levels'],
         'next_experiment':'Compare load_character_bmp error paths, lexical scopes and return-value allocation against original disassembly.',
+        'missing_artifact':None})
+    scroller=reports['game-scroller']
+    blockers.append({'id':'B008','target':'scroller.c complete text',
+        'current_evidence':str(scroller['function_matches'])+'/4 exact function bodies; scroll_scroller, restart_scroller and init_scroller match at -O2.',
+        'first_mismatch':next(({'function':f['name'], 'detail':f['first_difference']} for f in scroller['functions'] if f['status']!='FUNCTION_MATCH'),None),
+        'experiments_tried':['DWARF structure and lexical scopes','Original control-flow and signed-shift disassembly','Historical Allegro inline call ordering'],
+        'next_experiment':'Match draw_scroller register allocation for its first vertical set_clip_rect argument sequence without changing source semantics.',
         'missing_artifact':None})
     beta=reports['game-beta']
     blockers.append({'id':'B006','target':'beta.c complete text and natural game prefix',

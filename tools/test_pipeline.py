@@ -108,6 +108,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(r['candidate_text_logical_size'],304)
         self.assertFalse(r['object_match'])
 
+    def test_partial_scroller_text(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-scroller/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\scroller.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],4)
+        self.assertEqual(r['function_matches'],3)
+        self.assertEqual({f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'},
+                         {'scroll_scroller','restart_scroller','init_scroller'})
+        self.assertEqual(next(f for f in r['functions'] if f['name']=='draw_scroller')['candidate_size'],396)
+        self.assertFalse(r['whole_text_contribution_equal'])
+
     def test_complete_beta_text(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\beta.c',ROOT/'assets/icytower15.exe',OBJDUMP)
