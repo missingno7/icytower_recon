@@ -49,3 +49,13 @@ frontier starts with `_mangled_main`, then exposes custom image loading,
 profile/game-flow/presentation routines, ad HTTP support, profile data tables,
 and logg audio. This failed link is a dependency measurement, not a game
 executable.
+
+The three loadpng source files are exact Allegro 4.4.1 inputs, but they cannot
+yet join this link: the locked TDM toolchains contain neither `png.h` nor a
+libpng import archive, while the user-supplied `libpng3.dll` and `zlib1.dll`
+are runtime assets and deliberately excluded from object generation. The
+historical libpng 1.2.34 headers and import library must be pinned before a
+`game-loadpng` target is introduced. The adjacent recovery-owned HTTP unit is
+mapped in `docs/httpget-recovery.md`; its two public request wrappers and its
+transport call graph are now oracle-derived, but no replacement network code is
+linked.
