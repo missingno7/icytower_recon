@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-timer','allegro-timer','allegro-color','allegro-blit']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -65,6 +65,8 @@ def main():
         'upstream_library_cus_identified':137,'upstream_library_cu_scope':'115 Allegro (including 9 data-only) plus 22 Xiph; excludes CRT', 'allegro_core_cus_built':len(library['units']),'upstream_library_cus_reproduced':0,
         'upstream_library_cus_complete_text_equal':len(library_matches),
         'upstream_library_text_bytes_reproduced':sum(r['original_cu_span'] for r in library_matches),
+        'modified_vendor_cus_complete_text_equal':int(reports['allegro-logg']['whole_text_contribution_equal']),
+        'modified_vendor_scope':'Included in library CU totals; logg memory extension reconstructed independently, not unmodified upstream.',
         'data_bytes_structured_and_content_verified':data_bytes,
         'game_bss_globals_typed':7,'game_bss_semantic_bytes':168,'game_common_allocation_bytes':240,
         'dwarf_type_dies_recovered':len(read_json(ROOT/'evidence/census/types.json')),
@@ -130,7 +132,8 @@ def main():
     blockers[3].update(current_evidence='Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.',
         next_experiment='Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies.')
     blockers[3]['current_evidence']='Complete beta/control/directories/timer and ambiguous csv text; all 114 Allegro core CUs built and linked with five historical game-tree CUs.'
-    blockers[3]['next_experiment']='Recover original logg/main helper dependencies before adding custom.c to the natural integration link.'
+    blockers[3]['next_experiment']='Logg now has exact complete text. Build pinned Xiph dependencies and recover main helpers before adding custom.c to the natural integration link.'
+    blockers[3]['missing_artifact']='GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; exact strptime/timecompat provenance; remaining game CUs'
     custom=reports['game-custom']
     blockers.append({'id':'B007','target':'custom.c complete text',
         'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; not yet integrated.',

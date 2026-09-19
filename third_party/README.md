@@ -18,7 +18,10 @@ by Git and can be populated with the documented bootstrap commands.
 - libogg 1.1.3 remains a binary-version candidate. The original framing.c and
   bitwise.c report GCC 4.2.1-sjlj (mingw32-2); that compiler is still missing.
 - logg.c is VENDORED_MODIFIED. The unmodified Allegro file remains upstream
-  source; the memory reader extension is not silently replaced with it.
+  source; `recovered/logg.c` reconstructs the memory extension separately.
+  All 18 emitted functions and complete text now match at -O2; Xiph linkage
+  and debug metadata remain unresolved. Its MIT license is in
+  `licenses/logg-license.txt`.
 - csv.c and httpget.c are AMBIGUOUS and remain recovery-owned. strptime.c
   and timecompat.c have identified compatibility-code families but unresolved
   exact revisions. They remain skeletons rather than guessed replacements.

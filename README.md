@@ -31,10 +31,13 @@ Current results:
   game CUs link against it with a synthetic main and no fallback code.
 - Allegro 4.4.1 timer.c and color.c: complete text contributions match at
   -O2, totaling 11,752 bytes; initialized data is checked separately.
+- Modified logg.c: all 18 emitted functions and its complete 2061-byte text
+  contribution match; the reconstructed memory extension is kept separately
+  from the locked upstream source. Xiph linkage remains outstanding.
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Thirteen validation tests include wrong relocation targets, altered code and
+- Fourteen validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),
@@ -118,5 +121,5 @@ equivalence from that repository is counted as historical build equality.
 
 The startup cmshared mismatch is resolved by the separately locked TDM-2
 runtime candidate. Remaining work includes full game CUs, old libogg compiler,
-modified logg, exact compatibility sources, resources, common/data ordering,
+Xiph linkage, exact compatibility sources, resources, common/data ordering,
 and historical debug metadata. See the [full project brief](docs/project-brief.md).

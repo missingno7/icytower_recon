@@ -7,6 +7,8 @@ from pathlib import Path
 from common import ROOT, TC, identity, read_json, run, write_json
 
 TARGETS={
+    'allegro-logg': {'source':'third_party/recovered/logg.c','historical_cu':'C:\\Lib\\allegro4\\addons\\logg\\logg.c','default':'-O2',
+                     'includes':['third_party/allegro-4.4.1/addons/logg','third_party/libvorbis-1.2.0/include','third_party/libogg-1.1.3/include']},
     'game-directories': {'source':'src/directories.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\directories.c','default':'-O2'},
     'game-custom': {'source':'src/custom.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\custom.c','default':'-O2'},
     'game-csv': {'source':'src/csv.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\csv.c','default':'-O2'},
@@ -56,7 +58,7 @@ def compile_target(target,flags=None,dest=None,compiler='tdm-1'):
     (out/'build.json').unlink(missing_ok=True)
     args=[tc/'bin/gcc.exe',*flags,'-g','-mfpmath=387','-DALLEGRO_STATICLINK',
           '-Iinclude','-Ithird_party/allegro-4.4.1/include','-MMD','-MF',out/'unit.d',
-          '-c',config['source'],'-o',obj]
+          *['-I'+p for p in config.get('includes',[])],'-c',config['source'],'-o',obj]
     run(args,toolchain=tc)
     run([tc/'bin/objdump.exe','-drt',obj],out/'object.txt',toolchain=tc)
     # Record every directly maintained source/config header too. Toolchain

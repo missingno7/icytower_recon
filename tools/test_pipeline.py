@@ -50,6 +50,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(r['candidate_text_logical_size'],750)
         self.assertFalse(r['object_match'])
 
+    def test_complete_modified_logg_text_and_data(self):
+        r=compare(ROOT/'build/experiments/tdm-2/allegro-logg/O2/unit.o',
+                  'C:\\Lib\\allegro4\\addons\\logg\\logg.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],18)
+        self.assertEqual(r['function_matches'],18)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        self.assertEqual(r['candidate_text_logical_size'],2061)
+        self.assertEqual(sum(s['logical_size'] for s in r['initialized_data_comparison'] if s['content_equal']),80)
+        self.assertFalse(r['object_match'])
+
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)
