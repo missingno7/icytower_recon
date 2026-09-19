@@ -11,6 +11,7 @@
 #include "game_services.h"
 #include "timer.h"
 #include "particle.h"
+#include "map.h"
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
@@ -240,13 +241,30 @@ typedef struct Tplayer {
     double y;
     double sx;
     double sy;
-    unsigned char reserved1[0x1c];
+    double max_s;
+    int level;
+    int score;
+    int best_combo;
+    int status;
+    int jump_key;
     int frame;
-    unsigned char reserved2[0x0c];
+    int in_combo;
+    int acc_level;
+    int acc_jumps;
     int dead;
-    unsigned char reserved3[0x08];
+    int rotate;
+    float angle;
     int edge;
     int edge_drawn;
+    int bounce;
+    int shake;
+    int latest_combo;
+    int show_combo;
+    int no_combo_top_floor;
+    int biggest_lost_combo;
+    int ccc[5];
+    int jcTop[5];
+    int jc[5];
 } Tplayer;
 
 Toptions options;
@@ -268,6 +286,12 @@ int play_char;
 Tplayer *ply[1000];
 int player_id;
 int any11;
+int any12;
+int any13;
+int any21;
+int any22;
+int any23;
+Tmap map;
 int fast_forward;
 int fast_fast_forward;
 int gameMusicVoiceID;
@@ -1091,6 +1115,49 @@ int start_reward(int lev)
     }
     play_sound(combo_sound[r], 0, 0);
     return r;
+}
+
+void handle_player_collision_original(int lastX, int lastY)
+{
+    int solid1;
+    int solid2;
+
+    solid1=is_solid(&map,(int)ply[player_id]->x-11,(int)ply[player_id]->y);
+    solid2=is_solid(&map,(int)ply[player_id]->x+11,(int)ply[player_id]->y);
+    any11=solid1;
+    any12=solid2;
+    any23=0;
+    any22=0;
+    any21=0;
+    if (solid1+solid2==0) {
+        if (ply[player_id]->status==2 || ply[player_id]->status==0)
+            ply[player_id]->status=3;
+        return;
+    }
+    if (ply[player_id]->status==1) return;
+    if (ply[player_id]->status==2) return;
+    if (ply[player_id]->status)
+        play_sound(combo_sound[0],1,1);
+    ply[player_id]->status=0;
+    ply[player_id]->sy=0;
+    if (solid1) {
+        ply[player_id]->y-=solid1-9999;
+        ply[player_id]->rotate=0;
+        if (solid1==solid2) {
+            ply[player_id]->edge=0;
+            return;
+        }
+        ply[player_id]->edge=1;
+        return;
+    }
+    if (solid2) {
+        ply[player_id]->y-=solid2-9999;
+        ply[player_id]->rotate=0;
+        ply[player_id]->edge=2;
+        return;
+    }
+    ply[player_id]->rotate=0;
+    ply[player_id]->edge=0;
 }
 
 /* DWARF signature for the remaining historical main body. */
