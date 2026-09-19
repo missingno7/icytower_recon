@@ -7,6 +7,7 @@ from pathlib import Path
 from common import ROOT, TC, identity, read_json, run, write_json
 
 TARGETS={
+    'game-map': {'source':'src/map.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\map.c','default':'-O2'},
     'game-scroller': {'source':'src/scroller.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\scroller.c','default':'-O2'},
     'game-particle': {'source':'src/particle.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\particle.c','default':'-O2'},
     'game-stars': {'source':'src/stars.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\stars.c','default':'-O2'},

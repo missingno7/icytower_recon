@@ -118,6 +118,17 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(next(f for f in r['functions'] if f['name']=='draw_scroller')['candidate_size'],396)
         self.assertFalse(r['whole_text_contribution_equal'])
 
+    def test_partial_map_text(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-map/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\map.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],5)
+        self.assertEqual(r['function_matches'],3)
+        self.assertEqual({f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'},
+                         {'reset_map','is_solid','get_level'})
+        floor=next(f for f in r['functions'] if f['name']=='getFloorData')
+        self.assertEqual(floor['candidate_size'],107)
+        self.assertEqual(next(f for f in r['functions'] if f['name']=='add_floor')['status'],'MISSING')
+
     def test_complete_beta_text(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\beta.c',ROOT/'assets/icytower15.exe',OBJDUMP)
