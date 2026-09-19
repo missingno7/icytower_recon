@@ -3,7 +3,7 @@
  * Source recovery pending. This file intentionally defines no fallback code.
  * EXACT: hash2 @ 0x004189cc, 71 bytes
  * UNKNOWN: generate_profile_checksum @ 0x00418a14, 112 bytes
- * UNKNOWN: get_rank_id @ 0x00418a84, 75 bytes
+ * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
  * UNKNOWN: get_rank @ 0x00418ad0, 82 bytes
  * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
@@ -28,4 +28,32 @@ unsigned int hash2(unsigned int a)
     a *= 668265261U;
     a ^= a >> 15;
     return a;
+}
+typedef struct Tprofile_rank {
+    unsigned char before_score[0x4c];
+    int score;
+    int combo;
+    unsigned char before_ccc[4];
+    int ccc;
+    unsigned char before_nml[0x2c];
+    int no_combo_lost;
+} Tprofile_rank;
+
+extern int rankFloors[16];
+extern int rankCombos[16];
+extern int rankCCCs[16];
+extern int rankNMLs[16];
+
+inline int get_rank_id(Tprofile_rank *profile)
+{
+    int i;
+
+    for (i = 11; i >= 0; i--) {
+        if (profile->score < rankFloors[i]) continue;
+        if (profile->combo < rankCombos[i]) continue;
+        if (profile->ccc < rankCCCs[i]) continue;
+        if (profile->no_combo_lost < rankNMLs[i]) continue;
+        return i;
+    }
+    return 0;
 }
