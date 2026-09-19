@@ -29,6 +29,12 @@ read-only data, independently of masked instruction equality. That exact
 dependency permits the recovered particle CU to enter the separate synthetic
 custom-audio link.
 
+`update_reward` was independently derived from its named `reward_time` and
+`reward_scale` globals, but both source control-flow forms tested at -O2 emit
+a 54-byte body with the high-reward branch placed after the shared epilogue;
+the original is 55 bytes and places that branch first. It remains absent from
+`src/main.c` pending a source-level explanation for that compiler layout.
+
 This is intentionally a partial CU report: there are 82 original main.c
 functions, so it cannot support a CU-wide text or object claim. The exact
 helper is checked by the pipeline test, and the complete comparison inventory
