@@ -45,10 +45,10 @@ comparison results remain separately scoped.
 main-partial's own historical `WinMain` wrapper. It records the ordinary
 linker's result in `build/recovered-game/tdm-2/link.json` without any
 synthetic entrypoint, stubs, original-code input, or execution. The current
-frontier starts with the unrecovered `HTTPRequest` transport, then
-`_mangled_main`, custom image loading, profile/game-flow/presentation routines,
-remaining ad HTTP support, profile data tables, and logg audio. This failed
-link is a dependency measurement, not a game executable.
+frontier starts with `SplitURL` and `HTTPFetchInternal`, then `_mangled_main`,
+custom image loading, profile/game-flow/presentation routines, remaining ad
+HTTP support, profile data tables, and logg audio. This failed link is a
+dependency measurement, not a game executable.
 
 The three loadpng source files are exact Allegro 4.4.1 inputs, but they cannot
 yet join this link: the locked TDM toolchains contain neither `png.h` nor a
@@ -57,6 +57,6 @@ are runtime assets and deliberately excluded from object generation. The
 historical libpng 1.2.34 headers and import library must be pinned before a
 `game-loadpng` target is introduced. The adjacent recovery-owned HTTP unit is
 mapped in `docs/httpget-recovery.md`; its two public request wrappers and its
-transport call graph are now oracle-derived. The wrappers and socket-error
-helper compile as exact partial-unit functions, while the remaining HTTP source
-is not yet linked into the recovered-game measurement.
+transport call graph are now oracle-derived. The wrappers, socket-error helper,
+and `HTTPRequest` compile as exact partial-unit functions; the ordinary link
+now exposes the remaining split and transport helpers.

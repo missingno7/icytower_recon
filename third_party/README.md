@@ -23,7 +23,7 @@ by Git and can be populated with the documented bootstrap commands.
   linkage succeeds, while Xiph byte equality and debug metadata remain unresolved. Its MIT license is in
   `licenses/logg-license.txt`.
 - csv.c and httpget.c are AMBIGUOUS and remain recovery-owned. csv.c is
-  complete; httpget.c has three independently verified partial functions.
+  complete; httpget.c has four independently verified partial functions.
   strptime.c and timecompat.c have identified compatibility-code families but
   unresolved exact revisions. Their remaining bodies stay absent rather than
   being guessed.

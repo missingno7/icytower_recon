@@ -57,8 +57,9 @@ Current results:
   upstream ownership remains ambiguous and separate from game-owned totals.
   The natural beta/control/csv address-and-extent prefix spans 2576 bytes.
 - httpget.c: the recovery-owned partial object has exact `getSocketError`,
-  `HTTPHead`, and `HTTPGet` bodies. Its ordinary-link frontier now begins at
-  the unrecovered `HTTPRequest` transport rather than those public wrappers.
+  `HTTPRequest`, `HTTPHead`, and `HTTPGet` bodies. Its ordinary-link frontier
+  now begins at `SplitURL` and `HTTPFetchInternal` rather than the public
+  request entry points.
 - All 114 historical Allegro core CUs build into a static library. The recovered
   game CUs link against it with a synthetic main and no fallback code.
 - Allegro 4.4.1 timer.c and color.c: complete text contributions match at

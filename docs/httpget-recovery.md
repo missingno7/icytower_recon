@@ -55,9 +55,10 @@ entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
 the original program code.
 
-The initial `game-httpget` TDM-2 build verifies three of the ten historical
-functions as `FUNCTION_MATCH`: `getSocketError` (12 bytes), `HTTPHead` (27),
-and `HTTPGet` (27). The comparison resolves the Winsock tail jump, each unique
-method literal, and both direct calls to `HTTPRequest` independently. Its
-68-byte partial text cannot establish a complete-CU match; the full record is
+The initial `game-httpget` TDM-2 build verifies four of the ten historical
+functions as `FUNCTION_MATCH`: `getSocketError` (12 bytes), `HTTPRequest`
+(136), `HTTPHead` (27), and `HTTPGet` (27). The comparison resolves the
+Winsock tail jump, each unique method literal, the original failure string,
+and every request-helper call independently. Its 204-byte partial text cannot
+establish a complete-CU match; the full record is
 in `docs/experiments/game-httpget-O2.json`.
