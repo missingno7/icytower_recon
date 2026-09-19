@@ -1,7 +1,5 @@
 /* Historical CU: F:\projects\icytower\trunk\source\options.c
  * Ownership: GAME
- * UNKNOWN: load_options @ 0x0041839c, 70 bytes
- * UNKNOWN: save_options @ 0x004183e4, 58 bytes
  */
 
 unsigned int hash3(unsigned int a)
@@ -26,6 +24,44 @@ typedef struct {
 
 extern char *strcpy(char *dst,const char *src);
 extern int file_size_ex(const char *filename);
+extern long pack_fread(void *buffer,long bytes,void *fp);
+extern long pack_fwrite(const void *buffer,long bytes,void *fp);
+extern int get_sort_method(void);
+extern void set_sort_method(int sm);
+void reset_options(Toptions *o);
+
+int generate_options_checksum(Toptions *o)
+{
+    int i,cs;
+    int values[11] = {
+        o->flash, o->full_screen, o->jump_hold, o->msc_volume, o->snd_volume,
+        o->floor_size, o->floor_shrink, o->gravity, o->start_speed,
+        o->speed_increase, o->posterSize
+    };
+
+    for (i=0,cs=0;i<11;i++) cs+=(values[i]+i)*17;
+    for (i=0;i<8;i++) cs+=o->updateDate[i];
+    for (i=0;i<16;i++) cs+=o->updateDate[i]+o->posterDate[i];
+    for (i=0;i<256;i++) cs+=o->posterUrl[i]+o->posterSrc[i];
+    return hash3(cs);
+}
+
+void save_options(Toptions *o,void *fp)
+{
+    o->sort_method=get_sort_method();
+    o->checksum=generate_options_checksum(o);
+    pack_fwrite(o,sizeof(Toptions),fp);
+}
+
+void load_options(Toptions *o,void *fp)
+{
+    int cs;
+
+    pack_fread(o,sizeof(Toptions),fp);
+    cs=generate_options_checksum(o);
+    if (cs!=o->checksum) reset_options(o);
+    set_sort_method(o->sort_method);
+}
 
 void reset_options(Toptions *o)
 {
@@ -47,20 +83,4 @@ void reset_options(Toptions *o)
     strcpy(o->posterUrl,"http://www.freelunchdesign.com/?src=it15_game");
     strcpy(o->posterSrc,"default.dat");
     o->posterSize=file_size_ex("data/com/default.dat");
-}
-
-int generate_options_checksum(Toptions *o)
-{
-    int cs,i;
-    int values[11] = {
-        o->flash, o->full_screen, o->jump_hold, o->msc_volume, o->snd_volume,
-        o->floor_size, o->floor_shrink, o->gravity, o->start_speed,
-        o->speed_increase, o->posterSize
-    };
-
-    for (i=0,cs=0;i<11;i++) cs+=(values[i]+i)*17;
-    for (i=0;i<8;i++) cs+=o->updateDate[i];
-    for (i=0;i<16;i++) cs+=o->updateDate[i]+o->posterDate[i];
-    for (i=0;i<256;i++) cs+=o->posterUrl[i]+o->posterSrc[i];
-    return hash3(cs);
 }
