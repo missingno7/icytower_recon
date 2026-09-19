@@ -4,7 +4,6 @@
  * The remaining functions below are still pending reconstruction:
  * UNKNOWN: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
  * UNKNOWN: calc_replay_checksum @ 0x0041bac4, 676 bytes
- * UNKNOWN: destroy_replay @ 0x0041bd68, 54 bytes
  * UNKNOWN: update_file_list @ 0x0041bda0, 184 bytes
  * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
  * UNKNOWN: create_replay @ 0x0041cce8, 254 bytes
@@ -30,4 +29,19 @@ unsigned int hash(unsigned int a)
     a *= 668265261U;
     a ^= a >> 15;
     return a;
+}
+
+typedef struct Treplay {
+    char reserved[0x8a8];
+    void *data;
+} Treplay;
+
+extern void free(void *ptr);
+
+void destroy_replay(Treplay *r)
+{
+    if (r) {
+        if (r->data) free(r->data);
+        free(r);
+    }
 }
