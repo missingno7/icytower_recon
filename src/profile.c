@@ -10,7 +10,7 @@
  * UNKNOWN: draw_buffer @ 0x004191c8, 185 bytes
  * UNKNOWN: profile_data_page_advanced @ 0x00419284, 332 bytes
  * UNKNOWN: profile_data_page_basic @ 0x004193d0, 637 bytes
- * UNKNOWN: profile_data_page_extra @ 0x00419650, 85 bytes
+ * DIFFER: profile_data_page_extra @ 0x00419650, 85 bytes (CODEGEN_SIMILAR)
  * UNKNOWN: profile_data_page_general @ 0x004196a8, 1091 bytes
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
@@ -84,4 +84,20 @@ int generate_profile_checksum(Tprofile_checksum *p)
     }
     p->checksum = oldCS;
     return hash2(cs);
+}
+
+typedef struct Tprofile_extra {
+    unsigned char before_total_jumps[0xd8];
+    int total_jumps;
+} Tprofile_extra;
+
+char *profile_data_page_extra(Tprofile_extra *p)
+{
+    char *data;
+
+    data = malloc(2048);
+    data[0] = 0;
+    sprintf(data, "%sTotal jumps:    %d\n", data, p->total_jumps);
+    sprintf(data, "%s\n", data);
+    return data;
 }
