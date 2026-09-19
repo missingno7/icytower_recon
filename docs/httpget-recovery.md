@@ -41,7 +41,8 @@ method)`, releases the host and path strings, and returns the parsed response.
 For an invalid URL it logs `"Could not split URL \"%s\""` and returns null.
 
 `HTTPFetchInternal` is the 594-byte Winsock transport at `0x405e9c`: it creates
-a TCP socket, applies a five-second send timeout, resolves the host, connects,
+a TCP socket, applies a five-second receive timeout (`SO_RCVTIMEO`), resolves
+the host, connects,
 formats the fixed `"GET /%s HTTP/1.1\r\nHost: %s\r\n\r\n"` request, sends it,
 accumulates 1024-byte receives, parses the response, and closes the socket.
 The fourth `HTTPRequest` argument is passed through as an additional fetch
@@ -53,6 +54,13 @@ prefix, extracts the host on `:` or `/`, converts a colon-prefixed port with
 `strtol`, and releases both output allocations on failure.
 `extractHTTPResponse` remains the 923-byte recovery body, with exact DWARF
 extent and oracle disassembly available.
+
+DWARF records a one-byte initial response allocation, 512-byte send and
+1024-byte receive buffers, and the local order `sendbuff`, `sprintf`,
+`recvbuff`, then `send`. The receive buffer is therefore allocated before the
+send call even though it is first consumed in the receive loop. These details
+are preserved here as an implementation boundary; the transport body remains
+unrecovered until an ordinary C candidate matches all 594 historical bytes.
 
 This map gives the next implementation a closed evidence boundary: recover the
 entire unit from the executable oracle and its DWARF, then compile and compare
