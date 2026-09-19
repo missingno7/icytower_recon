@@ -2,7 +2,7 @@
  * Ownership: GAME
  * Source recovery pending. This file intentionally defines no fallback code.
  * EXACT: hash2 @ 0x004189cc, 71 bytes
- * UNKNOWN: generate_profile_checksum @ 0x00418a14, 112 bytes
+ * DIFFER: generate_profile_checksum @ 0x00418a14, 112 bytes
  * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
  * DIFFER: get_rank @ 0x00418ad0, 82 bytes
  * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
@@ -61,4 +61,27 @@ inline int get_rank_id(Tprofile_rank *profile)
 inline char *get_rank(Tprofile_rank *profile)
 {
     return rankLables[get_rank_id(profile)];
+}
+typedef struct Tprofile_checksum {
+    unsigned char before_checksum[0x28];
+    int checksum;
+    unsigned char remainder[0x554 - 0x2c];
+} Tprofile_checksum;
+
+int generate_profile_checksum(Tprofile_checksum *p)
+{
+    int i, cs;
+    int oldCS;
+    int *pos;
+
+    oldCS = p->checksum;
+    pos = (int *)p;
+    p->checksum = 0;
+    cs = 0;
+    for (i = 0; i < 0x154; i++) {
+        cs += *pos * (i + 1);
+        pos++;
+    }
+    p->checksum = oldCS;
+    return hash2(cs);
 }
