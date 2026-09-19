@@ -15,7 +15,7 @@
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
  * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
- * UNKNOWN: delete_profile @ 0x0041a8a8, 222 bytes
+ * CODEGEN_SIMILAR: delete_profile @ 0x0041a8a8, 222 bytes
  * UNKNOWN: create_profile @ 0x0041a988, 823 bytes
  * UNKNOWN: select_profile @ 0x0041acc0, 3070 bytes
  */
@@ -311,4 +311,21 @@ Tprofile_load *load_profile(char *handle)
         p = 0;
     }
     return p;
+}
+
+void delete_profile(char *handle)
+{
+    char file[1024];
+
+    get_profile_dir_for_profile(file, 1024, handle);
+    strcat(file, "replays");
+    rmdir(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itp", file, handle);
+    delete_file(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itr", file, handle);
+    delete_file(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    rmdir(file);
 }
