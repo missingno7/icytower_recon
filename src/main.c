@@ -13,6 +13,8 @@ SAMPLE *logg_load_memory(void *pData, size_t iSize);
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
 double seed;
+int hasFocus;
+int closeButtonClicked;
 
 typedef struct Treplay Treplay;
 Treplay *demo;
@@ -45,6 +47,26 @@ int new_rand(void)
 void new_srand(int s)
 {
     seed=s;
+}
+
+int ok_to_play(void)
+{
+    return 1;
+}
+
+void switchedFromProgram(void)
+{
+    hasFocus = 0;
+}
+
+void switchedToProgram(void)
+{
+    hasFocus = 1;
+}
+
+void clickedCloseButton(void)
+{
+    closeButtonClicked = 1;
 }
 
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)

@@ -1,11 +1,15 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers six historical helpers while the remaining
+`src/main.c` currently recovers ten historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
 unique NUL-terminated bytes in the original read-only data; `get_demo` and
 `get_controls` resolve their `demo` and `ctrl` globals by name.
+
+`ok_to_play` returns the original constant `1`, while `switchedFromProgram`,
+`switchedToProgram`, and `clickedCloseButton` exactly update the named
+`hasFocus` and `closeButtonClicked` globals.
 
 `getSampleFromOggDatafile` matches its complete
 32-byte body at -O2, including the tail call to `logg_load_memory`: it passes

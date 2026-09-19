@@ -31,8 +31,9 @@ Current results:
   match; its recovered `new_rand` dependency resolves in the separate synthetic
   custom-audio PE.
 - main.c: `get_version_str`, `get_demo`, `get_controls`, `new_rand`,
-  `new_srand`, and `getSampleFromOggDatafile` match at -O2; the other main
-  functions remain explicit partial-CU work.
+  `new_srand`, `ok_to_play`, the three focus/close callbacks, and
+  `getSampleFromOggDatafile` match at -O2; the other main functions remain
+  explicit partial-CU work.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.
