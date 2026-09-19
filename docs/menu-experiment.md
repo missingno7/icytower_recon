@@ -13,3 +13,11 @@ comparison oracle.
 build_menu_string is behaviorally reconstructed. It formats slider progress, a selected value, boolean choices, key bindings, headings, and plain captions from recovered menu flags and data layouts. Its 407-byte candidate retains a different temporary-buffer stack layout from the 415-byte historical body, so it is recorded as `DIFFER`.
 
 update_game_menu now reconstructs menu selection and action dispatch. It finds the selected entry through the terminating flag, draws the current page, accepts primary and alternate control navigation, supports the historical F1 jump, updates the selected bit and movement sound, then returns the selected/left/right action with the entry data. The candidate is 454 bytes against the historical 583 and is recorded as `DIFFER`.
+
+draw_menu now reconstructs the historical rendering loop from its independent
+DWARF types and original control flow. It advances rows by `font_height - 12`,
+formats every entry, renders key bindings in two columns, draws the selection
+bullet, and renders the three-piece and movable slider assets through Allegro's
+historical inline `draw_sprite` dispatch. The candidate is 952 bytes against
+the historical 1,118-byte function and is recorded as `DIFFER`; its shorter
+code results from equivalent compiler register allocation and branch folding.
