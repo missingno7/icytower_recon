@@ -19,6 +19,7 @@ TARGETS={
     'game-options': {'source':'src/options.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\options.c','default':'-O2'},
     'game-game-data': {'source':'src/game_data.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\game_data.c','default':'-O2'},
     'game-replay': {'source':'src/replay.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\replay.c','default':'-O2'},
+    'game-profile': {'source':'src/profile.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\profile.c','default':'-O2'},
     'allegro-logg': {'source':'third_party/recovered/logg.c','historical_cu':'C:\\Lib\\allegro4\\addons\\logg\\logg.c','default':'-O2',
                      'includes':['third_party/allegro-4.4.1/addons/logg','third_party/libvorbis-1.2.0/include','third_party/libogg-1.1.3/include']},
     'game-directories': {'source':'src/directories.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\directories.c','default':'-O2'},

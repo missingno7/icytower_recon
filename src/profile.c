@@ -1,7 +1,7 @@
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
  * Source recovery pending. This file intentionally defines no fallback code.
- * UNKNOWN: hash2 @ 0x004189cc, 71 bytes
+ * EXACT: hash2 @ 0x004189cc, 71 bytes
  * UNKNOWN: generate_profile_checksum @ 0x00418a14, 112 bytes
  * UNKNOWN: get_rank_id @ 0x00418a84, 75 bytes
  * UNKNOWN: get_rank @ 0x00418ad0, 82 bytes
@@ -19,3 +19,13 @@
  * UNKNOWN: create_profile @ 0x0041a988, 823 bytes
  * UNKNOWN: select_profile @ 0x0041acc0, 3070 bytes
  */
+
+unsigned int hash2(unsigned int a)
+{
+    a = (a ^ 0x3dU) ^ (a >> 16);
+    a *= 9U;
+    a ^= a >> 4;
+    a *= 668265261U;
+    a ^= a >> 15;
+    return a;
+}

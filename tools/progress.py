@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-scroller','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -23,14 +23,14 @@ def main():
     timer=reports['game-timer']
     game_units=[u for u in units if u['classification']=='GAME']
     game_functions=[f for u in game_units for f in u['functions']]
-    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-fld-adspot'],reports['game-game-data'],reports['game-hisc'],reports['game-main-partial'],reports['game-map'],reports['game-menu'],reports['game-options'],reports['game-particle'],reports['game-replay'],reports['game-scroller'],reports['game-stars'],timer]
+    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-fld-adspot'],reports['game-game-data'],reports['game-hisc'],reports['game-main-partial'],reports['game-map'],reports['game-menu'],reports['game-options'],reports['game-particle'],reports['game-replay'],reports['game-profile'],reports['game-scroller'],reports['game-stars'],timer]
     matched=[f for r in games for f in r['functions'] if f['status']=='FUNCTION_MATCH']
     library_matches=[r for key,r in reports.items() if key.startswith('allegro-') and r['whole_text_contribution_equal']]
     data_bytes=sum(s['logical_size'] for r in reports.values() for s in r['initialized_data_comparison'] if s['content_equal'])
     summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
     recovery={}
     recovery_sources={'game-fld-adspot':'src/fld_adspot.c','game-game-data':'src/game_data.c'}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-scroller','game-stars','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-fld-adspot','game-game-data','game-hisc','game-main-partial','game-map','game-menu','game-options','game-particle','game-replay','game-profile','game-scroller','game-stars','game-timer']:
         report=reports[target]
         recovery[recovery_sources.get(target,'src/'+target[5:]+'.c')]={
             'state':'RECOVERED_EXACT_FUNCTIONS' if report['function_matches']==report['functions_total'] else 'PARTIALLY_MATCHED',
