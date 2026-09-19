@@ -20,6 +20,14 @@ extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
+typedef struct {
+    int jumps;
+    int combos;
+    int sd;
+    int keys;
+    int tiny;
+} Tcmdline;
+Tcmdline cmdline;
 double seed;
 int hasFocus;
 int closeButtonClicked;
