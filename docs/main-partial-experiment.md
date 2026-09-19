@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-four historical helpers while the remaining
+`src/main.c` currently recovers twenty-five historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -77,6 +77,16 @@ the still-unimplemented `_mangled_main` symbol to `__WinMain`. Its two
 relocations resolve by their named symbols; the forward declaration comes from
 DWARF and supplies no missing game-function body.
 
+`set_current_avatar` matches its full 96-byte character-selection loop. It
+compares each of the DWARF-sized 2188-byte character records against the
+profile avatar field, and writes the matching index to both named selection
+globals. All five global references and the `stricmp` call resolve by symbol.
+
+`update_frame` recovers the typed reward, player-death, edge-draw, and frame
+advance transitions. Its 125-byte candidate differs from the historical
+120-byte branch layout, so it is recorded as `DIFFER` and receives no exact
+function credit.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
@@ -94,8 +104,8 @@ custom-audio link.
 `update_reward` was independently derived from its named `reward_time` and
 `reward_scale` globals, but both source control-flow forms tested at -O2 emit
 a 54-byte body with the high-reward branch placed after the shared epilogue;
-the original is 55 bytes and places that branch first. It remains absent from
-`src/main.c` pending a source-level explanation for that compiler layout.
+the original is 55 bytes and places that branch first. It remains non-exact
+pending a source-level explanation for that compiler layout.
 
 This is intentionally a partial CU report: there are 82 original main.c
 functions, so it cannot support a CU-wide text or object claim. The exact

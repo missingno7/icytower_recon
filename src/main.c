@@ -7,6 +7,7 @@
 #include "custom.h"
 #include "directories.h"
 #include "game_services.h"
+#include "timer.h"
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
@@ -46,6 +47,27 @@ typedef struct Tprofile {
     int snd_volume;
 } Tprofile;
 
+typedef struct Tavatar_profile {
+    unsigned char reserved[0x4e4];
+    char avatar[1];
+} Tavatar_profile;
+
+typedef struct Tcharacter {
+    unsigned char reserved0[0x408];
+    char name[1];
+    unsigned char reserved1[0x88c-0x409];
+} Tcharacter;
+
+typedef struct Tplayer {
+    unsigned char reserved0[0x3c];
+    int frame;
+    unsigned char reserved1[0x0c];
+    int dead;
+    unsigned char reserved2[0x08];
+    int edge;
+    int edge_drawn;
+} Tplayer;
+
 Toptions options;
 Tprofile *profile;
 SAMPLE *bg_menu;
@@ -53,6 +75,12 @@ SAMPLE *menu_sounds[2];
 Tcustom custom;
 int reward_time;
 fixed reward_scale;
+int num_chars;
+Tcharacter *characters;
+int curr_char;
+int play_char;
+Tplayer *ply[1000];
+int player_id;
 
 char *get_version_str(void)
 {
@@ -250,6 +278,40 @@ void myDeleteFile(char *path, char *file)
     sprintf(buf, "%s%s", path, file);
     delete_file(buf);
 }
+
+void set_current_avatar(void)
+{
+    int i;
+    for (i=0; i<num_chars; i++) {
+        if (!stricmp(characters[i].name, ((Tavatar_profile *)profile)->avatar)) {
+            curr_char=i;
+            play_char=i;
+        }
+    }
+}
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+void update_frame(void)
+{
+    Tplayer *p;
+    if (reward_time) {
+        if (reward_time>60)
+            reward_scale+=3277;
+        else if (reward_time<=9)
+            reward_scale-=6554;
+        reward_time--;
+    }
+    p=ply[player_id];
+    if (p->dead && p->dead<=299)
+        p->dead+=8;
+    else {
+        if (p->edge)
+            p->edge_drawn++;
+        if (logic_count%10==0)
+            p->frame++;
+    }
+}
+#endif
 
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);
