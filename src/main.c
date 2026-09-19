@@ -16,7 +16,14 @@ double seed;
 int hasFocus;
 int closeButtonClicked;
 
-typedef struct Treplay Treplay;
+typedef struct Treplay {
+    unsigned char reserved[140];
+    int floor_shrink;
+    int floor_size;
+    int start_speed;
+    int speed_increase;
+    int gravity;
+} Treplay;
 Treplay *demo;
 Tcontrol ctrl;
 
@@ -67,6 +74,12 @@ void switchedToProgram(void)
 void clickedCloseButton(void)
 {
     closeButtonClicked = 1;
+}
+
+int is_custom_replay(Treplay *r)
+{
+    return r->floor_shrink != 1 || r->floor_size != 1 ||
+           r->start_speed != 5 || r->speed_increase != 1 || r->gravity != 1;
 }
 
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)
