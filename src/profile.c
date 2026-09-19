@@ -13,7 +13,7 @@
  * EXACT: profile_data_page_extra @ 0x00419650, 85 bytes
  * DIFFER: profile_data_page_general @ 0x004196a8, 1091 bytes
  * UNKNOWN: view_profile @ 0x00419aec, 2249 bytes
- * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
+ * DIFFER: save_profile @ 0x0041a3b8, 1073 bytes
  * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
  * CODEGEN_SIMILAR: delete_profile @ 0x0041a8a8, 222 bytes
  * DIFFER: create_profile @ 0x0041a988, 823 bytes
@@ -52,8 +52,8 @@ inline int get_rank_id(Tprofile_rank *profile)
     for (i = 11; i >= 0; i--) {
         if (profile->score < rankFloors[i]) continue;
         if (profile->combo < rankCombos[i]) continue;
-        if (profile->ccc < rankCCCs[i]) continue;
-        if (profile->no_combo_lost < rankNMLs[i]) continue;
+        if (profile->ccc < rankNMLs[i]) continue;
+        if (profile->no_combo_lost < rankCCCs[i]) continue;
         return i;
     }
     return 0;
@@ -521,4 +521,71 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     sprintf(data, "%sGames quit:     %s%d\n", data, filler, p->games_quit);
     sprintf(data, "%s\n", data);
     return data;
+}
+
+extern int file_exists(char *filename, int attrib, int not_attrib);
+
+int save_profile(Tprofile_create *p)
+{
+    char file[1024];
+    long now;
+    Tprofile_tm *my_time;
+    int year, month, day;
+    void *fp;
+    char *data_basic;
+    char *data_advanced;
+    char *data_general;
+    char *data_extra;
+
+    get_profile_dir_for_profile(file, 1024, p->handle);
+    if (!file_exists(file, 16, 0))
+        mkdir(file);
+    strcat(file, "replays/");
+    if (!file_exists(file, 16, 0))
+        mkdir(file);
+    get_profile_dir_for_profile(file, 1024, p->handle);
+    sprintf(file, "%s%s.itp", file, p->handle);
+    now = time(0);
+    my_time = localtime(&now);
+    year = my_time->tm_year;
+    month = my_time->tm_mon + 1;
+    day = my_time->tm_mday;
+    sprintf(p->saveDate, "%d-%s%d-%s%d", year + 1900,
+            month < 10 ? "0" : "", month, day < 10 ? "0" : "", day);
+    p->checksum = generate_profile_checksum((Tprofile_checksum *)p);
+    fp = fopen(file, "wb");
+    if (!fp) {
+        log2file("Failed to open \"%s\" for writing", file);
+        return -1;
+    }
+    fwrite(p, 0x550, 1, fp);
+    save_control(get_controls(), fp);
+    fclose(fp);
+    get_profile_dir_for_profile(file, 1024, p->handle);
+    sprintf(file, "%s%s_stats.txt", file, p->handle);
+    fp = fopen(file, "wt");
+    if (!fp) {
+        log2file("failed to open profile stats \"%s\" for writing", file);
+        return -1;
+    }
+    fwrite("ICY TOWER 1.4 PROFILE\n", 1, 22, fp);
+    fwrite("**********************************************\n", 1, 47, fp);
+    fprintf(fp, "Profile name:           %s\n", p->handle);
+    fprintf(fp, "Last updated:           %s\n", p->saveDate);
+    fprintf(fp, "Rank:                   %s\n", get_rank((Tprofile_rank *)p));
+    data_general = profile_data_page_general((Tprofile_general *)p, "        ");
+    data_basic = profile_data_page_basic((Tprofile_basic *)p);
+    data_advanced = profile_data_page_advanced((Tprofile_advanced *)p);
+    data_extra = profile_data_page_extra((Tprofile_extra *)p);
+    fputs(data_general, fp);
+    fputs(data_basic, fp);
+    fputs(data_advanced, fp);
+    fputs(data_extra, fp);
+    fputc('\n', fp);
+    fclose(fp);
+    free(data_general);
+    free(data_basic);
+    free(data_advanced);
+    free(data_extra);
+    return 0;
 }
