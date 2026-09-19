@@ -36,6 +36,11 @@ def main(compiler='tdm-2'):
     report = read_json(adir / 'build.json')
     if identity(library) != report['archive']:
         raise ValueError('Library differs from build report')
+    xdir = ROOT / 'build' / 'xiph' / compiler
+    xiph = read_json(xdir / 'build.json')
+    for name, archive in xiph['archives'].items():
+        if identity(xdir / name) != archive['identity']:
+            raise ValueError('Xiph archive differs from build report: ' + name)
 
     out = ROOT / 'build' / 'recovered-game' / compiler
     out.mkdir(parents=True, exist_ok=True)
@@ -49,10 +54,13 @@ def main(compiler='tdm-2'):
         obj, build = compile_target(target, dest=out / target, compiler=compiler)
         objects.append(obj)
         object_reports.append(build)
+    logg_object, logg_report = compile_target(
+        'allegro-logg', dest=out / 'allegro-logg', compiler=compiler)
 
     args = [
         tc / 'bin/gcc.exe', '-O2', '-g', '-mfpmath=387', '-DALLEGRO_STATICLINK',
         '-Iinclude', '-Ithird_party/allegro-4.4.1/include', '-mwindows', *objects,
+        logg_object, xdir / 'libvorbisfile.a', xdir / 'libvorbis.a', xdir / 'libogg.a',
         library, '-lkernel32', '-luser32', '-lgdi32', '-lcomdlg32', '-lole32',
         '-ldinput', '-lddraw', '-ldxguid', '-lwinmm', '-ldsound', '-lws2_32', '-lpthread',
         '-Lthird_party/libpng-1.2.34', '-lpng3', '-lm',
@@ -69,6 +77,8 @@ def main(compiler='tdm-2'):
         'compiler': compiler,
         'command': [str(x) for x in args],
         'allegro_report': identity(adir / 'build.json'),
+        'xiph_report': identity(xdir / 'build.json'),
+        'logg_object': logg_report,
         'game_objects': object_reports,
         'returncode': result.returncode,
         'linked': result.returncode == 0,
