@@ -10,6 +10,7 @@
 #include "directories.h"
 #include "game_services.h"
 #include "timer.h"
+#include "particle.h"
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
@@ -130,6 +131,9 @@ SAMPLE *menu_sounds[2];
 Tcustom custom;
 int reward_time;
 fixed reward_scale;
+BITMAP *reward_bmp;
+Tparticle stars[512];
+SAMPLE *combo_sound[10];
 int num_chars;
 Tcharacter *characters;
 int curr_char;
@@ -826,6 +830,37 @@ void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
     rectfill(dst, x - 1, y - 1, x + 340, y + 18, makecol(255, 255, 255));
     rect(dst, x - 1, y - 1, x + 340, y + 18, makecol(80, 80, 80));
     textout_ex(dst, data[54].dat, text, x + 2, y, color, -1);
+}
+
+int start_reward(int lev)
+{
+    int r;
+    int i, p;
+
+    reward_time = 80;
+    reward_scale = 0;
+    if (lev <= 6) r = 0;
+    else if (lev <= 14) r = 1;
+    else if (lev <= 24) r = 2;
+    else if (lev <= 34) r = 3;
+    else if (lev <= 49) r = 4;
+    else if (lev <= 69) r = 5;
+    else if (lev <= 99) r = 6;
+    else if (lev <= 139) r = 7;
+    else if (lev > 199) r = 9;
+    else r = 8;
+    if (!itrcheck) {
+        if (!options.flash && r > 2) {
+            for (i = 0; i < (r - 2) * 16; i++) {
+                p = create_particle(stars, 320, 360);
+                stars[p].sy = (((new_rand() % 500) + 500) << 16) / 100;
+                stars[p].sx = ((((new_rand() % 1000) - 500) << 16) * (r - 2)) / 100;
+            }
+        }
+        reward_bmp = data[90 + r].dat;
+    }
+    play_sound(combo_sound[r], 0, 0);
+    return r;
 }
 
 /* DWARF signature for the remaining historical main body. */

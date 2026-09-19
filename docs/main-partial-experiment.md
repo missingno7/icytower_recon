@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers thirty-nine historical helpers while the remaining
+`src/main.c` currently recovers forty-one historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -251,6 +251,8 @@ single-precision literal relocations by their unique bytes in the original
 read-only data, independently of masked instruction equality. That exact
 dependency permits the recovered particle CU to enter the separate synthetic
 custom-audio link.
+
+`start_reward` now recovers the nine level bands, 80-frame reward setup, selected `data[90 + r]` image, combo sound, and non-flash particle burst. Its 476-byte candidate is four bytes longer than the original 472-byte body because its burst branch has a different register allocation and placement; it is recorded as `DIFFER`. Typing its `reward_bmp`, `combo_sound`, and 512-entry `stars` globals also resolves the complete bodies of two existing helpers.
 
 `update_reward` was independently derived from its named `reward_time` and
 `reward_scale` globals, but both source control-flow forms tested at -O2 emit
