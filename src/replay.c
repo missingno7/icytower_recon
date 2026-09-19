@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /* Partial historical replay.c recovery.
  * Ownership: GAME.
  *
@@ -44,6 +46,14 @@ typedef struct Treplay_post {
 
 extern int stricmp(const char *a, const char *b);
 extern int get_replay_property(const char *file_name, int property);
+extern int for_each_file_ex(const char *pattern, int in_attrib, int out_attrib,
+                            int (*callback)(const char *, int, void *), void *param);
+extern int add_itr_file(const char *filename, int attrib, void *param);
+extern void qsort(void *base, size_t count, size_t size,
+                  int (*compare)(const void *, const void *));
+
+Treplay_post itr_file_list[1024];
+int num_itr_files;
 
 typedef struct Treplay_data {
     unsigned char type;
@@ -129,4 +139,20 @@ int my_strcmp(const void *c, const void *d)
         return 1;
     }
     return stricmp(a->full_path, b->full_path);
+}
+
+void update_file_list(char *path)
+{
+    int i;
+    char full_path[1024];
+
+    for (i = 0; i < num_itr_files; i++) {
+        free(itr_file_list[i].full_path);
+        itr_file_list[i].parent = 0;
+        itr_file_list[i].directory = 0;
+    }
+    num_itr_files = 0;
+    sprintf(full_path, "%s/*", path);
+    for_each_file_ex(full_path, 0, 0, add_itr_file, 0);
+    qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);
 }
