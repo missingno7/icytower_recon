@@ -149,6 +149,13 @@ and shows the original seven-argument failure dialog only when loading fails.
 Its UI, audio, dialog, font, and read-only-string references all resolve
 exactly.
 
+`take_screenshot` recovers the complete 203-byte capture workflow. It allocates
+the next unused `screenshots/icytower_%04d.png` name with the historical
+post-increment counter, enforces the 9999 limit after every existence test,
+saves a sub-bitmap with the current palette, and waits for F12 release. Its
+static counter allocation and direct same-CU logging call remain
+layout-dependent, so it is recorded as `DIFFER`.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
