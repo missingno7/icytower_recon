@@ -7,7 +7,7 @@
  *
  * The remaining functions below are still pending reconstruction:
  * PARTIAL: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
- * UNKNOWN: calc_replay_checksum @ 0x0041bac4, 676 bytes
+ * DIFFER: calc_replay_checksum @ 0x0041bac4, 676 bytes
  * EXACT: update_file_list @ 0x0041bda0, 184 bytes
  * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
  * DIFFER: create_replay @ 0x0041cce8, 254 bytes
@@ -123,6 +123,36 @@ int calc_replay_checksum_131(Treplay *r)
     for (i = 0; i < r->size; i++)
         sum += (r->data[i].type * 5 + r->data[i].value * 3) * i;
     return sum;
+}
+
+int calc_replay_checksum(Treplay *r)
+{
+    int i;
+    int sum;
+
+    sum = (r->biggest_lost_combo * 17 + r->no_combo_top_floor * 127) * 2;
+    sum += r->floor_shrink * 102 + r->floor_size * 17 + 3702;
+    sum += r->start_speed * 163 + r->speed_increase * 23;
+    sum += r->gravity * 88 + r->random_seed * 329;
+    sum += r->tc_posts * 127 + r->rejump * 13;
+    sum += r->score * 17 + 17;
+    sum += (r->combo + 1) * 649;
+    sum += (r->floor + 1) * 113;
+    for (i = 0; i < 5; i++)
+        sum += r->ccc[i] * (39 + i * 3) + r->jc[i] * (27 + i * 3);
+    for (i = 0; i < 100; i++) {
+        sum += r->tc_c_data[i] * ((i + 1) % 13);
+        sum += r->tc_q_data[i] * ((i + 6) % 17);
+        sum += r->tc_t_data[i] * ((i + 8) % 23);
+    }
+    for (i = 0; i < 32; i++)
+        sum += (r->date[i] + i) * (r->name[i] + i) * (17 + i * 17);
+    for (i = 0; i < 42; i++)
+        sum += (r->comment[i] + i) * (r->comment[i] + i) * (-3 + i * 3);
+    for (i = 0; i < r->size; i++)
+        sum += r->data[i].type * 3 * (i % 193 + 1) +
+               r->data[i].value * 7 * (i % 167 + 1);
+    return hash(sum);
 }
 
 int my_strcmp(const void *c, const void *d)
