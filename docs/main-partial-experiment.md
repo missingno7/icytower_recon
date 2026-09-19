@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-five historical helpers while the remaining
+`src/main.c` currently recovers twenty-six historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -98,6 +98,10 @@ candidate path, accepts non-dot directories, checks for `"%s/%s.txt"`, and
 counts a matching character. Its external calls, format string, and
 `num_chars` reference resolve exactly. The direct same-CU `log2file` call has
 a layout-dependent displacement, so it remains `DIFFER` without exact credit.
+
+`for_each_directory` matches its full 109-byte wrapper. It copies the base
+directory into its DWARF-sized local buffer, appends `"*"`, and invokes the
+named Allegro `for_each_file_ex` callback API with directory attributes.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy

@@ -341,6 +341,15 @@ int check_dir(char *filename, int attrib, void *param)
     return 0;
 }
 
+void for_each_directory(char *basedir,
+                        int (*cb)(const char *filename, int attrib, void *param))
+{
+    char dir_and_wildcard[256];
+    strncpy(dir_and_wildcard, basedir, sizeof(dir_and_wildcard));
+    strcat(dir_and_wildcard, "*");
+    for_each_file_ex(dir_and_wildcard, FA_DIREC, 0, cb, NULL);
+}
+
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);
 
