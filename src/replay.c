@@ -10,7 +10,7 @@
  * UNKNOWN: calc_replay_checksum @ 0x0041bac4, 676 bytes
  * EXACT: update_file_list @ 0x0041bda0, 184 bytes
  * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
- * UNKNOWN: create_replay @ 0x0041cce8, 254 bytes
+ * DIFFER: create_replay @ 0x0041cce8, 254 bytes
  * UNKNOWN: load_replay @ 0x0041cde8, 1136 bytes
  * UNKNOWN: replay_selector @ 0x0041d258, 2845 bytes
  * UNKNOWN: save_replay @ 0x0041dd78, 1227 bytes
@@ -203,4 +203,36 @@ bad_replay:
         goto done;
     itr_file_list[num_itr_files].version = -1000 - res;
     goto copy_replay;
+}
+
+Treplay *create_replay(int size)
+{
+    Treplay *r;
+    int i;
+
+    r = malloc(sizeof(Treplay));
+    if (!r)
+        return 0;
+    strncpy(r->header, "ITR140", 6);
+    r->comment[0] = 0;
+    r->size = size;
+    r->combo = 0;
+    r->floor = 0;
+    r->score = 0;
+    for (i = 0; i < 32; i++)
+        r->name[i] = 0;
+    for (i = 0; i < 32; i++)
+        r->name[i] = 0;
+    strcpy(r->name, "replay");
+    strcpy(r->date, "no date");
+    r->data = malloc(size * sizeof(Treplay_data) + 32);
+    if (!r->data) {
+        free(r);
+        return 0;
+    }
+    for (i = 0; i < size; i++) {
+        r->data[i].type = 0;
+        r->data[i].value = 0;
+    }
+    return r;
 }

@@ -16,3 +16,5 @@ reconstructed source and uses the original executable as its comparison oracle.
 `update_file_list` matches its complete 184-byte body. It frees and clears all existing 24-byte posts, resets the independently typed 1,024-entry list, scans the original `"%s/*"` pattern through `add_itr_file`, and sorts with `my_strcmp`. Every data, string, callback, and call relocation resolves exactly.
 
 `add_itr_file` is now recovered semantically. It ignores the current-directory marker, allocates each 24-byte post with the original filename slack, admits directories and `.itr` files, preserves the parent marker, and stores replay-version errors other than the two sentinel failures. The `-O2` candidate is 357 bytes against the historical 360 because block ordering differs; it remains recorded as `DIFFER`.
+
+create_replay is behaviorally reconstructed. It allocates the 0x8ac-byte replay object, initializes its fixed header, default name/date, score/floor/combo state, and replay-event storage. The candidate remains `DIFFER` while its six-byte header-copy lowering and loop alignment differ from the historical 254-byte body.
