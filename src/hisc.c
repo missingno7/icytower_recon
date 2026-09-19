@@ -1,7 +1,5 @@
 /* Historical CU: F:\projects\icytower\trunk\source\hisc.c
  * Ownership: GAME
- * UNKNOWN: qualify_hisc_table @ 0x00404994, 39 bytes
- * UNKNOWN: sort_hisc_table @ 0x004049bc, 147 bytes
  * UNKNOWN: draw_table @ 0x00404a7c, 441 bytes
  * UNKNOWN: view_scores @ 0x00404c38, 2552 bytes
  * UNKNOWN: save_hisc_table @ 0x00405630, 129 bytes
@@ -67,4 +65,27 @@ int generate_checksum(Thisc_post *entry)
         s++;
     }
     return i;
+}
+
+int qualify_hisc_table(Thisc_table *table,int value)
+{
+    int i;
+
+    if (value)
+        for (i=0;i<5;i++)
+            if (table->posts[i].value<value) return i+1;
+    return 0;
+}
+
+void sort_hisc_table(Thisc_table *table)
+{
+    int i,j;
+    Thisc_post post;
+
+    for (i=1;i<5;i++) {
+        post=table->posts[i];
+        for (j=i;j>0 && table->posts[j-1].value<post.value;j--)
+            table->posts[j]=table->posts[j-1];
+        table->posts[j]=post;
+    }
 }
