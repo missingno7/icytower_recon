@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers thirty-five historical helpers while the remaining
+`src/main.c` currently recovers thirty-seven historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -101,8 +101,15 @@ historical password, writes the temporary `data/com/temp.dat`, loads it with
 the typed PNG reader and palette, and deletes the temporary file. DWARF
 establishes all ten locals and the disassembly fixes the password loop and
 error paths. The bytecode and every named or uniquely resolved literal target
-match; the original contains repeated `"rb"` mode strings, so the remaining
-literal relocation leaves it `CODEGEN_SIMILAR`.
+match, including the file modes after the beta-test literals establish their
+candidate read-only-data neighbourhoods.
+
+`check_beta_tester` matches its full 254-byte body. It reads and garbles the
+eight-byte password, compares it against each typed 276-byte beta record,
+sets the selected tester, and reports the historical missing-file and
+no-match paths. Its 16-byte initializer contains an explicit second NUL;
+that source detail is required for the historical ten-byte initialization
+copy and complete function equality.
 
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,

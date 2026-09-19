@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <allegro.h>
 #include "loadpng.h"
+#include "beta.h"
 #include "control.h"
 #include "custom.h"
 #include "directories.h"
@@ -23,6 +24,8 @@ int hasFocus;
 int closeButtonClicked;
 int lastFocus;
 int in_replay_menu;
+Tbeta *testers;
+Tbeta *the_tester;
 
 typedef struct Treplay {
     unsigned char reserved[140];
@@ -719,6 +722,34 @@ BITMAP *loadScrambled(char *fileName)
     png = load_png(newFile, pal);
     delete_file(newFile);
     return png;
+}
+
+int check_beta_tester(void)
+{
+    int i;
+    Tbeta *b;
+    FILE *fp;
+    char pwd[16] = "12345678\0";
+
+    fp = fopen("password.txt", "rt");
+    if (!fp) {
+        allegro_message("password.txt not found");
+        return 0;
+    }
+    fread(pwd, 8, 1, fp);
+    fclose(fp);
+    garble_string(pwd, 8);
+    b = testers;
+    the_tester = NULL;
+    while (b) {
+        if (!strncmp(pwd, b->code, 8))
+            the_tester = b;
+        b = b->next;
+    }
+    if (the_tester)
+        return 1;
+    log2file("no tester match found");
+    return 0;
 }
 
 /* DWARF signature for the remaining historical main body. */
