@@ -33,11 +33,12 @@ Current results:
   -O2, totaling 11,752 bytes; initialized data is checked separately.
 - Modified logg.c: all 18 emitted functions and its complete 2061-byte text
   contribution match; the reconstructed memory extension is kept separately
-  from the locked upstream source. Xiph linkage remains outstanding.
+  from the locked upstream source. All 22 Xiph CUs build into candidate archives
+  and link with logg/Allegro in a separate, unexecuted synthetic audio PE.
 - A real historical CRT link produces the original entry RVA 0x1110 and
   eight original startup symbol addresses with TDM-2. The first 792 bytes have matching
   function starts and spans. It is not a game layout or whole-byte match.
-- Fourteen validation tests include wrong relocation targets, altered code and
+- Fifteen validation tests include wrong relocation targets, altered code and
   padding, unknown relocation kinds, origin chains, and independent builds.
 
 See [machine-readable progress](docs/progress.json),
@@ -81,6 +82,8 @@ python tools/experiment.py game-beta game-control game-csv game-timer allegro-ti
 python tools/link_probe.py --compiler tdm-2
 python tools/integration_link.py --compiler tdm-2
 python tools/verify_integration.py
+python tools/build_xiph.py
+python tools/audio_link.py
 python tools/test_pipeline.py
 python tools/progress.py
 python tools/audit.py

@@ -162,6 +162,23 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(dies[0x40]['type_ref'],0x50)
         self.assertEqual(stats['unresolved_origin_specification'],[])
 
+    def test_audio_build_never_reads_assets_or_evidence(self):
+        from build_xiph import build_library
+        from audio_link import main as link_audio
+        original_open=Path.open
+        def guarded(path,*args,**kwargs):
+            absolute=path.resolve()
+            if absolute.is_relative_to(ROOT/'assets') or absolute.is_relative_to(ROOT/'evidence'):
+                raise AssertionError('Audio build accessed verification inputs')
+            return original_open(path,*args,**kwargs)
+        with patch.object(Path,'open',guarded):
+            report=build_library()
+            self.assertEqual(len(report['units']),22)
+            link_audio()
+        linked=read_json(ROOT/'build/audio/tdm-2/build.json')
+        self.assertFalse(linked['executed'])
+        self.assertEqual(linked['executable'],identity(ROOT/'build/audio/tdm-2/audio-probe.exe'))
+
     def test_normal_object_build_never_reads_assets_or_evidence(self):
         original_open=Path.open
         def guarded(path,*args,**kwargs):

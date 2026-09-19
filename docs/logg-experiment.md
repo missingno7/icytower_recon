@@ -21,8 +21,8 @@ The initial switch-based seek candidate was 55 bytes versus the original 51;
 an if/else chain reproduces the exact branch sequence. No placement directives,
 copied machine code, or fallback paths are used.
 
-The addon is a separately verified object, not yet a linked audio library.
-The pinned Xiph sources still need their historical builds, and the GCC 4.2.1
-libogg compiler remains unresolved. Game main helpers also remain absent.
+The addon is a separately verified object and now links with the 22 candidate
+Xiph objects and Allegro in a synthetic audio PE. Xiph byte equality and the
+GCC 4.2.1 libogg compiler remain unresolved. Game main helpers also remain absent.
 See `docs/experiments/allegro-logg-O2.json` for the full inventory and the
 optimization matrix for alternative compiler settings.

@@ -43,6 +43,14 @@ def main():
         raise ValueError('Stale integration layout report')
     write_json(ROOT/'docs/experiments/integration-link.json',integration)
     library=read_json(ROOT/'build/allegro/tdm-2/build.json')
+    xiph=read_json(ROOT/'build/xiph/tdm-2/build.json')
+    audio=read_json(ROOT/'build/audio/tdm-2/build.json')
+    if xiph['plan']!=identity(ROOT/'third_party/xiph-build.json') or xiph['source_lock']!=identity(ROOT/'third_party/xiph-lock.json'):
+        raise ValueError('Stale Xiph build report')
+    if audio['xiph_report']!=identity(ROOT/'build/xiph/tdm-2/build.json'):
+        raise ValueError('Stale audio link report')
+    write_json(ROOT/'docs/experiments/xiph-build.json',xiph)
+    write_json(ROOT/'docs/experiments/audio-link.json',audio)
     write_json(ROOT/'docs/experiments/allegro-build.json',library)
     write_json(ROOT/'src/recovery.json',recovery)
     metrics={
@@ -67,6 +75,9 @@ def main():
         'upstream_library_text_bytes_reproduced':sum(r['original_cu_span'] for r in library_matches),
         'modified_vendor_cus_complete_text_equal':int(reports['allegro-logg']['whole_text_contribution_equal']),
         'modified_vendor_scope':'Included in library CU totals; logg memory extension reconstructed independently, not unmodified upstream.',
+        'xiph_cus_built':len(xiph['units']),
+        'audio_dependencies_linked':True,
+        'audio_dependency_scope':'Synthetic logg/Xiph/Allegro PE, not executed; Xiph bytes and original compiler configuration unproven.',
         'data_bytes_structured_and_content_verified':data_bytes,
         'game_bss_globals_typed':7,'game_bss_semantic_bytes':168,'game_common_allocation_bytes':240,
         'dwarf_type_dies_recovered':len(read_json(ROOT/'evidence/census/types.json')),
@@ -132,7 +143,7 @@ def main():
     blockers[3].update(current_evidence='Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.',
         next_experiment='Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies.')
     blockers[3]['current_evidence']='Complete beta/control/directories/timer and ambiguous csv text; all 114 Allegro core CUs built and linked with five historical game-tree CUs.'
-    blockers[3]['next_experiment']='Logg now has exact complete text. Build pinned Xiph dependencies and recover main helpers before adding custom.c to the natural integration link.'
+    blockers[3]['next_experiment']='All 22 Xiph CUs build and link with exact-text logg. Compare Xiph code and recover main helpers before integrating custom.c.'
     blockers[3]['missing_artifact']='GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; exact strptime/timecompat provenance; remaining game CUs'
     custom=reports['game-custom']
     blockers.append({'id':'B007','target':'custom.c complete text',
