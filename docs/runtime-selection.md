@@ -50,13 +50,16 @@ custom image loading, profile/game-flow/presentation routines, remaining ad
 HTTP support, profile data tables, and logg audio. This failed link is a
 dependency measurement, not a game executable.
 
-The three loadpng source files are exact Allegro 4.4.1 inputs, but they cannot
-yet join this link: the locked TDM toolchains contain neither `png.h` nor a
-libpng import archive, while the user-supplied `libpng3.dll` and `zlib1.dll`
-are runtime assets and deliberately excluded from object generation. The
-historical libpng 1.2.34 headers and import library must be pinned before a
-`game-loadpng` target is introduced. The adjacent recovery-owned HTTP unit is
+The three loadpng source files are exact Allegro 4.4.1 inputs. The project now
+pins the publisher's Windows libpng 1.2.34 sources and zlib 1.2.3 sources in
+`third_party/png-lock.json`, supplying the historical headers needed to build
+all three units. `tools/import_png.py` derives a candidate `libpng3.a` from
+the named exports of the user-supplied `libpng3.dll`; this allows a normal
+link with that DLL but does not establish the identity of the original import
+archive. The runtime DLL itself remains excluded from object generation. The
+adjacent recovery-owned HTTP unit is
 mapped in `docs/httpget-recovery.md`; its two public request wrappers and its
 transport call graph are now oracle-derived. The wrappers, socket-error helper,
-and `HTTPRequest` compile as exact partial-unit functions; the ordinary link
-now exposes the remaining split and transport helpers.
+and `HTTPRequest` compile as exact partial-unit functions. With all three PNG
+units included, the ordinary link resolves `load_png` and now begins at the
+remaining HTTP transport helper.

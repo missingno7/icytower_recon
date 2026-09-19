@@ -18,6 +18,7 @@ GAME_TARGETS = [
     'game-stars', 'game-options', 'game-replay', 'game-main-partial',
     'game-map', 'game-scroller', 'game-particle', 'game-fld-adspot',
     'game-hisc', 'game-menu', 'game-game-data', 'game-profile', 'game-custom',
+    'game-loadpng', 'game-savepng', 'game-regpng',
     'game-strptime', 'game-timecompat',
 ]
 
@@ -53,7 +54,8 @@ def main(compiler='tdm-2'):
         tc / 'bin/gcc.exe', '-O2', '-g', '-mfpmath=387', '-DALLEGRO_STATICLINK',
         '-Iinclude', '-Ithird_party/allegro-4.4.1/include', '-mwindows', *objects,
         library, '-lkernel32', '-luser32', '-lgdi32', '-lcomdlg32', '-lole32',
-        '-ldinput', '-lddraw', '-ldxguid', '-lwinmm', '-ldsound', '-lws2_32', '-lpthread', '-lm',
+        '-ldinput', '-lddraw', '-ldxguid', '-lwinmm', '-ldsound', '-lws2_32', '-lpthread',
+        '-Lthird_party/libpng-1.2.34', '-lpng3', '-lm',
         '-Wl,-Map,' + str(link_map), '-Wl,--cref', '-o', exe,
     ]
     env = os.environ.copy()

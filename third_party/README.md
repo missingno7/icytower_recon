@@ -8,8 +8,11 @@ by Git and can be populated with the documented bootstrap commands.
   `licenses/allegro-license.txt`. No Allegro 4.4.3.1 input is used.
 - loadpng.c, savepng.c, regpng.c and loadpng.h are copied verbatim from that
   release into the historical game source locations. Their public-domain
-  notices remain intact. They are KNOWN_UPSTREAM, not yet compiled/matched;
-  exact libpng 1.2.34 headers/import libraries remain to be pinned.
+  notices remain intact. The publisher's libpng 1.2.34 Windows source archive
+  and zlib 1.2.3 archive are hash-locked in `png-lock.json`; all three units
+  compile with complete text equality at `-O2`. `libpng3.a` is a candidate
+  import archive derived from the user-supplied `libpng3.dll` exports, so the
+  original import archive identity remains unresolved.
 - libvorbis 1.2.0 and libogg 1.1.3 are from the
   [Xiph Vorbis archive](https://downloads.xiph.org/releases/vorbis/) and
   [Xiph Ogg archive](https://downloads.xiph.org/releases/ogg/). Fetching checks

@@ -19,7 +19,7 @@ def identity(path):
 def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=True) + '\n', encoding='utf-8')
+    path.write_bytes((json.dumps(value, indent=2, ensure_ascii=True) + '\n').encode('utf-8'))
 
 def read_json(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))

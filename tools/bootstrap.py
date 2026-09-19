@@ -68,7 +68,7 @@ def main():
     lock = {'schema': 1, 'inputs': inputs, 'archive_provenance': 'evidence/research/third_party/MANIFEST.json',
             'versions': {name: run([TC / 'bin' / (name + '.exe'), '--version']).splitlines()[0] for name in ['gcc', 'as', 'ld', 'ar', 'windres']},
             'separate_dependency_lock': 'third_party/xiph-lock.json',
-            'missing': ['GNU C 4.2.1-sjlj (mingw32-2) for libogg', 'Exact libpng 1.2.34 headers/import library', 'Exact pthreads-win32 2.8.0 headers/import library', 'Matching cmshared-enabled historical crtbegin.o/libgcc runtime'],
+            'missing': ['GNU C 4.2.1-sjlj (mingw32-2) for libogg', 'Original libpng 1.2.34 import archive (candidate derived from supplied runtime exports)', 'Exact pthreads-win32 2.8.0 headers/import library', 'Matching cmshared-enabled historical crtbegin.o/libgcc runtime'],
             'historical_flags': {'game': {'candidate': '-Os -mfpmath=387', 'status': 'INFERRED; per-CU verification required'}, 'allegro': {'candidate': '-O2 -DALLEGRO_STATICLINK', 'status': 'INFERRED; per-CU verification required'}}}
     out = ROOT / 'toolchain/lock.json'
     if out.exists() and read_json(out) != lock:

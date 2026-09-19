@@ -26,6 +26,12 @@ TARGETS={
     'game-custom': {'source':'src/custom.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\custom.c','default':'-O2'},
     'game-csv': {'source':'src/csv.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\csv.c','default':'-O2'},
     'game-httpget': {'source':'src/httpget.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\httpget.c','default':'-O2'},
+    'game-loadpng': {'source':'src/loadpng.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\loadpng.c','default':'-O2',
+                     'includes':['third_party/libpng-1.2.34','third_party/zlib-1.2.3']},
+    'game-savepng': {'source':'src/savepng.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\savepng.c','default':'-O2',
+                     'includes':['third_party/libpng-1.2.34','third_party/zlib-1.2.3']},
+    'game-regpng': {'source':'src/regpng.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\regpng.c','default':'-O2',
+                    'includes':['third_party/libpng-1.2.34','third_party/zlib-1.2.3']},
     'game-strptime': {'source':'src/strptime.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\strptime.c','default':'-O2'},
     'game-timecompat': {'source':'src/timecompat.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\timecompat.c','default':'-O2'},
     'game-beta': {'source':'src/beta.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\beta.c','default':'-O2'},
@@ -51,6 +57,18 @@ def verify_inputs(compiler='tdm-1'):
             for row in dependency['files']:
                 if identity(ROOT/row['path'])!={k:row[k] for k in ['size','sha256']}:
                     raise ValueError('Xiph input hash differs: '+row['path'])
+    png=ROOT/'third_party/png-lock.json'
+    if png.exists():
+        for dependency in read_json(png)['dependencies']:
+            for row in dependency['files']:
+                if identity(ROOT/row['path'])!={k:row[k] for k in ['size','sha256']}:
+                    raise ValueError('PNG input hash differs: '+row['path'])
+        candidate=read_json(png)['link_candidate']
+        for key in ['definition','import_library']:
+            row=candidate[key]
+            path=ROOT/'third_party/libpng-1.2.34'/('libpng3-derived.def' if key=='definition' else 'libpng3.a')
+            if identity(path)!=row:
+                raise ValueError('PNG link candidate differs: '+str(path))
     if compiler!='tdm-1':
         for row in read_json(ROOT/'toolchain'/f'{compiler}-lock.json')['inputs']:
             if identity(ROOT/row['path'])!={k:row[k] for k in ['size','sha256']}:

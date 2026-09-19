@@ -60,6 +60,10 @@ Current results:
   `HTTPRequest`, `HTTPHead`, and `HTTPGet` bodies. Its ordinary-link frontier
   now begins at `SplitURL` and `HTTPFetchInternal` rather than the public
   request entry points.
+- loadpng.c, savepng.c, and regpng.c: all fifteen functions and their complete
+  text contributions match at `-O2`. The ordinary recovered-game link now
+  resolves `load_png` through a runtime-derived `libpng3.dll` import candidate;
+  the original import archive has not been recovered.
 - All 114 historical Allegro core CUs build into a static library. The recovered
   game CUs link against it with a synthetic main and no fallback code.
 - Allegro 4.4.1 timer.c and color.c: complete text contributions match at
@@ -93,6 +97,9 @@ One-time local export (the external research tree is read-only):
 ```powershell
 python tools/bootstrap.py --research D:\Games\DOS\dos_recosystem\icytower_forged
 python tools/fetch_xiph.py
+curl.exe --fail --location --output third_party/archives/lpng1234.zip https://downloads.sourceforge.net/project/libpng/libpng12/older-releases/1.2.34/lpng1234.zip
+curl.exe --fail --location --output third_party/archives/zlib-1.2.3.tar.gz https://zlib.net/fossils/zlib-1.2.3.tar.gz
+python tools/import_png.py
 ```
 
 The existing assets/icytower15.exe and runtime DLLs are user-supplied local
@@ -104,7 +111,7 @@ normal compilation has no dependency on the research repository or assets.
 Normal compilation of complete CUs:
 
 ```powershell
-python tools/build.py game-beta game-control game-csv game-timer allegro-timer allegro-color allegro-blit --compiler tdm-2
+python tools/build.py game-beta game-control game-csv game-timer game-loadpng game-savepng game-regpng allegro-timer allegro-color allegro-blit --compiler tdm-2
 ```
 
 Verification and experiments (these explicitly read the original fixture):
