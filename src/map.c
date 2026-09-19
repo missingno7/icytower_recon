@@ -79,9 +79,9 @@ void add_floor(Tmap *m)
                 else width=6;
             }
             else {
-                width=(int)(((float)(300-m->room[31].level/5)/300.0f)*10.0f);
-                if (width<1) width=6;
-                else width=rand()%width+6;
+                width=rand();
+                if ((int)(((float)(300-m->room[31].level/5)/300.0f)*10.0f)<1) width=6;
+                else width=width%(int)(((float)(300-m->room[31].level/5)/300.0f)*10.0f)+6;
             }
         }
         else width=rand()%10+6;
