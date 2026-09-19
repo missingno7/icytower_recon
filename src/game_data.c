@@ -3,10 +3,41 @@
  * Partial source recovery.
  * UNKNOWN: add_jump_sequence @ 0x004040f4, 87 bytes
  * UNKNOWN: add_combo @ 0x0040414c, 62 bytes
- * UNKNOWN: create_game_data @ 0x00404198, 186 bytes
  * UNKNOWN: getGameDataXML @ 0x00404254, 1855 bytes
  */
 
+typedef struct { int start, end, length; } Tgd_combo;
+typedef struct { int start, dist, num; } Tgd_jump_sequence;
+
+typedef struct {
+    void *replay;
+    int score, floor, combo, no_combo_top_floor, biggest_lost_combo;
+    int ccc[5], jc[5];
+    int comboPosts;
+    Tgd_combo combos[5000];
+    int jumpPosts;
+    Tgd_jump_sequence jumps[5000];
+    int left, right, jump;
+} Tgame_data;
+
 extern void free(void *ptr);
+extern void *malloc(unsigned int size);
 
 void destroy_game_data(void *gd) { free(gd); }
+
+Tgame_data *create_game_data(void)
+{
+    int i;
+    Tgame_data *gd;
+
+    gd=malloc(sizeof(Tgame_data));
+    if (gd) {
+        gd->replay=0;
+        gd->score=gd->floor=gd->combo=gd->no_combo_top_floor=gd->biggest_lost_combo=0;
+        for (i=0;i<5;i++) gd->ccc[i]=gd->jc[i]=0;
+        gd->comboPosts=0;
+        gd->jumpPosts=0;
+        gd->left=gd->right=gd->jump=0;
+    }
+    return gd;
+}
