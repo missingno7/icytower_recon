@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <allegro.h>
 #include "control.h"
+#include "custom.h"
 #include "directories.h"
 #include "game_services.h"
 
@@ -49,6 +50,7 @@ Toptions options;
 Tprofile *profile;
 SAMPLE *bg_menu;
 SAMPLE *menu_sounds[2];
+Tcustom custom;
 
 char *get_version_str(void)
 {
@@ -223,4 +225,10 @@ void log2file(const char *format, ...)
         fclose(fp);
     }
     pthread_mutex_unlock(&sLogMutex);
+}
+
+void end_game(void)
+{
+    log2file(" freeing custom data");
+    destroy_custom_data(&custom);
 }

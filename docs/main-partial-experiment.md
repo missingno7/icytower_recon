@@ -51,6 +51,13 @@ is repeated in the original; the verifier establishes its address from the
 unique preceding 12-byte read-only float-table neighbourhood, then derives the
 literal's target from that independently established table position.
 
+`end_game` has a recovered 32-byte source body: it logs `" freeing custom
+data"` and calls `destroy_custom_data` on the typed main-CU `custom` global.
+Its read-only-data and `custom` relocations resolve exactly. The direct call to
+the separately defined `log2file` has no COFF relocation, so its displacement
+remains layout-dependent while the rest of historical main.c is absent; it is
+therefore recorded as `DIFFER`, with no exact-function credit.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
