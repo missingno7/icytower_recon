@@ -61,11 +61,13 @@ typedef struct Tcharacter {
 } Tcharacter;
 
 typedef struct Tplayer {
-    unsigned char reserved0[0x3c];
+    unsigned char reserved0[0x18];
+    double sy;
+    unsigned char reserved1[0x1c];
     int frame;
-    unsigned char reserved1[0x0c];
+    unsigned char reserved2[0x0c];
     int dead;
-    unsigned char reserved2[0x08];
+    unsigned char reserved3[0x08];
     int edge;
     int edge_drawn;
 } Tplayer;
@@ -349,6 +351,18 @@ void for_each_directory(char *basedir,
     strcat(dir_and_wildcard, "*");
     for_each_file_ex(dir_and_wildcard, FA_DIREC, 0, cb, NULL);
 }
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+void play_jump_sound(Tplayer *p)
+{
+    if (p->sy < -22.0f)
+        play_sound(custom.jump_sound[2], 1, 1);
+    else if (p->sy < -15.0f)
+        play_sound(custom.jump_sound[1], 1, 1);
+    else
+        play_sound(custom.jump_sound[0], 1, 1);
+}
+#endif
 
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);

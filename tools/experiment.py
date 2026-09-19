@@ -160,6 +160,25 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                 if found<0: break
                 locations.append(exe.image_base+original_section['rva']+found+preceding)
                 start=found+1
+        if len(locations)==1:
+            return locations[0]
+        # A repeated first field can instead be anchored by succeeding table
+        # fields.  The candidate data establishes this complete sequence;
+        # neither the relocated instruction operand nor comparison bytes do.
+        following=4
+        if addend+len(literal)+following>len(content):
+            return None
+        neighbourhood=content[addend:addend+len(literal)+following]
+        locations=[]
+        for original_section in exe.sections:
+            if original_section['name']!='.rdata': continue
+            haystack=exe.section_bytes(original_section)
+            start=0
+            while True:
+                found=haystack.find(neighbourhood,start)
+                if found<0: break
+                locations.append(exe.image_base+original_section['rva']+found)
+                start=found+1
         return locations[0] if len(locations)==1 else None
     def target_address(sym,addend):
         if sym['name']=='.text':

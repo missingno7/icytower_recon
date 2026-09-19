@@ -41,7 +41,8 @@ Current results:
   302-byte x87 segment-intersection body, and the historical Allegro
   `END_OF_MAIN()` macro emits the exact 50-byte `WinMain` wrapper.
   `set_current_avatar` also matches its complete 96-byte profile-avatar scan,
-  and `for_each_directory` matches its 109-byte Allegro enumeration wrapper.
+  `for_each_directory` matches its 109-byte Allegro enumeration wrapper, and
+  `play_jump_sound` matches its complete 141-byte threshold selector.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.

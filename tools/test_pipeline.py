@@ -90,7 +90,7 @@ class PipelineTests(unittest.TestCase):
                      'datafile_callback','color_map_callback','syncProfileFromOptions',
                      'startMenuMusic','play_menu_select','play_menu_move','stopMenuMusic',
                      'replaceBadCharacters','pwd_garble_string','line_intersect','WinMain',
-                     'set_current_avatar','for_each_directory'):
+                     'set_current_avatar','for_each_directory','play_jump_sound'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
@@ -106,6 +106,7 @@ class PipelineTests(unittest.TestCase):
                              else 50 if name=='WinMain'
                              else 96 if name=='set_current_avatar'
                              else 109 if name=='for_each_directory'
+                             else 141 if name=='play_jump_sound'
                              else 33 if name=='datafile_callback_slow'
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 
@@ -130,6 +131,28 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(line['masked_equal'])
         self.assertFalse(line['relocation_resolved_equal'])
         self.assertNotEqual(line['status'],'FUNCTION_MATCH')
+
+    def test_trailing_literal_neighbourhood_rejects_wrong_target(self):
+        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        cu='F:\\projects\\icytower\\trunk\\source\\main.c'
+        exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        jump=next(f for f in exact['functions'] if f['name']=='play_jump_sound')
+        relocation=jump['relocations'][0]
+        b=Binary(obj)
+        section=next(s for s in b.sections if s['index']==relocation['section'])
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+            altered=Path(folder)/'unit.o'
+            contents=bytearray(obj.read_bytes())
+            # Point at the succeeding threshold.  The instruction body stays
+            # masked-equal, but the trailing two-float anchor must reject it.
+            struct.pack_into('<I',contents,section['raw_pointer']+relocation['offset'],
+                             relocation['addend']+4)
+            altered.write_bytes(contents)
+            wrong=compare(altered,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        jump=next(f for f in wrong['functions'] if f['name']=='play_jump_sound')
+        self.assertTrue(jump['masked_equal'])
+        self.assertFalse(jump['relocation_resolved_equal'])
+        self.assertNotEqual(jump['status'],'FUNCTION_MATCH')
 
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',

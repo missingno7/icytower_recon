@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-six historical helpers while the remaining
+`src/main.c` currently recovers twenty-seven historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -102,6 +102,13 @@ a layout-dependent displacement, so it remains `DIFFER` without exact credit.
 `for_each_directory` matches its full 109-byte wrapper. It copies the base
 directory into its DWARF-sized local buffer, appends `"*"`, and invokes the
 named Allegro `for_each_file_ex` callback API with directory attributes.
+
+`play_jump_sound` matches its full 141-byte body. It selects one of the three
+typed `custom.jump_sound` entries from the player vertical-speed thresholds
+`-22.0f` and `-15.0f`, then calls the declared game sound helper. The first
+threshold is repeated in original read-only data, so the verifier anchors it
+through the unique succeeding two-float sequence; a shifted relocation is
+covered by a mutation regression.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
