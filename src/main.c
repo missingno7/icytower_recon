@@ -149,6 +149,7 @@ char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
 void *hisc_tables[15];
+static int count;
 
 extern void save_options(Toptions *o, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
@@ -160,7 +161,7 @@ extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int new_game(void);
 extern int play(void);
-extern int load_character(char *filename, int attrib, void *param);
+extern int load_character(const char *filename, int attrib, void *param);
 
 char *get_version_str(void)
 {
@@ -788,6 +789,34 @@ int check_characters(void)
         characters[i].ok = characters[i].bmp != NULL;
     set_current_avatar();
     return 1;
+}
+
+int load_character(const char *filename, int attrib, void *param)
+{
+    char *name;
+
+    name = get_filename(filename);
+    if ((attrib & FA_DIREC) && *name != '.') {
+        char buf[1024];
+
+        sprintf(buf, "%s/%s.txt", filename, name);
+        if (exists(buf)) {
+            characters[count].bmp = load_character_bmp(name,
+                &characters[count].uses_datafile, characters[count].pal);
+            log2file(" %s (%s): %s", name, filename,
+                characters[count].bmp ? "ok" : "error");
+            if (characters[count].bmp) {
+                strcpy(characters[count].name, name);
+                count++;
+                return 0;
+            }
+            else {
+                num_chars--;
+                *allegro_errno = 0;
+            }
+        }
+    }
+    return 0;
 }
 
 /* DWARF signature for the remaining historical main body. */

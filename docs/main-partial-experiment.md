@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers thirty-seven historical helpers while the remaining
+`src/main.c` currently recovers thirty-eight historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -104,12 +104,13 @@ error paths. The bytecode and every named or uniquely resolved literal target
 match, including the file modes after the beta-test literals establish their
 candidate read-only-data neighbourhoods.
 
-`check_beta_tester` matches its full 254-byte body. It reads and garbles the
+`check_beta_tester` recovers its full 254-byte body. It reads and garbles the
 eight-byte password, compares it against each typed 276-byte beta record,
 sets the selected tester, and reports the historical missing-file and
 no-match paths. Its 16-byte initializer contains an explicit second NUL;
 that source detail is required for the historical ten-byte initialization
-copy and complete function equality.
+copy. The combined partial snapshot's literal neighbourhood remains reported
+by the generated comparison inventory.
 
 `check_characters` recovers the 345-byte character discovery and loading
 workflow. It enumerates the base and optional custom directories, allocates
@@ -118,6 +119,14 @@ each `ok` flag from its bitmap pointer, and chooses the current avatar. Its
 instruction sequence and all named data, callbacks, and direct calls match;
 the repeated `"Searching '%s'"` literal has no independent original
 read-only-data position in this partial CU, so it remains `DIFFER`.
+
+`load_character` recovers the 330-byte directory callback used by character
+discovery. It validates the character directory and descriptor, loads the
+character bitmap and metadata through the typed custom-CU API, logs the
+outcome, preserves the static load counter, and restores Allegro's error
+state while removing failed entries. The compiler retains the filename and
+basename in the opposite registers and merges the success return path into a
+315-byte candidate, so this evidence-backed source remains `DIFFER`.
 
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
