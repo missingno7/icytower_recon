@@ -31,7 +31,7 @@ def main(with_custom=False):
     obj,logg=compile_target('allegro-logg',dest=out/'logg',compiler=compiler)
     game=[]
     if with_custom:
-        for target in ['game-custom','game-directories','game-main-partial']:
+        for target in ['game-custom','game-directories','game-main-partial','game-particle']:
             game.append(compile_target(target,dest=out/target,compiler=compiler))
     args=[tc/'bin/gcc.exe','-O2','-g','-mfpmath=387','-mwindows',
           'tools/audio_probe.c',*[o for o,_ in game],obj,xdir/'libvorbisfile.a',xdir/'libvorbis.a',xdir/'libogg.a',adir/'liballeg.a',

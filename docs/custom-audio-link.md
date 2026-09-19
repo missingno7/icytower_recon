@@ -1,7 +1,7 @@
 # Custom dependency link
 
 `tools/audio_link.py --with-custom` creates an unexecuted synthetic PE from
-the recovered custom, directories and partial-main objects, reconstructed
+the recovered custom, directories, partial-main and particle objects, reconstructed
 logg, 22 candidate Xiph objects, historical Allegro and pthread. The linker
 resolves all of these objects without fallback definitions.
 

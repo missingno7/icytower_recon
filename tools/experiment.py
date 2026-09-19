@@ -63,6 +63,29 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         matches=own or matches
         if len({x['va'] for x in matches})==1:
             section_bases.setdefault(s['section'],set()).add(matches[0]['va']-s['value'])
+    sections_by_index={s['index']:s for s in obj.sections}
+    def unique_literal_target(sym,addend,instruction):
+        """Resolve an anonymous x87 literal by unique content, not its field."""
+        sizes={b'\xdd\x05':8,b'\xdc\x0d':8,b'\xd9\x05':4,b'\xd8\x0d':4}
+        size=sizes.get(instruction)
+        if size is None or sym['name']!='.rdata' or sym['section']<=0:
+            return None
+        section=sections_by_index.get(sym['section'])
+        if section is None: return None
+        content=obj.section_bytes(section)
+        if addend<0 or addend+size>len(content): return None
+        literal=content[addend:addend+size]
+        locations=[]
+        for original_section in exe.sections:
+            if original_section['name']!='.rdata': continue
+            haystack=exe.section_bytes(original_section)
+            start=0
+            while True:
+                found=haystack.find(literal,start)
+                if found<0: break
+                locations.append(exe.image_base+original_section['rva']+found)
+                start=found+1
+        return locations[0] if len(locations)==1 else None
     def target_address(sym,addend):
         if sym['name']=='.text':
             # A section relocation can point into a function even when
@@ -141,6 +164,9 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             sym=obj.by_index[r['symbol_index']]
             addend=struct.unpack_from('<I',code,p)[0]
             target,reason=target_address(sym,addend)
+            literal=unique_literal_target(sym,addend,bytes(code[max(0,p-2):p]))
+            if target is None and literal is not None:
+                target,reason=literal,'unique read-only literal content'
             expected=None
             if r['type']==6 and target is not None: expected=target&0xffffffff
             elif r['type']==20 and target is not None: expected=(target-f['va']-p-4)&0xffffffff

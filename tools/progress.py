@@ -5,7 +5,7 @@ from common import ROOT, identity, read_json, write_json
 def main():
     units=read_json(ROOT/'src/units.json')
     reports={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-stars','game-timer','allegro-timer','allegro-color','allegro-blit','allegro-logg']:
         p=ROOT/'build/experiments/tdm-2'/target/'O2/comparison.json'
         r=read_json(p)
         for name,expected in r['build']['local_inputs'].items():
@@ -23,13 +23,13 @@ def main():
     timer=reports['game-timer']
     game_units=[u for u in units if u['classification']=='GAME']
     game_functions=[f for u in game_units for f in u['functions']]
-    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-main-partial'],reports['game-stars'],timer]
+    games=[reports['game-beta'],reports['game-control'],reports['game-custom'],reports['game-directories'],reports['game-main-partial'],reports['game-particle'],reports['game-stars'],timer]
     matched=[f for r in games for f in r['functions'] if f['status']=='FUNCTION_MATCH']
     library_matches=[r for key,r in reports.items() if key.startswith('allegro-') and r['whole_text_contribution_equal']]
     data_bytes=sum(s['logical_size'] for r in reports.values() for s in r['initialized_data_comparison'] if s['content_equal'])
     summary=read_json(ROOT/'evidence/census/dwarf-summary.json')
     recovery={}
-    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-stars','game-timer']:
+    for target in ['game-beta','game-control','game-csv','game-custom','game-directories','game-main-partial','game-particle','game-stars','game-timer']:
         report=reports[target]
         recovery['src/'+target[5:]+'.c']={
             'state':'RECOVERED_EXACT_FUNCTIONS' if report['function_matches']==report['functions_total'] else 'PARTIALLY_MATCHED',
@@ -83,7 +83,9 @@ def main():
         'audio_dependencies_linked':True,
         'audio_dependency_scope':'Synthetic logg/Xiph/Allegro PE, not executed; Xiph bytes and original compiler configuration unproven.',
         'custom_dependencies_linked':True,
-        'custom_dependency_scope':'Synthetic custom/directories/main-helper/logg/Xiph/Allegro/pthread PE, not executed; custom complete text and natural layout remain unproven.',
+        'custom_dependency_scope':'Synthetic custom/directories/main-helper/particle/logg/Xiph/Allegro/pthread PE, not executed; custom complete text and natural layout remain unproven.',
+        'particle_dependencies_linked':True,
+        'particle_dependency_scope':'Synthetic custom-audio PE resolves particle through the recovered exact new_rand body; it is outside the natural integration layout experiment.',
         'data_bytes_structured_and_content_verified':data_bytes,
         'game_bss_globals_typed':7,'game_bss_semantic_bytes':168,'game_common_allocation_bytes':240,
         'dwarf_type_dies_recovered':len(read_json(ROOT/'evidence/census/types.json')),
@@ -148,12 +150,12 @@ def main():
     blockers[0]['experiments_tried'].append('Imported hash-pinned TDM-2; compared both startup COFF objects and a real synthetic link')
     blockers[3].update(current_evidence='Complete timer/control text (18 functions, 902 bytes); all 114 Allegro core CUs built and linked with both recovered CUs.',
         next_experiment='Recover complete beta.c next to extend the natural game prefix; resolve remaining vendor dependencies.')
-    blockers[3]['current_evidence']='Complete beta/control/directories/stars/timer and ambiguous csv text; all 114 Allegro core CUs built and linked with six historical game-tree CUs.'
+    blockers[3]['current_evidence']='Complete beta/control/directories/particle/stars/timer and ambiguous csv text; all 114 Allegro core CUs build and link with six historical game-tree CUs. particle and its exact main.c new_rand dependency link in the separate custom-audio PE.'
     blockers[3]['next_experiment']='All 22 Xiph CUs build and link with exact-text logg; custom dependencies now resolve in a synthetic PE. Compare Xiph code and recover remaining main CUs before natural integration.'
     blockers[3]['missing_artifact']='GCC 4.2.1-sjlj for libogg; exact png/pthread headers/import libraries; exact strptime/timecompat provenance; remaining game CUs'
     custom=reports['game-custom']
     blockers.append({'id':'B007','target':'custom.c complete text',
-        'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; not yet integrated.',
+        'current_evidence':str(custom['function_matches'])+'/10 exact function bodies; initialized data checked separately; dependencies resolve in the separate synthetic custom-audio PE.',
         'first_mismatch':next(({'function':f['name'], 'detail':f['first_difference']} for f in custom['functions'] if f['status']!='FUNCTION_MATCH'),None),
         'experiments_tried':['Original DWARF function order and lexical scopes','Explicit fgets prefetch control flow','Historical Allegro inline draw_sprite expansion','All five optimization levels'],
         'next_experiment':'Compare load_character_bmp error paths, lexical scopes and return-value allocation against original disassembly.',

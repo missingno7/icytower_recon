@@ -12,6 +12,13 @@ first instruction-level difference is how the compiler loads `itrcheck`.
 The function therefore remains DIFFER even though its visible control flow
 and call order agree.
 
+`new_rand` and `new_srand` also match their complete 128-byte and 14-byte
+bodies at -O2. The verifier resolves the random generator's x87 double and
+single-precision literal relocations by their unique bytes in the original
+read-only data, independently of masked instruction equality. That exact
+dependency permits the recovered particle CU to enter the separate synthetic
+custom-audio link.
+
 This is intentionally a partial CU report: there are 82 original main.c
 functions, so it cannot support a CU-wide text or object claim. The exact
 helper is checked by the pipeline test, and the complete comparison inventory

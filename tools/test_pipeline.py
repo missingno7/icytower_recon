@@ -71,6 +71,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(log['original_size'],189)
         self.assertNotEqual(log['status'],'FUNCTION_MATCH')
 
+    def test_main_random_helpers_are_exact(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        rng=next(f for f in r['functions'] if f['name']=='new_rand')
+        self.assertEqual(rng['status'],'FUNCTION_MATCH')
+        self.assertEqual(rng['candidate_size'],128)
+        seed=next(f for f in r['functions'] if f['name']=='new_srand')
+        self.assertEqual(seed['status'],'FUNCTION_MATCH')
+        self.assertEqual(seed['candidate_size'],14)
+
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)
@@ -87,6 +97,15 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(r['function_matches'],3)
         self.assertTrue(r['whole_text_contribution_equal'])
         self.assertEqual(r['candidate_text_logical_size'],643)
+        self.assertFalse(r['object_match'])
+
+    def test_complete_particle_text(self):
+        r=compare(ROOT/'build/experiments/tdm-2/game-particle/O2/unit.o',
+                  'F:\\projects\\icytower\\trunk\\source\\particle.c',ROOT/'assets/icytower15.exe',OBJDUMP)
+        self.assertEqual(r['functions_total'],3)
+        self.assertEqual(r['function_matches'],3)
+        self.assertTrue(r['whole_text_contribution_equal'])
+        self.assertEqual(r['candidate_text_logical_size'],304)
         self.assertFalse(r['object_match'])
 
     def test_complete_beta_text(self):
@@ -200,7 +219,7 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(linked['executed'])
         self.assertEqual(linked['executable'],identity(ROOT/'build/audio/tdm-2/audio-probe.exe'))
         custom=read_json(ROOT/'build/custom-audio/tdm-2/build.json')
-        self.assertEqual(len(custom['game_objects']),3)
+        self.assertEqual(len(custom['game_objects']),4)
         self.assertFalse(custom['executed'])
 
     def test_normal_object_build_never_reads_assets_or_evidence(self):

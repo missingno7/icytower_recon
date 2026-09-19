@@ -11,6 +11,21 @@ SAMPLE *logg_load_memory(void *pData, size_t iSize);
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
+double seed;
+
+int new_rand(void)
+{
+    int x;
+    seed = seed * 1.4294484665;
+    while (seed > 65535.0f) seed -= 65535.0f;
+    x = (int)seed;
+    return (int)((seed-x) * 65535.0f);
+}
+
+void new_srand(int s)
+{
+    seed=s;
+}
 
 SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id)
 {
