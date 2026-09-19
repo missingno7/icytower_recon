@@ -283,3 +283,5 @@ it draws the supplied bitmap into a temporary surface, blends it from alpha
 255 toward transparent, presents each timer-driven frame, and destroys the
 temporary. Its independently compiled body has the exact 424-byte historical
 extent and remains `DIFFER` only at a late register/layout decision.
+
+`show_credits` is reconstructed from the 0x40c4dc body and its DWARF locals. It fades the menu music from `options.msc_volume` over 150 timer frames, draws assets 125 and 126, centres the three original credit lines, and preserves the focus, close-button, Escape, and timer handling before fading out. The independently compiled body is 654 bytes against the historical 634 bytes; its draw and timing sequence agrees, while GCC places the loop tests differently, so it is recorded as `DIFFER`.
