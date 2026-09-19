@@ -22,6 +22,16 @@ emitted function bytes. The current comparison reports `FUNCTION_MATCH` for
 all three recovered functions. `__strptime` (2028 bytes) remains unrecovered,
 so this compilation unit is not yet complete.
 
+The source now also restores the parser's original static table declarations:
+eight abbreviated weekdays, eight full weekdays, thirteen abbreviated months,
+thirteen full months, and three AM/PM entries (each including its null
+terminator), plus `const int tm_year_base = 1900`. DWARF fixes their source
+order and dimensions; the literal content comes from their original pointer
+tables and strings. With `_strptime` still absent, GCC removes the unused
+static arrays, so only the external `tm_year_base` is emitted and verified as
+the exact four-byte read-only contribution at `0x004d80cc`. This does not
+claim emitted table equality before the parser body references them.
+
 ## Provenance frontier
 
 The observed table names, `match_string` and `first_day` structures identify the

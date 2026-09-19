@@ -7,6 +7,24 @@
 #include <time.h>
 #include <string.h>
 
+static const char *abb_weekdays[] = {
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", NULL
+};
+static const char *full_weekdays[] = {
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+    "Saturday", NULL
+};
+static const char *abb_month[] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+    "Oct", "Nov", "Dec", NULL
+};
+static const char *full_month[] = {
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December", NULL
+};
+static const char *ampm[] = { "am", "pm", NULL };
+const int tm_year_base = 1900;
+
 char *_strptime(const char *buf, const char *format, struct tm *tm,
                 int *state) __attribute__((regparm(3)));
 
