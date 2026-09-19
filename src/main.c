@@ -162,9 +162,27 @@ typedef struct Toptions {
 } Toptions;
 
 typedef struct Tprofile {
-    unsigned char reserved0[6];
-    char name[1];
-    unsigned char reserved1[0x4dc-7];
+    unsigned char header[6];
+    char handle[32];
+    int checksum;
+    int games_played;
+    int custom_games_played;
+    int games_quit;
+    int seconds_spent_playing;
+    int total_floors;
+    int total_score;
+    int total_combos;
+    int total_combo_floors;
+    int best_floor;
+    int best_combo;
+    int best_score;
+    int no_combo_top_floor;
+    int biggest_lost_combo;
+    int cccNum[5];
+    int cccTotal[5];
+    int ccc[5];
+    int jc[5];
+    unsigned char reserved1[0x4dc-176];
     int flash;
     int jump_hold;
     unsigned char reserved2[64];
@@ -361,7 +379,7 @@ void syncOptionsFromProfile(void)
     eyecandy_selection.value = options.flash;
     set_current_avatar();
     get_profile_dir_for_profile(replay_directory, sizeof(replay_directory),
-                                profile->name);
+                                profile->handle);
     strcat(replay_directory, "replays/");
 }
 
@@ -726,7 +744,7 @@ void change_profile(void)
     if (newProfile) {
         if (profile) free(profile);
         profile = newProfile;
-        strcpy(options.lastProfile, profile->name);
+        strcpy(options.lastProfile, profile->handle);
         syncOptionsFromProfile();
         save_config();
         rebuild_profile_list(0);
