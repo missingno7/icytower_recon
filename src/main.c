@@ -90,6 +90,8 @@ int player_id;
 int any11;
 int fast_forward;
 int fast_fast_forward;
+int gameMusicVoiceID;
+SAMPLE *bg_beat;
 
 char *get_version_str(void)
 {
@@ -202,6 +204,36 @@ void stopMenuMusic(void)
 {
     if (bg_menu)
         stop_sample(bg_menu);
+}
+
+void stopGameMusic(void)
+{
+    if (gameMusicVoiceID >= 0)
+        voice_stop(gameMusicVoiceID);
+    if (custom.bg_music)
+        stop_sample(custom.bg_music);
+    if (custom.bg_midi)
+        stop_midi();
+}
+
+void startGameMusic(void)
+{
+    gameMusicVoiceID = -1;
+    if (!options.msc_volume)
+        return;
+    if (custom.bg_music) {
+        gameMusicVoiceID = play_sample(custom.bg_music, options.msc_volume,
+                                       128, 1000, 1);
+        return;
+    }
+    if (custom.bg_midi) {
+        set_volume(-1, options.msc_volume);
+        play_midi(custom.bg_midi, 1);
+        return;
+    }
+    if (bg_beat)
+        gameMusicVoiceID = play_sample(bg_beat, options.msc_volume,
+                                       128, 1000, 1);
 }
 
 void replaceBadCharacters(char *string, char newChar)

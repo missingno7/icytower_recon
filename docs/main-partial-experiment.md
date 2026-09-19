@@ -121,6 +121,14 @@ The two 37-byte menu-sound selectors now make the same direct call, so their
 otherwise identical bodies are likewise recorded as `DIFFER` until the full
 translation-unit layout is recovered.
 
+`stopGameMusic` and `startGameMusic` recover the three-source music lifecycle:
+the custom sample, custom MIDI, and fallback beat sample, with the typed
+`gameMusicVoiceID` state reset and cleaned up through the corresponding Allegro
+APIs. Their candidates have the historical 58-byte and 144-byte extents and
+all symbolic targets resolve. The compiler chooses a different register for a
+MIDI guard, so both remain `DIFFER` pending the original full-CU register
+allocation.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
