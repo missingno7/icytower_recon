@@ -27,6 +27,10 @@ every header, then the header array, payload, and response.
 `"%a, %e %b %Y %H:%M:%S"`, `strptime`, and `timegm`; a null response, no
 headers, or no matching header returns zero.
 
+The 35-byte public `strptime` wrapper is recovered separately with its
+historical `regparm(3)` parser ABI; its 2028-byte `__strptime` body remains a
+dependency for the timestamp helper.
+
 The two 27-byte public request wrappers are complete:
 
 ```c
