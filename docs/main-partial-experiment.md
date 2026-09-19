@@ -93,6 +93,12 @@ globals. The candidate has the historical 59-byte extent but chooses different
 dead registers for the first two loads, so it is also `DIFFER` without exact
 credit.
 
+`check_dir` recovers the 103-byte directory-enumeration callback: it logs the
+candidate path, accepts non-dot directories, checks for `"%s/%s.txt"`, and
+counts a matching character. Its external calls, format string, and
+`num_chars` reference resolve exactly. The direct same-CU `log2file` call has
+a layout-dependent displacement, so it remains `DIFFER` without exact credit.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The

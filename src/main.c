@@ -328,6 +328,19 @@ void checkMenuFocus(void)
     lastFocus=hasFocus;
 }
 
+int check_dir(char *filename, int attrib, void *param)
+{
+    char name[1024];
+    char *n=get_filename(filename);
+    log2file(filename);
+    if ((attrib & FA_DIREC) && *n!='.') {
+        sprintf(name, "%s/%s.txt", filename, n);
+        if (exists(name))
+            num_chars++;
+    }
+    return 0;
+}
+
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);
 
