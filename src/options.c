@@ -1,6 +1,5 @@
 /* Historical CU: F:\projects\icytower\trunk\source\options.c
  * Ownership: GAME
- * UNKNOWN: generate_options_checksum @ 0x004181cc, 254 bytes
  * UNKNOWN: load_options @ 0x0041839c, 70 bytes
  * UNKNOWN: save_options @ 0x004183e4, 58 bytes
  */
@@ -48,4 +47,20 @@ void reset_options(Toptions *o)
     strcpy(o->posterUrl,"http://www.freelunchdesign.com/?src=it15_game");
     strcpy(o->posterSrc,"default.dat");
     o->posterSize=file_size_ex("data/com/default.dat");
+}
+
+int generate_options_checksum(Toptions *o)
+{
+    int cs,i;
+    int values[11] = {
+        o->flash, o->full_screen, o->jump_hold, o->msc_volume, o->snd_volume,
+        o->floor_size, o->floor_shrink, o->gravity, o->start_speed,
+        o->speed_increase, o->posterSize
+    };
+
+    for (i=0,cs=0;i<11;i++) cs+=(values[i]+i)*17;
+    for (i=0;i<8;i++) cs+=o->updateDate[i];
+    for (i=0;i<16;i++) cs+=o->updateDate[i]+o->posterDate[i];
+    for (i=0;i<256;i++) cs+=o->posterUrl[i]+o->posterSrc[i];
+    return hash3(cs);
 }
