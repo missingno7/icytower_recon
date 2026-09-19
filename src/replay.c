@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /* Partial historical replay.c recovery.
  * Ownership: GAME.
@@ -14,7 +16,7 @@
  * UNKNOWN: save_replay @ 0x0041dd78, 1227 bytes
  * UNKNOWN: get_replay_property @ 0x0041e244, 1147 bytes
  * UNKNOWN: my_strcmp @ 0x0041e6c0, 128 bytes
- * UNKNOWN: add_itr_file @ 0x0041e740, 360 bytes
+ * DIFFER: add_itr_file @ 0x0041e740, 360 bytes
  */
 
 int sort_method;
@@ -51,6 +53,11 @@ extern int for_each_file_ex(const char *pattern, int in_attrib, int out_attrib,
 extern int add_itr_file(const char *filename, int attrib, void *param);
 extern void qsort(void *base, size_t count, size_t size,
                   int (*compare)(const void *, const void *));
+extern char *get_filename(const char *path);
+extern char *get_extension(const char *path);
+#ifndef FA_DIREC
+#define FA_DIREC 0x10
+#endif
 
 Treplay_post itr_file_list[1024];
 int num_itr_files;
@@ -155,4 +162,45 @@ void update_file_list(char *path)
     sprintf(full_path, "%s/*", path);
     for_each_file_ex(full_path, 0, 0, add_itr_file, 0);
     qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);
+}
+
+int add_itr_file(const char *filename, int attrib, void *param)
+{
+    int length;
+    char *name;
+    int res;
+
+    length = strlen(filename) + 10;
+    name = get_filename(filename);
+    if (!stricmp(name, "."))
+        goto done;
+    if (!(attrib & FA_DIREC))
+        goto replay_file;
+    goto directory;
+replay_file:
+    if (stricmp(get_extension(filename), "itr"))
+        goto done;
+    itr_file_list[num_itr_files].full_path = malloc(length);
+    res = get_replay_property(filename, 0);
+    if (res < 0)
+        goto bad_replay;
+copy_replay:
+    strcpy(itr_file_list[num_itr_files].full_path, filename);
+    itr_file_list[num_itr_files].directory = 0;
+    num_itr_files++;
+done:
+    return 0;
+directory:
+    itr_file_list[num_itr_files].full_path = malloc(length);
+    strcpy(itr_file_list[num_itr_files].full_path, filename);
+    itr_file_list[num_itr_files].directory = 1;
+    if (!strncmp(name, "..", 3))
+        itr_file_list[num_itr_files].parent = 1;
+    num_itr_files++;
+    goto done;
+bad_replay:
+    if (res == -1 || res == -1000)
+        goto done;
+    itr_file_list[num_itr_files].version = -1000 - res;
+    goto copy_replay;
 }
