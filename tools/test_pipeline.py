@@ -152,6 +152,31 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(jump['relocations'][0]['equal'])
         self.assertNotEqual(jump['status'],'FUNCTION_MATCH')
 
+    def test_wrong_direct_same_unit_target_is_rejected(self):
+        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        cu='F:\\projects\\icytower\\trunk\\source\\main.c'
+        exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        save=next(f for f in exact['functions'] if f['name']=='save_config')
+        end=next(f for f in exact['functions'] if f['name']=='end_game')
+        transfer=save['direct_transfers'][0]
+        b=Binary(obj)
+        text=next(s for s in b.sections if s['name']=='.text')
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+            altered=Path(folder)/'unit.o'
+            contents=bytearray(obj.read_bytes())
+            # Keep a valid direct call, but make it target end_game rather
+            # than the independently identified historical log2file callee.
+            displacement=end['candidate_offset']-(save['candidate_offset']+
+                         transfer['function_offset']+4)
+            struct.pack_into('<i',contents,text['raw_pointer']+save['candidate_offset']+
+                             transfer['function_offset'],displacement)
+            altered.write_bytes(contents)
+            wrong=compare(altered,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        save=next(f for f in wrong['functions'] if f['name']=='save_config')
+        self.assertEqual(save['direct_transfers'][0]['target_function'],'end_game')
+        self.assertFalse(save['direct_transfers'][0]['equal'])
+        self.assertNotEqual(save['status'],'FUNCTION_MATCH')
+
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\directories.c',ROOT/'assets/icytower15.exe',OBJDUMP)
