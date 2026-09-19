@@ -111,6 +111,7 @@ python tools/experiment.py game-beta game-control game-csv game-timer allegro-ti
 python tools/link_probe.py --compiler tdm-2
 python tools/integration_link.py --compiler tdm-2
 python tools/verify_integration.py
+python tools/recovered_game_link.py
 python tools/build_xiph.py
 python tools/audio_link.py
 python tools/test_pipeline.py
