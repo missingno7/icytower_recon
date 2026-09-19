@@ -1,20 +1,18 @@
 # Partial `fld_adspot.c` experiment
 
 `fld_adspot.c` is now compiled as its own historical game translation-unit
-target. The recovered `get_url_filename` helper performs the oracle's
-backward slash scan over a remote URL and returns the cache-name boundary used
-by the ad subsystem. `fldads_get_local_cache_name` rebuilds the 256-byte
-static cache path through the recovered directory policy and appends the
-requested cache filename. `fldads_get_local_filename_from_url` composes the
-two helpers with the original tail-call shape. `fldads_load_local_cache` opens
-the derived `ads.csv` path through the recovered CSV CU, imports its contents,
-and destroys the parser.
+target. Two functions match byte-for-byte: `get_url_filename`, whose backward
+slash scan returns the filename following the final slash, and
+`fldads_destroy_cache`, which frees each local path, remote URL, and visit URL
+before releasing the cache allocation.
 
-The URL helper's 33-byte candidate differs from the historical 42-byte loop
-layout, and the wrapper's local-call displacement is layout-dependent. The
-cache helper has the historical 64-byte extent and masked body but its static
-buffer relocation is not independently established. The cache loader has its
-historical 55-byte extent with all typed CSV and local-call targets resolved,
-but its partial-CU direct-call distances differ. None receives exact function
-credit. The other eight functions remain unrecovered; no original code or
-object content is linked into this target.
+`fldads_load_cache_from_csv` accepts only three-field rows, rejects entries
+whose cached image is absent, duplicates the remote/local/visit strings,
+parses its frequency, and atomically replaces the old cache under the
+historical pthread mutex. Its 282-byte body has every named call and typed
+global relocation resolved; it is retained as `CODEGEN_SIMILAR` because the
+partial CU's local layout and anonymous string section remain unproven.
+`fldads_dump_local_cache` recreates `ads.csv` while holding the same mutex.
+The cache-path helper retains its 64-byte masked body. The URL wrapper and
+local-cache loader have their historical extents but differ in local branch
+layout. No original code or object content is linked into this target.
