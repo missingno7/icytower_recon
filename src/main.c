@@ -148,7 +148,7 @@ extern void save_hisc_table(void *table, PACKFILE *fp);
 extern void save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
-extern void rebuild_profile_list(int selection);
+extern int rebuild_profile_list(Tavailable_profile **profs);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int new_game(void);
@@ -661,6 +661,25 @@ int add_profile(const char *filename, int attrib, void *param)
         }
     }
     return 0;
+}
+
+int rebuild_profile_list(Tavailable_profile **profs)
+{
+    char profiledir[1024];
+
+    if (profiles) {
+        free(profiles);
+        profiles = NULL;
+    }
+    profiles = malloc(sizeof(*profiles));
+    strcpy(profiles[0].handle, "CREATE NEW PROFILE");
+    numProfiles = 1;
+    get_profiles_dir(profiledir, sizeof(profiledir));
+    strcat(profiledir, "/*");
+    for_each_file_ex(profiledir, FA_DIREC, 0, add_profile, NULL);
+    if (profs)
+        *profs = profiles;
+    return numProfiles;
 }
 
 /* DWARF signature for the remaining historical main body. */

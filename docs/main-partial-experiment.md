@@ -87,6 +87,14 @@ identical; the `"%s%s"` format literal occurs three times in the original
 read-only data and cannot be independently located in this partial CU, so the
 verifier records it as `CODEGEN_SIMILAR` rather than exact.
 
+`rebuild_profile_list` likewise recovers its full 198-byte profile-list reset:
+it frees and clears the old array, adds the initial `"CREATE NEW PROFILE"`
+handle, enumerates profile directories through `add_profile`, returns the
+count, and optionally exposes the new array through its typed out-parameter.
+Its code and all non-literal transfer targets match, while the initial handle
+literal has two original read-only-data occurrences; it remains
+`CODEGEN_SIMILAR` under the same proof policy.
+
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
 subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
