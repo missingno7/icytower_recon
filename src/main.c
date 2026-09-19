@@ -102,6 +102,8 @@ typedef struct Tplayer {
 
 Toptions options;
 Tprofile *profile;
+Tprofile **profiles;
+int numProfiles;
 SAMPLE *bg_menu;
 SAMPLE *menu_sounds[2];
 Tcustom custom;
