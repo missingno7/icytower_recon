@@ -153,6 +153,16 @@ void replaceBadCharacters(char *string, char newChar)
             string[i] = newChar;
 }
 
+void pwd_garble_string(char *str, int key)
+{
+    int i;
+    int len_i;
+
+    len_i = strlen(str);
+    for (i = 0; i < len_i; i++)
+        str[i] ^= key - i;
+}
+
 void draw_progress_bar(void);
 
 void datafile_callback_slow(DATAFILE *d)

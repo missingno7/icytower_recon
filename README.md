@@ -36,7 +36,8 @@ Current results:
   progress callbacks match at -O2. `syncProfileFromOptions`, menu-music
   start/stop, and the two menu-sound wrappers also match; the other main
   functions remain explicit partial-CU work. `replaceBadCharacters` also
-  matches its complete signed string-filtering loop.
+  matches its complete signed string-filtering loop, and `pwd_garble_string`
+  matches its in-place XOR transform.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.
