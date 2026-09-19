@@ -264,3 +264,6 @@ This is intentionally a partial CU report: there are 82 original main.c
 functions, so it cannot support a CU-wide text or object claim. The exact
 helper is checked by the pipeline test, and the complete comparison inventory
 is `docs/experiments/game-main-partial-O2.json`.
+
+
+line_alert is reconstructed from the 0x409138 overlay sequence. It applies the original alpha-158 black blend, clears the active display through gfx_driver dimensions, draws asset 88 at (103,200), and centres its message with asset 51 at (320,220). The candidate has the original 353-byte extent and remains DIFFER pending instruction-level layout recovery.

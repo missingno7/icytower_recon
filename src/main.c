@@ -46,6 +46,28 @@ typedef struct Treplay {
 } Treplay;
 Treplay *demo;
 Tcontrol ctrl;
+extern DATAFILE *data;
+
+void line_alert(char *text)
+{
+    int color;
+    int width;
+    int height;
+
+    set_trans_blender(0,0,0,158);
+    drawing_mode(DRAW_MODE_TRANS,0,0,0);
+    color=makecol(0,0,0);
+    width=0;
+    height=0;
+    if (gfx_driver) {
+        width=gfx_driver->w;
+        height=gfx_driver->h;
+    }
+    rectfill(screen,0,0,width,height,color);
+    solid_mode();
+    draw_sprite(screen,data[88].dat,103,200);
+    textprintf_centre_ex(screen,data[51].dat,320,220,-1,-1,"%s",text);
+}
 
 typedef struct Toptions {
     int flash;
