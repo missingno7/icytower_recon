@@ -467,7 +467,7 @@ void testWindowResolution(void)
             set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0);
             set_palette(pal);
             window=0;
-            set_display_switch_mode(SWITCH_BACKGROUND);
+            set_display_switch_mode(SWITCH_BACKAMNESIA);
             set_display_switch_callback(SWITCH_IN,switchedToProgram);
             set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
             if (window)
@@ -483,10 +483,10 @@ void testWindowResolution(void)
         set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0);
         set_palette(pal);
         window=1;
-        set_display_switch_mode(SWITCH_PAUSE);
+        set_display_switch_mode(SWITCH_BACKGROUND);
         set_display_switch_callback(SWITCH_IN,switchedToProgram);
         set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
-        show_mouse(mouse_sprite);
+        show_mouse(screen);
     }
 }
 
