@@ -12,7 +12,8 @@ TARGETS={
     'game-particle': {'source':'src/particle.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\particle.c','default':'-O2'},
     'game-stars': {'source':'src/stars.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\stars.c','default':'-O2'},
     'game-main-partial': {'source':'src/main.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\main.c','default':'-O2'},
-    'game-fld-adspot': {'source':'src/fld_adspot.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\fld_adspot.c','default':'-O2'},
+    'game-fld-adspot': {'source':'src/fld_adspot.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\fld_adspot.c','default':'-O2',
+                        'flags':['-fno-toplevel-reorder']},
     'game-hisc': {'source':'src/hisc.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\hisc.c','default':'-O2'},
     'game-menu': {'source':'src/menu.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\menu.c','default':'-O2'},
     'game-options': {'source':'src/options.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\options.c','default':'-O2'},
@@ -59,7 +60,7 @@ def verify_inputs(compiler='tdm-1'):
 def compile_target(target,flags=None,dest=None,compiler='tdm-1'):
     tc=COMPILERS[compiler]
     config=TARGETS[target]
-    flags=flags or [config['default']]
+    flags=[*(flags or [config['default']]),*config.get('flags',[])]
     out=dest or ROOT/'build/objects'/compiler/target
     out.mkdir(parents=True,exist_ok=True)
     obj=out/'unit.o'
