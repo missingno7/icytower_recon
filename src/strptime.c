@@ -2,10 +2,10 @@
  * Ownership: VENDORED_UPSTREAM
  * Partial recovery: the public strptime wrapper is independently matched;
  * the parser body remains unavailable.
- * UNKNOWN: match_string @ 0x0041f5d8, 103 bytes
  * UNKNOWN: _strptime @ 0x0041f640, 2028 bytes
  */
 #include <time.h>
+#include <string.h>
 
 char *_strptime(const char *buf, const char *format, struct tm *tm,
                 int *state) __attribute__((regparm(3)));
@@ -26,4 +26,23 @@ static int __attribute__((regparm(1), used)) first_day(int year)
     if (year <= 1970)
         ret = 4;
     return ret;
+}
+
+static int match_string(const char **buf, const char **strs)
+    __attribute__((regparm(2)));
+
+static int __attribute__((regparm(2), used))
+match_string(const char **buf, const char **strs)
+{
+    int i;
+
+    for (i = 0; strs[i] != NULL; i++) {
+        int len = strlen(strs[i]);
+
+        if (strncasecmp(*buf, strs[i], len) == 0) {
+            *buf += len;
+            return i;
+        }
+    }
+    return -1;
 }
