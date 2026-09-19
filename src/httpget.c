@@ -5,6 +5,7 @@
  */
 #include <winsock2.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct HTTPHeader {
     char *pHeader;
@@ -24,6 +25,35 @@ int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
                                 char *pMethod);
 void log2file(char *fmt, ...);
+
+int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)
+{
+    char *p;
+
+    *ppHost = NULL;
+    *ppPath = NULL;
+    *piPort = 80;
+    if (!strncmp(pURL, "http://", 7))
+        pURL += 7;
+    p = pURL;
+    while (*p) {
+        if (*p == ':' || *p == '/') {
+            int iHostLen = p - pURL;
+
+            *ppHost = malloc(iHostLen + 1);
+            memcpy(*ppHost, pURL, iHostLen);
+            (*ppHost)[iHostLen] = 0;
+            if (*p == ':')
+                *piPort = strtol(p, &p, 10);
+            *ppPath = strdup(p);
+            return 1;
+        }
+        p++;
+    }
+    free(*ppHost);
+    free(*ppPath);
+    return 0;
+}
 
 void destroyHTTPResponse(HTTPResponse *pResponse)
 {

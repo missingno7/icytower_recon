@@ -1,7 +1,7 @@
 # `httpget.c` recovery map
 
 `src/httpget.c` remains recovery-owned. The historical compilation unit spans
-`0x405890` through `0x4061af` in the original executable. Five independently
+`0x405890` through `0x4061af` in the original executable. Six independently
 recovered functions now compile in its ordinary partial-object target; the
 remaining source is deliberately absent. This document records the
 oracle-derived map needed to continue without importing a substitute HTTP
@@ -47,20 +47,24 @@ accumulates 1024-byte receives, parses the response, and closes the socket.
 The fourth `HTTPRequest` argument is passed through as an additional fetch
 argument, but has no observed use in this body; the `HEAD` wrapper therefore
 preserves the original call shape without claiming a corrected request method.
-Its error paths log the original socket errors. `SplitURL` and
-`extractHTTPResponse` remain the larger recovery bodies (267 and 923 bytes),
-with exact DWARF extents and oracle disassembly available.
+Its error paths log the original socket errors. The 267-byte `SplitURL`
+recovery initializes all output pointers, accepts the optional `http://`
+prefix, extracts the host on `:` or `/`, converts a colon-prefixed port with
+`strtol`, and releases both output allocations on failure.
+`extractHTTPResponse` remains the 923-byte recovery body, with exact DWARF
+extent and oracle disassembly available.
 
 This map gives the next implementation a closed evidence boundary: recover the
 entire unit from the executable oracle and its DWARF, then compile and compare
 it as `game-httpget`. Do not replace it with a modern HTTP client, a stub, or
 the original program code.
 
-The current `game-httpget` TDM-2 build verifies five of the ten historical
+The current `game-httpget` TDM-2 build verifies six of the ten historical
 functions as `FUNCTION_MATCH`: `destroyHTTPResponse` (116 bytes),
-`getSocketError` (12), `HTTPRequest` (136), `HTTPHead` (27), and `HTTPGet`
-(27). The comparison resolves all five `free` calls, the Winsock tail jump,
-each unique method literal, the original failure string, and every
-request-helper call independently. Its 320-byte partial text cannot
+`SplitURL` (267), `getSocketError` (12), `HTTPRequest` (136), `HTTPHead`
+(27), and `HTTPGet` (27). The comparison resolves all five `free` calls, the
+URL parsing helper's allocator and string-library calls, the Winsock tail
+jump, each unique method literal, the original failure string, and every
+request-helper call independently. Its 587-byte partial text cannot
 establish a complete-CU match; the full record is
 in `docs/experiments/game-httpget-O2.json`.
