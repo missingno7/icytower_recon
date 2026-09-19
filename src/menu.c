@@ -1,4 +1,6 @@
-/* Partial historical menu.c recovery. */
+/* Partial historical menu.c recovery.
+ * DIFFER: build_menu_string @ 0x004174dc, 415 bytes
+ */
 typedef struct Tmenu_slider {
     int value;
     int min;
@@ -64,4 +66,47 @@ void reset_menu(Tmenu *m, Tmenu_params *mp, int sel_pos)
     } while ((signed char)flags >= 0);
     m[sel_pos].flags |= 1;
     mp->font_height = text_height(mp->font);
+}
+
+
+typedef struct Tmenu_selection_data {
+    int value;
+    int max;
+    char *choices[1];
+} Tmenu_selection_data;
+
+extern void key_to_str(int key, char *dest);
+
+void build_menu_string(Tmenu *m, char *dest)
+{
+    int v;
+    int t;
+    int i;
+
+    if (m->flags & 2) {
+        Tmenu_slider *s;
+        s = (Tmenu_slider *)m->data;
+        v = (s->value - s->min) / s->step;
+        t = (s->max - s->min) / s->step;
+        sprintf(dest, "%s: ", m->caption);
+        for (i = 0; i < v; i++)
+            strcat(dest, "}");
+        for (; i < t; i++)
+            strcat(dest, "{");
+    } else if (m->flags & 8) {
+        Tmenu_selection_data *s;
+        s = (Tmenu_selection_data *)m->data;
+        sprintf(dest, "%s: %s", m->caption, s->choices[s->value]);
+    } else if (m->flags & 4) {
+        int *v;
+        v = (int *)m->data;
+        sprintf(dest, "%s: %s", m->caption, *v ? "YES" : "NO");
+    } else if (m->flags & 64) {
+        char str[50];
+        key_to_str(*(int *)m->data, str);
+        sprintf(dest, "%s: (%s)", m->caption, str);
+    } else if (m->flags & 16 || m->flags & 32) {
+        sprintf(dest, "%s:", m->caption);
+    } else
+        strcpy(dest, m->caption);
 }
