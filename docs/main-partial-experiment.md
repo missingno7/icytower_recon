@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers forty-one historical helpers while the remaining
+`src/main.c` currently establishes forty-two exact historical functions while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -30,12 +30,13 @@ the DATAFILE entry's data pointer and byte count without a substitute layer.
 
 `drawSlot` matches its complete 328-byte body at -O2. It renders the title, framed white slot, and colored text through the independently typed main-CU `data` global, using the historical font stored in `data[54].dat`.
 
-The three loading progress callbacks also match: `datafile_callback` is the
-12-byte progress-bar tail call, `color_map_callback` is its 22-byte
-every-sixteenth-entry form, and `datafile_callback_slow` is the 33-byte
-counter-based variant. Its private `p` counter is resolved through the unique
-DWARF static variable owned by the already shape-matched function, not its
-relocation operand; the compiler's serialised local COFF name is not stable.
+The loading progress callbacks recover `datafile_callback` as the 12-byte
+progress-bar tail call and `color_map_callback` as its 22-byte
+every-sixteenth-entry form. `datafile_callback_slow` has the original 33-byte
+counter-based body, but remains `DIFFER`: its private `p` counter is a
+function-scoped DWARF static whose candidate BSS placement conflicts with the
+independently observed ordering of other partial-CU statics. Its relocation is
+therefore not accepted as an exact match.
 
 `syncProfileFromOptions` matches its 58-byte body, copying the four named
 options settings (flash, jump hold, music volume, and sound volume) into the
