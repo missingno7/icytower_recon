@@ -39,11 +39,23 @@ typedef struct Tprofile_rank {
     int no_combo_lost;
 } Tprofile_rank;
 
-extern int rankFloors[16];
-extern int rankCombos[16];
-extern int rankCCCs[16];
-extern int rankNMLs[16];
-extern char *rankLables[16];
+char *jcLabels[5] = {
+    "Singles in a Row:   ", "Doubles in a Row:   ",
+    "Triples in a Row:   ", "Quadruples in a Row:",
+    "Quintuples in a Row:"
+};
+char *rankLables[16] = {
+    "no rank", "F", "E", "D", "C", "B", "A", "*", "**", "***",
+    "****", "*****"
+};
+int rankFloors[16] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
+int rankCombos[16] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
+int rankCCCs[16] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
+int rankNMLs[16] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
+char *comboNames[10] = {
+    "Good:", "Sweet:", "Great:", "Super:", "WOW:", "Amazing:",
+    "Extreme:", "Fantastic:", "Splendid:", "No way!"
+};
 
 inline int get_rank_id(Tprofile_rank *profile)
 {
@@ -119,7 +131,6 @@ typedef struct Tprofile_basic {
     int jc[5];
 } Tprofile_basic;
 
-extern char *jcLabels[5];
 
 char *profile_data_page_basic(Tprofile_basic *p)
 {
@@ -175,7 +186,6 @@ typedef struct Tprofile_advanced {
     int rewards[10];
 } Tprofile_advanced;
 
-extern char *comboNames[10];
 
 char *profile_data_page_advanced(Tprofile_advanced *p)
 {
