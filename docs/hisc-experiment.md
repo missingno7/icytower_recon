@@ -1,8 +1,11 @@
 # Partial `hisc.c` experiment
 
 `destroy_hisc_table`, `make_hisc_table`, `reset_hisc_table`,
-`generate_checksum`, `qualify_hisc_table`, and `sort_hisc_table` are
-byte-exact at `-O2`. DWARF establishes the
+`generate_checksum`, `qualify_hisc_table`, `sort_hisc_table`,
+`save_hisc_table`, and `load_hisc_table` are byte-exact at `-O2`.
+The persistence wrappers serialize five 36-byte `Thisc_post` records, each
+followed by its historical inlined checksum; loading validates all five and
+returns the aggregate success flag. DWARF establishes the
 `Thisc_table` layout as a 32-byte name followed by its five `posts` entries;
 the recovered source preserves the allocation/failure paths, ordered `free`
 calls, reset loop, checksum recurrence, score qualification, and insertion

@@ -2,8 +2,6 @@
  * Ownership: GAME
  * UNKNOWN: draw_table @ 0x00404a7c, 441 bytes
  * UNKNOWN: view_scores @ 0x00404c38, 2552 bytes
- * UNKNOWN: save_hisc_table @ 0x00405630, 129 bytes
- * UNKNOWN: load_hisc_table @ 0x004056b4, 155 bytes
  * UNKNOWN: enter_hisc_table @ 0x00405790, 136 bytes
  */
 
@@ -20,6 +18,8 @@ typedef struct {
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
 extern char *strcpy(char *dst,const char *src);
+extern long pack_fread(void *buffer,long bytes,void *fp);
+extern long pack_fwrite(const void *buffer,long bytes,void *fp);
 
 void destroy_hisc_table(Thisc_table *table)
 {
@@ -88,4 +88,31 @@ void sort_hisc_table(Thisc_table *table)
             table->posts[j]=table->posts[j-1];
         table->posts[j]=post;
     }
+}
+
+void save_hisc_table(Thisc_table *table,void *fp)
+{
+    int i;
+
+    for (i=0;i<5;i++) {
+        int checksum;
+        pack_fwrite(&table->posts[i],sizeof(Thisc_post),fp);
+        checksum=generate_checksum(&table->posts[i]);
+        pack_fwrite(&checksum,sizeof(int),fp);
+    }
+}
+
+int load_hisc_table(Thisc_table *table,void *fp)
+{
+    int i;
+    int ok=1;
+
+    for (i=0;i<5;i++) {
+        int c_disk,c_real;
+        pack_fread(&table->posts[i],sizeof(Thisc_post),fp);
+        pack_fread(&c_disk,sizeof(int),fp);
+        c_real=generate_checksum(&table->posts[i]);
+        if (c_disk!=c_real) ok=0;
+    }
+    return ok;
 }
