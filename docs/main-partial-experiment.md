@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers thirty-four historical helpers while the remaining
+`src/main.c` currently recovers thirty-five historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -71,6 +71,13 @@ saves configuration, and rebuilds the profile list. The candidate has the
 observed calls, fields, and 188-byte semantic path, but the compiler places
 the null-profile setup in a 196-byte tail block instead of the original
 fall-through block; it remains `DIFFER` pending a source-level explanation.
+
+`run_demo` matches its complete 159-byte body. It conditionally replaces the
+loaded replay, runs it through `new_game`, `play`, and `end_game`, and restores
+the typed profile `start_floor` and floor-menu value after ordinary replay
+execution. DWARF establishes the `file_name` parameter and `fo` local, while
+the disassembly establishes the two `itrcheck` paths and the exact field
+offsets; all external and direct same-CU transfer targets resolve by identity.
 
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,

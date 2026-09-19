@@ -53,7 +53,8 @@ typedef struct Tprofile {
     unsigned char reserved1[0x4dc-7];
     int flash;
     int jump_hold;
-    unsigned char reserved2[68];
+    unsigned char reserved2[64];
+    int start_floor;
     int msc_volume;
     int snd_volume;
 } Tprofile;
@@ -70,6 +71,11 @@ typedef struct Tmenu_selection {
     int size;
     char caption[128];
 } Tmenu_selection;
+
+typedef struct Tmenu_floor_selection {
+    int value;
+    int max;
+} Tmenu_floor_selection;
 
 typedef struct FLDAdSpot {
     const char *pRemoteImageURL;
@@ -127,6 +133,7 @@ SAMPLE *bg_beat;
 Tmenu_slider snd_volume_slider;
 Tmenu_slider msc_volume_slider;
 Tmenu_selection eyecandy_selection;
+Tmenu_floor_selection floors;
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
@@ -138,6 +145,10 @@ extern void save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tprofile **profiles,
                                 int numProfiles, Tcontrol *ctrl);
 extern void rebuild_profile_list(int selection);
+extern void destroy_replay(Treplay *r);
+extern Treplay *load_replay(char *filename);
+extern int new_game(void);
+extern int play(void);
 
 char *get_version_str(void)
 {
@@ -599,6 +610,33 @@ void play_jump_sound(Tplayer *p)
         play_sound(custom.jump_sound[0], 1, 1);
 }
 #endif
+
+void run_demo(char *file_name)
+{
+    int fo;
+
+    if (file_name) {
+        if (demo)
+            destroy_replay(demo);
+        demo = load_replay(file_name);
+    }
+    if (demo) {
+        if (!itrcheck) {
+            fo = profile->start_floor;
+            profile->start_floor = 0;
+        }
+        else
+            fo = 0;
+        if (new_game()) {
+            play();
+            end_game();
+        }
+        if (!itrcheck) {
+            profile->start_floor = fo;
+            floors.value = fo;
+        }
+    }
+}
 
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);
