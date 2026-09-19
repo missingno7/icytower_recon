@@ -2,7 +2,6 @@
  * Ownership: GAME
  * UNKNOWN: draw_table @ 0x00404a7c, 441 bytes
  * UNKNOWN: view_scores @ 0x00404c38, 2552 bytes
- * UNKNOWN: enter_hisc_table @ 0x00405790, 136 bytes
  */
 
 typedef struct {
@@ -87,6 +86,24 @@ void sort_hisc_table(Thisc_table *table)
         for (j=i;j>0 && table->posts[j-1].value<post.value;j--)
             table->posts[j]=table->posts[j-1];
         table->posts[j]=post;
+    }
+}
+
+void enter_hisc_table(Thisc_table *table,int value,char *name)
+{
+    unsigned int lo=10000000;
+    int loID=-1;
+    int i;
+
+    for (i=0;i<5;i++) {
+        if (table->posts[i].value<lo) {
+            loID=i;
+            lo=table->posts[i].value;
+        }
+    }
+    if (loID!=-1) {
+        table->posts[loID].value=value;
+        strcpy(table->posts[loID].name,name);
     }
 }
 

@@ -2,7 +2,8 @@
 
 `destroy_hisc_table`, `make_hisc_table`, `reset_hisc_table`,
 `generate_checksum`, `qualify_hisc_table`, `sort_hisc_table`,
-`save_hisc_table`, and `load_hisc_table` are byte-exact at `-O2`.
+`save_hisc_table`, `load_hisc_table`, and `enter_hisc_table` are byte-exact at
+`-O2`.
 The persistence wrappers serialize five 36-byte `Thisc_post` records, each
 followed by its historical inlined checksum; loading validates all five and
 returns the aggregate success flag. DWARF establishes the
