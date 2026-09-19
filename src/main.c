@@ -99,9 +99,12 @@ typedef struct Tavatar_profile {
 } Tavatar_profile;
 
 typedef struct Tcharacter {
-    unsigned char reserved0[0x408];
-    char name[1];
-    unsigned char reserved1[0x88c-0x409];
+    char filename[1024];
+    BITMAP *bmp;
+    int ok;
+    char name[128];
+    int uses_datafile;
+    PALETTE pal;
 } Tcharacter;
 
 typedef struct Tplayer {
@@ -157,6 +160,7 @@ extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int new_game(void);
 extern int play(void);
+extern int load_character(char *filename, int attrib, void *param);
 
 char *get_version_str(void)
 {
@@ -750,6 +754,40 @@ int check_beta_tester(void)
         return 1;
     log2file("no tester match found");
     return 0;
+}
+
+int check_characters(void)
+{
+    int i;
+    char base_char_dir[256];
+    size_t base_char_dir_len;
+    char additional_char_dir[256];
+    int has_additional_char_dir;
+
+    getcwd(base_char_dir, sizeof(base_char_dir));
+    base_char_dir_len = strlen(base_char_dir);
+    strcpy(base_char_dir + base_char_dir_len, "/characters/");
+    has_additional_char_dir = get_custom_characters_dir(
+        additional_char_dir, sizeof(additional_char_dir));
+    log2file("Searching '%s'", base_char_dir);
+    for_each_directory(base_char_dir, check_dir);
+    if (has_additional_char_dir) {
+        log2file("Searching '%s'", additional_char_dir);
+        for_each_directory(additional_char_dir, check_dir);
+    }
+    if (!num_chars)
+        return 0;
+    characters = malloc(num_chars * sizeof(*characters));
+    for_each_directory(base_char_dir, load_character);
+    if (has_additional_char_dir)
+        for_each_directory(additional_char_dir, load_character);
+    if (!num_chars)
+        return 0;
+    curr_char = num_chars - 1;
+    for (i = 0; i < num_chars; i++)
+        characters[i].ok = characters[i].bmp != NULL;
+    set_current_avatar();
+    return 1;
 }
 
 /* DWARF signature for the remaining historical main body. */

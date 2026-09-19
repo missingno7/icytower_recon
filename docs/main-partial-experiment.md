@@ -111,6 +111,14 @@ no-match paths. Its 16-byte initializer contains an explicit second NUL;
 that source detail is required for the historical ten-byte initialization
 copy and complete function equality.
 
+`check_characters` recovers the 345-byte character discovery and loading
+workflow. It enumerates the base and optional custom directories, allocates
+the DWARF-sized character records, invokes the typed loading callback, derives
+each `ok` flag from its bitmap pointer, and chooses the current avatar. Its
+instruction sequence and all named data, callbacks, and direct calls match;
+the repeated `"Searching '%s'"` literal has no independent original
+read-only-data position in this partial CU, so it remains `DIFFER`.
+
 `update_reward` recovers the inline fixed-point reward transition over the
 typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
 subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
