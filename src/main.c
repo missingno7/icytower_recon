@@ -20,6 +20,7 @@ extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
+char last_log[1024];
 typedef struct {
     int jumps;
     int combos;
@@ -611,7 +612,28 @@ int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int d
     return 1;
 }
 
-void draw_progress_bar(void);
+void draw_progress_bar(void)
+{
+    int size;
+    int ypos;
+    static int value;
+    int maxVal;
+
+    if (itrcheck)
+        return;
+    size=value*4;
+    maxVal=212;
+    if (size>maxVal)
+        size=maxVal;
+    acquire_screen();
+    ypos=400;
+    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));
+    rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));
+    rectfill(screen,0,420,639,430,makecol(255,255,255));
+    textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));
+    release_screen();
+    value++;
+}
 
 void datafile_callback_slow(DATAFILE *d)
 {
