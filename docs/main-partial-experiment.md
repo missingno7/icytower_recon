@@ -1,6 +1,6 @@
 # main.c helper recovery
 
-`src/main.c` currently recovers twenty-two historical helpers while the remaining
+`src/main.c` currently recovers twenty-three historical helpers while the remaining
 main CU entities stay absent. `get_version_str`, `get_demo`, and
 `get_controls` each match their complete 10-byte bodies at -O2. The version
 accessor's anonymous `"1.5.1"` string relocation is resolved only by its
@@ -44,11 +44,12 @@ the latter is required to preserve the historical signed comparison branch.
 `pwd_garble_string` matches its complete 52-byte in-place XOR loop. The
 independently recovered `len_i` local preserves the original signed loop bound.
 
-`line_intersect` has a source-derived partial candidate: its ten integer
+`line_intersect` matches its complete 302-byte body. Its ten integer
 parameters, two integer outputs, three float locals, and segment-endpoint
-tests are recovered from DWARF and x87 disassembly. It currently emits 322
-bytes versus the original 302, so it remains `DIFFER`; no geometry recovery
-credit is claimed until its exact x87 comparison schedule is matched.
+tests come from DWARF and x87 disassembly. The final `0.5f` conversion literal
+is repeated in the original; the verifier establishes its address from the
+unique preceding 12-byte read-only float-table neighbourhood, then derives the
+literal's target from that independently established table position.
 
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy

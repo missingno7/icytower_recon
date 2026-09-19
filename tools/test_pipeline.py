@@ -89,7 +89,7 @@ class PipelineTests(unittest.TestCase):
                      'is_custom_replay','show_name','datafile_callback_slow',
                      'datafile_callback','color_map_callback','syncProfileFromOptions',
                      'startMenuMusic','play_menu_select','play_menu_move','stopMenuMusic',
-                     'replaceBadCharacters','pwd_garble_string'):
+                     'replaceBadCharacters','pwd_garble_string','line_intersect'):
             accessor=next(f for f in r['functions'] if f['name']==name)
             self.assertEqual(accessor['status'],'FUNCTION_MATCH')
             self.assertEqual(accessor['candidate_size'],
@@ -101,8 +101,31 @@ class PipelineTests(unittest.TestCase):
                              else 25 if name=='stopMenuMusic'
                              else 125 if name=='replaceBadCharacters'
                              else 52 if name=='pwd_garble_string'
+                             else 302 if name=='line_intersect'
                              else 33 if name=='datafile_callback_slow'
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
+
+    def test_repeated_literal_neighbourhood_rejects_wrong_target(self):
+        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        cu='F:\\projects\\icytower\\trunk\\source\\main.c'
+        exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        line=next(f for f in exact['functions'] if f['name']=='line_intersect')
+        relocation=line['relocations'][0]
+        b=Binary(obj)
+        section=next(s for s in b.sections if s['index']==relocation['section'])
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+            altered=Path(folder)/'unit.o'
+            contents=bytearray(obj.read_bytes())
+            # Select the preceding table field while leaving the instruction
+            # body masked-equal.  A table neighbourhood must not hide this.
+            struct.pack_into('<I',contents,section['raw_pointer']+relocation['offset'],
+                             relocation['addend']-4)
+            altered.write_bytes(contents)
+            wrong=compare(altered,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        line=next(f for f in wrong['functions'] if f['name']=='line_intersect')
+        self.assertTrue(line['masked_equal'])
+        self.assertFalse(line['relocation_resolved_equal'])
+        self.assertNotEqual(line['status'],'FUNCTION_MATCH')
 
     def test_complete_directories_text_and_data(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-directories/O2/unit.o',

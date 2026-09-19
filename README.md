@@ -37,7 +37,8 @@ Current results:
   start/stop, and the two menu-sound wrappers also match; the other main
   functions remain explicit partial-CU work. `replaceBadCharacters` also
   matches its complete signed string-filtering loop, and `pwd_garble_string`
-  matches its in-place XOR transform.
+  matches its in-place XOR transform. `line_intersect` matches its full
+  302-byte x87 segment-intersection body.
 - scroller.c: `scroll_scroller`, `restart_scroller`, and `init_scroller` match
   at -O2; the 396-byte `draw_scroller` candidate has one remaining
   argument-register difference.

@@ -107,7 +107,13 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                                     'section_base':base})
     sections_by_index={s['index']:s for s in obj.sections}
     def unique_literal_target(sym,addend,instruction):
-        """Resolve an anonymous read-only literal by unique content, not its field."""
+        """Resolve an anonymous read-only literal from independent data evidence.
+
+        When the field itself occurs more than once, a unique preceding data
+        neighbourhood may still establish the table base.  The target is then
+        derived from that base plus the field's offset; the relocated operand
+        remains unused as evidence.
+        """
         sizes={b'\xdd\x05':8,b'\xdc\x0d':8,b'\xd9\x05':4,b'\xd8\x0d':4}
         if sym['name']!='.rdata' or sym['section']<=0:
             return None
@@ -133,6 +139,26 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                 found=haystack.find(literal,start)
                 if found<0: break
                 locations.append(exe.image_base+original_section['rva']+found)
+                start=found+1
+        if len(locations)==1:
+            return locations[0]
+        # Float tables commonly repeat a scalar.  Require twelve preceding
+        # bytes plus the field itself to be unique before deriving its address.
+        # This cannot make an altered relocation pass: only candidate .rdata
+        # content and the original read-only-data layout establish the target.
+        preceding=12
+        if addend<preceding:
+            return None
+        neighbourhood=content[addend-preceding:addend+len(literal)]
+        locations=[]
+        for original_section in exe.sections:
+            if original_section['name']!='.rdata': continue
+            haystack=exe.section_bytes(original_section)
+            start=0
+            while True:
+                found=haystack.find(neighbourhood,start)
+                if found<0: break
+                locations.append(exe.image_base+original_section['rva']+found+preceding)
                 start=found+1
         return locations[0] if len(locations)==1 else None
     def target_address(sym,addend):
@@ -215,7 +241,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             target,reason=target_address(sym,addend)
             literal=unique_literal_target(sym,addend,bytes(code[max(0,p-2):p]))
             if target is None and literal is not None:
-                target,reason=literal,'unique read-only literal content'
+                target,reason=literal,'unique read-only literal or table content'
             expected=None
             if r['type']==6 and target is not None: expected=target&0xffffffff
             elif r['type']==20 and target is not None: expected=(target-f['va']-p-4)&0xffffffff
