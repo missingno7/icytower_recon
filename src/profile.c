@@ -16,7 +16,7 @@
  * UNKNOWN: save_profile @ 0x0041a3b8, 1073 bytes
  * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
  * CODEGEN_SIMILAR: delete_profile @ 0x0041a8a8, 222 bytes
- * UNKNOWN: create_profile @ 0x0041a988, 823 bytes
+ * DIFFER: create_profile @ 0x0041a988, 823 bytes
  * UNKNOWN: select_profile @ 0x0041acc0, 3070 bytes
  */
 
@@ -328,4 +328,134 @@ void delete_profile(char *handle)
     delete_file(file);
     get_profile_dir_for_profile(file, 1024, handle);
     rmdir(file);
+}
+
+typedef struct Tprofile_create {
+    char header[6];
+    char handle[32];
+    unsigned char before_checksum[2];
+    int checksum;
+    int games_played;
+    int custom_games_played;
+    int games_quit;
+    int seconds_spent_playing;
+    int total_floors;
+    int total_score;
+    int total_combos;
+    int total_combo_floors;
+    int best_floor;
+    int best_combo;
+    int best_score;
+    int no_combo_top_floor;
+    int biggest_lost_combo;
+    int cccNum[5];
+    int cccTotal[5];
+    int ccc[5];
+    int jc[5];
+    int rewards[10];
+    int total_jumps;
+    char best_replay_names[32][32];
+    int flash;
+    int jump_hold;
+    char last_avatar[64];
+    int start_floor;
+    int msc_volume;
+    int snd_volume;
+    char creationDate[16];
+    char saveDate[16];
+} Tprofile_create;
+
+typedef struct Tprofile_tm {
+    int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;
+} Tprofile_tm;
+
+extern int exists(char *file);
+extern void log2file(char *format, ...);
+extern long time(long *t);
+extern Tprofile_tm *localtime(long *t);
+extern void init_control(void *control);
+extern int save_profile(Tprofile_create *p);
+
+Tprofile_create *create_profile(char *handle, int overwrite)
+{
+    char file[1024];
+    Tprofile_create *p;
+    int i;
+    long now;
+    Tprofile_tm *my_time;
+    int year, month, day;
+
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itp", file, handle);
+    if (!overwrite && exists(file)) {
+        log2file("Overwrite is false and %s already exists", file);
+        return 0;
+    }
+    p = malloc(sizeof(Tprofile_create));
+    p->header[0] = 'I';
+    p->header[1] = 'T';
+    p->header[2] = 'P';
+    p->header[3] = '1';
+    p->header[4] = '4';
+    p->header[5] = '0';
+    strcpy(p->handle, handle);
+    p->custom_games_played = 0;
+    p->games_played = 0;
+    p->games_quit = 0;
+    p->seconds_spent_playing = 0;
+    p->best_score = 0;
+    p->best_combo = 0;
+    p->best_floor = 0;
+    p->total_combo_floors = 0;
+    p->total_combos = 0;
+    p->total_score = 0;
+    p->total_floors = 0;
+    p->no_combo_top_floor = 0;
+    p->biggest_lost_combo = 0;
+    p->cccTotal[4] = 0;
+    p->cccTotal[3] = 0;
+    p->cccTotal[2] = 0;
+    p->cccTotal[1] = 0;
+    p->cccTotal[0] = 0;
+    p->cccNum[4] = 0;
+    p->cccNum[3] = 0;
+    p->cccNum[2] = 0;
+    p->cccNum[1] = 0;
+    p->cccNum[0] = 0;
+    p->ccc[4] = 0;
+    p->ccc[3] = 0;
+    p->ccc[2] = 0;
+    p->ccc[1] = 0;
+    p->ccc[0] = 0;
+    p->jc[4] = 0;
+    p->jc[3] = 0;
+    p->jc[2] = 0;
+    p->jc[1] = 0;
+    p->jc[0] = 0;
+    for (i = 0; i < 10; i++)
+        p->rewards[i] = 0;
+    for (i = 0; i < 32; i++)
+        p->best_replay_names[i][0] = 0;
+    p->total_jumps = 0;
+    p->flash = 1;
+    strcpy(p->last_avatar, "harold_the_homeboy");
+    p->jump_hold = 0;
+    p->start_floor = 0;
+    p->msc_volume = 150;
+    p->snd_volume = 150;
+    now = time(0);
+    my_time = localtime(&now);
+    year = my_time->tm_year;
+    month = my_time->tm_mon + 1;
+    day = my_time->tm_mday;
+    sprintf(p->creationDate, "%d-%s%d-%s%d", year + 1900,
+            month < 10 ? "0" : "", month, day < 10 ? "0" : "", day);
+    strcpy(p->saveDate, p->creationDate);
+    init_control(get_controls());
+    if (save_profile(p) < 0) {
+        log2file("failed to create profile %s", handle);
+        free(p);
+        return 0;
+    }
+    return p;
 }
