@@ -4,7 +4,7 @@
  * EXACT: hash2 @ 0x004189cc, 71 bytes
  * UNKNOWN: generate_profile_checksum @ 0x00418a14, 112 bytes
  * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
- * UNKNOWN: get_rank @ 0x00418ad0, 82 bytes
+ * DIFFER: get_rank @ 0x00418ad0, 82 bytes
  * UNKNOWN: set_next_rank_message @ 0x00418b24, 431 bytes
  * UNKNOWN: draw_profile_selector @ 0x00418cd4, 1268 bytes
  * UNKNOWN: draw_buffer @ 0x004191c8, 185 bytes
@@ -43,6 +43,7 @@ extern int rankFloors[16];
 extern int rankCombos[16];
 extern int rankCCCs[16];
 extern int rankNMLs[16];
+extern char *rankLables[16];
 
 inline int get_rank_id(Tprofile_rank *profile)
 {
@@ -56,4 +57,8 @@ inline int get_rank_id(Tprofile_rank *profile)
         return i;
     }
     return 0;
+}
+inline char *get_rank(Tprofile_rank *profile)
+{
+    return rankLables[get_rank_id(profile)];
 }
