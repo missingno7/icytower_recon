@@ -381,7 +381,7 @@ int new_rand(void)
     return (int)((seed-x) * 65535.0f);
 }
 
-void new_srand(int s)
+inline void new_srand(int s)
 {
     seed=s;
 }
@@ -545,7 +545,7 @@ void testWindowResolution(void)
     }
 }
 
-int is_custom_replay(Treplay *r)
+inline int is_custom_replay(Treplay *r)
 {
     return r->floor_shrink != 1 || r->floor_size != 1 ||
            r->start_speed != 5 || r->speed_increase != 1 || r->gravity != 1;
