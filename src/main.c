@@ -17,6 +17,8 @@ int itrcheck;
 double seed;
 int hasFocus;
 int closeButtonClicked;
+int lastFocus;
+int in_replay_menu;
 
 typedef struct Treplay {
     unsigned char reserved[140];
@@ -312,6 +314,19 @@ void update_frame(void)
     }
 }
 #endif
+
+void checkMenuFocus(void)
+{
+    if (in_replay_menu)
+        return;
+    if (lastFocus==hasFocus)
+        return;
+    if (hasFocus)
+        startMenuMusic();
+    else
+        stopMenuMusic();
+    lastFocus=hasFocus;
+}
 
 /* DWARF signature for the remaining historical main body. */
 int _mangled_main(int argc, char **argv);

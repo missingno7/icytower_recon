@@ -87,6 +87,12 @@ advance transitions. Its 125-byte candidate differs from the historical
 120-byte branch layout, so it is recorded as `DIFFER` and receives no exact
 function credit.
 
+`checkMenuFocus` recovers the replay-menu guard and the focus-change music
+transition over the named `in_replay_menu`, `hasFocus`, and `lastFocus`
+globals. The candidate has the historical 59-byte extent but chooses different
+dead registers for the first two loads, so it is also `DIFFER` without exact
+credit.
+
 `log2file` has a same-sized 189-byte candidate but is not exact. Its recovered
 source preserves the original early `itrcheck` gate, pthread mutex, lazy
 logfile path, append-mode output, newline, and historical va_list reuse. The
