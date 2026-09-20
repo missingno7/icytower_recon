@@ -34,3 +34,14 @@ uses a translucent slide from 500 toward its target, calls
 `draw_replay_selector`, then blits to screen. Its exit releases every
 file-list allocation, destroys the presentation bitmap, restores `old_font`,
 and returns the selected replay pointer.
+
+`draw_replay_selector` has eight typed inputs in the oracle order: `bmp`,
+`rep`, `file_list`, `selection`, `offset`, `max_posts`, `x`, and `y`. Its
+DWARF locals establish the panel dimensions, font height, filename, two gray
+colors, view ratio and offset, directory visibility, selected replay version,
+and custom-replay indicator. The opening renderer phase computes `fh` from
+the active font, creates the 25-gray foreground and 85-gray middle color,
+clamps the visible-list ratio to one, and draws the `data[86]` panel with the
+historical translucent layout. The same decoded region sets list/panel geometry
+from `x` and `y`, leaving the later text rows, replay details, version state,
+and custom indicator to the remaining renderer phases.
