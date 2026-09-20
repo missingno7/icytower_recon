@@ -1,5 +1,4 @@
 /* Partial historical menu.c recovery.
- * DIFFER: build_menu_string @ 0x004174dc, 415 bytes
  * DIFFER: update_game_menu @ 0x00417adc, 583 bytes
  */
 #include <allegro.h>
