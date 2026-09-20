@@ -2495,7 +2495,6 @@ int init_game(int argc, char **argv)
     replay_path=NULL;
     check=0;
     tmpHandle[0]=0;
-    reset_options(&options);
     eyecandy_selection.value=0;
     eyecandy_selection.size=3;
     eyecandy_selection.caption[0]=strdup("Lots");
