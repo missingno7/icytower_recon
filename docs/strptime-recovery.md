@@ -58,6 +58,26 @@ month `"Mars"`, and retains a different multi-year `first_day` calculation.
 Those independently observable differences rule out treating source
 provenance as a whole-body recovery.
 
+## Stateful parser boundary
+
+An isolated, untracked adaptation of that public ancestor has now established
+the target parser's additional source shape without being admitted to
+`src/strptime.c`. With only a mechanical `_strptime` rename, the ancestor's
+`first_day` and `match_string` bodies are both `FUNCTION_MATCH`; its parser is
+an 1846-byte near ancestor of the target's 2028-byte body. The target DWARF
+then fixes a fourth formal named `gmt`, while the 35-byte public wrapper
+creates a zero state word and calls the internal function.
+
+The original line table and disassembly further establish two extensions over
+the public ancestor: `%c` recursively invokes the wrapper with
+`"%a %b %e %H:%M:%S %Y"`; and `%Z` uses locals `cp` and `zonestr`, scans an
+uppercase abbreviation, allocates and terminates a temporary token, calls
+`tzset`, accepts `"GMT"` by setting `*gmt`, or compares the token with the two
+CRT `tzname` entries to set `tm_isdst`. A source-shaped candidate with those
+rules retains exact helpers and wrapper but emits a 1983-byte parser, still 45
+bytes short. It therefore remains a constrained recovery baseline only; the
+complete body is not yet promoted.
+
 Research references: the [2002 Newlib import](https://github.com/mirror/newlib-cygwin/blob/dea7e25ca71e6a6c690f09a43b04f2858c1c348d/newlib/libc/time/strptime.c), the
 [1999 Heimdal source](https://github.com/heimdal/heimdal/blob/0d3fc31121aa/lib/roken/strptime.c), and the
 [FreeBSD-style stateful parser](https://git.brainchurts.com/uBixOS/ubixos/blob/f6a7e39c29077265516ce890cf998c46b957136e/src/lib/libc/stdtime/strptime.c).
