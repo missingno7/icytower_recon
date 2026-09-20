@@ -73,10 +73,13 @@ the public ancestor: `%c` recursively invokes the wrapper with
 `"%a %b %e %H:%M:%S %Y"`; and `%Z` uses locals `cp` and `zonestr`, scans an
 uppercase abbreviation, allocates and terminates a temporary token, calls
 `tzset`, accepts `"GMT"` by setting `*gmt`, or compares the token with the two
-CRT `tzname` entries to set `tm_isdst`. A source-shaped candidate with those
-rules retains exact helpers and wrapper but emits a 1983-byte parser, still 45
-bytes short. It therefore remains a constrained recovery baseline only; the
-complete body is not yet promoted.
+CRT `tzname` entries to set `tm_isdst`. The public stateful parser linked below
+confirms that exact `cp`/`zonestr`/`alloca` structure and its
+`isupper((unsigned char)*cp)` form. The target's bounded two-digit-year pivot
+is also independently visible: values above 99 fail before the 70-year rule.
+A source-shaped candidate with those rules retains exact helpers and wrapper
+but emits a 2003-byte parser, still 25 bytes short. It therefore remains a
+constrained recovery baseline only; the complete body is not yet promoted.
 
 Research references: the [2002 Newlib import](https://github.com/mirror/newlib-cygwin/blob/dea7e25ca71e6a6c690f09a43b04f2858c1c348d/newlib/libc/time/strptime.c), the
 [1999 Heimdal source](https://github.com/heimdal/heimdal/blob/0d3fc31121aa/lib/roken/strptime.c), and the
