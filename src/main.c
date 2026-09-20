@@ -2556,7 +2556,7 @@ int init_game(int argc, char **argv)
 
     set_color_conversion(0x00ffffff);
     packfile_password("CHEESE");
-    data=load_datafile("data/data.dat");
+    data=load_datafile_callback("data/data.dat",datafile_callback_slow);
     if (!data) return 0;
     sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
     if (sfx) {
