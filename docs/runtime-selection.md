@@ -74,3 +74,8 @@ the fixture's runtime assets into `build/recovered-game/tdm-2/runtime`. It
 records hashes in `stage.json`, includes `data/data.dat`, character/profile
 trees, configuration files, and the two non-system DLL imports, and excludes
 the original `icytower15.exe`. Staging does not execute the candidate.
+
+A bounded hidden startup probe of the staged executable remained active for
+ten seconds before the probe terminated it. This confirms that the staged
+source-built executable reaches a running process with its copied assets; it
+does not establish menu, gameplay, teardown, or byte-level parity.
