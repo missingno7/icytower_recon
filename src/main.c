@@ -972,6 +972,8 @@ void blit_to_screen(BITMAP *bmp)
 extern void handle_player_input(void *control);
 extern void update_player(Tplayer *p);
 extern void draw_frame(void);
+extern int jump_player(Tplayer *p, int force);
+extern void play_jump_sound(Tplayer *p);
 
 int play(void)
 {
@@ -1897,6 +1899,39 @@ void handle_player_collision_combo(int lastX, int lastY)
     p->y = floor_y - 1;
     p->x = left ? left_x + 11 : right_x - 11;
     p->rotate = 0;
+}
+
+/* Partial recovery of main.c, 0x40b3e4..0x40b6bc.  This is the oracle's
+ * normal-control path; replay control recording remains to be restored. */
+void handle_player_input(void *control)
+{
+    Tcontrol *input = (Tcontrol *)control;
+    Tplayer *p;
+
+    if (!input)
+        return;
+    p = ply[player_id];
+    if (is_left(input)) {
+        if (p->sx < 0.0)
+            p->sx *= 0.8;
+        p->sx -= 0.1;
+    }
+    else if (is_right(input)) {
+        if (p->sx > 0.0)
+            p->sx *= 0.8;
+        p->sx += 0.1;
+    }
+    else
+        p->sx *= 0.9;
+
+    if (is_fire(input)) {
+        if (!p->jump_key && jump_player(p, 0)) {
+            p->jump_key = -1;
+            play_jump_sound(p);
+        }
+        return;
+    }
+    p->jump_key = 0;
 }
 
 /* DWARF signature for the remaining historical main body. */
