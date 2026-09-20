@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 2,862-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 2,874-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -34,8 +34,10 @@ synchronizes profile options, and propagates character-loading failure.
 The recovered final profile stage also computes the start-floor selector from
 the profile's `best_floor` and persisted `start_floor`, limiting its maximum
 to nine tiers exactly as the oracle does.
+Before loading packed graphics, the candidate now restores the oracle's full
+Allegro color-conversion mask (`0x00ffffff`).
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 2,926 bytes cover the original network, graphics fallback,
+remaining 2,914 bytes cover the original network, graphics fallback,
 resource-loader,
 and staged progress work.
 
