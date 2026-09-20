@@ -5,21 +5,21 @@
 #include <allegro.h>
 #include "control.h"
 
-/* Partial historical replay.c recovery.
+/* Historical CU: replay.c; current status: src/recovery.json.
  * Ownership: GAME.
  *
- * The remaining functions below are still pending reconstruction:
- * PARTIAL: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
- * DIFFER: calc_replay_checksum @ 0x0041bac4, 676 bytes
- * EXACT: update_file_list @ 0x0041bda0, 184 bytes
- * DIFFER: draw_replay_selector @ 0x0041be58, 3726 bytes
- * DIFFER: create_replay @ 0x0041cce8, 254 bytes
- * DIFFER: load_replay @ 0x0041cde8, 1136 bytes
- * DIFFER: replay_selector @ 0x0041d258, 2845 bytes
- * DIFFER: save_replay @ 0x0041dd78, 1227 bytes
- * DIFFER: get_replay_property @ 0x0041e244, 1147 bytes
- * DIFFER: my_strcmp @ 0x0041e6c0, 128 bytes
- * DIFFER: add_itr_file @ 0x0041e740, 360 bytes
+ * Historical function inventory (current status: docs/current/):
+ * Historical function: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
+ * Historical function: calc_replay_checksum @ 0x0041bac4, 676 bytes
+ * Historical function: update_file_list @ 0x0041bda0, 184 bytes
+ * Historical function: draw_replay_selector @ 0x0041be58, 3726 bytes
+ * Historical function: create_replay @ 0x0041cce8, 254 bytes
+ * Historical function: load_replay @ 0x0041cde8, 1136 bytes
+ * Historical function: replay_selector @ 0x0041d258, 2845 bytes
+ * Historical function: save_replay @ 0x0041dd78, 1227 bytes
+ * Historical function: get_replay_property @ 0x0041e244, 1147 bytes
+ * Historical function: my_strcmp @ 0x0041e6c0, 128 bytes
+ * Historical function: add_itr_file @ 0x0041e740, 360 bytes
  */
 
 int sort_method;

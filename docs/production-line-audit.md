@@ -324,3 +324,21 @@ use atomic replacement. Failure-injection tests preserve old bytes on write/repl
 errors. See literal-content-evidence.md and docs/attempts/pattern-runs/.
 
 Global-reference audit: check_characters has a wrong scalar reference plus a missing aggregate declaration, not merely literal placement. Generated diagnostics now separate supported whole-skeleton reference conflicts from four weaker aligned observations. The isolated 4-to-1,036-byte play_char type probe preserved existing exact functions and exposed only the known line_alert clear-order effect. That isolated probe was followed by the implemented GLOBAL_TYPE gate: the migration passed strict acceptance, the generated line_alert repair then reached exact match, and check_characters reached BODY_MATCH_LAYOUT_BLOCKED through the guarded assignment/literal recipe. The seven remaining same-CU transfer operands remain explicit layout work.
+
+
+## Unattended interface batch and source-status cleanup
+
+The mechanical worker completed three consecutive generated interface tasks for
+`fldads_get_local_cache_name`, `fldads_get_local_filename_from_url` and
+`fldads_update_local_adimg`. Each passed its fresh FAST and ACCEPTANCE gates;
+the stage logs are indexed by
+`docs/attempts/mechanical-runs/20260920T232314104868Z.jsonl`. These are declaration
+repairs, not three newly recovered function bodies.
+
+Reconstruction banners in profile, replay, hisc, menu and strptime retained stale
+per-function recovery claims. They now retain historical inventory evidence and
+point to the canonical ledger/current cards. Source line counts and executable
+source were preserved. Fresh locked compilation of every configured CU passed
+non-regression checks; the five changed files also preserved every non-debug
+section byte, symbol/relocation contribution and function byte/status. The
+comparison results are in `docs/attempts/source-banner-cleanup.json`.

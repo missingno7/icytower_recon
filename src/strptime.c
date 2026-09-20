@@ -1,8 +1,8 @@
 /* Historical CU: F:\projects\icytower\trunk\source\strptime.c
  * Ownership: VENDORED_UPSTREAM
- * Partial recovery: public wrapper and helpers are independently matched;
- * the internal parser is source-recovered but still differs in code generation.
- * DIFFER: _strptime @ 0x0041f640, 2028 bytes
+ * Current recovery status: src/recovery.json and docs/current/.
+ * Historical extents below are evidence, not recovery claims.
+ * Historical function: _strptime @ 0x0041f640, 2028 bytes
  */
 #include <time.h>
 #include <ctype.h>

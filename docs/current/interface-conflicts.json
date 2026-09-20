@@ -440,46 +440,6 @@
       "size": 0
     },
     {
-      "function": "fldads_get_local_cache_name",
-      "source": "src/fld_adspot.c",
-      "sources": [
-        "src/fld_adspot.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin fldads_get_local_cache_name",
-      "verification_command": "python tools/interface_task.py check fldads_get_local_cache_name",
-      "promotion_command": "python tools/interface_task.py promote fldads_get_local_cache_name",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/fldads_get_local_cache_name.json",
-      "size": 0
-    },
-    {
-      "function": "fldads_get_local_filename_from_url",
-      "source": "src/fld_adspot.c",
-      "sources": [
-        "src/fld_adspot.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin fldads_get_local_filename_from_url",
-      "verification_command": "python tools/interface_task.py check fldads_get_local_filename_from_url",
-      "promotion_command": "python tools/interface_task.py promote fldads_get_local_filename_from_url",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/fldads_get_local_filename_from_url.json",
-      "size": 0
-    },
-    {
       "function": "fldads_get_random_ad",
       "source": "src/fld_adspot.c",
       "sources": null,
@@ -513,26 +473,6 @@
       "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/fldads_update_cache.json",
-      "size": 0
-    },
-    {
-      "function": "fldads_update_local_adimg",
-      "source": "src/fld_adspot.c",
-      "sources": [
-        "src/fld_adspot.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin fldads_update_local_adimg",
-      "verification_command": "python tools/interface_task.py check fldads_update_local_adimg",
-      "promotion_command": "python tools/interface_task.py promote fldads_update_local_adimg",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/fldads_update_local_adimg.json",
       "size": 0
     },
     {
@@ -8410,22 +8350,22 @@
           "line": 55,
           "kind": "NF",
           "name": "fldads_get_local_cache_name",
-          "return_type": "char*",
+          "return_type": "const char*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern char *fldads_get_local_cache_name (char *pFileName);",
-          "canonical_return_type": "char*",
+          "declaration": "extern const char *fldads_get_local_cache_name (const char *pFileName);",
+          "canonical_return_type": "const char*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -8448,22 +8388,22 @@
           "line": 89,
           "kind": "NF",
           "name": "fldads_get_local_filename_from_url",
-          "return_type": "char*",
+          "return_type": "const char*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern char *fldads_get_local_filename_from_url (char *pRemoteName);",
-          "canonical_return_type": "char*",
+          "declaration": "extern const char *fldads_get_local_filename_from_url (const char *pRemoteName);",
+          "canonical_return_type": "const char*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -8893,12 +8833,12 @@
           "name": "fldads_update_local_adimg",
           "return_type": "void",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern void fldads_update_local_adimg (char *);",
+          "declaration": "extern void fldads_update_local_adimg (const char *);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": []
@@ -8910,20 +8850,20 @@
           "name": "fldads_update_local_adimg",
           "return_type": "void",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern void fldads_update_local_adimg (char *pRemoteName);",
+          "declaration": "extern void fldads_update_local_adimg (const char *pRemoteName);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -30320,82 +30260,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "fldads_get_local_cache_name",
-      "historical": [
-        {
-          "cu": "src/fld_adspot.c",
-          "return_type": "const char*",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 47381
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 55,
-          "kind": "NF",
-          "name": "fldads_get_local_cache_name",
-          "return_type": "char*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern char *fldads_get_local_cache_name (char *pFileName);",
-          "canonical_return_type": "char*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "fldads_get_local_filename_from_url",
-      "historical": [
-        {
-          "cu": "src/fld_adspot.c",
-          "return_type": "const char*",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 47648
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 89,
-          "kind": "NF",
-          "name": "fldads_get_local_filename_from_url",
-          "return_type": "char*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern char *fldads_get_local_filename_from_url (char *pRemoteName);",
-          "canonical_return_type": "char*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "fldads_get_random_ad",
       "historical": [
         {
@@ -30620,61 +30484,6 @@
       "status": "CONFLICT",
       "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "fldads_update_local_adimg",
-      "historical": [
-        {
-          "cu": "src/fld_adspot.c",
-          "return_type": "void",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 47951
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 37,
-          "kind": "NC",
-          "name": "fldads_update_local_adimg",
-          "return_type": "void",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern void fldads_update_local_adimg (char *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/fld_adspot.c",
-          "line": 133,
-          "kind": "NF",
-          "name": "fldads_update_local_adimg",
-          "return_type": "void",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern void fldads_update_local_adimg (char *pRemoteName);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {

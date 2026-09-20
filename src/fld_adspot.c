@@ -34,7 +34,7 @@ pthread_mutex_t gFLDADMutex;
 int giAdCacheSize;
 FLDAdSpot *gpAdCache;
 
-void fldads_update_local_adimg(char *pRemoteName);
+void fldads_update_local_adimg(const char *pRemoteName);
 void *fldads_threadmain(void *data);
 
 void fldads_destroy_cache(void)
@@ -52,7 +52,7 @@ void fldads_destroy_cache(void)
     }
 }
 
-char *fldads_get_local_cache_name(char *pFileName)
+const char *fldads_get_local_cache_name(const char *pFileName)
 {
     static char localFilename[256];
     get_adcache_dir(localFilename, sizeof(localFilename));
@@ -86,7 +86,7 @@ char *get_url_filename(char *pURL)
     return p;
 }
 
-char *fldads_get_local_filename_from_url(char *pRemoteName)
+const char *fldads_get_local_filename_from_url(const char *pRemoteName)
 {
     return fldads_get_local_cache_name(get_url_filename(pRemoteName));
 }
@@ -130,7 +130,7 @@ void fldads_load_local_cache(void)
     }
 }
 
-void fldads_update_local_adimg(char *pRemoteName)
+void fldads_update_local_adimg(const char *pRemoteName)
 {
     char *localFilename = fldads_get_local_filename_from_url(pRemoteName);
     struct stat localStat;

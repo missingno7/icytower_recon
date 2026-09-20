@@ -3,8 +3,8 @@
 #include "timer.h"
 
 /* Historical CU: F:\projects\icytower\trunk\source\hisc.c
- * Ownership: GAME
- * PARTIAL: view_scores @ 0x00404c38, 2552 bytes
+ * Ownership: GAME; current status: src/recovery.json.
+ * Historical function: view_scores @ 0x00404c38, 2552 bytes
  */
 
 typedef struct {

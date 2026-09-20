@@ -1,5 +1,5 @@
-/* Partial historical menu.c recovery.
- * DIFFER: update_game_menu @ 0x00417adc, 583 bytes
+/* Historical CU: menu.c; current status: src/recovery.json.
+ * Historical function: update_game_menu @ 0x00417adc, 583 bytes
  */
 #include <allegro.h>
 #include <string.h>

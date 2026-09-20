@@ -1,23 +1,23 @@
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
- * Source recovery pending. This file intentionally defines no fallback code.
- * EXACT: hash2 @ 0x004189cc, 71 bytes
- * DIFFER: generate_profile_checksum @ 0x00418a14, 112 bytes
- * DIFFER: get_rank_id @ 0x00418a84, 75 bytes
- * DIFFER: get_rank @ 0x00418ad0, 82 bytes
- * DIFFER: set_next_rank_message @ 0x00418b24, 431 bytes
- * Partial reconstruction: draw_profile_selector @ 0x00418cd4.
- * DIFFER: draw_buffer @ 0x004191c8, 185 bytes
- * DIFFER: profile_data_page_advanced @ 0x00419284, 332 bytes
- * EXACT: profile_data_page_basic @ 0x004193d0, 637 bytes
- * EXACT: profile_data_page_extra @ 0x00419650, 85 bytes
- * DIFFER: profile_data_page_general @ 0x004196a8, 1091 bytes
- * PARTIAL: view_profile @ 0x00419aec, 2249 bytes
- * DIFFER: save_profile @ 0x0041a3b8, 1073 bytes
- * DIFFER: load_profile @ 0x0041a7ec, 188 bytes
- * CODEGEN_SIMILAR: delete_profile @ 0x0041a8a8, 222 bytes
- * DIFFER: create_profile @ 0x0041a988, 823 bytes
- * PARTIAL: select_profile @ 0x0041acc0, 3070 bytes
+ * Current recovery status: src/recovery.json and docs/current/.
+ * Historical function: hash2 @ 0x004189cc, 71 bytes
+ * Historical function: generate_profile_checksum @ 0x00418a14, 112 bytes
+ * Historical function: get_rank_id @ 0x00418a84, 75 bytes
+ * Historical function: get_rank @ 0x00418ad0, 82 bytes
+ * Historical function: set_next_rank_message @ 0x00418b24, 431 bytes
+ * Historical function: draw_profile_selector @ 0x00418cd4.
+ * Historical function: draw_buffer @ 0x004191c8, 185 bytes
+ * Historical function: profile_data_page_advanced @ 0x00419284, 332 bytes
+ * Historical function: profile_data_page_basic @ 0x004193d0, 637 bytes
+ * Historical function: profile_data_page_extra @ 0x00419650, 85 bytes
+ * Historical function: profile_data_page_general @ 0x004196a8, 1091 bytes
+ * Historical function: view_profile @ 0x00419aec, 2249 bytes
+ * Historical function: save_profile @ 0x0041a3b8, 1073 bytes
+ * Historical function: load_profile @ 0x0041a7ec, 188 bytes
+ * Historical function: delete_profile @ 0x0041a8a8, 222 bytes
+ * Historical function: create_profile @ 0x0041a988, 823 bytes
+ * Historical function: select_profile @ 0x0041acc0, 3070 bytes
  */
 
 unsigned int hash2(unsigned int a)
