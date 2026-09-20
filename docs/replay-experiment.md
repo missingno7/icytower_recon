@@ -21,8 +21,12 @@ before doubling, contributing 34 at this stage. Historical DWARF also types
 its `sum` local as `unsigned int` even though the function returns `int`; that
 restores the original unsigned timing-curve conversions and brings the `-O2`
 candidate from 656 to 675 bytes. Its remaining byte and arithmetic scheduling
-differ from the historical 676-byte body, so the inventory records it as
-`DIFFER`.
+differ from the historical 676-byte body. A fully stepwise initial accumulation
+(`biggest_lost_combo * 17 + 17`, then the no-combo term, then doubling) extends
+the matching prefix from 19 to 21 bytes, but materializes `sum` in `edx` rather
+than the original `ecx`; the resulting 675-byte object remains `DIFFER`. The
+undoubled single-expression form regresses at byte 16, so neither probe is
+retained as source.
 
 `load_replay` now reconstructs the ITR140 reader. It opens once to validate the
 six-byte header and allocate the event buffer from its size, then reopens and
