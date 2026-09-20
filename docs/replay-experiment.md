@@ -15,8 +15,11 @@ reconstructed source and uses the original executable as its comparison oracle.
 DWARF layout and the 676-byte body. It includes every integrity input: replay
 settings, score and combo counters, the three 100-element timing curves,
 name/date/comment bytes, and packed input records, before applying the local
-hash mixer. The `-O2` candidate is 656 bytes; its arithmetic scheduling differs
-from the historical body, so the inventory records it as `DIFFER`.
+hash mixer. The initial accumulator is `(biggest_lost_combo * 17 +
+no_combo_top_floor * 127 + 17) * 2`: the original carries the `17`
+before doubling, contributing 34 at this stage. The `-O2` candidate is 656
+bytes; its arithmetic scheduling differs from the historical 676-byte body,
+so the inventory records it as `DIFFER`.
 
 `load_replay` now reconstructs the ITR140 reader. It opens once to validate the
 six-byte header and allocate the event buffer from its size, then reopens and
