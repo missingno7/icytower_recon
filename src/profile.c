@@ -62,11 +62,11 @@ inline int get_rank_id(Tprofile_rank *profile)
     int i;
 
     for (i = 11; i >= 0; i--) {
-        if (profile->score < rankFloors[i]) continue;
-        if (profile->combo < rankCombos[i]) continue;
-        if (profile->ccc < rankNMLs[i]) continue;
-        if (profile->no_combo_lost < rankCCCs[i]) continue;
-        return i;
+        if (profile->score >= rankFloors[i]
+         && profile->combo >= rankCombos[i]
+         && profile->ccc >= rankNMLs[i]
+         && profile->no_combo_lost >= rankCCCs[i])
+            return i;
     }
     return 0;
 }
