@@ -16,3 +16,14 @@ window-resolution checks, optional browser launch, and alert fallback precede
 the visual work. Rendering begins at line 5187 with backdrop blits and reaches
 head bitmap/shadow construction at lines 5206--5212. These two regions must
 remain coupled in the recovered callback.
+
+The opening oracle trace resolves the poster ownership without a carrier:
+`pFLDAdBitmap` is the `0x4dd30c` bitmap pointer and `pFLDAd` is the
+`0x4dd310` ad descriptor. When an ad is active, the callback checks its
+timestamp against the system counter, opens its URL with `open_web_browser`,
+shows the existing browser alert, and restores the last mouse-button state.
+The first rendering phase then blits `data[126]` to `swap_screen`, draws
+`data[71]` at `(330, 280)`, and alpha-draws the optional ad bitmap at
+`(0, 280)`. The head construction starts from `data[58 + face]` and the
+shadow asset at `data[61]`; later animation remains to be recovered with its
+fixed-point sine expressions and local lifetimes intact.
