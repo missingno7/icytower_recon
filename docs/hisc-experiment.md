@@ -14,9 +14,11 @@ the recovered source preserves the allocation/failure paths, ordered `free`
 calls, reset loop, checksum recurrence, score qualification, and insertion
 sort.
 
-`view_scores` remains a partial 1,988-byte candidate against the historical
-2,552-byte body. Its interaction loop now preserves the DWARF-confirmed
+`view_scores` remains a partial 2,064-byte candidate against the historical
+2,552-byte body. Its interaction loop preserves the DWARF-confirmed
 `canDone` debounce: fire completes immediately, while a close request must
-first observe a released control state. The panel also begins at the original
-`pageY = 500` and eases toward zero. The original text is used only as an
-oracle by `build/experiments/tdm-2/game-hisc/O2`.
+first observe a released control state. The panel begins at the original
+`pageY = 500`, eases toward zero while darkening toward 158, clamps its
+scroll at `485 - panel_height` and zero, then slides back to 500 while clearing
+the overlay before teardown. The original text is used only as an oracle by
+`build/experiments/tdm-2/game-hisc/O2`.

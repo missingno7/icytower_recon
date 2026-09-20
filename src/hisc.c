@@ -178,17 +178,21 @@ void view_scores(Thisc_table **tables,char **names)
     pageY=500;
     targetY=0;
     dark=0;
-    targetDark=0;
+    targetDark=158;
     done=0;
     canDone=0;
     while (!done) {
         cycle_count=0;
         checkMenuFocus();
         poll_control(get_controls(),0);
-        if (is_down(get_controls()) && targetY>480-bmp->h)
+        if (is_down(get_controls()) && targetY>485-bmp->h)
             targetY-=16;
-        else if (is_up(get_controls()) && targetY<0)
-            targetY+=16;
+        else if (is_up(get_controls())) {
+            if (targetY < -15)
+                targetY+=16;
+            else
+                targetY=0;
+        }
         done=is_fire(get_controls());
         if (closeButtonClicked && canDone)
             done=1;
@@ -208,10 +212,12 @@ void view_scores(Thisc_table **tables,char **names)
             rest(2);
     }
 
-    targetDark=255;
-    while (dark<250) {
+    targetY=500;
+    targetDark=0;
+    while (pageY<=480) {
         cycle_count=0;
         checkMenuFocus();
+        pageY+=(int)((targetY-pageY)*0.2f);
         dark+=(int)((targetDark-dark)*0.2f);
         blit(bg,swap_screen,0,0,0,0,SCREEN_W,SCREEN_H);
         set_trans_blender(0,0,0,dark);
