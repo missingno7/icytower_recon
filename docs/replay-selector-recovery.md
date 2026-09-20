@@ -45,3 +45,14 @@ clamps the visible-list ratio to one, and draws the `data[86]` panel with the
 historical translucent layout. The same decoded region sets list/panel geometry
 from `x` and `y`, leaving the later text rows, replay details, version state,
 and custom indicator to the remaining renderer phases.
+
+The remaining renderer call map fixes those phases. Lines 487--509 draw the
+clipped file-list rows and selected filename; the latter obtains its basename
+through `get_filename`. Lines 525--543 restore the clip, classify a present
+preview with `is_custom_replay`, and compose the clipped replay-detail text.
+Lines 551--569 render the labelled score, floor, combo, and replay fields with
+left and right text helpers. The final phase invokes the panel's inline sprite
+and rectangle operations, selects a version/detail presentation, and renders
+the remaining formatted labels. Every clip transition, text helper, and
+custom-replay call is therefore anchored to a source line and direct oracle
+transfer for the future complete body.
