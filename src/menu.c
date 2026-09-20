@@ -428,7 +428,7 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
         num_posts++;
         if (m[num_posts].flags & 1)
             pos = num_posts;
-    } while (!(m[num_posts].flags & 0x80000000));
+    } while ((signed char)m[num_posts].flags >= 0);
     old_pos = pos;
     draw_menu(bmp, m, mp, x, y, stepIn);
     if (ctrl) {
