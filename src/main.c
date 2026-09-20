@@ -2610,11 +2610,7 @@ int init_game(int argc, char **argv)
         log2file("Game started %d times",options.timesStarted);
     }
 
-    if (allegro_init()!=0) {
-        set_gfx_mode(GFX_TEXT,0,0,0,0);
-        allegro_message("For some reason, the game failed to go into\ngraphics mode. Try starting the game again.\n\nIf this problem persists,\nplease visit www.freelunchdesign.com.");
-        return 0;
-    }
+    allegro_init();
     set_color_depth(32);
     if (options.full_screen) {
         log2file("Setting fullscreen mode 640x480");
@@ -2638,8 +2634,9 @@ int init_game(int argc, char **argv)
             window=1;
     }
     if (!screen) {
+        log2file("ERROR: screen was not set");
         set_gfx_mode(GFX_TEXT,0,0,0,0);
-        allegro_message("ERROR: screen was not set");
+        allegro_message("For some reason, the game failed to go into\ngraphics mode. Try starting the game again.\n\nIf this problem persists,\nplease visit www.freelunchdesign.com.");
         return 0;
     }
     log2file("Graphics mode set. (screen = %d)",screen);
