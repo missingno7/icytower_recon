@@ -1,8 +1,7 @@
 # `_mangled_main` recovery map
 
-`_mangled_main` is the missing historical game entrypoint in `main.c`.  The
-original is at `0x415f10`, has a 1,938-byte DWARF extent, and is the first
-unresolved symbol in the ordinary recovered-game link.  This note records
+`_mangled_main` is the historical game entrypoint in `main.c`. The original
+is at `0x415f10` and has a 1,938-byte DWARF extent. This note records
 oracle-derived structure only; it is not source input to normal compilation.
 
 DWARF declares `argc`, `argv`, `i`, `ret`, `must_fade`, `full_path[1024]`,
@@ -78,6 +77,14 @@ final four-byte `data` relocation of each 148-byte record. This includes the
 main menu's links to the play, profile, and options tables. It must not be
 replaced with a zeroed table or a pre-relocated address blob.
 
+The source now implements the normal dispatch loop after `clear_keybuf`:
+both game routes, score viewing, instructions, replay selection/replay
+execution, and credits all use their typed source-level callees and preserve
+the decoded fade and music transitions. The isolated `-O2` candidate is 1,220
+bytes, so this is behavioral/source recovery rather than an exact match.
+Profile-creation pre-dispatch, special command-line startup paths, exceptional
+exit handling, and the remaining compiler layout remain open.
+
 Reproduce the current dependency measurement with:
 
 ```powershell
@@ -85,5 +92,4 @@ python tools/recovered_game_link.py
 ```
 
 It records `_mangled_main` first in
-`build/recovered-game/tdm-2/link.json`.  A complete source implementation is
-still required before this can become an independently linkable game.
+`build/recovered-game/tdm-2/link.json`.

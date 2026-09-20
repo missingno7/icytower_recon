@@ -574,8 +574,11 @@ extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
                        BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
 extern int get_slider_value(Tmenu_slider *s);
 extern int get_selection_value(Tmenu_selection *s);
+extern void draw_menu(BITMAP *bmp, Tmenu *menu, Tmenu_params *mp,
+                      int x, int y, int dx);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
+extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
 extern int calc_replay_checksum(Treplay *r);
 extern int save_replay(char *path, char *file, Treplay *r, int size,
                        int make_new_date);
@@ -583,6 +586,7 @@ extern void run_demo(char *file_name);
 extern int new_game(void);
 extern int play(void);
 extern int load_character(const char *filename, int attrib, void *param);
+extern void view_scores(void **tables, char **names);
 
 char *get_version_str(void)
 {
@@ -2463,15 +2467,18 @@ int init_game(int argc, char **argv)
     return 1;
 }
 
-/* Partial recovery of main.c:5761, 0x415f10..0x4166a2.  This preserves the
- * oracle's initialization/game/teardown lifecycle while menu dispatch is
- * recovered from its source-line branches. */
+/* Source recovery of main.c:5761, 0x415f10..0x4166a2.  This retains the
+ * startup, main-menu action dispatch, game/replay transitions, and orderly
+ * shutdown recovered from the original control-flow branches. */
 int _mangled_main(int argc, char **argv)
 {
     char executable_name[1024];
     char logfile_path[256];
     FILE *fp;
     int i;
+    int ret;
+    int must_fade;
+    int play_result;
 
     if (!LoadLibraryA("exchndl.dll"))
         printf("No exception handler present, RPTs will not be generated");
@@ -2510,9 +2517,71 @@ int _mangled_main(int argc, char **argv)
                   640, 30, -1);
     startMenuMusic();
     clear_keybuf();
-    if (new_game()) {
-        play();
-        end_game();
+
+    must_fade=1;
+    while (!closeButtonClicked) {
+        if (must_fade)
+            fadeIn(swap_screen,16);
+        ret=handle_menu(main_menu,&menu_params,&ctrl,swap_screen,
+                        main_menu_callback,355,285,0);
+
+        if (ret=='e' || ret==0x85) {
+            in_replay_menu=(ret!='e');
+            do {
+                fadeOut(16);
+                stopMenuMusic();
+                if (demo) {
+                    destroy_replay(demo);
+                    demo=NULL;
+                }
+                play_result=0;
+                if (new_game()) {
+                    play_result=play();
+                    end_game();
+                    fadeOut(16);
+                }
+            } while (play_result && !closeButtonClicked);
+            if (!closeButtonClicked)
+                startMenuMusic();
+            must_fade=1;
+        }
+        else if (ret=='i') {
+            view_scores(hisc_tables,result_categories);
+            must_fade=0;
+        }
+        else if (ret=='h') {
+            fadeOut(16);
+            show_instructions();
+            must_fade=1;
+        }
+        else if (ret=='z') {
+            if (demo) {
+                destroy_replay(demo);
+                demo=NULL;
+            }
+            for (;;) {
+                demo=replay_selector(&ctrl,replay_directory);
+                if (!demo) {
+                    must_fade=0;
+                    break;
+                }
+                fadeOut(16);
+                stopMenuMusic();
+                run_demo(NULL);
+                fadeOut(16);
+                main_menu_callback();
+                draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+                fadeIn(swap_screen,32);
+                if (closeButtonClicked)
+                    break;
+                startMenuMusic();
+            }
+        }
+        else if (ret=='k') {
+            fadeOut(16);
+            show_credits();
+            break;
+        }
     }
     stopMenuMusic();
     uninit_game();
