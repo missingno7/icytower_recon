@@ -9,3 +9,9 @@ then clears keyboard state and destroys its temporary bitmap.
 The source recovery must retain the selection and animated table presentation;
 calling `draw_table` once or substituting a static score list is not an
 equivalent viewer lifecycle.
+
+DWARF fixes the interface and animation state: parameters `tables` and
+`names`; locals `bg`, `pageY`, `targetY`, `dark`, `targetDark`, `listHeight`,
+`th`, `mh`, `bh`, `lh`, `bmpHeight`, `bmp`, and `yPos`. These establish a
+scrolling/fading table viewer with a temporary backing bitmap, rather than a
+single static rendering call.
