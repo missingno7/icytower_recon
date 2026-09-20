@@ -1,0 +1,297 @@
+{
+  "scope": "Diagnostic interpretation of fixed-offset relocation comparisons. No target bindings, proof verdicts, workflow states or queue eligibility changed.",
+  "unchanged_ledger_functions_and_workflow": true,
+  "counts": {
+    "UNALIGNED_BYTE_WINDOW": 1801,
+    "ALIGNED_OPERAND": 65,
+    "ALIGNED_FIELD_UNTYPED": 12
+  },
+  "tests": "53 diagnostic tests passed; global audit passed; fresh create_profile FAST rejected with exit 10.",
+  "examples": [
+    {
+      "function": "stopGameMusic",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "mismatches": [
+        {
+          "section": 1,
+          "offset": 17561,
+          "symbol_index": 156,
+          "symbol": "_custom",
+          "type": 6,
+          "function_offset": 41,
+          "addend": 1244,
+          "target_va": 5221396,
+          "resolution": "named symbol",
+          "resolved_value": 5221396,
+          "original_value": 1336677389,
+          "equal": false,
+          "comparison_context": {
+            "state": "UNALIGNED_BYTE_WINDOW",
+            "original_value_is_operand": false,
+            "reason": "No matching decoded instruction field at this function offset.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 17560,
+              "bytes": "a1dc040000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x4dc,%eax"
+            },
+            "original_instruction_at_offset": {
+              "address": 4246300,
+              "bytes": "8b0d14ac4f00",
+              "mnemonic": "mov",
+              "assembly": "mov    0x4fac14,%ecx"
+            }
+          }
+        },
+        {
+          "section": 1,
+          "offset": 17571,
+          "symbol_index": 275,
+          "symbol": "_stop_midi",
+          "type": 20,
+          "function_offset": 51,
+          "addend": 0,
+          "target_va": 4471000,
+          "resolution": "named symbol",
+          "resolved_value": 224685,
+          "original_value": 57519337,
+          "equal": false,
+          "comparison_context": {
+            "state": "UNALIGNED_BYTE_WINDOW",
+            "original_value_is_operand": false,
+            "reason": "No matching decoded instruction field at this function offset.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 17570,
+              "bytes": "e900000000",
+              "mnemonic": "jmp",
+              "assembly": "jmp    44a7 <_stopGameMusic+0x37>"
+            },
+            "original_instruction_at_offset": {
+              "address": 4246311,
+              "bytes": "e9ac6d0300",
+              "mnemonic": "jmp",
+              "assembly": "jmp    4438d8 <_stop_midi>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "function": "create_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "mismatches": [
+        {
+          "section": 1,
+          "offset": 6478,
+          "symbol_index": 32,
+          "symbol": ".rdata",
+          "type": 6,
+          "function_offset": 598,
+          "addend": 594,
+          "target_va": 5075930,
+          "resolution": "unique read-only literal or table content",
+          "resolved_value": 5075930,
+          "original_value": 5075444,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_OPERAND",
+            "original_value_is_operand": true,
+            "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 6477,
+              "bytes": "bf52020000",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x252,%edi"
+            },
+            "original_instruction_at_offset": {
+              "address": 4303837,
+              "bytes": "bff4714d00",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x4d71f4,%edi"
+            },
+            "operand_kind": "IMMEDIATE_OR_LITERAL",
+            "original_operand_value": 5075444
+          }
+        },
+        {
+          "section": 1,
+          "offset": 6492,
+          "symbol_index": 32,
+          "symbol": ".rdata",
+          "type": 6,
+          "function_offset": 612,
+          "addend": 594,
+          "target_va": 5075930,
+          "resolution": "unique read-only literal or table content",
+          "resolved_value": 5075930,
+          "original_value": 5075444,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_OPERAND",
+            "original_value_is_operand": true,
+            "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 6491,
+              "bytes": "b952020000",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x252,%ecx"
+            },
+            "original_instruction_at_offset": {
+              "address": 4303851,
+              "bytes": "b9f4714d00",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x4d71f4,%ecx"
+            },
+            "operand_kind": "IMMEDIATE_OR_LITERAL",
+            "original_operand_value": 5075444
+          }
+        }
+      ]
+    },
+    {
+      "function": "blit_to_screen",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "mismatches": [
+        {
+          "section": 1,
+          "offset": 9489,
+          "symbol_index": 228,
+          "symbol": "_key",
+          "type": 6,
+          "function_offset": 21,
+          "addend": 56,
+          "target_va": 5269952,
+          "resolution": "named symbol",
+          "resolved_value": 5269952,
+          "original_value": 5269944,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_FIELD_UNTYPED",
+            "original_value_is_operand": false,
+            "reason": "Same instruction byte field; this encoding is not supported for operand interpretation.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 9488,
+              "bytes": "a038000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x38,%al"
+            },
+            "original_instruction_at_offset": {
+              "address": 4241104,
+              "bytes": "a0b8695000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x5069b8,%al"
+            }
+          }
+        },
+        {
+          "section": 1,
+          "offset": 9499,
+          "symbol_index": 166,
+          "symbol": "_blit_mode",
+          "type": 6,
+          "function_offset": 31,
+          "addend": 0,
+          "target_va": null,
+          "resolution": "missing or ambiguous symbol",
+          "resolved_value": null,
+          "original_value": 5100324,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_OPERAND",
+            "original_value_is_operand": true,
+            "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 9497,
+              "bytes": "c7050000000000000000",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x0,0x0"
+            },
+            "original_instruction_at_offset": {
+              "address": 4241113,
+              "bytes": "c70524d34d0000000000",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x0,0x4dd324"
+            },
+            "operand_kind": "ABSOLUTE_MEMORY",
+            "original_operand_value": 5100324
+          }
+        },
+        {
+          "section": 1,
+          "offset": 9508,
+          "symbol_index": 228,
+          "symbol": "_key",
+          "type": 6,
+          "function_offset": 40,
+          "addend": 57,
+          "target_va": 5269953,
+          "resolution": "named symbol",
+          "resolved_value": 5269953,
+          "original_value": 5269945,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_FIELD_UNTYPED",
+            "original_value_is_operand": false,
+            "reason": "Same instruction byte field; this encoding is not supported for operand interpretation.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 9507,
+              "bytes": "a039000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x39,%al"
+            },
+            "original_instruction_at_offset": {
+              "address": 4241123,
+              "bytes": "a0b9695000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x5069b9,%al"
+            }
+          }
+        },
+        {
+          "section": 1,
+          "offset": 9518,
+          "symbol_index": 166,
+          "symbol": "_blit_mode",
+          "type": 6,
+          "function_offset": 50,
+          "addend": 0,
+          "target_va": null,
+          "resolution": "missing or ambiguous symbol",
+          "resolved_value": null,
+          "original_value": 5100324,
+          "equal": false,
+          "comparison_context": {
+            "state": "ALIGNED_OPERAND",
+            "original_value_is_operand": true,
+            "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
+            "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
+            "candidate_instruction": {
+              "address": 9516,
+              "bytes": "c7050000000001000000",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x1,0x0"
+            },
+            "original_instruction_at_offset": {
+              "address": 4241132,
+              "bytes": "c70524d34d0001000000",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x1,0x4dd324"
+            },
+            "operand_kind": "ABSOLUTE_MEMORY",
+            "original_operand_value": 5100324
+          }
+        }
+      ]
+    }
+  ]
+}

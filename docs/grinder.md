@@ -283,3 +283,12 @@ available recipe. A literal or assignment recipe with such prerequisites routes 
 SUPERVISOR rather than spending an automatic attempt on a known incomplete repair.
 This does not assert that equal literal content proves ownership or layout-only body
 correctness. The normal strict promotion gates remain unchanged.
+
+
+Relocation mismatch interpretation: `comparison_context` distinguishes a decoded
+`ALIGNED_OPERAND` from an `UNALIGNED_BYTE_WINDOW` or `ALIGNED_FIELD_UNTYPED`.
+When `original_value_is_operand` is false, the raw `original_value` is only the
+four bytes at the candidate field offset; instruction-length changes can make it
+span opcodes or unrelated operands. Do not interpret it as a pointer, displacement
+or ownership conflict. Inspect the supplied instruction pair first. Even an
+aligned operand is diagnostic evidence only, never an independent target binding.

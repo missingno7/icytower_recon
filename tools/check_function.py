@@ -83,6 +83,8 @@ def main():
         print('relocation mismatches:',len(card['relocation_mismatches']),'direct-transfer/layout differences:',len(card['direct_transfer_mismatches']))
         for r in card['relocation_mismatches'][:4]:
             print('  relocation +%#x %s: %s; independently resolved target %s'%(r['function_offset'],r['symbol'],r['resolution'],r.get('target_va')))
+            context=r.get('comparison_context',{})
+            print('    comparison:',context.get('state','UNINTERPRETED'),';',context.get('reason','Original byte window has not been interpreted.'))
         for reference in card.get('reference_diagnostics',[])[:4]:
             print('  reference +%#x: %s -> %s; %s'%(reference['function_offset'],reference['candidate_reference']['expression'],reference['expected_reference']['expression'],reference['prerequisite']))
         for pool in card.get('literal_dependencies',[])[:4]:
