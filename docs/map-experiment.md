@@ -7,7 +7,9 @@ and `Tmap` at 32 floors plus its scroll offset.
 `getFloorData` has the historical 107-byte extent and now fully matches its
 signed tile-row calculation, bounds checks, empty-row check, both edges, and
 output order. The algebraically equivalent right-edge source form selects the
-original `lea` sequence.
+original `lea` sequence. A fresh isolated `game-map -O2` comparison confirms
+`FUNCTION_MATCH`: relative layout, masked bytes, and relocation-resolved bytes
+are all equal.
 `add_floor` now has a 606-byte source reconstruction. It shifts the 31 prior
 floors, evolves the new room's `level` and periodic `level / 5` `sign` marker, applies the
 250/2500/5-floor reset rules, computes replay-controlled floor widths, and
