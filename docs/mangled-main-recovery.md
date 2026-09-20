@@ -80,7 +80,7 @@ replaced with a zeroed table or a pre-relocated address blob.
 The source now implements the normal dispatch loop after `clear_keybuf`:
 both game routes, score viewing, instructions, replay selection/replay
 execution, and credits all use their typed source-level callees and preserve
-the decoded fade and music transitions. The isolated `-O2` candidate is 1,220
+the decoded fade and music transitions. The isolated `-O2` candidate is 1,319
 bytes, so this is behavioral/source recovery rather than an exact match.
 Profile-creation pre-dispatch, special command-line startup paths, exceptional
 exit handling, and the remaining compiler layout remain open.

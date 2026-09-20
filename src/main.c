@@ -2479,6 +2479,7 @@ int _mangled_main(int argc, char **argv)
     int ret;
     int must_fade;
     int play_result;
+    int redraw_menu;
 
     if (!LoadLibraryA("exchndl.dll"))
         printf("No exception handler present, RPTs will not be generated");
@@ -2519,30 +2520,39 @@ int _mangled_main(int argc, char **argv)
     clear_keybuf();
 
     must_fade=1;
+    redraw_menu=1;
     while (!closeButtonClicked) {
-        if (must_fade)
-            fadeIn(swap_screen,16);
+        if (redraw_menu) {
+            main_menu_callback();
+            draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+            if (must_fade)
+                fadeIn(swap_screen,16);
+            else
+                blit_to_screen(swap_screen);
+            redraw_menu=0;
+        }
         ret=handle_menu(main_menu,&menu_params,&ctrl,swap_screen,
                         main_menu_callback,355,285,0);
 
         if (ret=='e' || ret==0x85) {
             in_replay_menu=(ret!='e');
+            fadeOut(16);
+            stopMenuMusic();
+            if (demo) {
+                destroy_replay(demo);
+                demo=NULL;
+            }
             do {
-                fadeOut(16);
-                stopMenuMusic();
-                if (demo) {
-                    destroy_replay(demo);
-                    demo=NULL;
-                }
                 play_result=0;
                 if (new_game()) {
                     play_result=play();
                     end_game();
                     fadeOut(16);
-                }
+                } else
+                    fadeOut(16);
             } while (play_result && !closeButtonClicked);
-            if (!closeButtonClicked)
-                startMenuMusic();
+            if (menu_sounds[1])
+                play_menu_select();
             must_fade=1;
         }
         else if (ret=='i') {
@@ -2574,15 +2584,19 @@ int _mangled_main(int argc, char **argv)
                 fadeIn(swap_screen,32);
                 if (closeButtonClicked)
                     break;
-                startMenuMusic();
+                if (menu_sounds[1])
+                    play_menu_select();
             }
         }
-        else if (ret=='k') {
-            fadeOut(16);
-            show_credits();
+        else if (ret=='k')
             break;
-        }
+        rest(2);
+        if (closeButtonClicked || ret=='k')
+            break;
+        redraw_menu=1;
     }
+    fadeOut(16);
+    show_credits();
     stopMenuMusic();
     uninit_game();
     return 0;

@@ -21,9 +21,9 @@ conditional alert, cleanup, and return. The source dispatcher now enters the
 typed `main_menu` with `main_menu_callback`, preserving the observed
 `must_fade` state and the action branches for both new-game codes, scores,
 instructions, replay selection, and credits. The new-game branch clears a
-pending replay, handles the `play` retry result, and restores menu music; the
-replay branch owns its selector result and rebuilds the menu before its
-32-step fade-in.
+pending replay, handles the `play` retry result, and preserves the decoded
+menu-select sound; the replay branch owns its selector result and rebuilds
+the menu before its 32-step fade-in.
 
 The startup sequence at `0x41650e..0x416544` now has a directly decoded,
 source-level recovery. After successful game initialization it calls
@@ -32,6 +32,6 @@ source-level recovery. After successful game initialization it calls
 `DATAFILE` array; the other five arguments resolve to the typed persistent
 objects and constants. This establishes the main-menu greeting state before
 menu music starts. `_mangled_main` remains `DIFFER`: the isolated TDM-2
-candidate is 1,220 bytes against the oracle's 1,938 bytes. Profile-creation
+candidate is 1,319 bytes against the oracle's 1,938 bytes. Profile-creation
 pre-dispatch, special startup/replay cases, error exits, and exact compiler
 structure still require recovery.
