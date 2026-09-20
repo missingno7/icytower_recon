@@ -102,7 +102,7 @@ char *getGameDataXML(Tgame_data *gd)
     char playerTag[256], gameTag[512], claimTag[1024], actualTag[1024];
     char comboTag[5120], jumpTag[5120], keysTag[256], sdTag[5120];
     char *xmlStr;
-    int i, mismatch;
+    int i;
 
     xmlStr=malloc(128000);
     sprintf(playerTag,"  <player>\n    <name>%s</name>\n  </player>\n",r->name);
@@ -125,9 +125,11 @@ char *getGameDataXML(Tgame_data *gd)
     strcat(sdTag,"  </sd>\n");
     sprintf(xmlStr,"<itrcheck_results file_status=\"ok\" header=\"%c%c%c%c%c%c\" date=\"%s\">\n",r->header[0],r->header[1],r->header[2],r->header[3],r->header[4],r->header[5],r->date);
     if (cmdline.tiny) {
-        mismatch=gd->score!=r->score || gd->floor!=r->floor || gd->combo!=r->combo || gd->no_combo_top_floor!=r->no_combo_top_floor || gd->biggest_lost_combo!=r->biggest_lost_combo;
-        for (i=0;i<5;i++) mismatch+=gd->ccc[i]!=r->ccc[i] || gd->jc[i]!=r->jc[i];
-        sprintf(xmlStr,"%s  <result>%s</result>\n",xmlStr,mismatch ? "mismatch" : "match");
+        int misses;
+
+        misses=gd->score!=r->score || gd->floor!=r->floor || gd->combo!=r->combo || gd->no_combo_top_floor!=r->no_combo_top_floor || gd->biggest_lost_combo!=r->biggest_lost_combo;
+        for (i=0;i<5;i++) misses+=gd->ccc[i]!=r->ccc[i] || gd->jc[i]!=r->jc[i];
+        sprintf(xmlStr,"%s  <result>%s</result>\n",xmlStr,misses ? "mismatch" : "match");
     } else {
         strcat(xmlStr,playerTag);
         strcat(xmlStr,gameTag);

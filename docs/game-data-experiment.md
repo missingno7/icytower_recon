@@ -20,6 +20,7 @@ claimed-counter layout.
 Its local serializer buffers use the original DWARF bounds: `playerTag` and
 `keysTag` are 256 bytes, `gameTag` is 512 bytes, `claimTag` and `actualTag`
 are 1024 bytes, and the combo, jump, and sample-data buffers are each 5120
-bytes. Those bounds restore the historical 0x485c stack allocation; the
-remaining 1853-byte candidate still differs from the 1855-byte original in
-formatter and branch scheduling.
+bytes. Those bounds restore the historical 0x485c stack allocation. DWARF also
+confirms `misses` as an `int` local scoped only to the tiny-output branch; the
+source preserves that lexical scope. The resulting 1853-byte candidate still
+differs from the 1855-byte original in formatter and branch scheduling.
