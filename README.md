@@ -127,6 +127,9 @@ python tools/build_xiph.py
 python tools/audio_link.py
 python tools/test_pipeline.py
 python tools/progress.py
+python tools/generate_types.py --check
+python tools/next_frontier.py
+python tools/audit_signedness.py
 python tools/audit.py
 ```
 
@@ -156,6 +159,15 @@ source bodies. The whole DIE graph is retained as JSONL with references,
 including parameters, local variables, inline instances, static functions,
 array subranges and member offsets. Type DIE counts include duplicates;
 they do not imply that 32,978 canonical C types have been emitted as headers.
+
+`tools/progress.py` derives `docs/progress.json` and
+`docs/blocker-summary.json` from the ledger; `--check` makes stale generated
+status an audit failure. `tools/classify_diff.py` labels observed comparison
+differences without changing their verdict, and `tools/next_frontier.py`
+ranks unresolved functions. `tools/sweep.py` permits at most three explicit
+compiler flags for one CU. `tools/stage_forged_evidence.py` records hashes and
+named claims from an external forged tree as evidence only; it never imports
+or compiles that tree.
 
 Inherited research's 751,448-byte function-span denominator differs from
 the PE .text virtual size of 761,928 bytes. Keep those measures separate.

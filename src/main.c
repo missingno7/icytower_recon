@@ -17,6 +17,7 @@
 #include "particle.h"
 #include "map.h"
 #include "scroller.h"
+#include "recovered_types.h"
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
@@ -310,37 +311,6 @@ typedef struct Tcharacter {
     int uses_datafile;
     PALETTE pal;
 } Tcharacter;
-
-typedef struct Tplayer {
-    double x;
-    double y;
-    double sx;
-    double sy;
-    double max_s;
-    int level;
-    int score;
-    int best_combo;
-    int status;
-    int jump_key;
-    int frame;
-    int in_combo;
-    int acc_level;
-    int acc_jumps;
-    int dead;
-    int rotate;
-    float angle;
-    int edge;
-    int edge_drawn;
-    int bounce;
-    int shake;
-    int latest_combo;
-    int show_combo;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    int ccc[5];
-    int jcTop[5];
-    int jc[5];
-} Tplayer;
 
 typedef struct Tgame_data {
     Treplay *replay;

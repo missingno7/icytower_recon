@@ -2,6 +2,9 @@
 from collections import Counter
 from common import ROOT, identity, read_json
 from build import verify_inputs
+from recovery_state import load_ledger, progress_document
+from progress import blocker_summary
+from generate_types import render
 
 def main():
     verify_inputs()
@@ -28,6 +31,10 @@ def main():
     assert sum(len(d['entries']) for d in pe['imports'])==320
     assert len(pe['resources']['leaves'])==2
     assert len(read_json(ROOT/'evidence/census/compilation-units.json'))==148
-    print('PASS: fixture, census, research snapshots, build-input locks, 25-CU ownership, upstream copies, PE invariants.')
+    ledger=load_ledger()
+    assert (ROOT/'include/recovered_types.h').read_text(encoding='utf-8') == render()
+    assert read_json(ROOT/'docs/progress.json') == progress_document(ledger)
+    assert read_json(ROOT/'docs/blocker-summary.json') == blocker_summary(ledger)
+    print('PASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.')
 
 if __name__=='__main__': main()

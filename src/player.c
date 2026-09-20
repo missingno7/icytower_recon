@@ -4,15 +4,7 @@
  * UNKNOWN: update_player @ 0x00418740, 651 bytes
  */
 
-typedef struct Tplayer {
-    double x, y, sx, sy, max_s;
-    int level, score, best_combo, status, jump_key, frame, in_combo;
-    int acc_level, acc_jumps, dead, rotate;
-    int angle;
-    int edge, edge_drawn, bounce, shake, latest_combo, show_combo;
-    int no_combo_top_floor, biggest_lost_combo;
-    int ccc[5], jcTop[5], jc[5];
-} Tplayer;
+#include "recovered_types.h"
 
 /* DWARF names parameter p at original line 18. This body preserves the
  * original reset set; x, y, and angle deliberately remain untouched. */
