@@ -6,9 +6,10 @@
 
 typedef struct { int start, end, length; } Tgd_combo;
 typedef struct { int start, dist, num; } Tgd_jump_sequence;
+typedef struct Treplay Treplay;
 
 typedef struct {
-    void *replay;
+    Treplay *replay;
     int score, floor, combo, no_combo_top_floor, biggest_lost_combo;
     int ccc[5], jc[5];
     int comboPosts;
@@ -26,7 +27,7 @@ typedef struct {
     int tiny;
 } Tcmdline;
 
-typedef struct {
+struct Treplay {
     char header[6];
     int size;
     char name[32];
@@ -98,7 +99,7 @@ Tgame_data *create_game_data(void)
 
 char *getGameDataXML(Tgame_data *gd)
 {
-    Tgd_replay *r=(Tgd_replay *)gd->replay;
+    Treplay *r=gd->replay;
     char playerTag[256], gameTag[512], claimTag[1024], actualTag[1024];
     char comboTag[5120], jumpTag[5120], keysTag[256], sdTag[5120];
     char *xmlStr;

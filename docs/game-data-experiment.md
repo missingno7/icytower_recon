@@ -9,9 +9,10 @@ function boundaries, and relocations are recorded in
 `build/experiments/tdm-2/game-game-data/O2`.
 
 `getGameDataXML` is reconstructed from the original serializer's fixed replay
-layout and XML literals. Its replay mirror retains the shared six-byte header
-and 42-byte comment fields; normal C alignment preserves the historical field
-offsets used by the serializer. It allocates the original 128000-byte output buffer,
+layout and XML literals. Its `Tgame_data.replay` member is a typed pointer to
+the historical `Treplay` structure, rather than a layout-only `void *`; the
+shared replay definition retains the six-byte header and 42-byte comment
+fields, with normal C alignment preserving the serializer offsets. It allocates the original 128000-byte output buffer,
 formats the player, game, claimed and actual result blocks, and retains both
 mutually exclusive output paths: `cmdline.tiny` emits only the result verdict,
 whereas the normal path emits the optional combos, jumps, keys, and sample-data
