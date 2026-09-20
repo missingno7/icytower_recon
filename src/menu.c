@@ -455,9 +455,9 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
         if (is_fire(ctrl) || is_enter(&mp->ctrl) ||
             is_fire(&mp->ctrl))
             return_value = m[pos].return_select;
-        else if (is_left(ctrl) || is_left(&mp->ctrl))
+        if (is_left(ctrl) || is_left(&mp->ctrl))
             return_value = m[pos].return_left;
-        else if (is_right(ctrl) || is_right(&mp->ctrl))
+        if (is_right(ctrl) || is_right(&mp->ctrl))
             return_value = m[pos].return_right;
     }
     *data = (int)m[pos].data;

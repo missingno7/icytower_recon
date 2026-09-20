@@ -20,9 +20,10 @@ path: with no primary control it leaves the selected entry unchanged. It finds
 the selected entry through the terminating flag, draws the current page,
 accepts primary and alternate control navigation, and evaluates up and down
 independently as the original does. It updates the selected bit and movement
-sound, then returns the selected/left/right action with the entry data. The
-candidate is 518 bytes against the historical 583 and is recorded as
-`DIFFER`.
+sound, then independently evaluates select, left, and right actions in that
+order, allowing a later simultaneous directional action to replace the return
+code. The candidate is now 582 bytes against the historical 583 and is
+recorded as `DIFFER` for the remaining code-generation byte.
 
 draw_menu now reconstructs the historical rendering loop from its independent
 DWARF types and original control flow. Its source-local declaration order is
