@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <pthread.h>
+#include <direct.h>
 #include <allegro.h>
 #include "loadpng.h"
 #include "beta.h"
@@ -25,8 +26,10 @@ extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
 
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
+int dropped_file_is_not_a_replay;
 int init_ok;
 char last_log[1024];
+char working_directory[1024];
 typedef struct {
     int jumps;
     int combos;
@@ -2348,12 +2351,42 @@ int init_game(int argc, char **argv)
  * recovered from its source-line branches. */
 int _mangled_main(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
-    log2file("INIT");
+    char executable_name[1024];
+    char logfile_path[256];
+    FILE *fp;
+    int i;
+
+    if (!LoadLibraryA("exchndl.dll"))
+        printf("No exception handler present, RPTs will not be generated");
+    allegro_init();
+    register_png_file_type();
+    get_executable_name(executable_name, sizeof(executable_name));
+    replace_filename(working_directory, executable_name, "data",
+                     sizeof(working_directory));
+    chdir(working_directory);
+    memset(logfile_path, 0, sizeof(logfile_path));
+    get_logfile_path(logfile_path, sizeof(logfile_path));
+    fp = fopen(logfile_path, "wt");
+    if (fp) {
+        fprintf(fp, "Icy Tower v%s - log file\n----------------------------\n",
+                "1.5.1");
+        fclose(fp);
+    }
+    for (i = 0; i < argc; i++)
+        if (!stricmp(argv[i], "-check"))
+            itrcheck = 1;
+    log2file("Game started with the following commands:");
+    for (i = 0; i < argc; i++)
+        log2file("    %s", argv[i]);
+    log2file("Working directory is:\n    %s", working_directory);
     if (!init_game(argc,argv)) {
-        log2file("Initialization failed");
+        if (!dropped_file_is_not_a_replay) {
+            log2file("* Failed to initialize the game *");
+            allegro_message("Failed to initialize the game.");
+        }
+        log2file("Cleaning up Allegro");
         uninit_game();
+        log2file("Done...");
         return 1;
     }
     init_scroller(&greeting_scroller, data[54].dat, scroller_greetings,

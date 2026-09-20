@@ -11,6 +11,15 @@ credits, instructions, score viewing, replay selection, profile creation and
 option synchronization. Every normal exit uninitializes the game and calls
 `allegro_exit`; failure paths log and call `exit`.
 
+The source also recovers the oracle's entry prefix through the `init_game`
+call at `0x41606f`: it attempts to load `exchndl.dll`, performs the Allegro
+version check via `allegro_init`, registers PNG support, derives and enters the
+`data` directory in the typed `working_directory[1024]` buffer, writes the
+version `1.5.1` log header, and recognizes the `-check` argument as the
+existing `itrcheck` switch. Its failed-initialization branch now preserves the
+conditional alert, cleanup, and return. The menu dispatcher after this prefix
+is still incomplete.
+
 The startup sequence at `0x41650e..0x416544` now has a directly decoded,
 source-level recovery. After successful game initialization it calls
 `init_scroller(&greeting_scroller, data[54].dat, scroller_greetings, 640, 30,
