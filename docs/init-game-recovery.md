@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 5,545-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 5,670-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 243 bytes cover compiler layout and the remaining source detail.
+remaining 118 bytes cover compiler layout and the remaining source detail.
 resource-loader,
 and staged progress work.
 
@@ -142,6 +142,9 @@ validation, configuration fallback, graphics setup, loader presentation,
 input installation, profile selection, resource loading, SFX conversion, and
 the final cleanup stage. These logs are observable state for the historical
 launcher and account for most of the prior code-size gap.
+The source now has the same 65 `log2file` calls as the oracle initializer,
+including the final `Welcome to Icy Tower` trace between its two final
+progress updates.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,

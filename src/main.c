@@ -2539,20 +2539,25 @@ int init_game(int argc, char **argv)
             }
             else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1;
         }
-        if (check) {
-            log2file("Loading %s",replay_path);
-            demo=load_replay(replay_path);
-            if (!demo) {
-                set_gfx_mode(GFX_TEXT,0,0,0,0);
-                printf("<itrcheck_results status=\"error\">%s</itrcheck_results>\n",
-                       get_filename(replay_path));
-                log2file("*** Failed!");
-                dropped_file_is_not_a_replay=1;
-                return 0;
-            }
-            itrcheck=1;
-            log2file("ITRCHECK activated, checking <%s>",replay_path);
+        if (!check) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("<%s>\nis not a vaild option.",argv[1]);
+            log2file("*** Erroneous option (%s)",argv[1]);
+            dropped_file_is_not_a_replay=1;
+            return 0;
         }
+        log2file("Loading %s",replay_path);
+        demo=load_replay(replay_path);
+        if (!demo) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            printf("<itrcheck_results status=\"error\">%s</itrcheck_results>\n",
+                   get_filename(replay_path));
+            log2file("*** Failed!");
+            dropped_file_is_not_a_replay=1;
+            return 0;
+        }
+        itrcheck=1;
+        log2file("ITRCHECK activated, checking <%s>",replay_path);
     } else if (argc==2) {
         log2file("Loading %s",argv[1]);
         demo=load_replay(argv[1]);
@@ -2615,6 +2620,7 @@ int init_game(int argc, char **argv)
     if (options.full_screen) {
         log2file("Setting fullscreen mode 640x480");
         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
+            log2file("*** failed.");
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("Failed to set graphics mode.");
             return 0;
@@ -2626,6 +2632,7 @@ int init_game(int argc, char **argv)
             log2file("*** failed.");
             options.full_screen=-1;
             if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
+                log2file("*** failed.");
                 set_gfx_mode(GFX_TEXT,0,0,0,0);
                 allegro_message("Failed to set graphics mode.");
                 return 0;
@@ -2719,6 +2726,7 @@ int init_game(int argc, char **argv)
     draw_progress_bar();
     swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
     if (!swap_screen) {
+        log2file("*** failed.");
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("Failed reserve memory screen buffers.");
         return 0;
@@ -2731,6 +2739,7 @@ int init_game(int argc, char **argv)
     packfile_password(init_string);
     data=load_datafile_callback("data/data.dat",datafile_callback_slow);
     if (!data) {
+        log2file("*** failed.");
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("Failed to load datafile.");
         return 0;
@@ -2741,6 +2750,7 @@ int init_game(int argc, char **argv)
     player_id=rand()%1000;
     ply[player_id]=malloc(sizeof(*ply[player_id]));
     if (!ply[player_id]) {
+        log2file("*** failed.");
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("Failed to allocate memory for player.");
         return 0;
@@ -2851,6 +2861,7 @@ int init_game(int argc, char **argv)
     }
     log2file("Cleaning up");
     draw_progress_bar();
+    log2file("Welcome to Icy Tower");
     draw_progress_bar();
     i=0;
     while (!keypressed() && cycle_count<=149) {
