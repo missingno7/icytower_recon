@@ -9,18 +9,20 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 1,329-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 1,493-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
 five original gameplay command switches and a replay-file argument, then
 display mode arguments, initializes Allegro's graphics, timer, input,
-joystick, and audio subsystems, loads the datafile, allocates the swap buffer,
+joystick, and audio subsystems, installs the display-focus and close callbacks,
+seeds runtime randomness, establishes the original joystick defaults, loads
+the datafile, allocates the swap buffer,
 and recovers the profile/character discovery path. It rebuilds the profile
 list, loads the remembered profile with the guest fallback/create sequence,
 synchronizes profile options, and propagates character-loading failure.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 4,459 bytes cover the original network, resource-loader,
+remaining 4,295 bytes cover the original network, resource-loader,
 and staged progress work.
 
 The verified base resource is `data/data.dat`, loaded with the manifest's

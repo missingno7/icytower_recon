@@ -2510,6 +2510,20 @@ int init_game(int argc, char **argv)
         data=NULL;
         return 0;
     }
+    set_display_switch_mode(options.full_screen ? SWITCH_BACKAMNESIA :
+                            SWITCH_BACKGROUND);
+    set_display_switch_callback(SWITCH_IN,switchedToProgram);
+    set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
+    set_close_button_callback(clickedCloseButton);
+    srand((unsigned int)time(NULL));
+    if (got_joystick) {
+        gamepad.up=4;
+        gamepad.down=8;
+        gamepad.left=1;
+        gamepad.right=2;
+        for (i=0;i<32;i++)
+            gamepad.b[i]=16;
+    }
     rebuild_profile_list(0);
     profile=load_profile(options.lastProfile);
     if (!profile)
