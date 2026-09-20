@@ -9,7 +9,9 @@ function boundaries, and relocations are recorded in
 `build/experiments/tdm-2/game-game-data/O2`.
 
 `getGameDataXML` is reconstructed from the original serializer's fixed replay
-layout and XML literals. It allocates the original 128000-byte output buffer,
+layout and XML literals. Its replay mirror retains the shared six-byte header
+and 42-byte comment fields; normal C alignment preserves the historical field
+offsets used by the serializer. It allocates the original 128000-byte output buffer,
 formats the player, game, claimed and actual result blocks, and retains both
 mutually exclusive output paths: `cmdline.tiny` emits only the result verdict,
 whereas the normal path emits the optional combos, jumps, keys, and sample-data

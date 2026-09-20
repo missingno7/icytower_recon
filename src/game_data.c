@@ -27,7 +27,7 @@ typedef struct {
 } Tcmdline;
 
 typedef struct {
-    char header[8];
+    char header[6];
     int size;
     char name[32];
     char date[32];
@@ -42,7 +42,7 @@ typedef struct {
     int gravity;
     int rejump;
     int random_seed;
-    char comment[44];
+    char comment[42];
     int tc_posts;
     float tc_c_data[100];
     float tc_q_data[100];
