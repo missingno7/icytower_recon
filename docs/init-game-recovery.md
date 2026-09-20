@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 3,111-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 3,271-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -37,7 +37,7 @@ to nine tiers exactly as the oracle does.
 Before loading packed graphics, the candidate now restores the oracle's full
 Allegro color-conversion mask (`0x00ffffff`).
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 2,677 bytes cover the original network, graphics fallback,
+remaining 2,517 bytes cover the original graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -66,6 +66,13 @@ replay through `dropped_file_is_not_a_replay`, and enables `itrcheck` only
 after a successful load. The candidate no longer accepts non-oracle
 `-windowed` or `-fullscreen` switches, and it no longer treats every ordinary
 non-option argument as a replay.
+
+The pre-graphics network setup is recovered from `0x40e811..0x40e87a`. It
+formats the `Icy Tower v1.5.1` window title, requests Winsock 2.2 through the
+real `WSAStartup@8` import, and logs both setup and too-old-version failures
+without aborting startup. The source keeps the historical 400-byte `WSADATA`
+ABI locally because the period Allegro headers conflict with modern Winsock
+headers in this compiler configuration.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,

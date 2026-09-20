@@ -24,6 +24,22 @@ extern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,
     const char *operation, const char *file, const char *parameters,
     const char *directory, int show);
 
+typedef struct {
+    unsigned short wVersion;
+    unsigned short wHighVersion;
+    char szDescription[257];
+    char szSystemStatus[129];
+    unsigned short iMaxSockets;
+    unsigned short iMaxUdpDg;
+    char *lpVendorInfo;
+} WSADATA;
+extern int __attribute__((stdcall)) WSAStartup(unsigned short version,
+                                                WSADATA *data);
+#define MAKEWORD(a,b) ((unsigned short)(((unsigned char)(a)) | \
+                    ((unsigned short)((unsigned char)(b)) << 8)))
+#define LOBYTE(value) ((unsigned char)((value) & 0xff))
+#define HIBYTE(value) ((unsigned char)(((value) >> 8) & 0xff))
+
 /* Declared at original line 92; log2file suppresses output while it is set. */
 int itrcheck;
 int dropped_file_is_not_a_replay;
@@ -2440,6 +2456,9 @@ void handle_player_input(void *control)
  * subsystems before it exposes the datafile-backed game globals. */
 int init_game(int argc, char **argv)
 {
+    char title[64];
+    WSADATA wsaData;
+    unsigned short wVersionRequested;
     char cfgfilename[256];
     char profiles_dir[1024];
     char *replay_path;
@@ -2454,6 +2473,14 @@ int init_game(int argc, char **argv)
 
     log2file("INIT GAME");
     packfile_password(NULL);
+    sprintf(title,"Icy Tower v%s","1.5.1");
+    set_window_title(title);
+    wVersionRequested=MAKEWORD(2,2);
+    if (WSAStartup(wVersionRequested,&wsaData)!=0)
+        log2file(" !!! Failed to setup Winsock");
+    if (LOBYTE(wsaData.wVersion)<2 || HIBYTE(wsaData.wVersion)<2)
+        log2file(" !!! Failed to get proper Winsock version (wanted 2.2, got %d.%d)",
+                 LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
     init_ok=0;
     closeButtonClicked=0;
     in_replay_menu=0;
