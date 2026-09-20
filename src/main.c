@@ -1100,7 +1100,7 @@ int do_replay_menu(void)
                 blit_to_screen(swap_screen);
                 if (state==0) {
                     state=get_string(swap_screen,player_name,340,512,data[54].dat,
-                                     140,210,makecol(255,255,255),makecol(0,0,0));
+                                     140,210,makecol(0,0,0),makecol(255,255,255));
                     replaceBadCharacters(player_name,'_');
                     state++;
                     if (!state)
@@ -1113,7 +1113,7 @@ int do_replay_menu(void)
                         replaceBadCharacters(filename,'_');
                     }
                     if (get_string(swap_screen,filename,340,512,data[54].dat,
-                                   140,250,makecol(255,255,255),makecol(0,0,0)) == -1)
+                                   140,250,makecol(0,0,0),makecol(255,255,255)) == -1)
                         state='*';
                     else {
                         replaceBadCharacters(filename,'_');
@@ -1124,7 +1124,7 @@ int do_replay_menu(void)
                     int edit_result;
 
                     edit_result=get_string(swap_screen,comment,340,42,data[54].dat,
-                                           140,290,makecol(255,255,255),makecol(0,0,0));
+                                           140,290,makecol(0,0,0),makecol(255,255,255));
                     if (edit_result == -1)
                         state='*';
                     else if (edit_result == -2)
