@@ -21,7 +21,9 @@ shrinking-floor path, the source now preserves the original unconditional
 known. Its guard now compares the float limit before integer conversion, which
 matches the original x87 sequence. The historical lexical `int max_w` local is
 also restored for the bounded-width branch, preserving the oracle's debug
-scope without changing the 606-byte candidate body. The first remaining difference is at
+scope without changing the 606-byte candidate body. The high-level shrink
+ladder now uses the oracle's visible default-and-refine order: width 5, then
+width 4, then the 3/2 terminal selection. The first remaining difference is at
 function offset 297 (`0x416905`): the candidate loads `floor_shrink` into
 `edi`, while the original loads it into `esi`. The later shrink-width blocks
 then use a different but equivalent layout, so the 606-byte candidate cannot

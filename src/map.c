@@ -72,9 +72,12 @@ void add_floor(Tmap *m)
         if (get_demo()->floor_shrink) {
             if (m->room[31].level>2999) {
                 if (m->room[31].level>5004) {
-                    if (m->room[31].level<=7504) width=5;
-                    else if (m->room[31].level<=10004) width=4;
-                    else width=m->room[31].level<50005 ? 3 : 2;
+                    width=5;
+                    if (m->room[31].level>7504) {
+                        width=4;
+                        if (m->room[31].level>10004)
+                            width=m->room[31].level<50005 ? 3 : 2;
+                    }
                 }
                 else width=6;
             }
