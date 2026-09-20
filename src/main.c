@@ -2672,13 +2672,6 @@ int init_game(int argc, char **argv)
         return 0;
     strcpy(options.lastProfile,profile->handle);
     syncOptionsFromProfile();
-    gravity_selection.value=options.gravity;
-    floor_size_selection.value=options.floor_size;
-    scroll_speed_selection.value=options.start_speed;
-    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
-    floors.value=profile->start_floor;
-    if (floors.value>floors.max)
-        floors.value=floors.max;
     draw_progress_bar();
     if (!check_characters())
         return 0;
@@ -2713,6 +2706,16 @@ int init_game(int argc, char **argv)
         sounds[8]=getSampleFromOggDatafile(sfx,16);
         unload_datafile(sfx);
     }
+    snd_volume_slider.value=options.snd_volume;
+    msc_volume_slider.value=options.msc_volume;
+    eyecandy_selection.value=options.flash;
+    gravity_selection.value=options.gravity;
+    floor_size_selection.value=options.floor_size;
+    scroll_speed_selection.value=options.start_speed;
+    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
+    floors.value=profile->start_floor;
+    if (floors.value>floors.max)
+        floors.value=floors.max;
     init_ok=1;
     return 1;
 }
