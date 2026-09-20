@@ -15,10 +15,12 @@ static control flow. Both key-label temporaries are `char[32]`; the separate
 heading-asset branches are required by the historical flag tests. The result
 is the original 415-byte body with no non-relocation byte difference.
 
-`update_game_menu` now uses the original signed-byte terminator test for each
-menu entry. The entry keeps a 32-bit `flags` field, but its termination flag is
-the high bit of the low byte; this reproduces the historical `test dl,dl` and
-extends the exact instruction prefix to 103 bytes. It also keeps the historical
+`update_game_menu` and `draw_menu` now use the original signed-byte terminator
+test for each menu entry. The entry keeps a 32-bit `flags` field, but its
+termination flag is the high bit of the low byte; this reproduces the historical
+`test dl,dl` input-path check and extends that exact instruction prefix to 103
+bytes. The renderer retains an earlier stack-layout gap, so this source fix
+does not claim an exact renderer body. The input path also keeps the historical
 F1 jump inside the primary-control path: with no primary control it leaves the
 selected entry unchanged. It finds
 the selected entry through the terminating flag, draws the current page,

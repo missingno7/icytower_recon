@@ -375,7 +375,7 @@ void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int cx, int y, int dx)
         }
         m++;
         y += h;
-    } while (!(m[-1].flags & 0x80000000));
+    } while ((signed char)m[-1].flags >= 0);
 }
 
 void build_menu_string(Tmenu *m, char *dest)
