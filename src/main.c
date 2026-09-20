@@ -60,6 +60,7 @@ int closeButtonClicked;
 int window;
 int lastFocus;
 int in_replay_menu;
+char sfx_file[512];
 int collision_type;
 int got_joystick;
 int scroll_count;
@@ -2464,7 +2465,7 @@ int init_game(int argc, char **argv)
     unsigned short wVersionRequested;
     char cfgfilename[256];
     char profiles_dir[1024];
-    char profile_name[64];
+    char tmpHandle[32];
     char *replay_path;
     PACKFILE *cfg;
     DATAFILE *loader;
@@ -2493,7 +2494,7 @@ int init_game(int argc, char **argv)
     memset(&cmdline,0,sizeof(cmdline));
     replay_path=NULL;
     check=0;
-    profile_name[0]=0;
+    tmpHandle[0]=0;
     reset_options(&options);
     eyecandy_selection.value=0;
     eyecandy_selection.size=3;
@@ -2553,11 +2554,11 @@ int init_game(int argc, char **argv)
     } else if (argc==2) {
         demo=load_replay(argv[1]);
         if (!demo) {
-            strcpy(profile_name,get_filename(argv[1]));
-            get_extension(profile_name)[-1]=0;
-            profile=load_profile(profile_name);
+            strcpy(tmpHandle,get_filename(argv[1]));
+            get_extension(tmpHandle)[-1]=0;
+            profile=load_profile(tmpHandle);
             if (!profile) {
-                profile_name[0]=0;
+                tmpHandle[0]=0;
                 set_gfx_mode(GFX_TEXT,0,0,0,0);
                 allegro_message("The file\n<%s>\nis not a vaild Icy Tower profile.",
                                get_filename(argv[1]));
@@ -2588,8 +2589,8 @@ int init_game(int argc, char **argv)
         pack_fclose(cfg);
     } else
         reset_options(&options);
-    if (profile_name[0])
-        strcpy(options.lastProfile,profile_name);
+    if (tmpHandle[0])
+        strcpy(options.lastProfile,tmpHandle);
     if (!itrcheck)
         options.timesStarted++;
 
@@ -2693,13 +2694,15 @@ int init_game(int argc, char **argv)
 
     set_color_conversion(0x00ffffff);
     draw_progress_bar();
-    packfile_password("CHEESE");
+    pwd_garble_string(init_string,50);
+    packfile_password(init_string);
     data=load_datafile_callback("data/data.dat",datafile_callback_slow);
     if (!data) {
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("Failed to load datafile.");
         return 0;
     }
+    strcpy(sfx_file,"sfx15.dat");
     packfile_password(NULL);
     draw_progress_bar();
     player_id=rand()%1000;
@@ -2745,7 +2748,7 @@ int init_game(int argc, char **argv)
         }
         select_palette(data[0].dat);
         draw_progress_bar();
-        packfile_password("CHEESE");
+        packfile_password(init_string);
         sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
         packfile_password(NULL);
         if (sfx) {
