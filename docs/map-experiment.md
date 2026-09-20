@@ -17,7 +17,11 @@ compiler block layout, so it remains `DIFFER` without exact credit. In the
 shrinking-floor path, the source now preserves the original unconditional
 `rand()` call and retains its result in `width` until the computed limit is
 known. Its guard now compares the float limit before integer conversion, which
-matches the original x87 sequence. The remaining two-byte gap is basic-block
-placement around the common shrink-width path. This is a
-partial-CU result only; see
+matches the original x87 sequence. The first remaining difference is at
+function offset 297 (`0x416905`): the candidate loads `floor_shrink` into
+`edi`, while the original loads it into `esi`. The later shrink-width blocks
+then use a different but equivalent layout, so the 606-byte candidate cannot
+receive exact credit against the 608-byte historical body. A
+`-fno-reorder-blocks` probe changed earlier matched code and was rejected.
+This is a partial-CU result only; see
 `docs/experiments/game-map-O2.json` for the comparison record.
