@@ -41,23 +41,32 @@ void reset_player(Tplayer *p)
     }
 }
 
-/* Partial recovery of player.c: 0x418678..0x418740.  The forced-jump path is
- * direct from the oracle; normal launch-vector tuning still needs its
- * collision-mode table constants. */
-int jump_player(Tplayer *p, int force)
+/* DWARF names the second parameter cheat.  The normal jump preserves the
+ * original two-path x87 expression instead of reducing it to fabs(sx). */
+extern int collision_type;
+extern double max_speed[];
+
+int jump_player(Tplayer *p, int cheat)
 {
-    if (force) {
+    if (cheat) {
         p->status = 1;
-        p->sy = -12.0 * force;
+        p->sy = (double)(-(cheat * 12));
         return -1;
     }
     if (p->status)
         return 0;
 
     p->status = 1;
-    p->sy = -12.0;
-    p->max_s = p->sx * 2.0;
-    p->rotate = p->max_s != 0.0;
+    {
+        double sx = p->sx;
+        double candidate = (sx + sx >= 0.0) ? sx * -2.0 : sx + sx;
+        double floor_speed = -max_speed[collision_type];
+
+        p->sy = (floor_speed > candidate) ? candidate : floor_speed;
+        p->max_s = sx;
+    }
+    if (p->sy < -22.0)
+        p->rotate = 1;
     p->angle = 0;
     return -1;
 }
