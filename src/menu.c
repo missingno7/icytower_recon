@@ -335,9 +335,9 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
             if (pos > num_posts)
                 pos = 0;
         }
+        if (key[KEY_F1] && pos != num_posts)
+            pos = num_posts;
     }
-    if (key[KEY_F1] && pos != num_posts)
-        pos = num_posts;
     return_value = 0;
     if (old_pos != pos) {
         m[old_pos].flags &= ~1;

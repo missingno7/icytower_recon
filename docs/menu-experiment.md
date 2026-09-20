@@ -15,7 +15,13 @@ static control flow. Both key-label temporaries are `char[32]`; the separate
 heading-asset branches are required by the historical flag tests. The result
 is the original 415-byte body with no non-relocation byte difference.
 
-update_game_menu now reconstructs menu selection and action dispatch. It finds the selected entry through the terminating flag, draws the current page, accepts primary and alternate control navigation, supports the historical F1 jump, updates the selected bit and movement sound, then returns the selected/left/right action with the entry data. The candidate is 454 bytes against the historical 583 and is recorded as `DIFFER`.
+`update_game_menu` now keeps the historical F1 jump inside the primary-control
+path: with no primary control it leaves the selected entry unchanged. It finds
+the selected entry through the terminating flag, draws the current page,
+accepts primary and alternate control navigation, updates the selected bit and
+movement sound, then returns the selected/left/right action with the entry
+data. The candidate is 484 bytes against the historical 583 and is recorded
+as `DIFFER`.
 
 draw_menu now reconstructs the historical rendering loop from its independent
 DWARF types and original control flow. It advances rows by `font_height - 12`,
