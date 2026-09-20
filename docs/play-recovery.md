@@ -1,9 +1,21 @@
 # `play` recovery map
 
 `play` is the main-CU game loop at `0x411a00..0x415e0c`, a 17,420-byte
-function declared at source line 3405. It is the final ordinary game-flow
+function declared at source line 3405. It was the final ordinary game-flow
 linker frontier after profile selection, input editing, and presentation
 recovery.
+
+`src/main.c` now contains a deliberately bounded, compiling first source
+candidate. It preserves the observed entry sequence (logging, frame update,
+music start), pause gate, player-input/player-update/particle ordering, the
+oracle collision-mode dispatch, display transfer, frame wait, profile save,
+and music stop. It is explicitly **PARTIAL**: it does not yet recover the
+floor, combo/reward, replay, result-screen, high-score, or terminal return
+state machines described below. The independent recovered-game linker now
+resolves `play`; its next direct game dependencies are
+`handle_player_input`, `update_player`, `draw_frame`, and the four missing
+collision variants. `handle_player_collision_original` already resolves from
+the current main source.
 
 DWARF records its gameplay state directly: `playing`, `old_map_pos`, `level`,
 `diff`, `quit`, scrolling state (`scroll_acc`, `scroll`, `max_scroll`), speed

@@ -966,6 +966,61 @@ void blit_to_screen(BITMAP *bmp)
     release_screen();
 }
 
+/* Partial source recovery of main.c:3405, 0x411a00..0x415e0c.  This retains
+ * the oracle's real game-state ownership and phase order while the remaining
+ * results/replay branches are being recovered instruction by instruction. */
+extern void handle_player_input(void *control);
+extern void update_player(Tplayer *p);
+extern void draw_frame(void);
+
+int play(void)
+{
+    int playing;
+    int i;
+    Tplayer *p;
+
+    log2file("PLAY");
+    update_frame();
+    startGameMusic();
+    playing = 1;
+    while (playing && !closeButtonClicked) {
+        cycle_count = 0;
+        poll_control(&ctrl, 0);
+        if (is_pause(&ctrl)) {
+            clear_keybuf();
+            while (is_pause(&ctrl) && !closeButtonClicked) {
+                poll_control(&ctrl, 0);
+                rest(2);
+            }
+            clear_keybuf();
+        }
+
+        p = ply[player_id];
+        handle_player_input(&ctrl);
+        update_player(p);
+        for (i = 0; i < 512; i++)
+            update_particle(&stars[i]);
+
+        switch (collision_type) {
+        case 0: handle_player_collision_vector_2((int)p->x, (int)p->y); break;
+        case 1: handle_player_collision_vector((int)p->x, (int)p->y); break;
+        case 2: handle_player_collision_old((int)p->x, (int)p->y); break;
+        case 3: handle_player_collision_original((int)p->x, (int)p->y); break;
+        default: handle_player_collision_combo((int)p->x, (int)p->y); break;
+        }
+        draw_frame();
+        blit_to_screen(screen);
+        if (p->dead > 299)
+            playing = 0;
+        while (!cycle_count && !closeButtonClicked)
+            rest(2);
+    }
+    if (profile)
+        save_profile(profile);
+    stopGameMusic();
+    return 0;
+}
+
 /* Oracle: main.c:5367, 0x40bc44..0x40bf59.  The editor owns only its
  * temporary backing bitmap; callers retain the supplied string and screen. */
 int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
