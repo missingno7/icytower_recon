@@ -71,117 +71,224 @@ int set_selection_value(Tmenu_selection *s, int v)
 
 void key_to_str(int k, char *dest)
 {
-    switch (k) {
-    case 1: strcpy(dest, "A"); break;
-    case 2: strcpy(dest, "B"); break;
-    case 3: strcpy(dest, "C"); break;
-    case 4: strcpy(dest, "D"); break;
-    case 5: strcpy(dest, "E"); break;
-    case 6: strcpy(dest, "F"); break;
-    case 7: strcpy(dest, "G"); break;
-    case 8: strcpy(dest, "H"); break;
-    case 9: strcpy(dest, "I"); break;
-    case 10: strcpy(dest, "J"); break;
-    case 11: strcpy(dest, "K"); break;
-    case 12: strcpy(dest, "L"); break;
-    case 13: strcpy(dest, "M"); break;
-    case 14: strcpy(dest, "N"); break;
-    case 15: strcpy(dest, "O"); break;
-    case 16: strcpy(dest, "P"); break;
-    case 17: strcpy(dest, "Q"); break;
-    case 18: strcpy(dest, "r"); break;
-    case 19: strcpy(dest, "S"); break;
-    case 20: strcpy(dest, "T"); break;
-    case 21: strcpy(dest, "U"); break;
-    case 22: strcpy(dest, "V"); break;
-    case 23: strcpy(dest, "W"); break;
-    case 24: strcpy(dest, "X"); break;
-    case 25: strcpy(dest, "Y"); break;
-    case 26: strcpy(dest, "Z"); break;
-    case 27: strcpy(dest, "0"); break;
-    case 28: strcpy(dest, "1"); break;
-    case 29: strcpy(dest, "2"); break;
-    case 30: strcpy(dest, "3"); break;
-    case 31: strcpy(dest, "4"); break;
-    case 32: strcpy(dest, "5"); break;
-    case 33: strcpy(dest, "6"); break;
-    case 34: strcpy(dest, "7"); break;
-    case 35: strcpy(dest, "8"); break;
-    case 36: strcpy(dest, "9"); break;
-    case 37: strcpy(dest, "0 (Pad)"); break;
-    case 38: strcpy(dest, "1 (Pad)"); break;
-    case 39: strcpy(dest, "2 (Pad)"); break;
-    case 40: strcpy(dest, "3 (Pad)"); break;
-    case 41: strcpy(dest, "4 (Pad)"); break;
-    case 42: strcpy(dest, "5 (Pad)"); break;
-    case 43: strcpy(dest, "6 (Pad)"); break;
-    case 44: strcpy(dest, "7 (Pad)"); break;
-    case 45: strcpy(dest, "8 (Pad)"); break;
-    case 46: strcpy(dest, "9 (Pad)"); break;
-    case 47: strcpy(dest, "F1"); break;
-    case 48: strcpy(dest, "F2"); break;
-    case 49: strcpy(dest, "F3"); break;
-    case 50: strcpy(dest, "F4"); break;
-    case 51: strcpy(dest, "F5"); break;
-    case 52: strcpy(dest, "F6"); break;
-    case 53: strcpy(dest, "F7"); break;
-    case 54: strcpy(dest, "F8"); break;
-    case 55: strcpy(dest, "F9"); break;
-    case 56: strcpy(dest, "F10"); break;
-    case 57: strcpy(dest, "F11"); break;
-    case 58: strcpy(dest, "F12"); break;
-    case 59: strcpy(dest, "ESC"); break;
-    case 60: strcpy(dest, "TILDE"); break;
-    case 61: strcpy(dest, "-"); break;
-    case 62: strcpy(dest, "="); break;
-    case 63: strcpy(dest, "Backspace"); break;
-    case 64: strcpy(dest, "Tab"); break;
-    case 65: strcpy(dest, "{"); break;
-    case 66: strcpy(dest, "}"); break;
-    case 67: strcpy(dest, "Enter"); break;
-    case 68: strcpy(dest, ":"); break;
-    case 105: strcpy(dest, ";"); break;
-    case 69: strcpy(dest, "'"); break;
-    case 70: strcpy(dest, "\\"); break;
-    case 71: strcpy(dest, "\\"); break;
-    case 72: strcpy(dest, ","); break;
-    case 73: strcpy(dest, "."); break;
-    case 74: strcpy(dest, "/"); break;
-    case 75: strcpy(dest, "Space"); break;
-    case 76: strcpy(dest, "Insert"); break;
-    case 77: strcpy(dest, "Delete"); break;
-    case 78: strcpy(dest, "Home"); break;
-    case 79: strcpy(dest, "End"); break;
-    case 80: strcpy(dest, "Pg Up"); break;
-    case 81: strcpy(dest, "Pg Down"); break;
-    case 82: strcpy(dest, "Left"); break;
-    case 83: strcpy(dest, "Right"); break;
-    case 84: strcpy(dest, "Up"); break;
-    case 85: strcpy(dest, "Down"); break;
-    case 86: strcpy(dest, "/ (Pad)"); break;
-    case 87: strcpy(dest, "*"); break;
-    case 88: strcpy(dest, "- (Pad)"); break;
-    case 89: strcpy(dest, "+ (Pad)"); break;
-    case 90: strcpy(dest, "Del (Pad)"); break;
-    case 91: strcpy(dest, "Enter (Pad)"); break;
-    case 92: strcpy(dest, "Print Screen"); break;
-    case 93: strcpy(dest, "Pause"); break;
-    case 95: strcpy(dest, "Yen"); break;
-    case 96: strcpy(dest, "Kana"); break;
-    case 115: strcpy(dest, "L Shift"); break;
-    case 116: strcpy(dest, "R Shift"); break;
-    case 117: strcpy(dest, "L Ctrl"); break;
-    case 118: strcpy(dest, "R Ctrl"); break;
-    case 119: strcpy(dest, "Alt"); break;
-    case 120: strcpy(dest, "Alt Gr"); break;
-    case 121: strcpy(dest, "Left Win"); break;
-    case 122: strcpy(dest, "Right Win"); break;
-    case 123: strcpy(dest, "Menu"); break;
-    case 124: strcpy(dest, "Scroll Lock"); break;
-    case 125: strcpy(dest, "Num Lock"); break;
-    case 126: strcpy(dest, "Caps Lock"); break;
-    default: strcpy(dest, "undefined"); break;
-    }
+    if (k == 1)
+        strcpy(dest, "A");
+    else if (k == 2)
+        strcpy(dest, "B");
+    else if (k == 3)
+        strcpy(dest, "C");
+    else if (k == 4)
+        strcpy(dest, "D");
+    else if (k == 5)
+        strcpy(dest, "E");
+    else if (k == 6)
+        strcpy(dest, "F");
+    else if (k == 7)
+        strcpy(dest, "G");
+    else if (k == 8)
+        strcpy(dest, "H");
+    else if (k == 9)
+        strcpy(dest, "I");
+    else if (k == 10)
+        strcpy(dest, "J");
+    else if (k == 11)
+        strcpy(dest, "K");
+    else if (k == 12)
+        strcpy(dest, "L");
+    else if (k == 13)
+        strcpy(dest, "M");
+    else if (k == 14)
+        strcpy(dest, "N");
+    else if (k == 15)
+        strcpy(dest, "O");
+    else if (k == 16)
+        strcpy(dest, "P");
+    else if (k == 17)
+        strcpy(dest, "Q");
+    else if (k == 18)
+        strcpy(dest, "r");
+    else if (k == 19)
+        strcpy(dest, "S");
+    else if (k == 20)
+        strcpy(dest, "T");
+    else if (k == 21)
+        strcpy(dest, "U");
+    else if (k == 22)
+        strcpy(dest, "V");
+    else if (k == 23)
+        strcpy(dest, "W");
+    else if (k == 24)
+        strcpy(dest, "X");
+    else if (k == 25)
+        strcpy(dest, "Y");
+    else if (k == 26)
+        strcpy(dest, "Z");
+    else if (k == 27)
+        strcpy(dest, "0");
+    else if (k == 28)
+        strcpy(dest, "1");
+    else if (k == 29)
+        strcpy(dest, "2");
+    else if (k == 30)
+        strcpy(dest, "3");
+    else if (k == 31)
+        strcpy(dest, "4");
+    else if (k == 32)
+        strcpy(dest, "5");
+    else if (k == 33)
+        strcpy(dest, "6");
+    else if (k == 34)
+        strcpy(dest, "7");
+    else if (k == 35)
+        strcpy(dest, "8");
+    else if (k == 36)
+        strcpy(dest, "9");
+    else if (k == 37)
+        strcpy(dest, "0 (Pad)");
+    else if (k == 38)
+        strcpy(dest, "1 (Pad)");
+    else if (k == 39)
+        strcpy(dest, "2 (Pad)");
+    else if (k == 40)
+        strcpy(dest, "3 (Pad)");
+    else if (k == 41)
+        strcpy(dest, "4 (Pad)");
+    else if (k == 42)
+        strcpy(dest, "5 (Pad)");
+    else if (k == 43)
+        strcpy(dest, "6 (Pad)");
+    else if (k == 44)
+        strcpy(dest, "7 (Pad)");
+    else if (k == 45)
+        strcpy(dest, "8 (Pad)");
+    else if (k == 46)
+        strcpy(dest, "9 (Pad)");
+    else if (k == 47)
+        strcpy(dest, "F1");
+    else if (k == 48)
+        strcpy(dest, "F2");
+    else if (k == 49)
+        strcpy(dest, "F3");
+    else if (k == 50)
+        strcpy(dest, "F4");
+    else if (k == 51)
+        strcpy(dest, "F5");
+    else if (k == 52)
+        strcpy(dest, "F6");
+    else if (k == 53)
+        strcpy(dest, "F7");
+    else if (k == 54)
+        strcpy(dest, "F8");
+    else if (k == 55)
+        strcpy(dest, "F9");
+    else if (k == 56)
+        strcpy(dest, "F10");
+    else if (k == 57)
+        strcpy(dest, "F11");
+    else if (k == 58)
+        strcpy(dest, "F12");
+    else if (k == 59)
+        strcpy(dest, "ESC");
+    else if (k == 60)
+        strcpy(dest, "TILDE");
+    else if (k == 61)
+        strcpy(dest, "-");
+    else if (k == 62)
+        strcpy(dest, "=");
+    else if (k == 63)
+        strcpy(dest, "Backspace");
+    else if (k == 64)
+        strcpy(dest, "Tab");
+    else if (k == 65)
+        strcpy(dest, "{");
+    else if (k == 66)
+        strcpy(dest, "}");
+    else if (k == 67)
+        strcpy(dest, "Enter");
+    else if (k == 68)
+        strcpy(dest, ":");
+    else if (k == 105)
+        strcpy(dest, ";");
+    else if (k == 69)
+        strcpy(dest, "'");
+    else if (k == 70)
+        strcpy(dest, "\\");
+    else if (k == 71)
+        strcpy(dest, "\\");
+    else if (k == 72)
+        strcpy(dest, ",");
+    else if (k == 73)
+        strcpy(dest, ".");
+    else if (k == 74)
+        strcpy(dest, "/");
+    else if (k == 75)
+        strcpy(dest, "Space");
+    else if (k == 76)
+        strcpy(dest, "Insert");
+    else if (k == 77)
+        strcpy(dest, "Delete");
+    else if (k == 78)
+        strcpy(dest, "Home");
+    else if (k == 79)
+        strcpy(dest, "End");
+    else if (k == 80)
+        strcpy(dest, "Pg Up");
+    else if (k == 81)
+        strcpy(dest, "Pg Down");
+    else if (k == 82)
+        strcpy(dest, "Left");
+    else if (k == 83)
+        strcpy(dest, "Right");
+    else if (k == 84)
+        strcpy(dest, "Up");
+    else if (k == 85)
+        strcpy(dest, "Down");
+    else if (k == 86)
+        strcpy(dest, "/ (Pad)");
+    else if (k == 87)
+        strcpy(dest, "*");
+    else if (k == 88)
+        strcpy(dest, "- (Pad)");
+    else if (k == 89)
+        strcpy(dest, "+ (Pad)");
+    else if (k == 90)
+        strcpy(dest, "Del (Pad)");
+    else if (k == 91)
+        strcpy(dest, "Enter (Pad)");
+    else if (k == 92)
+        strcpy(dest, "Print Screen");
+    else if (k == 93)
+        strcpy(dest, "Pause");
+    else if (k == 95)
+        strcpy(dest, "Yen");
+    else if (k == 96)
+        strcpy(dest, "Kana");
+    else if (k == 115)
+        strcpy(dest, "L Shift");
+    else if (k == 116)
+        strcpy(dest, "R Shift");
+    else if (k == 117)
+        strcpy(dest, "L Ctrl");
+    else if (k == 118)
+        strcpy(dest, "R Ctrl");
+    else if (k == 119)
+        strcpy(dest, "Alt");
+    else if (k == 120)
+        strcpy(dest, "Alt Gr");
+    else if (k == 121)
+        strcpy(dest, "Left Win");
+    else if (k == 122)
+        strcpy(dest, "Right Win");
+    else if (k == 123)
+        strcpy(dest, "Menu");
+    else if (k == 124)
+        strcpy(dest, "Scroll Lock");
+    else if (k == 125)
+        strcpy(dest, "Num Lock");
+    else if (k == 126)
+        strcpy(dest, "Caps Lock");
+    else
+        strcpy(dest, "undefined");
 }
 
 void reset_menu(Tmenu *m, Tmenu_params *mp, int sel_pos)
