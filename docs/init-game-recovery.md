@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 5,670-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 5,646-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 118 bytes cover compiler layout and the remaining source detail.
+remaining 142 bytes cover compiler layout and the remaining source detail.
 resource-loader,
 and staged progress work.
 
@@ -136,6 +136,10 @@ through `pwd_garble_string` before use, clears it after loading, and reuses
 the decoded state for SFX. It also stores the original `sfx15.dat` filename in
 the 512-byte startup buffer and uses the original 32-byte temporary profile
 handle for single-file startup validation.
+
+Before menu captions are allocated, the oracle resets `curr_char`,
+`play_char`, and the character-list pointer. The initializer no longer makes
+unobserved focus, close-button, replay-menu, or command-line reset writes.
 
 The initializer now restores the original diagnostic trace across replay
 validation, configuration fallback, graphics setup, loader presentation,

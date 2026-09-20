@@ -2487,11 +2487,9 @@ int init_game(int argc, char **argv)
         log2file(" !!! Failed to get proper Winsock version (wanted 2.2, got %d.%d)",
                  LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
     init_ok=0;
-    closeButtonClicked=0;
-    in_replay_menu=0;
-    hasFocus=1;
-    lastFocus=1;
-    memset(&cmdline,0,sizeof(cmdline));
+    curr_char=0;
+    play_char=0;
+    characters=NULL;
     replay_path=NULL;
     check=0;
     tmpHandle[0]=0;
