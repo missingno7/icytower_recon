@@ -18,7 +18,7 @@
  * DIFFER: replay_selector @ 0x0041d258, 2845 bytes
  * DIFFER: save_replay @ 0x0041dd78, 1227 bytes
  * DIFFER: get_replay_property @ 0x0041e244, 1147 bytes
- * UNKNOWN: my_strcmp @ 0x0041e6c0, 128 bytes
+ * DIFFER: my_strcmp @ 0x0041e6c0, 128 bytes
  * DIFFER: add_itr_file @ 0x0041e740, 360 bytes
  */
 
@@ -710,7 +710,9 @@ int my_strcmp(const void *c, const void *d)
             return -1;
         return 1;
     }
-    if (!a->directory && sort_method >= 2 && sort_method <= 4) {
+    /* The original forms this as an unsigned interval: modes 2 through 4
+     * select a replay property, while every other value sorts by pathname. */
+    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {
         av = get_replay_property(a->full_path, sort_method);
         bv = get_replay_property(b->full_path, sort_method);
         if (av > bv)

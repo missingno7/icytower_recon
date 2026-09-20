@@ -37,7 +37,7 @@ requested event count, recalculates the checksum, and writes the same complete
 field sequence consumed by `load_replay`. Its candidate reaches the historical
 1,227-byte length and remains `DIFFER` only in instruction scheduling.
 
-`my_strcmp` now recovers the 24-byte replay-post layout and comparator behavior: directory entries rank ahead of replay files, file rows use the selected score/floor/combo property when sorting modes 2–4 are active, and the remaining names compare case-insensitively. Its candidate is 127 bytes against the historical 128 because the compiler places the directory-mismatch return path differently; the comparison inventory records it as `DIFFER`.
+`my_strcmp` now recovers the 24-byte replay-post layout and comparator behavior: directory entries rank ahead of replay files, file rows use the selected score/floor/combo property when sorting modes 2–4 are active, and the remaining names compare case-insensitively. The original's `lea`/unsigned-range check establishes the property-mode test as `(unsigned)(sort_method - 2) <= 2`; the recovered source now preserves that form. Its 123-byte candidate still differs from the historical 128-byte body because the pinned compiler places the directory-mismatch return path differently, so the comparison inventory records it as `DIFFER`.
 
 `update_file_list` matches its complete 184-byte body. It frees and clears all existing 24-byte posts, resets the independently typed 1,024-entry list, scans the original `"%s/*"` pattern through `add_itr_file`, and sorts with `my_strcmp`. Every data, string, callback, and call relocation resolves exactly.
 
