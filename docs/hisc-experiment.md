@@ -14,7 +14,7 @@ the recovered source preserves the allocation/failure paths, ordered `free`
 calls, reset loop, checksum recurrence, score qualification, and insertion
 sort.
 
-`view_scores` remains a partial 2,414-byte candidate against the historical
+`view_scores` remains a partial 2,498-byte candidate against the historical
 2,552-byte body. DWARF declares `data` as `DATAFILE *`; the original's
 `+0x420`, `+0x410`, and `+0x400` loads therefore select entries 66, 65, and
 64, rather than doubled indices. The viewer also draws entries 9 and 6 at
@@ -26,5 +26,7 @@ immediately; F1, Enter, and K complete only after all three have been released.
 scroll at `485 - panel_height` and zero, then slides back to 500 while clearing
 the overlay before teardown. Each entry frame renders at the prior position
 and alpha, then polls input, waits for the timer, and advances page position
-for the next frame. The original text is used only as an oracle by
+for the next frame. Each easing calculation adds in double precision before
+the result is truncated, matching the original x87 sequence. The original
+text is used only as an oracle by
 `build/experiments/tdm-2/game-hisc/O2`.
