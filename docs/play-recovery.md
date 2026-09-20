@@ -57,3 +57,10 @@ scroller, and continues screenshot/presentation handling. Its input loop
 uses the shared control and keyboard state before entering and sorting the
 high-score table; subsequent calls save the replay variants. This is a
 continuation of the same `play` lifecycle, not a separate menu implementation.
+
+Pause and game-over transitions occupy lines 4120--4641. Both render their
+own presentation through `blit_to_screen`, drain shared controls and keyboard
+input, and wait for the pause/input state to clear before resuming or moving
+on. The nearby debug/reward paths trigger `start_reward`; the terminal setup
+then saves the profile, stops game music and the tracked voice, and clears the
+display. These transitions must remain in the main loop's state machine.
