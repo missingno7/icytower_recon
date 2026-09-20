@@ -8,3 +8,9 @@ setup stages through `draw_progress_bar`.
 
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
+
+DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
+`black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
+`cfgfilename`, `check`, `checkFile`, `loader`, `fldLogo`, and `whiteColor`.
+They anchor the configuration, resource-loader, network, profile, and startup
+presentation portions of the source body.
