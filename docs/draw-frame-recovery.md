@@ -1,7 +1,7 @@
 # `draw_frame` recovery map
 
 `draw_frame` spans `0x40929c..0x40b3e4` (8,518 bytes) in `main.c`. The current
-source candidate is 1,067 bytes and is `DIFFER`; it closes the final direct
+source candidate is 985 bytes and is `DIFFER`; it closes the final direct
 renderer dependency in the recovered-game link without claiming byte credit.
 
 Oracle call order establishes phases: camera/background blits and random
@@ -19,7 +19,7 @@ loops before HUD and debug overlays.
 
 The current candidate renders the game floor plane, animated custom player
 frame, particle field, reward bitmap, advertising image, and score/floor/combo
-HUD to the supplied target bitmap. The remaining 7,451 bytes cover the
+HUD to the supplied target bitmap. The remaining 7,533 bytes cover the
 oracle's camera/background variation, exact sprite planes, clipping, reward
 animation, and conditional debug/status overlays.
 
@@ -39,3 +39,15 @@ DWARF names the early state directly: destination `bmp`; `x`, `y`, `p_im`,
 `ox`. The first sprite blocks introduce `f`, then `s`, `sy`, `sw`, `c1`, and
 `c2`. These identify camera/background setup through the first player/floor
 sprite loops (source lines 2490--2582).
+
+## Reward presentation slice
+
+`draw_reward` spans `0x4070fc..0x407341` (581 bytes). Its source candidate is
+1,218 bytes and `DIFFER`. The recovered branch shape selects `stretch_sprite`
+for `options.flash == 1`, returns for the other nonzero flash modes, and uses
+`rotate_scaled_sprite` when flash is disabled. Both paths center the scaled
+`reward_bmp` at `(360, 320)` using the fixed-point `reward_scale` value.
+
+This replaces the earlier static reward blit in the partial renderer. The
+candidate remains an oracle-derived source slice; its larger body does not
+claim a matching code-generation shape.

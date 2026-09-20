@@ -974,6 +974,29 @@ extern void update_player(Tplayer *p);
 extern int jump_player(Tplayer *p, int force);
 extern void play_jump_sound(Tplayer *p);
 
+/* Partial recovery of main.c:2320, 0x4070fc..0x407341.  The two paths are
+ * distinguished by the original eye-candy option: rectangular scaling for
+ * flash mode 1 and fixed-point rotation/scaling for mode 0. */
+void draw_reward(BITMAP *bmp)
+{
+    int w;
+    int h;
+
+    if (options.flash) {
+        if (options.flash!=1)
+            return;
+        w=fixtoi(fixmul(itofix(reward_bmp->w),reward_scale));
+        h=fixtoi(fixmul(itofix(reward_bmp->h),reward_scale));
+        stretch_sprite(bmp,reward_bmp,360-w/2,320-h/2,w,h);
+    }
+    else {
+        rotate_scaled_sprite(bmp,reward_bmp,
+                             itofix(360)-fixmul(itofix(reward_bmp->w),reward_scale)/2,
+                             itofix(320)-fixmul(itofix(reward_bmp->h),reward_scale)/2,
+                             itofix(0),reward_scale);
+    }
+}
+
 /* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
  * oracle's renderer phases in source: floor plane, animated character,
  * particles, rewards, advertising image, and score/status overlays. */
@@ -1018,7 +1041,7 @@ void draw_frame(BITMAP *dst)
                                  "%d COMBO",p->in_combo);
     }
     if (reward_bmp && reward_time>0)
-        draw_sprite(dst,reward_bmp,320-reward_bmp->w/2,80);
+        draw_reward(dst);
     if (pFLDAdBitmap)
         draw_sprite(dst,pFLDAdBitmap,540,400);
 }
