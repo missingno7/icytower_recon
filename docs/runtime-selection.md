@@ -37,6 +37,7 @@ python tools/integration_link.py --compiler tdm-2
 python tools/link_probe.py --compiler tdm-2
 python tools/runtime_compare.py
 python tools/recovered_game_link.py
+python tools/stage_recovered_game.py
 ```
 
 The integration executable uses a synthetic main and the recovered
@@ -67,3 +68,9 @@ transport call graph are now oracle-derived. The wrappers, socket-error helper,
 and `HTTPRequest` compile as exact partial-unit functions. With all three PNG
 units included, the ordinary link resolves `load_png` and now begins at the
 remaining HTTP transport helper.
+
+`tools/stage_recovered_game.py` copies the source-linked executable and only
+the fixture's runtime assets into `build/recovered-game/tdm-2/runtime`. It
+records hashes in `stage.json`, includes `data/data.dat`, character/profile
+trees, configuration files, and the two non-system DLL imports, and excludes
+the original `icytower15.exe`. Staging does not execute the candidate.
