@@ -42,3 +42,10 @@ respectively, `handle_player_collision_vector_2`, `_vector`, `_old`,
 `_original`, or `_combo`, each with the current player coordinates. The next
 control poll is anchored at line 4251. This dispatch remains part of `play`;
 the handlers must not be selected by a replacement loop.
+
+The terminal branch is anchored at lines 4663--5004. After its end-state
+checks, the oracle calls `save_config`, `stopGameMusic`, and `voice_stop` for
+an active voice. In the applicable replay path it sets the replay-menu state,
+calls `do_replay_menu`, clears that state, and returns the menu result. The
+ordinary caller must receive this real return value rather than a synthetic
+success code.
