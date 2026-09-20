@@ -16,3 +16,10 @@ whereas the normal path emits the optional combos, jumps, keys, and sample-data
 blocks selected by the corresponding command-line flags. The actual level rows
 remain gated by the claimed replay counters, including the original off-by-one
 claimed-counter layout.
+
+Its local serializer buffers use the original DWARF bounds: `playerTag` and
+`keysTag` are 256 bytes, `gameTag` is 512 bytes, `claimTag` and `actualTag`
+are 1024 bytes, and the combo, jump, and sample-data buffers are each 5120
+bytes. Those bounds restore the historical 0x485c stack allocation; the
+remaining 1853-byte candidate still differs from the 1855-byte original in
+formatter and branch scheduling.

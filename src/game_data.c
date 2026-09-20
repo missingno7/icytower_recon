@@ -99,8 +99,8 @@ Tgame_data *create_game_data(void)
 char *getGameDataXML(Tgame_data *gd)
 {
     Tgd_replay *r=(Tgd_replay *)gd->replay;
-    char playerTag[256], gameTag[1024], claimTag[1024], actualTag[1024];
-    char comboTag[5120], jumpTag[5120], keysTag[512], sdTag[6144];
+    char playerTag[256], gameTag[512], claimTag[1024], actualTag[1024];
+    char comboTag[5120], jumpTag[5120], keysTag[256], sdTag[5120];
     char *xmlStr;
     int i, mismatch;
 
