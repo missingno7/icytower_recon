@@ -1,9 +1,10 @@
-"""Measure the ordinary partial-game link frontier without fallback code.
+"""Link all recovered game CUs without fallback code.
 
-This is a deliberately unexecuted candidate link.  It uses main-partial's
-historical WinMain wrapper, so no synthetic entrypoint, original code, or
-undefined-symbol suppression is involved.  A linker failure is recorded as
-the next dependency frontier rather than treated as a successful game build.
+This deliberately unexecuted candidate uses main-partial's historical WinMain
+wrapper, so no synthetic entrypoint, original code, or undefined-symbol
+suppression is involved. A successful link establishes ordinary source-link
+closure only; per-function and CU fidelity still require oracle verification.
+A linker failure records the next genuine dependency frontier.
 """
 import os
 import re
