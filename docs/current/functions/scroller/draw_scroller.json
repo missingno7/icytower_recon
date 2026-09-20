@@ -1,0 +1,734 @@
+{
+  "schema": 1,
+  "source": "src/scroller.c",
+  "target": "game-scroller",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\scroller.c",
+  "function": "draw_scroller",
+  "historical_va": "0x41f0ec",
+  "historical_size": 396,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+  "body_edit_allowed": false,
+  "reason": "Route compiler-context sensitivity to supervisor; no body or layout match is claimed.",
+  "prototype": "int draw_scroller(Tscroller *sc, BITMAP *bmp, int x, int y, int color);",
+  "return_type": "int",
+  "parameters": [
+    {
+      "die": 250734,
+      "name": "sc",
+      "type_die": 250636,
+      "type": "Tscroller *",
+      "scope": 250695,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0xb79e (location list)",
+      "address": null
+    },
+    {
+      "die": 250748,
+      "name": "bmp",
+      "type_die": 250225,
+      "type": "BITMAP *",
+      "scope": 250695,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0xb7d4 (location list)",
+      "address": null
+    },
+    {
+      "die": 250763,
+      "name": "x",
+      "type_die": 244148,
+      "type": "int",
+      "scope": 250695,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb80c (location list)",
+      "address": null
+    },
+    {
+      "die": 250776,
+      "name": "y",
+      "type_die": 244148,
+      "type": "int",
+      "scope": 250695,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb844 (location list)",
+      "address": null
+    },
+    {
+      "die": 250789,
+      "name": "color",
+      "type_die": 244148,
+      "type": "int",
+      "scope": 250695,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 91 10 \t(DW_OP_fbreg: 16)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 250810,
+      "name": "i",
+      "type_die": 244148,
+      "type": "int",
+      "scope": 250805,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 250805,
+      "parent": 250695,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1500"
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 36,
+    "body_end_line": 61,
+    "body_sha256": "27cdc519a42f4eddef93576929deac49becd330b51c7c56c48c27c23a9929e52"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 250763,
+        "name": "x",
+        "type_die": 244148,
+        "type": "int",
+        "scope": 250695,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 250776,
+        "name": "y",
+        "type_die": 244148,
+        "type": "int",
+        "scope": 250695,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 250789,
+        "name": "color",
+        "type_die": 244148,
+        "type": "int",
+        "scope": 250695,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 250810,
+        "name": "i",
+        "type_die": 244148,
+        "type": "int",
+        "scope": 250805,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [
+      "x + (sc->width >> 1),"
+    ],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 396,
+  "first_difference": {
+    "offset": 93,
+    "original_va": 4321609,
+    "candidate_byte": 69,
+    "original_byte": 77
+  },
+  "mismatch_count": 6,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4321594,
+        "bytes": "89442410",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x10(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4321598,
+        "bytes": "8b4510",
+        "mnemonic": "mov",
+        "assembly": "mov    0x10(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 250763,
+            "name": "x",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 16
+            },
+            "expression_hex": "9108",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4321601,
+        "bytes": "034310",
+        "mnemonic": "add",
+        "assembly": "add    0x10(%ebx),%eax",
+        "dwarf_variables": [
+          {
+            "die": 250734,
+            "name": "sc",
+            "type": "Tscroller *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "register",
+              "register": "ebx"
+            },
+            "expression_hex": "53",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4321604,
+        "bytes": "8944240c",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0xc(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4321608,
+        "bytes": "8b4d14",
+        "mnemonic": "mov",
+        "assembly": "mov    0x14(%ebp),%ecx",
+        "dwarf_variables": [
+          {
+            "die": 250776,
+            "name": "y",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 20
+            },
+            "expression_hex": "910c",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4321611,
+        "bytes": "894c2408",
+        "mnemonic": "mov",
+        "assembly": "mov    %ecx,0x8(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4321615,
+        "bytes": "8b4510",
+        "mnemonic": "mov",
+        "assembly": "mov    0x10(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 250763,
+            "name": "x",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 16
+            },
+            "expression_hex": "9108",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4321618,
+        "bytes": "89442404",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4321622,
+        "bytes": "8b550c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%edx",
+        "dwarf_variables": [
+          {
+            "die": 250748,
+            "name": "bmp",
+            "type": "BITMAP *",
+            "base_type": "BITMAP",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "address": 122,
+        "bytes": "89442410",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x10(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 126,
+        "bytes": "8b4510",
+        "mnemonic": "mov",
+        "assembly": "mov    0x10(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 6730,
+            "name": "x",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 16
+            },
+            "expression_hex": "9108",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 129,
+        "bytes": "034310",
+        "mnemonic": "add",
+        "assembly": "add    0x10(%ebx),%eax",
+        "dwarf_variables": [
+          {
+            "die": 6701,
+            "name": "sc",
+            "type": "Tscroller *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "register",
+              "register": "ebx"
+            },
+            "expression_hex": "53",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 132,
+        "bytes": "8944240c",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0xc(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 136,
+        "bytes": "8b4514",
+        "mnemonic": "mov",
+        "assembly": "mov    0x14(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 6743,
+            "name": "y",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 20
+            },
+            "expression_hex": "910c",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 139,
+        "bytes": "89442408",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x8(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 143,
+        "bytes": "8b5510",
+        "mnemonic": "mov",
+        "assembly": "mov    0x10(%ebp),%edx",
+        "dwarf_variables": [
+          {
+            "die": 6730,
+            "name": "x",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 16
+            },
+            "expression_hex": "9108",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 146,
+        "bytes": "89542404",
+        "mnemonic": "mov",
+        "assembly": "mov    %edx,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 150,
+        "bytes": "8b4d0c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%ecx",
+        "dwarf_variables": [
+          {
+            "die": 6715,
+            "name": "bmp",
+            "type": "BITMAP *",
+            "base_type": "BITMAP",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "Tscroller",
+      "size": 2084,
+      "header": "include/recovered/Tscroller.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "text",
+          "offset": 4,
+          "type": "char *"
+        },
+        {
+          "name": "fnt",
+          "offset": 8,
+          "type": "FONT *"
+        },
+        {
+          "name": "font_height",
+          "offset": 12,
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "offset": 16,
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "offset": 20,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 67,
+      "address": 4321559,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 56,
+      "address": 4321568,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 57,
+      "address": 4321584,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 58,
+      "address": 4321591,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 59,
+      "address": 4321633,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 60,
+      "address": 4321656,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 62,
+      "address": 4321658,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "scroller.c",
+      "file": "scroller.c",
+      "line": 59,
+      "address": 4321659,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [],
+  "calls": [
+    {
+      "symbol": "_set_clip_rect",
+      "function_offset": 113,
+      "target_va": 4516720,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        113,
+        283,
+        382
+      ]
+    },
+    {
+      "symbol": "_textout_centre_ex",
+      "function_offset": 239,
+      "target_va": 4562892,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        239
+      ]
+    },
+    {
+      "symbol": "_textout_ex",
+      "function_offset": 340,
+      "target_va": 4562700,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        340
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4321628,
+      "bytes": "e80ffa0200",
+      "mnemonic": "call",
+      "assembly": "call   44eb70 <_set_clip_rect>"
+    },
+    {
+      "address": 4321754,
+      "bytes": "e8edad0300",
+      "mnemonic": "call",
+      "assembly": "call   459fcc <_textout_centre_ex>"
+    },
+    {
+      "address": 4321798,
+      "bytes": "e865f90200",
+      "mnemonic": "call",
+      "assembly": "call   44eb70 <_set_clip_rect>"
+    },
+    {
+      "address": 4321855,
+      "bytes": "e8c8ac0300",
+      "mnemonic": "call",
+      "assembly": "call   459f0c <_textout_ex>"
+    },
+    {
+      "address": 4321897,
+      "bytes": "e802f90200",
+      "mnemonic": "call",
+      "assembly": "call   44eb70 <_set_clip_rect>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "restart_scroller",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 16,
+      "candidate_offset": 16,
+      "size_delta": 0
+    },
+    {
+      "function": "init_scroller",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 440,
+      "candidate_offset": 440,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "assignment-register",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Argument setup differs at equal size",
+      "known_source_cause": "Source expression shape affects result register",
+      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "draw_scroller"
+      ],
+      "evidence": "docs/scroller-experiment.md",
+      "confidence": "HYPOTHESIS"
+    },
+    {
+      "id": "persistent-peephole-scratch",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "symptom": "Equal-sized function differs in scratch-register pushes or call argument setup, and an isolated peer-definition change alters its bytes without changing its body.",
+      "known_source_cause": "GCC 4.4.1 peep2_find_free_register retains search_ofs across successful scratch searches; earlier compiled functions can affect later scratch selection. Not every register mismatch is this cause.",
+      "known_fix_pattern": "Keep production flags and protected bodies. Supervisor runs compiler_probe.py and compares focused RTL passes. Resolve historical CU context once; do not keep rewriting the target or mask register bytes.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2",
+        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH."
+      },
+      "example_functions": [
+        "HTTPFetchInternal",
+        "draw_scroller"
+      ],
+      "evidence": "docs/compiler-context-evidence.md",
+      "confidence": "MECHANICALLY_OBSERVED"
+    },
+    {
+      "id": "historical-definition-order",
+      "difference_class": "HISTORICAL_DEFINITION_ORDER",
+      "symptom": "Current source definition order disagrees with unique original DWARF declaration lines.",
+      "known_source_cause": "Some reconstruction candidates were assembled in executable address order. GCC emission order does not necessarily equal source order.",
+      "known_fix_pattern": "Use the generated SOURCE_ORDER task only when complete definitions can move safely. Preserve all bodies and exact neighbors; reject new implicit declarations.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386",
+        "acceptance": "HISTORICAL_SOURCE_ORDER is a separate claim. Layout improvement alone is not FUNCTION_MATCH or CU_MATCH."
+      },
+      "example_functions": [
+        "draw_scroller",
+        "init_scroller"
+      ],
+      "evidence": "docs/compiler-context-evidence.md",
+      "confidence": "OBSERVED"
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": 43,
+  "compiler_context": {
+    "state": "CONTEXT_EVIDENCE_NEEDS_REFRESH",
+    "confidence": "HISTORICAL_OBSERVATION",
+    "dependencies": [
+      {
+        "omitted_function": "restart_scroller",
+        "changed_offsets": [
+          13,
+          15,
+          118,
+          121
+        ],
+        "target_body_unchanged": true
+      }
+    ],
+    "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
+    "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+    "verification_command": "python tools/compiler_probe.py game-scroller draw_scroller --omit-earlier restart_scroller"
+  },
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-scroller.json",
+  "verification_command": "python tools/check_function.py game-scroller draw_scroller",
+  "begin_command": "python tools/grinder_task.py begin game-scroller draw_scroller",
+  "promotion_command": "python tools/promote_function.py game-scroller draw_scroller",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/scroller/draw_scroller.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 5,
+    "calls": 5,
+    "referenced_globals": 0
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

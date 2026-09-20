@@ -29,12 +29,6 @@ extern Tcontrol *get_controls(void);
 extern void checkMenuFocus(void);
 extern void blit_to_screen(BITMAP *bmp);
 
-void destroy_hisc_table(Thisc_table *table)
-{
-    free(table->posts);
-    free(table);
-}
-
 Thisc_table *make_hisc_table(char *name)
 {
     Thisc_table *table;
@@ -48,6 +42,53 @@ Thisc_table *make_hisc_table(char *name)
         }
     }
     return 0;
+}
+
+void destroy_hisc_table(Thisc_table *table)
+{
+    free(table->posts);
+    free(table);
+}
+
+int qualify_hisc_table(Thisc_table *table,int value)
+{
+    int i;
+
+    if (value)
+        for (i=0;i<5;i++)
+            if (table->posts[i].value<value) return i+1;
+    return 0;
+}
+
+void sort_hisc_table(Thisc_table *table)
+{
+    int i,j;
+    Thisc_post post;
+
+    for (i=1;i<5;i++) {
+        post=table->posts[i];
+        for (j=i;j>0 && table->posts[j-1].value<post.value;j--)
+            table->posts[j]=table->posts[j-1];
+        table->posts[j]=post;
+    }
+}
+
+void enter_hisc_table(Thisc_table *table,int value,char *name)
+{
+    unsigned int lo=10000000;
+    int loID=-1;
+    int i;
+
+    for (i=0;i<5;i++) {
+        if (table->posts[i].value<lo) {
+            loID=i;
+            lo=table->posts[i].value;
+        }
+    }
+    if (loID!=-1) {
+        table->posts[loID].value=value;
+        strcpy(table->posts[loID].name,name);
+    }
 }
 
 void reset_hisc_table(Thisc_table *table,char *name,int hi,int lo)
@@ -75,26 +116,34 @@ int generate_checksum(Thisc_post *entry)
     return i;
 }
 
-int qualify_hisc_table(Thisc_table *table,int value)
+/* Source candidate recovered from the viewer's bitmap construction, control
+ * flow, and rendering call surface.  Its animation constants and asset order
+ * are oracle-derived; the complete 2552-byte function still needs matching
+ * source structure for exact code generation. */
+int load_hisc_table(Thisc_table *table,void *fp)
+{
+    int i;
+    int ok=1;
+
+    for (i=0;i<5;i++) {
+        int c_disk,c_real;
+        pack_fread(&table->posts[i],sizeof(Thisc_post),fp);
+        pack_fread(&c_disk,sizeof(int),fp);
+        c_real=generate_checksum(&table->posts[i]);
+        if (c_disk!=c_real) ok=0;
+    }
+    return ok;
+}
+
+void save_hisc_table(Thisc_table *table,void *fp)
 {
     int i;
 
-    if (value)
-        for (i=0;i<5;i++)
-            if (table->posts[i].value<value) return i+1;
-    return 0;
-}
-
-void sort_hisc_table(Thisc_table *table)
-{
-    int i,j;
-    Thisc_post post;
-
-    for (i=1;i<5;i++) {
-        post=table->posts[i];
-        for (j=i;j>0 && table->posts[j-1].value<post.value;j--)
-            table->posts[j]=table->posts[j-1];
-        table->posts[j]=post;
+    for (i=0;i<5;i++) {
+        int checksum;
+        pack_fwrite(&table->posts[i],sizeof(Thisc_post),fp);
+        checksum=generate_checksum(&table->posts[i]);
+        pack_fwrite(&checksum,sizeof(int),fp);
     }
 }
 
@@ -119,10 +168,6 @@ int draw_table(void *dst,int x,int y,char *header,Thisc_table *table)
     return yPos;
 }
 
-/* Source candidate recovered from the viewer's bitmap construction, control
- * flow, and rendering call surface.  Its animation constants and asset order
- * are oracle-derived; the complete 2552-byte function still needs matching
- * source structure for exact code generation. */
 void view_scores(Thisc_table **tables,char **names)
 {
     int i;
@@ -237,49 +282,4 @@ void view_scores(Thisc_table **tables,char **names)
     clear_keybuf();
     destroy_bitmap(bmp);
     destroy_bitmap(bg);
-}
-
-void enter_hisc_table(Thisc_table *table,int value,char *name)
-{
-    unsigned int lo=10000000;
-    int loID=-1;
-    int i;
-
-    for (i=0;i<5;i++) {
-        if (table->posts[i].value<lo) {
-            loID=i;
-            lo=table->posts[i].value;
-        }
-    }
-    if (loID!=-1) {
-        table->posts[loID].value=value;
-        strcpy(table->posts[loID].name,name);
-    }
-}
-
-void save_hisc_table(Thisc_table *table,void *fp)
-{
-    int i;
-
-    for (i=0;i<5;i++) {
-        int checksum;
-        pack_fwrite(&table->posts[i],sizeof(Thisc_post),fp);
-        checksum=generate_checksum(&table->posts[i]);
-        pack_fwrite(&checksum,sizeof(int),fp);
-    }
-}
-
-int load_hisc_table(Thisc_table *table,void *fp)
-{
-    int i;
-    int ok=1;
-
-    for (i=0;i<5;i++) {
-        int c_disk,c_real;
-        pack_fread(&table->posts[i],sizeof(Thisc_post),fp);
-        pack_fread(&c_disk,sizeof(int),fp);
-        c_real=generate_checksum(&table->posts[i]);
-        if (c_disk!=c_real) ok=0;
-    }
-    return ok;
 }

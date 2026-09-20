@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Toptions",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "changes": [
+    {
+      "file": "src/main.c",
+      "start": 4817,
+      "end": 5260,
+      "before": "typedef struct Toptions {\n    int flash;\n    int checksum;\n    int jump_hold;\n    int full_screen;\n    int floor_shrink;\n    int floor_size;\n    int start_speed;\n    int speed_increase;\n    int gravity;\n    int msc_volume;\n    int snd_volume;\n    int sort_method;\n    char updateDate[16];\n    char posterDate[16];\n    char posterUrl[256];\n    char posterSrc[256];\n    int posterSize;\n    char lastProfile[32];\n    int timesStarted;\n} Toptions;",
+      "after": "#include \"recovered/Toptions.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Toptions.h",
+  "header_identity": {
+    "size": 2510,
+    "sha256": "a9a1d0c0e5678e48781fb55f4dd90b758b51eaa6b64976527209da761179b776"
+  },
+  "source_identities": {
+    "src/main.c": {
+      "size": 91699,
+      "sha256": "4119d95832c56ea7acc91b33cb21c25e7222bfde16651069539c07cf9c80e254"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    int flash;\n    int checksum;\n    int jump_hold;\n    int full_screen;\n    int floor_shrink;\n    int floor_size;\n    int start_speed;\n    int speed_increase;\n    int gravity;\n    int msc_volume;\n    int snd_volume;\n    int sort_method;\n    char updateDate[16];\n    char posterDate[16];\n    char posterUrl[256];\n    char posterSrc[256];\n    int posterSize;\n    char lastProfile[32];\n    int timesStarted;\n} Toptions;",
+  "affected_targets": [
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 242,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Toptions",
+  "apply_command": "python tools/interface_task.py apply Toptions",
+  "verification_command": "python tools/interface_task.py check Toptions",
+  "promotion_command": "python tools/interface_task.py promote Toptions",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

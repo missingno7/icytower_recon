@@ -1,0 +1,295 @@
+{
+  "scope": "Real FAST, exact gate, layout protection and rejected promotion. No additional function recovery claimed.",
+  "results": [
+    {
+      "command": "python tools/check_function.py game-scroller draw_scroller",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "seconds": 5.776,
+      "stdout": "game-scroller:draw_scroller DIFFER / SOURCE_DIFFER\nsize 396 / 396; COMPILER_CONTEXT_DEPENDENCY; body edit False\nfirst difference: {'offset': 93, 'original_va': 4321609, 'candidate_byte': 69, 'original_byte': 77}\nint draw_scroller(Tscroller *sc, BITMAP *bmp, int x, int y, int color);\nlocals: int i\noriginal:\n  0041f13a  89442410               mov    %eax,0x10(%esp)\n  0041f13e  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  0041f141  034310                 add    0x10(%ebx),%eax ; sc: Tscroller *\n  0041f144  8944240c               mov    %eax,0xc(%esp)\n  0041f148  8b4d14                 mov    0x14(%ebp),%ecx ; y: int\n  0041f14b  894c2408               mov    %ecx,0x8(%esp)\n  0041f14f  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  0041f152  89442404               mov    %eax,0x4(%esp)\n  0041f156  8b550c                 mov    0xc(%ebp),%edx ; bmp: BITMAP *\ncandidate:\n  0000007a  89442410               mov    %eax,0x10(%esp)\n  0000007e  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  00000081  034310                 add    0x10(%ebx),%eax ; sc: Tscroller *\n  00000084  8944240c               mov    %eax,0xc(%esp)\n  00000088  8b4514                 mov    0x14(%ebp),%eax ; y: int\n  0000008b  89442408               mov    %eax,0x8(%esp)\n  0000008f  8b5510                 mov    0x10(%ebp),%edx ; x: int\n  00000092  89542404               mov    %edx,0x4(%esp)\n  00000096  8b4d0c                 mov    0xc(%ebp),%ecx ; bmp: BITMAP *\nrelocation mismatches: 0 direct-transfer/layout differences: 0\nCompiler context: CONTEXT_EVIDENCE_NEEDS_REFRESH ; docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl\nFocused card: build/fast/game-scroller/draw_scroller.json\npython tools/promote_function.py game-scroller draw_scroller\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/check_function.py game-map add_floor",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "seconds": 5.507,
+      "stdout": "game-map:add_floor DIFFER / SOURCE_DIFFER\nsize 608 / 608; REGISTER_OR_INSTRUCTION_SELECTION; body edit True\nfirst difference: {'offset': 297, 'original_va': 4286725, 'candidate_byte': 184, 'original_byte': 176}\nvoid add_floor(Tmap *m);\nlocals: int i, int width, int max_w\noriginal:\n  004168ee  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  004168f8  41                     inc    %ecx\n  004168f9  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  004168ff  e86800ffff             call   40696c <_get_demo>\n  00416904  8bb08c000000           mov    0x8c(%eax),%esi\n  0041690a  85f6                   test   %esi,%esi\n  0041690c  0f84aa000000           je     4169bc <_add_floor+0x1e0>\n  00416912  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00416918  3db70b0000             cmp    $0xbb7,%eax\ncandidate:\n  0000024a  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  00000254  41                     inc    %ecx\n  00000255  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  0000025b  e800000000             call   260 <_add_floor+0x128>\n  00000260  8bb88c000000           mov    0x8c(%eax),%edi\n  00000266  85ff                   test   %edi,%edi\n  00000268  0f8486000000           je     2f4 <_add_floor+0x1bc>\n  0000026e  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00000274  3db70b0000             cmp    $0xbb7,%eax\nrelocation mismatches: 6 direct-transfer/layout differences: 0\n  relocation +0x16e _rand: named symbol; independently resolved target 4959512\n  relocation +0x1bd _rand: named symbol; independently resolved target 4959512\n  relocation +0x1d1 _rand: named symbol; independently resolved target 4959512\n  relocation +0x1fd _rand: named symbol; independently resolved target 4959512\nFocused card: build/fast/game-map/add_floor.json\npython tools/promote_function.py game-map add_floor\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/check_function.py game-profile create_profile",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "seconds": 6.45,
+      "stdout": "game-profile:create_profile DIFFER / SOURCE_DIFFER\nsize 823 / 823; UNKNOWN_SUPERVISOR; body edit True\nfirst difference: {'offset': 508, 'original_va': 4303748, 'candidate_byte': 220, 'original_byte': 36}\nTprofile * create_profile(char *handle, int overwrite);\nlocals: char [1024] file, Tprofile * p, int i, time_t now, struct tm * my_time, int year, int month, int day\noriginal:\n  0041ab6f  b913000000             mov    $0x13,%ecx\n  0041ab74  89c7                   mov    %eax,%edi\n  0041ab76  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  0041ab78  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  0041ab82  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  0041ab8c  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  0041ab96  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  0041aba0  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0041abaa  c7042400000000         movl   $0x0,(%esp)\ncandidate:\n  000018df  b913000000             mov    $0x13,%ecx\n  000018e4  89c7                   mov    %eax,%edi\n  000018e6  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  000018e8  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  000018f2  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  000018fc  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  00001906  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  00001910  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0000191a  c7042400000000         movl   $0x0,(%esp)\nrelocation mismatches: 2 direct-transfer/layout differences: 1\n  relocation +0x256 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  relocation +0x264 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  transfer +0x2c0 save_profile: target proof True; original layout operand False\n  instruction-order window +0x1fa; candidate source lines []\nNeighbor size deltas: select_profile: -444\nFocused card: build/fast/game-profile/create_profile.json\npython tools/promote_function.py game-profile create_profile\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/check_function.py game-main play_jump_sound",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "seconds": 9.72,
+      "stdout": "game-main:play_jump_sound FUNCTION_MATCH / BODY_MATCH_LAYOUT_BLOCKED\nsize 141 / 141; SAME_CU_CALL_LAYOUT; body edit False\nfirst difference: None\nvoid play_jump_sound(Tplayer *p);\nlocals: \noriginal:\n  00406ecc  55                     push   %ebp\n  00406ecd  89e5                   mov    %esp,%ebp\n  00406ecf  83ec18                 sub    $0x18,%esp\n  00406ed2  8b4508                 mov    0x8(%ebp),%eax ; p: Tplayer *\n  00406ed5  dd4018                 fldl   0x18(%eax)\ncandidate:\n  00003c28  55                     push   %ebp\n  00003c29  89e5                   mov    %esp,%ebp\n  00003c2b  83ec18                 sub    $0x18,%esp\n  00003c2e  8b4508                 mov    0x8(%ebp),%eax ; p: Tplayer *\n  00003c31  dd4018                 fldl   0x18(%eax)\nrelocation mismatches: 0 direct-transfer/layout differences: 3\n  transfer +0x43 play_sound: target proof True; original layout operand False\n  transfer +0x65 play_sound: target proof True; original layout operand False\n  transfer +0x87 play_sound: target proof True; original layout operand False\n  storage custom: COMMON_DECLARATION_AGREES; docs/current/storage/game-main/137955.json\nNeighbor size deltas: handle_player_input: -499\nFocused card: build/fast/game-main/play_jump_sound.json\npython tools/promote_function.py game-main play_jump_sound --claim BODY_MATCH_LAYOUT_BLOCKED\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/grinder_task.py begin game-main play_jump_sound",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "seconds": 10.049,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 103, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 98, in main\n    if a.action=='begin': begin(a.target,a.function,a.verify_only,a.medium)\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 41, in begin\n    if not card['body_edit_allowed'] or card['state']=='BODY_MATCH_LAYOUT_BLOCKED': raise ValueError('Body is protected: '+card['state'])\nValueError: Body is protected: BODY_MATCH_LAYOUT_BLOCKED\n",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/promote_function.py game-scroller draw_scroller",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "seconds": 6.5,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 126, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 123, in main\n    a=ap.parse_args(); promote(a.target,a.function,a.claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 90, in promote\n    row=eligible(report,name,claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 37, in eligible\n    raise ValueError('Promotion denied: '+name+' is '+row['status']+'; first mismatch '+str(row.get('first_difference')))\nValueError: Promotion denied: draw_scroller is DIFFER; first mismatch {'offset': 93, 'original_va': 4321609, 'candidate_byte': 69, 'original_byte': 77}\n",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/grinder_task.py begin game-map getFloorData --verify-only",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "seconds": 6.213,
+      "stdout": "Task opened: src/map.c getFloorData verify-only\npython tools/check_function.py game-map getFloorData\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      }
+    },
+    {
+      "command": "python tools/promote_function.py game-map getFloorData",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "seconds": 59.397,
+      "stdout": "Recorded failure and restored only the task source; task blocked\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-map getFloorData FUNCTION_MATCH (exact function proof; no object/CU claim)\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "803c628a52de604a15eb03a9a8ccb141f03af4f5ab300d07636a0be2327f9267"
+      }
+    },
+    {
+      "command": "python tools/promote_function.py game-main play_jump_sound --claim BODY_MATCH_LAYOUT_BLOCKED",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "seconds": 61.338,
+      "stdout": "Recorded failure and restored only the task source; task blocked\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-main play_jump_sound BODY_MATCH_LAYOUT_BLOCKED (exact function proof; no object/CU claim)\n",
+      "stderr": "",
+      "ledger_before": {
+        "size": 125065,
+        "sha256": "803c628a52de604a15eb03a9a8ccb141f03af4f5ab300d07636a0be2327f9267"
+      },
+      "ledger_after": {
+        "size": 125065,
+        "sha256": "56c5ba54f608067081f5dafc7a2f88d7afe1aad5181819aeaaaaebcca8ef4351"
+      }
+    },
+    {
+      "check": "All generated headers compiled together with historical GCC; every layout assertion active",
+      "headers": 35,
+      "header_identities": {
+        "include/recovered/CSVParseContext.h": {
+          "size": 1186,
+          "sha256": "88bd76e5cbb067c71dd13cb4a5f28961569b04e1136631bc42f5a410d90dd7d0"
+        },
+        "include/recovered/FLDAdSpot.h": {
+          "size": 874,
+          "sha256": "3e5263b31865a61ca566a7068f2a1cb99a30f61d1bef826fef67a4f6b70f382b"
+        },
+        "include/recovered/HTTPHeader.h": {
+          "size": 606,
+          "sha256": "e6265ed89297ca1a4972756b4c924dfac786fc7fa2df993539d8860945cdc299"
+        },
+        "include/recovered/HTTPResponse.h": {
+          "size": 1061,
+          "sha256": "8d25b0f5a71803e70e68c17c19b48c175ec30f5b2e3265a839eb1a46c919e767"
+        },
+        "include/recovered/MEMORY_READER_STATE.h": {
+          "size": 853,
+          "sha256": "388a1192867c9abd8c83db78ead56c76725602980a102fb6d022a99e35076133"
+        },
+        "include/recovered/Tavailable_profile.h": {
+          "size": 548,
+          "sha256": "ea6cb9da63e80af685a62a9d2584e8a3f08410767ebb22893a6ee94afc46e47a"
+        },
+        "include/recovered/Tbeta.h": {
+          "size": 745,
+          "sha256": "81d9a160922d93a4ca63342cca20e163eeb294bbbfffb095b6e2714182b64202"
+        },
+        "include/recovered/Tcharacter.h": {
+          "size": 1047,
+          "sha256": "0e406185d4b4dccda968a1775c93643218a3b9f4137d0a8b2b512b7efad52bc8"
+        },
+        "include/recovered/Tcommandline.h": {
+          "size": 900,
+          "sha256": "69bb6524c5e077bde4818a5d0c3968151897fd7f9af9f497c6ff0fb8832d2e7a"
+        },
+        "include/recovered/Tcontrol.h": {
+          "size": 1318,
+          "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
+        },
+        "include/recovered/Tcustom.h": {
+          "size": 1710,
+          "sha256": "7725c0575603b21d4a73f35562ae61eaa1004d9a79f9f9b40e4be8377a37d2a1"
+        },
+        "include/recovered/Tfloor.h": {
+          "size": 935,
+          "sha256": "6680bdaee94bbea655558a489092e889697af3134a97e758b8f547d26bfed1ee"
+        },
+        "include/recovered/Tgame_data.h": {
+          "size": 2112,
+          "sha256": "6d4eea4056f58893f50228c4ad7d088357a0d34c40ee558a6e250e7747530a33"
+        },
+        "include/recovered/Tgamepad.h": {
+          "size": 830,
+          "sha256": "711b96c3de3999839758fb4ffb8c518eb1f6ddb3ec98bff20e4e5756dab03898"
+        },
+        "include/recovered/Tgd_combo.h": {
+          "size": 668,
+          "sha256": "2b924d83331be4a7ba439174feedb09c2b5e739ccc320fcc8d89e397eade9708"
+        },
+        "include/recovered/Tgd_jump_sequence.h": {
+          "size": 750,
+          "sha256": "8d15e9fd99d98cb03cc4751e1cfa185f8646653c863144538d002b7a8b2b3f27"
+        },
+        "include/recovered/Thisc.h": {
+          "size": 550,
+          "sha256": "03f19834f70fb0d3b94977ece70415863740a94e536472616458c7729e8d1a20"
+        },
+        "include/recovered/Thisc_table.h": {
+          "size": 617,
+          "sha256": "e6a9bb5525139da08a938d638109a2483b637890f44cb211093eebbdc77a835b"
+        },
+        "include/recovered/Tmap.h": {
+          "size": 559,
+          "sha256": "d9cf3bb3ccc33690a40865a2d17e6aac75448f47ddb95368104a36c6d0443ec9"
+        },
+        "include/recovered/Tmenu.h": {
+          "size": 979,
+          "sha256": "5b03709ce285034e32fd81e9670468c18e7438b90e0632d5e49bea425a78b064"
+        },
+        "include/recovered/Tmenu_char_selection.h": {
+          "size": 925,
+          "sha256": "343e9dece8303253ee187f2f781557a774d6da8612c354b1922202878aee2c8d"
+        },
+        "include/recovered/Tmenu_floor_selection.h": {
+          "size": 675,
+          "sha256": "db77d3b62791d0ae1065f370d66ddffe590bc841a58def6ad0280001d1e236b9"
+        },
+        "include/recovered/Tmenu_params.h": {
+          "size": 1177,
+          "sha256": "c948f615fda45c47c10930d85c24126a8b3c058aed0c71207fb3408ac66d3964"
+        },
+        "include/recovered/Tmenu_selection.h": {
+          "size": 747,
+          "sha256": "db63513c5419288f52f9e36d6ce745ec866b319cd611d6869c8b56dd1040a23b"
+        },
+        "include/recovered/Tmenu_slider.h": {
+          "size": 793,
+          "sha256": "b2c2dfa6a23a3a27a858e5ce92faa0083d07e7a19c214f116c538a8b25767ba7"
+        },
+        "include/recovered/Toptions.h": {
+          "size": 2510,
+          "sha256": "a9a1d0c0e5678e48781fb55f4dd90b758b51eaa6b64976527209da761179b776"
+        },
+        "include/recovered/Tparticle.h": {
+          "size": 964,
+          "sha256": "1872ac5827fb5e91ad19460a180489d743aafdfcec93d635c33f947a0ad667cc"
+        },
+        "include/recovered/Tplayer.h": {
+          "size": 3188,
+          "sha256": "1cc419a3ca8b13b27d4f7cf677b23e2fe1bf2cffb2e6cbcce9881503a0a4f15f"
+        },
+        "include/recovered/Tprofile.h": {
+          "size": 3950,
+          "sha256": "bbee5233a2c0834121794d864fa5efd8d9d1ef062d69f634049b7e70ead8a7cc"
+        },
+        "include/recovered/Trecord.h": {
+          "size": 595,
+          "sha256": "ca3ae9ecac44e663a410688a362e4455450e822a23014bc7a3c3fc67994895da"
+        },
+        "include/recovered/Treplay.h": {
+          "size": 3261,
+          "sha256": "f0e42b307eec2510e7f259b59df710ebafd95e04e63af8fb5016099c27c42c4b"
+        },
+        "include/recovered/Treplay_post.h": {
+          "size": 1156,
+          "sha256": "e13d91c1a732b124e0e0e9a39d03f0b258121c331259e8b8145c0bb72325f686"
+        },
+        "include/recovered/Tscroller.h": {
+          "size": 1421,
+          "sha256": "df11c2270dd4bba8e840bf1c32ee08f0edd0f82fba79e8279e72d9503f792fd8"
+        },
+        "include/recovered/Tstar.h": {
+          "size": 598,
+          "sha256": "dc504070e2288dcfb6311a3f6896c41d81c6e248c2b1064742466bb4bf2f6bef"
+        },
+        "include/recovered/Tstar_field.h": {
+          "size": 1257,
+          "sha256": "f3bd6acdc64b42efd9bd1bccfb3ece2b2b66b1a83b6c561ad84c1eb8e5248081"
+        }
+      }
+    }
+  ]
+}

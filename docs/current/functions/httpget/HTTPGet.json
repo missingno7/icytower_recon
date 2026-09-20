@@ -1,0 +1,404 @@
+{
+  "schema": 1,
+  "source": "src/httpget.c",
+  "target": "game-httpget",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+  "function": "HTTPGet",
+  "historical_va": "0x406194",
+  "historical_size": 27,
+  "status": "FUNCTION_MATCH",
+  "state": "BODY_MATCH_LAYOUT_BLOCKED",
+  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "body_edit_allowed": false,
+  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "prototype": "HTTPResponse * HTTPGet(const char *pURL);",
+  "return_type": "HTTPResponse *",
+  "parameters": [
+    {
+      "die": 80843,
+      "name": "pURL",
+      "type_die": 73669,
+      "type": "const char *",
+      "scope": 80809,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "2 byte block: 91 0 \t(DW_OP_fbreg: 0)",
+      "address": null
+    }
+  ],
+  "locals": [],
+  "lexical_blocks": [],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 105,
+    "body_end_line": 107,
+    "body_sha256": "317e9e43b4500cefd6b8790abbb260f84f2591c36c7887d3a423ed0850f6cd9c"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 80843,
+        "name": "pURL",
+        "type_die": 73669,
+        "type": "const char *",
+        "scope": 80809,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [
+      {
+        "variable": "pURL",
+        "original_type": "const char *",
+        "candidate_type": "char *",
+        "original_die": 80843,
+        "candidate_die": 2635,
+        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
+        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
+      }
+    ],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 27,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4219284,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219285,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219287,
+        "bytes": "83ec18",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x18,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219290,
+        "bytes": "c7442404954a4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4a95,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219298,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 80843,
+            "name": "pURL",
+            "type": "const char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "address": 2048,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2049,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2051,
+        "bytes": "83ec18",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x18,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2054,
+        "bytes": "c744240440010000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x140,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2062,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 2635,
+            "name": "pURL",
+            "type": "char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 256,
+      "address": 4219284,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 257,
+      "address": 4219290,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 258,
+      "address": 4219309,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4a95",
+      "candidate_addend": 320,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        10
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "HTTPRequest",
+      "function_offset": 21,
+      "target_va": 4219120,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        21
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4219304,
+      "bytes": "e843ffffff",
+      "mnemonic": "call",
+      "assembly": "call   4060f0 <_HTTPRequest>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 20,
+      "function_offset": 21,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "HTTPRequest",
+      "target_va": 4219120,
+      "candidate_target": 1912,
+      "candidate_displacement": -161,
+      "layout_operand_equal": false,
+      "resolved_value": 4294967107,
+      "original_value": 4294967107,
+      "equal": true,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "HTTPRequest",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2144,
+      "candidate_offset": 1912,
+      "size_delta": 0
+    },
+    {
+      "function": "HTTPHead",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2280,
+      "candidate_offset": 2076,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 45,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-httpget.json",
+  "verification_command": "python tools/check_function.py game-httpget HTTPGet",
+  "begin_command": "python tools/grinder_task.py begin game-httpget HTTPGet",
+  "promotion_command": "python tools/promote_function.py game-httpget HTTPGet --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [
+    {
+      "function": "HTTPGet",
+      "historical": [
+        {
+          "cu": "src/httpget.c",
+          "return_type": "HTTPResponse*",
+          "parameter_types": [
+            "const char*"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 80809
+        }
+      ],
+      "type_layout_issues": [
+        {
+          "position": "return",
+          "historical_type": "HTTPResponse",
+          "candidate_type": "HTTPResponse",
+          "header": "include/recovered/HTTPResponse.h",
+          "status": "MISMATCH",
+          "historical_size": 20,
+          "candidate_size": 20,
+          "member_difference_count": 3,
+          "first_member_differences": [
+            {
+              "member": "iNumHeaders",
+              "historical": {
+                "offset": 4,
+                "size": 4,
+                "type": "unsigned int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 4,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "iPayloadSize",
+              "historical": {
+                "offset": 16,
+                "size": 4,
+                "type": "unsigned int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 16,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "pHeaders",
+              "historical": {
+                "offset": 8,
+                "size": 4,
+                "type": "HTTPHeader *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 8,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/fld_adspot.c",
+          "file": "src/fld_adspot.c",
+          "line": 28
+        }
+      ],
+      "candidate_signatures": [
+        "('HTTPResponse*', ['char*'])"
+      ],
+      "candidate_card": "docs/current/interfaces/HTTPGet.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/httpget/HTTPGet.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 1,
+    "original_calls": 1,
+    "calls": 1,
+    "referenced_globals": 1
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

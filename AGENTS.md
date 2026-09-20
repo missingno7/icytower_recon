@@ -20,3 +20,11 @@ relocations. Masked equality is not FUNCTION_MATCH. Complete .text equality
 is not OBJECT_MATCH or CU_MATCH. Keep failed experiments and concrete first
 mismatches in the ledger. Do not overwrite original assets or write into the
 external research repository.
+
+
+For bounded grinder work, follow docs/grinder.md and docs/current/grinder-queue.json.
+Use grinder_task.py begin before body edits; check_function.py is FAST and
+promote_function.py is ACCEPTANCE. Never manually edit src/recovery.json.
+Never edit a FUNCTION_MATCH or BODY_MATCH_LAYOUT_BLOCKED body. Unknown relocation
+ownership is not a proven layout-only match; send it to the supervisor queue.
+Do not consume old whole-CU reports when a current focused function card exists.

@@ -1,3 +1,4 @@
+extern int new_rand(void);
 /* Complete particle.c candidate reconstructed from original DWARF and code. */
 #include <allegro.h>
 #include "particle.h"

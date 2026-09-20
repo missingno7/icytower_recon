@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Tcustom",
+  "source": "include/custom.h",
+  "sources": [
+    "include/custom.h"
+  ],
+  "changes": [
+    {
+      "file": "include/custom.h",
+      "start": 73,
+      "end": 355,
+      "before": "typedef struct {\n    char name[128];\n    BITMAP *frame[15];\n    PALETTE pal;\n    SAMPLE *jump_sound[3];\n    SAMPLE *falling;\n    SAMPLE *edge;\n    SAMPLE *yo;\n    SAMPLE *wazup;\n    SAMPLE *bg_music;\n    MIDI *bg_midi;\n    int uses_datafile;\n    DATAFILE *df;\n    int ok;\n} Tcustom;",
+      "after": "#include \"recovered/Tcustom.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tcustom.h",
+  "header_identity": {
+    "size": 1710,
+    "sha256": "7725c0575603b21d4a73f35562ae61eaa1004d9a79f9f9b40e4be8377a37d2a1"
+  },
+  "source_identities": {
+    "include/custom.h": {
+      "size": 864,
+      "sha256": "cbd883c85104871ad3d219933bdd1c998020a6193ff6f24a8b7c94ddf67aa57e"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    char name[128];\n    BITMAP *frame[15];\n    PALETTE pal;\n    SAMPLE *jump_sound[3];\n    SAMPLE *falling;\n    SAMPLE *edge;\n    SAMPLE *yo;\n    SAMPLE *wazup;\n    SAMPLE *bg_music;\n    MIDI *bg_midi;\n    int uses_datafile;\n    DATAFILE *df;\n    int ok;\n} Tcustom;",
+  "affected_targets": [
+    "game-custom",
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 239,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Tcustom",
+  "apply_command": "python tools/interface_task.py apply Tcustom",
+  "verification_command": "python tools/interface_task.py check Tcustom",
+  "promotion_command": "python tools/interface_task.py promote Tcustom",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

@@ -3,6 +3,7 @@
 The selected sources are complete CUs; unknown skeletons cannot be targets.
 """
 import argparse
+import re
 from pathlib import Path
 from common import ROOT, TC, identity, read_json, run, write_json
 
@@ -12,7 +13,7 @@ TARGETS={
     'game-particle': {'source':'src/particle.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\particle.c','default':'-O2'},
     'game-player': {'source':'src/player.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\player.c','default':'-O2'},
     'game-stars': {'source':'src/stars.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\stars.c','default':'-O2'},
-    'game-main-partial': {'source':'src/main.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\main.c','default':'-O2'},
+    'game-main': {'source':'src/main.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\main.c','default':'-O2'},
     'game-fld-adspot': {'source':'src/fld_adspot.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\fld_adspot.c','default':'-O2',
                         'flags':['-fno-toplevel-reorder']},
     'game-hisc': {'source':'src/hisc.c','historical_cu':'F:\\projects\\icytower\\trunk\\source\\hisc.c','default':'-O2'},
@@ -80,6 +81,25 @@ def verify_inputs(compiler='tdm-1'):
             if identity(ROOT/row['path'])!={k:row[k] for k in ['size','sha256']}:
                 raise ValueError('DirectX input differs: '+row['path'])
 
+def depfile_inputs(path):
+    """Read GCC make dependencies, including continuations and escaped spaces."""
+    text = Path(path).read_text().replace('\\\n', '').replace('\\\r\n', '')
+    match = re.search(r':\s', text)
+    if not match:
+        raise ValueError('Invalid GCC dependency file: ' + str(path))
+    tokens = re.findall(r'(?:\\[ #\\]|[^\s])+', text[match.end():])
+    paths = []
+    for token in tokens:
+        token = re.sub(r'\\([ #\\])', r'\1', token)
+        p = (ROOT / token).resolve()
+        p.relative_to(ROOT)  # no untracked external include inputs
+        if p not in paths:
+            paths.append(p)
+    if not paths:
+        raise ValueError('Empty GCC dependency set')
+    return paths
+
+
 def compile_target(target,flags=None,dest=None,compiler='tdm-1'):
     tc=COMPILERS[compiler]
     config=TARGETS[target]
@@ -92,15 +112,24 @@ def compile_target(target,flags=None,dest=None,compiler='tdm-1'):
     obj.unlink(missing_ok=True)
     (out/'build.json').unlink(missing_ok=True)
     args=[tc/'bin/gcc.exe',*flags,'-g','-mfpmath=387','-DALLEGRO_STATICLINK',
-          '-Iinclude','-Ithird_party/allegro-4.4.1/include','-MMD','-MF',out/'unit.d',
+          '-Iinclude','-Ithird_party/allegro-4.4.1/include','-MMD','-MF',out/'unit.d','-aux-info',out/'interfaces.aux',
           *['-I'+p for p in config.get('includes',[])],'-c',config['source'],'-o',obj]
+    # Establish the actual include closure before compilation, then reject races.
+    dep_args=[tc/'bin/gcc.exe',*flags,'-g','-mfpmath=387','-DALLEGRO_STATICLINK',
+              '-Iinclude','-Ithird_party/allegro-4.4.1/include',*['-I'+p for p in config.get('includes',[])],
+              '-MM','-MF',out/'before.d',config['source']]
+    run(dep_args,toolchain=tc)
+    before={p.relative_to(ROOT).as_posix():identity(p) for p in depfile_inputs(out/'before.d')}
     run(args,toolchain=tc)
+    after={p.relative_to(ROOT).as_posix():identity(p) for p in depfile_inputs(out/'unit.d')}
+    if before!=after:
+        obj.unlink(missing_ok=True)
+        raise ValueError('Source/dependency changed during compilation: '+target)
     run([tc/'bin/objdump.exe','-drt',obj],out/'object.txt',toolchain=tc)
-    # Record every directly maintained source/config header too. Toolchain
-    # and upstream files are individually pinned by toolchain/lock.json.
-    local_files=[ROOT/config['source'],*sorted((ROOT/'include').rglob('*.h'))]
+    local_files=depfile_inputs(out/'unit.d')
     report={'target':target,'historical_cu':config['historical_cu'],'flags':flags,'compiler':compiler,
             'command':[str(x) for x in args],'object':identity(obj),
+            'dependency_file':identity(out/'unit.d'), 'config':config, 'inputs_verified_around_compile':True,
             'toolchain_lock':identity(ROOT/'toolchain/lock.json'),
             'local_inputs':{p.relative_to(ROOT).as_posix():identity(p) for p in local_files}}
     if compiler!='tdm-1': report['candidate_toolchain_lock']=identity(ROOT/'toolchain'/f'{compiler}-lock.json')

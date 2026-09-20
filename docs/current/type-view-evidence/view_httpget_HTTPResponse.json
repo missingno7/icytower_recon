@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_httpget_HTTPResponse",
+  "source": "src/httpget.c",
+  "sources": [
+    "src/httpget.c"
+  ],
+  "alias": "HTTPResponse",
+  "observations": [
+    {
+      "function": "httpGetLastModified",
+      "variable": "pResponse",
+      "historical_type": "HTTPResponse",
+      "historical_die": 79408,
+      "candidate_die": 2742
+    },
+    {
+      "function": "destroyHTTPResponse",
+      "variable": "pResponse",
+      "historical_type": "HTTPResponse",
+      "historical_die": 79518,
+      "candidate_die": 1465
+    },
+    {
+      "function": "extractHTTPResponse",
+      "variable": "pResponse",
+      "historical_type": "HTTPResponse",
+      "historical_die": 79844,
+      "candidate_die": 1655
+    },
+    {
+      "function": "HTTPFetchInternal",
+      "variable": "rtv",
+      "historical_type": "HTTPResponse",
+      "historical_die": 80560,
+      "candidate_die": 2264
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/httpget.c": {
+      "size": 8342,
+      "sha256": "d2e4723e10b07561d11ca9b00783c08ebaef75cc4915fa2e66128e1461b7251a"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_httpget_HTTPResponse",
+  "apply_command": "python tools/interface_task.py apply view_httpget_HTTPResponse",
+  "verification_command": "python tools/interface_task.py check view_httpget_HTTPResponse",
+  "promotion_command": "python tools/interface_task.py promote view_httpget_HTTPResponse",
+  "canonical": "HTTPResponse",
+  "header": "include/recovered/HTTPResponse.h",
+  "header_identity": {
+    "size": 1061,
+    "sha256": "8d25b0f5a71803e70e68c17c19b48c175ec30f5b2e3265a839eb1a46c919e767"
+  },
+  "expected_layout": {
+    "kind": "structure_type",
+    "size": 20,
+    "type": "struct HTTPResponse",
+    "members": [
+      {
+        "name": "iStatusCode",
+        "offset": 0,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "int",
+          "encoding": "5\t(signed)"
+        }
+      },
+      {
+        "name": "iNumHeaders",
+        "offset": 4,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "unsigned int",
+          "encoding": "7\t(unsigned)"
+        }
+      },
+      {
+        "name": "pHeaders",
+        "offset": 8,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "HTTPHeader *"
+        }
+      },
+      {
+        "name": "pPayload",
+        "offset": 12,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "unsigned char *"
+        }
+      },
+      {
+        "name": "iPayloadSize",
+        "offset": 16,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "unsigned int",
+          "encoding": "7\t(unsigned)"
+        }
+      }
+    ]
+  },
+  "candidate_size": 20,
+  "historical_size": 20,
+  "member_correspondence": [
+    {
+      "candidate_member": "iStatusCode",
+      "candidate_offset": 0,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iStatusCode",
+        "offset": 0,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "iStatusCode",
+            "index": 0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "iNumHeaders",
+      "candidate_offset": 4,
+      "candidate_type": "unsigned int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iNumHeaders",
+        "offset": 4,
+        "size": 4,
+        "kind": "base_type",
+        "type": "unsigned int",
+        "encoding": "7\t(unsigned)",
+        "steps": [
+          {
+            "member": "iNumHeaders",
+            "index": 1
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "pHeaders",
+      "candidate_offset": 8,
+      "candidate_type": "HTTPHeader *",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.pHeaders",
+        "offset": 8,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "HTTPHeader *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "pHeaders",
+            "index": 2
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "pPayload",
+      "candidate_offset": 12,
+      "candidate_type": "unsigned char *",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.pPayload",
+        "offset": 12,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "unsigned char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "pPayload",
+            "index": 3
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "iPayloadSize",
+      "candidate_offset": 16,
+      "candidate_type": "unsigned int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iPayloadSize",
+        "offset": 16,
+        "size": 4,
+        "kind": "base_type",
+        "type": "unsigned int",
+        "encoding": "7\t(unsigned)",
+        "steps": [
+          {
+            "member": "iPayloadSize",
+            "index": 4
+          }
+        ]
+      }
+    }
+  ],
+  "reason": "View has uses outside its owning source"
+}

@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_replay_Treplay_post",
+  "source": "src/replay.c",
+  "sources": [
+    "src/replay.c"
+  ],
+  "alias": "Treplay_post",
+  "observations": [
+    {
+      "function": "draw_replay_selector",
+      "variable": "file_list",
+      "historical_type": "Treplay_post",
+      "historical_die": 222270,
+      "candidate_die": 12431
+    },
+    {
+      "function": "my_strcmp",
+      "variable": "a",
+      "historical_type": "Treplay_post",
+      "historical_die": 224560,
+      "candidate_die": 11828
+    },
+    {
+      "function": "my_strcmp",
+      "variable": "b",
+      "historical_type": "Treplay_post",
+      "historical_die": 224570,
+      "candidate_die": 11838
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/replay.c": {
+      "size": 24185,
+      "sha256": "d98d4e45948810a174826c20b027b7632b30c29a290e5636369c3294129e85d7"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_replay_Treplay_post",
+  "apply_command": "python tools/interface_task.py apply view_replay_Treplay_post",
+  "verification_command": "python tools/interface_task.py check view_replay_Treplay_post",
+  "promotion_command": "python tools/interface_task.py promote view_replay_Treplay_post",
+  "canonical": "Treplay_post",
+  "header": "include/recovered/Treplay_post.h",
+  "header_identity": {
+    "size": 1156,
+    "sha256": "e13d91c1a732b124e0e0e9a39d03f0b258121c331259e8b8145c0bb72325f686"
+  },
+  "expected_layout": {
+    "kind": "structure_type",
+    "size": 24,
+    "type": "struct {\n    char *full_path;\n    char directory;\n    char parent;\n    int version;\n    int score;\n    int floor;\n    int combo;\n} ",
+    "members": [
+      {
+        "name": "full_path",
+        "offset": 0,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "char *"
+        }
+      },
+      {
+        "name": "directory",
+        "offset": 4,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 1,
+          "type": "char",
+          "encoding": "6\t(signed char)"
+        }
+      },
+      {
+        "name": "parent",
+        "offset": 5,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 1,
+          "type": "char",
+          "encoding": "6\t(signed char)"
+        }
+      },
+      {
+        "name": "version",
+        "offset": 8,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "int",
+          "encoding": "5\t(signed)"
+        }
+      },
+      {
+        "name": "score",
+        "offset": 12,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "int",
+          "encoding": "5\t(signed)"
+        }
+      },
+      {
+        "name": "floor",
+        "offset": 16,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "int",
+          "encoding": "5\t(signed)"
+        }
+      },
+      {
+        "name": "combo",
+        "offset": 20,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "int",
+          "encoding": "5\t(signed)"
+        }
+      }
+    ]
+  },
+  "candidate_size": 24,
+  "historical_size": 24,
+  "member_correspondence": [
+    {
+      "candidate_member": "full_path",
+      "candidate_offset": 0,
+      "candidate_type": "char *",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.full_path",
+        "offset": 0,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "full_path",
+            "index": 0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "directory",
+      "candidate_offset": 4,
+      "candidate_type": "char",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.directory",
+        "offset": 4,
+        "size": 1,
+        "kind": "base_type",
+        "type": "char",
+        "encoding": "6\t(signed char)",
+        "steps": [
+          {
+            "member": "directory",
+            "index": 1
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "parent",
+      "candidate_offset": 5,
+      "candidate_type": "char",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.parent",
+        "offset": 5,
+        "size": 1,
+        "kind": "base_type",
+        "type": "char",
+        "encoding": "6\t(signed char)",
+        "steps": [
+          {
+            "member": "parent",
+            "index": 2
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "reserved",
+      "candidate_offset": 6,
+      "candidate_type": "char [2]",
+      "historical_field_at_offset": null
+    },
+    {
+      "candidate_member": "version",
+      "candidate_offset": 8,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.version",
+        "offset": 8,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "version",
+            "index": 3
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "score",
+      "candidate_offset": 12,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.score",
+        "offset": 12,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "score",
+            "index": 4
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "floor",
+      "candidate_offset": 16,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.floor",
+        "offset": 16,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "floor",
+            "index": 5
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "combo",
+      "candidate_offset": 20,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Treplay_post.combo",
+        "offset": 20,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "combo",
+            "index": 6
+          }
+        ]
+      }
+    }
+  ],
+  "reason": "Non-pointer or size-dependent view use requires supervisor review"
+}

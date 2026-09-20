@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "task_kind": "LOCAL_DECLARATION",
+  "function": "decl_menu_handle_menu_data",
+  "target_function": "handle_menu",
+  "source": "src/menu.c",
+  "sources": [
+    "src/menu.c"
+  ],
+  "target": "game-menu",
+  "variable": "data",
+  "original_constant_value": null,
+  "original": {
+    "die": 159840,
+    "name": "data",
+    "type_die": 147725,
+    "type": "void *",
+    "scope": 159624,
+    "base_type": null,
+    "base_encoding": null,
+    "location": "2 byte block: 75 64 \t(DW_OP_breg5 (ebp): -28)",
+    "address": null
+  },
+  "candidate": {
+    "die": 9026,
+    "name": "data",
+    "type_die": 79,
+    "type": "int",
+    "scope": 8798,
+    "base_type": "int",
+    "base_encoding": "5\t(signed)",
+    "location": "2 byte block: 75 64 \t(DW_OP_breg5 (ebp): -28)",
+    "address": null,
+    "role": "DW_TAG_variable",
+    "declaration_line": 462,
+    "declaration_file": "src/menu.c",
+    "byte_size": 4,
+    "constant_value": null,
+    "function_scope": true
+  },
+  "expected_declaration": "void *data",
+  "status": "LOCAL_TYPE_DIFFERS",
+  "state": "LOCAL_DECLARATION_REPAIR",
+  "difference_class": "LOCAL_TYPE_DECLARATION",
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "body_edit_allowed": false,
+  "changes": [],
+  "source_identities": {
+    "src/menu.c": {
+      "size": 16022,
+      "sha256": "3ee94a954330da897e66fc9d114ec959fbf59b5e7d689955aad7b1afac445d59"
+    }
+  },
+  "function_status": "DIFFER",
+  "first_difference": {
+    "offset": 14,
+    "original_va": 4291890,
+    "candidate_byte": 16,
+    "original_byte": 12
+  },
+  "function_card": "docs/current/functions/menu/handle_menu.json",
+  "begin_command": "python tools/interface_task.py begin decl_menu_handle_menu_data",
+  "apply_command": "python tools/interface_task.py apply decl_menu_handle_menu_data",
+  "verification_command": "python tools/interface_task.py check decl_menu_handle_menu_data",
+  "promotion_command": "python tools/interface_task.py promote decl_menu_handle_menu_data",
+  "acceptance": "Complete DWARF declaration equality plus unchanged emitted contributions, or strict exact target-function proof with preserved non-code contributions. No partial machine-code match claim.",
+  "declaration_evidence": {
+    "line": 462,
+    "before": "int data",
+    "after": "void *data"
+  },
+  "reason": "Storage width, pointer topology or array extent changes need supervisor source review"
+}

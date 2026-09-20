@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "save_profile",
+  "source": "src/profile.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/profile.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Tprofile*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 199329
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tprofile",
+      "candidate_type": "Tprofile",
+      "header": "include/recovered/Tprofile.h",
+      "status": "MISMATCH",
+      "historical_size": 1360,
+      "candidate_size": 1328,
+      "member_difference_count": 9,
+      "first_member_differences": [
+        {
+          "member": "best_replay_names",
+          "historical": {
+            "offset": 220,
+            "size": 1024,
+            "type": "char [32][32]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "creationDate",
+          "historical": {
+            "offset": 1328,
+            "size": 16,
+            "type": "char [16]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "header",
+          "historical": {
+            "offset": 0,
+            "size": 6,
+            "type": "char [6]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 0,
+            "size": 6,
+            "type": "unsigned char [6]",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "last_avatar",
+          "historical": {
+            "offset": 1252,
+            "size": 64,
+            "type": "char [64]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "reserved1",
+          "historical": null,
+          "candidate": {
+            "offset": 176,
+            "size": 1068,
+            "type": "unsigned char [1068]",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "reserved2",
+          "historical": null,
+          "candidate": {
+            "offset": 1252,
+            "size": 64,
+            "type": "unsigned char [64]",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/main.c",
+      "file": "src/main.c",
+      "line": 555
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check save_profile",
+  "begin_command": "python tools/interface_task.py begin save_profile",
+  "apply_command": "python tools/interface_task.py apply save_profile",
+  "promotion_command": "python tools/interface_task.py promote save_profile",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

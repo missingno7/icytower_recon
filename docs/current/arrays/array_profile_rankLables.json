@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "task_kind": "ARRAY_EXTENT",
+  "function": "array_profile_rankLables",
+  "object": "rankLables",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 260,
+  "state": "ARRAY_EXTENT_REPAIR",
+  "status": "ARRAY_EXTENT_DIFFERS",
+  "difference_class": "DWARF_ARRAY_EXTENT",
+  "body_edit_allowed": false,
+  "changes": [
+    {
+      "file": "src/profile.c",
+      "start": 1617,
+      "end": 1619,
+      "before": "16",
+      "after": "12",
+      "reason": "Use the unique original DWARF array extent; preserve every initializer and body"
+    }
+  ],
+  "historical_owner": {
+    "name": "rankLables",
+    "scope": [
+      "GLOBAL"
+    ],
+    "candidate_die": 5765,
+    "candidate_offset": 32,
+    "section_index": 2,
+    "section": ".data",
+    "size": 64,
+    "original_va": 4971488,
+    "original_die": 201753,
+    "dwarf_type": "char *[12]",
+    "candidate_type": "char *[16]",
+    "reason": "DWARF type/size/member layout differs or is incomplete"
+  },
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin array_profile_rankLables",
+  "apply_command": "python tools/interface_task.py apply array_profile_rankLables",
+  "verification_command": "python tools/interface_task.py check array_profile_rankLables",
+  "promotion_command": "python tools/interface_task.py promote array_profile_rankLables",
+  "expected_count": 12,
+  "current_count": 16,
+  "affected_targets": [
+    "game-profile"
+  ],
+  "reason": "One builtin array extent differs; original DWARF and exact object initializer are acceptance requirements.",
+  "edit_scope": "Only generated bound digits. Require complete original type/initializer ownership and unchanged emitted contributions."
+}

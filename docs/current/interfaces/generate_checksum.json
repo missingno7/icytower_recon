@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "generate_checksum",
+  "source": "src/hisc.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/hisc.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Thisc*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 69086
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check generate_checksum",
+  "begin_command": "python tools/interface_task.py begin generate_checksum",
+  "apply_command": "python tools/interface_task.py apply generate_checksum",
+  "promotion_command": "python tools/interface_task.py promote generate_checksum",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Requires type/return/body interpretation: Thisc_post* -> Thisc*",
+  "priority": -20
+}

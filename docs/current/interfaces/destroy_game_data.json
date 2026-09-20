@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "destroy_game_data",
+  "source": "src/game_data.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/game_data.c",
+      "return_type": "void",
+      "parameter_types": [
+        "Tgame_data*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 57095
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tgame_data",
+      "candidate_type": "void",
+      "header": "include/recovered/Tgame_data.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/game_data.c",
+      "file": "src/game_data.c",
+      "line": 149
+    },
+    {
+      "position": "parameter 1",
+      "historical_type": "Tgame_data",
+      "candidate_type": "Tgame_data",
+      "header": "include/recovered/Tgame_data.h",
+      "status": "MISMATCH",
+      "historical_size": 120084,
+      "candidate_size": 4,
+      "member_difference_count": 14,
+      "first_member_differences": [
+        {
+          "member": "biggest_lost_combo",
+          "historical": {
+            "offset": 20,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "ccc",
+          "historical": {
+            "offset": 24,
+            "size": 20,
+            "type": "int [5]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "combo",
+          "historical": {
+            "offset": 12,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "comboPosts",
+          "historical": {
+            "offset": 64,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "combos",
+          "historical": {
+            "offset": 68,
+            "size": 60000,
+            "type": "Tgd_combo [5000]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "floor",
+          "historical": {
+            "offset": 8,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/main.c",
+      "file": "src/main.c",
+      "line": 777
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check destroy_game_data",
+  "begin_command": "python tools/interface_task.py begin destroy_game_data",
+  "apply_command": "python tools/interface_task.py apply destroy_game_data",
+  "promotion_command": "python tools/interface_task.py promote destroy_game_data",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

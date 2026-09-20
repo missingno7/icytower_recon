@@ -12,6 +12,9 @@ from common import ROOT, identity, read_json, run, write_json
 from binary import Binary
 from dwarf import parse
 from build import TARGETS, COMPILERS, verify_inputs, compile_target
+from instructions import decode, zero_clear_projection
+from data_owners import independent_owners, resolve_owner
+from control_transfers import resolve as resolve_transfers,tail_layout,complete_stream
 
 def original_contributions(exe, cu_file, text_va):
     """Select one COFF FILE group by filename AND its text contribution VA."""
@@ -33,8 +36,26 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     cu=next(c for c in read_json(ROOT/'evidence/census/compilation-units.json') if c['path']==cu_path)
     text=next(s for s in obj.sections if s['name']=='.text')
     raw=obj.section_bytes(text)
+    decoded=decode(obj_path, analysis_objdump)
+    boundaries={i['address']: i for i in decoded}
     dies,_=parse(run([analysis_objdump,'--dwarf=info',obj_path],obj_path.parent/'dwarf.txt'))
     candidates={d['name']:d for d in dies.values() if d['tag']=='DW_TAG_subprogram' and d['low_pc'] is not None and d['high_pc'] is not None}
+    entry_targets={d['low_pc'] for d in candidates.values()}
+    forbidden=[]
+    for d in candidates.values():
+        if any(d['low_pc']<=i['address']<d['high_pc'] and i['mnemonic'].startswith('j') and '*' in i['assembly'] for i in decoded):
+            forbidden.append((d['low_pc'],d['high_pc']))
+    for relocation in obj.relocations:
+        symbol=obj.by_index[relocation['symbol_index']]
+        if symbol['section']==text['index']:
+            section=next(s for s in obj.sections if s['index']==relocation['section'])
+            content=obj.section_bytes(section); off=relocation['offset']
+            if off+4<=len(content):
+                addend=struct.unpack_from('<I',content,off)[0]
+                entry_targets.update((addend, symbol['value']+addend))
+        if relocation['section']==text['index']:
+            entry_targets.update(range(relocation['offset'],relocation['offset']+4))
+    zero_projection=zero_clear_projection(raw,decoded,entry_targets,forbidden)
     original_by_name={f['name']:f for f in original}
     def masked_code_equal(d,f):
         """Compare code shape without consulting relocation operands."""
@@ -82,6 +103,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     for line in (ROOT/'evidence/census/dwarf-dies.jsonl').read_text(encoding='utf-8').splitlines():
         d=json.loads(line)
         original_dies[d['offset']]=d
+    object_owners=independent_owners(obj,exe,dies,original_dies,cu_path)
     static_evidence=[]
     for d in dies.values():
         if d['tag']!='DW_TAG_variable' or d['address'] is None: continue
@@ -190,6 +212,8 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                 return original_by_name[d['name']]['va']+addend-d['low_pc'],'function-relative .text'
             return None,'unknown .text addend'
         if sym['name'].startswith('.') and sym['section']>0:
+            owned=resolve_owner(object_owners,sym['section'],addend)
+            if owned is not None: return owned,'independent DWARF/COFF object owner and complete initializer'
             bases=section_bases.get(sym['section'],set())
             if len(bases)==1: return next(iter(bases))+addend,'independent section base (COFF ownership, symbol, or unique content)'
             return None,'section base not independently established'
@@ -201,6 +225,23 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         # COFF common-symbol value is allocation size, NOT an address/addend.
         adjustment=sym['value'] if sym['section']>0 else 0
         return next(iter(addresses))+addend-adjustment,'named symbol'
+    def initializer_target(sym,addend):
+        target,reason=target_address(sym,addend)
+        if target is None:
+            literal=unique_literal_target(sym,addend,b'')
+            if literal is not None: return literal,'unique read-only initializer literal or table content'
+        return target,reason
+    # Start with fully proved leaf objects. Pointer-containing objects can then
+    # become owners only after every initializer relocation resolves without
+    # consulting the original pointer field or any tested instruction operand.
+    for _ in range(len(dies)+1):
+        updated=independent_owners(obj,exe,dies,original_dies,cu_path,initializer_target)
+        key=lambda o:(tuple(o['scope']),o['name'],o['candidate_offset'],o['original_va'])
+        before={key(o) for o in object_owners['accepted']}; after={key(o) for o in updated['accepted']}
+        if before-after: raise ValueError('Conflicting independently resolved initializer ownership')
+        object_owners=updated
+        if after==before: break
+    else: raise ValueError('Initializer ownership did not converge')
     data_evidence=[]
     # Anonymous constants/jump tables have no public symbols. Resolve their
     # own relocations first and locate the ENTIRE contribution by unique
@@ -273,34 +314,34 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             if p+4<=len(masked_ref): masked_ref[p:p+4]=b'\0'*4
             relocs.append({**r,'function_offset':p,'addend':addend,'target_va':target,'resolution':reason,
                            'resolved_value':expected,'original_value':actual,'equal':expected is not None and expected==actual})
-        # GCC resolves calls and tail jumps within the same COFF .text section
-        # directly, so they have no relocation records.  Map only E8/E9 rel32
-        # transfers that land exactly on a candidate function with a unique
-        # historical function identity; this is independent of the operand
-        # being verified and mirrors the named-symbol resolution above.
-        direct_transfers=[]
-        for op in range(len(code)-4):
-            if code[op] not in (0xe8,0xe9) or op+1 in relocation_offsets: continue
-            p=op+1
-            displacement=struct.unpack_from('<i',code,p)[0]
-            target=candidate_by_start.get(low+op+5+displacement)
-            if target is None or target['name'] not in original_by_name: continue
-            expected=(original_by_name[target['name']]['va']-f['va']-p-4)&0xffffffff
-            actual=struct.unpack_from('<I',reference,p)[0] if p+4<=len(reference) else None
-            struct.pack_into('<I',code,p,expected)
-            direct_transfers.append({'function_offset':p,'opcode':code[op],
-                'target_function':target['name'],'target_va':original_by_name[target['name']]['va'],
-                'resolved_value':expected,'original_value':actual,'equal':expected==actual})
+        # Every decoded relative edge to a CU function entry is independently
+        # resolved, including rel8 JMP/Jcc. Internal basic-block edges remain raw.
+        direct_transfers=resolve_transfers(code,reference,low,high,f['va'],list(boundaries.values()),list(candidates.values()),original,relocs)
+        body_masked=bytearray(code)
+        body_reference=bytearray(reference)
+        for r in relocs:
+            p=r['function_offset']
+            body_masked[p:p+4]=b'\0'*4
+            if p+4<=len(body_reference): body_reference[p:p+4]=b'\0'*4
+        body_shape_equal=body_masked==body_reference
         masked_equal=masked==masked_ref
-        exact=code==reference and all(r['equal'] for r in relocs) and all(t['equal'] for t in direct_transfers)
+        function_instructions=[i for i in decoded if low<=i['address']<high]
+        boundaries_verified=complete_stream(function_instructions,low,high-low)==raw[low:high]
+        exact=boundaries_verified and code==reference and all(r['equal'] for r in relocs) and all(t['equal'] for t in direct_transfers)
         differences=[i for i,(x,y) in enumerate(zip(code,reference)) if x!=y]
         first=differences[0] if differences else min(len(code),len(reference)) if len(code)!=len(reference) else None
         rows.append({'name':f['name'],'va':f['va'],'original_size':f['size'],'candidate_offset':low,'candidate_size':high-low,
-                     'relative_layout_equal':low==f['va']-cu['low_pc'], 'masked_equal':masked_equal,
+                     'relative_layout_equal':low==f['va']-cu['low_pc'], 'masked_equal':masked_equal, 'body_shape_equal':body_shape_equal,
                      'relocation_resolved_equal':exact,'relocations':relocs,'direct_transfers':direct_transfers,
+                     'difference_offsets':differences, 'instruction_boundaries_verified':boundaries_verified,
+                     'instructions':function_instructions,
                      'first_difference':None if first is None else {'offset':first,'original_va':f['va']+first,
                          'candidate_byte':code[first] if first<len(code) else None,'original_byte':reference[first] if first<len(reference) else None},
                      'status':'FUNCTION_MATCH' if exact else 'CODEGEN_SIMILAR' if masked_equal else 'DIFFER'})
+        rows[-1]['tail_jump_layout']=None
+        if abs((high-low)-f['size'])==3:
+            old_instructions=decode(exe_path,analysis_objdump,f['va'],f['va']+f['size'])
+            rows[-1]['tail_jump_layout']=tail_layout(rows[-1],old_instructions,list(candidates.values()),original,reference=reference)
     extras=sorted(set(candidates)-set(original_by_name))
     layout=all(r.get('relative_layout_equal',False) for r in rows) and not extras
     resolved=bytearray(raw)
@@ -319,14 +360,14 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     logical_size=struct.unpack_from('<I',bytes.fromhex(sectionsym['aux_hex']))[0]
     whole=layout and logical_size==span and not unresolved and resolved[:span]==exe.at_va(cu['low_pc'],span)
     return {'historical_cu':cu_path,'original_cu_span':span,'candidate_text_logical_size':logical_size,
-            'candidate_text_raw_size':len(raw),'functions':rows,'extra_functions':extras,
+            'candidate_text_raw_size':len(raw),'candidate_zero_clear_projection':zero_projection,'functions':rows,'extra_functions':extras,
             'functions_total':len(original),'function_matches':sum(r['status']=='FUNCTION_MATCH' for r in rows),
             'masked_matches':sum(r.get('masked_equal',False) for r in rows),
             'whole_text_contribution_equal':whole,'relative_layout_equal':layout,'unresolved_text_relocations':unresolved,
             'object_sections':obj.sections,'object_symbols':obj.symbols,'object_relocations':obj.relocations,
             'common_allocations':[s for s in obj.symbols if s['section']==0 and s['value']>0],
             'initialized_data_comparison':data_evidence,
-            'static_data_evidence':static_evidence,
+            'static_data_evidence':static_evidence,'object_ownership':object_owners,
             'original_defined_globals':[g for g in read_json(ROOT/'evidence/census/globals.json') if g['cu']==cu_path and g['address'] is not None],
             'object_match':False,'cu_match':False,
             'limits':['Original .o files unavailable; original relocation records cannot be compared directly.',

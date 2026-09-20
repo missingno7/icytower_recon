@@ -1,0 +1,356 @@
+{
+  "schema": 1,
+  "source": "src/timecompat.c",
+  "target": "game-timecompat",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\timecompat.c",
+  "function": "timegm",
+  "historical_va": "0x41fe50",
+  "historical_size": 84,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "time_t timegm(struct tm *ptm);",
+  "return_type": "time_t",
+  "parameters": [
+    {
+      "die": 262183,
+      "name": "ptm",
+      "type_die": 262262,
+      "type": "struct tm *",
+      "scope": 262151,
+      "base_type": "tm",
+      "base_encoding": null,
+      "location": "2 byte block: 91 0 \t(DW_OP_fbreg: 0)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 262197,
+      "name": "now",
+      "type_die": 261940,
+      "type": "time_t",
+      "scope": 262151,
+      "base_type": "long int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xc4ab (location list)",
+      "address": null
+    },
+    {
+      "die": 262212,
+      "name": "nowlocal",
+      "type_die": 261940,
+      "type": "time_t",
+      "scope": 262151,
+      "base_type": "long int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xc4ca (location list)",
+      "address": null
+    },
+    {
+      "die": 262232,
+      "name": "nowgm",
+      "type_die": 261940,
+      "type": "time_t",
+      "scope": 262151,
+      "base_type": "long int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xc4dd (location list)",
+      "address": null
+    },
+    {
+      "die": 262249,
+      "name": "diff",
+      "type_die": 261904,
+      "type": "int",
+      "scope": 262151,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    }
+  ],
+  "lexical_blocks": [],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 8,
+    "body_end_line": 15,
+    "body_sha256": "6c10560cc590722635c897bdd0d6358a843f6227952431f35d8ec5870be78d1d"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 262249,
+        "name": "diff",
+        "type_die": 261904,
+        "type": "int",
+        "scope": 262151,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 84,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4324944,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4324945,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4324947,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4324948,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4324949,
+        "bytes": "83ec20",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x20,%esp",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 0,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 3,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5,
+        "bytes": "83ec20",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x20,%esp",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 7,
+      "address": 4324944,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 8,
+      "address": 4324952,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 9,
+      "address": 4324967,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 10,
+      "address": 4324988,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 13,
+      "address": 4325006,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timecompat.c",
+      "file": "timecompat.c",
+      "line": 14,
+      "address": 4325021,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [],
+  "calls": [
+    {
+      "symbol": "_time",
+      "function_offset": 16,
+      "target_va": 4959608,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        16
+      ]
+    },
+    {
+      "symbol": "_localtime",
+      "function_offset": 30,
+      "target_va": 4959736,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        30
+      ]
+    },
+    {
+      "symbol": "_mktime",
+      "function_offset": 38,
+      "target_va": 4959792,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        38,
+        56,
+        69
+      ]
+    },
+    {
+      "symbol": "_gmtime",
+      "function_offset": 48,
+      "target_va": 4959784,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        48
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4324959,
+      "bytes": "e814af0900",
+      "mnemonic": "call",
+      "assembly": "call   4bad78 <_time>"
+    },
+    {
+      "address": 4324973,
+      "bytes": "e886af0900",
+      "mnemonic": "call",
+      "assembly": "call   4badf8 <_localtime>"
+    },
+    {
+      "address": 4324981,
+      "bytes": "e8b6af0900",
+      "mnemonic": "call",
+      "assembly": "call   4bae30 <_mktime>"
+    },
+    {
+      "address": 4324991,
+      "bytes": "e8a4af0900",
+      "mnemonic": "call",
+      "assembly": "call   4bae28 <_gmtime>"
+    },
+    {
+      "address": 4324999,
+      "bytes": "e8a4af0900",
+      "mnemonic": "call",
+      "assembly": "call   4bae30 <_mktime>"
+    },
+    {
+      "address": 4325012,
+      "bytes": "e897af0900",
+      "mnemonic": "call",
+      "assembly": "call   4bae30 <_mktime>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 0,
+  "neighbor_layout": [],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 38,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-timecompat.json",
+  "verification_command": "python tools/check_function.py game-timecompat timegm",
+  "begin_command": "python tools/grinder_task.py begin game-timecompat timegm",
+  "promotion_command": "python tools/promote_function.py game-timecompat timegm",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/timecompat/timegm.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 6,
+    "calls": 6,
+    "referenced_globals": 0
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

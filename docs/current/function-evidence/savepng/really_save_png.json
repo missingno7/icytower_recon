@@ -1,0 +1,2737 @@
+{
+  "schema": 1,
+  "source": "src/savepng.c",
+  "target": "game-savepng",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+  "function": "really_save_png",
+  "historical_va": "0x41e8b0",
+  "historical_size": 1870,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "int really_save_png(PACKFILE *fp, BITMAP *bmp, const RGB *pal);",
+  "return_type": "int",
+  "parameters": [
+    {
+      "die": 242021,
+      "name": "fp",
+      "type_die": 242734,
+      "type": "PACKFILE *",
+      "scope": 241981,
+      "base_type": "PACKFILE",
+      "base_encoding": null,
+      "location": "0xb28a (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45706,
+        "entries": [
+          {
+            "offset": 45706,
+            "begin": 8,
+            "end": 55,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 45725
+      }
+    },
+    {
+      "die": 242035,
+      "name": "bmp",
+      "type_die": 239924,
+      "type": "BITMAP *",
+      "scope": 241981,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0xb29d (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45725,
+        "entries": [
+          {
+            "offset": 45725,
+            "begin": 8,
+            "end": 108,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 45736,
+            "begin": 461,
+            "end": 472,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 45747,
+            "begin": 733,
+            "end": 772,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 45758,
+            "begin": 960,
+            "end": 1096,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 45769,
+            "begin": 1141,
+            "end": 1355,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 45780,
+            "begin": 1355,
+            "end": 1404,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 45791,
+            "begin": 1467,
+            "end": 1583,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 45802,
+            "begin": 1583,
+            "end": 1831,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 45813,
+            "begin": 1860,
+            "end": 1878,
+            "kind": "range",
+            "expression_hex": "52"
+          }
+        ],
+        "end_offset": 45832
+      }
+    },
+    {
+      "die": 242050,
+      "name": "pal",
+      "type_die": 242740,
+      "type": "const RGB *",
+      "scope": 241981,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "0xb308 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45832,
+        "entries": [
+          {
+            "offset": 45832,
+            "begin": 8,
+            "end": 108,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 45843,
+            "begin": 461,
+            "end": 472,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 45854,
+            "begin": 1860,
+            "end": 1878,
+            "kind": "range",
+            "expression_hex": "51"
+          }
+        ],
+        "end_offset": 45873
+      }
+    }
+  ],
+  "locals": [
+    {
+      "die": 242065,
+      "name": "png_ptr",
+      "type_die": 233437,
+      "type": "png_structp",
+      "scope": 241981,
+      "base_type": "png_struct_def",
+      "base_encoding": null,
+      "location": "0xb331 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45873,
+        "entries": [
+          {
+            "offset": 45873,
+            "begin": 45,
+            "end": 119,
+            "kind": "range",
+            "expression_hex": "7564"
+          },
+          {
+            "offset": 45885,
+            "begin": 119,
+            "end": 127,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 45896,
+            "begin": 127,
+            "end": 1878,
+            "kind": "range",
+            "expression_hex": "7564"
+          }
+        ],
+        "end_offset": 45916
+      }
+    },
+    {
+      "die": 242080,
+      "name": "info_ptr",
+      "type_die": 229906,
+      "type": "png_infop",
+      "scope": 241981,
+      "base_type": "png_info_struct",
+      "base_encoding": null,
+      "location": "0xb35c (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45916,
+        "entries": [
+          {
+            "offset": 45916,
+            "begin": 52,
+            "end": 138,
+            "kind": "range",
+            "expression_hex": "7560"
+          },
+          {
+            "offset": 45928,
+            "begin": 138,
+            "end": 141,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 45939,
+            "begin": 141,
+            "end": 1878,
+            "kind": "range",
+            "expression_hex": "7560"
+          }
+        ],
+        "end_offset": 45959
+      }
+    },
+    {
+      "die": 242100,
+      "name": "depth",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 241981,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 c4 79 \t(DW_OP_breg5 (ebp): -828)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242117,
+      "name": "colour_type",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 241981,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242210,
+      "name": "depth",
+      "type_die": 239508,
+      "type": "const int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242219,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242205,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242224,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 d4 79 \t(DW_OP_breg5 (ebp): -812)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242233,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb387 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 45959,
+        "entries": [
+          {
+            "offset": 45959,
+            "begin": 1184,
+            "end": 1210,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 45970,
+            "begin": 1283,
+            "end": 1287,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 45981,
+            "begin": 1287,
+            "end": 1293,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 45992,
+            "begin": 1293,
+            "end": 1311,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 46003,
+            "begin": 1602,
+            "end": 1604,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 46014,
+            "begin": 1604,
+            "end": 1708,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 46025,
+            "begin": 1726,
+            "end": 1728,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 46036,
+            "begin": 1728,
+            "end": 1831,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 46055
+      }
+    },
+    {
+      "die": 242251,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242242,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0xb3e7 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46055,
+        "entries": [
+          {
+            "offset": 46055,
+            "begin": 1141,
+            "end": 1404,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 46066,
+            "begin": 1583,
+            "end": 1710,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 46077,
+            "begin": 1724,
+            "end": 1831,
+            "kind": "range",
+            "expression_hex": "56"
+          }
+        ],
+        "end_offset": 46096
+      }
+    },
+    {
+      "die": 242273,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242260,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb410 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46096,
+        "entries": [
+          {
+            "offset": 46096,
+            "begin": 1215,
+            "end": 1270,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 46115
+      }
+    },
+    {
+      "die": 242323,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242314,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb423 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46115,
+        "entries": [
+          {
+            "offset": 46115,
+            "begin": 1753,
+            "end": 1805,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 46134
+      }
+    },
+    {
+      "die": 242373,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242364,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb436 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46134,
+        "entries": [
+          {
+            "offset": 46134,
+            "begin": 1629,
+            "end": 1682,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 46153
+      }
+    },
+    {
+      "die": 242451,
+      "name": "palette",
+      "type_die": 242751,
+      "type": "png_color [256]",
+      "scope": 242438,
+      "base_type": "png_color_struct",
+      "base_encoding": null,
+      "location": "3 byte block: 91 d8 79 \t(DW_OP_fbreg: -808)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242466,
+      "name": "i",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242518,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242505,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb449 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46153,
+        "entries": [
+          {
+            "offset": 46153,
+            "begin": 725,
+            "end": 772,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 46164,
+            "begin": 1355,
+            "end": 1403,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 46183
+      }
+    },
+    {
+      "die": 242537,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242528,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242542,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242528,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb467 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46183,
+        "entries": [
+          {
+            "offset": 46183,
+            "begin": 1355,
+            "end": 1403,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 46194,
+            "begin": 1467,
+            "end": 1583,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 46213
+      }
+    },
+    {
+      "die": 242551,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242528,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb485 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46213,
+        "entries": [
+          {
+            "offset": 46213,
+            "begin": 1457,
+            "end": 1467,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 46224,
+            "begin": 1467,
+            "end": 1488,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 46235,
+            "begin": 1525,
+            "end": 1561,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 46254
+      }
+    },
+    {
+      "die": 242565,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242560,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242643,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242634,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242648,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242634,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4ae (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46254,
+        "entries": [
+          {
+            "offset": 46254,
+            "begin": 960,
+            "end": 1118,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 46265,
+            "begin": 1355,
+            "end": 1403,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 46284
+      }
+    },
+    {
+      "die": 242657,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242634,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4cc (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46284,
+        "entries": [
+          {
+            "offset": 46284,
+            "begin": 950,
+            "end": 958,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 46303
+      }
+    },
+    {
+      "die": 242671,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242666,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 242689,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242680,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4df (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 46303,
+        "entries": [
+          {
+            "offset": 46303,
+            "begin": 999,
+            "end": 1040,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 46322
+      }
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 242150,
+      "parent": 241981,
+      "low_pc": 4319452,
+      "high_pc": 4319463,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242175,
+      "parent": 241981,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1448",
+      "range_list": {
+        "offset": 5192,
+        "entries": [
+          {
+            "offset": 5192,
+            "begin": 365,
+            "end": 416,
+            "kind": "range"
+          },
+          {
+            "offset": 5200,
+            "begin": 1584,
+            "end": 1831,
+            "kind": "range"
+          },
+          {
+            "offset": 5208,
+            "begin": 1118,
+            "end": 1355,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5224
+      }
+    },
+    {
+      "die": 242205,
+      "parent": 242175,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1468",
+      "range_list": {
+        "offset": 5224,
+        "entries": [
+          {
+            "offset": 5224,
+            "begin": 365,
+            "end": 416,
+            "kind": "range"
+          },
+          {
+            "offset": 5232,
+            "begin": 1584,
+            "end": 1831,
+            "kind": "range"
+          },
+          {
+            "offset": 5240,
+            "begin": 1118,
+            "end": 1355,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5256
+      }
+    },
+    {
+      "die": 242242,
+      "parent": 242205,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1488",
+      "range_list": {
+        "offset": 5256,
+        "entries": [
+          {
+            "offset": 5256,
+            "begin": 1139,
+            "end": 1311,
+            "kind": "range"
+          },
+          {
+            "offset": 5264,
+            "begin": 1584,
+            "end": 1831,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5280
+      }
+    },
+    {
+      "die": 242260,
+      "parent": 242242,
+      "low_pc": 4320584,
+      "high_pc": 4320676,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242282,
+      "parent": 242260,
+      "low_pc": 4320584,
+      "high_pc": 4320613,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242314,
+      "parent": 242242,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14a0",
+      "range_list": {
+        "offset": 5280,
+        "entries": [
+          {
+            "offset": 5280,
+            "begin": 1139,
+            "end": 1144,
+            "kind": "range"
+          },
+          {
+            "offset": 5288,
+            "begin": 1726,
+            "end": 1821,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5304
+      }
+    },
+    {
+      "die": 242332,
+      "parent": 242314,
+      "low_pc": 4321128,
+      "high_pc": 4321151,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242364,
+      "parent": 242242,
+      "low_pc": 4321004,
+      "high_pc": 4321098,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242382,
+      "parent": 242364,
+      "low_pc": 4321004,
+      "high_pc": 4321027,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242415,
+      "parent": 242205,
+      "low_pc": 4319765,
+      "high_pc": 4319782,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242438,
+      "parent": 241981,
+      "low_pc": 4319984,
+      "high_pc": 4320066,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242476,
+      "parent": 241981,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14b8",
+      "range_list": {
+        "offset": 5304,
+        "entries": [
+          {
+            "offset": 5304,
+            "begin": 693,
+            "end": 772,
+            "kind": "range"
+          },
+          {
+            "offset": 5312,
+            "begin": 1407,
+            "end": 1584,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5328
+      }
+    },
+    {
+      "die": 242505,
+      "parent": 242476,
+      "low_pc": 4320112,
+      "high_pc": 4320172,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242528,
+      "parent": 242476,
+      "low_pc": 4320807,
+      "high_pc": 4320984,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242560,
+      "parent": 242528,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14d0",
+      "range_list": {
+        "offset": 5328,
+        "entries": [
+          {
+            "offset": 5328,
+            "begin": 1468,
+            "end": 1474,
+            "kind": "range"
+          },
+          {
+            "offset": 5336,
+            "begin": 1488,
+            "end": 1549,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5352
+      }
+    },
+    {
+      "die": 242574,
+      "parent": 242560,
+      "low_pc": 4320888,
+      "high_pc": 4320911,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242608,
+      "parent": 241981,
+      "low_pc": 4320296,
+      "high_pc": 4320518,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242634,
+      "parent": 242608,
+      "low_pc": 4320296,
+      "high_pc": 4320518,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242666,
+      "parent": 242634,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14e8",
+      "range_list": {
+        "offset": 5352,
+        "entries": [
+          {
+            "offset": 5352,
+            "begin": 960,
+            "end": 966,
+            "kind": "range"
+          },
+          {
+            "offset": 5360,
+            "begin": 968,
+            "end": 1073,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 5376
+      }
+    },
+    {
+      "die": 242680,
+      "parent": 242666,
+      "low_pc": 4320368,
+      "high_pc": 4320444,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 242698,
+      "parent": 242680,
+      "low_pc": 4320368,
+      "high_pc": 4320391,
+      "ranges": null,
+      "range_list": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 167,
+    "body_end_line": 284,
+    "body_sha256": "bf05bc8e82ddc25c8a9e0d457445cac9ada6669f11a11cdd717ceeec12907f99"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 242100,
+        "name": "depth",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 241981,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 c4 79 \t(DW_OP_breg5 (ebp): -828)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242117,
+        "name": "colour_type",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 241981,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242210,
+        "name": "depth",
+        "type_die": 239508,
+        "type": "const int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242219,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242205,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242224,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 d4 79 \t(DW_OP_breg5 (ebp): -812)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242233,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb387 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 45959,
+          "entries": [
+            {
+              "offset": 45959,
+              "begin": 1184,
+              "end": 1210,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 45970,
+              "begin": 1283,
+              "end": 1287,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 45981,
+              "begin": 1287,
+              "end": 1293,
+              "kind": "range",
+              "expression_hex": "57"
+            },
+            {
+              "offset": 45992,
+              "begin": 1293,
+              "end": 1311,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 46003,
+              "begin": 1602,
+              "end": 1604,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 46014,
+              "begin": 1604,
+              "end": 1708,
+              "kind": "range",
+              "expression_hex": "57"
+            },
+            {
+              "offset": 46025,
+              "begin": 1726,
+              "end": 1728,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 46036,
+              "begin": 1728,
+              "end": 1831,
+              "kind": "range",
+              "expression_hex": "57"
+            }
+          ],
+          "end_offset": 46055
+        }
+      },
+      {
+        "die": 242251,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242242,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "0xb3e7 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46055,
+          "entries": [
+            {
+              "offset": 46055,
+              "begin": 1141,
+              "end": 1404,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 46066,
+              "begin": 1583,
+              "end": 1710,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 46077,
+              "begin": 1724,
+              "end": 1831,
+              "kind": "range",
+              "expression_hex": "56"
+            }
+          ],
+          "end_offset": 46096
+        }
+      },
+      {
+        "die": 242273,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242260,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb410 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46096,
+          "entries": [
+            {
+              "offset": 46096,
+              "begin": 1215,
+              "end": 1270,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 46115
+        }
+      },
+      {
+        "die": 242323,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242314,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb423 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46115,
+          "entries": [
+            {
+              "offset": 46115,
+              "begin": 1753,
+              "end": 1805,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 46134
+        }
+      },
+      {
+        "die": 242373,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242364,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb436 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46134,
+          "entries": [
+            {
+              "offset": 46134,
+              "begin": 1629,
+              "end": 1682,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 46153
+        }
+      },
+      {
+        "die": 242466,
+        "name": "i",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242518,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242505,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb449 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46153,
+          "entries": [
+            {
+              "offset": 46153,
+              "begin": 725,
+              "end": 772,
+              "kind": "range",
+              "expression_hex": "53"
+            },
+            {
+              "offset": 46164,
+              "begin": 1355,
+              "end": 1403,
+              "kind": "range",
+              "expression_hex": "53"
+            }
+          ],
+          "end_offset": 46183
+        }
+      },
+      {
+        "die": 242537,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242528,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242542,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242528,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb467 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46183,
+          "entries": [
+            {
+              "offset": 46183,
+              "begin": 1355,
+              "end": 1403,
+              "kind": "range",
+              "expression_hex": "53"
+            },
+            {
+              "offset": 46194,
+              "begin": 1467,
+              "end": 1583,
+              "kind": "range",
+              "expression_hex": "53"
+            }
+          ],
+          "end_offset": 46213
+        }
+      },
+      {
+        "die": 242551,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242528,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb485 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46213,
+          "entries": [
+            {
+              "offset": 46213,
+              "begin": 1457,
+              "end": 1467,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 46224,
+              "begin": 1467,
+              "end": 1488,
+              "kind": "range",
+              "expression_hex": "57"
+            },
+            {
+              "offset": 46235,
+              "begin": 1525,
+              "end": 1561,
+              "kind": "range",
+              "expression_hex": "57"
+            }
+          ],
+          "end_offset": 46254
+        }
+      },
+      {
+        "die": 242565,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242560,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242643,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242634,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242648,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242634,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb4ae (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46254,
+          "entries": [
+            {
+              "offset": 46254,
+              "begin": 960,
+              "end": 1118,
+              "kind": "range",
+              "expression_hex": "53"
+            },
+            {
+              "offset": 46265,
+              "begin": 1355,
+              "end": 1403,
+              "kind": "range",
+              "expression_hex": "53"
+            }
+          ],
+          "end_offset": 46284
+        }
+      },
+      {
+        "die": 242657,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242634,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb4cc (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46284,
+          "entries": [
+            {
+              "offset": 46284,
+              "begin": 950,
+              "end": 958,
+              "kind": "range",
+              "expression_hex": "57"
+            }
+          ],
+          "end_offset": 46303
+        }
+      },
+      {
+        "die": 242671,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242666,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 242689,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242680,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0xb4df (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 46303,
+          "entries": [
+            {
+              "offset": 46303,
+              "begin": 999,
+              "end": 1040,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 46322
+        }
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 1870,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4319408,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319409,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319411,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319412,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319413,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 8,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 9,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 11,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 12,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 13,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 167,
+      "address": 4319408,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 168,
+      "address": 4319438,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 169,
+      "address": 4319445,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "E:/Lib/allegro4/include/allegro/inline/gfx.inl",
+      "file": "gfx.inl",
+      "line": 104,
+      "address": 4319452,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 174,
+      "address": 4319463,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 180,
+      "address": 4319472,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 182,
+      "address": 4319511,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 186,
+      "address": 4319519,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "_png_compression_level",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "historical_address": "0x4bc010",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41e984",
+        "0x41ea80",
+        "0x41ebac"
+      ],
+      "coff_symbols": [
+        {
+          "index": 33,
+          "name": "__png_compression_level",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11349,
+          "name": "__png_compression_level",
+          "section": 2,
+          "va": 4964368,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "09000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_r_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8668",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "references": [
+        "0x41ef05"
+      ],
+      "coff_symbols": [
+        {
+          "index": 42,
+          "name": "__rgb_r_shift_15",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10735,
+          "name": "__rgb_r_shift_15",
+          "section": 4,
+          "va": 5146216,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_g_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9d4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ef1c"
+      ],
+      "coff_symbols": [
+        {
+          "index": 44,
+          "name": "__rgb_g_shift_15",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10967,
+          "name": "__rgb_g_shift_15",
+          "section": 2,
+          "va": 5032404,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "05000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_b_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9d8",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ef32"
+      ],
+      "coff_symbols": [
+        {
+          "index": 45,
+          "name": "__rgb_b_shift_15",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10682,
+          "name": "__rgb_b_shift_15",
+          "section": 2,
+          "va": 5032408,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "0a000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_r_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e866c",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "references": [
+        "0x41ef81"
+      ],
+      "coff_symbols": [
+        {
+          "index": 46,
+          "name": "__rgb_r_shift_16",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11179,
+          "name": "__rgb_r_shift_16",
+          "section": 4,
+          "va": 5146220,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_g_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9dc",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ef98"
+      ],
+      "coff_symbols": [
+        {
+          "index": 47,
+          "name": "__rgb_g_shift_16",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10554,
+          "name": "__rgb_g_shift_16",
+          "section": 2,
+          "va": 5032412,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "05000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_b_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e0",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41efad"
+      ],
+      "coff_symbols": [
+        {
+          "index": 48,
+          "name": "__rgb_b_shift_16",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11125,
+          "name": "__rgb_b_shift_16",
+          "section": 2,
+          "va": 5032416,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "0b000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_r_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8670",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "references": [
+        "0x41ed67"
+      ],
+      "coff_symbols": [
+        {
+          "index": 39,
+          "name": "__rgb_r_shift_24",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10183,
+          "name": "__rgb_r_shift_24",
+          "section": 4,
+          "va": 5146224,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_g_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ed7f"
+      ],
+      "coff_symbols": [
+        {
+          "index": 40,
+          "name": "__rgb_g_shift_24",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11075,
+          "name": "__rgb_g_shift_24",
+          "section": 2,
+          "va": 5032420,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "08000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_b_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e8",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ed96"
+      ],
+      "coff_symbols": [
+        {
+          "index": 41,
+          "name": "__rgb_b_shift_24",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10592,
+          "name": "__rgb_b_shift_24",
+          "section": 2,
+          "va": 5032424,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "10000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_r_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8674",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "references": [
+        "0x41ec87"
+      ],
+      "coff_symbols": [
+        {
+          "index": 35,
+          "name": "__rgb_r_shift_32",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10470,
+          "name": "__rgb_r_shift_32",
+          "section": 4,
+          "va": 5146228,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_g_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9ec",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ec94"
+      ],
+      "coff_symbols": [
+        {
+          "index": 36,
+          "name": "__rgb_g_shift_32",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10770,
+          "name": "__rgb_g_shift_32",
+          "section": 2,
+          "va": 5032428,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "08000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_b_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9f0",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41eca2"
+      ],
+      "coff_symbols": [
+        {
+          "index": 37,
+          "name": "__rgb_b_shift_32",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10900,
+          "name": "__rgb_b_shift_32",
+          "section": 2,
+          "va": 5032432,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "10000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_a_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9f4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "references": [
+        "0x41ecb0"
+      ],
+      "coff_symbols": [
+        {
+          "index": 38,
+          "name": "__rgb_a_shift_32",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11320,
+          "name": "__rgb_a_shift_32",
+          "section": 2,
+          "va": 5032436,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "18000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_scale_5",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cca00",
+      "dwarf_type": "int [32]",
+      "size": 128,
+      "section": ".data",
+      "references": [
+        "0x41ef10",
+        "0x41ef27",
+        "0x41ef3d",
+        "0x41ef8c",
+        "0x41efb8"
+      ],
+      "coff_symbols": [
+        {
+          "index": 43,
+          "name": "__rgb_scale_5",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 11440,
+          "name": "__rgb_scale_5",
+          "section": 2,
+          "va": 5032448,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "0000000008000000100000001800000021000000290000003100000039000000420000004a000000520000005a000000630000006b000000730000007b000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": "_rgb_scale_6",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cca80",
+      "dwarf_type": "int [64]",
+      "size": 256,
+      "section": ".data",
+      "references": [
+        "0x41eaf0",
+        "0x41efa3"
+      ],
+      "coff_symbols": [
+        {
+          "index": 34,
+          "name": "__rgb_scale_6",
+          "section": 0,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10539,
+          "name": "__rgb_scale_6",
+          "section": 2,
+          "va": 5032576,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "0000000004000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d7e00",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        91
+      ],
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 154,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            5078528
+          ],
+          "detail_report": "docs/current/reports/game-savepng.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x41e8a8",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        153
+      ],
+      "placement_confidence": "function-relative .text",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x41f074",
+      "candidate_addend": 1996,
+      "dwarf_type": null,
+      "references": [
+        161
+      ],
+      "placement_confidence": "function-relative .text",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d7e08",
+      "candidate_addend": 8,
+      "dwarf_type": null,
+      "references": [
+        344
+      ],
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 154,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            5078528
+          ],
+          "detail_report": "docs/current/reports/game-savepng.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_png_create_write_struct",
+      "function_offset": 96,
+      "target_va": 4915500,
+      "verified": true
+    },
+    {
+      "symbol": "_png_create_info_struct",
+      "function_offset": 115,
+      "target_va": 4915452,
+      "verified": true
+    },
+    {
+      "symbol": "__setjmp",
+      "function_offset": 137,
+      "target_va": 4959648,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_write_fn",
+      "function_offset": 182,
+      "target_va": 4915508,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_compression_level",
+      "function_offset": 228,
+      "target_va": 4915524,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_IHDR",
+      "function_offset": 305,
+      "target_va": 4915532,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_info",
+      "function_offset": 323,
+      "target_va": 4915540,
+      "verified": true
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 383,
+      "target_va": 4959504,
+      "verified": true
+    },
+    {
+      "symbol": "_png_destroy_write_struct",
+      "function_offset": 444,
+      "target_va": 4915564,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_compression_level",
+      "function_offset": 480,
+      "target_va": 4915524,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_IHDR",
+      "function_offset": 557,
+      "target_va": 4915532,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_PLTE",
+      "function_offset": 654,
+      "target_va": 4915516,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_info",
+      "function_offset": 672,
+      "target_va": 4915540,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_row",
+      "function_offset": 740,
+      "target_va": 4915556,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_compression_level",
+      "function_offset": 780,
+      "target_va": 4915524,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_IHDR",
+      "function_offset": 857,
+      "target_va": 4915532,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_info",
+      "function_offset": 875,
+      "target_va": 4915540,
+      "verified": true
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 903,
+      "target_va": 4959504,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_row",
+      "function_offset": 1061,
+      "target_va": 4915556,
+      "verified": true
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 1092,
+      "target_va": 4959496,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_row",
+      "function_offset": 1299,
+      "target_va": 4915556,
+      "verified": true
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 1334,
+      "target_va": 4959496,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_end",
+      "function_offset": 1364,
+      "target_va": 4915548,
+      "verified": true
+    },
+    {
+      "symbol": "_png_destroy_write_struct",
+      "function_offset": 1382,
+      "target_va": 4915564,
+      "verified": true
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 1414,
+      "target_va": 4959504,
+      "verified": true
+    },
+    {
+      "symbol": "_png_write_row",
+      "function_offset": 1537,
+      "target_va": 4915556,
+      "verified": true
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 1557,
+      "target_va": 4959496,
+      "verified": true
+    },
+    {
+      "symbol": "_png_destroy_write_struct",
+      "function_offset": 1838,
+      "target_va": 4915564,
+      "verified": true
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4319503,
+      "bytes": "e818180900",
+      "mnemonic": "call",
+      "assembly": "call   4b012c <_png_create_write_struct>"
+    },
+    {
+      "address": 4319522,
+      "bytes": "e8d5170900",
+      "mnemonic": "call",
+      "assembly": "call   4b00fc <_png_create_info_struct>"
+    },
+    {
+      "address": 4319544,
+      "bytes": "e863c40900",
+      "mnemonic": "call",
+      "assembly": "call   4bada0 <__setjmp>"
+    },
+    {
+      "address": 4319589,
+      "bytes": "e8ca170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0134 <_png_set_write_fn>"
+    },
+    {
+      "address": 4319635,
+      "bytes": "e8ac170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0144 <_png_set_compression_level>"
+    },
+    {
+      "address": 4319712,
+      "bytes": "e867170900",
+      "mnemonic": "call",
+      "assembly": "call   4b014c <_png_set_IHDR>"
+    },
+    {
+      "address": 4319730,
+      "bytes": "e85d170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0154 <_png_write_info>"
+    },
+    {
+      "address": 4319749,
+      "bytes": "ff2485087e4d00",
+      "mnemonic": "jmp",
+      "assembly": "jmp    *0x4d7e08(,%eax,4)"
+    },
+    {
+      "address": 4319790,
+      "bytes": "e8ddc20900",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4319851,
+      "bytes": "e8fc160900",
+      "mnemonic": "call",
+      "assembly": "call   4b016c <_png_destroy_write_struct>"
+    },
+    {
+      "address": 4319887,
+      "bytes": "e8b0160900",
+      "mnemonic": "call",
+      "assembly": "call   4b0144 <_png_set_compression_level>"
+    },
+    {
+      "address": 4319964,
+      "bytes": "e86b160900",
+      "mnemonic": "call",
+      "assembly": "call   4b014c <_png_set_IHDR>"
+    },
+    {
+      "address": 4320061,
+      "bytes": "e8fa150900",
+      "mnemonic": "call",
+      "assembly": "call   4b013c <_png_set_PLTE>"
+    },
+    {
+      "address": 4320079,
+      "bytes": "e800160900",
+      "mnemonic": "call",
+      "assembly": "call   4b0154 <_png_write_info>"
+    },
+    {
+      "address": 4320147,
+      "bytes": "e8cc150900",
+      "mnemonic": "call",
+      "assembly": "call   4b0164 <_png_write_row>"
+    },
+    {
+      "address": 4320187,
+      "bytes": "e884150900",
+      "mnemonic": "call",
+      "assembly": "call   4b0144 <_png_set_compression_level>"
+    },
+    {
+      "address": 4320264,
+      "bytes": "e83f150900",
+      "mnemonic": "call",
+      "assembly": "call   4b014c <_png_set_IHDR>"
+    },
+    {
+      "address": 4320282,
+      "bytes": "e835150900",
+      "mnemonic": "call",
+      "assembly": "call   4b0154 <_png_write_info>"
+    },
+    {
+      "address": 4320310,
+      "bytes": "e8d5c00900",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4320388,
+      "bytes": "ff5020",
+      "mnemonic": "call",
+      "assembly": "call   *0x20(%eax)"
+    },
+    {
+      "address": 4320468,
+      "bytes": "e88b140900",
+      "mnemonic": "call",
+      "assembly": "call   4b0164 <_png_write_row>"
+    },
+    {
+      "address": 4320499,
+      "bytes": "e810c00900",
+      "mnemonic": "call",
+      "assembly": "call   4bad08 <_free>"
+    },
+    {
+      "address": 4320610,
+      "bytes": "ff5020",
+      "mnemonic": "call",
+      "assembly": "call   *0x20(%eax)"
+    },
+    {
+      "address": 4320706,
+      "bytes": "e89d130900",
+      "mnemonic": "call",
+      "assembly": "call   4b0164 <_png_write_row>"
+    },
+    {
+      "address": 4320741,
+      "bytes": "e81ebf0900",
+      "mnemonic": "call",
+      "assembly": "call   4bad08 <_free>"
+    },
+    {
+      "address": 4320771,
+      "bytes": "e854130900",
+      "mnemonic": "call",
+      "assembly": "call   4b015c <_png_write_end>"
+    },
+    {
+      "address": 4320789,
+      "bytes": "e852130900",
+      "mnemonic": "call",
+      "assembly": "call   4b016c <_png_destroy_write_struct>"
+    },
+    {
+      "address": 4320821,
+      "bytes": "e8d6be0900",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4320908,
+      "bytes": "ff5020",
+      "mnemonic": "call",
+      "assembly": "call   *0x20(%eax)"
+    },
+    {
+      "address": 4320944,
+      "bytes": "e8af120900",
+      "mnemonic": "call",
+      "assembly": "call   4b0164 <_png_write_row>"
+    },
+    {
+      "address": 4320964,
+      "bytes": "e83fbe0900",
+      "mnemonic": "call",
+      "assembly": "call   4bad08 <_free>"
+    },
+    {
+      "address": 4321024,
+      "bytes": "ff5020",
+      "mnemonic": "call",
+      "assembly": "call   *0x20(%eax)"
+    },
+    {
+      "address": 4321148,
+      "bytes": "ff5020",
+      "mnemonic": "call",
+      "assembly": "call   *0x20(%eax)"
+    },
+    {
+      "address": 4321245,
+      "bytes": "e88a110900",
+      "mnemonic": "call",
+      "assembly": "call   4b016c <_png_destroy_write_struct>"
+    }
+  ],
+  "indirect_control_flow": 6,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "flush_data",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 0,
+      "candidate_offset": 0,
+      "size_delta": 0
+    },
+    {
+      "function": "save_png",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1880,
+      "candidate_offset": 1880,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": -40,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-savepng.json",
+  "verification_command": "python tools/check_function.py game-savepng really_save_png",
+  "begin_command": "python tools/grinder_task.py begin game-savepng really_save_png",
+  "promotion_command": "python tools/promote_function.py game-savepng really_save_png",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
+}

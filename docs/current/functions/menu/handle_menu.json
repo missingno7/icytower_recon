@@ -1,0 +1,1858 @@
+{
+  "schema": 1,
+  "source": "src/menu.c",
+  "target": "game-menu",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+  "function": "handle_menu",
+  "historical_va": "0x417d24",
+  "historical_size": 1120,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp, void (*callback)(void), int x, int y, int dx);",
+  "return_type": "int",
+  "parameters": [
+    {
+      "die": 159661,
+      "name": "menu",
+      "type_die": 158791,
+      "type": "Tmenu *",
+      "scope": 159624,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x87c2 (location list)",
+      "address": null
+    },
+    {
+      "die": 159677,
+      "name": "mp",
+      "type_die": 158797,
+      "type": "Tmenu_params *",
+      "scope": 159624,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x87e2 (location list)",
+      "address": null
+    },
+    {
+      "die": 159691,
+      "name": "ctrl",
+      "type_die": 159612,
+      "type": "Tcontrol *",
+      "scope": 159624,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x88b9 (location list)",
+      "address": null
+    },
+    {
+      "die": 159707,
+      "name": "bmp",
+      "type_die": 156357,
+      "type": "BITMAP *",
+      "scope": 159624,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x8937 (location list)",
+      "address": null
+    },
+    {
+      "die": 159722,
+      "name": "callback",
+      "type_die": 148696,
+      "type": "void (*)(void)",
+      "scope": 159624,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x899f (location list)",
+      "address": null
+    },
+    {
+      "die": 159742,
+      "name": "x",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x89d7 (location list)",
+      "address": null
+    },
+    {
+      "die": 159755,
+      "name": "y",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8a3f (location list)",
+      "address": null
+    },
+    {
+      "die": 159768,
+      "name": "dx",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8aa7 (location list)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 159782,
+      "name": "menu_return",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8ac7 (location list)",
+      "address": null
+    },
+    {
+      "die": 159805,
+      "name": "handle_keys",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 d4 7d \t(DW_OP_breg5 (ebp): -300)",
+      "address": null
+    },
+    {
+      "die": 159828,
+      "name": "done",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 159840,
+      "name": "data",
+      "type_die": 147725,
+      "type": "void *",
+      "scope": 159624,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "2 byte block: 75 64 \t(DW_OP_breg5 (ebp): -28)",
+      "address": null
+    },
+    {
+      "die": 159855,
+      "name": "key_counter",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 159624,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8b48 (location list)",
+      "address": null
+    },
+    {
+      "die": 159891,
+      "name": "buf",
+      "type_die": 157936,
+      "type": "char [128]",
+      "scope": 159878,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 dc 7d \t(DW_OP_fbreg: -292)",
+      "address": null
+    },
+    {
+      "die": 159917,
+      "name": "sel",
+      "type_die": 160183,
+      "type": "Tmenu_char_selection *",
+      "scope": 159908,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x8bd4 (location list)",
+      "address": null
+    },
+    {
+      "die": 159943,
+      "name": "box",
+      "type_die": 147582,
+      "type": "int *",
+      "scope": 159934,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8bfd (location list)",
+      "address": null
+    },
+    {
+      "die": 159973,
+      "name": "sel",
+      "type_die": 160183,
+      "type": "Tmenu_char_selection *",
+      "scope": 159960,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x8c47 (location list)",
+      "address": null
+    },
+    {
+      "die": 160024,
+      "name": "sub_ret",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 160015,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8c70 (location list)",
+      "address": null
+    },
+    {
+      "die": 160054,
+      "name": "kp",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 160045,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8cfc (location list)",
+      "address": null
+    },
+    {
+      "die": 160069,
+      "name": "k",
+      "type_die": 147485,
+      "type": "int",
+      "scope": 160045,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x8d25 (location list)",
+      "address": null
+    },
+    {
+      "die": 160083,
+      "name": "txt",
+      "type_die": 159379,
+      "type": "char [256]",
+      "scope": 160045,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 dc 7d \t(DW_OP_fbreg: -292)",
+      "address": null
+    },
+    {
+      "die": 160113,
+      "name": "sel",
+      "type_die": 158557,
+      "type": "Tmenu_selection *",
+      "scope": 160100,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x8d4e (location list)",
+      "address": null
+    },
+    {
+      "die": 160139,
+      "name": "sld",
+      "type_die": 158419,
+      "type": "Tmenu_slider *",
+      "scope": 160130,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x8d77 (location list)",
+      "address": null
+    },
+    {
+      "die": 160165,
+      "name": "sld",
+      "type_die": 158419,
+      "type": "Tmenu_slider *",
+      "scope": 160156,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x8dcc (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 159878,
+      "parent": 159624,
+      "low_pc": 4292319,
+      "high_pc": 4292388,
+      "ranges": null
+    },
+    {
+      "die": 159908,
+      "parent": 159624,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1140"
+    },
+    {
+      "die": 159934,
+      "parent": 159624,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1158"
+    },
+    {
+      "die": 159960,
+      "parent": 159624,
+      "low_pc": 4292417,
+      "high_pc": 4292432,
+      "ranges": null
+    },
+    {
+      "die": 159990,
+      "parent": 159624,
+      "low_pc": 4292439,
+      "high_pc": 4292455,
+      "ranges": null
+    },
+    {
+      "die": 160015,
+      "parent": 159624,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1188"
+    },
+    {
+      "die": 160045,
+      "parent": 159624,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x11a0"
+    },
+    {
+      "die": 160100,
+      "parent": 159624,
+      "low_pc": 4292853,
+      "high_pc": 4292871,
+      "ranges": null
+    },
+    {
+      "die": 160130,
+      "parent": 159624,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x11b8"
+    },
+    {
+      "die": 160156,
+      "parent": 159624,
+      "low_pc": 4292910,
+      "high_pc": 4292925,
+      "ranges": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 458,
+    "body_end_line": 605,
+    "body_sha256": "4652341bea07ab57df0407232e8b243d58e722ca1100319ea2be2ad160d095e5"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 159742,
+        "name": "x",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159755,
+        "name": "y",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159768,
+        "name": "dx",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159782,
+        "name": "menu_return",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159805,
+        "name": "handle_keys",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159828,
+        "name": "done",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159855,
+        "name": "key_counter",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 159624,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 159891,
+        "name": "buf",
+        "type_die": 157936,
+        "type": "char [128]",
+        "scope": 159878,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 159943,
+        "name": "box",
+        "type_die": 147582,
+        "type": "int *",
+        "scope": 159934,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 160024,
+        "name": "sub_ret",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 160015,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 160054,
+        "name": "kp",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 160045,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 160069,
+        "name": "k",
+        "type_die": 147485,
+        "type": "int",
+        "scope": 160045,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 160083,
+        "name": "txt",
+        "type_die": 159379,
+        "type": "char [256]",
+        "scope": 160045,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [
+      {
+        "signed_instruction": "jl",
+        "unsigned_instruction": "jb",
+        "original_counts": [
+          1,
+          0
+        ],
+        "candidate_counts": [
+          0,
+          0
+        ]
+      },
+      {
+        "signed_instruction": "jge",
+        "unsigned_instruction": "jae",
+        "original_counts": [
+          0,
+          0
+        ],
+        "candidate_counts": [
+          1,
+          0
+        ]
+      }
+    ],
+    "declaration_differences": [
+      {
+        "variable": "buf",
+        "original_type": "char [128]",
+        "candidate_type": "char [256]",
+        "original_die": 159891,
+        "candidate_die": 9079,
+        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
+        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
+      },
+      {
+        "variable": "data",
+        "original_type": "void *",
+        "candidate_type": "int",
+        "original_die": 159840,
+        "candidate_die": 9026,
+        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
+        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
+      }
+    ],
+    "cast_chains": [
+      "(int *)",
+      "(int *)",
+      "(int *)",
+      "(int *)",
+      "(int *)",
+      "(int *)"
+    ],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 1034,
+  "first_difference": {
+    "offset": 14,
+    "original_va": 4291890,
+    "candidate_byte": 16,
+    "original_byte": 12
+  },
+  "mismatch_count": 962,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4291880,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4291881,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4291882,
+        "bytes": "81ec4c010000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x14c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4291888,
+        "bytes": "8b7d0c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%edi",
+        "dwarf_variables": [
+          {
+            "die": 159677,
+            "name": "mp",
+            "type": "Tmenu_params *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4291891,
+        "bytes": "8b4524",
+        "mnemonic": "mov",
+        "assembly": "mov    0x24(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 159768,
+            "name": "dx",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 36
+            },
+            "expression_hex": "911c",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4291894,
+        "bytes": "a340d74d00",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x4dd740",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4291899,
+        "bytes": "c745e400000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,-0x1c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 159840,
+            "name": "data",
+            "type": "void *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -28
+            },
+            "expression_hex": "7564",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4291906,
+        "bytes": "8b4730",
+        "mnemonic": "mov",
+        "assembly": "mov    0x30(%edi),%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4291909,
+        "bytes": "89442408",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x8(%esp)",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 4680,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4681,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4682,
+        "bytes": "81ec4c010000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x14c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4688,
+        "bytes": "8b7d10",
+        "mnemonic": "mov",
+        "assembly": "mov    0x10(%ebp),%edi",
+        "dwarf_variables": [
+          {
+            "die": 8868,
+            "name": "ctrl",
+            "type": "Tcontrol *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 16
+            },
+            "expression_hex": "9108",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4691,
+        "bytes": "8b4524",
+        "mnemonic": "mov",
+        "assembly": "mov    0x24(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 8950,
+            "name": "dx",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 36
+            },
+            "expression_hex": "911c",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4694,
+        "bytes": "a300000000",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x0",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4699,
+        "bytes": "c745e400000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,-0x1c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 9026,
+            "name": "data",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -28
+            },
+            "expression_hex": "7564",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4706,
+        "bytes": "8b550c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%edx",
+        "dwarf_variables": [
+          {
+            "die": 8853,
+            "name": "mp",
+            "type": "Tmenu_params *",
+            "base_type": "Tmenu_params",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4709,
+        "bytes": "8b4230",
+        "mnemonic": "mov",
+        "assembly": "mov    0x30(%edx),%eax",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "Tcontrol",
+      "size": 36,
+      "header": "include/recovered/Tcontrol.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "key_right",
+          "offset": 8,
+          "type": "int"
+        },
+        {
+          "name": "key_up",
+          "offset": 12,
+          "type": "int"
+        },
+        {
+          "name": "key_down",
+          "offset": 16,
+          "type": "int"
+        },
+        {
+          "name": "key_pause",
+          "offset": 28,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "Tmenu",
+      "size": 148,
+      "header": "include/recovered/Tmenu.h",
+      "members_at_disassembly_offsets": [],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "Tmenu_char_selection",
+      "size": 1036,
+      "header": "include/recovered/Tmenu_char_selection.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "bmp",
+          "offset": 8,
+          "type": "BITMAP *"
+        },
+        {
+          "name": "pal",
+          "offset": 12,
+          "type": "PALETTE"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "Tmenu_params",
+      "size": 60,
+      "header": "include/recovered/Tmenu_params.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "ctrl",
+          "offset": 8,
+          "type": "Tcontrol"
+        },
+        {
+          "name": "pos",
+          "offset": 48,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "Tmenu_selection",
+      "size": 136,
+      "header": "include/recovered/Tmenu_selection.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "caption",
+          "offset": 8,
+          "type": "char *[32]"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "Tmenu_slider",
+      "size": 16,
+      "header": "include/recovered/Tmenu_slider.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "max",
+          "offset": 8,
+          "type": "int"
+        },
+        {
+          "name": "step",
+          "offset": 12,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 195,
+      "address": 4291876,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 196,
+      "address": 4291891,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 201,
+      "address": 4291899,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 205,
+      "address": 4291906,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 221,
+      "address": 4291928,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 207,
+      "address": 4291951,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 208,
+      "address": 4291964,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/menu.c",
+      "file": "menu.c",
+      "line": 211,
+      "address": 4291974,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "closeButtonClicked",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd264",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "profile",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd27c",
+      "dwarf_type": "Tprofile *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "stepIn",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "historical_address": "0x4dd740",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "cycle_count",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\timer.c",
+      "historical_address": "0x506938",
+      "dwarf_type": "volatile int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "key",
+      "cu": "C:\\Lib\\allegro4\\src\\keyboard.c",
+      "historical_address": "0x506988",
+      "dwarf_type": "volatile char [127]",
+      "size": 127,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d6e88",
+      "candidate_addend": 192,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        393
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 217,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        439
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d6ea1",
+      "candidate_addend": 220,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        464
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 232,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        527
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\menu.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d6e77",
+      "candidate_addend": 175,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        713
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_poll_control",
+      "function_offset": 108,
+      "target_va": 4200792,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        108,
+        130
+      ]
+    },
+    {
+      "symbol": "_checkMenuFocus",
+      "function_offset": 179,
+      "target_va": 4222840,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        179
+      ]
+    },
+    {
+      "symbol": "_blit_to_screen",
+      "function_offset": 216,
+      "target_va": 4241084,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        216
+      ]
+    },
+    {
+      "symbol": "_is_any",
+      "function_offset": 224,
+      "target_va": 4200680,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        224,
+        274
+      ]
+    },
+    {
+      "symbol": "_play_menu_select",
+      "function_offset": 369,
+      "target_va": 4222588,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        369,
+        1025
+      ]
+    },
+    {
+      "symbol": "_sprintf",
+      "function_offset": 407,
+      "target_va": 4959584,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        407,
+        727
+      ]
+    },
+    {
+      "symbol": "_my_alert",
+      "function_offset": 469,
+      "target_va": 4246888,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        469
+      ]
+    },
+    {
+      "symbol": "_rest",
+      "function_offset": 496,
+      "target_va": 4578984,
+      "verified": false,
+      "reference_count": 3,
+      "function_offsets": [
+        496,
+        802,
+        977
+      ]
+    },
+    {
+      "symbol": "_clear_bitmap",
+      "function_offset": 515,
+      "target_va": 4506292,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        515
+      ]
+    },
+    {
+      "symbol": "_change_profile",
+      "function_offset": 634,
+      "target_va": 4252108,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        634
+      ]
+    },
+    {
+      "symbol": "_view_profile",
+      "function_offset": 652,
+      "target_va": 4299500,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        652
+      ]
+    },
+    {
+      "symbol": "_line_alert",
+      "function_offset": 741,
+      "target_va": 4231480,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        741
+      ]
+    },
+    {
+      "symbol": "reset_menu",
+      "function_offset": 51,
+      "target_va": 4289676,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        51
+      ]
+    },
+    {
+      "symbol": "update_game_menu",
+      "function_offset": 354,
+      "target_va": 4291292,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        354
+      ]
+    },
+    {
+      "symbol": "handle_menu",
+      "function_offset": 594,
+      "target_va": 4291876,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        594
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4291923,
+      "bytes": "e834f7ffff",
+      "mnemonic": "call",
+      "assembly": "call   41748c <_reset_menu>"
+    },
+    {
+      "address": 4291974,
+      "bytes": "e8edf1feff",
+      "mnemonic": "call",
+      "assembly": "call   406f78 <_checkMenuFocus>"
+    },
+    {
+      "address": 4291990,
+      "bytes": "ff5518",
+      "mnemonic": "call",
+      "assembly": "call   *0x18(%ebp)"
+    },
+    {
+      "address": 4292052,
+      "bytes": "e803fdffff",
+      "mnemonic": "call",
+      "assembly": "call   417adc <_update_game_menu>"
+    },
+    {
+      "address": 4292065,
+      "bytes": "e8d638ffff",
+      "mnemonic": "call",
+      "assembly": "call   40b6bc <_blit_to_screen>"
+    },
+    {
+      "address": 4292076,
+      "bytes": "e8f79afeff",
+      "mnemonic": "call",
+      "assembly": "call   4018e8 <_is_any>"
+    },
+    {
+      "address": 4292123,
+      "bytes": "e8389bfeff",
+      "mnemonic": "call",
+      "assembly": "call   401958 <_poll_control>"
+    },
+    {
+      "address": 4292145,
+      "bytes": "e8229bfeff",
+      "mnemonic": "call",
+      "assembly": "call   401958 <_poll_control>"
+    }
+  ],
+  "indirect_control_flow": 2,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 4784,
+      "symbol_index": 55,
+      "symbol": "_poll_control",
+      "type": 20,
+      "function_offset": 108,
+      "addend": 0,
+      "target_va": 4200792,
+      "resolution": "named symbol",
+      "resolved_value": 4294876100,
+      "original_value": 29459471,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4806,
+      "symbol_index": 55,
+      "symbol": "_poll_control",
+      "type": 20,
+      "function_offset": 130,
+      "addend": 0,
+      "target_va": 4200792,
+      "resolution": "named symbol",
+      "resolved_value": 4294876078,
+      "original_value": 272993024,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4819,
+      "symbol_index": 41,
+      "symbol": "_cycle_count",
+      "type": 6,
+      "function_offset": 143,
+      "addend": 0,
+      "target_va": 5269816,
+      "resolution": "named symbol",
+      "resolved_value": 5269816,
+      "original_value": 609519904,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4832,
+      "symbol_index": 42,
+      "symbol": "_closeButtonClicked",
+      "type": 6,
+      "function_offset": 156,
+      "addend": 0,
+      "target_va": 5100132,
+      "resolution": "named symbol",
+      "resolved_value": 5100132,
+      "original_value": 2299274308,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4846,
+      "symbol_index": 41,
+      "symbol": "_cycle_count",
+      "type": 6,
+      "function_offset": 170,
+      "addend": 0,
+      "target_va": 5269816,
+      "resolution": "named symbol",
+      "resolved_value": 5269816,
+      "original_value": 2299811211,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4855,
+      "symbol_index": 56,
+      "symbol": "_checkMenuFocus",
+      "type": 20,
+      "function_offset": 179,
+      "addend": 0,
+      "target_va": 4222840,
+      "resolution": "named symbol",
+      "resolved_value": 4294898077,
+      "original_value": 3330932735,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4892,
+      "symbol_index": 57,
+      "symbol": "_blit_to_screen",
+      "type": 20,
+      "function_offset": 216,
+      "addend": 0,
+      "target_va": 4241084,
+      "resolution": "named symbol",
+      "resolved_value": 4294916284,
+      "original_value": 34693,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 4900,
+      "symbol_index": 58,
+      "symbol": "_is_any",
+      "type": 20,
+      "function_offset": 224,
+      "addend": 0,
+      "target_va": 4200680,
+      "resolution": "named symbol",
+      "resolved_value": 4294875872,
+      "original_value": 4294890629,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 50,
+      "function_offset": 51,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "reset_menu",
+      "target_va": 4289676,
+      "candidate_target": 96,
+      "candidate_displacement": -4635,
+      "layout_operand_equal": false,
+      "resolved_value": 4294965041,
+      "original_value": 138907135,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 353,
+      "function_offset": 354,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "update_game_menu",
+      "target_va": 4291292,
+      "candidate_target": 4092,
+      "candidate_displacement": -942,
+      "layout_operand_equal": false,
+      "resolved_value": 4294966354,
+      "original_value": 256610559,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 593,
+      "function_offset": 594,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "handle_menu",
+      "target_va": 4291876,
+      "candidate_target": 4676,
+      "candidate_displacement": -598,
+      "layout_operand_equal": false,
+      "resolved_value": 4294966698,
+      "original_value": 8108227,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 0,
+  "neighbor_layout": [
+    {
+      "function": "reset_menu",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2640,
+      "candidate_offset": 96,
+      "size_delta": 0
+    },
+    {
+      "function": "update_game_menu",
+      "status": "DIFFER",
+      "historical_offset": 4256,
+      "candidate_offset": 4092,
+      "size_delta": -1
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "pointer-live-range",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Equivalent pointer/index uses a different register",
+      "known_source_cause": "Pointer and loop index may be folded when their relationship is provable",
+      "known_fix_pattern": "Match evidenced locals and lifetimes; do not add arbitrary volatile",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "generate_profile_checksum"
+      ],
+      "evidence": "docs/profile-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "assignment-register",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Argument setup differs at equal size",
+      "known_source_cause": "Source expression shape affects result register",
+      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "draw_scroller"
+      ],
+      "evidence": "docs/scroller-experiment.md",
+      "confidence": "HYPOTHESIS"
+    },
+    {
+      "id": "declaration-scope",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Allocation or stack spill differs",
+      "known_source_cause": "Declaration scope and local live ranges differ",
+      "known_fix_pattern": "Use DWARF lexical locals and scope before exploring flags",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "add_floor",
+        "profile_data_page_advanced"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "lea-expression",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "LEA versus shift/add differs",
+      "known_source_cause": "Algebraically equivalent edge calculation has different shape",
+      "known_fix_pattern": "Use the recovered right-edge expression as a scoped example",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "getFloorData"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "peeled-loop-load-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "An equal-size loop differs only in adjacent byte/dword load ordering.",
+      "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
+      "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
+      },
+      "example_functions": [
+        "calc_replay_checksum_131"
+      ],
+      "confidence": "OBSERVED_FAILED_PATTERNS",
+      "evidence": "docs/attempts/replay-load-order-confirmation.json",
+      "failed_experiments": "docs/attempts/game-replay/calc_replay_checksum_131.jsonl",
+      "observed_offsets": {
+        "baseline": [
+          144,
+          145,
+          147,
+          148,
+          149,
+          150
+        ],
+        "operand_swap": [
+          134,
+          135,
+          136,
+          137,
+          138
+        ]
+      }
+    },
+    {
+      "id": "declaration-uid-independent-clear-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Adding a complete prototype can renumber GCC static symbols and swap adjacent independent register clears in an unrelated unresolved function.",
+      "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
+      "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
+      },
+      "example_functions": [
+        "create_post",
+        "line_alert"
+      ],
+      "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
+      "evidence": "docs/attempts/interfaces/create_post.jsonl"
+    }
+  ],
+  "difficulty": "MEDIUM",
+  "priority": 45,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-menu.json",
+  "verification_command": "python tools/check_function.py game-menu handle_menu",
+  "begin_command": "python tools/grinder_task.py begin game-menu handle_menu",
+  "promotion_command": "python tools/promote_function.py game-menu handle_menu",
+  "storage_declarations": [
+    {
+      "name": "stepIn",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-menu/161102.json"
+    }
+  ],
+  "local_declaration_tasks": [
+    {
+      "function": "decl_menu_handle_menu_buf",
+      "status": "LOCAL_TYPE_DIFFERS",
+      "state": "LOCAL_DECLARATION_REPAIR",
+      "difficulty": "SUPERVISOR",
+      "candidate_card": "docs/current/local-declarations/decl_menu_handle_menu_buf.json"
+    },
+    {
+      "function": "decl_menu_handle_menu_data",
+      "status": "LOCAL_TYPE_DIFFERS",
+      "state": "LOCAL_DECLARATION_REPAIR",
+      "difficulty": "SUPERVISOR",
+      "candidate_card": "docs/current/local-declarations/decl_menu_handle_menu_data.json"
+    }
+  ],
+  "interface_conflicts": [
+    {
+      "function": "handle_menu",
+      "historical": [
+        {
+          "cu": "src/menu.c",
+          "return_type": "int",
+          "parameter_types": [
+            "Tmenu*",
+            "Tmenu_params*",
+            "Tcontrol*",
+            "BITMAP*",
+            "void(*)(void)",
+            "int",
+            "int",
+            "int"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 159624
+        }
+      ],
+      "type_layout_issues": [
+        {
+          "position": "parameter 2",
+          "historical_type": "Tmenu_params",
+          "candidate_type": "Tmenu_params",
+          "header": "include/recovered/Tmenu_params.h",
+          "status": "MISMATCH",
+          "historical_size": 60,
+          "candidate_size": 60,
+          "member_difference_count": 3,
+          "first_member_differences": [
+            {
+              "member": "bullet",
+              "historical": {
+                "offset": 44,
+                "size": 4,
+                "type": "BITMAP *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 44,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "data",
+              "historical": {
+                "offset": 52,
+                "size": 4,
+                "type": "DATAFILE *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 52,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "font",
+              "historical": {
+                "offset": 0,
+                "size": 4,
+                "type": "FONT *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 0,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/main.c",
+          "file": "src/main.c",
+          "line": 561
+        },
+        {
+          "position": "parameter 2",
+          "historical_type": "Tmenu_params",
+          "candidate_type": "Tmenu_params",
+          "header": "include/recovered/Tmenu_params.h",
+          "status": "MISMATCH",
+          "historical_size": 60,
+          "candidate_size": 60,
+          "member_difference_count": 3,
+          "first_member_differences": [
+            {
+              "member": "bullet",
+              "historical": {
+                "offset": 44,
+                "size": 4,
+                "type": "BITMAP *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 44,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "data",
+              "historical": {
+                "offset": 52,
+                "size": 4,
+                "type": "DATAFILE *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 52,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "font",
+              "historical": {
+                "offset": 0,
+                "size": 4,
+                "type": "FONT *",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": {
+                "offset": 0,
+                "size": 4,
+                "type": "void *",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/menu.c",
+          "file": "src/menu.c",
+          "line": 456
+        }
+      ],
+      "candidate_signatures": [
+        "('int', ['Tmenu*', 'Tmenu_params*', 'Tcontrol*', 'BITMAP*', 'void(*)(void)', 'int', 'int', 'int'])"
+      ],
+      "candidate_card": "docs/current/interfaces/handle_menu.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/menu/handle_menu.json",
+  "evidence_counts": {
+    "relocation_mismatches": 32,
+    "direct_transfer_mismatches": 3,
+    "original_calls": 22,
+    "calls": 21,
+    "referenced_globals": 10
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

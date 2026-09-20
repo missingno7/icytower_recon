@@ -1,0 +1,985 @@
+{
+  "schema": 1,
+  "source": "src/main.c",
+  "target": "game-main",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+  "function": "handle_player_collision_original",
+  "historical_va": "0x407e10",
+  "historical_size": 456,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "void handle_player_collision_original(int lastX, int lastY);",
+  "return_type": "void",
+  "parameters": [
+    {
+      "die": 120809,
+      "name": "lastX",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 120754,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 91 0 \t(DW_OP_fbreg: 0)",
+      "address": null
+    },
+    {
+      "die": 120824,
+      "name": "lastY",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 120754,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 91 4 \t(DW_OP_fbreg: 4)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 120839,
+      "name": "solid1",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 120754,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x4635 (location list)",
+      "address": null
+    },
+    {
+      "die": 120855,
+      "name": "solid2",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 120754,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x465e (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 2094,
+    "body_end_line": 2134,
+    "body_sha256": "a451a7758758f7a47f1953091045a13fa0e5c237e85a950d2703815af9253945"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 120809,
+        "name": "lastX",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 120754,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 120824,
+        "name": "lastY",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 120754,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 120839,
+        "name": "solid1",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 120754,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 120855,
+        "name": "solid2",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 120754,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [
+      {
+        "signed_instruction": "movsbl",
+        "unsigned_instruction": "movzbl",
+        "original_counts": [
+          0,
+          0
+        ],
+        "candidate_counts": [
+          0,
+          1
+        ]
+      }
+    ],
+    "declaration_differences": [],
+    "cast_chains": [
+      "(int)",
+      "(int)",
+      "(int)",
+      "(int)"
+    ],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 449,
+  "first_difference": {
+    "offset": 205,
+    "original_va": 4226781,
+    "candidate_byte": 20,
+    "original_byte": 4
+  },
+  "mismatch_count": 154,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4226768,
+        "bytes": "8d1418",
+        "mnemonic": "lea",
+        "assembly": "lea    (%eax,%ebx,1),%edx",
+        "dwarf_variables": [
+          {
+            "die": 120839,
+            "name": "solid1",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "ebx"
+            },
+            "expression_hex": "53",
+            "relation": "register is used"
+          },
+          {
+            "die": 120855,
+            "name": "solid2",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4226771,
+        "bytes": "85d2",
+        "mnemonic": "test",
+        "assembly": "test   %edx,%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226773,
+        "bytes": "7525",
+        "mnemonic": "jne",
+        "assembly": "jne    407efc <_handle_player_collision_original+0xec>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226775,
+        "bytes": "a118e54f00",
+        "mnemonic": "mov",
+        "assembly": "mov    0x4fe518,%eax",
+        "dwarf_variables": [
+          {
+            "die": 120855,
+            "name": "solid2",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4226780,
+        "bytes": "8b048528f14f00",
+        "mnemonic": "mov",
+        "assembly": "mov    0x4ff128(,%eax,4),%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226787,
+        "bytes": "8b5034",
+        "mnemonic": "mov",
+        "assembly": "mov    0x34(%eax),%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226790,
+        "bytes": "83fa02",
+        "mnemonic": "cmp",
+        "assembly": "cmp    $0x2,%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226793,
+        "bytes": "7404",
+        "mnemonic": "je",
+        "assembly": "je     407eef <_handle_player_collision_original+0xdf>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4226795,
+        "bytes": "85d2",
+        "mnemonic": "test",
+        "assembly": "test   %edx,%edx",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 14664,
+        "bytes": "8d1418",
+        "mnemonic": "lea",
+        "assembly": "lea    (%eax,%ebx,1),%edx",
+        "dwarf_variables": [
+          {
+            "die": 24379,
+            "name": "solid1",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "ebx"
+            },
+            "expression_hex": "53",
+            "relation": "register is used"
+          },
+          {
+            "die": 24395,
+            "name": "solid2",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 14667,
+        "bytes": "85d2",
+        "mnemonic": "test",
+        "assembly": "test   %edx,%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14669,
+        "bytes": "7525",
+        "mnemonic": "jne",
+        "assembly": "jne    3974 <_handle_player_collision_original+0xec>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14671,
+        "bytes": "a100000000",
+        "mnemonic": "mov",
+        "assembly": "mov    0x0,%eax",
+        "dwarf_variables": [
+          {
+            "die": 24395,
+            "name": "solid2",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 14676,
+        "bytes": "8b148500000000",
+        "mnemonic": "mov",
+        "assembly": "mov    0x0(,%eax,4),%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14683,
+        "bytes": "8b4234",
+        "mnemonic": "mov",
+        "assembly": "mov    0x34(%edx),%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14686,
+        "bytes": "83f802",
+        "mnemonic": "cmp",
+        "assembly": "cmp    $0x2,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14689,
+        "bytes": "7404",
+        "mnemonic": "je",
+        "assembly": "je     3967 <_handle_player_collision_original+0xdf>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 14691,
+        "bytes": "85c0",
+        "mnemonic": "test",
+        "assembly": "test   %eax,%eax",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3298,
+      "address": 4226727,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3299,
+      "address": 4226733,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3300,
+      "address": 4226738,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3301,
+      "address": 4226768,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3302,
+      "address": 4226795,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3313,
+      "address": 4226806,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3303,
+      "address": 4226812,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 3304,
+      "address": 4226838,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "any11",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd170",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "any12",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd174",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "any21",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd17c",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "any22",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd180",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "any23",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd184",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "map",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4f8b18",
+      "dwarf_type": "Tmap",
+      "size": 772,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "ply",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4ff128",
+      "dwarf_type": "Tplayer *[1000]",
+      "size": 4000,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 5,
+      "function_offsets": []
+    },
+    {
+      "symbol": "player_id",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fe518",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 5,
+      "function_offsets": []
+    },
+    {
+      "symbol": "combo_sound",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd280",
+      "dwarf_type": "SAMPLE *[10]",
+      "size": 40,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_is_solid",
+      "function_offset": 74,
+      "target_va": 4286172,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        147,
+        74
+      ]
+    },
+    {
+      "symbol": "play_sound",
+      "function_offset": 385,
+      "target_va": 4222372,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        385
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4226722,
+      "bytes": "e835e80000",
+      "mnemonic": "call",
+      "assembly": "call   4166dc <_is_solid>"
+    },
+    {
+      "address": 4226649,
+      "bytes": "e87ee80000",
+      "mnemonic": "call",
+      "assembly": "call   4166dc <_is_solid>"
+    },
+    {
+      "address": 4226984,
+      "bytes": "e8f7edffff",
+      "mnemonic": "call",
+      "assembly": "call   406da4 <_play_sound>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 14846,
+      "symbol_index": 148,
+      "symbol": "_combo_sound",
+      "type": 6,
+      "function_offset": 374,
+      "addend": 0,
+      "target_va": 5100160,
+      "resolution": "named symbol",
+      "resolved_value": 5100160,
+      "original_value": 2379279104,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 14863,
+      "symbol_index": 130,
+      "symbol": "_player_id",
+      "type": 6,
+      "function_offset": 391,
+      "addend": 0,
+      "target_va": 5235992,
+      "resolution": "named symbol",
+      "resolved_value": 5235992,
+      "original_value": 260,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 14870,
+      "symbol_index": 131,
+      "symbol": "_ply",
+      "type": 6,
+      "function_offset": 398,
+      "addend": 0,
+      "target_va": 5239080,
+      "resolution": "named symbol",
+      "resolved_value": 5239080,
+      "original_value": 5100288,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 384,
+      "function_offset": 385,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "play_sound",
+      "target_va": 4222372,
+      "candidate_target": 10940,
+      "candidate_displacement": -3921,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962703,
+      "original_value": 3338665984,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 0,
+  "neighbor_layout": [
+    {
+      "function": "play_sound",
+      "status": "DIFFER",
+      "historical_offset": 1092,
+      "candidate_offset": 10940,
+      "size_delta": 0
+    },
+    {
+      "function": "start_reward",
+      "status": "DIFFER",
+      "historical_offset": 4824,
+      "candidate_offset": 14924,
+      "size_delta": 4
+    },
+    {
+      "function": "handle_player_collision_old",
+      "status": "DIFFER",
+      "historical_offset": 5752,
+      "candidate_offset": 13736,
+      "size_delta": -160
+    },
+    {
+      "function": "play",
+      "status": "DIFFER",
+      "historical_offset": 45216,
+      "candidate_offset": 17580,
+      "size_delta": -16796
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "pointer-live-range",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Equivalent pointer/index uses a different register",
+      "known_source_cause": "Pointer and loop index may be folded when their relationship is provable",
+      "known_fix_pattern": "Match evidenced locals and lifetimes; do not add arbitrary volatile",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "generate_profile_checksum"
+      ],
+      "evidence": "docs/profile-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "assignment-register",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Argument setup differs at equal size",
+      "known_source_cause": "Source expression shape affects result register",
+      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "draw_scroller"
+      ],
+      "evidence": "docs/scroller-experiment.md",
+      "confidence": "HYPOTHESIS"
+    },
+    {
+      "id": "declaration-scope",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Allocation or stack spill differs",
+      "known_source_cause": "Declaration scope and local live ranges differ",
+      "known_fix_pattern": "Use DWARF lexical locals and scope before exploring flags",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "add_floor",
+        "profile_data_page_advanced"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "lea-expression",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "LEA versus shift/add differs",
+      "known_source_cause": "Algebraically equivalent edge calculation has different shape",
+      "known_fix_pattern": "Use the recovered right-edge expression as a scoped example",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "getFloorData"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "peeled-loop-load-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "An equal-size loop differs only in adjacent byte/dword load ordering.",
+      "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
+      "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
+      },
+      "example_functions": [
+        "calc_replay_checksum_131"
+      ],
+      "confidence": "OBSERVED_FAILED_PATTERNS",
+      "evidence": "docs/attempts/replay-load-order-confirmation.json",
+      "failed_experiments": "docs/attempts/game-replay/calc_replay_checksum_131.jsonl",
+      "observed_offsets": {
+        "baseline": [
+          144,
+          145,
+          147,
+          148,
+          149,
+          150
+        ],
+        "operand_swap": [
+          134,
+          135,
+          136,
+          137,
+          138
+        ]
+      }
+    },
+    {
+      "id": "declaration-uid-independent-clear-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Adding a complete prototype can renumber GCC static symbols and swap adjacent independent register clears in an unrelated unresolved function.",
+      "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
+      "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
+      },
+      "example_functions": [
+        "create_post",
+        "line_alert"
+      ],
+      "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
+      "evidence": "docs/attempts/interfaces/create_post.jsonl"
+    }
+  ],
+  "difficulty": "MEDIUM",
+  "priority": 81,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-main.json",
+  "verification_command": "python tools/check_function.py game-main handle_player_collision_original",
+  "begin_command": "python tools/grinder_task.py begin game-main handle_player_collision_original",
+  "promotion_command": "python tools/promote_function.py game-main handle_player_collision_original",
+  "storage_declarations": [
+    {
+      "name": "any11",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136522.json"
+    },
+    {
+      "name": "any12",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136542.json"
+    },
+    {
+      "name": "any21",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136582.json"
+    },
+    {
+      "name": "any22",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136602.json"
+    },
+    {
+      "name": "any23",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136622.json"
+    },
+    {
+      "name": "map",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmap",
+      "candidate_type": "Tmap",
+      "candidate_card": "docs/current/storage/game-main/137155.json"
+    },
+    {
+      "name": "ply",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tplayer *[1000]",
+      "candidate_type": "Tplayer *[1000]",
+      "candidate_card": "docs/current/storage/game-main/137190.json"
+    },
+    {
+      "name": "player_id",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/137208.json"
+    },
+    {
+      "name": "combo_sound",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[10]",
+      "candidate_type": "SAMPLE *[10]",
+      "candidate_card": "docs/current/storage/game-main/138157.json"
+    }
+  ],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [
+    {
+      "function": "handle_player_collision_original",
+      "historical": [
+        {
+          "cu": "src/main.c",
+          "return_type": "void",
+          "parameter_types": [
+            "int",
+            "int"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 120754
+        }
+      ],
+      "type_layout_issues": [],
+      "candidate_signatures": [
+        "('int', ['/*???*/'])",
+        "('void', ['int', 'int'])"
+      ],
+      "candidate_card": "docs/current/interfaces/handle_player_collision_original.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/main/handle_player_collision_original.json",
+  "evidence_counts": {
+    "relocation_mismatches": 3,
+    "direct_transfer_mismatches": 1,
+    "original_calls": 3,
+    "calls": 3,
+    "referenced_globals": 9
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

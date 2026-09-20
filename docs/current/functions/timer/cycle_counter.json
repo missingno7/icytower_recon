@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "source": "src/timer.c",
+  "target": "game-timer",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\timer.c",
+  "function": "cycle_counter",
+  "historical_va": "0x41fed4",
+  "historical_size": 16,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "void cycle_counter(void);",
+  "return_type": "void",
+  "parameters": [],
+  "locals": [],
+  "lexical_blocks": [],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 26,
+    "body_end_line": 28,
+    "body_sha256": "3c52cbf54598b45247eb2148c1754868fb13f579c561eb9a7921f7886fb534db"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 16,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4325076,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4325077,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4325079,
+        "bytes": "a138695000",
+        "mnemonic": "mov",
+        "assembly": "mov    0x506938,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4325084,
+        "bytes": "40",
+        "mnemonic": "inc",
+        "assembly": "inc    %eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4325085,
+        "bytes": "a338695000",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x506938",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 48,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 49,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 51,
+        "bytes": "a100000000",
+        "mnemonic": "mov",
+        "assembly": "mov    0x0,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 56,
+        "bytes": "40",
+        "mnemonic": "inc",
+        "assembly": "inc    %eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 57,
+        "bytes": "a300000000",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,0x0",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "timer.c",
+      "file": "timer.c",
+      "line": 30,
+      "address": 4325076,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timer.c",
+      "file": "timer.c",
+      "line": 31,
+      "address": 4325079,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "timer.c",
+      "file": "timer.c",
+      "line": 32,
+      "address": 4325090,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "cycle_count",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\timer.c",
+      "historical_address": "0x506938",
+      "dwarf_type": "volatile int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    }
+  ],
+  "calls": [],
+  "original_calls": [],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "fps_counter",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 0,
+      "candidate_offset": 0,
+      "size_delta": 0
+    },
+    {
+      "function": "install_timers",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 64,
+      "candidate_offset": 64,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 50,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-timer.json",
+  "verification_command": "python tools/check_function.py game-timer cycle_counter",
+  "begin_command": "python tools/grinder_task.py begin game-timer cycle_counter",
+  "promotion_command": "python tools/promote_function.py game-timer cycle_counter",
+  "storage_declarations": [
+    {
+      "name": "cycle_count",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "volatile int",
+      "candidate_type": "volatile int",
+      "candidate_card": "docs/current/storage/game-timer/269499.json"
+    }
+  ],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/timer/cycle_counter.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 0,
+    "calls": 0,
+    "referenced_globals": 1
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_loadpng_MEMORY_READER_STATE",
+  "source": "src/loadpng.c",
+  "sources": [
+    "src/loadpng.c"
+  ],
+  "alias": "MEMORY_READER_STATE",
+  "observations": [
+    {
+      "function": "read_data_memory",
+      "variable": "f",
+      "historical_type": "MEMORY_READER_STATE",
+      "historical_die": 97619,
+      "candidate_die": 15944
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/loadpng.c": {
+      "size": 11654,
+      "sha256": "f7be2dc9f34a215de8830275529be3b1b585da4fb73c29ce872bfedebe2b6ed1"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_loadpng_MEMORY_READER_STATE",
+  "apply_command": "python tools/interface_task.py apply view_loadpng_MEMORY_READER_STATE",
+  "verification_command": "python tools/interface_task.py check view_loadpng_MEMORY_READER_STATE",
+  "promotion_command": "python tools/interface_task.py promote view_loadpng_MEMORY_READER_STATE",
+  "canonical": "MEMORY_READER_STATE",
+  "header": "include/recovered/MEMORY_READER_STATE.h",
+  "header_identity": {
+    "size": 853,
+    "sha256": "388a1192867c9abd8c83db78ead56c76725602980a102fb6d022a99e35076133"
+  },
+  "expected_layout": {
+    "kind": "structure_type",
+    "size": 12,
+    "type": "struct {\n    const unsigned char *buffer;\n    png_uint_32 bufsize;\n    png_uint_32 current_pos;\n} ",
+    "members": [
+      {
+        "name": "buffer",
+        "offset": 0,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "const unsigned char *"
+        }
+      },
+      {
+        "name": "bufsize",
+        "offset": 4,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "long unsigned int",
+          "encoding": "7\t(unsigned)"
+        }
+      },
+      {
+        "name": "current_pos",
+        "offset": 8,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "long unsigned int",
+          "encoding": "7\t(unsigned)"
+        }
+      }
+    ]
+  },
+  "candidate_size": 12,
+  "historical_size": 12,
+  "member_correspondence": [
+    {
+      "candidate_member": "buffer",
+      "candidate_offset": 0,
+      "candidate_type": "const unsigned char *",
+      "historical_field_at_offset": {
+        "expression": "MEMORY_READER_STATE.buffer",
+        "offset": 0,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "const unsigned char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "buffer",
+            "index": 0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "bufsize",
+      "candidate_offset": 4,
+      "candidate_type": "long unsigned int",
+      "historical_field_at_offset": {
+        "expression": "MEMORY_READER_STATE.bufsize",
+        "offset": 4,
+        "size": 4,
+        "kind": "base_type",
+        "type": "long unsigned int",
+        "encoding": "7\t(unsigned)",
+        "steps": [
+          {
+            "member": "bufsize",
+            "index": 1
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "current_pos",
+      "candidate_offset": 8,
+      "candidate_type": "long unsigned int",
+      "historical_field_at_offset": {
+        "expression": "MEMORY_READER_STATE.current_pos",
+        "offset": 8,
+        "size": 4,
+        "kind": "base_type",
+        "type": "long unsigned int",
+        "encoding": "7\t(unsigned)",
+        "steps": [
+          {
+            "member": "current_pos",
+            "index": 2
+          }
+        ]
+      }
+    }
+  ],
+  "reason": "Non-pointer or size-dependent view use requires supervisor review"
+}

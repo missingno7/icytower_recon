@@ -1,0 +1,1392 @@
+{
+  "schema": 1,
+  "source": "src/savepng.c",
+  "target": "game-savepng",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+  "function": "really_save_png",
+  "historical_va": "0x41e8b0",
+  "historical_size": 1870,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "int really_save_png(PACKFILE *fp, BITMAP *bmp, const RGB *pal);",
+  "return_type": "int",
+  "parameters": [
+    {
+      "die": 242021,
+      "name": "fp",
+      "type_die": 242734,
+      "type": "PACKFILE *",
+      "scope": 241981,
+      "base_type": "PACKFILE",
+      "base_encoding": null,
+      "location": "0xb28a (location list)",
+      "address": null
+    },
+    {
+      "die": 242035,
+      "name": "bmp",
+      "type_die": 239924,
+      "type": "BITMAP *",
+      "scope": 241981,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0xb29d (location list)",
+      "address": null
+    },
+    {
+      "die": 242050,
+      "name": "pal",
+      "type_die": 242740,
+      "type": "const RGB *",
+      "scope": 241981,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "0xb308 (location list)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 242065,
+      "name": "png_ptr",
+      "type_die": 233437,
+      "type": "png_structp",
+      "scope": 241981,
+      "base_type": "png_struct_def",
+      "base_encoding": null,
+      "location": "0xb331 (location list)",
+      "address": null
+    },
+    {
+      "die": 242080,
+      "name": "info_ptr",
+      "type_die": 229906,
+      "type": "png_infop",
+      "scope": 241981,
+      "base_type": "png_info_struct",
+      "base_encoding": null,
+      "location": "0xb35c (location list)",
+      "address": null
+    },
+    {
+      "die": 242100,
+      "name": "depth",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 241981,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 c4 79 \t(DW_OP_breg5 (ebp): -828)",
+      "address": null
+    },
+    {
+      "die": 242117,
+      "name": "colour_type",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 241981,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 242210,
+      "name": "depth",
+      "type_die": 239508,
+      "type": "const int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null
+    },
+    {
+      "die": 242219,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242205,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 242224,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 d4 79 \t(DW_OP_breg5 (ebp): -812)",
+      "address": null
+    },
+    {
+      "die": 242233,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242205,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb387 (location list)",
+      "address": null
+    },
+    {
+      "die": 242251,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242242,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0xb3e7 (location list)",
+      "address": null
+    },
+    {
+      "die": 242273,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242260,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb410 (location list)",
+      "address": null
+    },
+    {
+      "die": 242323,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242314,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb423 (location list)",
+      "address": null
+    },
+    {
+      "die": 242373,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242364,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb436 (location list)",
+      "address": null
+    },
+    {
+      "die": 242451,
+      "name": "palette",
+      "type_die": 242751,
+      "type": "png_color [256]",
+      "scope": 242438,
+      "base_type": "png_color_struct",
+      "base_encoding": null,
+      "location": "3 byte block: 91 d8 79 \t(DW_OP_fbreg: -808)",
+      "address": null
+    },
+    {
+      "die": 242466,
+      "name": "i",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 242518,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242505,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb449 (location list)",
+      "address": null
+    },
+    {
+      "die": 242537,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242528,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 242542,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242528,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb467 (location list)",
+      "address": null
+    },
+    {
+      "die": 242551,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242528,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb485 (location list)",
+      "address": null
+    },
+    {
+      "die": 242565,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242560,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null
+    },
+    {
+      "die": 242643,
+      "name": "rowdata",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242634,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 242648,
+      "name": "x",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242634,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4ae (location list)",
+      "address": null
+    },
+    {
+      "die": 242657,
+      "name": "y",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242634,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4cc (location list)",
+      "address": null
+    },
+    {
+      "die": 242671,
+      "name": "p",
+      "type_die": 226647,
+      "type": "unsigned char *",
+      "scope": 242666,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "3 byte block: 75 cc 79 \t(DW_OP_breg5 (ebp): -820)",
+      "address": null
+    },
+    {
+      "die": 242689,
+      "name": "c",
+      "type_die": 226044,
+      "type": "int",
+      "scope": 242680,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0xb4df (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 242150,
+      "parent": 241981,
+      "low_pc": 4319452,
+      "high_pc": 4319463,
+      "ranges": null
+    },
+    {
+      "die": 242175,
+      "parent": 241981,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1448"
+    },
+    {
+      "die": 242205,
+      "parent": 242175,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1468"
+    },
+    {
+      "die": 242242,
+      "parent": 242205,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1488"
+    },
+    {
+      "die": 242260,
+      "parent": 242242,
+      "low_pc": 4320584,
+      "high_pc": 4320676,
+      "ranges": null
+    },
+    {
+      "die": 242282,
+      "parent": 242260,
+      "low_pc": 4320584,
+      "high_pc": 4320613,
+      "ranges": null
+    },
+    {
+      "die": 242314,
+      "parent": 242242,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14a0"
+    },
+    {
+      "die": 242332,
+      "parent": 242314,
+      "low_pc": 4321128,
+      "high_pc": 4321151,
+      "ranges": null
+    },
+    {
+      "die": 242364,
+      "parent": 242242,
+      "low_pc": 4321004,
+      "high_pc": 4321098,
+      "ranges": null
+    },
+    {
+      "die": 242382,
+      "parent": 242364,
+      "low_pc": 4321004,
+      "high_pc": 4321027,
+      "ranges": null
+    },
+    {
+      "die": 242415,
+      "parent": 242205,
+      "low_pc": 4319765,
+      "high_pc": 4319782,
+      "ranges": null
+    },
+    {
+      "die": 242438,
+      "parent": 241981,
+      "low_pc": 4319984,
+      "high_pc": 4320066,
+      "ranges": null
+    },
+    {
+      "die": 242476,
+      "parent": 241981,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14b8"
+    },
+    {
+      "die": 242505,
+      "parent": 242476,
+      "low_pc": 4320112,
+      "high_pc": 4320172,
+      "ranges": null
+    },
+    {
+      "die": 242528,
+      "parent": 242476,
+      "low_pc": 4320807,
+      "high_pc": 4320984,
+      "ranges": null
+    },
+    {
+      "die": 242560,
+      "parent": 242528,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14d0"
+    },
+    {
+      "die": 242574,
+      "parent": 242560,
+      "low_pc": 4320888,
+      "high_pc": 4320911,
+      "ranges": null
+    },
+    {
+      "die": 242608,
+      "parent": 241981,
+      "low_pc": 4320296,
+      "high_pc": 4320518,
+      "ranges": null
+    },
+    {
+      "die": 242634,
+      "parent": 242608,
+      "low_pc": 4320296,
+      "high_pc": 4320518,
+      "ranges": null
+    },
+    {
+      "die": 242666,
+      "parent": 242634,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x14e8"
+    },
+    {
+      "die": 242680,
+      "parent": 242666,
+      "low_pc": 4320368,
+      "high_pc": 4320444,
+      "ranges": null
+    },
+    {
+      "die": 242698,
+      "parent": 242680,
+      "low_pc": 4320368,
+      "high_pc": 4320391,
+      "ranges": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 167,
+    "body_end_line": 284,
+    "body_sha256": "bf05bc8e82ddc25c8a9e0d457445cac9ada6669f11a11cdd717ceeec12907f99"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 242100,
+        "name": "depth",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 241981,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242117,
+        "name": "colour_type",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 241981,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242210,
+        "name": "depth",
+        "type_die": 239508,
+        "type": "const int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242219,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242205,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242224,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242233,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242205,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242251,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242242,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242273,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242260,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242323,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242314,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242373,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242364,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242466,
+        "name": "i",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242518,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242505,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242537,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242528,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242542,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242528,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242551,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242528,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242565,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242560,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242643,
+        "name": "rowdata",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242634,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242648,
+        "name": "x",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242634,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242657,
+        "name": "y",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242634,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 242671,
+        "name": "p",
+        "type_die": 226647,
+        "type": "unsigned char *",
+        "scope": 242666,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 242689,
+        "name": "c",
+        "type_die": 226044,
+        "type": "int",
+        "scope": 242680,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 1870,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4319408,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319409,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319411,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319412,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4319413,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 8,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 9,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 11,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 12,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 13,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 167,
+      "address": 4319408,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 168,
+      "address": 4319438,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "savepng.c",
+      "file": "savepng.c",
+      "line": 169,
+      "address": 4319445,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "E:/Lib/allegro4/include/allegro/inline/gfx.inl",
+      "file": "gfx.inl",
+      "line": 104,
+      "address": 4319452,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 174,
+      "address": 4319463,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 180,
+      "address": 4319472,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 182,
+      "address": 4319511,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/savepng.c",
+      "file": "savepng.c",
+      "line": 186,
+      "address": 4319519,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "_png_compression_level",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "historical_address": "0x4bc010",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "09000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_r_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8668",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_g_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9d4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "05000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_b_shift_15",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9d8",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0a000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_r_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e866c",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_g_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9dc",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "05000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_b_shift_16",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e0",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0b000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_r_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8670",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_g_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "08000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_b_shift_24",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9e8",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "10000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_r_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4e8674",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_g_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9ec",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "08000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_b_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9f0",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "10000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_a_shift_32",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cc9f4",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "18000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_scale_5",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cca00",
+      "dwarf_type": "int [32]",
+      "size": 128,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0000000008000000100000001800000021000000290000003100000039000000420000004a000000520000005a000000630000006b000000730000007b000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 5,
+      "function_offsets": []
+    },
+    {
+      "symbol": "_rgb_scale_6",
+      "cu": "C:\\Lib\\allegro4\\src\\graphics.c",
+      "historical_address": "0x4cca80",
+      "dwarf_type": "int [64]",
+      "size": 256,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0000000004000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d7e00",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        91
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x41e8a8",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        153
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x41f074",
+      "candidate_addend": 1996,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        161
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\savepng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d7e08",
+      "candidate_addend": 8,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        344
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_png_create_write_struct",
+      "function_offset": 96,
+      "target_va": 4915500,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        96
+      ]
+    },
+    {
+      "symbol": "_png_create_info_struct",
+      "function_offset": 115,
+      "target_va": 4915452,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        115
+      ]
+    },
+    {
+      "symbol": "__setjmp",
+      "function_offset": 137,
+      "target_va": 4959648,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        137
+      ]
+    },
+    {
+      "symbol": "_png_set_write_fn",
+      "function_offset": 182,
+      "target_va": 4915508,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        182
+      ]
+    },
+    {
+      "symbol": "_png_set_compression_level",
+      "function_offset": 228,
+      "target_va": 4915524,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        228,
+        480,
+        780
+      ]
+    },
+    {
+      "symbol": "_png_set_IHDR",
+      "function_offset": 305,
+      "target_va": 4915532,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        305,
+        557,
+        857
+      ]
+    },
+    {
+      "symbol": "_png_write_info",
+      "function_offset": 323,
+      "target_va": 4915540,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        323,
+        672,
+        875
+      ]
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 383,
+      "target_va": 4959504,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        383,
+        903,
+        1414
+      ]
+    },
+    {
+      "symbol": "_png_destroy_write_struct",
+      "function_offset": 444,
+      "target_va": 4915564,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        444,
+        1382,
+        1838
+      ]
+    },
+    {
+      "symbol": "_png_set_PLTE",
+      "function_offset": 654,
+      "target_va": 4915516,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        654
+      ]
+    },
+    {
+      "symbol": "_png_write_row",
+      "function_offset": 740,
+      "target_va": 4915556,
+      "verified": true,
+      "reference_count": 4,
+      "function_offsets": [
+        740,
+        1061,
+        1299,
+        1537
+      ]
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 1092,
+      "target_va": 4959496,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        1092,
+        1334,
+        1557
+      ]
+    },
+    {
+      "symbol": "_png_write_end",
+      "function_offset": 1364,
+      "target_va": 4915548,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        1364
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4319503,
+      "bytes": "e818180900",
+      "mnemonic": "call",
+      "assembly": "call   4b012c <_png_create_write_struct>"
+    },
+    {
+      "address": 4319522,
+      "bytes": "e8d5170900",
+      "mnemonic": "call",
+      "assembly": "call   4b00fc <_png_create_info_struct>"
+    },
+    {
+      "address": 4319544,
+      "bytes": "e863c40900",
+      "mnemonic": "call",
+      "assembly": "call   4bada0 <__setjmp>"
+    },
+    {
+      "address": 4319589,
+      "bytes": "e8ca170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0134 <_png_set_write_fn>"
+    },
+    {
+      "address": 4319635,
+      "bytes": "e8ac170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0144 <_png_set_compression_level>"
+    },
+    {
+      "address": 4319712,
+      "bytes": "e867170900",
+      "mnemonic": "call",
+      "assembly": "call   4b014c <_png_set_IHDR>"
+    },
+    {
+      "address": 4319730,
+      "bytes": "e85d170900",
+      "mnemonic": "call",
+      "assembly": "call   4b0154 <_png_write_info>"
+    },
+    {
+      "address": 4319749,
+      "bytes": "ff2485087e4d00",
+      "mnemonic": "jmp",
+      "assembly": "jmp    *0x4d7e08(,%eax,4)"
+    }
+  ],
+  "indirect_control_flow": 6,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "flush_data",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 0,
+      "candidate_offset": 0,
+      "size_delta": 0
+    },
+    {
+      "function": "save_png",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1880,
+      "candidate_offset": 1880,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": -40,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-savepng.json",
+  "verification_command": "python tools/check_function.py game-savepng really_save_png",
+  "begin_command": "python tools/grinder_task.py begin game-savepng really_save_png",
+  "promotion_command": "python tools/promote_function.py game-savepng really_save_png",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/savepng/really_save_png.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 34,
+    "calls": 28,
+    "referenced_globals": 20
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

@@ -58,28 +58,6 @@ extern int sprintf(char *str, const char *format, ...);
 extern char *strcat(char *dest, const char *src);
 extern Tcommandline cmdline;
 
-void add_jump_sequence(Tgame_data *gd,Tgd_jump_sequence *js)
-{
-    if (js->num && gd->jumpPosts<5000) {
-        gd->jumps[gd->jumpPosts].num=js->num;
-        gd->jumps[gd->jumpPosts].dist=js->dist;
-        gd->jumps[gd->jumpPosts].start=js->start;
-        gd->jumpPosts++;
-    }
-}
-
-void add_combo(Tgame_data *gd,Tgd_combo *c)
-{
-    if (gd->comboPosts<5000) {
-        gd->combos[gd->comboPosts].end=c->end;
-        gd->combos[gd->comboPosts].start=c->start;
-        gd->combos[gd->comboPosts].length=c->length;
-        gd->comboPosts++;
-    }
-}
-
-void destroy_game_data(void *gd) { free(gd); }
-
 Tgame_data *create_game_data(void)
 {
     int i;
@@ -147,3 +125,25 @@ char *getGameDataXML(Tgame_data *gd)
     strcat(xmlStr,"</itrcheck_results>\n");
     return xmlStr;
 }
+
+void add_jump_sequence(Tgame_data *gd,Tgd_jump_sequence *js)
+{
+    if (js->num && gd->jumpPosts<5000) {
+        gd->jumps[gd->jumpPosts].num=js->num;
+        gd->jumps[gd->jumpPosts].dist=js->dist;
+        gd->jumps[gd->jumpPosts].start=js->start;
+        gd->jumpPosts++;
+    }
+}
+
+void add_combo(Tgame_data *gd,Tgd_combo *c)
+{
+    if (gd->comboPosts<5000) {
+        gd->combos[gd->comboPosts].end=c->end;
+        gd->combos[gd->comboPosts].start=c->start;
+        gd->combos[gd->comboPosts].length=c->length;
+        gd->comboPosts++;
+    }
+}
+
+void destroy_game_data(void *gd) { free(gd); }

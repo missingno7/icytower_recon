@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_game_data",
+  "source": "src/game_data.c",
+  "sources": [
+    "src/game_data.c"
+  ],
+  "target": "game-game-data",
+  "affected_targets": [
+    "game-game-data"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/game_data.c": {
+      "size": 6809,
+      "sha256": "581a265da5b1e62c9629e53a6b81c7333c0194a0c5cf862311b3b1fa8c03ee46"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "create_game_data",
+      "historical_line": 30
+    },
+    {
+      "function": "getGameDataXML",
+      "historical_line": 51
+    },
+    {
+      "function": "add_jump_sequence",
+      "historical_line": 182
+    },
+    {
+      "function": "add_combo",
+      "historical_line": 193
+    },
+    {
+      "function": "destroy_game_data",
+      "historical_line": 203
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_game_data",
+  "apply_command": "python tools/interface_task.py apply order_game_data",
+  "verification_command": "python tools/interface_task.py check order_game_data",
+  "promotion_command": "python tools/interface_task.py promote order_game_data",
+  "current_order": [
+    "create_game_data",
+    "getGameDataXML",
+    "add_jump_sequence",
+    "add_combo",
+    "destroy_game_data"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

@@ -1,0 +1,1728 @@
+{
+  "schema": 1,
+  "source": "src/custom.c",
+  "target": "game-custom",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+  "function": "load_character_bmp",
+  "historical_va": "0x4031cc",
+  "historical_size": 1992,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "BITMAP * load_character_bmp(const char *name, int *uses_datafile, RGB *pal);",
+  "return_type": "BITMAP *",
+  "parameters": [
+    {
+      "die": 30206,
+      "name": "name",
+      "type_die": 22333,
+      "type": "const char *",
+      "scope": 30162,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x13f6 (location list)",
+      "address": null
+    },
+    {
+      "die": 30222,
+      "name": "uses_datafile",
+      "type_die": 21232,
+      "type": "int *",
+      "scope": 30162,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x1416 (location list)",
+      "address": null
+    },
+    {
+      "die": 30237,
+      "name": "pal",
+      "type_die": 30943,
+      "type": "RGB *",
+      "scope": 30162,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "0x14ae (location list)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 30252,
+      "name": "fp",
+      "type_die": 29160,
+      "type": "FILE *",
+      "scope": 30162,
+      "base_type": "_iobuf",
+      "base_encoding": null,
+      "location": "3 byte block: 75 e4 65 \t(DW_OP_breg5 (ebp): -3356)",
+      "address": null
+    },
+    {
+      "die": 30266,
+      "name": "buf",
+      "type_die": 29166,
+      "type": "char [1024]",
+      "scope": 30162,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 75 \t(DW_OP_fbreg: -1312)",
+      "address": null
+    },
+    {
+      "die": 30281,
+      "name": "ret",
+      "type_die": 21129,
+      "type": "char *",
+      "scope": 30162,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x153a (location list)",
+      "address": null
+    },
+    {
+      "die": 30296,
+      "name": "data",
+      "type_die": 29166,
+      "type": "char [1024]",
+      "scope": 30162,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 6d \t(DW_OP_fbreg: -2336)",
+      "address": null
+    },
+    {
+      "die": 30311,
+      "name": "filename",
+      "type_die": 29166,
+      "type": "char [1024]",
+      "scope": 30162,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 65 \t(DW_OP_fbreg: -3360)",
+      "address": null
+    },
+    {
+      "die": 30326,
+      "name": "ok",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30162,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x15bb (location list)",
+      "address": null
+    },
+    {
+      "die": 30340,
+      "name": "i",
+      "type_die": 20932,
+      "type": "unsigned int",
+      "scope": 30162,
+      "base_type": "unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "0x161b (location list)",
+      "address": null
+    },
+    {
+      "die": 30353,
+      "name": "depth",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30162,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x164f (location list)",
+      "address": null
+    },
+    {
+      "die": 30379,
+      "name": "color_conversion",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30370,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x1683 (location list)",
+      "address": null
+    },
+    {
+      "die": 30394,
+      "name": "bmp",
+      "type_die": 27191,
+      "type": "BITMAP *",
+      "scope": 30370,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x16ac (location list)",
+      "address": null
+    },
+    {
+      "die": 30422,
+      "name": "buf",
+      "type_die": 30146,
+      "type": "char [256]",
+      "scope": 30409,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 7d \t(DW_OP_fbreg: -288)",
+      "address": null
+    },
+    {
+      "die": 30447,
+      "name": "x",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x172d (location list)",
+      "address": null
+    },
+    {
+      "die": 30460,
+      "name": "y",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x1782 (location list)",
+      "address": null
+    },
+    {
+      "die": 30473,
+      "name": "w",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x17c1 (location list)",
+      "address": null
+    },
+    {
+      "die": 30486,
+      "name": "h",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x17d4 (location list)",
+      "address": null
+    },
+    {
+      "die": 30499,
+      "name": "char_bmp",
+      "type_die": 27191,
+      "type": "BITMAP *",
+      "scope": 30438,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x181e (location list)",
+      "address": null
+    },
+    {
+      "die": 30514,
+      "name": "frame_color",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30438,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 e4 65 \t(DW_OP_breg5 (ebp): -3356)",
+      "address": null
+    },
+    {
+      "die": 30529,
+      "name": "tmp_bmp",
+      "type_die": 27191,
+      "type": "BITMAP *",
+      "scope": 30438,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x183c (location list)",
+      "address": null
+    },
+    {
+      "die": 30697,
+      "name": "buf",
+      "type_die": 30146,
+      "type": "char [256]",
+      "scope": 30688,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 7d \t(DW_OP_fbreg: -288)",
+      "address": null
+    },
+    {
+      "die": 30814,
+      "name": "buf",
+      "type_die": 30146,
+      "type": "char [256]",
+      "scope": 30805,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 7d \t(DW_OP_fbreg: -288)",
+      "address": null
+    },
+    {
+      "die": 30836,
+      "name": "df",
+      "type_die": 28204,
+      "type": "DATAFILE *",
+      "scope": 30831,
+      "base_type": "DATAFILE",
+      "base_encoding": null,
+      "location": "0x1870 (location list)",
+      "address": null
+    },
+    {
+      "die": 30850,
+      "name": "char_bmp",
+      "type_die": 27191,
+      "type": "BITMAP *",
+      "scope": 30831,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x1899 (location list)",
+      "address": null
+    },
+    {
+      "die": 30865,
+      "name": "color_conversion",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30831,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x18cd (location list)",
+      "address": null
+    },
+    {
+      "die": 30889,
+      "name": "w",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30880,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x18eb (location list)",
+      "address": null
+    },
+    {
+      "die": 30902,
+      "name": "h",
+      "type_die": 21135,
+      "type": "int",
+      "scope": 30880,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x1909 (location list)",
+      "address": null
+    },
+    {
+      "die": 30925,
+      "name": "buf",
+      "type_die": 30146,
+      "type": "char [256]",
+      "scope": 30916,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 7d \t(DW_OP_fbreg: -288)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 30370,
+      "parent": 30162,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x128"
+    },
+    {
+      "die": 30409,
+      "parent": 30370,
+      "low_pc": 4208369,
+      "high_pc": 4208422,
+      "ranges": null
+    },
+    {
+      "die": 30438,
+      "parent": 30370,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x150"
+    },
+    {
+      "die": 30548,
+      "parent": 30438,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x170"
+    },
+    {
+      "die": 30588,
+      "parent": 30438,
+      "low_pc": 4208100,
+      "high_pc": 4208116,
+      "ranges": null
+    },
+    {
+      "die": 30618,
+      "parent": 30438,
+      "low_pc": 4207887,
+      "high_pc": 4207910,
+      "ranges": null
+    },
+    {
+      "die": 30653,
+      "parent": 30438,
+      "low_pc": 4207802,
+      "high_pc": 4207825,
+      "ranges": null
+    },
+    {
+      "die": 30688,
+      "parent": 30438,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x188"
+    },
+    {
+      "die": 30713,
+      "parent": 30438,
+      "low_pc": 4207580,
+      "high_pc": 4207613,
+      "ranges": null
+    },
+    {
+      "die": 30748,
+      "parent": 30438,
+      "low_pc": 4207616,
+      "high_pc": 4207633,
+      "ranges": null
+    },
+    {
+      "die": 30780,
+      "parent": 30370,
+      "low_pc": 4207519,
+      "high_pc": 4207524,
+      "ranges": null
+    },
+    {
+      "die": 30805,
+      "parent": 30370,
+      "low_pc": 4208470,
+      "high_pc": 4208492,
+      "ranges": null
+    },
+    {
+      "die": 30831,
+      "parent": 30162,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1a0"
+    },
+    {
+      "die": 30880,
+      "parent": 30831,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x1c0"
+    },
+    {
+      "die": 30916,
+      "parent": 30831,
+      "low_pc": 4208995,
+      "high_pc": 4209044,
+      "ranges": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 30,
+    "body_end_line": 157,
+    "body_sha256": "247271751a338e594a8214d19f8a1e27e170d04b9e606237d82b38f97b43c1fe"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 30206,
+        "name": "name",
+        "type_die": 22333,
+        "type": "const char *",
+        "scope": 30162,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30222,
+        "name": "uses_datafile",
+        "type_die": 21232,
+        "type": "int *",
+        "scope": 30162,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30266,
+        "name": "buf",
+        "type_die": 29166,
+        "type": "char [1024]",
+        "scope": 30162,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30281,
+        "name": "ret",
+        "type_die": 21129,
+        "type": "char *",
+        "scope": 30162,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30296,
+        "name": "data",
+        "type_die": 29166,
+        "type": "char [1024]",
+        "scope": 30162,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30311,
+        "name": "filename",
+        "type_die": 29166,
+        "type": "char [1024]",
+        "scope": 30162,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30326,
+        "name": "ok",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30162,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30340,
+        "name": "i",
+        "type_die": 20932,
+        "type": "unsigned int",
+        "scope": 30162,
+        "base_type": "unsigned int",
+        "base_encoding": "7\t(unsigned)",
+        "address": null
+      },
+      {
+        "die": 30353,
+        "name": "depth",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30162,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30379,
+        "name": "color_conversion",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30370,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30422,
+        "name": "buf",
+        "type_die": 30146,
+        "type": "char [256]",
+        "scope": 30409,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30447,
+        "name": "x",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30460,
+        "name": "y",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30473,
+        "name": "w",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30486,
+        "name": "h",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30514,
+        "name": "frame_color",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30438,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30697,
+        "name": "buf",
+        "type_die": 30146,
+        "type": "char [256]",
+        "scope": 30688,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30814,
+        "name": "buf",
+        "type_die": 30146,
+        "type": "char [256]",
+        "scope": 30805,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 30865,
+        "name": "color_conversion",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30831,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30889,
+        "name": "w",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30880,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30902,
+        "name": "h",
+        "type_die": 21135,
+        "type": "int",
+        "scope": 30880,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 30925,
+        "name": "buf",
+        "type_die": 30146,
+        "type": "char [256]",
+        "scope": 30916,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 1993,
+  "first_difference": {
+    "offset": 134,
+    "original_va": 4207186,
+    "candidate_byte": 241,
+    "original_byte": 227
+  },
+  "mismatch_count": 579,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4207168,
+        "bytes": "891424",
+        "mnemonic": "mov",
+        "assembly": "mov    %edx,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207171,
+        "bytes": "e8e07a0b00",
+        "mnemonic": "call",
+        "assembly": "call   4bad28 <_fopen>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207176,
+        "bytes": "8985e4f2ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,-0xd1c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 30252,
+            "name": "fp",
+            "type": "FILE *",
+            "base_type": "_iobuf",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -3356
+            },
+            "expression_hex": "75e465",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4207182,
+        "bytes": "85c0",
+        "mnemonic": "test",
+        "assembly": "test   %eax,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207184,
+        "bytes": "0f84e3040000",
+        "mnemonic": "je",
+        "assembly": "je     403739 <_load_character_bmp+0x56d>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207190,
+        "bytes": "8bbde4f2ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    -0xd1c(%ebp),%edi",
+        "dwarf_variables": [
+          {
+            "die": 30252,
+            "name": "fp",
+            "type": "FILE *",
+            "base_type": "_iobuf",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -3356
+            },
+            "expression_hex": "75e465",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4207196,
+        "bytes": "897c2408",
+        "mnemonic": "mov",
+        "assembly": "mov    %edi,0x8(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207200,
+        "bytes": "c744240400040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x400,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4207208,
+        "bytes": "8d85e8faffff",
+        "mnemonic": "lea",
+        "assembly": "lea    -0x518(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 30266,
+            "name": "buf",
+            "type": "char [1024]",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -1304
+            },
+            "expression_hex": "91e075",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "address": 5400,
+        "bytes": "891424",
+        "mnemonic": "mov",
+        "assembly": "mov    %edx,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5403,
+        "bytes": "e800000000",
+        "mnemonic": "call",
+        "assembly": "call   1520 <_load_character_bmp+0x7c>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5408,
+        "bytes": "8985e4f2ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,-0xd1c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 9045,
+            "name": "fp",
+            "type": "FILE *",
+            "base_type": "_iobuf",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -3356
+            },
+            "expression_hex": "75e465",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 5414,
+        "bytes": "85c0",
+        "mnemonic": "test",
+        "assembly": "test   %eax,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5416,
+        "bytes": "0f84f1060000",
+        "mnemonic": "je",
+        "assembly": "je     1c1f <_load_character_bmp+0x77b>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5422,
+        "bytes": "8bbde4f2ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    -0xd1c(%ebp),%edi",
+        "dwarf_variables": [
+          {
+            "die": 9045,
+            "name": "fp",
+            "type": "FILE *",
+            "base_type": "_iobuf",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -3356
+            },
+            "expression_hex": "75e465",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 5428,
+        "bytes": "897c2408",
+        "mnemonic": "mov",
+        "assembly": "mov    %edi,0x8(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5432,
+        "bytes": "c744240400040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x400,0x4(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5440,
+        "bytes": "8d85e8faffff",
+        "mnemonic": "lea",
+        "assembly": "lea    -0x518(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 9059,
+            "name": "buf",
+            "type": "char [1024]",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -1304
+            },
+            "expression_hex": "91e075",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 55,
+      "address": 4207120,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 58,
+      "address": 4207154,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 59,
+      "address": 4207182,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 66,
+      "address": 4207190,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 67,
+      "address": 4207222,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 70,
+      "address": 4207230,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 68,
+      "address": 4207236,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/custom.c",
+      "file": "custom.c",
+      "line": 69,
+      "address": 4207258,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "pink",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "historical_address": "0x4bc000",
+      "dwarf_type": "RGB",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "ff00ff00",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d40cd",
+      "candidate_addend": 157,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        106,
+        662
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d417b",
+      "candidate_addend": 331,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        197
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4184",
+      "candidate_addend": 340,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": [
+        1168,
+        1331,
+        1952
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4270",
+      "candidate_addend": 576,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1196
+      ]
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bc000",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        1303,
+        1760
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4197",
+      "candidate_addend": 359,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        1353,
+        1974
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4257",
+      "candidate_addend": 551,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1405
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d423a",
+      "candidate_addend": 522,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1474
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\custom.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4245",
+      "candidate_addend": 533,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1928
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_get_character_dir",
+      "function_offset": 43,
+      "target_va": 4209284,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        43,
+        408,
+        1661
+      ]
+    },
+    {
+      "symbol": "_strcat",
+      "function_offset": 64,
+      "target_va": 4959576,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        64,
+        426,
+        1685
+      ]
+    },
+    {
+      "symbol": "_fopen",
+      "function_offset": 120,
+      "target_va": 4959528,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        120,
+        676
+      ]
+    },
+    {
+      "symbol": "_fgets",
+      "function_offset": 166,
+      "target_va": 4959568,
+      "verified": true,
+      "reference_count": 4,
+      "function_offsets": [
+        166,
+        333,
+        1433,
+        1581
+      ]
+    },
+    {
+      "symbol": "_strcpy",
+      "function_offset": 222,
+      "target_va": 4959560,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        222,
+        1495
+      ]
+    },
+    {
+      "symbol": "_fclose",
+      "function_offset": 363,
+      "target_va": 4959536,
+      "verified": true,
+      "reference_count": 5,
+      "function_offsets": [
+        363,
+        646,
+        1380,
+        1623,
+        1896
+      ]
+    },
+    {
+      "symbol": "_get_color_conversion",
+      "function_offset": 368,
+      "target_va": 4516432,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        368,
+        1690
+      ]
+    },
+    {
+      "symbol": "_set_color_conversion",
+      "function_offset": 438,
+      "target_va": 4516408,
+      "verified": true,
+      "reference_count": 6,
+      "function_offsets": [
+        438,
+        484,
+        1267,
+        1298,
+        1393,
+        1716
+      ]
+    },
+    {
+      "symbol": "_load_bitmap",
+      "function_offset": 453,
+      "target_va": 4534160,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        453,
+        514,
+        1288
+      ]
+    },
+    {
+      "symbol": "_destroy_bitmap",
+      "function_offset": 476,
+      "target_va": 4518220,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        476,
+        1127,
+        1135
+      ]
+    },
+    {
+      "symbol": "_select_palette",
+      "function_offset": 893,
+      "target_va": 4513572,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        893
+      ]
+    },
+    {
+      "symbol": "_create_bitmap_ex",
+      "function_offset": 926,
+      "target_va": 4518524,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        926,
+        1786
+      ]
+    },
+    {
+      "symbol": "_blit",
+      "function_offset": 990,
+      "target_va": 4547172,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        990,
+        1861
+      ]
+    },
+    {
+      "symbol": "_create_bitmap",
+      "function_offset": 1014,
+      "target_va": 4518896,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        1014
+      ]
+    },
+    {
+      "symbol": "_makecol",
+      "function_offset": 1044,
+      "target_va": 4525208,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        1044
+      ]
+    },
+    {
+      "symbol": "_sprintf",
+      "function_offset": 1188,
+      "target_va": 4959584,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        1188,
+        1345,
+        1966
+      ]
+    },
+    {
+      "symbol": "_load_datafile",
+      "function_offset": 1706,
+      "target_va": 4546780,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1706
+      ]
+    },
+    {
+      "symbol": "_clear_bitmap",
+      "function_offset": 1800,
+      "target_va": 4506292,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1800
+      ]
+    },
+    {
+      "symbol": "_unload_datafile",
+      "function_offset": 1869,
+      "target_va": 4538740,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1869
+      ]
+    },
+    {
+      "symbol": "_log2file",
+      "function_offset": 1933,
+      "target_va": 4250200,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1933
+      ]
+    },
+    {
+      "symbol": "get_string_data",
+      "function_offset": 202,
+      "target_va": 4202708,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        202,
+        1479
+      ]
+    },
+    {
+      "symbol": "custom_alert",
+      "function_offset": 1210,
+      "target_va": 4204528,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        1210,
+        1361,
+        1982
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4207171,
+      "bytes": "e8e07a0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad28 <_fopen>"
+    },
+    {
+      "address": 4207217,
+      "bytes": "e8da7a0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad50 <_fgets>"
+    },
+    {
+      "address": 4207253,
+      "bytes": "e83aeeffff",
+      "mnemonic": "call",
+      "assembly": "call   4020d4 <_get_string_data>"
+    },
+    {
+      "address": 4207115,
+      "bytes": "e8487b0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad58 <_strcat>"
+    },
+    {
+      "address": 4207273,
+      "bytes": "e89a7a0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad48 <_strcpy>"
+    },
+    {
+      "address": 4207094,
+      "bytes": "e889080000",
+      "mnemonic": "call",
+      "assembly": "call   403a84 <_get_character_dir>"
+    },
+    {
+      "address": 4207384,
+      "bytes": "e8337a0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad50 <_fgets>"
+    },
+    {
+      "address": 4207414,
+      "bytes": "e8f5790b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad30 <_fclose>"
+    }
+  ],
+  "indirect_control_flow": 7,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 6677,
+      "symbol_index": 69,
+      "symbol": "_set_color_conversion",
+      "type": 20,
+      "function_offset": 1393,
+      "addend": 0,
+      "target_va": 4516408,
+      "resolution": "named symbol",
+      "resolved_value": 307959,
+      "original_value": 1284112383,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6689,
+      "symbol_index": 25,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 1405,
+      "addend": 551,
+      "target_va": 5063255,
+      "resolution": "independent section base (COFF ownership, symbol, or unique content)",
+      "resolved_value": 5063255,
+      "original_value": 2735335424,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6717,
+      "symbol_index": 64,
+      "symbol": "_fgets",
+      "type": 20,
+      "function_offset": 1433,
+      "addend": 0,
+      "target_va": 4959568,
+      "resolution": "named symbol",
+      "resolved_value": 751079,
+      "original_value": 1296193284,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6758,
+      "symbol_index": 25,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 1474,
+      "addend": 522,
+      "target_va": 5063226,
+      "resolution": "independent section base (COFF ownership, symbol, or unique content)",
+      "resolved_value": 5063226,
+      "original_value": 2215624837,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6779,
+      "symbol_index": 63,
+      "symbol": "_strcpy",
+      "type": 20,
+      "function_offset": 1495,
+      "addend": 0,
+      "target_va": 4959560,
+      "resolution": "named symbol",
+      "resolved_value": 751009,
+      "original_value": 609520127,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6865,
+      "symbol_index": 64,
+      "symbol": "_fgets",
+      "type": 20,
+      "function_offset": 1581,
+      "addend": 0,
+      "target_va": 4959568,
+      "resolution": "named symbol",
+      "resolved_value": 750931,
+      "original_value": 4075062667,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6907,
+      "symbol_index": 74,
+      "symbol": "_fclose",
+      "type": 20,
+      "function_offset": 1623,
+      "addend": 0,
+      "target_va": 4959536,
+      "resolution": "named symbol",
+      "resolved_value": 750857,
+      "original_value": 4294949120,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 6945,
+      "symbol_index": 65,
+      "symbol": "_get_character_dir",
+      "type": 20,
+      "function_offset": 1661,
+      "addend": 0,
+      "target_va": 4209284,
+      "resolution": "named symbol",
+      "resolved_value": 567,
+      "original_value": 2332033024,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 1478,
+      "function_offset": 1479,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "get_string_data",
+      "target_va": 4202708,
+      "candidate_target": 940,
+      "candidate_displacement": -5827,
+      "layout_operand_equal": false,
+      "resolved_value": 4294961469,
+      "original_value": 2231369729,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 1981,
+      "function_offset": 1982,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "custom_alert",
+      "target_va": 4204528,
+      "candidate_target": 2760,
+      "candidate_displacement": -4510,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962786,
+      "original_value": 838860782,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "get_string_data",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 940,
+      "candidate_offset": 940,
+      "size_delta": 0
+    },
+    {
+      "function": "custom_alert",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2760,
+      "candidate_offset": 2760,
+      "size_delta": 0
+    },
+    {
+      "function": "load_frames",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2892,
+      "candidate_offset": 2892,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "branch-order",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "symptom": "Branch ordering differs",
+      "known_source_cause": "Independent if statements versus else-if changes reachable blocks",
+      "known_fix_pattern": "Preserve DWARF scopes and independent guards; compare one change at a time",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "update_star_field"
+      ],
+      "evidence": "docs/stars-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "loop-shape",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "symptom": "Backedge or induction sequence differs",
+      "known_source_cause": "Increment placement changes induction folding",
+      "known_fix_pattern": "Match original load/increment order; record unsuccessful alternatives",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "generate_profile_checksum",
+        "draw_buffer"
+      ],
+      "evidence": "docs/profile-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "cold-guard",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "symptom": "Cold branch placement differs",
+      "known_source_cause": "Early return and guarded block produce different layout",
+      "known_fix_pattern": "Preserve the historical single cold block when corroborated by line/scopes",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "profile_data_page_basic"
+      ],
+      "evidence": "docs/profile-experiment.md",
+      "confidence": "OBSERVED"
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -60,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-custom.json",
+  "verification_command": "python tools/check_function.py game-custom load_character_bmp",
+  "begin_command": "python tools/grinder_task.py begin game-custom load_character_bmp",
+  "promotion_command": "python tools/promote_function.py game-custom load_character_bmp",
+  "storage_declarations": [
+    {
+      "name": "pink",
+      "state": "INITIALIZER_OR_OWNER_UNPROVEN",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "RGB",
+      "candidate_type": "RGB",
+      "candidate_card": "docs/current/storage/game-custom/31971.json"
+    }
+  ],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/custom/load_character_bmp.json",
+  "evidence_counts": {
+    "relocation_mismatches": 23,
+    "direct_transfer_mismatches": 2,
+    "original_calls": 59,
+    "calls": 52,
+    "referenced_globals": 10
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

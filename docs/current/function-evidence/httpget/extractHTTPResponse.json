@@ -1,0 +1,1940 @@
+{
+  "schema": 1,
+  "source": "src/httpget.c",
+  "target": "game-httpget",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+  "function": "extractHTTPResponse",
+  "historical_va": "0x405a90",
+  "historical_size": 923,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "STACK_FRAME_LAYOUT",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "HTTPResponse * extractHTTPResponse(const unsigned char *pHTTPData, int iResponseBytesCount);",
+  "return_type": "HTTPResponse *",
+  "parameters": [
+    {
+      "die": 79740,
+      "name": "pHTTPData",
+      "type_die": 79215,
+      "type": "const unsigned char *",
+      "scope": 79696,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0x2d1c (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11548,
+        "entries": [
+          {
+            "offset": 11548,
+            "begin": 512,
+            "end": 548,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 11559,
+            "begin": 633,
+            "end": 740,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 11570,
+            "begin": 1337,
+            "end": 1350,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 11589
+      }
+    },
+    {
+      "die": 79761,
+      "name": "iResponseBytesCount",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 79696,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x2d45 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11589,
+        "entries": [
+          {
+            "offset": 11589,
+            "begin": 512,
+            "end": 548,
+            "kind": "range",
+            "expression_hex": "52"
+          }
+        ],
+        "end_offset": 11608
+      }
+    }
+  ],
+  "locals": [
+    {
+      "die": 79792,
+      "name": "slaskbuf",
+      "type_die": 80084,
+      "type": "char [1024]",
+      "scope": 79696,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 77 \t(DW_OP_fbreg: -1056)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 79812,
+      "name": "linebuf",
+      "type_die": 80084,
+      "type": "char [1024]",
+      "scope": 79696,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 e0 6f \t(DW_OP_fbreg: -2080)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 79831,
+      "name": "i",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 79696,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x2d58 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11608,
+        "entries": [
+          {
+            "offset": 11608,
+            "begin": 627,
+            "end": 818,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 11619,
+            "begin": 1234,
+            "end": 1248,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 11630,
+            "begin": 1291,
+            "end": 1401,
+            "kind": "range",
+            "expression_hex": "56"
+          }
+        ],
+        "end_offset": 11649
+      }
+    },
+    {
+      "die": 79844,
+      "name": "pResponse",
+      "type_die": 79471,
+      "type": "HTTPResponse *",
+      "scope": 79696,
+      "base_type": "HTTPResponse",
+      "base_encoding": null,
+      "location": "0x2d81 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11649,
+        "entries": [
+          {
+            "offset": 11649,
+            "begin": 573,
+            "end": 633,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 11660,
+            "begin": 702,
+            "end": 740,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 11671,
+            "begin": 1401,
+            "end": 1435,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 11690
+      }
+    },
+    {
+      "die": 79911,
+      "name": "bytesRead",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 79906,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 79916,
+      "name": "last",
+      "type_die": 72521,
+      "type": "unsigned char",
+      "scope": 79906,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0x2dfc (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11772,
+        "entries": [
+          {
+            "offset": 11772,
+            "begin": 615,
+            "end": 635,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 11783,
+            "begin": 635,
+            "end": 664,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 11794,
+            "begin": 664,
+            "end": 673,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 11805,
+            "begin": 673,
+            "end": 683,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 11816,
+            "begin": 683,
+            "end": 712,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 11827,
+            "begin": 712,
+            "end": 722,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 11838,
+            "begin": 1337,
+            "end": 1350,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 11857
+      }
+    },
+    {
+      "die": 79930,
+      "name": "c",
+      "type_die": 72521,
+      "type": "unsigned char",
+      "scope": 79925,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 79943,
+      "name": "bytesRead",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 79938,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x2e51 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11857,
+        "entries": [
+          {
+            "offset": 11857,
+            "begin": 757,
+            "end": 1087,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 11868,
+            "begin": 1139,
+            "end": 1247,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 11879,
+            "begin": 1251,
+            "end": 1337,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 11898
+      }
+    },
+    {
+      "die": 79958,
+      "name": "header",
+      "type_die": 72509,
+      "type": "HTTPHeader *",
+      "scope": 79938,
+      "base_type": "HTTPHeader",
+      "base_encoding": null,
+      "location": "3 byte block: 75 d0 6f \t(DW_OP_breg5 (ebp): -2096)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 79985,
+      "name": "j",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 79976,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x2e7a (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 11898,
+        "entries": [
+          {
+            "offset": 11898,
+            "begin": 757,
+            "end": 816,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 11909,
+            "begin": 971,
+            "end": 1032,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 11920,
+            "begin": 1087,
+            "end": 1098,
+            "kind": "range",
+            "expression_hex": "52"
+          },
+          {
+            "offset": 11931,
+            "begin": 1286,
+            "end": 1329,
+            "kind": "range",
+            "expression_hex": "52"
+          }
+        ],
+        "end_offset": 11950
+      }
+    },
+    {
+      "die": 80055,
+      "name": "bytesRead",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80050,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 80060,
+      "name": "last",
+      "type_die": 72521,
+      "type": "unsigned char",
+      "scope": 80050,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0x2f3f (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 12095,
+        "entries": [
+          {
+            "offset": 12095,
+            "begin": 818,
+            "end": 828,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12106,
+            "begin": 828,
+            "end": 865,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 12117,
+            "begin": 865,
+            "end": 878,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12128,
+            "begin": 878,
+            "end": 890,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 12139,
+            "begin": 890,
+            "end": 900,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12150,
+            "begin": 900,
+            "end": 919,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 12161,
+            "begin": 919,
+            "end": 977,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12172,
+            "begin": 1139,
+            "end": 1215,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12183,
+            "begin": 1234,
+            "end": 1248,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 12194,
+            "begin": 1251,
+            "end": 1259,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 12205,
+            "begin": 1259,
+            "end": 1284,
+            "kind": "range",
+            "expression_hex": "56"
+          }
+        ],
+        "end_offset": 12224
+      }
+    },
+    {
+      "die": 80074,
+      "name": "c",
+      "type_die": 72521,
+      "type": "unsigned char",
+      "scope": 80069,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 79859,
+      "parent": 79696,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x380",
+      "range_list": {
+        "offset": 896,
+        "entries": [
+          {
+            "offset": 896,
+            "begin": 575,
+            "end": 706,
+            "kind": "range"
+          },
+          {
+            "offset": 904,
+            "begin": 1401,
+            "end": 1435,
+            "kind": "range"
+          },
+          {
+            "offset": 912,
+            "begin": 1343,
+            "end": 1350,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 928
+      }
+    },
+    {
+      "die": 79906,
+      "parent": 79859,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x3a0",
+      "range_list": {
+        "offset": 928,
+        "entries": [
+          {
+            "offset": 928,
+            "begin": 575,
+            "end": 706,
+            "kind": "range"
+          },
+          {
+            "offset": 936,
+            "begin": 1401,
+            "end": 1435,
+            "kind": "range"
+          },
+          {
+            "offset": 944,
+            "begin": 1343,
+            "end": 1350,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 960
+      }
+    },
+    {
+      "die": 79925,
+      "parent": 79906,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x3c0",
+      "range_list": {
+        "offset": 960,
+        "entries": [
+          {
+            "offset": 960,
+            "begin": 636,
+            "end": 666,
+            "kind": "range"
+          },
+          {
+            "offset": 968,
+            "begin": 1343,
+            "end": 1350,
+            "kind": "range"
+          },
+          {
+            "offset": 976,
+            "begin": 670,
+            "end": 701,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 992
+      }
+    },
+    {
+      "die": 79938,
+      "parent": 79696,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x3e0",
+      "range_list": {
+        "offset": 992,
+        "entries": [
+          {
+            "offset": 992,
+            "begin": 760,
+            "end": 1166,
+            "kind": "range"
+          },
+          {
+            "offset": 1000,
+            "begin": 1252,
+            "end": 1343,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1016
+      }
+    },
+    {
+      "die": 79976,
+      "parent": 79938,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x3f8",
+      "range_list": {
+        "offset": 1016,
+        "entries": [
+          {
+            "offset": 1016,
+            "begin": 956,
+            "end": 1013,
+            "kind": "range"
+          },
+          {
+            "offset": 1024,
+            "begin": 1259,
+            "end": 1291,
+            "kind": "range"
+          },
+          {
+            "offset": 1032,
+            "begin": 1023,
+            "end": 1146,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1048
+      }
+    },
+    {
+      "die": 79999,
+      "parent": 79938,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x418",
+      "range_list": {
+        "offset": 1048,
+        "entries": [
+          {
+            "offset": 1048,
+            "begin": 778,
+            "end": 793,
+            "kind": "range"
+          },
+          {
+            "offset": 1056,
+            "begin": 1291,
+            "end": 1298,
+            "kind": "range"
+          },
+          {
+            "offset": 1064,
+            "begin": 1252,
+            "end": 1259,
+            "kind": "range"
+          },
+          {
+            "offset": 1072,
+            "begin": 1146,
+            "end": 1151,
+            "kind": "range"
+          },
+          {
+            "offset": 1080,
+            "begin": 828,
+            "end": 904,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1096
+      }
+    },
+    {
+      "die": 80050,
+      "parent": 79999,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x448",
+      "range_list": {
+        "offset": 1096,
+        "entries": [
+          {
+            "offset": 1096,
+            "begin": 778,
+            "end": 793,
+            "kind": "range"
+          },
+          {
+            "offset": 1104,
+            "begin": 1291,
+            "end": 1298,
+            "kind": "range"
+          },
+          {
+            "offset": 1112,
+            "begin": 1252,
+            "end": 1259,
+            "kind": "range"
+          },
+          {
+            "offset": 1120,
+            "begin": 1146,
+            "end": 1151,
+            "kind": "range"
+          },
+          {
+            "offset": 1128,
+            "begin": 828,
+            "end": 904,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1144
+      }
+    },
+    {
+      "die": 80069,
+      "parent": 80050,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x478",
+      "range_list": {
+        "offset": 1144,
+        "entries": [
+          {
+            "offset": 1144,
+            "begin": 828,
+            "end": 867,
+            "kind": "range"
+          },
+          {
+            "offset": 1152,
+            "begin": 1252,
+            "end": 1259,
+            "kind": "range"
+          },
+          {
+            "offset": 1160,
+            "begin": 875,
+            "end": 900,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1176
+      }
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 156,
+    "body_end_line": 206,
+    "body_sha256": "ab89023ade7417b5f936f5e9616900cb66293fd65531a142ccc64e8642972e37"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": {
+    "original": {
+      "function_offset": 6,
+      "reserved_bytes": 2124,
+      "instruction": {
+        "address": 4217494,
+        "bytes": "81ec4c080000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x84c,%esp"
+      }
+    },
+    "candidate": {
+      "function_offset": 6,
+      "reserved_bytes": 2140,
+      "instruction": {
+        "address": 122,
+        "bytes": "81ec5c080000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x85c,%esp"
+      }
+    },
+    "candidate_minus_original": 16,
+    "first_mismatch_is_frame_allocation": true,
+    "local_width_differences": [],
+    "proof": "Decoded constant SUB ESP in the straight-line entry prefix; no branches/calls crossed.",
+    "limit": "Local widths are unique-name DWARF evidence, not complete frame accounting. Spill slots, outgoing call arguments, alignment and lifetime reuse also affect allocation. This never proves body or layout-only equality."
+  },
+  "signedness": {
+    "variables": [
+      {
+        "die": 79740,
+        "name": "pHTTPData",
+        "type_die": 79215,
+        "type": "const unsigned char *",
+        "scope": 79696,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "0x2d1c (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11548,
+          "entries": [
+            {
+              "offset": 11548,
+              "begin": 512,
+              "end": 548,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 11559,
+              "begin": 633,
+              "end": 740,
+              "kind": "range",
+              "expression_hex": "57"
+            },
+            {
+              "offset": 11570,
+              "begin": 1337,
+              "end": 1350,
+              "kind": "range",
+              "expression_hex": "57"
+            }
+          ],
+          "end_offset": 11589
+        }
+      },
+      {
+        "die": 79761,
+        "name": "iResponseBytesCount",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 79696,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x2d45 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11589,
+          "entries": [
+            {
+              "offset": 11589,
+              "begin": 512,
+              "end": 548,
+              "kind": "range",
+              "expression_hex": "52"
+            }
+          ],
+          "end_offset": 11608
+        }
+      },
+      {
+        "die": 79792,
+        "name": "slaskbuf",
+        "type_die": 80084,
+        "type": "char [1024]",
+        "scope": 79696,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "location": "3 byte block: 91 e0 77 \t(DW_OP_fbreg: -1056)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 79812,
+        "name": "linebuf",
+        "type_die": 80084,
+        "type": "char [1024]",
+        "scope": 79696,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "location": "3 byte block: 91 e0 6f \t(DW_OP_fbreg: -2080)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 79831,
+        "name": "i",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 79696,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x2d58 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11608,
+          "entries": [
+            {
+              "offset": 11608,
+              "begin": 627,
+              "end": 818,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 11619,
+              "begin": 1234,
+              "end": 1248,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 11630,
+              "begin": 1291,
+              "end": 1401,
+              "kind": "range",
+              "expression_hex": "56"
+            }
+          ],
+          "end_offset": 11649
+        }
+      },
+      {
+        "die": 79911,
+        "name": "bytesRead",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 79906,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 79916,
+        "name": "last",
+        "type_die": 72521,
+        "type": "unsigned char",
+        "scope": 79906,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "0x2dfc (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11772,
+          "entries": [
+            {
+              "offset": 11772,
+              "begin": 615,
+              "end": 635,
+              "kind": "range",
+              "expression_hex": "51"
+            },
+            {
+              "offset": 11783,
+              "begin": 635,
+              "end": 664,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 11794,
+              "begin": 664,
+              "end": 673,
+              "kind": "range",
+              "expression_hex": "51"
+            },
+            {
+              "offset": 11805,
+              "begin": 673,
+              "end": 683,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 11816,
+              "begin": 683,
+              "end": 712,
+              "kind": "range",
+              "expression_hex": "51"
+            },
+            {
+              "offset": 11827,
+              "begin": 712,
+              "end": 722,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 11838,
+              "begin": 1337,
+              "end": 1350,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 11857
+        }
+      },
+      {
+        "die": 79930,
+        "name": "c",
+        "type_die": 72521,
+        "type": "unsigned char",
+        "scope": 79925,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 79943,
+        "name": "bytesRead",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 79938,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x2e51 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11857,
+          "entries": [
+            {
+              "offset": 11857,
+              "begin": 757,
+              "end": 1087,
+              "kind": "range",
+              "expression_hex": "53"
+            },
+            {
+              "offset": 11868,
+              "begin": 1139,
+              "end": 1247,
+              "kind": "range",
+              "expression_hex": "53"
+            },
+            {
+              "offset": 11879,
+              "begin": 1251,
+              "end": 1337,
+              "kind": "range",
+              "expression_hex": "53"
+            }
+          ],
+          "end_offset": 11898
+        }
+      },
+      {
+        "die": 79985,
+        "name": "j",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 79976,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x2e7a (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 11898,
+          "entries": [
+            {
+              "offset": 11898,
+              "begin": 757,
+              "end": 816,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 11909,
+              "begin": 971,
+              "end": 1032,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 11920,
+              "begin": 1087,
+              "end": 1098,
+              "kind": "range",
+              "expression_hex": "52"
+            },
+            {
+              "offset": 11931,
+              "begin": 1286,
+              "end": 1329,
+              "kind": "range",
+              "expression_hex": "52"
+            }
+          ],
+          "end_offset": 11950
+        }
+      },
+      {
+        "die": 80055,
+        "name": "bytesRead",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80050,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 80060,
+        "name": "last",
+        "type_die": 72521,
+        "type": "unsigned char",
+        "scope": 80050,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": "0x2f3f (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 12095,
+          "entries": [
+            {
+              "offset": 12095,
+              "begin": 818,
+              "end": 828,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12106,
+              "begin": 828,
+              "end": 865,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 12117,
+              "begin": 865,
+              "end": 878,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12128,
+              "begin": 878,
+              "end": 890,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 12139,
+              "begin": 890,
+              "end": 900,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12150,
+              "begin": 900,
+              "end": 919,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 12161,
+              "begin": 919,
+              "end": 977,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12172,
+              "begin": 1139,
+              "end": 1215,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12183,
+              "begin": 1234,
+              "end": 1248,
+              "kind": "range",
+              "expression_hex": "56"
+            },
+            {
+              "offset": 12194,
+              "begin": 1251,
+              "end": 1259,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 12205,
+              "begin": 1259,
+              "end": 1284,
+              "kind": "range",
+              "expression_hex": "56"
+            }
+          ],
+          "end_offset": 12224
+        }
+      },
+      {
+        "die": 80074,
+        "name": "c",
+        "type_die": 72521,
+        "type": "unsigned char",
+        "scope": 80069,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [
+      {
+        "signed_instruction": "jl",
+        "unsigned_instruction": "jb",
+        "original_counts": [
+          0,
+          0
+        ],
+        "candidate_counts": [
+          1,
+          0
+        ]
+      },
+      {
+        "signed_instruction": "jle",
+        "unsigned_instruction": "jbe",
+        "original_counts": [
+          4,
+          0
+        ],
+        "candidate_counts": [
+          3,
+          0
+        ]
+      },
+      {
+        "signed_instruction": "jg",
+        "unsigned_instruction": "ja",
+        "original_counts": [
+          0,
+          0
+        ],
+        "candidate_counts": [
+          2,
+          0
+        ]
+      },
+      {
+        "signed_instruction": "jge",
+        "unsigned_instruction": "jae",
+        "original_counts": [
+          1,
+          0
+        ],
+        "candidate_counts": [
+          0,
+          0
+        ]
+      }
+    ],
+    "declaration_differences": [
+      {
+        "variable": "pHTTPData",
+        "original_type": "const unsigned char *",
+        "candidate_type": "char *",
+        "original_die": 79740,
+        "candidate_die": 1551,
+        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
+        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
+      }
+    ],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 918,
+  "first_difference": {
+    "offset": 8,
+    "original_va": 4217496,
+    "candidate_byte": 92,
+    "original_byte": 76
+  },
+  "mismatch_count": 810,
+  "classification_confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4217489,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217491,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217492,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217493,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217494,
+        "bytes": "81ec4c080000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x84c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217500,
+        "bytes": "8985ccf7ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,-0x834(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 79740,
+            "name": "pHTTPData",
+            "type": "const unsigned char *",
+            "base_type": "unsigned char",
+            "base_encoding": "8\t(unsigned char)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4217506,
+        "bytes": "8995d4f7ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %edx,-0x82c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 79761,
+            "name": "iResponseBytesCount",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "edx"
+            },
+            "expression_hex": "52",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4217512,
+        "bytes": "c7042414000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x14,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4217519,
+        "bytes": "e85c520b00",
+        "mnemonic": "call",
+        "assembly": "call   4bad10 <_malloc>",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 117,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 119,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 120,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 121,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 122,
+        "bytes": "81ec5c080000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x85c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 128,
+        "bytes": "8985ccf7ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %eax,-0x834(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 1551,
+            "name": "pHTTPData",
+            "type": "char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 134,
+        "bytes": "8995d4f7ffff",
+        "mnemonic": "mov",
+        "assembly": "mov    %edx,-0x82c(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 1572,
+            "name": "iResponseBytesCount",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "register",
+              "register": "edx"
+            },
+            "expression_hex": "52",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 140,
+        "bytes": "c7042414000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x14,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 147,
+        "bytes": "e800000000",
+        "mnemonic": "call",
+        "assembly": "call   98 <_extractHTTPResponse+0x24>",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "HTTPHeader",
+      "size": 8,
+      "header": "include/recovered/HTTPHeader.h",
+      "members_at_disassembly_offsets": [],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    },
+    {
+      "name": "HTTPResponse",
+      "size": 20,
+      "header": "include/recovered/HTTPResponse.h",
+      "members_at_disassembly_offsets": [],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 89,
+      "address": 4217488,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 94,
+      "address": 4217512,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 95,
+      "address": 4217536,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 59,
+      "address": 4217551,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 61,
+      "address": 4217558,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 72,
+      "address": 4217612,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 74,
+      "address": 4217616,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 75,
+      "address": 4217619,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4944",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        201
+      ],
+      "placement_confidence": "unique read-only literal or table content",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 365,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [],
+          "detail_report": "docs/current/reports/game-httpget.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d494f",
+      "candidate_addend": 11,
+      "dwarf_type": null,
+      "references": [
+        880
+      ],
+      "placement_confidence": "unique read-only literal or table content",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 365,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [],
+          "detail_report": "docs/current/reports/game-httpget.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_malloc",
+      "function_offset": 32,
+      "target_va": 4959504,
+      "verified": true
+    },
+    {
+      "symbol": "_sscanf",
+      "function_offset": 215,
+      "target_va": 4959624,
+      "verified": false
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 411,
+      "target_va": 4959504,
+      "verified": false
+    },
+    {
+      "symbol": "_realloc",
+      "function_offset": 556,
+      "target_va": 4959544,
+      "verified": false
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 667,
+      "target_va": 4959504,
+      "verified": false
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 728,
+      "target_va": 4959504,
+      "verified": false
+    },
+    {
+      "symbol": "_log2file",
+      "function_offset": 885,
+      "target_va": 4250200,
+      "verified": false
+    },
+    {
+      "symbol": "destroyHTTPResponse",
+      "function_offset": 899,
+      "target_va": 4217104,
+      "verified": false
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4217519,
+      "bytes": "e85c520b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4217719,
+      "bytes": "e80c520b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad88 <_sscanf>"
+    },
+    {
+      "address": 4217921,
+      "bytes": "e8f2500b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad38 <_realloc>"
+    },
+    {
+      "address": 4218008,
+      "bytes": "e873500b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4218069,
+      "bytes": "e836500b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4218171,
+      "bytes": "e8d04f0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4218300,
+      "bytes": "e8774f0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad38 <_realloc>"
+    },
+    {
+      "address": 4218343,
+      "bytes": "e86c7c0000",
+      "mnemonic": "call",
+      "assembly": "call   40da58 <_log2file>"
+    },
+    {
+      "address": 4218357,
+      "bytes": "e816fbffff",
+      "mnemonic": "call",
+      "assembly": "call   405910 <_destroyHTTPResponse>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 317,
+      "symbol_index": 24,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 201,
+      "addend": 0,
+      "target_va": 5065028,
+      "resolution": "unique read-only literal or table content",
+      "resolved_value": 5065028,
+      "original_value": 2366383180,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 331,
+      "symbol_index": 38,
+      "symbol": "_sscanf",
+      "type": 20,
+      "function_offset": 215,
+      "addend": 0,
+      "target_va": 4959624,
+      "resolution": "named symbol",
+      "resolved_value": 741917,
+      "original_value": 1141122116,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 527,
+      "symbol_index": 50,
+      "symbol": "_malloc",
+      "type": 20,
+      "function_offset": 411,
+      "addend": 0,
+      "target_va": 4959504,
+      "resolution": "named symbol",
+      "resolved_value": 741601,
+      "original_value": 1200357375,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 672,
+      "symbol_index": 47,
+      "symbol": "_realloc",
+      "type": 20,
+      "function_offset": 556,
+      "addend": 0,
+      "target_va": 4959544,
+      "resolution": "named symbol",
+      "resolved_value": 741496,
+      "original_value": 3834481415,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 783,
+      "symbol_index": 50,
+      "symbol": "_malloc",
+      "type": 20,
+      "function_offset": 667,
+      "addend": 0,
+      "target_va": 4959504,
+      "resolution": "named symbol",
+      "resolved_value": 741345,
+      "original_value": 4294434965,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 844,
+      "symbol_index": 50,
+      "symbol": "_malloc",
+      "type": 20,
+      "function_offset": 728,
+      "addend": 0,
+      "target_va": 4959504,
+      "resolution": "named symbol",
+      "resolved_value": 741284,
+      "original_value": 139248769,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 996,
+      "symbol_index": 24,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 880,
+      "addend": 11,
+      "target_va": 5065039,
+      "resolution": "unique read-only literal or table content",
+      "resolved_value": 5065039,
+      "original_value": 0,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 1001,
+      "symbol_index": 54,
+      "symbol": "_log2file",
+      "type": 20,
+      "function_offset": 885,
+      "addend": 0,
+      "target_va": 4250200,
+      "resolution": "named symbol",
+      "resolved_value": 31823,
+      "original_value": 4294967129,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 898,
+      "function_offset": 899,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "destroyHTTPResponse",
+      "target_va": 4217104,
+      "candidate_target": 0,
+      "candidate_displacement": -1019,
+      "layout_operand_equal": false,
+      "resolved_value": 4294966009,
+      "original_value": 255,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "destroyHTTPResponse",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 128,
+      "candidate_offset": 0,
+      "size_delta": 0
+    },
+    {
+      "function": "SplitURL",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 244,
+      "candidate_offset": 1644,
+      "size_delta": 0
+    },
+    {
+      "function": "dumpHTTPResponse",
+      "status": "MISSING",
+      "historical_offset": 1436,
+      "candidate_offset": null,
+      "size_delta": -99
+    },
+    {
+      "function": "HTTPFetchInternal",
+      "status": "DIFFER",
+      "historical_offset": 1548,
+      "candidate_offset": 1048,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "constant-stack-frame-allocation",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "symptom": "First differing instruction is a constant SUB ESP prologue allocation.",
+      "known_source_cause": "Not established by the allocation alone. Different local widths, spills, outgoing arguments, lifetimes or source expansion can change the frame.",
+      "known_fix_pattern": "Check the attached DWARF local-width evidence and calls before experimenting with register temporaries. Preserve x87 and historical flags; never change a frame size or padding to mask a source mismatch.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof."
+      },
+      "example_functions": [
+        "main_menu_callback",
+        "profile_data_page_general",
+        "draw_profile_selector"
+      ],
+      "required_evidence": "frame_layout",
+      "confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
+      "evidence": "docs/stack-frame-evidence.md"
+    }
+  ],
+  "difficulty": "MEDIUM",
+  "priority": 72,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-httpget.json",
+  "verification_command": "python tools/check_function.py game-httpget extractHTTPResponse",
+  "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
+  "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [
+    {
+      "function": "extractHTTPResponse",
+      "historical": [
+        {
+          "cu": "src/httpget.c",
+          "return_type": "HTTPResponse*",
+          "parameter_types": [
+            "const unsigned char*",
+            "int"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 79696
+        }
+      ],
+      "type_layout_issues": [],
+      "candidate_signatures": [
+        "('HTTPResponse*', ['char*', 'int'])"
+      ],
+      "candidate_card": "docs/current/interfaces/extractHTTPResponse.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
+}

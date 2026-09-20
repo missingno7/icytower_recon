@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "check_dir",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "int",
+      "parameter_types": [
+        "const char*",
+        "int",
+        "void*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 129608
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 54446,
+      "end": 54485,
+      "before": "char *filename, int attrib, void *param",
+      "after": "const char *filename, int attrib, void *param",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/main.c",
+      "line": 1815
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check check_dir",
+  "begin_command": "python tools/interface_task.py begin check_dir",
+  "apply_command": "python tools/interface_task.py apply check_dir",
+  "promotion_command": "python tools/interface_task.py promote check_dir",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/main.c"
+  ],
+  "source_identities": {
+    "src/main.c": {
+      "size": 91699,
+      "sha256": "4119d95832c56ea7acc91b33cb21c25e7222bfde16651069539c07cf9c80e254"
+    }
+  },
+  "affected_targets": [
+    "game-main"
+  ],
+  "priority": 257,
+  "expected_prototype": "extern int check_dir(const char*, int, void*);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

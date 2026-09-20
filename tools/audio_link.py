@@ -4,6 +4,10 @@ from common import ROOT, identity, read_json, run, write_json
 from build import COMPILERS, compile_target, verify_inputs
 
 def main(with_custom=False):
+    if with_custom:
+        # The recovered main CU now depends on the full game tree. Use its ordinary topology.
+        from recovered_game_link import main as link_game
+        return link_game()
     compiler='tdm-2'
     verify_inputs(compiler)
     tc=COMPILERS[compiler]
@@ -31,8 +35,8 @@ def main(with_custom=False):
     obj,logg=compile_target('allegro-logg',dest=out/'logg',compiler=compiler)
     game=[]
     if with_custom:
-        for target in ['game-custom','game-directories','game-main-partial','game-particle']:
-            flags=['-O2','-DICYTOWER_SYNTHETIC_LINK'] if target=='game-main-partial' else None
+        for target in ['game-custom','game-directories','game-main','game-particle']:
+            flags=['-O2','-DICYTOWER_SYNTHETIC_LINK'] if target=='game-main' else None
             game.append(compile_target(target,flags=flags,dest=out/target,compiler=compiler))
     args=[tc/'bin/gcc.exe','-O2','-g','-mfpmath=387','-mwindows',
           'tools/audio_probe.c',*[o for o,_ in game],obj,xdir/'libvorbisfile.a',xdir/'libvorbis.a',xdir/'libogg.a',adir/'liballeg.a',

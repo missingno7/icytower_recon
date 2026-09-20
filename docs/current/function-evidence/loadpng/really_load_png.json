@@ -1,0 +1,1722 @@
+{
+  "schema": 1,
+  "source": "src/loadpng.c",
+  "target": "game-loadpng",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+  "function": "really_load_png",
+  "historical_va": "0x4061b0",
+  "historical_size": 1106,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "BITMAP * really_load_png(png_structp png_ptr, png_infop info_ptr, RGB *pal);",
+  "return_type": "BITMAP *",
+  "parameters": [
+    {
+      "die": 96854,
+      "name": "png_ptr",
+      "type_die": 89238,
+      "type": "png_structp",
+      "scope": 96814,
+      "base_type": "png_struct_def",
+      "base_encoding": null,
+      "location": "0x33e6 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13286,
+        "entries": [
+          {
+            "offset": 13286,
+            "begin": 0,
+            "end": 34,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 13297,
+            "begin": 34,
+            "end": 777,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 13308,
+            "begin": 777,
+            "end": 850,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 13319,
+            "begin": 850,
+            "end": 909,
+            "kind": "range",
+            "expression_hex": "53"
+          },
+          {
+            "offset": 13330,
+            "begin": 913,
+            "end": 1106,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 13349
+      }
+    },
+    {
+      "die": 96869,
+      "name": "info_ptr",
+      "type_die": 85716,
+      "type": "png_infop",
+      "scope": 96814,
+      "base_type": "png_info_struct",
+      "base_encoding": null,
+      "location": "0x3425 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13349,
+        "entries": [
+          {
+            "offset": 13349,
+            "begin": 0,
+            "end": 34,
+            "kind": "range",
+            "expression_hex": "52"
+          }
+        ],
+        "end_offset": 13368
+      }
+    },
+    {
+      "die": 96884,
+      "name": "pal",
+      "type_die": 97313,
+      "type": "RGB *",
+      "scope": 96814,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "0x3438 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13368,
+        "entries": [
+          {
+            "offset": 13368,
+            "begin": 0,
+            "end": 34,
+            "kind": "range",
+            "expression_hex": "51"
+          },
+          {
+            "offset": 13379,
+            "begin": 34,
+            "end": 777,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 13390,
+            "begin": 850,
+            "end": 910,
+            "kind": "range",
+            "expression_hex": "56"
+          },
+          {
+            "offset": 13401,
+            "begin": 913,
+            "end": 1106,
+            "kind": "range",
+            "expression_hex": "56"
+          }
+        ],
+        "end_offset": 13420
+      }
+    }
+  ],
+  "locals": [
+    {
+      "die": 96899,
+      "name": "bmp",
+      "type_die": 95730,
+      "type": "BITMAP *",
+      "scope": 96814,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x346c (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13420,
+        "entries": [
+          {
+            "offset": 13420,
+            "begin": 607,
+            "end": 672,
+            "kind": "range",
+            "expression_hex": "57"
+          },
+          {
+            "offset": 13431,
+            "begin": 739,
+            "end": 911,
+            "kind": "range",
+            "expression_hex": "57"
+          }
+        ],
+        "end_offset": 13450
+      }
+    },
+    {
+      "die": 96914,
+      "name": "tmppal",
+      "type_die": 93228,
+      "type": "PALETTE",
+      "scope": 96814,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "3 byte block: 91 b8 77 \t(DW_OP_fbreg: -1096)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 96932,
+      "name": "width",
+      "type_die": 82668,
+      "type": "png_uint_32",
+      "scope": 96814,
+      "base_type": "long unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "0x348a (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13450,
+        "entries": [
+          {
+            "offset": 13450,
+            "begin": 528,
+            "end": 672,
+            "kind": "range",
+            "expression_hex": "7564"
+          },
+          {
+            "offset": 13462,
+            "begin": 685,
+            "end": 913,
+            "kind": "range",
+            "expression_hex": "7564"
+          }
+        ],
+        "end_offset": 13482
+      }
+    },
+    {
+      "die": 96947,
+      "name": "height",
+      "type_die": 82668,
+      "type": "png_uint_32",
+      "scope": 96814,
+      "base_type": "long unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "0x34aa (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13482,
+        "entries": [
+          {
+            "offset": 13482,
+            "begin": 580,
+            "end": 672,
+            "kind": "range",
+            "expression_hex": "7560"
+          },
+          {
+            "offset": 13494,
+            "begin": 714,
+            "end": 913,
+            "kind": "range",
+            "expression_hex": "7560"
+          }
+        ],
+        "end_offset": 13514
+      }
+    },
+    {
+      "die": 96962,
+      "name": "rowbytes",
+      "type_die": 82668,
+      "type": "png_uint_32",
+      "scope": 96814,
+      "base_type": "long unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "1 byte block: 50 \t(DW_OP_reg0 (eax))",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 96975,
+      "name": "bit_depth",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 75 5c \t(DW_OP_breg5 (ebp): -36)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 96989,
+      "name": "color_type",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x34ca (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13514,
+        "entries": [
+          {
+            "offset": 13514,
+            "begin": 114,
+            "end": 367,
+            "kind": "range",
+            "expression_hex": "7558"
+          },
+          {
+            "offset": 13526,
+            "begin": 913,
+            "end": 1099,
+            "kind": "range",
+            "expression_hex": "7558"
+          }
+        ],
+        "end_offset": 13546
+      }
+    },
+    {
+      "die": 97004,
+      "name": "interlace_type",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 91 4c \t(DW_OP_fbreg: -52)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97018,
+      "name": "image_gamma",
+      "type_die": 82909,
+      "type": "double",
+      "scope": 96814,
+      "base_type": "double",
+      "base_encoding": "4\t(float)",
+      "location": "0x34ea (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13546,
+        "entries": [
+          {
+            "offset": 13546,
+            "begin": 317,
+            "end": 913,
+            "kind": "range",
+            "expression_hex": "7540"
+          },
+          {
+            "offset": 13558,
+            "begin": 977,
+            "end": 1002,
+            "kind": "range",
+            "expression_hex": "7540"
+          },
+          {
+            "offset": 13570,
+            "begin": 1077,
+            "end": 1088,
+            "kind": "range",
+            "expression_hex": "7540"
+          },
+          {
+            "offset": 13582,
+            "begin": 1099,
+            "end": 1106,
+            "kind": "range",
+            "expression_hex": "7540"
+          }
+        ],
+        "end_offset": 13602
+      }
+    },
+    {
+      "die": 97041,
+      "name": "screen_gamma",
+      "type_die": 82909,
+      "type": "double",
+      "scope": 96814,
+      "base_type": "double",
+      "base_encoding": "4\t(float)",
+      "location": "1 byte block: 5b \t(DW_OP_reg11 (st0))",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97054,
+      "name": "intent",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "2 byte block: 91 48 \t(DW_OP_fbreg: -56)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97071,
+      "name": "bpp",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 a4 77 \t(DW_OP_breg5 (ebp): -1116)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97086,
+      "name": "dest_bpp",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 a8 77 \t(DW_OP_breg5 (ebp): -1112)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97106,
+      "name": "tRNS_to_alpha",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97127,
+      "name": "number_passes",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 b0 77 \t(DW_OP_breg5 (ebp): -1104)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97152,
+      "name": "pass",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 96814,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 b4 77 \t(DW_OP_breg5 (ebp): -1100)",
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97192,
+      "name": "gamma_str",
+      "type_die": 82880,
+      "type": "const char *",
+      "scope": 97187,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x3522 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13602,
+        "entries": [
+          {
+            "offset": 13602,
+            "begin": 240,
+            "end": 243,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 13613,
+            "begin": 1049,
+            "end": 1059,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 13624,
+            "begin": 1088,
+            "end": 1099,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 13643
+      }
+    },
+    {
+      "die": 97212,
+      "name": "num_palette",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 97203,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x354b (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13643,
+        "entries": [
+          {
+            "offset": 13643,
+            "begin": 406,
+            "end": 672,
+            "kind": "range",
+            "expression_hex": "7548"
+          },
+          {
+            "offset": 13655,
+            "begin": 685,
+            "end": 913,
+            "kind": "range",
+            "expression_hex": "7548"
+          },
+          {
+            "offset": 13667,
+            "begin": 1099,
+            "end": 1106,
+            "kind": "range",
+            "expression_hex": "7548"
+          }
+        ],
+        "end_offset": 13687
+      }
+    },
+    {
+      "die": 97227,
+      "name": "i",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 97203,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x3577 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13687,
+        "entries": [
+          {
+            "offset": 13687,
+            "begin": 419,
+            "end": 508,
+            "kind": "range",
+            "expression_hex": "50"
+          },
+          {
+            "offset": 13698,
+            "begin": 1101,
+            "end": 1106,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 13717
+      }
+    },
+    {
+      "die": 97240,
+      "name": "palette",
+      "type_die": 83088,
+      "type": "png_colorp",
+      "scope": 97203,
+      "base_type": "png_color_struct",
+      "base_encoding": null,
+      "location": "0x3595 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13717,
+        "entries": [
+          {
+            "offset": 13717,
+            "begin": 417,
+            "end": 672,
+            "kind": "range",
+            "expression_hex": "754c"
+          },
+          {
+            "offset": 13729,
+            "begin": 685,
+            "end": 913,
+            "kind": "range",
+            "expression_hex": "754c"
+          }
+        ],
+        "end_offset": 13749
+      }
+    },
+    {
+      "die": 97269,
+      "name": "c",
+      "type_die": 81865,
+      "type": "int",
+      "scope": 97256,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x35b5 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13749,
+        "entries": [
+          {
+            "offset": 13749,
+            "begin": 658,
+            "end": 660,
+            "kind": "range",
+            "expression_hex": "50"
+          }
+        ],
+        "end_offset": 13768
+      }
+    },
+    {
+      "die": 97282,
+      "name": "pc",
+      "type_die": 82468,
+      "type": "unsigned char *",
+      "scope": 97256,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": null,
+      "address": null,
+      "location_list": null
+    },
+    {
+      "die": 97298,
+      "name": "y",
+      "type_die": 82668,
+      "type": "png_uint_32",
+      "scope": 97293,
+      "base_type": "long unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "0x35c8 (location list)",
+      "address": null,
+      "location_list": {
+        "offset": 13768,
+        "entries": [
+          {
+            "offset": 13768,
+            "begin": 777,
+            "end": 844,
+            "kind": "range",
+            "expression_hex": "53"
+          }
+        ],
+        "end_offset": 13787
+      }
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 97168,
+      "parent": 96814,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x520",
+      "range_list": {
+        "offset": 1312,
+        "entries": [
+          {
+            "offset": 1312,
+            "begin": 216,
+            "end": 240,
+            "kind": "range"
+          },
+          {
+            "offset": 1320,
+            "begin": 1088,
+            "end": 1099,
+            "kind": "range"
+          },
+          {
+            "offset": 1328,
+            "begin": 1035,
+            "end": 1064,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1344
+      }
+    },
+    {
+      "die": 97187,
+      "parent": 97168,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x540",
+      "range_list": {
+        "offset": 1344,
+        "entries": [
+          {
+            "offset": 1344,
+            "begin": 1035,
+            "end": 1064,
+            "kind": "range"
+          },
+          {
+            "offset": 1352,
+            "begin": 1088,
+            "end": 1099,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1368
+      }
+    },
+    {
+      "die": 97203,
+      "parent": 96814,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x558",
+      "range_list": {
+        "offset": 1368,
+        "entries": [
+          {
+            "offset": 1368,
+            "begin": 367,
+            "end": 502,
+            "kind": "range"
+          },
+          {
+            "offset": 1376,
+            "begin": 1099,
+            "end": 1106,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1392
+      }
+    },
+    {
+      "die": 97256,
+      "parent": 96814,
+      "low_pc": 4219935,
+      "high_pc": 4219984,
+      "ranges": null,
+      "range_list": null
+    },
+    {
+      "die": 97293,
+      "parent": 96814,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x570",
+      "range_list": {
+        "offset": 1392,
+        "entries": [
+          {
+            "offset": 1392,
+            "begin": 780,
+            "end": 787,
+            "kind": "range"
+          },
+          {
+            "offset": 1400,
+            "begin": 792,
+            "end": 822,
+            "kind": "range"
+          }
+        ],
+        "end_offset": 1416
+      }
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 81,
+    "body_end_line": 214,
+    "body_sha256": "5f805348dc66d6c3bd40554ba50d0ee7c4443577fcd0d2867b8d9fcc0ec69403"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 96975,
+        "name": "bit_depth",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "2 byte block: 75 5c \t(DW_OP_breg5 (ebp): -36)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 96989,
+        "name": "color_type",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x34ca (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 13514,
+          "entries": [
+            {
+              "offset": 13514,
+              "begin": 114,
+              "end": 367,
+              "kind": "range",
+              "expression_hex": "7558"
+            },
+            {
+              "offset": 13526,
+              "begin": 913,
+              "end": 1099,
+              "kind": "range",
+              "expression_hex": "7558"
+            }
+          ],
+          "end_offset": 13546
+        }
+      },
+      {
+        "die": 97004,
+        "name": "interlace_type",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "2 byte block: 91 4c \t(DW_OP_fbreg: -52)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97054,
+        "name": "intent",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "2 byte block: 91 48 \t(DW_OP_fbreg: -56)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97071,
+        "name": "bpp",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 a4 77 \t(DW_OP_breg5 (ebp): -1116)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97086,
+        "name": "dest_bpp",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 a8 77 \t(DW_OP_breg5 (ebp): -1112)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97106,
+        "name": "tRNS_to_alpha",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97127,
+        "name": "number_passes",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 b0 77 \t(DW_OP_breg5 (ebp): -1104)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97152,
+        "name": "pass",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 96814,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "3 byte block: 75 b4 77 \t(DW_OP_breg5 (ebp): -1100)",
+        "address": null,
+        "location_list": null
+      },
+      {
+        "die": 97192,
+        "name": "gamma_str",
+        "type_die": 82880,
+        "type": "const char *",
+        "scope": 97187,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "location": "0x3522 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 13602,
+          "entries": [
+            {
+              "offset": 13602,
+              "begin": 240,
+              "end": 243,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 13613,
+              "begin": 1049,
+              "end": 1059,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 13624,
+              "begin": 1088,
+              "end": 1099,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 13643
+        }
+      },
+      {
+        "die": 97212,
+        "name": "num_palette",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 97203,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x354b (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 13643,
+          "entries": [
+            {
+              "offset": 13643,
+              "begin": 406,
+              "end": 672,
+              "kind": "range",
+              "expression_hex": "7548"
+            },
+            {
+              "offset": 13655,
+              "begin": 685,
+              "end": 913,
+              "kind": "range",
+              "expression_hex": "7548"
+            },
+            {
+              "offset": 13667,
+              "begin": 1099,
+              "end": 1106,
+              "kind": "range",
+              "expression_hex": "7548"
+            }
+          ],
+          "end_offset": 13687
+        }
+      },
+      {
+        "die": 97227,
+        "name": "i",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 97203,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x3577 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 13687,
+          "entries": [
+            {
+              "offset": 13687,
+              "begin": 419,
+              "end": 508,
+              "kind": "range",
+              "expression_hex": "50"
+            },
+            {
+              "offset": 13698,
+              "begin": 1101,
+              "end": 1106,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 13717
+        }
+      },
+      {
+        "die": 97269,
+        "name": "c",
+        "type_die": 81865,
+        "type": "int",
+        "scope": 97256,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "location": "0x35b5 (location list)",
+        "address": null,
+        "location_list": {
+          "offset": 13749,
+          "entries": [
+            {
+              "offset": 13749,
+              "begin": 658,
+              "end": 660,
+              "kind": "range",
+              "expression_hex": "50"
+            }
+          ],
+          "end_offset": 13768
+        }
+      },
+      {
+        "die": 97282,
+        "name": "pc",
+        "type_die": 82468,
+        "type": "unsigned char *",
+        "scope": 97256,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "location": null,
+        "address": null,
+        "location_list": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [
+      "(unsigned char *)"
+    ],
+    "shifts": [
+      "pal[i].r = palette[i].red >> 2;\t\t/* 256 -> 64 */",
+      "pal[i].g = palette[i].green >> 2;",
+      "pal[i].b = palette[i].blue >> 2;"
+    ],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 1106,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4219312,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219313,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219315,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219316,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4219317,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 0,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 3,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 5,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 81,
+      "address": 4219312,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 97,
+      "address": 4219334,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 99,
+      "address": 4219346,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 105,
+      "address": 4219415,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 108,
+      "address": 4219423,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 113,
+      "address": 4219440,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 119,
+      "address": 4219474,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 123,
+      "address": 4219484,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "_png_screen_gamma",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "historical_address": "0x4bc008",
+      "dwarf_type": "double",
+      "size": 8,
+      "section": ".data",
+      "references": [
+        "0x406270"
+      ],
+      "coff_symbols": [
+        {
+          "index": 35,
+          "name": "__png_screen_gamma",
+          "section": 2,
+          "value": 0,
+          "storage_class": 2
+        }
+      ],
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "original_coff_symbols": [
+        {
+          "index": 10450,
+          "name": "__png_screen_gamma",
+          "section": 2,
+          "va": 4964360,
+          "storage_class": 2
+        }
+      ],
+      "initial_value": "000000000000f0bf",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bc008",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        194
+      ],
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "object_owners": [
+        {
+          "name": "_png_screen_gamma",
+          "scope": [
+            "GLOBAL"
+          ],
+          "candidate_die": 17149,
+          "candidate_offset": 0,
+          "section_index": 2,
+          "section": ".data",
+          "size": 8,
+          "original_va": 4964360,
+          "original_die": 98824,
+          "dwarf_type": "double",
+          "candidate_type": "double",
+          "candidate_coff": 35,
+          "original_coff": 10450,
+          "initializer_relocations": [],
+          "proof": "Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer",
+          "initializer": "all initialized bytes equal after independent relocation resolution",
+          "initial_value": "000000000000f0bf"
+        }
+      ],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 12,
+          "content_equal": true,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            4964360
+          ],
+          "detail_report": "docs/current/reports/game-loadpng.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4aa0",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        1038
+      ],
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 120,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            5065376
+          ],
+          "detail_report": "docs/current/reports/game-loadpng.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4b10",
+      "candidate_addend": 112,
+      "dwarf_type": null,
+      "references": [
+        1090
+      ],
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 120,
+          "content_equal": false,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            5065376
+          ],
+          "detail_report": "docs/current/reports/game-loadpng.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
+      "initializer_blockers": []
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_png_read_info",
+      "function_offset": 30,
+      "target_va": 4915292,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_IHDR",
+      "function_offset": 99,
+      "target_va": 4915300,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_packing",
+      "function_offset": 107,
+      "target_va": 4915308,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_valid",
+      "function_offset": 150,
+      "target_va": 4915316,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_sRGB",
+      "function_offset": 267,
+      "target_va": 4915324,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_gamma",
+      "function_offset": 309,
+      "target_va": 4915404,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_interlace_handling",
+      "function_offset": 321,
+      "target_va": 4915332,
+      "verified": true
+    },
+    {
+      "symbol": "_png_read_update_info",
+      "function_offset": 345,
+      "target_va": 4915340,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_PLTE",
+      "function_offset": 395,
+      "target_va": 4915348,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_rowbytes",
+      "function_offset": 516,
+      "target_va": 4915356,
+      "verified": true
+    },
+    {
+      "symbol": "__color_load_depth",
+      "function_offset": 567,
+      "target_va": 4516444,
+      "verified": true
+    },
+    {
+      "symbol": "_create_bitmap_ex",
+      "function_offset": 601,
+      "target_va": 4518524,
+      "verified": true
+    },
+    {
+      "symbol": "_makecol_depth",
+      "function_offset": 651,
+      "target_va": 4525008,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_bgr",
+      "function_offset": 666,
+      "target_va": 4915364,
+      "verified": true
+    },
+    {
+      "symbol": "_generate_332_palette",
+      "function_offset": 676,
+      "target_va": 4506572,
+      "verified": true
+    },
+    {
+      "symbol": "__color_load_depth",
+      "function_offset": 701,
+      "target_va": 4516444,
+      "verified": true
+    },
+    {
+      "symbol": "_create_bitmap_ex",
+      "function_offset": 733,
+      "target_va": 4518524,
+      "verified": true
+    },
+    {
+      "symbol": "_png_read_row",
+      "function_offset": 812,
+      "target_va": 4915372,
+      "verified": true
+    },
+    {
+      "symbol": "__fixup_loaded_bitmap",
+      "function_offset": 876,
+      "target_va": 4533608,
+      "verified": true
+    },
+    {
+      "symbol": "_png_read_end",
+      "function_offset": 896,
+      "target_va": 4915380,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_gray_to_rgb",
+      "function_offset": 917,
+      "target_va": 4915388,
+      "verified": true
+    },
+    {
+      "symbol": "_png_get_gAMA",
+      "function_offset": 953,
+      "target_va": 4915396,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_gamma",
+      "function_offset": 993,
+      "target_va": 4915404,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_tRNS_to_alpha",
+      "function_offset": 1006,
+      "target_va": 4915412,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_strip_16",
+      "function_offset": 1024,
+      "target_va": 4915420,
+      "verified": true
+    },
+    {
+      "symbol": "_getenv",
+      "function_offset": 1043,
+      "target_va": 4959632,
+      "verified": true
+    },
+    {
+      "symbol": "_atof",
+      "function_offset": 1055,
+      "target_va": 4959640,
+      "verified": true
+    },
+    {
+      "symbol": "_png_set_expand",
+      "function_offset": 1068,
+      "target_va": 4915428,
+      "verified": true
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4219341,
+      "bytes": "e88a9e0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b005c <_png_read_info>"
+    },
+    {
+      "address": 4219410,
+      "bytes": "e84d9e0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b0064 <_png_get_IHDR>"
+    },
+    {
+      "address": 4219418,
+      "bytes": "e84d9e0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b006c <_png_set_packing>"
+    },
+    {
+      "address": 4219461,
+      "bytes": "e82a9e0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b0074 <_png_get_valid>"
+    },
+    {
+      "address": 4219578,
+      "bytes": "e8bd9d0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b007c <_png_get_sRGB>"
+    },
+    {
+      "address": 4219620,
+      "bytes": "e8e39d0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00cc <_png_set_gamma>"
+    },
+    {
+      "address": 4219632,
+      "bytes": "e88f9d0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b0084 <_png_set_interlace_handling>"
+    },
+    {
+      "address": 4219656,
+      "bytes": "e87f9d0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b008c <_png_read_update_info>"
+    },
+    {
+      "address": 4219706,
+      "bytes": "e8559d0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b0094 <_png_get_PLTE>"
+    },
+    {
+      "address": 4219827,
+      "bytes": "e8e49c0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b009c <_png_get_rowbytes>"
+    },
+    {
+      "address": 4219878,
+      "bytes": "e871860400",
+      "mnemonic": "call",
+      "assembly": "call   44ea5c <__color_load_depth>"
+    },
+    {
+      "address": 4219912,
+      "bytes": "e86f8e0400",
+      "mnemonic": "call",
+      "assembly": "call   44f27c <_create_bitmap_ex>"
+    },
+    {
+      "address": 4219962,
+      "bytes": "e891a70400",
+      "mnemonic": "call",
+      "assembly": "call   450bd0 <_makecol_depth>"
+    },
+    {
+      "address": 4219977,
+      "bytes": "e8569c0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00a4 <_png_set_bgr>"
+    },
+    {
+      "address": 4219987,
+      "bytes": "e8745f0400",
+      "mnemonic": "call",
+      "assembly": "call   44c3cc <_generate_332_palette>"
+    },
+    {
+      "address": 4220012,
+      "bytes": "e8eb850400",
+      "mnemonic": "call",
+      "assembly": "call   44ea5c <__color_load_depth>"
+    },
+    {
+      "address": 4220044,
+      "bytes": "e8eb8d0400",
+      "mnemonic": "call",
+      "assembly": "call   44f27c <_create_bitmap_ex>"
+    },
+    {
+      "address": 4220123,
+      "bytes": "e8cc9b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00ac <_png_read_row>"
+    },
+    {
+      "address": 4220187,
+      "bytes": "e848c80400",
+      "mnemonic": "call",
+      "assembly": "call   452d68 <__fixup_loaded_bitmap>"
+    },
+    {
+      "address": 4220207,
+      "bytes": "e8809b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00b4 <_png_read_end>"
+    },
+    {
+      "address": 4220228,
+      "bytes": "e8739b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00bc <_png_set_gray_to_rgb>"
+    },
+    {
+      "address": 4220264,
+      "bytes": "e8579b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00c4 <_png_get_gAMA>"
+    },
+    {
+      "address": 4220304,
+      "bytes": "e8379b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00cc <_png_set_gamma>"
+    },
+    {
+      "address": 4220317,
+      "bytes": "e8329b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00d4 <_png_set_tRNS_to_alpha>"
+    },
+    {
+      "address": 4220335,
+      "bytes": "e8289b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00dc <_png_set_strip_16>"
+    },
+    {
+      "address": 4220354,
+      "bytes": "e8c9470b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad90 <_getenv>"
+    },
+    {
+      "address": 4220366,
+      "bytes": "e8c5470b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad98 <_atof>"
+    },
+    {
+      "address": 4220379,
+      "bytes": "e8049b0a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00e4 <_png_set_expand>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "load_memory_png",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1108,
+      "candidate_offset": 1108,
+      "size_delta": 0
+    },
+    {
+      "function": "load_png_pf",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1496,
+      "candidate_offset": 1496,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 15,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-loadpng.json",
+  "verification_command": "python tools/check_function.py game-loadpng really_load_png",
+  "begin_command": "python tools/grinder_task.py begin game-loadpng really_load_png",
+  "promotion_command": "python tools/promote_function.py game-loadpng really_load_png",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
+}

@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_profile_Tprofile_checksum",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "alias": "Tprofile_checksum",
+  "observations": [
+    {
+      "function": "generate_profile_checksum",
+      "variable": "p",
+      "historical_type": "Tprofile",
+      "historical_die": 196784,
+      "candidate_die": 2748
+    }
+  ],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/profile.c",
+      "start": 2570,
+      "end": 2727,
+      "before": "typedef struct Tprofile_checksum {\n    unsigned char before_checksum[0x28];\n    int checksum;\n    unsigned char remainder[0x554 - 0x2c];\n} Tprofile_checksum;",
+      "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_checksum;",
+      "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+    }
+  ],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_checksum",
+  "apply_command": "python tools/interface_task.py apply view_profile_Tprofile_checksum",
+  "verification_command": "python tools/interface_task.py check view_profile_Tprofile_checksum",
+  "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_checksum",
+  "canonical": "Tprofile",
+  "header": "include/recovered/Tprofile.h",
+  "header_identity": {
+    "size": 3950,
+    "sha256": "bbee5233a2c0834121794d864fa5efd8d9d1ef062d69f634049b7e70ead8a7cc"
+  },
+  "candidate_size": 1364,
+  "historical_size": 1360,
+  "member_correspondence": [
+    {
+      "candidate_member": "before_checksum",
+      "candidate_offset": 0,
+      "candidate_type": "unsigned char [40]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.header[0]",
+        "offset": 0,
+        "size": 1,
+        "type": "char"
+      }
+    },
+    {
+      "candidate_member": "checksum",
+      "candidate_offset": 40,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.checksum",
+        "offset": 40,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "remainder",
+      "candidate_offset": 44,
+      "candidate_type": "unsigned char [1320]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.games_played",
+        "offset": 44,
+        "size": 4,
+        "type": "int"
+      }
+    }
+  ],
+  "retained_members": [
+    {
+      "member": "checksum",
+      "offset": 40,
+      "size": 4,
+      "type": "int"
+    }
+  ],
+  "removed_fillers": [
+    {
+      "member": "before_checksum",
+      "offset": 0,
+      "size": 40,
+      "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
+    },
+    {
+      "member": "remainder",
+      "offset": 44,
+      "size": 1320,
+      "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
+    }
+  ],
+  "affected_targets": [
+    "game-profile"
+  ],
+  "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_checksum.json",
+  "observation_count": 1
+}

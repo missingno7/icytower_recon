@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "source": "src/httpget.c",
+  "target": "game-httpget",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+  "function": "getSocketError",
+  "historical_va": "0x405e90",
+  "historical_size": 12,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "int getSocketError(void);",
+  "return_type": "int",
+  "parameters": [],
+  "locals": [],
+  "lexical_blocks": [],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 95,
+    "body_end_line": 97,
+    "body_sha256": "cbb5a5fc1e9561a2f0d15af0f65296a34fb5364bbf40ad92292b8668888787b1"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 12,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4218512,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218513,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218515,
+        "bytes": "83ec08",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x8,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218518,
+        "bytes": "c9",
+        "mnemonic": "leave",
+        "assembly": "leave",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218519,
+        "bytes": "e9b0a80100",
+        "mnemonic": "jmp",
+        "assembly": "jmp    42074c <_WSAGetLastError@0>",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 1036,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1037,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1039,
+        "bytes": "83ec08",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x8,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1042,
+        "bytes": "c9",
+        "mnemonic": "leave",
+        "assembly": "leave",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1043,
+        "bytes": "e900000000",
+        "mnemonic": "jmp",
+        "assembly": "jmp    418 <_HTTPFetchInternal>",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 26,
+      "address": 4218512,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 32,
+      "address": 4218518,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 28,
+      "address": 4218519,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [],
+  "calls": [
+    {
+      "symbol": "_WSAGetLastError@0",
+      "function_offset": 8,
+      "target_va": 4327244,
+      "verified": true
+    }
+  ],
+  "original_calls": [],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 0,
+  "neighbor_layout": [
+    {
+      "function": "dumpHTTPResponse",
+      "status": "MISSING",
+      "historical_offset": 1436,
+      "candidate_offset": null,
+      "size_delta": -99
+    },
+    {
+      "function": "HTTPFetchInternal",
+      "status": "DIFFER",
+      "historical_offset": 1548,
+      "candidate_offset": 1048,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 40,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-httpget.json",
+  "verification_command": "python tools/check_function.py game-httpget getSocketError",
+  "begin_command": "python tools/grinder_task.py begin game-httpget getSocketError",
+  "promotion_command": "python tools/promote_function.py game-httpget getSocketError",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
+}

@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "generate_profile_checksum",
+  "source": "src/profile.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/profile.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Tprofile*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 196733
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tprofile",
+      "candidate_type": "Tprofile_checksum",
+      "header": "include/recovered/Tprofile.h",
+      "status": "MISMATCH",
+      "historical_size": 1360,
+      "candidate_size": 1364,
+      "member_difference_count": 32,
+      "first_member_differences": [
+        {
+          "member": "before_checksum",
+          "historical": null,
+          "candidate": {
+            "offset": 0,
+            "size": 40,
+            "type": "unsigned char [40]",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "best_combo",
+          "historical": {
+            "offset": 80,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "best_floor",
+          "historical": {
+            "offset": 76,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "best_replay_names",
+          "historical": {
+            "offset": 220,
+            "size": 1024,
+            "type": "char [32][32]",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "best_score",
+          "historical": {
+            "offset": 84,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        },
+        {
+          "member": "biggest_lost_combo",
+          "historical": {
+            "offset": 92,
+            "size": 4,
+            "type": "int",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": null
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/profile.c",
+      "file": "src/profile.c",
+      "line": 83
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check generate_profile_checksum",
+  "begin_command": "python tools/interface_task.py begin generate_profile_checksum",
+  "apply_command": "python tools/interface_task.py apply generate_profile_checksum",
+  "promotion_command": "python tools/interface_task.py promote generate_profile_checksum",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

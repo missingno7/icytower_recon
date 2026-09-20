@@ -48,7 +48,7 @@ char *rankLables[16] = {
     "no rank", "F", "E", "D", "C", "B", "A", "*", "**", "***",
     "****", "*****"
 };
-int rankFloors[16] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
+int rankFloors[12] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
 int rankCombos[16] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
 int rankCCCs[16] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
 int rankNMLs[16] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
@@ -98,10 +98,8 @@ int generate_profile_checksum(Tprofile_checksum *p)
     return hash2(cs);
 }
 
-typedef struct Tprofile_extra {
-    unsigned char before_total_jumps[0xd8];
-    int total_jumps;
-} Tprofile_extra;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_extra;
 
 char *profile_data_page_extra(Tprofile_extra *p)
 {
@@ -403,40 +401,8 @@ void delete_profile(char *handle)
     rmdir(file);
 }
 
-typedef struct Tprofile_create {
-    char header[6];
-    char handle[32];
-    unsigned char before_checksum[2];
-    int checksum;
-    int games_played;
-    int custom_games_played;
-    int games_quit;
-    int seconds_spent_playing;
-    int total_floors;
-    int total_score;
-    int total_combos;
-    int total_combo_floors;
-    int best_floor;
-    int best_combo;
-    int best_score;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    int cccNum[5];
-    int cccTotal[5];
-    int ccc[5];
-    int jc[5];
-    int rewards[10];
-    int total_jumps;
-    char best_replay_names[32][32];
-    int flash;
-    int jump_hold;
-    char last_avatar[64];
-    int start_floor;
-    int msc_volume;
-    int snd_volume;
-    char creationDate[16];
-    char saveDate[16];
-} Tprofile_create;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_create;
 
 typedef struct Tprofile_tm {
     int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;

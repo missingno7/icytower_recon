@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_profile_Tprofile_rank",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "alias": "Tprofile_rank",
+  "observations": [
+    {
+      "function": "get_rank_id",
+      "variable": "profile",
+      "historical_type": "Tprofile",
+      "historical_die": 196899,
+      "candidate_die": 2607
+    },
+    {
+      "function": "set_next_rank_message",
+      "variable": "p",
+      "historical_type": "Tprofile",
+      "historical_die": 197047,
+      "candidate_die": 2914
+    },
+    {
+      "function": "set_next_rank_message",
+      "variable": "profile",
+      "historical_type": "Tprofile",
+      "historical_die": 197199,
+      "candidate_die": 3074
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_rank",
+  "apply_command": "python tools/interface_task.py apply view_profile_Tprofile_rank",
+  "verification_command": "python tools/interface_task.py check view_profile_Tprofile_rank",
+  "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_rank",
+  "canonical": "Tprofile",
+  "header": "include/recovered/Tprofile.h",
+  "header_identity": {
+    "size": 3950,
+    "sha256": "bbee5233a2c0834121794d864fa5efd8d9d1ef062d69f634049b7e70ead8a7cc"
+  },
+  "candidate_size": 140,
+  "historical_size": 1360,
+  "member_correspondence": [
+    {
+      "candidate_member": "before_score",
+      "candidate_offset": 0,
+      "candidate_type": "unsigned char [76]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.header[0]",
+        "offset": 0,
+        "size": 1,
+        "type": "char"
+      }
+    },
+    {
+      "candidate_member": "score",
+      "candidate_offset": 76,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.best_floor",
+        "offset": 76,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "combo",
+      "candidate_offset": 80,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.best_combo",
+        "offset": 80,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "before_ccc",
+      "candidate_offset": 84,
+      "candidate_type": "unsigned char [4]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.best_score",
+        "offset": 84,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "ccc",
+      "candidate_offset": 88,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.no_combo_top_floor",
+        "offset": 88,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "before_nml",
+      "candidate_offset": 92,
+      "candidate_type": "unsigned char [44]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.biggest_lost_combo",
+        "offset": 92,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "no_combo_lost",
+      "candidate_offset": 136,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.ccc[0]",
+        "offset": 136,
+        "size": 4,
+        "type": "int"
+      }
+    }
+  ],
+  "reason": "Unmapped or referenced view member: score",
+  "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_rank.json",
+  "observation_count": 3
+}

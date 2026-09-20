@@ -23,8 +23,8 @@ typedef struct HTTPResponse {
 
 HTTPResponse *HTTPRequest(char *pURL, char *pMethod);
 int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort);
-HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
-                                char *pMethod);
+HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,
+                                const char *pMethod);
 void log2file(char *fmt, ...);
 char *strptime(const char *s, const char *format, struct tm *tm);
 time_t timegm(struct tm *tm);
@@ -205,8 +205,8 @@ HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,
     return pResponse;
 }
 
-HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
-                                char *pMethod)
+HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,
+                                const char *pMethod)
 {
     register char *dataPtr = malloc(1);
     int sBufferSize = 512;

@@ -1,0 +1,5077 @@
+{
+  "schema": 1,
+  "source": "src/main.c",
+  "target": "game-main",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+  "function": "init_game",
+  "historical_va": "0x40e7dc",
+  "historical_size": 5788,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "UNKNOWN_SUPERVISOR",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "int init_game(int argc, char **argv);",
+  "return_type": "int",
+  "parameters": [
+    {
+      "die": 128856,
+      "name": "argc",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 128820,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x6382 (location list)",
+      "address": null
+    },
+    {
+      "die": 128873,
+      "name": "argv",
+      "type_die": 109835,
+      "type": "char **",
+      "scope": 128820,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x63d2 (location list)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 128890,
+      "name": "fp",
+      "type_die": 128315,
+      "type": "PACKFILE *",
+      "scope": 128820,
+      "base_type": "PACKFILE",
+      "base_encoding": null,
+      "location": "0x6464 (location list)",
+      "address": null
+    },
+    {
+      "die": 128905,
+      "name": "black",
+      "type_die": 105940,
+      "type": "RGB",
+      "scope": 128820,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 128919,
+      "name": "i",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 128820,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x6506 (location list)",
+      "address": null
+    },
+    {
+      "die": 128933,
+      "name": "title",
+      "type_die": 112218,
+      "type": "char [64]",
+      "scope": 128820,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 80 7f \t(DW_OP_fbreg: -128)",
+      "address": null
+    },
+    {
+      "die": 128951,
+      "name": "tmpHandle",
+      "type_die": 111478,
+      "type": "char [32]",
+      "scope": 128820,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "2 byte block: 91 40 \t(DW_OP_fbreg: -64)",
+      "address": null
+    },
+    {
+      "die": 128972,
+      "name": "wsaData",
+      "type_die": 110604,
+      "type": "WSADATA",
+      "scope": 128820,
+      "base_type": "WSAData",
+      "base_encoding": null,
+      "location": "3 byte block: 91 f0 79 \t(DW_OP_fbreg: -784)",
+      "address": null
+    },
+    {
+      "die": 128992,
+      "name": "wVersionRequested",
+      "type_die": 110065,
+      "type": "WORD",
+      "scope": 128820,
+      "base_type": "short unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 129018,
+      "name": "cfgfilename",
+      "type_die": 112775,
+      "type": "char [256]",
+      "scope": 128820,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 80 7d \t(DW_OP_fbreg: -384)",
+      "address": null
+    },
+    {
+      "die": 129069,
+      "name": "check",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 129060,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "3 byte block: 75 f0 71 \t(DW_OP_breg5 (ebp): -1808)",
+      "address": null
+    },
+    {
+      "die": 129087,
+      "name": "checkFile",
+      "type_die": 99277,
+      "type": "char *",
+      "scope": 129060,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x6592 (location list)",
+      "address": null
+    },
+    {
+      "die": 129119,
+      "name": "loader",
+      "type_die": 112924,
+      "type": "DATAFILE *",
+      "scope": 129110,
+      "base_type": "DATAFILE",
+      "base_encoding": null,
+      "location": "0x6613 (location list)",
+      "address": null
+    },
+    {
+      "die": 129138,
+      "name": "fldLogo",
+      "type_die": 108467,
+      "type": "BITMAP *",
+      "scope": 129110,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x6673 (location list)",
+      "address": null
+    },
+    {
+      "die": 129158,
+      "name": "whiteColor",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 129110,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x66d3 (location list)",
+      "address": null
+    },
+    {
+      "die": 129282,
+      "name": "i",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 129269,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x66e6 (location list)",
+      "address": null
+    },
+    {
+      "die": 129296,
+      "name": "gp",
+      "type_die": 129455,
+      "type": "Tgamepad *",
+      "scope": 129269,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x6725 (location list)",
+      "address": null
+    },
+    {
+      "die": 129320,
+      "name": "buf",
+      "type_die": 110369,
+      "type": "char [8]",
+      "scope": 129311,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 f0 71 \t(DW_OP_fbreg: -1808)",
+      "address": null
+    },
+    {
+      "die": 129347,
+      "name": "gp",
+      "type_die": 129455,
+      "type": "Tgamepad *",
+      "scope": 129338,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "0x6759 (location list)",
+      "address": null
+    },
+    {
+      "die": 129373,
+      "name": "ext",
+      "type_die": 99277,
+      "type": "char *",
+      "scope": 129364,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x6798 (location list)",
+      "address": null
+    },
+    {
+      "die": 129395,
+      "name": "profiledir",
+      "type_die": 115611,
+      "type": "char [1024]",
+      "scope": 129390,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "3 byte block: 91 f0 71 \t(DW_OP_fbreg: -1808)",
+      "address": null
+    },
+    {
+      "die": 129411,
+      "name": "last_cc",
+      "type_die": 99024,
+      "type": "int",
+      "scope": 129390,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x67ab (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 129034,
+      "parent": 128820,
+      "low_pc": 4253740,
+      "high_pc": 4253757,
+      "ranges": null
+    },
+    {
+      "die": 129060,
+      "parent": 128820,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0xc70"
+    },
+    {
+      "die": 129110,
+      "parent": 128820,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0xc90"
+    },
+    {
+      "die": 129181,
+      "parent": 129110,
+      "low_pc": 4254956,
+      "high_pc": 4254970,
+      "ranges": null
+    },
+    {
+      "die": 129197,
+      "parent": 129110,
+      "low_pc": 4255352,
+      "high_pc": 4255368,
+      "ranges": null
+    },
+    {
+      "die": 129228,
+      "parent": 129110,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0xce0"
+    },
+    {
+      "die": 129269,
+      "parent": 129110,
+      "low_pc": 4255776,
+      "high_pc": 4255920,
+      "ranges": null
+    },
+    {
+      "die": 129311,
+      "parent": 129269,
+      "low_pc": 4255876,
+      "high_pc": 4255909,
+      "ranges": null
+    },
+    {
+      "die": 129338,
+      "parent": 129110,
+      "low_pc": 4257241,
+      "high_pc": 4257311,
+      "ranges": null
+    },
+    {
+      "die": 129364,
+      "parent": 128820,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0xcf8"
+    },
+    {
+      "die": 129390,
+      "parent": 128820,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0xd10"
+    },
+    {
+      "die": 129431,
+      "parent": 129390,
+      "low_pc": 4257316,
+      "high_pc": 4257344,
+      "ranges": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 2420,
+    "body_end_line": 2837,
+    "body_sha256": "390e87d3ba6f4a5bd6d6b829d00d0caa9fafb6873a2ff8f39d3ca9df727a47be"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 128856,
+        "name": "argc",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 128820,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 128873,
+        "name": "argv",
+        "type_die": 109835,
+        "type": "char **",
+        "scope": 128820,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 128919,
+        "name": "i",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 128820,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 128933,
+        "name": "title",
+        "type_die": 112218,
+        "type": "char [64]",
+        "scope": 128820,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 128951,
+        "name": "tmpHandle",
+        "type_die": 111478,
+        "type": "char [32]",
+        "scope": 128820,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129018,
+        "name": "cfgfilename",
+        "type_die": 112775,
+        "type": "char [256]",
+        "scope": 128820,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129069,
+        "name": "check",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 129060,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 129087,
+        "name": "checkFile",
+        "type_die": 99277,
+        "type": "char *",
+        "scope": 129060,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129158,
+        "name": "whiteColor",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 129110,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 129282,
+        "name": "i",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 129269,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 129320,
+        "name": "buf",
+        "type_die": 110369,
+        "type": "char [8]",
+        "scope": 129311,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129373,
+        "name": "ext",
+        "type_die": 99277,
+        "type": "char *",
+        "scope": 129364,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129395,
+        "name": "profiledir",
+        "type_die": 115611,
+        "type": "char [1024]",
+        "scope": 129390,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 129411,
+        "name": "last_cc",
+        "type_die": 99024,
+        "type": "int",
+        "scope": 129390,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [
+      {
+        "signed_instruction": "jle",
+        "unsigned_instruction": "jbe",
+        "original_counts": [
+          3,
+          2
+        ],
+        "candidate_counts": [
+          2,
+          2
+        ]
+      },
+      {
+        "signed_instruction": "jg",
+        "unsigned_instruction": "ja",
+        "original_counts": [
+          2,
+          0
+        ],
+        "candidate_counts": [
+          3,
+          0
+        ]
+      },
+      {
+        "signed_instruction": "jge",
+        "unsigned_instruction": "jae",
+        "original_counts": [
+          0,
+          0
+        ],
+        "candidate_counts": [
+          1,
+          0
+        ]
+      }
+    ],
+    "declaration_differences": [],
+    "cast_chains": [
+      "(unsigned int)"
+    ],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 5646,
+  "first_difference": {
+    "offset": 32,
+    "original_va": 4253692,
+    "candidate_byte": 203,
+    "original_byte": 202
+  },
+  "mismatch_count": 4735,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4253666,
+        "bytes": "81ec2c070000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x72c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253672,
+        "bytes": "8b750c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%esi",
+        "dwarf_variables": [
+          {
+            "die": 128873,
+            "name": "argv",
+            "type": "char **",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4253675,
+        "bytes": "c645c800",
+        "mnemonic": "movb",
+        "assembly": "movb   $0x0,-0x38(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 128951,
+            "name": "tmpHandle",
+            "type": "char [32]",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -56
+            },
+            "expression_hex": "9140",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4253679,
+        "bytes": "c70564d14d0000000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,0x4dd164",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253689,
+        "bytes": "c70424ca514d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d51ca,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253696,
+        "bytes": "e853f2ffff",
+        "mnemonic": "call",
+        "assembly": "call   40da58 <_log2file>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253701,
+        "bytes": "c7042400000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253708,
+        "bytes": "e87f5d0300",
+        "mnemonic": "call",
+        "assembly": "call   444590 <_packfile_password>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253713,
+        "bytes": "c7442408204b4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4b20,0x8(%esp)",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 20638,
+        "bytes": "81ec2c070000",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x72c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20644,
+        "bytes": "8b750c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%esi",
+        "dwarf_variables": [
+          {
+            "die": 26229,
+            "name": "argv",
+            "type": "char **",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 20647,
+        "bytes": "c645c800",
+        "mnemonic": "movb",
+        "assembly": "movb   $0x0,-0x38(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 26351,
+            "name": "tmpHandle",
+            "type": "char [32]",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -56
+            },
+            "expression_hex": "9140",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 20651,
+        "bytes": "c7050000000000000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,0x0",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20661,
+        "bytes": "c70424b6040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4b6,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20668,
+        "bytes": "e897b8ffff",
+        "mnemonic": "call",
+        "assembly": "call   958 <_log2file>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20673,
+        "bytes": "c7042400000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,(%esp)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20680,
+        "bytes": "e800000000",
+        "mnemonic": "call",
+        "assembly": "call   50cd <_init_game+0x35>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 20685,
+        "bytes": "c744240800000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,0x8(%esp)",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "Tgamepad",
+      "size": 144,
+      "header": "include/recovered/Tgamepad.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "left",
+          "offset": 8,
+          "type": "int"
+        },
+        {
+          "name": "right",
+          "offset": 12,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1375,
+      "address": 4253660,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1382,
+      "address": 4253675,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1385,
+      "address": 4253679,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1393,
+      "address": 4253689,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1394,
+      "address": 4253701,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1395,
+      "address": 4253713,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "E:/Lib/allegro4/include/allegro/inline/system.inl",
+      "file": "system.inl",
+      "line": 29,
+      "address": 4253740,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 1403,
+      "address": 4253757,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "cmdline",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd14c",
+      "dwarf_type": "Tcommandline",
+      "size": 20,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "seed",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4ff108",
+      "dwarf_type": "double",
+      "size": 8,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "init_ok",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd164",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "itrcheck",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd168",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "dropped_file_is_not_a_replay",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd16c",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "window",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bc028",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "ffffffff",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "got_joystick",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4f8b08",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "sfx_file",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4f87e8",
+      "dwarf_type": "char [512]",
+      "size": 512,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "swap_screen",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd194",
+      "dwarf_type": "BITMAP *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "options",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fe528",
+      "dwarf_type": "Toptions",
+      "size": 632,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "ctrl",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x5000c8",
+      "dwarf_type": "Tcontrol",
+      "size": 36,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "hisc_names",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bc040",
+      "dwarf_type": "char *[15]",
+      "size": 60,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "e9624d00f5624d0001634d0010634d0024634d003a634d004c634d005e634d0070634d0082634d0094634d00a9634d00be634d00d3634d00eb634d00",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "hisc_tables",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd1c0",
+      "dwarf_type": "Thisc_table *[15]",
+      "size": 60,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 4,
+      "function_offsets": []
+    },
+    {
+      "symbol": "data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd23c",
+      "dwarf_type": "DATAFILE *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 4,
+      "function_offsets": []
+    },
+    {
+      "symbol": "sfx",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd240",
+      "dwarf_type": "DATAFILE *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 26,
+      "function_offsets": []
+    },
+    {
+      "symbol": "ply",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4ff128",
+      "dwarf_type": "Tplayer *[1000]",
+      "size": 4000,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "player_id",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fe518",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "gameover_bmp",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x5000f8",
+      "dwarf_type": "BITMAP *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "demo",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd250",
+      "dwarf_type": "Treplay *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "characters",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fdcc8",
+      "dwarf_type": "Tcharacter *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    },
+    {
+      "symbol": "curr_char",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd270",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    },
+    {
+      "symbol": "profile",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd27c",
+      "dwarf_type": "Tprofile *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 7,
+      "function_offsets": []
+    },
+    {
+      "symbol": "combo_sound",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd280",
+      "dwarf_type": "SAMPLE *[10]",
+      "size": 40,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "bg_beat",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2a8",
+      "dwarf_type": "SAMPLE *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "bg_menu",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2ac",
+      "dwarf_type": "SAMPLE *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "jump_sound",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2b0",
+      "dwarf_type": "SAMPLE *[3]",
+      "size": 12,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "speaker",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2bc",
+      "dwarf_type": "SAMPLE *[3]",
+      "size": 12,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "menu_sounds",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2c8",
+      "dwarf_type": "SAMPLE *[2]",
+      "size": 8,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "sounds",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd2e0",
+      "dwarf_type": "SAMPLE *[9]",
+      "size": 36,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "snd_volume_slider",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bc198",
+      "dwarf_type": "Tmenu_slider",
+      "size": 16,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0000000000000000fa00000019000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "msc_volume_slider",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bc1a8",
+      "dwarf_type": "Tmenu_slider",
+      "size": 16,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "0000000000000000fa00000019000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "floors",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd304",
+      "dwarf_type": "Tmenu_floor_selection",
+      "size": 8,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "play_char",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fa318",
+      "dwarf_type": "Tmenu_char_selection",
+      "size": 1036,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "eyecandy_selection",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fa278",
+      "dwarf_type": "Tmenu_selection",
+      "size": 136,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "scroll_speed_selection",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fec78",
+      "dwarf_type": "Tmenu_selection",
+      "size": 136,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "floor_size_selection",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fe7b8",
+      "dwarf_type": "Tmenu_selection",
+      "size": 136,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "gravity_selection",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4fac38",
+      "dwarf_type": "Tmenu_selection",
+      "size": 136,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "init_string",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bdb3c",
+      "dwarf_type": "char [7]",
+      "size": 7,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "7179756a7d6800",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "cycle_count",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\timer.c",
+      "historical_address": "0x506938",
+      "dwarf_type": "volatile int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 6,
+      "function_offsets": []
+    },
+    {
+      "symbol": "joy",
+      "cu": "C:\\Lib\\allegro4\\src\\joystick.c",
+      "historical_address": "0x506a88",
+      "dwarf_type": "JOYSTICK_INFO [8]",
+      "size": 4544,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    },
+    {
+      "symbol": "system_driver",
+      "cu": "C:\\Lib\\allegro4\\src\\allegro.c",
+      "historical_address": "0x4dda74",
+      "dwarf_type": "SYSTEM_DRIVER *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "gfx_driver",
+      "cu": "C:\\Lib\\allegro4\\src\\allegro.c",
+      "historical_address": "0x4dda84",
+      "dwarf_type": "GFX_DRIVER *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    },
+    {
+      "symbol": "screen",
+      "cu": "C:\\Lib\\allegro4\\src\\allegro.c",
+      "historical_address": "0x4dda8c",
+      "dwarf_type": "BITMAP *",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 7,
+      "function_offsets": []
+    },
+    {
+      "symbol": "font",
+      "cu": "C:\\Lib\\allegro4\\src\\font.c",
+      "historical_address": "0x4ccc94",
+      "dwarf_type": "FONT *",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "98cc4c00",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d51cb",
+      "candidate_addend": 1206,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        32
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4b20",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        57
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d51d5",
+      "candidate_addend": 1216,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        65
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5242",
+      "candidate_addend": 1326,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        211
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5247",
+      "candidate_addend": 1331,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        228
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d524c",
+      "candidate_addend": 1336,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        245
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5251",
+      "candidate_addend": 1341,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": [
+        282,
+        421,
+        536
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5258",
+      "candidate_addend": 1348,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        299
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d525e",
+      "candidate_addend": 1354,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        316
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5263",
+      "candidate_addend": 1359,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        333
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d526a",
+      "candidate_addend": 1366,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        350
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5272",
+      "candidate_addend": 1374,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        367
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5279",
+      "candidate_addend": 1381,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        404
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d527e",
+      "candidate_addend": 1386,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        438
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5286",
+      "candidate_addend": 1394,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        455
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d528f",
+      "candidate_addend": 1403,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        472
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5294",
+      "candidate_addend": 1408,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        519
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d529b",
+      "candidate_addend": 1415,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        553
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52a1",
+      "candidate_addend": 1421,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        634
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52a8",
+      "candidate_addend": 1428,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        654
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52cc",
+      "candidate_addend": 1518,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        714,
+        2692
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5354",
+      "candidate_addend": 1600,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        761
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 1684,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        795
+      ]
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bc040",
+      "candidate_addend": 64,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        811
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d53f7",
+      "candidate_addend": 1767,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        858,
+        1009
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d53fe",
+      "candidate_addend": 1774,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        879
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5412",
+      "candidate_addend": 1794,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        903
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5426",
+      "candidate_addend": 1814,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        916
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5494",
+      "candidate_addend": 1888,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1131
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5588",
+      "candidate_addend": 2164,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1222
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d55a9",
+      "candidate_addend": 2197,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1299
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d55b5",
+      "candidate_addend": 2209,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1368
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d55cb",
+      "candidate_addend": 2231,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1380
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 2248,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1394
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d560c",
+      "candidate_addend": 2296,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1426
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5627",
+      "candidate_addend": 2323,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1598
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d563b",
+      "candidate_addend": 2343,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1630
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x406a6c",
+      "candidate_addend": 268,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1643
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x406a5c",
+      "candidate_addend": 252,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1663
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x406a7c",
+      "candidate_addend": 284,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1682
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5653",
+      "candidate_addend": 2367,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1714
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5665",
+      "candidate_addend": 2385,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1746
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5679",
+      "candidate_addend": 2405,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1768
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d568a",
+      "candidate_addend": 2422,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1813
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d56a6",
+      "candidate_addend": 2450,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1882
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d56be",
+      "candidate_addend": 2474,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        1894,
+        1926
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d56cc",
+      "candidate_addend": 2488,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1914
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4d41",
+      "candidate_addend": 1182,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1945
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4d49",
+      "candidate_addend": 1190,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1959
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4d4e",
+      "candidate_addend": 1195,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1974
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4d44",
+      "candidate_addend": 1185,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        1989
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d56ed",
+      "candidate_addend": 2521,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2016
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5757",
+      "candidate_addend": 2627,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2049
+      ]
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bdb3c",
+      "candidate_addend": 284,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": [
+        2135,
+        2159,
+        4186
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d578e",
+      "candidate_addend": 2682,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2147
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x407bf0",
+      "candidate_addend": 5188,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2172
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d579b",
+      "candidate_addend": 2695,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2179
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d57c2",
+      "candidate_addend": 2734,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2221
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d57fa",
+      "candidate_addend": 2790,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2355
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5872",
+      "candidate_addend": 2910,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2453
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d588e",
+      "candidate_addend": 2938,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2482
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d589e",
+      "candidate_addend": 2954,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2507
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5916",
+      "candidate_addend": 3074,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2568
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5934",
+      "candidate_addend": 3104,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2598
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5954",
+      "candidate_addend": 3136,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2654
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52af",
+      "candidate_addend": 1435,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2812
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5200",
+      "candidate_addend": 1260,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2873
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 1709,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 7,
+      "function_offsets": [
+        2891,
+        3169,
+        3243,
+        3651,
+        3907,
+        4079,
+        5116
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d53cc",
+      "candidate_addend": 1724,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2947
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d51e3",
+      "candidate_addend": 1230,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2971
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5474",
+      "candidate_addend": 1949,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        2991
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d531c",
+      "candidate_addend": 1464,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3118
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5338",
+      "candidate_addend": 1492,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3137
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d54b4",
+      "candidate_addend": 1920,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3299
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5720",
+      "candidate_addend": 2572,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3319
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d545e",
+      "candidate_addend": 1866,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3354
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5449",
+      "candidate_addend": 1845,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3371
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52b7",
+      "candidate_addend": 1443,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3408
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d583b",
+      "candidate_addend": 2855,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        3471,
+        5375
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d584c",
+      "candidate_addend": 2872,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3531
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d56f4",
+      "candidate_addend": 2528,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3583
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d542d",
+      "candidate_addend": 1817,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3663
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5818",
+      "candidate_addend": 2820,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3695
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d54d1",
+      "candidate_addend": 1979,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3727
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d54ec",
+      "candidate_addend": 2008,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3783
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d55ec",
+      "candidate_addend": 2264,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3846
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52bb",
+      "candidate_addend": 1447,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3866
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5768",
+      "candidate_addend": 2644,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        3963
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52d8",
+      "candidate_addend": 1532,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4038
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5310",
+      "candidate_addend": 1588,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        4050,
+        5620
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d57a9",
+      "candidate_addend": 2709,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4135
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d59b2",
+      "candidate_addend": 3230,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4169
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d59be",
+      "candidate_addend": 3242,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4198
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x407c14",
+      "candidate_addend": 5176,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4211
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d59ce",
+      "candidate_addend": 3258,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4218
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a1a",
+      "candidate_addend": 3273,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4230
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a24",
+      "candidate_addend": 3283,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4259
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a36",
+      "candidate_addend": 3301,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4283
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a54",
+      "candidate_addend": 3331,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4762
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a6c",
+      "candidate_addend": 3415,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4782
+      ]
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bc198",
+      "candidate_addend": 32,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4797
+      ]
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bc1a8",
+      "candidate_addend": 48,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4807
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a80",
+      "candidate_addend": 3435,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4918
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4dc5",
+      "candidate_addend": 3447,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        4935
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d57d4",
+      "candidate_addend": 2752,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5172
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52c1",
+      "candidate_addend": 1453,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5192
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d58ac",
+      "candidate_addend": 2968,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5261
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4b86",
+      "candidate_addend": 566,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": [
+        5274,
+        5293,
+        5326
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d58c4",
+      "candidate_addend": 2992,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5281
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d58e9",
+      "candidate_addend": 3029,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5350
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d58ff",
+      "candidate_addend": 3051,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5431
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d52c6",
+      "candidate_addend": 1458,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5451
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d59e0",
+      "candidate_addend": 3356,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5492
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 3387,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5504
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5a08",
+      "candidate_addend": 3397,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5528
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d5378",
+      "candidate_addend": 1636,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        5608
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_packfile_password",
+      "function_offset": 49,
+      "target_va": 4474256,
+      "verified": true,
+      "reference_count": 8,
+      "function_offsets": [
+        49,
+        1373,
+        1419,
+        2164,
+        2209,
+        4191,
+        4276,
+        5521
+      ]
+    },
+    {
+      "symbol": "_sprintf",
+      "function_offset": 76,
+      "target_va": 4959584,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        76,
+        2024
+      ]
+    },
+    {
+      "symbol": "_WSAStartup@8",
+      "function_offset": 115,
+      "target_va": 4327316,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        115
+      ]
+    },
+    {
+      "symbol": "_strdup",
+      "function_offset": 216,
+      "target_va": 4926952,
+      "verified": true,
+      "reference_count": 17,
+      "function_offsets": [
+        216,
+        233,
+        250,
+        287,
+        304,
+        321,
+        338,
+        355
+      ]
+    },
+    {
+      "symbol": "_fldads_start",
+      "function_offset": 568,
+      "target_va": 4209352,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        568
+      ]
+    },
+    {
+      "symbol": "_stricmp",
+      "function_offset": 642,
+      "target_va": 4926936,
+      "verified": false,
+      "reference_count": 7,
+      "function_offsets": [
+        642,
+        665,
+        2823,
+        3419,
+        3877,
+        5203,
+        5462
+      ]
+    },
+    {
+      "symbol": "_load_replay",
+      "function_offset": 727,
+      "target_va": 4312552,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        727,
+        2708
+      ]
+    },
+    {
+      "symbol": "_get_configfile_path",
+      "function_offset": 788,
+      "target_va": 4209100,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        788
+      ]
+    },
+    {
+      "symbol": "_make_hisc_table",
+      "function_offset": 819,
+      "target_va": 4216892,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        819
+      ]
+    },
+    {
+      "symbol": "_reset_hisc_table",
+      "function_offset": 866,
+      "target_va": 4216656,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        866,
+        1024
+      ]
+    },
+    {
+      "symbol": "_init_control",
+      "function_offset": 896,
+      "target_va": 4200336,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        896
+      ]
+    },
+    {
+      "symbol": "_pack_fopen",
+      "function_offset": 924,
+      "target_va": 4479740,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        924
+      ]
+    },
+    {
+      "symbol": "_load_options",
+      "function_offset": 950,
+      "target_va": 4293532,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        950
+      ]
+    },
+    {
+      "symbol": "_load_hisc_table",
+      "function_offset": 981,
+      "target_va": 4216500,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        981
+      ]
+    },
+    {
+      "symbol": "_pack_fclose",
+      "function_offset": 1038,
+      "target_va": 4476280,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1038
+      ]
+    },
+    {
+      "symbol": "__errno",
+      "function_offset": 1066,
+      "target_va": 4959704,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1066
+      ]
+    },
+    {
+      "symbol": "__install_allegro_version_check",
+      "function_offset": 1098,
+      "target_va": 4453264,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1098
+      ]
+    },
+    {
+      "symbol": "_set_color_depth",
+      "function_offset": 1110,
+      "target_va": 4516308,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1110
+      ]
+    },
+    {
+      "symbol": "_set_gfx_mode",
+      "function_offset": 1180,
+      "target_va": 4523656,
+      "verified": false,
+      "reference_count": 16,
+      "function_offsets": [
+        1180,
+        2647,
+        2940,
+        3040,
+        3104,
+        3228,
+        3292,
+        3520
+      ]
+    },
+    {
+      "symbol": "_install_mouse",
+      "function_offset": 1232,
+      "target_va": 4591072,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1232
+      ]
+    },
+    {
+      "symbol": "_enable_hardware_cursor",
+      "function_offset": 1237,
+      "target_va": 4588964,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1237
+      ]
+    },
+    {
+      "symbol": "_select_mouse_cursor",
+      "function_offset": 1249,
+      "target_va": 4585944,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1249
+      ]
+    },
+    {
+      "symbol": "_makecol",
+      "function_offset": 1291,
+      "target_va": 4525208,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1291,
+        1472
+      ]
+    },
+    {
+      "symbol": "_textprintf_centre_ex",
+      "function_offset": 1349,
+      "target_va": 4563516,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1349
+      ]
+    },
+    {
+      "symbol": "_set_color_conversion",
+      "function_offset": 1361,
+      "target_va": 4516408,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1361,
+        2115
+      ]
+    },
+    {
+      "symbol": "_load_datafile",
+      "function_offset": 1385,
+      "target_va": 4546780,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1385
+      ]
+    },
+    {
+      "symbol": "_select_palette",
+      "function_offset": 1444,
+      "target_va": 4513572,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1444,
+        4162
+      ]
+    },
+    {
+      "symbol": "_unload_datafile",
+      "function_offset": 1591,
+      "target_va": 4538740,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1591,
+        4775
+      ]
+    },
+    {
+      "symbol": "_set_display_switch_mode",
+      "function_offset": 1623,
+      "target_va": 4609736,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1623
+      ]
+    },
+    {
+      "symbol": "_set_display_switch_callback",
+      "function_offset": 1655,
+      "target_va": 4609844,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1655,
+        1675
+      ]
+    },
+    {
+      "symbol": "_set_close_button_callback",
+      "function_offset": 1687,
+      "target_va": 4451916,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1687
+      ]
+    },
+    {
+      "symbol": "_time",
+      "function_offset": 1699,
+      "target_va": 4959608,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1699
+      ]
+    },
+    {
+      "symbol": "_srand",
+      "function_offset": 1707,
+      "target_va": 4959688,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1707
+      ]
+    },
+    {
+      "symbol": "_install_timers",
+      "function_offset": 1729,
+      "target_va": 4325092,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1729
+      ]
+    },
+    {
+      "symbol": "_install_keyboard",
+      "function_offset": 1761,
+      "target_va": 4447784,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1761
+      ]
+    },
+    {
+      "symbol": "_install_sound",
+      "function_offset": 1806,
+      "target_va": 4462512,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1806
+      ]
+    },
+    {
+      "symbol": "_install_joystick",
+      "function_offset": 1835,
+      "target_va": 4450648,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1835
+      ]
+    },
+    {
+      "symbol": "_exists",
+      "function_offset": 1899,
+      "target_va": 4481560,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1899
+      ]
+    },
+    {
+      "symbol": "_set_config_file",
+      "function_offset": 1931,
+      "target_va": 4603880,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        1931
+      ]
+    },
+    {
+      "symbol": "_get_gamepad",
+      "function_offset": 1936,
+      "target_va": 4200444,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        1936,
+        3593
+      ]
+    },
+    {
+      "symbol": "_create_bitmap",
+      "function_offset": 2090,
+      "target_va": 4518896,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2090
+      ]
+    },
+    {
+      "symbol": "_load_datafile_callback",
+      "function_offset": 2184,
+      "target_va": 4545856,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        2184,
+        4223
+      ]
+    },
+    {
+      "symbol": "_rand",
+      "function_offset": 2231,
+      "target_va": 4959512,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        2231,
+        5026
+      ]
+    },
+    {
+      "symbol": "_malloc",
+      "function_offset": 2259,
+      "target_va": 4959504,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2259
+      ]
+    },
+    {
+      "symbol": "_get_profiles_dir",
+      "function_offset": 2382,
+      "target_va": 4209180,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2382
+      ]
+    },
+    {
+      "symbol": "_file_exists",
+      "function_offset": 2406,
+      "target_va": 4481360,
+      "verified": false,
+      "reference_count": 2,
+      "function_offsets": [
+        2406,
+        2438
+      ]
+    },
+    {
+      "symbol": "_load_profile",
+      "function_offset": 2524,
+      "target_va": 4302828,
+      "verified": false,
+      "reference_count": 3,
+      "function_offsets": [
+        2524,
+        2767,
+        5298
+      ]
+    },
+    {
+      "symbol": "_strcpy",
+      "function_offset": 2556,
+      "target_va": 4959560,
+      "verified": false,
+      "reference_count": 3,
+      "function_offsets": [
+        2556,
+        2747,
+        3395
+      ]
+    },
+    {
+      "symbol": "_allegro_message",
+      "function_offset": 2659,
+      "target_va": 4453092,
+      "verified": false,
+      "reference_count": 12,
+      "function_offsets": [
+        2659,
+        2952,
+        3123,
+        3304,
+        3536,
+        3788,
+        3851,
+        3968
+      ]
+    },
+    {
+      "symbol": "_get_filename",
+      "function_offset": 2732,
+      "target_va": 4474156,
+      "verified": false,
+      "reference_count": 3,
+      "function_offsets": [
+        2732,
+        4027,
+        5597
+      ]
+    },
+    {
+      "symbol": "_get_extension",
+      "function_offset": 2755,
+      "target_va": 4483100,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2755
+      ]
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 2788,
+      "target_va": 4959496,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2788
+      ]
+    },
+    {
+      "symbol": "_show_mouse",
+      "function_offset": 3457,
+      "target_va": 4587772,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        3457
+      ]
+    },
+    {
+      "symbol": "_reset_options",
+      "function_offset": 3680,
+      "target_va": 4293324,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        3680
+      ]
+    },
+    {
+      "symbol": "_mkdir",
+      "function_offset": 3708,
+      "target_va": 4926944,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        3708
+      ]
+    },
+    {
+      "symbol": "_printf",
+      "function_offset": 4043,
+      "target_va": 4959712,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        4043
+      ]
+    },
+    {
+      "symbol": "_rest",
+      "function_offset": 5012,
+      "target_va": 4578984,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5012
+      ]
+    },
+    {
+      "symbol": "_keypressed",
+      "function_offset": 5017,
+      "target_va": 4447264,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5017
+      ]
+    },
+    {
+      "symbol": "_clear_bitmap",
+      "function_offset": 5079,
+      "target_va": 4506292,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5079
+      ]
+    },
+    {
+      "symbol": "_vsync",
+      "function_offset": 5084,
+      "target_va": 4506432,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5084
+      ]
+    },
+    {
+      "symbol": "_clear_keybuf",
+      "function_offset": 5089,
+      "target_va": 4447324,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5089
+      ]
+    },
+    {
+      "symbol": "_create_profile",
+      "function_offset": 5331,
+      "target_va": 4303240,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5331
+      ]
+    },
+    {
+      "symbol": "log2file",
+      "function_offset": 37,
+      "target_va": 4250200,
+      "verified": true,
+      "reference_count": 64,
+      "function_offsets": [
+        37,
+        719,
+        766,
+        800,
+        884,
+        908,
+        1136,
+        1227
+      ]
+    },
+    {
+      "symbol": "draw_progress_bar",
+      "function_offset": 1724,
+      "target_va": 4225544,
+      "verified": false,
+      "reference_count": 15,
+      "function_offsets": [
+        1724,
+        1756,
+        1778,
+        1823,
+        2059,
+        2120,
+        2214,
+        2463
+      ]
+    },
+    {
+      "symbol": "get_gamepad_value",
+      "function_offset": 1950,
+      "target_va": 4245892,
+      "verified": false,
+      "reference_count": 5,
+      "function_offsets": [
+        1950,
+        1964,
+        1979,
+        1994,
+        2032
+      ]
+    },
+    {
+      "symbol": "pwd_garble_string",
+      "function_offset": 2140,
+      "target_va": 4223940,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2140
+      ]
+    },
+    {
+      "symbol": "rebuild_profile_list",
+      "function_offset": 2475,
+      "target_va": 4245336,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2475
+      ]
+    },
+    {
+      "symbol": "syncOptionsFromProfile",
+      "function_offset": 2561,
+      "target_va": 4245536,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2561
+      ]
+    },
+    {
+      "symbol": "check_characters",
+      "function_offset": 2583,
+      "target_va": 4253312,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        2583
+      ]
+    },
+    {
+      "symbol": "getSampleFromOggDatafile",
+      "function_offset": 4309,
+      "target_va": 4246060,
+      "verified": false,
+      "reference_count": 22,
+      "function_offsets": [
+        4309,
+        4330,
+        4351,
+        4372,
+        4393,
+        4414,
+        4435,
+        4456
+      ]
+    },
+    {
+      "symbol": "fadeOut",
+      "function_offset": 5066,
+      "target_va": 4243292,
+      "verified": false,
+      "reference_count": 1,
+      "function_offsets": [
+        5066
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4253696,
+      "bytes": "e853f2ffff",
+      "mnemonic": "call",
+      "assembly": "call   40da58 <_log2file>"
+    },
+    {
+      "address": 4253708,
+      "bytes": "e87f5d0300",
+      "mnemonic": "call",
+      "assembly": "call   444590 <_packfile_password>"
+    },
+    {
+      "address": 4253735,
+      "bytes": "e834c50a00",
+      "mnemonic": "call",
+      "assembly": "call   4bad60 <_sprintf>"
+    },
+    {
+      "address": 4253755,
+      "bytes": "ffd0",
+      "mnemonic": "call",
+      "assembly": "call   *%eax"
+    },
+    {
+      "address": 4253774,
+      "bytes": "e8411f0100",
+      "mnemonic": "call",
+      "assembly": "call   420794 <_WSAStartup@8>"
+    },
+    {
+      "address": 4253875,
+      "bytes": "e830450a00",
+      "mnemonic": "call",
+      "assembly": "call   4b2de8 <_strdup>"
+    },
+    {
+      "address": 4253892,
+      "bytes": "e81f450a00",
+      "mnemonic": "call",
+      "assembly": "call   4b2de8 <_strdup>"
+    },
+    {
+      "address": 4253909,
+      "bytes": "e80e450a00",
+      "mnemonic": "call",
+      "assembly": "call   4b2de8 <_strdup>"
+    }
+  ],
+  "indirect_control_flow": 5,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 20664,
+      "symbol_index": 107,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 32,
+      "addend": 1206,
+      "target_va": 5067211,
+      "resolution": "unique read-only literal or table content",
+      "resolved_value": 5067211,
+      "original_value": 5067210,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 20792,
+      "symbol_index": 134,
+      "symbol": "_curr_char",
+      "type": 6,
+      "function_offset": 160,
+      "addend": 0,
+      "target_va": 5100144,
+      "resolution": "named symbol",
+      "resolved_value": 5100144,
+      "original_value": 5219100,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 20812,
+      "symbol_index": 133,
+      "symbol": "_characters",
+      "type": 6,
+      "function_offset": 180,
+      "addend": 0,
+      "target_va": 5233864,
+      "resolution": "named symbol",
+      "resolved_value": 5233864,
+      "original_value": 5219104,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 21266,
+      "symbol_index": 107,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 634,
+      "addend": 1421,
+      "target_va": 5067425,
+      "resolution": "unique read-only literal or table content",
+      "resolved_value": 5067425,
+      "original_value": 131071,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 21274,
+      "symbol_index": 406,
+      "symbol": "_stricmp",
+      "type": 20,
+      "function_offset": 642,
+      "addend": 0,
+      "target_va": 4926936,
+      "resolution": "named symbol",
+      "resolved_value": 672630,
+      "original_value": 1386742820,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 21286,
+      "symbol_index": 107,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 654,
+      "addend": 1428,
+      "target_va": 5067432,
+      "resolution": "unique read-only literal or table content",
+      "resolved_value": 5067432,
+      "original_value": 172190184,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 21297,
+      "symbol_index": 406,
+      "symbol": "_stricmp",
+      "type": 20,
+      "function_offset": 665,
+      "addend": 0,
+      "target_va": 4926936,
+      "resolution": "named symbol",
+      "resolved_value": 672607,
+      "original_value": 5099852,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 21311,
+      "symbol_index": 179,
+      "symbol": "_cmdline",
+      "type": 6,
+      "function_offset": 679,
+      "addend": 0,
+      "target_va": 5099852,
+      "resolution": "named symbol",
+      "resolved_value": 5099852,
+      "original_value": 76218445,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 36,
+      "function_offset": 37,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -18281,
+      "layout_operand_equal": false,
+      "resolved_value": 4294963795,
+      "original_value": 4294963795,
+      "equal": true,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 718,
+      "function_offset": 719,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -18963,
+      "layout_operand_equal": false,
+      "resolved_value": 4294963113,
+      "original_value": 1126688804,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 765,
+      "function_offset": 766,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19010,
+      "layout_operand_equal": false,
+      "resolved_value": 4294963066,
+      "original_value": 65613,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 799,
+      "function_offset": 800,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19044,
+      "layout_operand_equal": false,
+      "resolved_value": 4294963032,
+      "original_value": 256,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 883,
+      "function_offset": 884,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19128,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962948,
+      "original_value": 2215629445,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 907,
+      "function_offset": 908,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19152,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962924,
+      "original_value": 2315255790,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 1135,
+      "function_offset": 1136,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19380,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962696,
+      "original_value": 603012,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    },
+    {
+      "instruction_offset": 1226,
+      "function_offset": 1227,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "log2file",
+      "target_va": 4250200,
+      "candidate_target": 2392,
+      "candidate_displacement": -19471,
+      "layout_operand_equal": false,
+      "resolved_value": 4294962605,
+      "original_value": 4285179112,
+      "equal": false,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 0,
+  "neighbor_layout": [
+    {
+      "function": "pwd_garble_string",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2660,
+      "candidate_offset": 1360,
+      "size_delta": 0
+    },
+    {
+      "function": "draw_progress_bar",
+      "status": "DIFFER",
+      "historical_offset": 4264,
+      "candidate_offset": 4668,
+      "size_delta": -4
+    },
+    {
+      "function": "fadeOut",
+      "status": "DIFFER",
+      "historical_offset": 22012,
+      "candidate_offset": 9936,
+      "size_delta": -31
+    },
+    {
+      "function": "rebuild_profile_list",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 24056,
+      "candidate_offset": 1724,
+      "size_delta": 0
+    },
+    {
+      "function": "syncOptionsFromProfile",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 24256,
+      "candidate_offset": 1924,
+      "size_delta": 0
+    },
+    {
+      "function": "get_gamepad_value",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 24612,
+      "candidate_offset": 20464,
+      "size_delta": 0
+    },
+    {
+      "function": "getSampleFromOggDatafile",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 24780,
+      "candidate_offset": 4636,
+      "size_delta": 0
+    },
+    {
+      "function": "log2file",
+      "status": "DIFFER",
+      "historical_offset": 28920,
+      "candidate_offset": 2392,
+      "size_delta": 0
+    },
+    {
+      "function": "check_characters",
+      "status": "DIFFER",
+      "historical_offset": 32032,
+      "candidate_offset": 2900,
+      "size_delta": 0
+    },
+    {
+      "function": "load_character",
+      "status": "DIFFER",
+      "historical_offset": 38168,
+      "candidate_offset": 2584,
+      "size_delta": -15
+    },
+    {
+      "function": "_mangled_main",
+      "status": "DIFFER",
+      "historical_offset": 62896,
+      "candidate_offset": 34132,
+      "size_delta": -282
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": -50,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-main.json",
+  "verification_command": "python tools/check_function.py game-main init_game",
+  "begin_command": "python tools/grinder_task.py begin game-main init_game",
+  "promotion_command": "python tools/promote_function.py game-main init_game",
+  "storage_declarations": [
+    {
+      "name": "cmdline",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tcommandline",
+      "candidate_type": "Tcmdline",
+      "candidate_card": "docs/current/storage/game-main/136066.json"
+    },
+    {
+      "name": "seed",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "double",
+      "candidate_type": "double",
+      "candidate_card": "docs/current/storage/game-main/136088.json"
+    },
+    {
+      "name": "init_ok",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136331.json"
+    },
+    {
+      "name": "itrcheck",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136353.json"
+    },
+    {
+      "name": "dropped_file_is_not_a_replay",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136376.json"
+    },
+    {
+      "name": "window",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136419.json"
+    },
+    {
+      "name": "got_joystick",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136440.json"
+    },
+    {
+      "name": "sfx_file",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "char [512]",
+      "candidate_type": "char [512]",
+      "candidate_card": "docs/current/storage/game-main/136467.json"
+    },
+    {
+      "name": "swap_screen",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "BITMAP *",
+      "candidate_type": "BITMAP *",
+      "candidate_card": "docs/current/storage/game-main/136789.json"
+    },
+    {
+      "name": "options",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Toptions",
+      "candidate_type": "Toptions",
+      "candidate_card": "docs/current/storage/game-main/136892.json"
+    },
+    {
+      "name": "ctrl",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tcontrol",
+      "candidate_type": "Tcontrol",
+      "candidate_card": "docs/current/storage/game-main/136914.json"
+    },
+    {
+      "name": "hisc_tables",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Thisc_table *[15]",
+      "candidate_type": "void *[15]",
+      "candidate_card": "docs/current/storage/game-main/137025.json"
+    },
+    {
+      "name": "data",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "DATAFILE *",
+      "candidate_type": "DATAFILE *",
+      "candidate_card": "docs/current/storage/game-main/137119.json"
+    },
+    {
+      "name": "sfx",
+      "state": "CANDIDATE_DECLARATION_MISSING",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": null,
+      "original_type": "DATAFILE *",
+      "candidate_type": null,
+      "candidate_card": "docs/current/storage/game-main/137137.json"
+    },
+    {
+      "name": "ply",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tplayer *[1000]",
+      "candidate_type": "Tplayer *[1000]",
+      "candidate_card": "docs/current/storage/game-main/137190.json"
+    },
+    {
+      "name": "player_id",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/137208.json"
+    },
+    {
+      "name": "gameover_bmp",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "BITMAP *",
+      "candidate_type": "BITMAP *",
+      "candidate_card": "docs/current/storage/game-main/137457.json"
+    },
+    {
+      "name": "demo",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Treplay *",
+      "candidate_type": "Treplay *",
+      "candidate_card": "docs/current/storage/game-main/137521.json"
+    },
+    {
+      "name": "characters",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tcharacter *",
+      "candidate_type": "Tcharacter *",
+      "candidate_card": "docs/current/storage/game-main/137900.json"
+    },
+    {
+      "name": "curr_char",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/137931.json"
+    },
+    {
+      "name": "profile",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tprofile *",
+      "candidate_type": "Tprofile *",
+      "candidate_card": "docs/current/storage/game-main/138025.json"
+    },
+    {
+      "name": "combo_sound",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[10]",
+      "candidate_type": "SAMPLE *[10]",
+      "candidate_card": "docs/current/storage/game-main/138157.json"
+    },
+    {
+      "name": "bg_beat",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *",
+      "candidate_type": "SAMPLE *",
+      "candidate_card": "docs/current/storage/game-main/138184.json"
+    },
+    {
+      "name": "bg_menu",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *",
+      "candidate_type": "SAMPLE *",
+      "candidate_card": "docs/current/storage/game-main/138207.json"
+    },
+    {
+      "name": "jump_sound",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[3]",
+      "candidate_type": "SAMPLE *[3]",
+      "candidate_card": "docs/current/storage/game-main/138230.json"
+    },
+    {
+      "name": "speaker",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[3]",
+      "candidate_type": "SAMPLE *[3]",
+      "candidate_card": "docs/current/storage/game-main/138249.json"
+    },
+    {
+      "name": "menu_sounds",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[2]",
+      "candidate_type": "SAMPLE *[2]",
+      "candidate_card": "docs/current/storage/game-main/138288.json"
+    },
+    {
+      "name": "sounds",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "SAMPLE *[9]",
+      "candidate_type": "SAMPLE *[9]",
+      "candidate_card": "docs/current/storage/game-main/138331.json"
+    },
+    {
+      "name": "floors",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_floor_selection",
+      "candidate_type": "Tmenu_floor_selection",
+      "candidate_card": "docs/current/storage/game-main/138446.json"
+    },
+    {
+      "name": "play_char",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_char_selection",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/138468.json"
+    },
+    {
+      "name": "eyecandy_selection",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_selection",
+      "candidate_type": "Tmenu_selection",
+      "candidate_card": "docs/current/storage/game-main/138493.json"
+    },
+    {
+      "name": "scroll_speed_selection",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_selection",
+      "candidate_type": "Tmenu_selection",
+      "candidate_card": "docs/current/storage/game-main/138527.json"
+    },
+    {
+      "name": "floor_size_selection",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_selection",
+      "candidate_type": "Tmenu_selection",
+      "candidate_card": "docs/current/storage/game-main/138565.json"
+    },
+    {
+      "name": "gravity_selection",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "Tmenu_selection",
+      "candidate_type": "Tmenu_selection",
+      "candidate_card": "docs/current/storage/game-main/138601.json"
+    }
+  ],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/main/init_game.json",
+  "evidence_counts": {
+    "relocation_mismatches": 339,
+    "direct_transfer_mismatches": 111,
+    "original_calls": 249,
+    "calls": 246,
+    "referenced_globals": 160
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

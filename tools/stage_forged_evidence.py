@@ -35,7 +35,7 @@ def main():
             unreadable.append({'path': rel, 'error': str(error)})
     for path in sorted(root.rglob('PROMOTIONS.md')) + sorted(root.rglob('INVIVO.md')):
         for symbol, cu in sorted(set(PROMOTION.findall(path.read_text(encoding='utf-8', errors='replace')))):
-            source = 'src/main-partial.c' if cu == 'main.c' else 'src/' + cu
+            source = 'src/' + cu
             functions.append({'source': source, 'function': symbol, 'confidence': 'strong',
                               'evidence_file': path.relative_to(root).as_posix()})
     promotion_docs = sorted(root.rglob('PROMOTIONS.md'))

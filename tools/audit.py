@@ -6,7 +6,9 @@ from recovery_state import load_ledger, progress_document
 from progress import blocker_summary
 from generate_types import render
 
-def main():
+def main(allow_transaction=False):
+    if not allow_transaction and (ROOT/'build/grinder/promotion.lock').exists():
+        raise ValueError('Promotion transaction in progress')
     verify_inputs()
     verify_inputs('tdm-2')
     lock=read_json(ROOT/'evidence/census-lock.json')
@@ -32,6 +34,12 @@ def main():
     assert len(pe['resources']['leaves'])==2
     assert len(read_json(ROOT/'evidence/census/compilation-units.json'))==148
     ledger=load_ledger()
+    from refresh_recovery import validate_ledger, publish_status
+    validate_ledger(ledger)
+    publish_status(ledger,check=True)
+    from generate_types import outputs
+    for path, content in outputs().items():
+        assert path.exists() and path.read_text(encoding='utf-8')==content, str(path)
     assert (ROOT/'include/recovered_types.h').read_text(encoding='utf-8') == render()
     assert read_json(ROOT/'docs/progress.json') == progress_document(ledger)
     assert read_json(ROOT/'docs/blocker-summary.json') == blocker_summary(ledger)

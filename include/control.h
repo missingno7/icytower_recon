@@ -5,17 +5,9 @@
 #define ICYTOWER_CONTROL_H
 #include <stdio.h>
 
-typedef struct {
-    int use_joy;
-    int key_left, key_right, key_up, key_down;
-    int key_fire, key_enter, key_pause;
-    unsigned char flags;
-} Tcontrol;
+#include "recovered/Tcontrol.h"
 
-typedef struct {
-    int up, down, left, right;
-    int b[32];
-} Tgamepad;
+#include "recovered/Tgamepad.h"
 
 extern Tgamepad gamepad;
 void init_control(Tcontrol *c);

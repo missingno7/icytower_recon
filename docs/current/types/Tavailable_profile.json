@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Tavailable_profile",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "changes": [
+    {
+      "file": "src/main.c",
+      "start": 5919,
+      "end": 5997,
+      "before": "typedef struct Tavailable_profile {\n    char handle[32];\n} Tavailable_profile;",
+      "after": "#include \"recovered/Tavailable_profile.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tavailable_profile.h",
+  "header_identity": {
+    "size": 548,
+    "sha256": "ea6cb9da63e80af685a62a9d2584e8a3f08410767ebb22893a6ee94afc46e47a"
+  },
+  "source_identities": {
+    "src/main.c": {
+      "size": 91699,
+      "sha256": "4119d95832c56ea7acc91b33cb21c25e7222bfde16651069539c07cf9c80e254"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    char handle[32];\n} Tavailable_profile;",
+  "affected_targets": [
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 242,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Tavailable_profile",
+  "apply_command": "python tools/interface_task.py apply Tavailable_profile",
+  "verification_command": "python tools/interface_task.py check Tavailable_profile",
+  "promotion_command": "python tools/interface_task.py promote Tavailable_profile",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

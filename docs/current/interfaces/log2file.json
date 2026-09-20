@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "log2file",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "void",
+      "parameter_types": [
+        "const char*"
+      ],
+      "variadic": true,
+      "calling_convention": null,
+      "die": 127883
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 0,
+      "end": 0,
+      "before": "",
+      "after": "extern void log2file(const char*, ...);\n",
+      "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
+      "file": "src/fld_adspot.c",
+      "line": 104
+    },
+    {
+      "start": 861,
+      "end": 875,
+      "before": "char *fmt, ...",
+      "after": "const char *fmt, ...",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/httpget.c",
+      "line": 28
+    },
+    {
+      "start": 12478,
+      "end": 12495,
+      "before": "char *format, ...",
+      "after": "const char *format, ...",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/profile.c",
+      "line": 412
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check log2file",
+  "begin_command": "python tools/interface_task.py begin log2file",
+  "apply_command": "python tools/interface_task.py apply log2file",
+  "promotion_command": "python tools/interface_task.py promote log2file",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/fld_adspot.c",
+    "src/httpget.c",
+    "src/profile.c"
+  ],
+  "source_identities": {
+    "src/fld_adspot.c": {
+      "size": 6930,
+      "sha256": "dd2093d4e922a9b8b871f6c5a9c3f82587fbfb442ef7babcfb89f46e51bf0ae6"
+    },
+    "src/httpget.c": {
+      "size": 8342,
+      "sha256": "d2e4723e10b07561d11ca9b00783c08ebaef75cc4915fa2e66128e1461b7251a"
+    },
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "affected_targets": [
+    "game-fld-adspot",
+    "game-httpget",
+    "game-profile"
+  ],
+  "priority": 251,
+  "expected_prototype": "extern void log2file(const char*, ...);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

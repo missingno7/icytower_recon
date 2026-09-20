@@ -34,7 +34,6 @@ pthread_mutex_t gFLDADMutex;
 int giAdCacheSize;
 FLDAdSpot *gpAdCache;
 
-static char localFilename[256];
 void fldads_update_local_adimg(char *pRemoteName);
 void *fldads_threadmain(void *data);
 
@@ -55,6 +54,7 @@ void fldads_destroy_cache(void)
 
 char *fldads_get_local_cache_name(char *pFileName)
 {
+    static char localFilename[256];
     get_adcache_dir(localFilename, sizeof(localFilename));
     mkdir(localFilename);
     strcat(localFilename, pFileName);

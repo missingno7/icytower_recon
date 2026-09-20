@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_menu_Tmenu_selection",
+  "source": "src/menu.c",
+  "sources": [
+    "src/menu.c"
+  ],
+  "alias": "Tmenu_selection",
+  "observations": [
+    {
+      "function": "get_selection_value",
+      "variable": "s",
+      "historical_type": "Tmenu_selection",
+      "historical_die": 158543,
+      "candidate_die": 7587
+    },
+    {
+      "function": "set_selection_value",
+      "variable": "s",
+      "historical_type": "Tmenu_selection",
+      "historical_die": 158609,
+      "candidate_die": 7651
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/menu.c": {
+      "size": 16022,
+      "sha256": "3ee94a954330da897e66fc9d114ec959fbf59b5e7d689955aad7b1afac445d59"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_menu_Tmenu_selection",
+  "apply_command": "python tools/interface_task.py apply view_menu_Tmenu_selection",
+  "verification_command": "python tools/interface_task.py check view_menu_Tmenu_selection",
+  "promotion_command": "python tools/interface_task.py promote view_menu_Tmenu_selection",
+  "canonical": "Tmenu_selection",
+  "header": "include/recovered/Tmenu_selection.h",
+  "header_identity": {
+    "size": 747,
+    "sha256": "db63513c5419288f52f9e36d6ce745ec866b319cd611d6869c8b56dd1040a23b"
+  },
+  "candidate_size": 136,
+  "historical_size": 136,
+  "member_correspondence": [
+    {
+      "candidate_member": "value",
+      "candidate_offset": 0,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tmenu_selection.value",
+        "offset": 0,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "size",
+      "candidate_offset": 4,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tmenu_selection.size",
+        "offset": 4,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "caption",
+      "candidate_offset": 8,
+      "candidate_type": "char *[32]",
+      "historical_field_at_offset": {
+        "expression": "Tmenu_selection.caption[0]",
+        "offset": 8,
+        "size": 4,
+        "type": "char *"
+      }
+    }
+  ],
+  "reason": "View has uses outside its owning source",
+  "detailed_evidence": "docs/current/type-view-evidence/view_menu_Tmenu_selection.json",
+  "observation_count": 2
+}

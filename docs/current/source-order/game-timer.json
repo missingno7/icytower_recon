@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_timer",
+  "source": "src/timer.c",
+  "sources": [
+    "src/timer.c"
+  ],
+  "target": "game-timer",
+  "affected_targets": [
+    "game-timer"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/timer.c": {
+      "size": 905,
+      "sha256": "19abba92b46f11224eb6834401a8bbf73895a735058d4189dc14cc776537f948"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "fps_counter",
+      "historical_line": 21
+    },
+    {
+      "function": "cycle_counter",
+      "historical_line": 30
+    },
+    {
+      "function": "install_timers",
+      "historical_line": 36
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_timer",
+  "apply_command": "python tools/interface_task.py apply order_timer",
+  "verification_command": "python tools/interface_task.py check order_timer",
+  "promotion_command": "python tools/interface_task.py promote order_timer",
+  "current_order": [
+    "fps_counter",
+    "cycle_counter",
+    "install_timers"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

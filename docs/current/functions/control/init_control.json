@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "source": "src/control.c",
+  "target": "game-control",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\control.c",
+  "function": "init_control",
+  "historical_va": "0x401790",
+  "historical_size": 67,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "void init_control(Tcontrol *c);",
+  "return_type": "void",
+  "parameters": [
+    {
+      "die": 18036,
+      "name": "c",
+      "type_die": 17996,
+      "type": "Tcontrol *",
+      "scope": 18002,
+      "base_type": null,
+      "base_encoding": null,
+      "location": "2 byte block: 91 0 \t(DW_OP_fbreg: 0)",
+      "address": null
+    }
+  ],
+  "locals": [],
+  "lexical_blocks": [
+    {
+      "die": 18048,
+      "parent": 18002,
+      "low_pc": 4200342,
+      "high_pc": 4200377,
+      "ranges": null
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 21,
+    "body_end_line": 27,
+    "body_sha256": "58df67189c83961e255c16822c0893241fa9f05fdee0f9618cd89b4d2b99d29b"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 67,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4200336,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4200337,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4200339,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 18036,
+            "name": "c",
+            "type": "Tcontrol *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4200342,
+        "bytes": "c7400c54000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x54,0xc(%eax)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4200349,
+        "bytes": "c7401055000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x55,0x10(%eax)",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 0,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 3,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 7214,
+            "name": "c",
+            "type": "Tcontrol *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 6,
+        "bytes": "c7400c54000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x54,0xc(%eax)",
+        "dwarf_variables": []
+      },
+      {
+        "address": 13,
+        "bytes": "c7401055000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x55,0x10(%eax)",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "Tcontrol",
+      "size": 36,
+      "header": "include/recovered/Tcontrol.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "key_right",
+          "offset": 8,
+          "type": "int"
+        },
+        {
+          "name": "key_up",
+          "offset": 12,
+          "type": "int"
+        },
+        {
+          "name": "key_down",
+          "offset": 16,
+          "type": "int"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 16,
+      "address": 4200336,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 32,
+      "address": 4200342,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 33,
+      "address": 4200349,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 34,
+      "address": 4200356,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 35,
+      "address": 4200363,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 36,
+      "address": 4200370,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 23,
+      "address": 4200377,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "control.c",
+      "file": "control.c",
+      "line": 24,
+      "address": 4200384,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [],
+  "calls": [],
+  "original_calls": [],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "set_control",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 68,
+      "candidate_offset": 68,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 43,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-control.json",
+  "verification_command": "python tools/check_function.py game-control init_control",
+  "begin_command": "python tools/grinder_task.py begin game-control init_control",
+  "promotion_command": "python tools/promote_function.py game-control init_control",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [
+    {
+      "function": "init_control",
+      "historical": [
+        {
+          "cu": "src/control.c",
+          "return_type": "void",
+          "parameter_types": [
+            "Tcontrol*"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 18002
+        }
+      ],
+      "type_layout_issues": [
+        {
+          "position": "parameter 1",
+          "historical_type": "Tcontrol",
+          "candidate_type": "Tcontrol",
+          "header": "include/recovered/Tcontrol.h",
+          "status": "UNAVAILABLE",
+          "reason": "Candidate named type layout is missing or ambiguous",
+          "cu": "src/hisc.c",
+          "file": "include/control.h",
+          "line": 13
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tcontrol",
+          "candidate_type": "void",
+          "header": "include/recovered/Tcontrol.h",
+          "status": "UNAVAILABLE",
+          "reason": "Candidate named type layout is missing or ambiguous",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 415
+        }
+      ],
+      "candidate_signatures": [
+        "('void', ['Tcontrol*'])",
+        "('void', ['void*'])"
+      ],
+      "candidate_card": "docs/current/interfaces/init_control.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/control/init_control.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 0,
+    "calls": 0,
+    "referenced_globals": 0
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

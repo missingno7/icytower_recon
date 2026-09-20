@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "fldads_get_local_filename_from_url",
+  "source": "src/fld_adspot.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/fld_adspot.c",
+      "return_type": "const char*",
+      "parameter_types": [
+        "const char*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 47648
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 2102,
+      "end": 2108,
+      "before": "char *",
+      "after": "const char *",
+      "reason": "Use the DWARF return qualifier",
+      "file": "src/fld_adspot.c",
+      "line": 89
+    },
+    {
+      "start": 2143,
+      "end": 2160,
+      "before": "char *pRemoteName",
+      "after": "const char *pRemoteName",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/fld_adspot.c",
+      "line": 89
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check fldads_get_local_filename_from_url",
+  "begin_command": "python tools/interface_task.py begin fldads_get_local_filename_from_url",
+  "apply_command": "python tools/interface_task.py apply fldads_get_local_filename_from_url",
+  "promotion_command": "python tools/interface_task.py promote fldads_get_local_filename_from_url",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/fld_adspot.c"
+  ],
+  "source_identities": {
+    "src/fld_adspot.c": {
+      "size": 6930,
+      "sha256": "dd2093d4e922a9b8b871f6c5a9c3f82587fbfb442ef7babcfb89f46e51bf0ae6"
+    }
+  },
+  "affected_targets": [
+    "game-fld-adspot"
+  ],
+  "priority": 257,
+  "expected_prototype": "extern const char* fldads_get_local_filename_from_url(const char*);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

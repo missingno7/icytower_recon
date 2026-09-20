@@ -1,66 +1,152 @@
-"""Generate audited shared C layouts from the local DWARF census."""
+"""Generate canonical type evidence and historical C89 layout-checked headers."""
 import argparse
+import hashlib
 import json
-
-from common import ROOT
-
-PLAYER_MEMBERS = [
-    ('double', 'x', 0), ('double', 'y', 8), ('double', 'sx', 16), ('double', 'sy', 24),
-    ('double', 'max_s', 32), ('int', 'level', 40), ('int', 'score', 44),
-    ('int', 'best_combo', 48), ('int', 'status', 52), ('int', 'jump_key', 56),
-    ('int', 'frame', 60), ('int', 'in_combo', 64), ('int', 'acc_level', 68),
-    ('int', 'acc_jumps', 72), ('int', 'dead', 76), ('int', 'rotate', 80),
-    ('int', 'angle', 84), ('int', 'edge', 88), ('int', 'edge_drawn', 92),
-    ('int', 'bounce', 96), ('int', 'shake', 100), ('int', 'latest_combo', 104),
-    ('int', 'show_combo', 108), ('int', 'no_combo_top_floor', 112),
-    ('int', 'biggest_lost_combo', 116), ('int', 'ccc[5]', 120),
-    ('int', 'jcTop[5]', 140), ('int', 'jc[5]', 160),
-]
+from common import ROOT, identity
+from type_graph import graph
 
 
-def census_members():
-    rows = [json.loads(line) for line in (ROOT / 'evidence/census/dwarf-dies.jsonl').read_text(encoding='utf-8').splitlines()]
-    typedef = next(row for row in rows if row['tag'] == 'DW_TAG_typedef' and row.get('name') == 'Tplayer'
-                   and row.get('decl_file_path', '').endswith('/player.h'))
-    members = [row for row in rows if row.get('parent') == typedef['type_ref'] and row['tag'] == 'DW_TAG_member']
-    return [(row['name'], int(row['resolved']['DW_AT_data_member_location'].split('DW_OP_plus_uconst: ')[1].split(')')[0]))
-            for row in members]
+def header_dependencies(g, name):
+    deps, external, seen = set(), set(), set()
+    def walk(ref):
+        if ref is None or ref in seen: return
+        seen.add(ref); d=g.dies[ref]; tag=d['tag']; path=(d.get('decl_file_path') or '').replace('\\','/')
+        if tag=='DW_TAG_typedef' and d['name'] in g.game_types and d['name']!=name:
+            deps.add(d['name']); return
+        named_external=tag in ('DW_TAG_typedef','DW_TAG_structure_type','DW_TAG_union_type','DW_TAG_enumeration_type') and d.get('name') and '/icytower/trunk/source/' not in path
+        if named_external:
+            target=g.dies.get(d.get('type_ref'),{})
+            if tag=='DW_TAG_typedef' and target.get('tag')=='DW_TAG_base_type': return
+            if '/include/allegro/' in path:
+                external.add('allegro.h'); return
+            relative=path.rsplit('/include/',1)[-1] if '/include/' in path else None
+            if relative and (ROOT/'toolchain/tdm-gcc-4.4.1-tdm-2/include'/relative).is_file():
+                external.add(relative); return
+            raise ValueError('Unresolved declaration header for external type '+d['name'])
+        walk(d.get('type_ref'))
+        for c in g.children[ref]: walk(c.get('type_ref'))
+    walk(g.game_types[name][0]['type_ref'])
+    return deps,external
+
+
+def type_header(g, name):
+    variants = g.game_types[name]
+    if len({str(g.signature(d['type_ref'])) for d in variants}) != 1:
+        raise ValueError('Conflicting DWARF definitions for ' + name)
+    root = g.dies[variants[0]['type_ref']]
+    deps, external = header_dependencies(g, name)
+    lines = ['/* Generated from locked DWARF; do not hand-edit. */',
+             '#ifndef RECOVERED_%s_H' % name.upper(), '#define RECOVERED_%s_H' % name.upper(),
+             '#include <stddef.h>']
+    lines += ['#include <%s>' % header for header in sorted(external)]
+    old_declare = g.declaration
+    def declare(ref, identifier='', expand=False):
+        if ref and g.dies[ref]['tag'] == 'DW_TAG_typedef' and g.dies[ref]['name'] not in g.game_types:
+            target = g.dies[ref]['type_ref']
+            if target and g.dies[target]['tag'] == 'DW_TAG_base_type':
+                return old_declare(target, identifier)
+        return old_declare(ref, identifier, expand)
+    g.declaration = declare
+    try:
+        lines += ['#include "%s.h"' % dep for dep in sorted(deps)]
+        lines += ['#ifndef RECOVERED_STATIC_ASSERT',
+                  '#define RECOVERED_STATIC_ASSERT(expr, name) typedef char recovered_static_assert_##name[(expr) ? 1 : -1]', '#endif']
+        if root['tag'] in ('DW_TAG_structure_type', 'DW_TAG_union_type') and root.get('name'):
+            kind = 'struct' if root['tag'] == 'DW_TAG_structure_type' else 'union'
+            members = [declare(c['type_ref'], c['name']) + ';' for c in g.children[root['offset']] if c['tag'] == 'DW_TAG_member']
+            body = kind + ' ' + root['name'] + ' {\n    ' + '\n    '.join(members) + '\n} ' + name
+        elif root['tag']=='DW_TAG_enumeration_type':
+            items=[c['name']+' = '+c['resolved']['DW_AT_const_value'] for c in g.children[root['offset']] if c['tag']=='DW_TAG_enumerator']
+            body='enum '+(root.get('name') or '')+' { '+', '.join(items)+' } '+name
+        else:
+            body = declare(root['offset'], name)
+        lines.append('typedef ' + body + ';')
+        size = g.size(root['offset'])
+        if size is None:
+            raise ValueError('Unknown size: ' + name)
+        lines.append('RECOVERED_STATIC_ASSERT(sizeof(%s) == %d, %s_size);' % (name, size, name))
+        for member in g.children[root['offset']]:
+            if member['tag'] != 'DW_TAG_member':
+                continue
+            offset = g.member_offset(member)
+            if offset is None or 'DW_AT_bit_size' in member['resolved']:
+                raise ValueError('Unproven member layout: ' + name + ':' + str(member['offset']))
+            lines.append('RECOVERED_STATIC_ASSERT(offsetof(%s, %s) == %d, %s_offset_%s);' % (name, member['name'], offset, name, member['name']))
+        return '\n'.join(lines + ['#endif', ''])
+    finally:
+        g.declaration = old_declare
 
 
 def render():
-    observed = census_members()
-    expected = [(name.split('[')[0], offset) for _, name, offset in PLAYER_MEMBERS]
-    if observed != expected:
-        raise ValueError('Tplayer DWARF member layout differs from generator specification')
-    lines = [
-        '/* Generated by tools/generate_types.py from evidence/census/dwarf-dies.jsonl. */',
-        '#ifndef ICYTOWER_RECOVERED_TYPES_H', '#define ICYTOWER_RECOVERED_TYPES_H', '#include <stddef.h>', '',
-        'typedef struct Tplayer {'
-    ]
-    for c_type, name, _ in PLAYER_MEMBERS:
-        lines.append('    %s %s;' % (c_type, name))
-    lines += ['} Tplayer;', '', '#define RECOVERED_STATIC_ASSERT(expr, name) typedef char recovered_static_assert_##name[(expr) ? 1 : -1]',
-              'RECOVERED_STATIC_ASSERT(sizeof(Tplayer) == 184, tplayer_size);']
-    for _, name, offset in PLAYER_MEMBERS:
-        if '[' not in name:
-            lines.append('RECOVERED_STATIC_ASSERT(offsetof(Tplayer, %s) == %d, tplayer_%s);' % (name, offset, name))
-    lines += ['', '#endif', '']
-    return '\n'.join(lines)
+    return '/* Generated by tools/generate_types.py. */\n#ifndef ICYTOWER_RECOVERED_TYPES_H\n#define ICYTOWER_RECOVERED_TYPES_H\n#include "recovered/Tplayer.h"\n#endif\n'
+
+
+def outputs():
+    g = graph()
+    generated = {ROOT / 'include/recovered_types.h': render()}
+    status = []
+    for name, variants in sorted(g.game_types.items()):
+        row = {'name': name, 'dies': [d['offset'] for d in variants], 'size': g.size(variants[0]['type_ref']),
+               'declaration_files': sorted({d['decl_file_path'] for d in variants})}
+        try:
+            path = ROOT / 'include/recovered' / (name + '.h')
+            generated[path] = type_header(g, name)
+            row.update(status='GENERATED', header=path.relative_to(ROOT).as_posix())
+        except ValueError as exc:
+            row.update(status='BLOCKED_SUPERVISOR', reason=str(exc))
+        status.append(row)
+    canonical, aliases = {}, {}
+    nodes = [d for d in g.dies.values() if d['tag'].endswith('_type') or d['tag'] == 'DW_TAG_typedef']
+    labels, edges = {}, {}
+    for d in nodes:
+        children = g.children[d['offset']]
+        labels[d['offset']] = (d['tag'], d.get('name'), g.size(d['offset']), tuple(g.dimensions(d['offset'])),
+            d['resolved'].get('DW_AT_encoding'), tuple((c['tag'], c.get('name') if c['tag'] != 'DW_TAG_formal_parameter' else None,
+            tuple((k, v) for k, v in sorted(c['resolved'].items()) if k in ('DW_AT_bit_size', 'DW_AT_bit_offset', 'DW_AT_const_value', 'DW_AT_data_member_location')))
+            for c in children))
+        edges[d['offset']] = [d.get('type_ref'), *[c.get('type_ref') for c in children]]
+    groups = {d['offset']: 0 for d in nodes}
+    while True:
+        partitions = {}
+        refined = {}
+        for d in nodes:
+            off = d['offset']
+            sig = (labels[off], tuple(groups.get(ref, -1) for ref in edges[off]))
+            refined[off] = partitions.setdefault(sig, len(partitions))
+        if refined == groups:
+            break
+        groups = refined
+    for d in nodes:
+        off = d['offset']
+        key = hashlib.sha256(repr((labels[off], tuple(groups.get(ref, -1) for ref in edges[off]))).encode()).hexdigest()
+        aliases[str(d['offset'])] = key
+        if key not in canonical:
+            canonical[key] = {'representative_die': d['offset'], 'tag': d['tag'], 'name': d.get('name'),
+                              'size': g.size(d['offset']), 'type_die': d.get('type_ref'),
+                              'dimensions': g.dimensions(d['offset']),
+                              'children': [c for c in g.children[d['offset']]], 'dies': []}
+        canonical[key]['dies'].append(d['offset'])
+    documents = {
+        'type-status.json': {'census': identity(ROOT / 'evidence/census/dwarf-dies.jsonl'), 'types': status},
+        'type-database.json': {'schema': 1, 'canonical_types': canonical, 'die_to_canonical': aliases,
+                               'scope': 'Structural equivalence; original DIE identities retained. Conflicts never silently merged.'}}
+    for name, data in documents.items():
+        generated[ROOT / 'docs/current' / name] = json.dumps(data, indent=2) + '\n'
+    return generated
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--check', action='store_true')
     a = ap.parse_args()
-    path = ROOT / 'include/recovered_types.h'
-    content = render()
-    if a.check:
-        if not path.exists() or path.read_text(encoding='utf-8') != content:
-            raise ValueError('Generated type header is stale: include/recovered_types.h')
-        print('PASS: recovered shared types agree with DWARF census.')
-    else:
-        path.write_bytes(content.encode('utf-8'))
-        print(path.relative_to(ROOT))
+    for path, content in outputs().items():
+        if a.check:
+            if not path.exists() or path.read_text(encoding='utf-8') != content:
+                raise ValueError('Stale generated types: ' + str(path.relative_to(ROOT)))
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding='utf-8', newline='\n')
+    print('PASS: generic canonical type database and DWARF-derived game type headers checked/generated.')
 
 
 if __name__ == '__main__':

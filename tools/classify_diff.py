@@ -1,30 +1,73 @@
-"""Classify a comparison report without changing its match verdict."""
+"""Conservative function-scoped classification; hypotheses never grant proof."""
 import argparse
+import json
 from pathlib import Path
+from common import read_json, write_json
+from instructions import affected_instructions
 
-from common import ROOT, read_json, write_json
+CLASSES = {'SOURCE_INCOMPLETE', 'REGISTER_OR_INSTRUCTION_SELECTION', 'SIGNEDNESS_OR_PROMOTION',
+           'FLOAT_OR_X87_SHAPE', 'ALIGNMENT_OR_PADDING', 'SAME_CU_CALL_LAYOUT', 'STATIC_DATA_LAYOUT',
+           'RELOCATION_OR_LITERAL_LAYOUT', 'COMMON_BSS_LAYOUT', 'SOURCE_CONTROL_FLOW_SHAPE', 'UNKNOWN_SUPERVISOR', 'COMPILER_CONTEXT_DEPENDENCY', 'STACK_FRAME_LAYOUT', 'INSTRUCTION_ORDER', 'EXACT'}
 
 
 def classify(row):
     if row['status'] == 'FUNCTION_MATCH':
         return 'EXACT'
+    if row.get('tail_jump_layout'): return 'SAME_CU_CALL_LAYOUT'
+    if row.get('compiler_context'): return 'COMPILER_CONTEXT_DEPENDENCY'
     if row['status'] == 'MISSING':
         return 'SOURCE_INCOMPLETE'
-    relocs = row.get('relocations', [])
-    transfers = row.get('direct_transfers', [])
-    if row['status'] == 'CODEGEN_SIMILAR':
+    if (row.get('frame_layout') or {}).get('first_mismatch_is_frame_allocation'): return 'STACK_FRAME_LAYOUT'
+    if (row.get('instruction_order') or {}).get('all_other_resolved_bytes_equal'): return 'INSTRUCTION_ORDER'
+    if row.get('signedness', {}).get('instruction_differences'):
+        return 'SIGNEDNESS_OR_PROMOTION'
+    relocs = [r for r in row.get('relocations', []) if not r.get('equal')]
+    # Relocation hypotheses apply only when all non-relocation bytes are proven equal.
+    if row.get('body_shape_equal', row.get('masked_equal')):
+        symbols = {r.get('symbol') for r in relocs}
+        if symbols and symbols <= {'.bss'}:
+            return 'COMMON_BSS_LAYOUT'
+        if symbols and symbols <= {'.data'}:
+            return 'STATIC_DATA_LAYOUT'
         return 'RELOCATION_OR_LITERAL_LAYOUT'
-    if relocs and all(x.get('symbol') == '.bss' and x.get('target_va') is None for x in relocs):
-        return 'BSS_STATIC_PLACEMENT'
-    if transfers and any(not x['equal'] for x in transfers):
-        return 'SAME_CU_CALL_LAYOUT'
-    if row.get('candidate_size') == row.get('original_size') and relocs and all(x.get('equal') for x in relocs):
-        return 'REGISTER_OR_INSTRUCTION_SELECTION'
-    if abs(row.get('candidate_size', 0) - row.get('original_size', 0)) <= 4:
-        return 'ALIGNMENT_OR_PADDING'
-    if row.get('candidate_size', 0) < row.get('original_size', 0):
-        return 'SOURCE_OR_CONTROL_FLOW_INCOMPLETE'
-    return 'UNCLASSIFIED'
+    diffs = row.get('difference_offsets', [])
+    if row.get('candidate_size') == row.get('original_size') and not relocs and diffs:
+        if row.get('register_only_instruction_shape'):
+            return 'REGISTER_OR_INSTRUCTION_SELECTION'
+        affected = affected_instructions(row)
+        if any(i['mnemonic'].startswith('f') for i in affected):
+            return 'FLOAT_OR_X87_SHAPE'
+        if any(i['mnemonic'].startswith('j') for i in affected):
+            return 'SOURCE_CONTROL_FLOW_SHAPE'
+        if len(affected) <= 4:
+            return 'REGISTER_OR_INSTRUCTION_SELECTION'
+    pair=row.get('first_instruction_pair',{})
+    old,new=pair.get('original'),pair.get('candidate')
+    if old and new:
+        if old['mnemonic'].startswith('f') or new['mnemonic'].startswith('f'):
+            return 'FLOAT_OR_X87_SHAPE'
+        if old['mnemonic'].startswith('j') or new['mnemonic'].startswith('j'):
+            return 'SOURCE_CONTROL_FLOW_SHAPE'
+        if old['mnemonic']==new['mnemonic'] and old['mnemonic'] in ('mov','lea','add','sub','test','cmp'):
+            return 'REGISTER_OR_INSTRUCTION_SELECTION'
+    # A size delta alone does not establish padding, missing source, or control flow.
+    return 'UNKNOWN_SUPERVISOR'
+
+
+def workflow(row):
+    if row.get('tail_jump_layout'):
+        return {'state':'BODY_MATCH_LAYOUT_BLOCKED','difference_class':'SAME_CU_CALL_LAYOUT','body_edit_allowed':False,
+                'reason':'Exact independently resolved prefix and identical terminal same-CU JMP target; only a range-forced short/near encoding differs. Raw function bytes and sizes do not match.'}
+    if row['status']!='FUNCTION_MATCH' and row.get('compiler_context'):
+        return {'state':'SOURCE_DIFFER','difference_class':'COMPILER_CONTEXT_DEPENDENCY','body_edit_allowed':False,'reason':'Route compiler-context sensitivity to supervisor; no body or layout match is claimed.'}
+    proven = row.get('relocation_resolved_equal') and row.get('instruction_boundaries_verified') and row['status'] == 'FUNCTION_MATCH'
+    displaced = [t for t in row.get('direct_transfers', []) if not t.get('layout_operand_equal', True)]
+    if proven and displaced:
+        return {'state': 'BODY_MATCH_LAYOUT_BLOCKED', 'difference_class': 'SAME_CU_CALL_LAYOUT',
+                'body_edit_allowed': False, 'reason': 'Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.'}
+    return {'state': 'FUNCTION_MATCH' if row['status'] == 'FUNCTION_MATCH' else 'MISSING' if row['status'] == 'MISSING' else 'CODEGEN_SIMILAR' if row.get('body_shape_equal',row.get('masked_equal')) else 'SOURCE_DIFFER',
+            'difference_class': classify(row), 'body_edit_allowed': row['status'] not in ('FUNCTION_MATCH', 'MISSING') and not row.get('body_shape_equal',row.get('masked_equal')),
+            'reason': 'Proof verdict retained separately; unresolved ownership never proves layout-only equality.'}
 
 
 def main():
@@ -33,14 +76,10 @@ def main():
     ap.add_argument('--output', type=Path)
     a = ap.parse_args()
     report = read_json(a.report)
-    rows = [{**row, 'difference_class': classify(row)} for row in report['functions']]
-    result = {'report': str(a.report), 'functions': rows,
-              'classes': {key: sum(x['difference_class'] == key for x in rows)
-                          for key in sorted({x['difference_class'] for x in rows})}}
+    result = {'report': str(a.report), 'functions': [{'name': row['name'], 'proof_status': row['status'], **workflow(row)} for row in report['functions']]}
     if a.output:
         write_json(a.output, result)
     else:
-        import json
         print(json.dumps(result, indent=2))
 
 

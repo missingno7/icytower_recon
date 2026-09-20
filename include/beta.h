@@ -7,7 +7,7 @@ typedef struct node {
     char code[16];
     struct node *next;
 } Tbeta;
-Tbeta *create_post();
+Tbeta *create_post(void);
 void destroy_all(Tbeta *b);
 void read_line(char *dst, FILE *fp);
 Tbeta *load_plain_data(char *filename);

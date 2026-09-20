@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "show_name",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "int",
+      "parameter_types": [
+        "const char*",
+        "int",
+        "void*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 118111
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check show_name",
+  "begin_command": "python tools/interface_task.py begin show_name",
+  "apply_command": "python tools/interface_task.py apply show_name",
+  "promotion_command": "python tools/interface_task.py promote show_name",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Parameter count change is not a mechanical qualifier repair",
+  "priority": -20
+}

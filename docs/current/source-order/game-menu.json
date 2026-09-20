@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_menu",
+  "source": "src/menu.c",
+  "sources": [
+    "src/menu.c"
+  ],
+  "target": "game-menu",
+  "affected_targets": [
+    "game-menu"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/menu.c": {
+      "size": 16022,
+      "sha256": "3ee94a954330da897e66fc9d114ec959fbf59b5e7d689955aad7b1afac445d59"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "SOURCE_ORDER_REPAIR",
+  "status": "DEFINITION_ORDER_DIFFERS",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "build_menu_string",
+      "historical_line": 26
+    },
+    {
+      "function": "draw_menu",
+      "historical_line": 66
+    },
+    {
+      "function": "reset_menu",
+      "historical_line": 113
+    },
+    {
+      "function": "update_game_menu",
+      "historical_line": 134
+    },
+    {
+      "function": "handle_menu",
+      "historical_line": 195
+    },
+    {
+      "function": "key_to_str",
+      "historical_line": 387
+    },
+    {
+      "function": "get_slider_value",
+      "historical_line": 500
+    },
+    {
+      "function": "set_slider_value",
+      "historical_line": 506
+    },
+    {
+      "function": "get_selection_value",
+      "historical_line": 515
+    },
+    {
+      "function": "set_selection_value",
+      "historical_line": 521
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_menu",
+  "apply_command": "python tools/interface_task.py apply order_menu",
+  "verification_command": "python tools/interface_task.py check order_menu",
+  "promotion_command": "python tools/interface_task.py promote order_menu",
+  "current_order": [
+    "get_slider_value",
+    "set_slider_value",
+    "get_selection_value",
+    "set_selection_value",
+    "key_to_str",
+    "reset_menu",
+    "draw_menu",
+    "build_menu_string",
+    "update_game_menu",
+    "handle_menu"
+  ],
+  "reason": "Interleaved top-level declarations/directives require supervisor review"
+}

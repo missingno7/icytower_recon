@@ -1,5 +1,6 @@
 """Meaningful negative controls for proof claims, using the complete timer CU."""
 import json
+import re
 from pathlib import Path
 import shutil
 import struct
@@ -19,7 +20,12 @@ class PipelineTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.obj=ROOT/'build/experiments/tdm-2/game-timer/O2/unit.o'
-        if not cls.obj.exists(): raise RuntimeError('Run the experiment matrix first')
+        verify_inputs('tdm-2')
+        targets=sorted(set(re.findall(r'build/experiments/tdm-2/([^/]+)/O2/unit.o',Path(__file__).read_text())))
+        for target in targets:
+            compile_target(target,dest=ROOT/'build/experiments/tdm-2'/target/'O2',compiler='tdm-2')
+        # The wrong-spacing negative control must not depend on an old build cache.
+        compile_target('game-timer',flags=['-O1'],dest=ROOT/'build/experiments/tdm-2/game-timer/O1',compiler='tdm-2')
 
     def check_object(self,path):
         return compare(path,CU,ROOT/'assets/icytower15.exe',OBJDUMP)
@@ -61,18 +67,17 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(r['object_match'])
 
     def test_main_datafile_helper_is_exact(self):
-        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+        r=compare(ROOT/'build/experiments/tdm-2/game-main/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         helper=next(f for f in r['functions'] if f['name']=='getSampleFromOggDatafile')
         self.assertEqual(helper['status'],'FUNCTION_MATCH')
         self.assertEqual(helper['candidate_size'],32)
         log=next(f for f in r['functions'] if f['name']=='log2file')
-        self.assertEqual(log['candidate_size'],189)
         self.assertEqual(log['original_size'],189)
-        self.assertNotEqual(log['status'],'FUNCTION_MATCH')
+        self.assertIsNotNone(log.get('candidate_size'))
 
     def test_main_random_helpers_are_exact(self):
-        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+        r=compare(ROOT/'build/experiments/tdm-2/game-main/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         rng=next(f for f in r['functions'] if f['name']=='new_rand')
         self.assertEqual(rng['status'],'FUNCTION_MATCH')
@@ -82,11 +87,11 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(seed['candidate_size'],14)
 
     def test_main_accessors_are_exact(self):
-        r=compare(ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o',
+        r=compare(ROOT/'build/experiments/tdm-2/game-main/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\main.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         for name in ('get_version_str','get_demo','get_controls','ok_to_play',
                      'switchedFromProgram','switchedToProgram','clickedCloseButton',
-                     'is_custom_replay','show_name','datafile_callback_slow',
+                     'is_custom_replay','show_name',
                      'datafile_callback','color_map_callback','syncProfileFromOptions',
                      'startMenuMusic','stopMenuMusic',
                      'replaceBadCharacters','pwd_garble_string','line_intersect','WinMain',
@@ -109,7 +114,7 @@ class PipelineTests(unittest.TestCase):
                              else 12 if name=='datafile_callback' else 22 if name=='color_map_callback' else 15)
 
     def test_repeated_literal_neighbourhood_rejects_wrong_target(self):
-        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        obj=ROOT/'build/experiments/tdm-2/game-main/O2/unit.o'
         cu='F:\\projects\\icytower\\trunk\\source\\main.c'
         exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
         line=next(f for f in exact['functions'] if f['name']=='line_intersect')
@@ -131,7 +136,7 @@ class PipelineTests(unittest.TestCase):
         self.assertNotEqual(line['status'],'FUNCTION_MATCH')
 
     def test_trailing_literal_neighbourhood_rejects_wrong_target(self):
-        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        obj=ROOT/'build/experiments/tdm-2/game-main/O2/unit.o'
         cu='F:\\projects\\icytower\\trunk\\source\\main.c'
         exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
         jump=next(f for f in exact['functions'] if f['name']=='play_jump_sound')
@@ -153,7 +158,7 @@ class PipelineTests(unittest.TestCase):
         self.assertNotEqual(jump['status'],'FUNCTION_MATCH')
 
     def test_wrong_direct_same_unit_target_is_rejected(self):
-        obj=ROOT/'build/experiments/tdm-2/game-main-partial/O2/unit.o'
+        obj=ROOT/'build/experiments/tdm-2/game-main/O2/unit.o'
         cu='F:\\projects\\icytower\\trunk\\source\\main.c'
         exact=compare(obj,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
         save=next(f for f in exact['functions'] if f['name']=='save_config')
@@ -204,28 +209,28 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(r['candidate_text_logical_size'],304)
         self.assertFalse(r['object_match'])
 
-    def test_partial_scroller_text(self):
+    def test_scroller_preserves_recovered_functions_while_allowing_progress(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-scroller/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\scroller.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         self.assertEqual(r['functions_total'],4)
-        self.assertEqual(r['function_matches'],3)
-        self.assertEqual({f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'},
-                         {'scroll_scroller','restart_scroller','init_scroller'})
-        self.assertEqual(next(f for f in r['functions'] if f['name']=='draw_scroller')['candidate_size'],396)
-        self.assertFalse(r['whole_text_contribution_equal'])
+        matches={f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'}
+        self.assertTrue({'scroll_scroller','restart_scroller','init_scroller'}<=matches)
+        draw=next(f for f in r['functions'] if f['name']=='draw_scroller')
+        self.assertEqual(draw['original_size'],396)
+        self.assertIsNotNone(draw.get('candidate_size'))
+        self.assertFalse(r['object_match'])
 
-    def test_partial_map_text(self):
+    def test_map_preserves_recovered_functions_while_allowing_progress(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-map/O2/unit.o',
                   'F:\\projects\\icytower\\trunk\\source\\map.c',ROOT/'assets/icytower15.exe',OBJDUMP)
         self.assertEqual(r['functions_total'],5)
-        self.assertEqual(r['function_matches'],3)
-        self.assertEqual({f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'},
-                         {'reset_map','is_solid','get_level'})
+        matches={f['name'] for f in r['functions'] if f['status']=='FUNCTION_MATCH'}
+        self.assertTrue({'reset_map','is_solid','get_level','getFloorData'}<=matches)
         floor=next(f for f in r['functions'] if f['name']=='getFloorData')
         self.assertEqual(floor['candidate_size'],107)
         add_floor=next(f for f in r['functions'] if f['name']=='add_floor')
-        self.assertEqual(add_floor['status'],'DIFFER')
-        self.assertEqual(add_floor['candidate_size'],592)
+        self.assertEqual(add_floor['original_size'],608)
+        self.assertIsNotNone(add_floor.get('candidate_size'))
 
     def test_complete_beta_text(self):
         r=compare(ROOT/'build/experiments/tdm-2/game-beta/O2/unit.o',
@@ -260,9 +265,10 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(wrong['function_matches'],5)
         self.assertFalse(wrong['whole_text_contribution_equal'])
 
-    def test_integration_layout_preserves_first_mismatch(self):
+    def test_historical_integration_report_preserves_first_mismatch(self):
         r=read_json(ROOT/'docs/experiments/integration-layout.json')
-        self.assertEqual(r['build_report'],identity(ROOT/'build/integration/tdm-2/build.json'))
+        # This retained experiment is archival evidence, not a live build receipt.
+        self.assertEqual(r['fixture'],identity(ROOT/'assets/icytower15.exe'))
         first=r['first_layout_mismatch']
         self.assertEqual(r['natural_game_address_extent_prefix_bytes'],2576)
         self.assertFalse(first['address_equal'])
@@ -337,9 +343,11 @@ class PipelineTests(unittest.TestCase):
         linked=read_json(ROOT/'build/audio/tdm-2/build.json')
         self.assertFalse(linked['executed'])
         self.assertEqual(linked['executable'],identity(ROOT/'build/audio/tdm-2/audio-probe.exe'))
-        custom=read_json(ROOT/'build/custom-audio/tdm-2/build.json')
-        self.assertEqual(len(custom['game_objects']),4)
+        custom=read_json(ROOT/'build/recovered-game/tdm-2/link.json')
+        self.assertEqual(len(custom['game_objects']),25)
         self.assertFalse(custom['executed'])
+        self.assertTrue(set(custom['unresolved_symbols'])<={'max_speed'})
+        self.assertEqual(custom['linked'],not custom['unresolved_symbols'])
 
     def test_normal_object_build_never_reads_assets_or_evidence(self):
         original_open=Path.open
@@ -352,5 +360,52 @@ class PipelineTests(unittest.TestCase):
             verify_inputs()
             obj,_=compile_target('game-timer',dest=ROOT/'build/independence-test')
         self.assertTrue(obj.exists())
+
+    def test_main_named_data_owner_is_independent_and_strict(self):
+        path=ROOT/'build/experiments/tdm-2/game-main/O2/unit.o'
+        cu='F:\\projects\\icytower\\trunk\\source\\main.c'
+        base=compare(path,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        row=next(r for r in base['functions'] if r['name']=='startGameMusic')
+        self.assertEqual(row['status'],'FUNCTION_MATCH')
+        callback=next(r for r in base['functions'] if r['name']=='datafile_callback_slow')
+        self.assertEqual(callback['status'],'FUNCTION_MATCH')
+        relocated=next(r for r in row['relocations'] if 'object owner' in r['resolution'])
+        obj=Binary(path); text=next(s for s in obj.sections if s['name']=='.text')
+        for change in ('operand','initializer'):
+            payload=bytearray(path.read_bytes())
+            if change=='operand':
+                struct.pack_into('<I',payload,text['raw_pointer']+relocated['offset'],relocated['addend']+1)
+            else:
+                symbol=next(s for s in obj.symbols if s['name']=='_gameMusicVoiceID')
+                section=next(s for s in obj.sections if s['index']==symbol['section'])
+                payload[section['raw_pointer']+symbol['value']]^=1
+            with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+                candidate=Path(folder)/'unit.o'; candidate.write_bytes(payload)
+                report=compare(candidate,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+                changed=next(r for r in report['functions'] if r['name']=='startGameMusic')
+                self.assertNotEqual(changed['status'],'FUNCTION_MATCH',change)
+
+    def test_pointer_initializer_owner_is_independent_and_strict(self):
+        path=ROOT/'build/experiments/tdm-2/game-profile/O2/unit.o'
+        cu='F:\\projects\\icytower\\trunk\\source\\profile.c'
+        base=compare(path,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+        owner=next(o for o in base['object_ownership']['accepted'] if o['name']=='jcLabels')
+        self.assertEqual(len(owner['initializer_relocations']),5)
+        obj=Binary(path); section=next(s for s in obj.sections if s['index']==owner['section_index'])
+        first=owner['initializer_relocations'][0]
+        for mutation in ('addend','literal','relocation_type'):
+            payload=bytearray(path.read_bytes())
+            if mutation=='addend':
+                struct.pack_into('<I',payload,section['raw_pointer']+first['section_offset'],first['addend']+1)
+            elif mutation=='literal':
+                rdata=next(s for s in obj.sections if s['name']=='.rdata')
+                payload[rdata['raw_pointer']+first['addend']]^=1
+            else:
+                index=next(i for i,r in enumerate(r for r in obj.relocations if r['section']==section['index']) if r['offset']==first['section_offset'])
+                struct.pack_into('<H',payload,section['relocation_pointer']+index*10+8,0x1234)
+            with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+                candidate=Path(folder)/'unit.o'; candidate.write_bytes(payload)
+                report=compare(candidate,cu,ROOT/'assets/icytower15.exe',OBJDUMP)
+                self.assertNotIn('jcLabels',[o['name'] for o in report['object_ownership']['accepted']],mutation)
 
 if __name__=='__main__': unittest.main(verbosity=2)

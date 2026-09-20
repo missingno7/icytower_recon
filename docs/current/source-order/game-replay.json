@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_replay",
+  "source": "src/replay.c",
+  "sources": [
+    "src/replay.c"
+  ],
+  "target": "game-replay",
+  "affected_targets": [
+    "game-replay"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/replay.c": {
+      "size": 24185,
+      "sha256": "d98d4e45948810a174826c20b027b7632b30c29a290e5636369c3294129e85d7"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "SOURCE_ORDER_REPAIR",
+  "status": "DEFINITION_ORDER_DIFFERS",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "get_sort_method",
+      "historical_line": 42
+    },
+    {
+      "function": "set_sort_method",
+      "historical_line": 46
+    },
+    {
+      "function": "create_replay",
+      "historical_line": 51
+    },
+    {
+      "function": "destroy_replay",
+      "historical_line": 90
+    },
+    {
+      "function": "hash",
+      "historical_line": 100
+    },
+    {
+      "function": "calc_replay_checksum_131",
+      "historical_line": 110
+    },
+    {
+      "function": "calc_replay_checksum",
+      "historical_line": 126
+    },
+    {
+      "function": "get_replay_property",
+      "historical_line": 172
+    },
+    {
+      "function": "load_replay",
+      "historical_line": 265
+    },
+    {
+      "function": "save_replay",
+      "historical_line": 358
+    },
+    {
+      "function": "draw_replay_selector",
+      "historical_line": 460
+    },
+    {
+      "function": "add_itr_file",
+      "historical_line": 608
+    },
+    {
+      "function": "my_strcmp",
+      "historical_line": 648
+    },
+    {
+      "function": "update_file_list",
+      "historical_line": 677
+    },
+    {
+      "function": "replay_selector",
+      "historical_line": 701
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_replay",
+  "apply_command": "python tools/interface_task.py apply order_replay",
+  "verification_command": "python tools/interface_task.py check order_replay",
+  "promotion_command": "python tools/interface_task.py promote order_replay",
+  "current_order": [
+    "get_sort_method",
+    "set_sort_method",
+    "hash",
+    "calc_replay_checksum_131",
+    "calc_replay_checksum",
+    "destroy_replay",
+    "update_file_list",
+    "draw_replay_selector",
+    "replay_selector",
+    "create_replay",
+    "load_replay",
+    "get_replay_property",
+    "save_replay",
+    "my_strcmp",
+    "add_itr_file"
+  ],
+  "reason": "Interleaved top-level declarations/directives require supervisor review"
+}

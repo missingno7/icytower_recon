@@ -1,0 +1,554 @@
+{
+  "schema": 1,
+  "source": "src/loadpng.c",
+  "target": "game-loadpng",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+  "function": "load_png_pf",
+  "historical_va": "0x406788",
+  "historical_size": 316,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "BITMAP * load_png_pf(PACKFILE *fp, RGB *pal);",
+  "return_type": "BITMAP *",
+  "parameters": [
+    {
+      "die": 97677,
+      "name": "fp",
+      "type_die": 96536,
+      "type": "PACKFILE *",
+      "scope": 97640,
+      "base_type": "PACKFILE",
+      "base_encoding": null,
+      "location": "0x37ba (location list)",
+      "address": null
+    },
+    {
+      "die": 97691,
+      "name": "pal",
+      "type_die": 97313,
+      "type": "RGB *",
+      "scope": 97640,
+      "base_type": "RGB",
+      "base_encoding": null,
+      "location": "2 byte block: 91 4 \t(DW_OP_fbreg: 4)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 97705,
+      "name": "bmp",
+      "type_die": 95730,
+      "type": "BITMAP *",
+      "scope": 97640,
+      "base_type": "BITMAP",
+      "base_encoding": null,
+      "location": "0x37da (location list)",
+      "address": null
+    },
+    {
+      "die": 97720,
+      "name": "png_ptr",
+      "type_die": 89238,
+      "type": "png_structp",
+      "scope": 97640,
+      "base_type": "png_struct_def",
+      "base_encoding": null,
+      "location": "0x3803 (location list)",
+      "address": null
+    },
+    {
+      "die": 97735,
+      "name": "info_ptr",
+      "type_die": 85716,
+      "type": "png_infop",
+      "scope": 97640,
+      "base_type": "png_info_struct",
+      "base_encoding": null,
+      "location": "0x3839 (location list)",
+      "address": null
+    },
+    {
+      "die": 97775,
+      "name": "buf",
+      "type_die": 96798,
+      "type": "unsigned char [4]",
+      "scope": 97770,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "2 byte block: 91 64 \t(DW_OP_fbreg: -28)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 97750,
+      "parent": 97640,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x588"
+    },
+    {
+      "die": 97770,
+      "parent": 97750,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x5a0"
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 245,
+    "body_end_line": 299,
+    "body_sha256": "a02f24d0f130fdeff3e5efc7b752dbc8b5743a84ea025a019a53462b142ced2e"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 97775,
+        "name": "buf",
+        "type_die": 96798,
+        "type": "unsigned char [4]",
+        "scope": 97770,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 316,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4220808,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4220809,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4220811,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4220812,
+        "bytes": "83ec34",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x34,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4220815,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 97677,
+            "name": "fp",
+            "type": "PACKFILE *",
+            "base_type": "PACKFILE",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "address": 1496,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1497,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1499,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1500,
+        "bytes": "83ec34",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x34,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1503,
+        "bytes": "8b4508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 16002,
+            "name": "fp",
+            "type": "PACKFILE *",
+            "base_type": "PACKFILE",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 245,
+      "address": 4220808,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 69,
+      "address": 4220815,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 298,
+      "address": 4220846,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 299,
+      "address": 4220848,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 72,
+      "address": 4220856,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 252,
+      "address": 4220880,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 262,
+      "address": 4220884,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "loadpng.c",
+      "file": "loadpng.c",
+      "line": 264,
+      "address": 4220920,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4aad",
+      "candidate_addend": 13,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        103
+      ]
+    },
+    {
+      "symbol": ".text",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\loadpng.c",
+      "section": ".text",
+      "size": null,
+      "historical_address": "0x4068c4",
+      "candidate_addend": 1812,
+      "dwarf_type": null,
+      "placement_confidence": "function-relative .text",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        157
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_pack_fread",
+      "function_offset": 29,
+      "target_va": 4475312,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        29
+      ]
+    },
+    {
+      "symbol": "_png_sig_cmp",
+      "function_offset": 68,
+      "target_va": 4915436,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        68
+      ]
+    },
+    {
+      "symbol": "_png_create_read_struct",
+      "function_offset": 108,
+      "target_va": 4915444,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        108
+      ]
+    },
+    {
+      "symbol": "_png_create_info_struct",
+      "function_offset": 123,
+      "target_va": 4915452,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        123
+      ]
+    },
+    {
+      "symbol": "__setjmp",
+      "function_offset": 145,
+      "target_va": 4959648,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        145
+      ]
+    },
+    {
+      "symbol": "_png_set_read_fn",
+      "function_offset": 175,
+      "target_va": 4915460,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        175
+      ]
+    },
+    {
+      "symbol": "_png_set_sig_bytes",
+      "function_offset": 194,
+      "target_va": 4915468,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        194
+      ]
+    },
+    {
+      "symbol": "_png_destroy_read_struct",
+      "function_offset": 237,
+      "target_va": 4915476,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        237,
+        271,
+        305
+      ]
+    },
+    {
+      "symbol": "really_load_png",
+      "function_offset": 208,
+      "target_va": 4219312,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        208
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4220836,
+      "bytes": "e807e20300",
+      "mnemonic": "call",
+      "assembly": "call   4449b0 <_pack_fread>"
+    },
+    {
+      "address": 4220875,
+      "bytes": "e81c990a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00ec <_png_sig_cmp>"
+    },
+    {
+      "address": 4220915,
+      "bytes": "e8fc980a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00f4 <_png_create_read_struct>"
+    },
+    {
+      "address": 4220930,
+      "bytes": "e8f5980a00",
+      "mnemonic": "call",
+      "assembly": "call   4b00fc <_png_create_info_struct>"
+    },
+    {
+      "address": 4220952,
+      "bytes": "e883450b00",
+      "mnemonic": "call",
+      "assembly": "call   4bada0 <__setjmp>"
+    },
+    {
+      "address": 4220982,
+      "bytes": "e8c9980a00",
+      "mnemonic": "call",
+      "assembly": "call   4b0104 <_png_set_read_fn>"
+    },
+    {
+      "address": 4221001,
+      "bytes": "e8be980a00",
+      "mnemonic": "call",
+      "assembly": "call   4b010c <_png_set_sig_bytes>"
+    },
+    {
+      "address": 4221015,
+      "bytes": "e854f9ffff",
+      "mnemonic": "call",
+      "assembly": "call   4061b0 <_really_load_png>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "really_load_png",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 0,
+      "candidate_offset": 0,
+      "size_delta": 0
+    },
+    {
+      "function": "read_data_memory",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1416,
+      "candidate_offset": 1416,
+      "size_delta": 0
+    },
+    {
+      "function": "read_data",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1812,
+      "candidate_offset": 1812,
+      "size_delta": 0
+    },
+    {
+      "function": "load_png",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1888,
+      "candidate_offset": 1888,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [],
+  "difficulty": "SUPERVISOR",
+  "priority": 41,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-loadpng.json",
+  "verification_command": "python tools/check_function.py game-loadpng load_png_pf",
+  "begin_command": "python tools/grinder_task.py begin game-loadpng load_png_pf",
+  "promotion_command": "python tools/promote_function.py game-loadpng load_png_pf",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/loadpng/load_png_pf.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 11,
+    "calls": 11,
+    "referenced_globals": 2
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

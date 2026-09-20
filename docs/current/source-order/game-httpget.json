@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_httpget",
+  "source": "src/httpget.c",
+  "sources": [
+    "src/httpget.c"
+  ],
+  "target": "game-httpget",
+  "affected_targets": [
+    "game-httpget"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 300,
+  "changes": [
+    {
+      "file": "src/httpget.c",
+      "start": 975,
+      "end": 1424,
+      "before": "time_t httpGetLastModified(HTTPResponse *pResponse)\n{\n    if (pResponse) {\n        int i;\n\n        for (i = 0; i < pResponse->iNumHeaders; i++) {\n            if (!strcmp(pResponse->pHeaders[i].pHeader, \"Last-Modified\")) {\n                struct tm stm;\n\n                strptime(pResponse->pHeaders[i].pValue,\n                         \"%a, %e %b %Y %H:%M:%S\", &stm);\n                return timegm(&stm);\n            }\n        }\n    }\n    return 0;\n}",
+      "after": "int getSocketError(void)\n{\n    return WSAGetLastError();\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 1426,
+      "end": 2067,
+      "before": "int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)\n{\n    char *p;\n\n    *ppHost = NULL;\n    *ppPath = NULL;\n    *piPort = 80;\n    if (!strncmp(pURL, \"http://\", 7))\n        pURL += 7;\n    p = pURL;\n    while (*p) {\n        if (*p == ':' || *p == '/') {\n            int iHostLen = p - pURL;\n\n            *ppHost = malloc(iHostLen + 1);\n            memcpy(*ppHost, pURL, iHostLen);\n            (*ppHost)[iHostLen] = 0;\n            if (*p == ':')\n                *piPort = strtol(p, &p, 10);\n            *ppPath = strdup(p);\n            return 1;\n        }\n        p++;\n    }\n    free(*ppHost);\n    free(*ppPath);\n    return 0;\n}",
+      "after": "void destroyHTTPResponse(HTTPResponse *pResponse)\n{\n    if (pResponse) {\n        int i;\n\n        for (i = 0; i < pResponse->iNumHeaders; i++) {\n            free(pResponse->pHeaders[i].pHeader);\n            free(pResponse->pHeaders[i].pValue);\n        }\n        free(pResponse->pHeaders);\n        free(pResponse->pPayload);\n        free(pResponse);\n    }\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 2069,
+      "end": 2424,
+      "before": "void destroyHTTPResponse(HTTPResponse *pResponse)\n{\n    if (pResponse) {\n        int i;\n\n        for (i = 0; i < pResponse->iNumHeaders; i++) {\n            free(pResponse->pHeaders[i].pHeader);\n            free(pResponse->pHeaders[i].pValue);\n        }\n        free(pResponse->pHeaders);\n        free(pResponse->pPayload);\n        free(pResponse);\n    }\n}",
+      "after": "static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,\n                              int iOutSize)\n{\n    int bytesRead = 0;\n    char last = 0;\n\n    pOutBuffer[0] = 0;\n    while (iDataLeft - bytesRead > 0) {\n        char c = pBuffer[bytesRead++];\n\n        if (c == '\\n' && last == '\\r')\n            break;\n        if (c != '\\r') {\n            *pOutBuffer++ = c;\n            *pOutBuffer = 0;\n            if (--iOutSize == 1)\n                break;\n        }\n        last = c;\n    }\n    pOutBuffer[--iOutSize] = 0;\n    return bytesRead;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 2426,
+      "end": 2484,
+      "before": "int getSocketError(void)\n{\n    return WSAGetLastError();\n}",
+      "after": "HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,\n                                                                int iResponseBytesCount)\n{\n    char slaskbuf[1024];\n    char linebuf[1024];\n    int i;\n    HTTPResponse *pResponse = malloc(sizeof(HTTPResponse));\n\n    memset(pResponse, 0, sizeof(HTTPResponse));\n    i = extractLine(pHTTPData, iResponseBytesCount, linebuf, sizeof(linebuf));\n    if (sscanf(linebuf, \"HTTP/%s %d\", slaskbuf, &pResponse->iStatusCode) != 2) {\n        log2file(\"Malformed HTTP response:\\n%s\", pHTTPData);\n        destroyHTTPResponse(pResponse);\n        return NULL;\n    }\n\n    while (1) {\n        int bytesRead = extractLine(pHTTPData + i, iResponseBytesCount - i,\n                                    linebuf, sizeof(linebuf));\n        HTTPHeader *header;\n        int j;\n\n        i += bytesRead;\n        if (bytesRead == 2)\n            break;\n        pResponse->iNumHeaders++;\n        pResponse->pHeaders = realloc(pResponse->pHeaders,\n                                      pResponse->iNumHeaders * sizeof(HTTPHeader));\n        header = &pResponse->pHeaders[pResponse->iNumHeaders - 1];\n        if (linebuf[0] == ':') {\n            j = 0;\n        } else {\n            for (j = 1; j < bytesRead; j++) {\n                if (linebuf[j] == ':')\n                    break;\n            }\n        }\n        header->pHeader = malloc(j + 1);\n        memcpy(header->pHeader, linebuf, j);\n        header->pHeader[j] = 0;\n        header->pValue = malloc(bytesRead - j - 1);\n        memcpy(header->pValue, linebuf + j + 2, bytesRead - j - 2);\n        header->pValue[bytesRead - j - 2] = 0;\n    }\n\n    pResponse->iPayloadSize = iResponseBytesCount - i;\n    if (pResponse->iPayloadSize) {\n        pResponse->pPayload = malloc(pResponse->iPayloadSize + 1);\n        memcpy(pResponse->pPayload, pHTTPData + i, pResponse->iPayloadSize);\n        pResponse->pPayload[pResponse->iPayloadSize] = 0;\n    }\n    return pResponse;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 2486,
+      "end": 2562,
+      "before": "HTTPResponse *HTTPHead(char *pURL)\n{\n    return HTTPRequest(pURL, \"HEAD\");\n}",
+      "after": "HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,\n                                const char *pMethod)\n{\n    register char *dataPtr = malloc(1);\n    int sBufferSize = 512;\n    int rBufferSize = 1024;\n    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);\n\n    if (sock != INVALID_SOCKET) {\n        struct timeval tv;\n        struct hostent *host;\n\n        tv.tv_sec = 5;\n        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));\n        host = gethostbyname(pHost);\n        if (host) {\n            struct sockaddr_in service;\n\n            service.sin_family = AF_INET;\n            service.sin_addr.s_addr = *(unsigned long *)host->h_addr_list[0];\n            service.sin_port = htons(iPort);\n            if (connect(sock, (struct sockaddr *)&service, sizeof(service)) != SOCKET_ERROR) {\n                char sendbuff[sBufferSize];\n\n                sprintf(sendbuff, \"GET /%s HTTP/1.1\\r\\nHost: %s\\r\\n\\r\\n\",\n                        pPathToFile, pHost);\n                char recvbuff[rBufferSize];\n                if (send(sock, sendbuff, strlen(sendbuff), 0) != SOCKET_ERROR) {\n                    int totBytes = 0;\n                    int bytesRead;\n\n                    while ((bytesRead = recv(sock, recvbuff, rBufferSize, 0)) > 0) {\n                        dataPtr = realloc(dataPtr, totBytes + bytesRead);\n                        if (!dataPtr) {\n                            log2file(\">>> HTTP: Failed to allocate %d bytes for http response\",\n                                     totBytes + bytesRead);\n                            free(NULL);\n                            return NULL;\n                        }\n                        memcpy(dataPtr + totBytes, recvbuff, bytesRead);\n                        totBytes += bytesRead;\n                    }\n                    {\n                        HTTPResponse *rtv = extractHTTPResponse(dataPtr, totBytes);\n\n                        free(dataPtr);\n                        closesocket(sock);\n                        return rtv;\n                    }\n                }\n                log2file(\">>> HTTP:  Sending data failed: %d\\n\", getSocketError());\n                return NULL;\n            }\n            log2file(\">>> HTTP:  Failed to connect to service: %d\\n\", getSocketError());\n            return NULL;\n        }\n        log2file(\">>> HTTP:  Host lookup failed: %s\\n\", pHost);\n        return NULL;\n    }\n    log2file(\">>> HTTP:  Socket creation failed: %d\\n\", getSocketError());\n    return NULL;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 2564,
+      "end": 2638,
+      "before": "HTTPResponse *HTTPGet(char *pURL)\n{\n    return HTTPRequest(pURL, \"GET\");\n}",
+      "after": "int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)\n{\n    char *p;\n\n    *ppHost = NULL;\n    *ppPath = NULL;\n    *piPort = 80;\n    if (!strncmp(pURL, \"http://\", 7))\n        pURL += 7;\n    p = pURL;\n    while (*p) {\n        if (*p == ':' || *p == '/') {\n            int iHostLen = p - pURL;\n\n            *ppHost = malloc(iHostLen + 1);\n            memcpy(*ppHost, pURL, iHostLen);\n            (*ppHost)[iHostLen] = 0;\n            if (*p == ':')\n                *piPort = strtol(p, &p, 10);\n            *ppPath = strdup(p);\n            return 1;\n        }\n        p++;\n    }\n    free(*ppHost);\n    free(*ppPath);\n    return 0;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 2640,
+      "end": 3074,
+      "before": "HTTPResponse *HTTPRequest(char *pURL, char *pMethod)\n{\n    char *pHost;\n    char *pPath;\n    int iPort;\n\n    if (SplitURL(pURL, &pHost, &pPath, &iPort)) {\n        HTTPResponse *pResponse = HTTPFetchInternal(pHost, iPort, pPath,\n                                                     pMethod);\n        free(pHost);\n        free(pPath);\n        return pResponse;\n    }\n\n    log2file(\"Could not split URL \\\"%s\\\"\", pURL);\n    return NULL;\n}",
+      "after": "HTTPResponse *HTTPGet(char *pURL)\n{\n    return HTTPRequest(pURL, \"GET\");\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 3234,
+      "end": 3792,
+      "before": "static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,\n                              int iOutSize)\n{\n    int bytesRead = 0;\n    char last = 0;\n\n    pOutBuffer[0] = 0;\n    while (iDataLeft - bytesRead > 0) {\n        char c = pBuffer[bytesRead++];\n\n        if (c == '\\n' && last == '\\r')\n            break;\n        if (c != '\\r') {\n            *pOutBuffer++ = c;\n            *pOutBuffer = 0;\n            if (--iOutSize == 1)\n                break;\n        }\n        last = c;\n    }\n    pOutBuffer[--iOutSize] = 0;\n    return bytesRead;\n}",
+      "after": "HTTPResponse *HTTPHead(char *pURL)\n{\n    return HTTPRequest(pURL, \"HEAD\");\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 3874,
+      "end": 5834,
+      "before": "HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,\n                                                                int iResponseBytesCount)\n{\n    char slaskbuf[1024];\n    char linebuf[1024];\n    int i;\n    HTTPResponse *pResponse = malloc(sizeof(HTTPResponse));\n\n    memset(pResponse, 0, sizeof(HTTPResponse));\n    i = extractLine(pHTTPData, iResponseBytesCount, linebuf, sizeof(linebuf));\n    if (sscanf(linebuf, \"HTTP/%s %d\", slaskbuf, &pResponse->iStatusCode) != 2) {\n        log2file(\"Malformed HTTP response:\\n%s\", pHTTPData);\n        destroyHTTPResponse(pResponse);\n        return NULL;\n    }\n\n    while (1) {\n        int bytesRead = extractLine(pHTTPData + i, iResponseBytesCount - i,\n                                    linebuf, sizeof(linebuf));\n        HTTPHeader *header;\n        int j;\n\n        i += bytesRead;\n        if (bytesRead == 2)\n            break;\n        pResponse->iNumHeaders++;\n        pResponse->pHeaders = realloc(pResponse->pHeaders,\n                                      pResponse->iNumHeaders * sizeof(HTTPHeader));\n        header = &pResponse->pHeaders[pResponse->iNumHeaders - 1];\n        if (linebuf[0] == ':') {\n            j = 0;\n        } else {\n            for (j = 1; j < bytesRead; j++) {\n                if (linebuf[j] == ':')\n                    break;\n            }\n        }\n        header->pHeader = malloc(j + 1);\n        memcpy(header->pHeader, linebuf, j);\n        header->pHeader[j] = 0;\n        header->pValue = malloc(bytesRead - j - 1);\n        memcpy(header->pValue, linebuf + j + 2, bytesRead - j - 2);\n        header->pValue[bytesRead - j - 2] = 0;\n    }\n\n    pResponse->iPayloadSize = iResponseBytesCount - i;\n    if (pResponse->iPayloadSize) {\n        pResponse->pPayload = malloc(pResponse->iPayloadSize + 1);\n        memcpy(pResponse->pPayload, pHTTPData + i, pResponse->iPayloadSize);\n        pResponse->pPayload[pResponse->iPayloadSize] = 0;\n    }\n    return pResponse;\n}",
+      "after": "HTTPResponse *HTTPRequest(char *pURL, char *pMethod)\n{\n    char *pHost;\n    char *pPath;\n    int iPort;\n\n    if (SplitURL(pURL, &pHost, &pPath, &iPort)) {\n        HTTPResponse *pResponse = HTTPFetchInternal(pHost, iPort, pPath,\n                                                     pMethod);\n        free(pHost);\n        free(pPath);\n        return pResponse;\n    }\n\n    log2file(\"Could not split URL \\\"%s\\\"\", pURL);\n    return NULL;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    },
+    {
+      "file": "src/httpget.c",
+      "start": 5836,
+      "end": 8341,
+      "before": "HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,\n                                const char *pMethod)\n{\n    register char *dataPtr = malloc(1);\n    int sBufferSize = 512;\n    int rBufferSize = 1024;\n    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);\n\n    if (sock != INVALID_SOCKET) {\n        struct timeval tv;\n        struct hostent *host;\n\n        tv.tv_sec = 5;\n        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));\n        host = gethostbyname(pHost);\n        if (host) {\n            struct sockaddr_in service;\n\n            service.sin_family = AF_INET;\n            service.sin_addr.s_addr = *(unsigned long *)host->h_addr_list[0];\n            service.sin_port = htons(iPort);\n            if (connect(sock, (struct sockaddr *)&service, sizeof(service)) != SOCKET_ERROR) {\n                char sendbuff[sBufferSize];\n\n                sprintf(sendbuff, \"GET /%s HTTP/1.1\\r\\nHost: %s\\r\\n\\r\\n\",\n                        pPathToFile, pHost);\n                char recvbuff[rBufferSize];\n                if (send(sock, sendbuff, strlen(sendbuff), 0) != SOCKET_ERROR) {\n                    int totBytes = 0;\n                    int bytesRead;\n\n                    while ((bytesRead = recv(sock, recvbuff, rBufferSize, 0)) > 0) {\n                        dataPtr = realloc(dataPtr, totBytes + bytesRead);\n                        if (!dataPtr) {\n                            log2file(\">>> HTTP: Failed to allocate %d bytes for http response\",\n                                     totBytes + bytesRead);\n                            free(NULL);\n                            return NULL;\n                        }\n                        memcpy(dataPtr + totBytes, recvbuff, bytesRead);\n                        totBytes += bytesRead;\n                    }\n                    {\n                        HTTPResponse *rtv = extractHTTPResponse(dataPtr, totBytes);\n\n                        free(dataPtr);\n                        closesocket(sock);\n                        return rtv;\n                    }\n                }\n                log2file(\">>> HTTP:  Sending data failed: %d\\n\", getSocketError());\n                return NULL;\n            }\n            log2file(\">>> HTTP:  Failed to connect to service: %d\\n\", getSocketError());\n            return NULL;\n        }\n        log2file(\">>> HTTP:  Host lookup failed: %s\\n\", pHost);\n        return NULL;\n    }\n    log2file(\">>> HTTP:  Socket creation failed: %d\\n\", getSocketError());\n    return NULL;\n}",
+      "after": "time_t httpGetLastModified(HTTPResponse *pResponse)\n{\n    if (pResponse) {\n        int i;\n\n        for (i = 0; i < pResponse->iNumHeaders; i++) {\n            if (!strcmp(pResponse->pHeaders[i].pHeader, \"Last-Modified\")) {\n                struct tm stm;\n\n                strptime(pResponse->pHeaders[i].pValue,\n                         \"%a, %e %b %Y %H:%M:%S\", &stm);\n                return timegm(&stm);\n            }\n        }\n    }\n    return 0;\n}",
+      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
+    }
+  ],
+  "source_identities": {
+    "src/httpget.c": {
+      "size": 8342,
+      "sha256": "d2e4723e10b07561d11ca9b00783c08ebaef75cc4915fa2e66128e1461b7251a"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "SOURCE_ORDER_REPAIR",
+  "status": "DEFINITION_ORDER_DIFFERS",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "getSocketError",
+      "historical_line": 25
+    },
+    {
+      "function": "destroyHTTPResponse",
+      "historical_line": 34
+    },
+    {
+      "function": "extractLine",
+      "historical_line": 55
+    },
+    {
+      "function": "extractHTTPResponse",
+      "historical_line": 88
+    },
+    {
+      "function": "HTTPFetchInternal",
+      "historical_line": 149
+    },
+    {
+      "function": "SplitURL",
+      "historical_line": 222
+    },
+    {
+      "function": "HTTPGet",
+      "historical_line": 256
+    },
+    {
+      "function": "HTTPHead",
+      "historical_line": 260
+    },
+    {
+      "function": "HTTPRequest",
+      "historical_line": 264
+    },
+    {
+      "function": "httpGetLastModified",
+      "historical_line": 281
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_httpget",
+  "apply_command": "python tools/interface_task.py apply order_httpget",
+  "verification_command": "python tools/interface_task.py check order_httpget",
+  "promotion_command": "python tools/interface_task.py promote order_httpget",
+  "current_order": [
+    "httpGetLastModified",
+    "SplitURL",
+    "destroyHTTPResponse",
+    "getSocketError",
+    "HTTPHead",
+    "HTTPGet",
+    "HTTPRequest",
+    "extractLine",
+    "extractHTTPResponse",
+    "HTTPFetchInternal"
+  ],
+  "reason": "Unique original declaration lines; only complete definitions move; every body is preserved byte-for-byte.",
+  "edit_scope": "Generated complete-definition reorder only. Freshly preserve every exact function and prohibit new implicit declarations. No linker placement or target addresses."
+}

@@ -5,12 +5,7 @@
 #include <string.h>
 #include "control.h"
 #include "timer.h"
-typedef struct Tmenu_slider {
-    int value;
-    int min;
-    int max;
-    int step;
-} Tmenu_slider;
+#include "recovered/Tmenu_slider.h"
 
 typedef struct Tmenu_selection {
     int value;
@@ -30,14 +25,7 @@ typedef struct Tmenu_char_selection {
     PALETTE pal;
 } Tmenu_char_selection;
 
-typedef struct Tmenu {
-    char caption[128];
-    int return_select;
-    int return_left;
-    int return_right;
-    int flags;
-    void *data;
-} Tmenu;
+#include "recovered/Tmenu.h"
 
 typedef struct Tmenu_params {
     void *font;

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Tmenu_char_selection",
+  "source": "src/menu.c",
+  "sources": [
+    "src/menu.c"
+  ],
+  "changes": [
+    {
+      "file": "src/menu.c",
+      "start": 411,
+      "end": 534,
+      "before": "typedef struct Tmenu_char_selection {\n    int value;\n    int max;\n    BITMAP *bmp;\n    PALETTE pal;\n} Tmenu_char_selection;",
+      "after": "#include \"recovered/Tmenu_char_selection.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tmenu_char_selection.h",
+  "header_identity": {
+    "size": 925,
+    "sha256": "343e9dece8303253ee187f2f781557a774d6da8612c354b1922202878aee2c8d"
+  },
+  "source_identities": {
+    "src/menu.c": {
+      "size": 16022,
+      "sha256": "3ee94a954330da897e66fc9d114ec959fbf59b5e7d689955aad7b1afac445d59"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    int value;\n    int max;\n    BITMAP *bmp;\n    PALETTE pal;\n} Tmenu_char_selection;",
+  "affected_targets": [
+    "game-menu"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 242,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Tmenu_char_selection",
+  "apply_command": "python tools/interface_task.py apply Tmenu_char_selection",
+  "verification_command": "python tools/interface_task.py check Tmenu_char_selection",
+  "promotion_command": "python tools/interface_task.py promote Tmenu_char_selection",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

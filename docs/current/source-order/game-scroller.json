@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_scroller",
+  "source": "src/scroller.c",
+  "sources": [
+    "src/scroller.c"
+  ],
+  "target": "game-scroller",
+  "affected_targets": [
+    "game-scroller"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/scroller.c": {
+      "size": 1974,
+      "sha256": "2d4cfaa016569e53ce0acf179bc2fa0b8c00872f9e1885b574cdd97c50d22d5e"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "init_scroller",
+      "historical_line": 16
+    },
+    {
+      "function": "draw_scroller",
+      "historical_line": 45
+    },
+    {
+      "function": "scroll_scroller",
+      "historical_line": 70
+    },
+    {
+      "function": "restart_scroller",
+      "historical_line": 75
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_scroller",
+  "apply_command": "python tools/interface_task.py apply order_scroller",
+  "verification_command": "python tools/interface_task.py check order_scroller",
+  "promotion_command": "python tools/interface_task.py promote order_scroller",
+  "current_order": [
+    "init_scroller",
+    "draw_scroller",
+    "scroll_scroller",
+    "restart_scroller"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

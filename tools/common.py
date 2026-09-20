@@ -35,3 +35,9 @@ def run(args, output=None, cwd=ROOT, toolchain=TC):
         Path(output).parent.mkdir(parents=True, exist_ok=True)
         Path(output).write_bytes(result.stdout)
     return result.stdout.decode('utf-8', errors='replace')
+
+
+def check_json(path, value):
+    path=Path(path)
+    if not path.exists() or read_json(path)!=value:
+        raise ValueError('Stale generated document: '+str(path.relative_to(ROOT)))

@@ -23,6 +23,7 @@ def main():
     a = ap.parse_args()
     ledger = load_ledger()
     generated = {ROOT / 'docs/progress.json': progress_document(ledger),
+                 ROOT / 'docs/current/progress.json': progress_document(ledger),
                  ROOT / 'docs/blocker-summary.json': blocker_summary(ledger)}
     stale = [path for path, value in generated.items() if not path.exists() or read_json(path) != value]
     if a.check:

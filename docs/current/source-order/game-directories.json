@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_directories",
+  "source": "src/directories.c",
+  "sources": [
+    "src/directories.c"
+  ],
+  "target": "game-directories",
+  "affected_targets": [
+    "game-directories"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/directories.c": {
+      "size": 1115,
+      "sha256": "80dafb8a613331d8e165fc450295ea2b41216b884886d4c3d326bd2e277b1e2c"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "get_profiles_dir",
+      "historical_line": 10
+    },
+    {
+      "function": "get_custom_characters_dir",
+      "historical_line": 17
+    },
+    {
+      "function": "get_logfile_path",
+      "historical_line": 23
+    },
+    {
+      "function": "get_configfile_path",
+      "historical_line": 29
+    },
+    {
+      "function": "get_character_dir",
+      "historical_line": 35
+    },
+    {
+      "function": "get_adcache_dir",
+      "historical_line": 41
+    },
+    {
+      "function": "get_profile_dir_for_profile",
+      "historical_line": 49
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_directories",
+  "apply_command": "python tools/interface_task.py apply order_directories",
+  "verification_command": "python tools/interface_task.py check order_directories",
+  "promotion_command": "python tools/interface_task.py promote order_directories",
+  "current_order": [
+    "get_profiles_dir",
+    "get_custom_characters_dir",
+    "get_logfile_path",
+    "get_configfile_path",
+    "get_character_dir",
+    "get_adcache_dir",
+    "get_profile_dir_for_profile"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

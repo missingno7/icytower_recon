@@ -2,17 +2,34 @@
 #include <allegro.h>
 #include "scroller.h"
 
-void scroll_scroller(Tscroller *sc, int step)
+void init_scroller(Tscroller *sc, FONT *f, char *t, int w, int h, int horiz)
 {
-    sc->offset += step;
-}
-
-void restart_scroller(Tscroller *sc)
-{
-    if (sc->horizontal)
+    sc->fnt = f;
+    sc->font_height = text_height(f);
+    sc->height = h;
+    sc->horizontal = horiz;
+    sc->text = t;
+    sc->width = w;
+    if (horiz) {
+        sc->length = text_length(sc->fnt, t);
         sc->offset = sc->width;
-    else
-        sc->offset = sc->height;
+        return;
+    }
+    else {
+    int i;
+    int len;
+    len = (int)strlen(t);
+    sc->lines[0] = t;
+    sc->rows = 1;
+    for (i = 0; i < len; i++) {
+        if (sc->text[i] == '\n' && sc->rows <= 511) {
+            sc->lines[sc->rows] = sc->text + i + 1;
+            sc->rows++;
+            sc->text[i] = '\0';
+        }
+    }
+    sc->offset = sc->height;
+    }
 }
 
 int draw_scroller(Tscroller *sc, BITMAP *bmp, int x, int y, int color)
@@ -43,32 +60,15 @@ int draw_scroller(Tscroller *sc, BITMAP *bmp, int x, int y, int color)
     return -1;
 }
 
-void init_scroller(Tscroller *sc, FONT *f, char *t, int w, int h, int horiz)
+void scroll_scroller(Tscroller *sc, int step)
 {
-    sc->fnt = f;
-    sc->font_height = text_height(f);
-    sc->height = h;
-    sc->horizontal = horiz;
-    sc->text = t;
-    sc->width = w;
-    if (horiz) {
-        sc->length = text_length(sc->fnt, t);
+    sc->offset += step;
+}
+
+void restart_scroller(Tscroller *sc)
+{
+    if (sc->horizontal)
         sc->offset = sc->width;
-        return;
-    }
-    else {
-    int i;
-    int len;
-    len = (int)strlen(t);
-    sc->lines[0] = t;
-    sc->rows = 1;
-    for (i = 0; i < len; i++) {
-        if (sc->text[i] == '\n' && sc->rows <= 511) {
-            sc->lines[sc->rows] = sc->text + i + 1;
-            sc->rows++;
-            sc->text[i] = '\0';
-        }
-    }
-    sc->offset = sc->height;
-    }
+    else
+        sc->offset = sc->height;
 }

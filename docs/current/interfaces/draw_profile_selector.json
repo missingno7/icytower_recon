@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "draw_profile_selector",
+  "source": "src/profile.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+  "status": "TYPE_EVIDENCE_INCOMPLETE",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/profile.c",
+      "return_type": "void",
+      "parameter_types": [
+        "BITMAP*",
+        "Tprofile*",
+        "Tavailable_profile*",
+        "int",
+        "int",
+        "int",
+        "int",
+        "int",
+        "int"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 197221
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 2",
+      "historical_type": "Tprofile",
+      "candidate_type": "char",
+      "header": "include/recovered/Tprofile.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/profile.c",
+      "file": "src/profile.c",
+      "line": 241
+    },
+    {
+      "position": "parameter 3",
+      "historical_type": "Tavailable_profile",
+      "candidate_type": "char",
+      "header": "include/recovered/Tavailable_profile.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/profile.c",
+      "file": "src/profile.c",
+      "line": 241
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check draw_profile_selector",
+  "begin_command": "python tools/interface_task.py begin draw_profile_selector",
+  "apply_command": "python tools/interface_task.py apply draw_profile_selector",
+  "promotion_command": "python tools/interface_task.py promote draw_profile_selector",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

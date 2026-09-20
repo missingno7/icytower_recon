@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_profile",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "target": "game-profile",
+  "affected_targets": [
+    "game-profile"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "SOURCE_ORDER_REPAIR",
+  "status": "DEFINITION_ORDER_DIFFERS",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "hash2",
+      "historical_line": 40
+    },
+    {
+      "function": "generate_profile_checksum",
+      "historical_line": 51
+    },
+    {
+      "function": "create_profile",
+      "historical_line": 70
+    },
+    {
+      "function": "get_rank_id",
+      "historical_line": 160
+    },
+    {
+      "function": "get_rank",
+      "historical_line": 175
+    },
+    {
+      "function": "set_next_rank_message",
+      "historical_line": 181
+    },
+    {
+      "function": "delete_profile",
+      "historical_line": 224
+    },
+    {
+      "function": "load_profile",
+      "historical_line": 248
+    },
+    {
+      "function": "profile_data_page_extra",
+      "historical_line": 279
+    },
+    {
+      "function": "profile_data_page_general",
+      "historical_line": 290
+    },
+    {
+      "function": "profile_data_page_basic",
+      "historical_line": 334
+    },
+    {
+      "function": "profile_data_page_advanced",
+      "historical_line": 380
+    },
+    {
+      "function": "save_profile",
+      "historical_line": 422
+    },
+    {
+      "function": "draw_buffer",
+      "historical_line": 513
+    },
+    {
+      "function": "view_profile",
+      "historical_line": 538
+    },
+    {
+      "function": "draw_profile_selector",
+      "historical_line": 645
+    },
+    {
+      "function": "select_profile",
+      "historical_line": 705
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_profile",
+  "apply_command": "python tools/interface_task.py apply order_profile",
+  "verification_command": "python tools/interface_task.py check order_profile",
+  "promotion_command": "python tools/interface_task.py promote order_profile",
+  "current_order": [
+    "hash2",
+    "get_rank_id",
+    "get_rank",
+    "generate_profile_checksum",
+    "profile_data_page_extra",
+    "profile_data_page_basic",
+    "profile_data_page_advanced",
+    "draw_profile_selector",
+    "draw_buffer",
+    "set_next_rank_message",
+    "load_profile",
+    "delete_profile",
+    "create_profile",
+    "profile_data_page_general",
+    "save_profile",
+    "view_profile",
+    "select_profile"
+  ],
+  "reason": "Interleaved top-level declarations/directives require supervisor review"
+}

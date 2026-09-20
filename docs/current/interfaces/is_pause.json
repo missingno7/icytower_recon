@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "is_pause",
+  "source": "src/control.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+  "status": "TYPE_EVIDENCE_INCOMPLETE",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/control.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Tcontrol*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 18504
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tcontrol",
+      "candidate_type": "Tcontrol",
+      "header": "include/recovered/Tcontrol.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/hisc.c",
+      "file": "include/control.h",
+      "line": 23
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check is_pause",
+  "begin_command": "python tools/interface_task.py begin is_pause",
+  "apply_command": "python tools/interface_task.py apply is_pause",
+  "promotion_command": "python tools/interface_task.py promote is_pause",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

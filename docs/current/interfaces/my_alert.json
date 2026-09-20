@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "my_alert",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "int",
+      "parameter_types": [
+        "char*",
+        "char*",
+        "int",
+        "int"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 127134
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 0,
+      "end": 0,
+      "before": "",
+      "after": "extern int my_alert(char*, char*, int, int);\n",
+      "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
+      "file": "src/menu.c",
+      "line": 596
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check my_alert",
+  "begin_command": "python tools/interface_task.py begin my_alert",
+  "apply_command": "python tools/interface_task.py apply my_alert",
+  "promotion_command": "python tools/interface_task.py promote my_alert",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/menu.c"
+  ],
+  "source_identities": {
+    "src/menu.c": {
+      "size": 16022,
+      "sha256": "3ee94a954330da897e66fc9d114ec959fbf59b5e7d689955aad7b1afac445d59"
+    }
+  },
+  "affected_targets": [
+    "game-menu"
+  ],
+  "priority": 257,
+  "expected_prototype": "extern int my_alert(char*, char*, int, int);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

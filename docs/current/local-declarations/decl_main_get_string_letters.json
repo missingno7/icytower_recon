@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "task_kind": "LOCAL_DECLARATION",
+  "function": "decl_main_get_string_letters",
+  "target_function": "get_string",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "target": "game-main",
+  "variable": "letters",
+  "original_constant_value": null,
+  "original": {
+    "die": 125367,
+    "name": "letters",
+    "type_die": 125462,
+    "type": "char [67]",
+    "scope": 125137,
+    "base_type": "char",
+    "base_encoding": "6\t(signed char)",
+    "location": "3 byte block: 91 9d 7f \t(DW_OP_fbreg: -99)",
+    "address": null
+  },
+  "candidate": {
+    "die": 25073,
+    "name": "letters",
+    "type_die": 20685,
+    "type": "char [63]",
+    "scope": 24857,
+    "base_type": "char",
+    "base_encoding": "6\t(signed char)",
+    "location": "3 byte block: 91 a1 7f \t(DW_OP_fbreg: -95)",
+    "address": null,
+    "role": "DW_TAG_variable",
+    "declaration_line": 1512,
+    "declaration_file": "src/main.c",
+    "byte_size": 63,
+    "constant_value": null,
+    "function_scope": true
+  },
+  "expected_declaration": "char letters[67]",
+  "status": "LOCAL_TYPE_DIFFERS",
+  "state": "LOCAL_DECLARATION_REPAIR",
+  "difference_class": "LOCAL_TYPE_DECLARATION",
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "body_edit_allowed": false,
+  "changes": [],
+  "source_identities": {
+    "src/main.c": {
+      "size": 91699,
+      "sha256": "4119d95832c56ea7acc91b33cb21c25e7222bfde16651069539c07cf9c80e254"
+    }
+  },
+  "function_status": "DIFFER",
+  "first_difference": {
+    "offset": 8,
+    "original_va": 4242508,
+    "candidate_byte": 156,
+    "original_byte": 188
+  },
+  "function_card": "docs/current/functions/main/get_string.json",
+  "begin_command": "python tools/interface_task.py begin decl_main_get_string_letters",
+  "apply_command": "python tools/interface_task.py apply decl_main_get_string_letters",
+  "verification_command": "python tools/interface_task.py check decl_main_get_string_letters",
+  "promotion_command": "python tools/interface_task.py promote decl_main_get_string_letters",
+  "acceptance": "Complete DWARF declaration equality plus unchanged emitted contributions, or strict exact target-function proof with preserved non-code contributions. No partial machine-code match claim.",
+  "reason": "Inferred array extent may reflect initializer content; do not pad it with a declaration edit"
+}

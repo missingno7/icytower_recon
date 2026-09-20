@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_beta",
+  "source": "src/beta.c",
+  "sources": [
+    "src/beta.c"
+  ],
+  "target": "game-beta",
+  "affected_targets": [
+    "game-beta"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/beta.c": {
+      "size": 2466,
+      "sha256": "c1578a0417cb0619a8460d2d2706003f45d65a8d26b657edb7b020299b89df27"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "create_post",
+      "historical_line": 8
+    },
+    {
+      "function": "destroy_all",
+      "historical_line": 20
+    },
+    {
+      "function": "read_line",
+      "historical_line": 30
+    },
+    {
+      "function": "load_plain_data",
+      "historical_line": 42
+    },
+    {
+      "function": "load_garbled_data",
+      "historical_line": 61
+    },
+    {
+      "function": "garble_string",
+      "historical_line": 95
+    },
+    {
+      "function": "save_garbled_data",
+      "historical_line": 102
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_beta",
+  "apply_command": "python tools/interface_task.py apply order_beta",
+  "verification_command": "python tools/interface_task.py check order_beta",
+  "promotion_command": "python tools/interface_task.py promote order_beta",
+  "current_order": [
+    "create_post",
+    "destroy_all",
+    "read_line",
+    "load_plain_data",
+    "load_garbled_data",
+    "garble_string",
+    "save_garbled_data"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

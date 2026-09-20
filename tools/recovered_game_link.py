@@ -1,6 +1,6 @@
 """Link all recovered game CUs without fallback code.
 
-This deliberately unexecuted candidate uses main-partial's historical WinMain
+This deliberately unexecuted candidate uses main.c's historical WinMain
 wrapper, so no synthetic entrypoint, original code, or undefined-symbol
 suppression is involved. A successful link establishes ordinary source-link
 closure only; per-function and CU fidelity still require oracle verification.
@@ -16,7 +16,7 @@ from build import COMPILERS, compile_target, verify_inputs
 
 GAME_TARGETS = [
     'game-beta', 'game-control', 'game-csv', 'game-httpget', 'game-directories', 'game-timer',
-    'game-stars', 'game-options', 'game-replay', 'game-main-partial',
+    'game-stars', 'game-options', 'game-replay', 'game-main',
     'game-map', 'game-scroller', 'game-particle', 'game-player', 'game-fld-adspot',
     'game-hisc', 'game-menu', 'game-game-data', 'game-profile', 'game-custom',
     'game-loadpng', 'game-savepng', 'game-regpng',

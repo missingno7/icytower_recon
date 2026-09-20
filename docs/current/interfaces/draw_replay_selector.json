@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "draw_replay_selector",
+  "source": "src/replay.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/replay.c",
+      "return_type": "void",
+      "parameter_types": [
+        "BITMAP*",
+        "Treplay*",
+        "Treplay_post*",
+        "int",
+        "int",
+        "int",
+        "int",
+        "int"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 222195
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 2",
+      "historical_type": "Treplay",
+      "candidate_type": "Treplay",
+      "header": "include/recovered/Treplay.h",
+      "status": "MISMATCH",
+      "historical_size": 2220,
+      "candidate_size": 2220,
+      "member_difference_count": 1,
+      "first_member_differences": [
+        {
+          "member": "data",
+          "historical": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Trecord *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Treplay_data *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/replay.c",
+      "file": "src/replay.c",
+      "line": 193
+    },
+    {
+      "position": "parameter 3",
+      "historical_type": "Treplay_post",
+      "candidate_type": "Treplay_post",
+      "header": "include/recovered/Treplay_post.h",
+      "status": "MISMATCH",
+      "historical_size": 24,
+      "candidate_size": 24,
+      "member_difference_count": 1,
+      "first_member_differences": [
+        {
+          "member": "reserved",
+          "historical": null,
+          "candidate": {
+            "offset": 6,
+            "size": 2,
+            "type": "char [2]",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/replay.c",
+      "file": "src/replay.c",
+      "line": 193
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check draw_replay_selector",
+  "begin_command": "python tools/interface_task.py begin draw_replay_selector",
+  "apply_command": "python tools/interface_task.py apply draw_replay_selector",
+  "promotion_command": "python tools/interface_task.py promote draw_replay_selector",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

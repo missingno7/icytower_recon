@@ -9,11 +9,10 @@ from pathlib import Path
 from common import ROOT, identity, read_json
 
 STATUSES = {'FUNCTION_MATCH', 'CODEGEN_SIMILAR', 'DIFFER', 'MISSING'}
-SOURCE_ALIASES = {'src/main-partial.c': 'src/main.c'}
 
 
 def unit_for(units, source):
-    return units.get(SOURCE_ALIASES.get(source, source))
+    return units.get(source)
 
 
 def load_ledger(path=ROOT / 'src/recovery.json'):
@@ -29,6 +28,9 @@ def load_ledger(path=ROOT / 'src/recovery.json'):
         bad = set(functions.values()) - STATUSES
         if bad:
             raise ValueError('Unknown recovery status in %s: %s' % (source, sorted(bad)))
+    if any('verified_report' in row for row in ledger.values()):
+        from refresh_recovery import validate_ledger
+        validate_ledger(ledger)
     return ledger
 
 

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "HTTPRequest",
+  "source": "src/httpget.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/httpget.c",
+      "return_type": "HTTPResponse*",
+      "parameter_types": [
+        "const char*",
+        "const char*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 80610
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 609,
+      "end": 634,
+      "before": "char *pURL, char *pMethod",
+      "after": "const char *pURL, const char *pMethod",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/httpget.c",
+      "line": 24
+    },
+    {
+      "start": 2666,
+      "end": 2691,
+      "before": "char *pURL, char *pMethod",
+      "after": "const char *pURL, const char *pMethod",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/httpget.c",
+      "line": 109
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check HTTPRequest",
+  "begin_command": "python tools/interface_task.py begin HTTPRequest",
+  "apply_command": "python tools/interface_task.py apply HTTPRequest",
+  "promotion_command": "python tools/interface_task.py promote HTTPRequest",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/httpget.c"
+  ],
+  "source_identities": {
+    "src/httpget.c": {
+      "size": 8342,
+      "sha256": "d2e4723e10b07561d11ca9b00783c08ebaef75cc4915fa2e66128e1461b7251a"
+    }
+  },
+  "affected_targets": [
+    "game-httpget"
+  ],
+  "priority": 257,
+  "expected_prototype": "extern HTTPResponse* HTTPRequest(const char*, const char*);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

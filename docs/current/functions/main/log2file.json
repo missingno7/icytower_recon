@@ -1,0 +1,956 @@
+{
+  "schema": 1,
+  "source": "src/main.c",
+  "target": "game-main",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+  "function": "log2file",
+  "historical_va": "0x40da58",
+  "historical_size": 189,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+  "body_edit_allowed": true,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "prototype": "void log2file(const char *format, ...);",
+  "return_type": "void",
+  "parameters": [
+    {
+      "die": 127914,
+      "name": "format",
+      "type_die": 100482,
+      "type": "const char *",
+      "scope": 127883,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x5fee (location list)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 127934,
+      "name": "sLogMutex",
+      "type_die": 99328,
+      "type": "pthread_mutex_t",
+      "scope": 127883,
+      "base_type": "pthread_mutex_t_",
+      "base_encoding": null,
+      "location": "5 byte block: 3 44 db 4b 0 \t(DW_OP_addr: 4bdb44)",
+      "address": 4971332
+    },
+    {
+      "die": 127958,
+      "name": "logfilename",
+      "type_die": 115611,
+      "type": "char [1024]",
+      "scope": 127883,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "5 byte block: 3 40 d3 4d 0 \t(DW_OP_addr: 4dd340)",
+      "address": 5100352
+    },
+    {
+      "die": 127976,
+      "name": "ptr",
+      "type_die": 99377,
+      "type": "va_list",
+      "scope": 127883,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 127988,
+      "name": "fp",
+      "type_die": 127027,
+      "type": "FILE *",
+      "scope": 127883,
+      "base_type": "_iobuf",
+      "base_encoding": null,
+      "location": "0x603b (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [],
+  "variadic": true,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 1643,
+    "body_end_line": 1660,
+    "body_sha256": "97a0ab7210501830bb63c77801a23b5152ddedc080f2a9d771f31ed63b9e74e4"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 127914,
+        "name": "format",
+        "type_die": 100482,
+        "type": "const char *",
+        "scope": 127883,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 127958,
+        "name": "logfilename",
+        "type_die": 115611,
+        "type": "char [1024]",
+        "scope": 127883,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": 5100352
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [],
+    "cast_chains": [],
+    "shifts": [],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 189,
+  "first_difference": {
+    "offset": 13,
+    "original_va": 4250213,
+    "candidate_byte": 13,
+    "original_byte": 21
+  },
+  "mismatch_count": 8,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4250204,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250205,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250206,
+        "bytes": "83ec1c",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x1c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250209,
+        "bytes": "8b7508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%esi",
+        "dwarf_variables": [
+          {
+            "die": 127914,
+            "name": "format",
+            "type": "const char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4250212,
+        "bytes": "8b1568d14d00",
+        "mnemonic": "mov",
+        "assembly": "mov    0x4dd168,%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250218,
+        "bytes": "85d2",
+        "mnemonic": "test",
+        "assembly": "test   %edx,%edx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250220,
+        "bytes": "740a",
+        "mnemonic": "je",
+        "assembly": "je     40da78 <_log2file+0x20>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250222,
+        "bytes": "83c41c",
+        "mnemonic": "add",
+        "assembly": "add    $0x1c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4250225,
+        "bytes": "5b",
+        "mnemonic": "pop",
+        "assembly": "pop    %ebx",
+        "dwarf_variables": []
+      }
+    ],
+    "candidate": [
+      {
+        "address": 2396,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2397,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2398,
+        "bytes": "83ec1c",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x1c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2401,
+        "bytes": "8b7508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%esi",
+        "dwarf_variables": [
+          {
+            "die": 19059,
+            "name": "format",
+            "type": "const char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 2404,
+        "bytes": "8b0d00000000",
+        "mnemonic": "mov",
+        "assembly": "mov    0x0,%ecx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2410,
+        "bytes": "85c9",
+        "mnemonic": "test",
+        "assembly": "test   %ecx,%ecx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2412,
+        "bytes": "740a",
+        "mnemonic": "je",
+        "assembly": "je     978 <_log2file+0x20>",
+        "dwarf_variables": [
+          {
+            "die": 19103,
+            "name": "logfilename",
+            "type": "char [1024]",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "memory",
+              "address": 32
+            },
+            "expression_hex": "0320000000",
+            "relation": "absolute variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 2414,
+        "bytes": "83c41c",
+        "mnemonic": "add",
+        "assembly": "add    $0x1c,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2417,
+        "bytes": "5b",
+        "mnemonic": "pop",
+        "assembly": "pop    %ebx",
+        "dwarf_variables": []
+      }
+    ]
+  },
+  "relevant_types": [],
+  "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 399,
+      "address": 4250200,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 401,
+      "address": 4250212,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 434,
+      "address": 4250222,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 403,
+      "address": 4250232,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 406,
+      "address": 4250245,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 414,
+      "address": 4250254,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 415,
+      "address": 4250276,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 399,
+      "address": 4250280,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": "sLogMutex",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4bdb44",
+      "dwarf_type": "pthread_mutex_t",
+      "size": 4,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "ffffffff",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": []
+    },
+    {
+      "symbol": "logfilename",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd340",
+      "dwarf_type": "char [1024]",
+      "size": 1024,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": []
+    },
+    {
+      "symbol": "itrcheck",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4dd168",
+      "dwarf_type": "int",
+      "size": 4,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "last_log",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "historical_address": "0x4f89e8",
+      "dwarf_type": "char [256]",
+      "size": 256,
+      "section": ".bss",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": null,
+      "initial_value_status": "BSS/unknown; no initializer claimed",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": []
+    },
+    {
+      "symbol": "allegro_error",
+      "cu": "C:\\Lib\\allegro4\\src\\allegro.c",
+      "historical_address": "0x4cba80",
+      "dwarf_type": "char [256]",
+      "size": 256,
+      "section": ".data",
+      "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
+      "initial_value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "initial_value_status": "first 64 bytes maximum, hexadecimal historical data",
+      "initializer_blockers": [],
+      "reference_count": 0,
+      "function_offsets": []
+    },
+    {
+      "symbol": ".data",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".data",
+      "size": null,
+      "historical_address": "0x4bdb44",
+      "candidate_addend": 6660,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 2,
+      "function_offsets": [
+        35,
+        146
+      ]
+    },
+    {
+      "symbol": ".bss",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".bss",
+      "size": null,
+      "historical_address": "0x4dd340",
+      "candidate_addend": 32,
+      "dwarf_type": null,
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 3,
+      "function_offsets": [
+        47,
+        65,
+        175
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": null,
+      "candidate_addend": 101,
+      "dwarf_type": null,
+      "placement_confidence": "section base not independently established",
+      "initial_value": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        58
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_fopen",
+      "function_offset": 70,
+      "target_va": 4959528,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        70
+      ]
+    },
+    {
+      "symbol": "_vfprintf",
+      "function_offset": 95,
+      "target_va": 4959664,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        95
+      ]
+    },
+    {
+      "symbol": "_vsprintf",
+      "function_offset": 115,
+      "target_va": 4959672,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        115
+      ]
+    },
+    {
+      "symbol": "_fputc",
+      "function_offset": 131,
+      "target_va": 4959680,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        131
+      ]
+    },
+    {
+      "symbol": "_fclose",
+      "function_offset": 139,
+      "target_va": 4959536,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        139
+      ]
+    },
+    {
+      "symbol": "_get_logfile_path",
+      "function_offset": 180,
+      "target_va": 4209140,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        180
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4250239,
+      "bytes": "ff155c4a5100",
+      "mnemonic": "call",
+      "assembly": "call   *0x514a5c"
+    },
+    {
+      "address": 4250269,
+      "bytes": "e886d20a00",
+      "mnemonic": "call",
+      "assembly": "call   4bad28 <_fopen>"
+    },
+    {
+      "address": 4250294,
+      "bytes": "e8f5d20a00",
+      "mnemonic": "call",
+      "assembly": "call   4badb0 <_vfprintf>"
+    },
+    {
+      "address": 4250314,
+      "bytes": "e8e9d20a00",
+      "mnemonic": "call",
+      "assembly": "call   4badb8 <_vsprintf>"
+    },
+    {
+      "address": 4250330,
+      "bytes": "e8e1d20a00",
+      "mnemonic": "call",
+      "assembly": "call   4badc0 <_fputc>"
+    },
+    {
+      "address": 4250338,
+      "bytes": "e849d20a00",
+      "mnemonic": "call",
+      "assembly": "call   4bad30 <_fclose>"
+    },
+    {
+      "address": 4250350,
+      "bytes": "ff15604a5100",
+      "mnemonic": "call",
+      "assembly": "call   *0x514a60"
+    },
+    {
+      "address": 4250379,
+      "bytes": "e8e45effff",
+      "mnemonic": "call",
+      "assembly": "call   4039f4 <_get_logfile_path>"
+    }
+  ],
+  "indirect_control_flow": 2,
+  "relocation_mismatches": [
+    {
+      "section": 1,
+      "offset": 2450,
+      "symbol_index": 107,
+      "symbol": ".rdata",
+      "type": 6,
+      "function_offset": 58,
+      "addend": 101,
+      "target_va": null,
+      "resolution": "section base not independently established",
+      "resolved_value": null,
+      "original_value": 5066515,
+      "equal": false
+    },
+    {
+      "section": 1,
+      "offset": 2502,
+      "symbol_index": 222,
+      "symbol": "_allegro_error",
+      "type": 6,
+      "function_offset": 110,
+      "addend": 0,
+      "target_va": 5028480,
+      "resolution": "named symbol",
+      "resolved_value": 5028480,
+      "original_value": 5212648,
+      "equal": false
+    }
+  ],
+  "direct_transfer_mismatches": [],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 1,
+  "neighbor_layout": [
+    {
+      "function": "force_create_profile",
+      "status": "DIFFER",
+      "historical_offset": 27380,
+      "candidate_offset": 27600,
+      "size_delta": -80
+    },
+    {
+      "function": "testWindowResolution",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 29112,
+      "candidate_offset": 19492,
+      "size_delta": 0
+    },
+    {
+      "function": "new_game",
+      "status": "DIFFER",
+      "historical_offset": 29500,
+      "candidate_offset": 18204,
+      "size_delta": -12
+    },
+    {
+      "function": "end_game",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 30640,
+      "candidate_offset": 4604,
+      "size_delta": 0
+    },
+    {
+      "function": "save_config",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 30672,
+      "candidate_offset": 3604,
+      "size_delta": 0
+    },
+    {
+      "function": "uninit_game",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 31016,
+      "candidate_offset": 3956,
+      "size_delta": 0
+    },
+    {
+      "function": "open_web_browser",
+      "status": "DIFFER",
+      "historical_offset": 31664,
+      "candidate_offset": 19980,
+      "size_delta": 0
+    },
+    {
+      "function": "check_beta_tester",
+      "status": "DIFFER",
+      "historical_offset": 31776,
+      "candidate_offset": 3248,
+      "size_delta": -4
+    },
+    {
+      "function": "check_characters",
+      "status": "DIFFER",
+      "historical_offset": 32032,
+      "candidate_offset": 2900,
+      "size_delta": 0
+    },
+    {
+      "function": "init_game",
+      "status": "DIFFER",
+      "historical_offset": 32380,
+      "candidate_offset": 20632,
+      "size_delta": -142
+    },
+    {
+      "function": "load_character",
+      "status": "DIFFER",
+      "historical_offset": 38168,
+      "candidate_offset": 2584,
+      "size_delta": -15
+    },
+    {
+      "function": "check_dir",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 38500,
+      "candidate_offset": 3500,
+      "size_delta": 0
+    },
+    {
+      "function": "take_screenshot",
+      "status": "DIFFER",
+      "historical_offset": 38604,
+      "candidate_offset": 20092,
+      "size_delta": 0
+    },
+    {
+      "function": "do_replay_menu",
+      "status": "DIFFER",
+      "historical_offset": 42552,
+      "candidate_offset": 29060,
+      "size_delta": -515
+    },
+    {
+      "function": "play",
+      "status": "DIFFER",
+      "historical_offset": 45216,
+      "candidate_offset": 17580,
+      "size_delta": -16796
+    },
+    {
+      "function": "load_new_ad_image",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 62796,
+      "candidate_offset": 19880,
+      "size_delta": 0
+    },
+    {
+      "function": "_mangled_main",
+      "status": "DIFFER",
+      "historical_offset": 62896,
+      "candidate_offset": 34132,
+      "size_delta": -282
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "pointer-live-range",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Equivalent pointer/index uses a different register",
+      "known_source_cause": "Pointer and loop index may be folded when their relationship is provable",
+      "known_fix_pattern": "Match evidenced locals and lifetimes; do not add arbitrary volatile",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "generate_profile_checksum"
+      ],
+      "evidence": "docs/profile-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "assignment-register",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Argument setup differs at equal size",
+      "known_source_cause": "Source expression shape affects result register",
+      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "draw_scroller"
+      ],
+      "evidence": "docs/scroller-experiment.md",
+      "confidence": "HYPOTHESIS"
+    },
+    {
+      "id": "declaration-scope",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Allocation or stack spill differs",
+      "known_source_cause": "Declaration scope and local live ranges differ",
+      "known_fix_pattern": "Use DWARF lexical locals and scope before exploring flags",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "add_floor",
+        "profile_data_page_advanced"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "lea-expression",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "LEA versus shift/add differs",
+      "known_source_cause": "Algebraically equivalent edge calculation has different shape",
+      "known_fix_pattern": "Use the recovered right-edge expression as a scoped example",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+      },
+      "example_functions": [
+        "getFloorData"
+      ],
+      "evidence": "docs/map-experiment.md",
+      "confidence": "OBSERVED"
+    },
+    {
+      "id": "peeled-loop-load-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "An equal-size loop differs only in adjacent byte/dword load ordering.",
+      "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
+      "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
+      },
+      "example_functions": [
+        "calc_replay_checksum_131"
+      ],
+      "confidence": "OBSERVED_FAILED_PATTERNS",
+      "evidence": "docs/attempts/replay-load-order-confirmation.json",
+      "failed_experiments": "docs/attempts/game-replay/calc_replay_checksum_131.jsonl",
+      "observed_offsets": {
+        "baseline": [
+          144,
+          145,
+          147,
+          148,
+          149,
+          150
+        ],
+        "operand_swap": [
+          134,
+          135,
+          136,
+          137,
+          138
+        ]
+      }
+    },
+    {
+      "id": "declaration-uid-independent-clear-order",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Adding a complete prototype can renumber GCC static symbols and swap adjacent independent register clears in an unrelated unresolved function.",
+      "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
+      "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
+      },
+      "example_functions": [
+        "create_post",
+        "line_alert"
+      ],
+      "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
+      "evidence": "docs/attempts/interfaces/create_post.jsonl"
+    }
+  ],
+  "difficulty": "MEDIUM",
+  "priority": 85,
+  "compiler_context": null,
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-main.json",
+  "verification_command": "python tools/check_function.py game-main log2file",
+  "begin_command": "python tools/grinder_task.py begin game-main log2file",
+  "promotion_command": "python tools/promote_function.py game-main log2file",
+  "storage_declarations": [
+    {
+      "name": "itrcheck",
+      "state": "COMMON_DECLARATION_AGREES",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "int",
+      "candidate_type": "int",
+      "candidate_card": "docs/current/storage/game-main/136353.json"
+    },
+    {
+      "name": "last_log",
+      "state": "STORAGE_TYPE_DIFFERS",
+      "original_scope": [
+        "GLOBAL"
+      ],
+      "candidate_scope": [
+        "GLOBAL"
+      ],
+      "original_type": "char [256]",
+      "candidate_type": "char [1024]",
+      "candidate_card": "docs/current/storage/game-main/138117.json"
+    }
+  ],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [
+    {
+      "function": "log2file",
+      "historical": [
+        {
+          "cu": "src/main.c",
+          "return_type": "void",
+          "parameter_types": [
+            "const char*"
+          ],
+          "variadic": true,
+          "calling_convention": null,
+          "die": 127883
+        }
+      ],
+      "type_layout_issues": [],
+      "candidate_signatures": [
+        "('int', ['/*???*/'])",
+        "('void', ['char*', '...'])",
+        "('void', ['const char*', '...'])"
+      ],
+      "candidate_card": "docs/current/interfaces/log2file.json"
+    }
+  ],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/main/log2file.json",
+  "evidence_counts": {
+    "relocation_mismatches": 2,
+    "direct_transfer_mismatches": 0,
+    "original_calls": 8,
+    "calls": 6,
+    "referenced_globals": 8
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

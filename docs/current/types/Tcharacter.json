@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Tcharacter",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "changes": [
+    {
+      "file": "src/main.c",
+      "start": 6806,
+      "end": 6961,
+      "before": "typedef struct Tcharacter {\n    char filename[1024];\n    BITMAP *bmp;\n    int ok;\n    char name[128];\n    int uses_datafile;\n    PALETTE pal;\n} Tcharacter;",
+      "after": "#include \"recovered/Tcharacter.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tcharacter.h",
+  "header_identity": {
+    "size": 1047,
+    "sha256": "0e406185d4b4dccda968a1775c93643218a3b9f4137d0a8b2b512b7efad52bc8"
+  },
+  "source_identities": {
+    "src/main.c": {
+      "size": 91699,
+      "sha256": "4119d95832c56ea7acc91b33cb21c25e7222bfde16651069539c07cf9c80e254"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    char filename[1024];\n    BITMAP *bmp;\n    int ok;\n    char name[128];\n    int uses_datafile;\n    PALETTE pal;\n} Tcharacter;",
+  "affected_targets": [
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 242,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Tcharacter",
+  "apply_command": "python tools/interface_task.py apply Tcharacter",
+  "verification_command": "python tools/interface_task.py check Tcharacter",
+  "promotion_command": "python tools/interface_task.py promote Tcharacter",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "SplitURL",
+  "source": "src/httpget.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
+  "historical": [
+    {
+      "cu": "src/httpget.c",
+      "return_type": "int",
+      "parameter_types": [
+        "const char*",
+        "char**",
+        "char**",
+        "int*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 79557
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [
+    {
+      "start": 650,
+      "end": 703,
+      "before": "char *pURL, char **ppHost, char **ppPath, int *piPort",
+      "after": "const char *pURL, char **ppHost, char **ppPath, int *piPort",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/httpget.c",
+      "line": 25
+    },
+    {
+      "start": 1439,
+      "end": 1492,
+      "before": "char *pURL, char **ppHost, char **ppPath, int *piPort",
+      "after": "const char *pURL, char **ppHost, char **ppPath, int *piPort",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/httpget.c",
+      "line": 50
+    }
+  ],
+  "verification_command": "python tools/interface_task.py check SplitURL",
+  "begin_command": "python tools/interface_task.py begin SplitURL",
+  "apply_command": "python tools/interface_task.py apply SplitURL",
+  "promotion_command": "python tools/interface_task.py promote SplitURL",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "sources": [
+    "src/httpget.c"
+  ],
+  "source_identities": {
+    "src/httpget.c": {
+      "size": 8342,
+      "sha256": "d2e4723e10b07561d11ca9b00783c08ebaef75cc4915fa2e66128e1461b7251a"
+    }
+  },
+  "affected_targets": [
+    "game-httpget"
+  ],
+  "priority": 257,
+  "expected_prototype": "extern int SplitURL(const char*, char**, char**, int*);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+}

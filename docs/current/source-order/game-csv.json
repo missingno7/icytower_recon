@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "order_csv",
+  "source": "src/csv.c",
+  "sources": [
+    "src/csv.c"
+  ],
+  "target": "game-csv",
+  "affected_targets": [
+    "game-csv"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
+  "source_identities": {
+    "src/csv.c": {
+      "size": 2555,
+      "sha256": "38c29791c0a0892e26b5e475c33b7bd773dfd3b9dd96e7f4e7cd5cac771a7ba9"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "csv_open",
+      "historical_line": 8
+    },
+    {
+      "function": "csv_begin",
+      "historical_line": 32
+    },
+    {
+      "function": "csv_destroy",
+      "historical_line": 46
+    },
+    {
+      "function": "csv_add_field",
+      "historical_line": 53
+    },
+    {
+      "function": "csv_next",
+      "historical_line": 62
+    },
+    {
+      "function": "csv_rewind",
+      "historical_line": 100
+    }
+  ],
+  "begin_command": "python tools/interface_task.py begin order_csv",
+  "apply_command": "python tools/interface_task.py apply order_csv",
+  "verification_command": "python tools/interface_task.py check order_csv",
+  "promotion_command": "python tools/interface_task.py promote order_csv",
+  "current_order": [
+    "csv_open",
+    "csv_begin",
+    "csv_destroy",
+    "csv_add_field",
+    "csv_next",
+    "csv_rewind"
+  ],
+  "reason": "Explicit function definitions already follow original DWARF lines"
+}

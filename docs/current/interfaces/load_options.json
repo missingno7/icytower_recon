@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "load_options",
+  "source": "src/options.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/options.c",
+      "return_type": "void",
+      "parameter_types": [
+        "Toptions*",
+        "PACKFILE*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 169047
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check load_options",
+  "begin_command": "python tools/interface_task.py begin load_options",
+  "apply_command": "python tools/interface_task.py apply load_options",
+  "promotion_command": "python tools/interface_task.py promote load_options",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Requires type/return/body interpretation: void* -> PACKFILE*",
+  "priority": -20
+}

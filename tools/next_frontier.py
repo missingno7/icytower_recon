@@ -1,38 +1,25 @@
-"""Rank unresolved functions using ledger facts and optional staged evidence."""
+"""Print the next bounded CHEAP task; the complete queue is an explicit request."""
 import argparse
 import json
-
 from common import ROOT, read_json, write_json
-from recovery_state import frontier_rows
-
-PRIORITY = {'MISSING': 0, 'DIFFER': 2, 'CODEGEN_SIMILAR': 4}
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--evidence', help='Optional staged candidate-evidence JSON')
-    ap.add_argument('--output')
-    a = ap.parse_args()
-    evidence = read_json(a.evidence) if a.evidence else {'functions': []}
-    boosted = {(x.get('source'), x.get('function')) for x in evidence.get('functions', [])
-               if x.get('confidence') in ('strong', 'proven')}
-    rows = frontier_rows()
-    for row in rows:
-        rank = PRIORITY[row['status']]
-        if (row['source'], row['function']) in boosted:
-            rank -= 2
-        if row['classification'] != 'GAME':
-            rank += 1
-        row['priority'] = 'P%d' % max(0, min(5, rank))
-        row['reason'] = ('strong external candidate evidence' if (row['source'], row['function']) in boosted
-                         else row['dimensions']['difference'].lower())
-    rows.sort(key=lambda x: (int(x['priority'][1:]), -x['size'], x['source'], x['function']))
-    result = {'authority': 'src/recovery.json', 'rows': rows}
-    if a.output:
-        write_json(a.output, result)
-    else:
-        print(json.dumps(result, indent=2))
+    ap=argparse.ArgumentParser(); ap.add_argument('--output'); ap.add_argument('--all',action='store_true')
+    ap.add_argument('--limit',type=int,help='Maximum tasks to print (default: one CHEAP task, or every task with --all).')
+    a=ap.parse_args()
+    if a.limit is not None and a.limit<1: raise ValueError('Limit must be positive')
+    if (ROOT/'build/grinder/promotion.lock').exists(): raise ValueError('Promotion in progress; retry')
+    from refresh_recovery import validate_ledger
+    validate_ledger(read_json(ROOT/'src/recovery.json'))
+    queue=read_json(ROOT/'docs/current/grinder-queue.json')
+    if not a.all: queue['tasks']=[r for r in queue['tasks'] if r['difficulty']=='CHEAP']
+    queue['eligible_task_count']=len(queue['tasks'])
+    limit=a.limit if a.limit is not None else None if a.all else 1
+    if limit is not None: queue['tasks']=queue['tasks'][:limit]
+    queue['next_action']='Open candidate_card and use its listed commands.' if queue['tasks'] else 'No CHEAP task remains; hand the supervisor queue back for one recurring blocker intervention.'
+    if a.output: write_json(a.output,queue)
+    else: print(json.dumps(queue,indent=2))
 
 
-if __name__ == '__main__':
-    main()
+if __name__=='__main__': main()

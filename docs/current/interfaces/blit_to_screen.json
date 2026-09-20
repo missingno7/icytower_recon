@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "blit_to_screen",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "void",
+      "parameter_types": [
+        "BITMAP*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 124632
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check blit_to_screen",
+  "begin_command": "python tools/interface_task.py begin blit_to_screen",
+  "apply_command": "python tools/interface_task.py apply blit_to_screen",
+  "promotion_command": "python tools/interface_task.py promote blit_to_screen",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
+  "priority": -20
+}

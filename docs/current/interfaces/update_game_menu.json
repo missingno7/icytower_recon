@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "update_game_menu",
+  "source": "src/menu.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/menu.c",
+      "return_type": "int",
+      "parameter_types": [
+        "BITMAP*",
+        "Tmenu*",
+        "Tmenu_params*",
+        "Tcontrol*",
+        "int",
+        "int",
+        "void**"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 159395
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 3",
+      "historical_type": "Tmenu_params",
+      "candidate_type": "Tmenu_params",
+      "header": "include/recovered/Tmenu_params.h",
+      "status": "MISMATCH",
+      "historical_size": 60,
+      "candidate_size": 60,
+      "member_difference_count": 3,
+      "first_member_differences": [
+        {
+          "member": "bullet",
+          "historical": {
+            "offset": 44,
+            "size": 4,
+            "type": "BITMAP *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 44,
+            "size": 4,
+            "type": "void *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "data",
+          "historical": {
+            "offset": 52,
+            "size": 4,
+            "type": "DATAFILE *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 52,
+            "size": 4,
+            "type": "void *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "font",
+          "historical": {
+            "offset": 0,
+            "size": 4,
+            "type": "FONT *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 0,
+            "size": 4,
+            "type": "void *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/menu.c",
+      "file": "src/menu.c",
+      "line": 405
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check update_game_menu",
+  "begin_command": "python tools/interface_task.py begin update_game_menu",
+  "apply_command": "python tools/interface_task.py apply update_game_menu",
+  "promotion_command": "python tools/interface_task.py promote update_game_menu",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

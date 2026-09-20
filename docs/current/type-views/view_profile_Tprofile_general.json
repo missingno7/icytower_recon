@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_profile_Tprofile_general",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "alias": "Tprofile_general",
+  "observations": [
+    {
+      "function": "profile_data_page_general",
+      "variable": "p",
+      "historical_type": "Tprofile",
+      "historical_die": 198371,
+      "candidate_die": 3621
+    }
+  ],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/profile.c",
+      "start": 14847,
+      "end": 15128,
+      "before": "typedef struct Tprofile_general {\n    unsigned char before_games_played[0x2c];\n    int games_played;\n    int custom_games_played;\n    int games_quit;\n    int seconds_spent_playing;\n    unsigned char before_creation_date[0x530 - 0x3c];\n    char creationDate[16];\n} Tprofile_general;",
+      "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_general;",
+      "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+    }
+  ],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_general",
+  "apply_command": "python tools/interface_task.py apply view_profile_Tprofile_general",
+  "verification_command": "python tools/interface_task.py check view_profile_Tprofile_general",
+  "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_general",
+  "canonical": "Tprofile",
+  "header": "include/recovered/Tprofile.h",
+  "header_identity": {
+    "size": 3950,
+    "sha256": "bbee5233a2c0834121794d864fa5efd8d9d1ef062d69f634049b7e70ead8a7cc"
+  },
+  "candidate_size": 1344,
+  "historical_size": 1360,
+  "member_correspondence": [
+    {
+      "candidate_member": "before_games_played",
+      "candidate_offset": 0,
+      "candidate_type": "unsigned char [44]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.header[0]",
+        "offset": 0,
+        "size": 1,
+        "type": "char"
+      }
+    },
+    {
+      "candidate_member": "games_played",
+      "candidate_offset": 44,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.games_played",
+        "offset": 44,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "custom_games_played",
+      "candidate_offset": 48,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.custom_games_played",
+        "offset": 48,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "games_quit",
+      "candidate_offset": 52,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.games_quit",
+        "offset": 52,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "seconds_spent_playing",
+      "candidate_offset": 56,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.seconds_spent_playing",
+        "offset": 56,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "before_creation_date",
+      "candidate_offset": 60,
+      "candidate_type": "unsigned char [1268]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.total_floors",
+        "offset": 60,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "creationDate",
+      "candidate_offset": 1328,
+      "candidate_type": "char [16]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.creationDate[0]",
+        "offset": 1328,
+        "size": 1,
+        "type": "char"
+      }
+    }
+  ],
+  "retained_members": [
+    {
+      "member": "games_played",
+      "offset": 44,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "custom_games_played",
+      "offset": 48,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "games_quit",
+      "offset": 52,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "seconds_spent_playing",
+      "offset": 56,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "creationDate",
+      "offset": 1328,
+      "size": 16,
+      "type": "char [16]"
+    }
+  ],
+  "removed_fillers": [
+    {
+      "member": "before_games_played",
+      "offset": 0,
+      "size": 44,
+      "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
+    },
+    {
+      "member": "before_creation_date",
+      "offset": 60,
+      "size": 1268,
+      "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
+    }
+  ],
+  "affected_targets": [
+    "game-profile"
+  ],
+  "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_general.json",
+  "observation_count": 1
+}

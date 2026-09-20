@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_hisc_Thisc_post",
+  "source": "src/hisc.c",
+  "sources": [
+    "src/hisc.c"
+  ],
+  "alias": "Thisc_post",
+  "observations": [
+    {
+      "function": "generate_checksum",
+      "variable": "entry",
+      "historical_type": "Thisc",
+      "historical_die": 69107,
+      "candidate_die": 9897
+    },
+    {
+      "function": "save_hisc_table",
+      "variable": "entry",
+      "historical_type": "Thisc",
+      "historical_die": 70265,
+      "candidate_die": 11011
+    },
+    {
+      "function": "load_hisc_table",
+      "variable": "entry",
+      "historical_type": "Thisc",
+      "historical_die": 70458,
+      "candidate_die": 11198
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/hisc.c": {
+      "size": 7321,
+      "sha256": "01c8556f09cfb83219cdcc21ac07c25d3122873267222c3b51710c23f2c422c3"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_hisc_Thisc_post",
+  "apply_command": "python tools/interface_task.py apply view_hisc_Thisc_post",
+  "verification_command": "python tools/interface_task.py check view_hisc_Thisc_post",
+  "promotion_command": "python tools/interface_task.py promote view_hisc_Thisc_post",
+  "canonical": "Thisc",
+  "header": "include/recovered/Thisc.h",
+  "header_identity": {
+    "size": 550,
+    "sha256": "03f19834f70fb0d3b94977ece70415863740a94e536472616458c7729e8d1a20"
+  },
+  "expected_layout": {
+    "kind": "structure_type",
+    "size": 36,
+    "type": "struct {\n    char name[32];\n    unsigned int value;\n} ",
+    "members": [
+      {
+        "name": "name",
+        "offset": 0,
+        "bitfield": false,
+        "layout": {
+          "kind": "array_type",
+          "size": 32,
+          "type": "char [32]",
+          "dimensions": [
+            32
+          ],
+          "element": {
+            "kind": "base_type",
+            "size": 1,
+            "type": "char",
+            "encoding": "6\t(signed char)"
+          }
+        }
+      },
+      {
+        "name": "value",
+        "offset": 32,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "unsigned int",
+          "encoding": "7\t(unsigned)"
+        }
+      }
+    ]
+  },
+  "candidate_size": 36,
+  "historical_size": 36,
+  "member_correspondence": [
+    {
+      "candidate_member": "name",
+      "candidate_offset": 0,
+      "candidate_type": "char [32]",
+      "historical_field_at_offset": {
+        "expression": "Thisc.name[0]",
+        "offset": 0,
+        "size": 1,
+        "kind": "base_type",
+        "type": "char",
+        "encoding": "6\t(signed char)",
+        "steps": [
+          {
+            "member": "name",
+            "index": 0
+          },
+          {
+            "index": 0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "value",
+      "candidate_offset": 32,
+      "candidate_type": "unsigned int",
+      "historical_field_at_offset": {
+        "expression": "Thisc.value",
+        "offset": 32,
+        "size": 4,
+        "kind": "base_type",
+        "type": "unsigned int",
+        "encoding": "7\t(unsigned)",
+        "steps": [
+          {
+            "member": "value",
+            "index": 1
+          }
+        ]
+      }
+    }
+  ],
+  "reason": "Non-pointer or size-dependent view use requires supervisor review"
+}

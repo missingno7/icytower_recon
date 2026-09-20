@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "task_kind": "CANONICAL_TYPE",
+  "function": "Tstar",
+  "source": "include/stars.h",
+  "sources": [
+    "include/stars.h"
+  ],
+  "changes": [
+    {
+      "file": "include/stars.h",
+      "start": 72,
+      "end": 136,
+      "before": "typedef struct {\n    double x;\n    double y;\n    int z;\n} Tstar;",
+      "after": "#include \"recovered/Tstar.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tstar.h",
+  "header_identity": {
+    "size": 598,
+    "sha256": "dc504070e2288dcfb6311a3f6896c41d81c6e248c2b1064742466bb4bf2f6bef"
+  },
+  "source_identities": {
+    "include/stars.h": {
+      "size": 578,
+      "sha256": "9c1f1d0c6b42694669313a685c90e4a8dd34e9aea983c4d52b81e1a684513783"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    double x;\n    double y;\n    int z;\n} Tstar;",
+  "affected_targets": [
+    "game-stars"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 242,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "body_edit_allowed": false,
+  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+  "begin_command": "python tools/interface_task.py begin Tstar",
+  "apply_command": "python tools/interface_task.py apply Tstar",
+  "verification_command": "python tools/interface_task.py check Tstar",
+  "promotion_command": "python tools/interface_task.py promote Tstar",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate."
+}

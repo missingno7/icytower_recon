@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "rebuild_profile_list",
+  "source": "src/main.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+  "status": "TYPE_EVIDENCE_INCOMPLETE",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/main.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Tavailable_profile**"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 126100
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tavailable_profile",
+      "candidate_type": "char",
+      "header": "include/recovered/Tavailable_profile.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/profile.c",
+      "file": "src/profile.c",
+      "line": 777
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check rebuild_profile_list",
+  "begin_command": "python tools/interface_task.py begin rebuild_profile_list",
+  "apply_command": "python tools/interface_task.py apply rebuild_profile_list",
+  "promotion_command": "python tools/interface_task.py promote rebuild_profile_list",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

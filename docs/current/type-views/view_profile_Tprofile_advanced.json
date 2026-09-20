@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_profile_Tprofile_advanced",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "alias": "Tprofile_advanced",
+  "observations": [
+    {
+      "function": "profile_data_page_advanced",
+      "variable": "p",
+      "historical_type": "Tprofile",
+      "historical_die": 198095,
+      "candidate_die": 3335
+    }
+  ],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/profile.c",
+      "start": 5574,
+      "end": 5761,
+      "before": "typedef struct Tprofile_advanced {\n    unsigned char before_ccc_num[0x60];\n    int cccNum[5];\n    int cccTotal[5];\n    int ccc[5];\n    int jc[5];\n    int rewards[10];\n} Tprofile_advanced;",
+      "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_advanced;",
+      "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+    }
+  ],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_advanced",
+  "apply_command": "python tools/interface_task.py apply view_profile_Tprofile_advanced",
+  "verification_command": "python tools/interface_task.py check view_profile_Tprofile_advanced",
+  "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_advanced",
+  "canonical": "Tprofile",
+  "header": "include/recovered/Tprofile.h",
+  "header_identity": {
+    "size": 3950,
+    "sha256": "bbee5233a2c0834121794d864fa5efd8d9d1ef062d69f634049b7e70ead8a7cc"
+  },
+  "candidate_size": 216,
+  "historical_size": 1360,
+  "member_correspondence": [
+    {
+      "candidate_member": "before_ccc_num",
+      "candidate_offset": 0,
+      "candidate_type": "unsigned char [96]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.header[0]",
+        "offset": 0,
+        "size": 1,
+        "type": "char"
+      }
+    },
+    {
+      "candidate_member": "cccNum",
+      "candidate_offset": 96,
+      "candidate_type": "int [5]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.cccNum[0]",
+        "offset": 96,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "cccTotal",
+      "candidate_offset": 116,
+      "candidate_type": "int [5]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.cccTotal[0]",
+        "offset": 116,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "ccc",
+      "candidate_offset": 136,
+      "candidate_type": "int [5]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.ccc[0]",
+        "offset": 136,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "jc",
+      "candidate_offset": 156,
+      "candidate_type": "int [5]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.jc[0]",
+        "offset": 156,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "rewards",
+      "candidate_offset": 176,
+      "candidate_type": "int [10]",
+      "historical_field_at_offset": {
+        "expression": "Tprofile.rewards[0]",
+        "offset": 176,
+        "size": 4,
+        "type": "int"
+      }
+    }
+  ],
+  "retained_members": [
+    {
+      "member": "cccNum",
+      "offset": 96,
+      "size": 20,
+      "type": "int [5]"
+    },
+    {
+      "member": "cccTotal",
+      "offset": 116,
+      "size": 20,
+      "type": "int [5]"
+    },
+    {
+      "member": "ccc",
+      "offset": 136,
+      "size": 20,
+      "type": "int [5]"
+    },
+    {
+      "member": "jc",
+      "offset": 156,
+      "size": 20,
+      "type": "int [5]"
+    },
+    {
+      "member": "rewards",
+      "offset": 176,
+      "size": 40,
+      "type": "int [10]"
+    }
+  ],
+  "removed_fillers": [
+    {
+      "member": "before_ccc_num",
+      "offset": 0,
+      "size": 96,
+      "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
+    }
+  ],
+  "affected_targets": [
+    "game-profile"
+  ],
+  "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_advanced.json",
+  "observation_count": 1
+}

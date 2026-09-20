@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "view_profile",
+  "source": "src/profile.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+  "status": "TYPE_EVIDENCE_INCOMPLETE",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/profile.c",
+      "return_type": "int",
+      "parameter_types": [
+        "Tprofile*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 198564
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "parameter 1",
+      "historical_type": "Tprofile",
+      "candidate_type": "void",
+      "header": "include/recovered/Tprofile.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/menu.c",
+      "file": "src/menu.c",
+      "line": 307
+    },
+    {
+      "position": "parameter 1",
+      "historical_type": "Tprofile",
+      "candidate_type": "void",
+      "header": "include/recovered/Tprofile.h",
+      "status": "UNAVAILABLE",
+      "reason": "Candidate named type layout is missing or ambiguous",
+      "cu": "src/profile.c",
+      "file": "src/profile.c",
+      "line": 659
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check view_profile",
+  "begin_command": "python tools/interface_task.py begin view_profile",
+  "apply_command": "python tools/interface_task.py apply view_profile",
+  "promotion_command": "python tools/interface_task.py promote view_profile",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

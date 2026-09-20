@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "task_kind": "LOCAL_DECLARATION",
+  "function": "decl_profile_profile_data_page_general_buf",
+  "target_function": "profile_data_page_general",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "target": "game-profile",
+  "variable": "buf",
+  "original_constant_value": null,
+  "original": {
+    "die": 198505,
+    "name": "buf",
+    "type_die": 198548,
+    "type": "char [80]",
+    "scope": 198319,
+    "base_type": "char",
+    "base_encoding": "6\t(signed char)",
+    "location": "3 byte block: 91 90 7f \t(DW_OP_fbreg: -112)",
+    "address": null
+  },
+  "candidate": {
+    "die": 3760,
+    "name": "buf",
+    "type_die": 3809,
+    "type": "char [100]",
+    "scope": 3569,
+    "base_type": "char",
+    "base_encoding": "6\t(signed char)",
+    "location": "3 byte block: 91 fc 7e \t(DW_OP_fbreg: -132)",
+    "address": null,
+    "role": "DW_TAG_variable",
+    "declaration_line": 520,
+    "declaration_file": "src/profile.c",
+    "byte_size": 100,
+    "constant_value": null,
+    "function_scope": true
+  },
+  "expected_declaration": "char buf[80]",
+  "status": "LOCAL_TYPE_DIFFERS",
+  "state": "LOCAL_DECLARATION_REPAIR",
+  "difference_class": "LOCAL_TYPE_DECLARATION",
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "body_edit_allowed": false,
+  "changes": [],
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "function_status": "DIFFER",
+  "first_difference": {
+    "offset": 8,
+    "original_va": 4298416,
+    "candidate_byte": 204,
+    "original_byte": 172
+  },
+  "function_card": "docs/current/functions/profile/profile_data_page_general.json",
+  "begin_command": "python tools/interface_task.py begin decl_profile_profile_data_page_general_buf",
+  "apply_command": "python tools/interface_task.py apply decl_profile_profile_data_page_general_buf",
+  "verification_command": "python tools/interface_task.py check decl_profile_profile_data_page_general_buf",
+  "promotion_command": "python tools/interface_task.py promote decl_profile_profile_data_page_general_buf",
+  "acceptance": "Complete DWARF declaration equality plus unchanged emitted contributions, or strict exact target-function proof with preserved non-code contributions. No partial machine-code match claim.",
+  "declaration_evidence": {
+    "line": 520,
+    "before": "char buf[100]",
+    "after": "char buf[80]"
+  },
+  "reason": "Storage width, pointer topology or array extent changes need supervisor source review"
+}

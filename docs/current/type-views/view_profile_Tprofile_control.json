@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_profile_Tprofile_control",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "alias": "Tprofile_control",
+  "observations": [
+    {
+      "function": "select_profile",
+      "variable": "ctrl",
+      "historical_type": "Tcontrol",
+      "historical_die": 200109,
+      "candidate_die": 5401
+    }
+  ],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/profile.c",
+      "start": 23535,
+      "end": 23717,
+      "before": "typedef struct Tprofile_control {\n    int use_joy;\n    int key_left, key_right, key_up, key_down;\n    int key_fire, key_enter, key_pause;\n    unsigned char flags;\n} Tprofile_control;",
+      "after": "#include \"recovered/Tcontrol.h\"\ntypedef Tcontrol Tprofile_control;",
+      "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+    }
+  ],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30534,
+      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_control",
+  "apply_command": "python tools/interface_task.py apply view_profile_Tprofile_control",
+  "verification_command": "python tools/interface_task.py check view_profile_Tprofile_control",
+  "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_control",
+  "canonical": "Tcontrol",
+  "header": "include/recovered/Tcontrol.h",
+  "header_identity": {
+    "size": 1318,
+    "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
+  },
+  "candidate_size": 36,
+  "historical_size": 36,
+  "member_correspondence": [
+    {
+      "candidate_member": "use_joy",
+      "candidate_offset": 0,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.use_joy",
+        "offset": 0,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_left",
+      "candidate_offset": 4,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_left",
+        "offset": 4,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_right",
+      "candidate_offset": 8,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_right",
+        "offset": 8,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_up",
+      "candidate_offset": 12,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_up",
+        "offset": 12,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_down",
+      "candidate_offset": 16,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_down",
+        "offset": 16,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_fire",
+      "candidate_offset": 20,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_fire",
+        "offset": 20,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_enter",
+      "candidate_offset": 24,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_enter",
+        "offset": 24,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "key_pause",
+      "candidate_offset": 28,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.key_pause",
+        "offset": 28,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "flags",
+      "candidate_offset": 32,
+      "candidate_type": "unsigned char",
+      "historical_field_at_offset": {
+        "expression": "Tcontrol.flags",
+        "offset": 32,
+        "size": 1,
+        "type": "unsigned char"
+      }
+    }
+  ],
+  "retained_members": [
+    {
+      "member": "use_joy",
+      "offset": 0,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_left",
+      "offset": 4,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_right",
+      "offset": 8,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_up",
+      "offset": 12,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_down",
+      "offset": 16,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_fire",
+      "offset": 20,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_enter",
+      "offset": 24,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "key_pause",
+      "offset": 28,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "flags",
+      "offset": 32,
+      "size": 1,
+      "type": "unsigned char"
+    }
+  ],
+  "removed_fillers": [],
+  "affected_targets": [
+    "game-profile"
+  ],
+  "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_control.json",
+  "observation_count": 1
+}

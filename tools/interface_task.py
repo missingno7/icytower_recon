@@ -1,0 +1,254 @@
+"""Bounded DWARF interface repairs: preview, apply, focused check and verified acceptance."""
+import argparse
+import json
+import sys
+from common import ROOT, read_json, write_json, identity, run
+from build import verify_inputs
+from recovery_pipeline import CURRENT, fresh_verify, validate_report, check_fixture
+from refresh_recovery import validate_ledger
+from grinder_task import SESSION, snapshot_files
+from interface_tasks import plan_interface, patch_text, signature, contribution_fingerprint
+from interfaces import declarations
+from source_scope import body_hash
+from promote_function import promotion_lock, no_regressions, commit_reports
+
+
+def active(name):
+    session=read_json(SESSION)
+    if session.get('kind')!='INTERFACE' or session['function']!=name: raise ValueError('Different task is active')
+    return session
+
+
+def validate_interface_scope(session, applied=None):
+    current=snapshot_files(); before=session['files']; sources=session['sources']
+    for path in set(current)|set(before):
+        if path not in sources and current.get(path)!=before.get(path): raise ValueError('Out-of-scope edit: '+path)
+    changed=False
+    for path,old in sources.items():
+        new=patch_text(old,[e for e in session['plan']['changes'] if e['file']==path])
+        text=(ROOT/path).read_bytes().decode('cp1252')
+        if text not in (old,new): raise ValueError('Edit exceeds the planned declaration spans: '+path)
+        if applied is True and text!=new: raise ValueError('Not all planned interface edits have been applied')
+        if applied is False and text!=old: raise ValueError('Task has already changed source')
+        changed|=text!=old
+    if identity(ROOT/'src/recovery.json')!=session['ledger']: raise ValueError('Ledger changed during task')
+    return changed
+
+
+def history(session,outcome,details):
+    path=ROOT/'docs/attempts/interfaces'/(session['function']+'.jsonl')
+    path.parent.mkdir(parents=True,exist_ok=True)
+    row={'outcome':outcome,'function':session['function'],'plan':session['plan'],'details':details}
+    with path.open('a',encoding='utf-8') as stream: stream.write(json.dumps(row,separators=(',',':'))+'\n')
+
+
+def begin(name):
+    if SESSION.exists(): raise ValueError('Finish the active task first')
+    ledger=read_json(ROOT/'src/recovery.json'); validate_ledger(ledger)
+    conflicts=read_json(CURRENT/'interface-conflicts.json')['conflicts']
+    row=next((r for r in conflicts if r['function']==name),None)
+    if row is None:
+        from type_tasks import plans
+        plan=next((p for p in plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from source_order import plans as order_plans
+            plan=next((p for p in order_plans(ledger) if p['function']==name and p['state']!='NOT_QUEUED'),None)
+        if plan is None:
+            from array_tasks import plans as array_plans
+            plan=next((p for p in array_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from data_tasks import plans as data_plans
+            plan=next((p for p in data_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from type_views import plans as view_plans
+            plan=next((p for p in view_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from local_declarations import plans as local_plans
+            plan=next((p for p in local_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from static_scope_tasks import plans as scope_plans
+            plan=next((p for p in scope_plans(ledger) if p['function']==name),None)
+        if plan is None: raise ValueError('No current mechanical task for '+name)
+    else: plan=plan_interface(row,ledger)
+    if plan['difficulty']!='CHEAP': raise ValueError('Supervisor required: '+plan['reason'])
+    session={'kind':'INTERFACE','function':name,'plan':plan,'files':snapshot_files(),'ledger':identity(ROOT/'src/recovery.json'),
+             'sources':{p:(ROOT/p).read_bytes().decode('cp1252') for p in plan['sources']},
+             'baseline_link':read_json(CURRENT/'link-status.json') if (CURRENT/'link-status.json').exists() else None}
+    write_json(SESSION,session)
+    history(session,'BEGIN',{'affected_targets':plan['affected_targets']})
+    print(plan['task_kind'],name,';',len(plan['changes']),'bounded source edits;',', '.join(plan['affected_targets']))
+    print(plan['apply_command'])
+
+
+def apply(name):
+    session=active(name); validate_interface_scope(session,applied=False)
+    for path,text in session['sources'].items():
+        edits=[e for e in session['plan']['changes'] if e['file']==path]
+        (ROOT/path).write_bytes(patch_text(text,edits).encode('cp1252'))
+    validate_interface_scope(session,applied=True)
+    print('Applied only the planned source spans; all other source is untouched.')
+
+
+def verify_interface(session,acceptance=False):
+    validate_interface_scope(session,applied=True)
+    ledger=read_json(ROOT/'src/recovery.json'); reports={}; scheduling=[]; order_effects=[]; local_effect=None
+    verify_inputs('tdm-2'); check_fixture()
+    for target in session['plan']['affected_targets']:
+        report=fresh_verify(target,dest=ROOT/('build/acceptance/interfaces' if acceptance else 'build/fast/interfaces')/session['function']/target,locked=True)
+        source=report['build']['config']['source']; old=read_json(ROOT/ledger[source]['verified_report'])
+        no_regressions(old,report)
+        if session['plan']['task_kind']=='SOURCE_ORDER':
+            original=session['sources'][source]; current=(ROOT/source).read_bytes().decode('cp1252')
+            for name in session['plan']['current_order']:
+                if body_hash(original,name)!=body_hash(current,name): raise ValueError('Source-order task modified a function body: '+name)
+            before_implicit={d['name'] for d in declarations(old['interfaces_aux']) if d['kind']=='IC'}
+            after_implicit={d['name'] for d in declarations(report['interfaces_aux']) if d['kind']=='IC'}
+            if after_implicit-before_implicit: raise ValueError('Source order needs explicit interface prerequisites: '+', '.join(sorted(after_implicit-before_implicit)))
+            for section in old['initialized_data_comparison']:
+                if section['content_equal'] and not any(s['section']==section['section'] and s['content_equal'] for s in report['initialized_data_comparison']):
+                    raise ValueError('Previously exact initialized contribution regressed: '+section['section'])
+            old_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in old.get('object_ownership',{}).get('accepted',[])}
+            new_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in report.get('object_ownership',{}).get('accepted',[])}
+            if old_owners-new_owners: raise ValueError('Previously proven data owner regressed')
+            if contribution_fingerprint(old)['common']!=contribution_fingerprint(report)['common']: raise ValueError('Common allocation changed')
+            order_effects.append({'target':target,'exact_functions_before':old['function_matches'],'exact_functions_after':report['function_matches'],
+                                  'text_contribution_equal':report['whole_text_contribution_equal'],'bodies_unchanged':True})
+        elif session['plan']['task_kind']=='DATA_POINTER':
+            from data_tasks import fingerprint,verify_owner
+            if fingerprint(old,session['plan'])!=fingerprint(report,session['plan']):
+                raise ValueError('Data repair changed code/layout/data/relocations outside its authorized pointer field')
+            verify_owner(report,session['plan'])
+            old_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in old.get('object_ownership',{}).get('accepted',[])}
+            new_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in report.get('object_ownership',{}).get('accepted',[])}
+            if old_owners-new_owners: raise ValueError('Data repair regressed a previously proven owner')
+        elif session['plan']['task_kind']=='STATIC_SCOPE':
+            from static_scope_tasks import verify_scope
+            verify_scope(old,report,session['plan'])
+        elif session['plan']['task_kind']=='LOCAL_DECLARATION':
+            from local_declarations import verify_local,emission_effect
+            verify_local(report,session['plan']); local_effect=emission_effect(old,report,session['plan'])
+        elif contribution_fingerprint(old)!=contribution_fingerprint(report):
+            raise ValueError('Interface repair changed emitted code/data/BSS/symbol/relocation contribution: '+target)
+        old_text=next(s['sha256'] for s in old['object_sections'] if s['name']=='.text')
+        new_text=next(s['sha256'] for s in report['object_sections'] if s['name']=='.text')
+        if old_text!=new_text and session['plan']['task_kind'] not in ('SOURCE_ORDER','LOCAL_DECLARATION'):
+            scheduling.append({'target':target,'before':old['candidate_zero_clear_projection'],'after':report['candidate_zero_clear_projection']})
+        reports[source]=report
+    observed=[]; state='INTERFACE_MATCH'
+    if session['plan']['task_kind']=='SOURCE_ORDER':
+        expected=session['plan']['definition_order']; state='HISTORICAL_SOURCE_ORDER'
+    elif session['plan']['task_kind']=='DATA_POINTER':
+        expected=session['plan']['changes'][0]['after']; state='DATA_POINTER_MATCH'
+    elif session['plan']['task_kind']=='ARRAY_EXTENT':
+        plan=session['plan']; owner=plan['historical_owner']; expected=plan['expected_count']; state='ARRAY_EXTENT_MATCH'
+        matching=[o for o in reports[plan['source']].get('object_ownership',{}).get('accepted',[])
+                  if o['name']==plan['object'] and tuple(o['scope'])==tuple(owner['scope']) and o['original_die']==owner['original_die']]
+        if len(matching)!=1: raise ValueError('Array still lacks exact original DWARF type and complete independently resolved initializer')
+        result_owner=matching[0]
+        if result_owner['dwarf_type']!=owner['dwarf_type']: raise ValueError('Historical array type changed')
+    elif session['plan']['task_kind']=='LOCAL_DECLARATION':
+        expected=session['plan']['original']['type']; state='LOCAL_DECLARATION_MATCH'
+    elif session['plan']['task_kind']=='STATIC_SCOPE':
+        expected=session['plan']['original']['scope']; state='STATIC_SCOPE_MATCH'
+    elif session['plan']['task_kind']=='TYPE_VIEW':
+        from type_views import verify_view
+        verify_view(reports[session['plan']['source']],session['plan'])
+        expected=session['plan']['canonical']; state='CANONICAL_VIEW_MATCH'
+    elif session['plan']['task_kind']=='CANONICAL_TYPE':
+        from generate_types import outputs
+        header=ROOT/session['plan']['header']
+        if header.read_text(encoding='utf-8')!=outputs()[header]: raise ValueError('Canonical header differs from DWARF generation')
+        expected=session['plan']['expected_declaration']; state='CANONICAL_TYPE_MATCH'
+    else:
+        expected=signature(session['plan']['historical'][0])
+        for source,entry in ledger.items():
+            report=reports.get(source) or read_json(ROOT/entry['verified_report'])
+            for decl in declarations(report['interfaces_aux']):
+                if decl['name']==session['function'] and decl['file'].startswith(('src/','include/')):
+                    observed.append(decl)
+        if not observed or any(signature(d)!=expected for d in observed):
+            raise ValueError('Compiler declarations still disagree with the DWARF interface')
+    validate_interface_scope(session,applied=True)
+    for report in reports.values(): validate_report(report)
+    result={'state':state,'function':session['function'],'expected':expected,
+            'declarations':observed,'affected_targets':session['plan']['affected_targets'],
+            'allocated_layout_and_data_unchanged':session['plan']['task_kind'] not in ('SOURCE_ORDER','DATA_POINTER') and local_effect!='EXACT_FUNCTION',
+            'local_declaration_effect':local_effect,
+            'local_function_proof':({k:next(r for r in reports[session['plan']['source']]['functions'] if r['name']==session['plan']['target_function'])[k] for k in ('name','status','workflow','original_size','candidate_size','first_difference')} if session['plan']['task_kind']=='LOCAL_DECLARATION' else None),
+            'authorized_data_field':({k:session['plan'][k] for k in ('object','field_offset','field_size','section_index','section_offset')} if session['plan']['task_kind']=='DATA_POINTER' else None),
+            'source_order_effects':order_effects,'independent_register_clear_reordering':scheduling,
+            'function_match_claim':'Function statuses come only from the fresh exact oracle; mechanical task completion is a separate claim.'}
+    write_json(ROOT/'build/fast/interfaces'/session['function']/'result.json',result)
+    return ledger,reports,result
+
+
+def check(name):
+    session=active(name)
+    try:
+        _,_,result=verify_interface(session)
+        history(session,'FAST_'+result['state'],result)
+        print(result['state'],name,'; planned source scope and existing exact proofs preserved')
+        print(session['plan']['promotion_command'])
+    except Exception as exc:
+        history(session,'FAST_FAILED',{'error':str(exc)})
+        raise
+
+
+def promote(name):
+    with promotion_lock():
+        session=active(name)
+        try:
+            ledger,reports,result=verify_interface(session,acceptance=True)
+            run([sys.executable,'tools/test_grinder.py'])
+            run([sys.executable,'tools/test_scheduling_diagnostics.py'])
+            run([sys.executable,'tools/test_control_transfers.py'])
+            run([sys.executable,'tools/test_data_owners.py'])
+            run([sys.executable,'tools/test_interface_tasks.py'])
+            run([sys.executable,'tools/test_dwarf_locations.py'])
+            run([sys.executable,'tools/test_compiler_context.py'])
+            run([sys.executable,'tools/test_branch_diagnostics.py'])
+            run([sys.executable,'tools/test_data_tasks.py'])
+            run([sys.executable,'tools/test_type_views.py'])
+            run([sys.executable,'tools/test_type_headers.py'])
+            run([sys.executable,'tools/test_local_declarations.py'])
+            run([sys.executable,'tools/test_stack_diagnostics.py'])
+            run([sys.executable,'tools/test_storage_diagnostics.py'])
+            run([sys.executable,'tools/test_static_scope_tasks.py'])
+            run([sys.executable,'tools/recovered_game_link.py'])
+            link=read_json(ROOT/'build/recovered-game/tdm-2/link.json'); old=session['baseline_link']
+            if not link['linked'] and (not old or old.get('linked') or set(link['unresolved_symbols'])!=set(old['unresolved_symbols'])):
+                raise ValueError('Ordinary link regressed or lacks a baseline')
+            validate_interface_scope(session,applied=True)
+            for report in reports.values(): validate_report(report)
+            commit_reports(ledger,reports,link)
+            history(session,'PROMOTED_'+result['state'],result)
+            SESSION.unlink()
+            print('PROMOTED '+result['state'],name,'; planned source scope and exact matches preserved')
+        except Exception as exc:
+            history(session,'PROMOTION_REJECTED',{'error':str(exc)})
+            raise
+
+
+def stop(name,reason,blocked=True):
+    session=active(name); validate_interface_scope(session)
+    history(session,'BLOCKED_SUPERVISOR' if blocked else 'ABORTED',{'reason':reason})
+    for path,text in session['sources'].items(): (ROOT/path).write_bytes(text.encode('cp1252'))
+    if blocked:
+        path=CURRENT/'interface-blocks.json'; blocks=read_json(path) if path.exists() else {}
+        blocks[name]={'reason':reason,'changes':session['plan']['changes']}; write_json(path,blocks)
+    SESSION.unlink()
+    from refresh_recovery import publish_status
+    ledger=read_json(ROOT/'src/recovery.json'); validate_ledger(ledger); publish_status(ledger)
+    print('Restored the exact original source bytes; task', 'blocked for supervisor' if blocked else 'aborted')
+
+
+def main():
+    ap=argparse.ArgumentParser(); ap.add_argument('action',choices=['begin','apply','check','promote','block','abort']); ap.add_argument('function'); ap.add_argument('--reason')
+    a=ap.parse_args()
+    if a.action in ('block','abort'):
+        if not a.reason: raise ValueError('A precise failure/reason is required')
+        stop(a.function,a.reason,a.action=='block')
+    else: globals()[a.action](a.function)
+
+
+if __name__=='__main__': main()

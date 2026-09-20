@@ -1,0 +1,224 @@
+# Cheap grinder workflow
+
+The historical CUs and strict static oracle remain the acceptance boundary. Start with
+`python tools/next_frontier.py`: it displays the next CHEAP task and the remaining count from
+`docs/current/grinder-queue.json`. Generated current documents supersede prose in
+old experiment notes; `src/recovery.json` is the canonical, receipt-checked ledger.
+Use `--limit 5` for a small batch or `--all` for explicit supervisor inspection.
+
+1. Select the highest-ranked CHEAP task and read its `candidate_card` only.
+2. For a FUNCTION_BODY task, run its `begin_command`. This fresh-verifies the CU and snapshots the permitted
+   function body and every maintained source/header/tool. One task may be active.
+3. Edit only that function body. The card supplies prototype, parameters, local
+   types/encodings/locations, lexical ranges, relevant generated types and field
+   offsets, globals/data ownership, calls, line evidence, first difference,
+   disassembly windows, compiler flags and applicable codegen rules.
+4. Run its `verification_command` (FAST). This compiles just its owning CU with
+   TDM-2, checks all CU functions and relocations, and prints target diagnostics.
+   Read `build/fast/<target>/<function>.json` for the focused result. Its
+   `detailed_evidence` link supplies complete evidence for that function only; the
+   primary card keeps the closest mismatch entries and records complete counts.
+5. Make at most three evidence-backed experiments on one hypothesis. The FAST
+   command enforces this limit within the active session. Failed
+   FAST and promotion attempts retain the source body, input identities and
+   concrete first mismatch in `docs/attempts/<target>/<function>.jsonl`.
+6. When FAST reports FUNCTION_MATCH, run the FAST result's `promotion_command`.
+   A remaining CU-layout blocker requires its explicit `--claim BODY_MATCH_LAYOUT_BLOCKED`;
+   the generic FUNCTION_MATCH claim is rejected in that case. ACCEPTANCE
+   recompiles, checks independent relocations and decoded same-CU targets,
+   protects exact neighbors, validates scope and input identities, runs focused
+   tests, checks the ordinary game link after source changes, atomically publishes
+   the verified ledger and current documents, and runs the global audit.
+7. Commit only the task source and generated proof/status changes after acceptance.
+   Preserve any pre-existing unrelated working-tree changes. Then read the queue again.
+
+Never edit `src/recovery.json`, generated headers or current cards by hand. Never
+add compiler switches, volatile qualifiers, inline assembly, binary fallbacks,
+guest-address dispatch, or per-function placement to manufacture equality.
+Do not change prototypes, shared types or data in a body task. Those require a
+separate interface task described below, or supervisor review and the affected
+dependency closure for other changes.
+
+`FUNCTION_MATCH` retains the existing exact function proof (independently resolved
+relocations and direct targets). `BODY_MATCH_LAYOUT_BLOCKED` is an additional
+workflow state: a proven body has displaced same-CU operands in the partial layout,
+or an exact prefix and identical final target require different short/near JMP
+encodings. A range-relaxed function remains raw DIFFER and does not count as an
+exact function. Both workflow states prohibit body edits. CODEGEN_SIMILAR with unresolved data
+ownership also prohibits grinder body edits, but **does not** claim proven layout-only
+correctness. None of these states is OBJECT_MATCH, CU_MATCH or a playable-game claim.
+COMPILER_CONTEXT_DEPENDENCY also prohibits cheap body edits: a peer-definition
+probe changed target code without changing its body. It remains SOURCE_DIFFER,
+not a layout or exact proof. The card links the observation and supervisor command.
+
+On an unknown failure, stop experimenting and run:
+
+```
+python tools/grinder_task.py block <target> <function> --reason "Exact failure and attempted changes"
+```
+
+This also works when compilation fails. It captures the failed candidate, marks BLOCKED_SUPERVISOR, restores the task
+source byte-for-byte, and excludes the task from cheap selection. Then take the
+next CHEAP task. Do not use `--medium` or `refresh_recovery.py --verify-all` as a
+cheap-task escape hatch. If no CHEAP task remains, report the supervisor queue.
+
+For an INTERFACE, CANONICAL_TYPE, SOURCE_ORDER, ARRAY_EXTENT, DATA_POINTER, TYPE_VIEW or LOCAL_DECLARATION task, read its small card and run its listed `begin_command`,
+`apply_command`, `verification_command`, then `promotion_command`. Apply makes
+only the generated source edits; do not manually change the function body.
+Canonical type tasks replace exact duplicate member declarations with the generated
+header and active layout assertions. TYPE_VIEW handles separately evidenced compatible partial views; member differences
+and separate struct-tag users still require supervisor review.
+The gate recompiles the actual affected dependency closure, compares every
+maintained declaration with the unique DWARF signature, and preserves all exact
+function proofs, source bodies, data/BSS/relocations and allocated layout.
+Declaration UID changes may renumber compiler static symbols or reorder adjacent
+independent register clears. These narrow candidate preservation checks never
+supply FUNCTION_MATCH evidence; the original comparison still requires exact bytes.
+Any other emission change fails. Use `python tools/interface_task.py block <name>
+--reason "Exact failure"` to restore and route a failure to the supervisor.
+All these task types support `abort` with a reason to restore without blocking.
+
+SOURCE_ORDER moves complete definitions according to unique original DWARF source
+lines. Every body remains byte-identical. The gate preserves exact functions,
+proved initialized objects and common allocations, and rejects newly implicit
+calls. Natural layout may change; no executable-address placement is allowed.
+ARRAY_EXTENT replaces only an evidenced builtin array bound. It preserves every
+initializer and body, requires unchanged emitted contributions, and accepts only
+after the complete original DWARF type and independently resolved initializer match.
+Their completion claims are HISTORICAL_SOURCE_ORDER and ARRAY_EXTENT_MATCH;
+neither substitutes for a function proof.
+
+DATA_POINTER replaces one explicit symbolic address in a typed initializer. The
+card identifies its array/member path and the independently evidenced original
+and candidate targets. Acceptance requires complete original type/initializer
+ownership, identical raw code, and identical data/layout/relocations outside that
+four-byte field. It never writes an original numeric address into source.
+WAITING_FOR_OWNER means the symbolic initializer is already correct: repair the
+named dependency first and leave this initializer alone. Full ownership is then
+re-evaluated automatically. DATA_POINTER_MATCH is a data repair claim, not a
+function or CU match.
+
+TYPE_VIEW uses matching original/candidate pointer-variable evidence to propose
+one canonical typedef alias. Named field offsets, types and qualifiers must agree;
+only unreferenced byte-array filler can be removed. The gate preserves all bodies
+and emitted contributions and requires the complete canonical layout in fresh
+DWARF. An alias is not permission to rename fields or alter body expressions.
+Unexplained view members remain supervisor tasks with original offset evidence.
+Explicit aliases to compiled generated headers normalize interface spelling only
+after full layout equality; unrelated equal-sized structs are never merged.
+Generated headers import library declarations only when their DWARF types need them.
+
+STATIC_SCOPE moves one unchanged file-static BSS declaration into its recorded
+historical function scope. Use only the generated two-span edit through
+`interface_task.py`; expressions, types and initializers are immutable. The gate
+requires identical raw machine text and allocated contributions, fresh complete
+DWARF/COFF ownership, and preserved existing owners. Proven function bodies remain
+ineligible. Common-to-static moves and unresolved lexical scopes need a supervisor.
+A CODEGEN_SIMILAR body can receive this declaration-only repair; it does not grant
+permission to edit its expressions or claim ownership from masked code equality.
+
+`docs/current/storage-status.json` inventories storage evidence across all CUs.
+Each function's `storage_declarations` links only its relevant object cards. These
+expose missing declarations, scope/type differences and owner failures previously
+skipped by name/scope matching. COMMON_DECLARATION_AGREES confirms a declaration,
+not common allocation order or object/CU equality. Similar content never silently
+binds renamed objects.
+
+LOCAL_DECLARATION uses a unique function-scope local, the compiler's source-file
+and line mapping, and its original DWARF type to generate one declaration edit.
+Parameters remain interface tasks. Protected bodies, static storage, macros,
+multiple declarators, inferred literal-array extents and ambiguous scopes are not
+eligible. Initializers and all other source are immutable. Width-changing types
+and pointer/array role changes retain evidence for supervisor review.
+
+LOCAL_DECLARATION_MATCH proves the local type only. Acceptance either preserves
+emitted contributions or requires the changed target to pass the strict exact
+function oracle, while preserving non-code contributions and existing exact
+neighbors. A still-different body with changed emission is rejected. Read the
+reported function status separately; correcting a declaration does not imply a
+FUNCTION_MATCH. Failures retain the candidate and restore through block/abort.
+
+If a process is interrupted during acceptance, run
+`python tools/recover_promotion.py`. It refuses a still-running publisher and
+restores the previous ledger/current files from the durable journal. The task
+source remains available to recheck, retry promotion, or block. Do not delete
+publication locks or edit receipts manually.
+
+Supervisor maintenance:
+
+- `python tools/generate_types.py --check` checks DWARF-derived headers/database.
+- `python tools/refresh_recovery.py` refreshes derived views from current receipts.
+- `python tools/refresh_recovery.py --reanalyze` refreshes changed diagnostic
+  logic from source-current byte proofs; it refuses changed verifier/compiler inputs.
+- `python tools/refresh_recovery.py --check` checks every generated current view.
+- `python tools/refresh_recovery.py --verify-all` freshly verifies all 25 CUs,
+  rejects regressions/protected-body edits, and publishes together under a lock.
+- `python tools/test_grinder.py` and `python tools/test_interface_tasks.py` run
+  the focused negative controls; `tools/test_data_owners.py` checks independent
+  object ownership without using tested instruction operands.
+- `tools/test_dwarf_locations.py` checks scoped live-variable/signedness attribution;
+  `tools/test_compiler_context.py` ensures observations cannot grant match status.
+- `tools/test_branch_diagnostics.py` checks the narrowly localized guard route.
+  Equal indirect calls elsewhere do not exclude a task when only a few conditional
+  opcodes differ and every target/remaining resolved byte agrees. This routing
+  evidence never substitutes for exact acceptance.
+- `tools/test_stack_diagnostics.py` checks bounded entry-allocation observations;
+  STACK_FRAME_LAYOUT is a source-difference category, never a layout-only body proof.
+- `tools/test_local_declarations.py` checks compiler-located declaration scope,
+  parameter/body protection and the preservation-or-exact acceptance boundary.
+- `tools/test_type_views.py` checks partial-view and alias safety; `tools/test_type_headers.py`
+  compiles all generated headers and checks isolation from unrelated library declarations.
+- `tools/test_data_tasks.py` checks typed initializer paths, symbolic-only repair,
+  owner dependencies, ambiguous targets and preservation outside the allowed field.
+- [Compiler-context probes](compiler-context-evidence.md) isolate recurring GCC
+  behavior. FAST cards include unique-name builtin type differences and live DWARF
+  operand associations; both are diagnostic evidence, not assumed source causes.
+- `python tools/test_pipeline.py` freshly builds test CUs and runs the existing
+  static-oracle/independence tests. It is a supervisor/global check, not FAST.
+- Resolve one recurring blocker class, record evidence and failed alternatives in
+  `docs/codegen-rules.json`, add a meaningful regression test, then refresh cards.
+
+Declaration conflicts are in `docs/current/interface-conflicts.json`; these are
+conservative comparisons of DWARF with historical GCC `-aux-info` declarations,
+including differing partial struct views and unprototyped declarations. Same-named
+game aggregates are compared by full layout; missing layout evidence is marked
+unavailable. External library types retain spelling checks. Inspect
+the reported return/parameter types before changing anything. Nominal aliases can
+need supervisor review; do not mechanically merge them based on spelling alone.
+
+The ordinary link presently has a known `max_speed` frontier. A promotion must
+not add unresolved symbols or regress a previously successful link. The unchanged
+frontier is recorded separately and is never counted as recovered link closure.
+
+## Mechanical batches and source experiments
+
+`python tools/mechanical_grinder.py --limit 3` runs up to three ranked CHEAP
+mechanical tasks. It uses the existing begin/apply/FAST/ACCEPTANCE commands,
+regenerates the queue after each outcome, and never edits a function body task.
+A failed FAST task is recorded, restored and marked BLOCKED_SUPERVISOR before
+continuing. An acceptance or infrastructure failure restores when safe and stops
+for review; it is not mislabeled as a source blocker. An unfinished publication
+journal stops the worker without restoring files over the transaction.
+The run retains command outputs and an outcome history in `docs/attempts/mechanical-runs`.
+Review and commit accepted changes after the batch; the worker does not commit.
+
+For body tasks, `instruction_order` identifies small decoded instruction
+permutations and candidate line-program locations. INSTRUCTION_ORDER is an
+observation, never equality or layout-only proof. `source_patterns` can provide
+an adjacent-assignment hypothesis. Begin the named body task, then run its
+`application_command` and FAST verifier. The application tool recomputes the
+pattern from source-current proof, checks the ledger identity, and refuses edits
+outside that function or stacking on an already edited body. Three FAST attempts
+remain the limit. The normal strict promotion gate is unchanged.
+
+Register-clear permutations can depend on declaration UID changes elsewhere in
+the CU. Read attached context rules before spending source trials. The retained
+`line_alert` experiment fixed the field-load ordering, but reversing its zero
+assignments did not repair the remaining clears. That task was restored and
+blocked for supervisor review; no function-match claim was made.
+
+The focused verifier also reports `tail_jump_layout`. A 2/5-byte terminal JMP
+change is a layout blocker only when its complete prefix, independently resolved
+target and range constraint are proved. Do not lengthen code, add padding, alter
+flags, or edit a protected body to force the encoding. Source-order acceptance may
+preserve this explicit layout proof while the raw function status remains DIFFER.

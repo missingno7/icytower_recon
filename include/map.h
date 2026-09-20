@@ -1,19 +1,9 @@
 #ifndef ICYTOWER_MAP_H
 #define ICYTOWER_MAP_H
 
-typedef struct {
-    int empty;
-    int start_tile;
-    int end_tile;
-    int level;
-    int sign;
-    int tiles;
-} Tfloor;
+#include "recovered/Tfloor.h"
 
-typedef struct {
-    Tfloor room[32];
-    int offset;
-} Tmap;
+#include "recovered/Tmap.h"
 
 void reset_map(Tmap *m);
 int is_solid(Tmap *m, int cx, int cy);

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "fldads_update_cache",
+  "source": "src/fld_adspot.c",
+  "body_edit_allowed": false,
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/fld_adspot.c",
+      "return_type": "void",
+      "parameter_types": [
+        "unsigned char*",
+        "size_t"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 48146
+    }
+  ],
+  "type_layout_issues": [],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check fldads_update_cache",
+  "begin_command": "python tools/interface_task.py begin fldads_update_cache",
+  "apply_command": "python tools/interface_task.py apply fldads_update_cache",
+  "promotion_command": "python tools/interface_task.py promote fldads_update_cache",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Requires type/return/body interpretation: int -> size_t",
+  "priority": -20
+}

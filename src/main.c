@@ -147,7 +147,7 @@ void fadeIn(BITMAP *bmp, int speed)
         rectfill(mybmp,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
         solid_mode();
         blit_to_screen(mybmp);
-        while (!cycle_count) rest(2);
+        while (cycle_count <= 0) rest(2);
     }
     destroy_bitmap(mybmp);
 }
@@ -252,12 +252,7 @@ typedef struct Tavailable_profile {
     char handle[32];
 } Tavailable_profile;
 
-typedef struct Tmenu_slider {
-    int value;
-    int min;
-    int max;
-    int step;
-} Tmenu_slider;
+#include "recovered/Tmenu_slider.h"
 
 typedef struct Tmenu_selection {
     int value;
@@ -271,14 +266,7 @@ typedef struct Tmenu_floor_selection {
 } Tmenu_floor_selection;
 
 /* menu.h layout recovered from the main-CU DWARF inventory. */
-typedef struct Tmenu {
-    char caption[128];
-    int return_select;
-    int return_left;
-    int return_right;
-    int flags;
-    void *data;
-} Tmenu;
+#include "recovered/Tmenu.h"
 
 typedef struct Tmenu_params {
     void *font;
@@ -419,7 +407,7 @@ Tmenu ctrl_menu[6] = {
     { "RIGHT",  'r', 0,   0,   0x40, &ctrl.key_right },
     { "JUMP",   'r', 0,   0,   0x40, &ctrl.key_fire },
     { "PAUSE",  'r', 0,   0,   0x40, &ctrl.key_pause },
-    { "ReJump", 'q', 'q', 'q', 0x04, &rejump },
+    { "ReJump", 'q', 'q', 'q', 0x04, &options.jump_hold },
     { "Back",   'l', 0,   0,   0x80, NULL }
 };
 
@@ -1085,7 +1073,7 @@ void replay_menu_callback(void)
 void main_menu_callback(void)
 {
     static int old_msc;
-    int scroller_step = -1;
+    const int scroller_step = -1;
     BITMAP *head_bmp;
     BITMAP *head_shadow;
     BITMAP *head;

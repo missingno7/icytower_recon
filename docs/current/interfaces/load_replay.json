@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "load_replay",
+  "source": "src/replay.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/replay.c",
+      "return_type": "Treplay*",
+      "parameter_types": [
+        "const char*"
+      ],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 223347
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "return",
+      "historical_type": "Treplay",
+      "candidate_type": "Treplay",
+      "header": "include/recovered/Treplay.h",
+      "status": "MISMATCH",
+      "historical_size": 2220,
+      "candidate_size": 2220,
+      "member_difference_count": 1,
+      "first_member_differences": [
+        {
+          "member": "data",
+          "historical": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Trecord *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 2216,
+            "size": 4,
+            "type": "void *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/main.c",
+      "file": "src/main.c",
+      "line": 569
+    },
+    {
+      "position": "return",
+      "historical_type": "Treplay",
+      "candidate_type": "Treplay",
+      "header": "include/recovered/Treplay.h",
+      "status": "MISMATCH",
+      "historical_size": 2220,
+      "candidate_size": 2220,
+      "member_difference_count": 1,
+      "first_member_differences": [
+        {
+          "member": "data",
+          "historical": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Trecord *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Treplay_data *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/replay.c",
+      "file": "src/replay.c",
+      "line": 116
+    },
+    {
+      "position": "return",
+      "historical_type": "Treplay",
+      "candidate_type": "Treplay",
+      "header": "include/recovered/Treplay.h",
+      "status": "MISMATCH",
+      "historical_size": 2220,
+      "candidate_size": 2220,
+      "member_difference_count": 1,
+      "first_member_differences": [
+        {
+          "member": "data",
+          "historical": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Trecord *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 2216,
+            "size": 4,
+            "type": "Treplay_data *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/replay.c",
+      "file": "src/replay.c",
+      "line": 487
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check load_replay",
+  "begin_command": "python tools/interface_task.py begin load_replay",
+  "apply_command": "python tools/interface_task.py apply load_replay",
+  "promotion_command": "python tools/interface_task.py promote load_replay",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}

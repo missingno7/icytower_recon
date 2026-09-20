@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_fld_adspot_HTTPResponse",
+  "source": "src/fld_adspot.c",
+  "sources": [
+    "src/fld_adspot.c"
+  ],
+  "alias": "HTTPResponse",
+  "observations": [
+    {
+      "function": "fldads_update_local_adimg",
+      "variable": "pResponse",
+      "historical_type": "HTTPResponse",
+      "historical_die": 48049,
+      "candidate_die": 2018
+    },
+    {
+      "function": "fldads_update_local_adimg",
+      "variable": "pHead",
+      "historical_type": "HTTPResponse",
+      "historical_die": 48097,
+      "candidate_die": 2066
+    },
+    {
+      "function": "fldads_threadmain",
+      "variable": "pResponse",
+      "historical_type": "HTTPResponse",
+      "historical_die": 48348,
+      "candidate_die": 2511
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
+  "changes": [],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/fld_adspot.c": {
+      "size": 6930,
+      "sha256": "dd2093d4e922a9b8b871f6c5a9c3f82587fbfb442ef7babcfb89f46e51bf0ae6"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_fld_adspot_HTTPResponse",
+  "apply_command": "python tools/interface_task.py apply view_fld_adspot_HTTPResponse",
+  "verification_command": "python tools/interface_task.py check view_fld_adspot_HTTPResponse",
+  "promotion_command": "python tools/interface_task.py promote view_fld_adspot_HTTPResponse",
+  "canonical": "HTTPResponse",
+  "header": "include/recovered/HTTPResponse.h",
+  "header_identity": {
+    "size": 1061,
+    "sha256": "8d25b0f5a71803e70e68c17c19b48c175ec30f5b2e3265a839eb1a46c919e767"
+  },
+  "candidate_size": 20,
+  "historical_size": 20,
+  "member_correspondence": [
+    {
+      "candidate_member": "iStatusCode",
+      "candidate_offset": 0,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iStatusCode",
+        "offset": 0,
+        "size": 4,
+        "type": "int"
+      }
+    },
+    {
+      "candidate_member": "iNumHeaders",
+      "candidate_offset": 4,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iNumHeaders",
+        "offset": 4,
+        "size": 4,
+        "type": "unsigned int"
+      }
+    },
+    {
+      "candidate_member": "pHeaders",
+      "candidate_offset": 8,
+      "candidate_type": "void *",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.pHeaders",
+        "offset": 8,
+        "size": 4,
+        "type": "HTTPHeader *"
+      }
+    },
+    {
+      "candidate_member": "pPayload",
+      "candidate_offset": 12,
+      "candidate_type": "unsigned char *",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.pPayload",
+        "offset": 12,
+        "size": 4,
+        "type": "unsigned char *"
+      }
+    },
+    {
+      "candidate_member": "iPayloadSize",
+      "candidate_offset": 16,
+      "candidate_type": "int",
+      "historical_field_at_offset": {
+        "expression": "HTTPResponse.iPayloadSize",
+        "offset": 16,
+        "size": 4,
+        "type": "unsigned int"
+      }
+    }
+  ],
+  "reason": "View has uses outside its owning source",
+  "detailed_evidence": "docs/current/type-view-evidence/view_fld_adspot_HTTPResponse.json",
+  "observation_count": 3
+}

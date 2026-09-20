@@ -1,0 +1,1106 @@
+{
+  "schema": 1,
+  "source": "src/httpget.c",
+  "target": "game-httpget",
+  "historical_cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+  "function": "HTTPFetchInternal",
+  "historical_va": "0x405e9c",
+  "historical_size": 594,
+  "status": "DIFFER",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+  "body_edit_allowed": false,
+  "reason": "Route compiler-context sensitivity to supervisor; no body or layout match is claimed.",
+  "prototype": "HTTPResponse * HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile, const char *pMethod);",
+  "return_type": "HTTPResponse *",
+  "parameters": [
+    {
+      "die": 80278,
+      "name": "pHost",
+      "type_die": 73669,
+      "type": "const char *",
+      "scope": 80235,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x30ad (location list)",
+      "address": null
+    },
+    {
+      "die": 80295,
+      "name": "iPort",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80235,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x30e3 (location list)",
+      "address": null
+    },
+    {
+      "die": 80312,
+      "name": "pPathToFile",
+      "type_die": 73669,
+      "type": "const char *",
+      "scope": 80235,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "0x3126 (location list)",
+      "address": null
+    },
+    {
+      "die": 80335,
+      "name": "pMethod",
+      "type_die": 73669,
+      "type": "const char *",
+      "scope": 80235,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": "2 byte block: 91 c \t(DW_OP_fbreg: 12)",
+      "address": null
+    }
+  ],
+  "locals": [
+    {
+      "die": 80353,
+      "name": "dataPtr",
+      "type_die": 72515,
+      "type": "unsigned char *",
+      "scope": 80235,
+      "base_type": "unsigned char",
+      "base_encoding": "8\t(unsigned char)",
+      "location": "0x316a (location list)",
+      "address": null
+    },
+    {
+      "die": 80372,
+      "name": "sBufferSize",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80235,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 80391,
+      "name": "rBufferSize",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80235,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 80410,
+      "name": "sock",
+      "type_die": 78637,
+      "type": "SOCKET",
+      "scope": 80235,
+      "base_type": "unsigned int",
+      "base_encoding": "7\t(unsigned)",
+      "location": "3 byte block: 75 bc 7f \t(DW_OP_breg5 (ebp): -68)",
+      "address": null
+    },
+    {
+      "die": 80431,
+      "name": "tv",
+      "type_die": 78651,
+      "type": "struct timeval",
+      "scope": 80426,
+      "base_type": "timeval",
+      "base_encoding": null,
+      "location": "2 byte block: 91 58 \t(DW_OP_fbreg: -40)",
+      "address": null
+    },
+    {
+      "die": 80444,
+      "name": "host",
+      "type_die": 79209,
+      "type": "struct hostent *",
+      "scope": 80426,
+      "base_type": "hostent",
+      "base_encoding": null,
+      "location": "0x31b4 (location list)",
+      "address": null
+    },
+    {
+      "die": 80465,
+      "name": "service",
+      "type_die": 79016,
+      "type": "struct sockaddr_in",
+      "scope": 80460,
+      "base_type": "sockaddr_in",
+      "base_encoding": null,
+      "location": "2 byte block: 91 48 \t(DW_OP_fbreg: -56)",
+      "address": null
+    },
+    {
+      "die": 80488,
+      "name": "sendbuff",
+      "type_die": 80580,
+      "type": "char []",
+      "scope": 80483,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 80504,
+      "name": "recvbuff",
+      "type_die": 80595,
+      "type": "char []",
+      "scope": 80483,
+      "base_type": "char",
+      "base_encoding": "6\t(signed char)",
+      "location": null,
+      "address": null
+    },
+    {
+      "die": 80525,
+      "name": "totBytes",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80520,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x31d2 (location list)",
+      "address": null
+    },
+    {
+      "die": 80545,
+      "name": "bytesRead",
+      "type_die": 72085,
+      "type": "int",
+      "scope": 80520,
+      "base_type": "int",
+      "base_encoding": "5\t(signed)",
+      "location": "0x3206 (location list)",
+      "address": null
+    },
+    {
+      "die": 80560,
+      "name": "rtv",
+      "type_die": 79471,
+      "type": "HTTPResponse *",
+      "scope": 80520,
+      "base_type": "HTTPResponse",
+      "base_encoding": null,
+      "location": "0x325b (location list)",
+      "address": null
+    }
+  ],
+  "lexical_blocks": [
+    {
+      "die": 80426,
+      "parent": 80235,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x498"
+    },
+    {
+      "die": 80460,
+      "parent": 80426,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x4c0"
+    },
+    {
+      "die": 80483,
+      "parent": 80460,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x4e8"
+    },
+    {
+      "die": 80520,
+      "parent": 80483,
+      "low_pc": null,
+      "high_pc": null,
+      "ranges": "0x508"
+    }
+  ],
+  "variadic": false,
+  "calling_convention": "not recorded (i386 C default candidate)",
+  "source_scope": {
+    "body_start_line": 210,
+    "body_end_line": 269,
+    "body_sha256": "0bf4c258f7befd7c2a6c573a9624128b1542b03a1423660910aa0161e2b4efb7"
+  },
+  "tail_jump_layout": null,
+  "instruction_order": null,
+  "source_patterns": [],
+  "frame_layout": null,
+  "signedness": {
+    "variables": [
+      {
+        "die": 80278,
+        "name": "pHost",
+        "type_die": 73669,
+        "type": "const char *",
+        "scope": 80235,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 80295,
+        "name": "iPort",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80235,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 80312,
+        "name": "pPathToFile",
+        "type_die": 73669,
+        "type": "const char *",
+        "scope": 80235,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 80335,
+        "name": "pMethod",
+        "type_die": 73669,
+        "type": "const char *",
+        "scope": 80235,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 80353,
+        "name": "dataPtr",
+        "type_die": 72515,
+        "type": "unsigned char *",
+        "scope": 80235,
+        "base_type": "unsigned char",
+        "base_encoding": "8\t(unsigned char)",
+        "address": null
+      },
+      {
+        "die": 80372,
+        "name": "sBufferSize",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80235,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 80391,
+        "name": "rBufferSize",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80235,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 80488,
+        "name": "sendbuff",
+        "type_die": 80580,
+        "type": "char []",
+        "scope": 80483,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 80504,
+        "name": "recvbuff",
+        "type_die": 80595,
+        "type": "char []",
+        "scope": 80483,
+        "base_type": "char",
+        "base_encoding": "6\t(signed char)",
+        "address": null
+      },
+      {
+        "die": 80525,
+        "name": "totBytes",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80520,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      },
+      {
+        "die": 80545,
+        "name": "bytesRead",
+        "type_die": 72085,
+        "type": "int",
+        "scope": 80520,
+        "base_type": "int",
+        "base_encoding": "5\t(signed)",
+        "address": null
+      }
+    ],
+    "instruction_differences": [],
+    "instruction_count_hypotheses": [],
+    "declaration_differences": [
+      {
+        "variable": "dataPtr",
+        "original_type": "unsigned char *",
+        "candidate_type": "char *",
+        "original_die": 80353,
+        "candidate_die": 2048,
+        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
+        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
+      }
+    ],
+    "cast_chains": [
+      "(char *)",
+      "(unsigned long *)"
+    ],
+    "shifts": [
+      "log2file(\">>> HTTP: Failed to allocate %d bytes for http response\",",
+      "log2file(\">>> HTTP:  Sending data failed: %d\\n\", getSocketError());",
+      "log2file(\">>> HTTP:  Failed to connect to service: %d\\n\", getSocketError());",
+      "log2file(\">>> HTTP:  Host lookup failed: %s\\n\", pHost);",
+      "log2file(\">>> HTTP:  Socket creation failed: %d\\n\", getSocketError());"
+    ],
+    "confidence": "NO_INSTRUCTION_EVIDENCE",
+    "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
+  },
+  "localized_guards": null,
+  "compiler": "tdm-2",
+  "compiler_flags": [
+    "-O2"
+  ],
+  "current_candidate_size": 594,
+  "first_difference": {
+    "offset": 127,
+    "original_va": 4218651,
+    "candidate_byte": 83,
+    "original_byte": 81
+  },
+  "mismatch_count": 3,
+  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "disassembly": {
+    "original": [
+      {
+        "address": 4218635,
+        "bytes": "e84ca80100",
+        "mnemonic": "call",
+        "assembly": "call   42075c <_setsockopt@20>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218640,
+        "bytes": "83ec14",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x14,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218643,
+        "bytes": "893c24",
+        "mnemonic": "mov",
+        "assembly": "mov    %edi,(%esp)",
+        "dwarf_variables": [
+          {
+            "die": 80278,
+            "name": "pHost",
+            "type": "const char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "register",
+              "register": "edi"
+            },
+            "expression_hex": "57",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 4218646,
+        "bytes": "e849a80100",
+        "mnemonic": "call",
+        "assembly": "call   420764 <_gethostbyname@4>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218651,
+        "bytes": "51",
+        "mnemonic": "push",
+        "assembly": "push   %ecx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218652,
+        "bytes": "85c0",
+        "mnemonic": "test",
+        "assembly": "test   %eax,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218654,
+        "bytes": "0f84b3010000",
+        "mnemonic": "je",
+        "assembly": "je     4060d7 <_HTTPFetchInternal+0x23b>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4218660,
+        "bytes": "66c745d00200",
+        "mnemonic": "movw",
+        "assembly": "movw   $0x2,-0x30(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 80465,
+            "name": "service",
+            "type": "struct sockaddr_in",
+            "base_type": "sockaddr_in",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -48
+            },
+            "expression_hex": "9148",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4218666,
+        "bytes": "8b400c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%eax),%eax",
+        "dwarf_variables": [
+          {
+            "die": 80444,
+            "name": "host",
+            "type": "struct hostent *",
+            "base_type": "hostent",
+            "base_encoding": null,
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "address": 1159,
+        "bytes": "e800000000",
+        "mnemonic": "call",
+        "assembly": "call   48c <_HTTPFetchInternal+0x74>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1164,
+        "bytes": "83ec14",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x14,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1167,
+        "bytes": "893c24",
+        "mnemonic": "mov",
+        "assembly": "mov    %edi,(%esp)",
+        "dwarf_variables": [
+          {
+            "die": 1973,
+            "name": "pHost",
+            "type": "const char *",
+            "base_type": "char",
+            "base_encoding": "6\t(signed char)",
+            "location": {
+              "kind": "register",
+              "register": "edi"
+            },
+            "expression_hex": "57",
+            "relation": "register is used"
+          }
+        ]
+      },
+      {
+        "address": 1170,
+        "bytes": "e800000000",
+        "mnemonic": "call",
+        "assembly": "call   497 <_HTTPFetchInternal+0x7f>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1175,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1176,
+        "bytes": "85c0",
+        "mnemonic": "test",
+        "assembly": "test   %eax,%eax",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1178,
+        "bytes": "0f84b3010000",
+        "mnemonic": "je",
+        "assembly": "je     653 <_HTTPFetchInternal+0x23b>",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1184,
+        "bytes": "66c745d00200",
+        "mnemonic": "movw",
+        "assembly": "movw   $0x2,-0x30(%ebp)",
+        "dwarf_variables": [
+          {
+            "die": 2160,
+            "name": "service",
+            "type": "struct sockaddr_in",
+            "base_type": "sockaddr_in",
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": -48
+            },
+            "expression_hex": "9148",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 1190,
+        "bytes": "8b400c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%eax),%eax",
+        "dwarf_variables": [
+          {
+            "die": 2139,
+            "name": "host",
+            "type": "struct hostent *",
+            "base_type": "hostent",
+            "base_encoding": null,
+            "location": {
+              "kind": "register",
+              "register": "eax"
+            },
+            "expression_hex": "50",
+            "relation": "register is used"
+          }
+        ]
+      }
+    ]
+  },
+  "relevant_types": [
+    {
+      "name": "HTTPResponse",
+      "size": 20,
+      "header": "include/recovered/HTTPResponse.h",
+      "members_at_disassembly_offsets": [
+        {
+          "name": "pPayload",
+          "offset": 12,
+          "type": "unsigned char *"
+        }
+      ],
+      "limit": "Offset association only; register-to-variable binding is not inferred."
+    }
+  ],
+  "original_line_window": [
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 157,
+      "address": 4218591,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 158,
+      "address": 4218598,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 160,
+      "address": 4218643,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 161,
+      "address": 4218652,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 163,
+      "address": 4218660,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 164,
+      "address": 4218666,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 165,
+      "address": 4218676,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "httpget.c",
+      "file": "httpget.c",
+      "line": 167,
+      "address": 4218693,
+      "end_sequence": false,
+      "flags": "x"
+    }
+  ],
+  "referenced_globals": [
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4980",
+      "candidate_addend": 40,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        236
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d49a0",
+      "candidate_addend": 72,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        470
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d49d8",
+      "candidate_addend": 128,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        508
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4a50",
+      "candidate_addend": 248,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        533
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d49fc",
+      "candidate_addend": 164,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        558
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4a2c",
+      "candidate_addend": 212,
+      "dwarf_type": null,
+      "placement_confidence": "unique read-only literal or table content",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        578
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "_malloc",
+      "function_offset": 20,
+      "target_va": 4959504,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        20
+      ]
+    },
+    {
+      "symbol": "_socket@12",
+      "function_offset": 50,
+      "target_va": 4327252,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        50
+      ]
+    },
+    {
+      "symbol": "_setsockopt@20",
+      "function_offset": 112,
+      "target_va": 4327260,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        112
+      ]
+    },
+    {
+      "symbol": "_gethostbyname@4",
+      "function_offset": 123,
+      "target_va": 4327268,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        123
+      ]
+    },
+    {
+      "symbol": "_htons@4",
+      "function_offset": 160,
+      "target_va": 4327276,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        160
+      ]
+    },
+    {
+      "symbol": "_connect@12",
+      "function_offset": 191,
+      "target_va": 4327284,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        191
+      ]
+    },
+    {
+      "symbol": "_sprintf",
+      "function_offset": 244,
+      "target_va": 4959584,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        244
+      ]
+    },
+    {
+      "symbol": "_send@16",
+      "function_offset": 301,
+      "target_va": 4327292,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        301
+      ]
+    },
+    {
+      "symbol": "_realloc",
+      "function_offset": 338,
+      "target_va": 4959544,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        338
+      ]
+    },
+    {
+      "symbol": "_recv@16",
+      "function_offset": 396,
+      "target_va": 4327300,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        396
+      ]
+    },
+    {
+      "symbol": "_free",
+      "function_offset": 429,
+      "target_va": 4959496,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        429,
+        487
+      ]
+    },
+    {
+      "symbol": "_closesocket@4",
+      "function_offset": 440,
+      "target_va": 4327308,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        440
+      ]
+    },
+    {
+      "symbol": "_log2file",
+      "function_offset": 475,
+      "target_va": 4250200,
+      "verified": true,
+      "reference_count": 5,
+      "function_offsets": [
+        475,
+        513,
+        538,
+        563,
+        583
+      ]
+    },
+    {
+      "symbol": "extractHTTPResponse",
+      "function_offset": 419,
+      "target_va": 4217488,
+      "verified": true,
+      "reference_count": 1,
+      "function_offsets": [
+        419
+      ]
+    },
+    {
+      "symbol": "getSocketError",
+      "function_offset": 497,
+      "target_va": 4218512,
+      "verified": true,
+      "reference_count": 3,
+      "function_offsets": [
+        497,
+        522,
+        547
+      ]
+    }
+  ],
+  "original_calls": [
+    {
+      "address": 4218646,
+      "bytes": "e849a80100",
+      "mnemonic": "call",
+      "assembly": "call   420764 <_gethostbyname@4>"
+    },
+    {
+      "address": 4218635,
+      "bytes": "e84ca80100",
+      "mnemonic": "call",
+      "assembly": "call   42075c <_setsockopt@20>"
+    },
+    {
+      "address": 4218683,
+      "bytes": "e82ca80100",
+      "mnemonic": "call",
+      "assembly": "call   42076c <_htons@4>"
+    },
+    {
+      "address": 4218714,
+      "bytes": "e815a80100",
+      "mnemonic": "call",
+      "assembly": "call   420774 <_connect@12>"
+    },
+    {
+      "address": 4218573,
+      "bytes": "e882a80100",
+      "mnemonic": "call",
+      "assembly": "call   420754 <_socket@12>"
+    },
+    {
+      "address": 4218543,
+      "bytes": "e85c4e0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad10 <_malloc>"
+    },
+    {
+      "address": 4218767,
+      "bytes": "e8cc4d0b00",
+      "mnemonic": "call",
+      "assembly": "call   4bad60 <_sprintf>"
+    },
+    {
+      "address": 4218824,
+      "bytes": "e8afa70100",
+      "mnemonic": "call",
+      "assembly": "call   42077c <_send@16>"
+    }
+  ],
+  "indirect_control_flow": 0,
+  "relocation_mismatches": [],
+  "direct_transfer_mismatches": [
+    {
+      "instruction_offset": 418,
+      "function_offset": 419,
+      "opcode": 232,
+      "operand_size": 4,
+      "transfer_kind": "call",
+      "target_function": "extractHTTPResponse",
+      "target_va": 4217488,
+      "candidate_target": 116,
+      "candidate_displacement": -1355,
+      "layout_operand_equal": false,
+      "resolved_value": 4294965837,
+      "original_value": 4294965837,
+      "equal": true,
+      "resolution": "Unique candidate and historical same-CU function entry"
+    }
+  ],
+  "unresolved_call_symbols": 0,
+  "exact_adjacent_functions": 2,
+  "neighbor_layout": [
+    {
+      "function": "extractHTTPResponse",
+      "status": "DIFFER",
+      "historical_offset": 512,
+      "candidate_offset": 116,
+      "size_delta": -5
+    },
+    {
+      "function": "getSocketError",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 1536,
+      "candidate_offset": 1036,
+      "size_delta": 0
+    },
+    {
+      "function": "HTTPRequest",
+      "status": "FUNCTION_MATCH",
+      "historical_offset": 2144,
+      "candidate_offset": 1912,
+      "size_delta": 0
+    }
+  ],
+  "known_rules": [
+    {
+      "id": "persistent-peephole-scratch",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "symptom": "Equal-sized function differs in scratch-register pushes or call argument setup, and an isolated peer-definition change alters its bytes without changing its body.",
+      "known_source_cause": "GCC 4.4.1 peep2_find_free_register retains search_ofs across successful scratch searches; earlier compiled functions can affect later scratch selection. Not every register mismatch is this cause.",
+      "known_fix_pattern": "Keep production flags and protected bodies. Supervisor runs compiler_probe.py and compares focused RTL passes. Resolve historical CU context once; do not keep rewriting the target or mask register bytes.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2",
+        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH."
+      },
+      "example_functions": [
+        "HTTPFetchInternal",
+        "draw_scroller"
+      ],
+      "evidence": "docs/compiler-context-evidence.md",
+      "confidence": "MECHANICALLY_OBSERVED"
+    }
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": 37,
+  "compiler_context": {
+    "state": "CONTEXT_EVIDENCE_NEEDS_REFRESH",
+    "confidence": "HISTORICAL_OBSERVATION",
+    "dependencies": [
+      {
+        "omitted_function": "destroyHTTPResponse",
+        "changed_offsets": [
+          127,
+          164,
+          444
+        ],
+        "target_body_unchanged": true
+      }
+    ],
+    "evidence": "docs/attempts/compiler-context/game-httpget/HTTPFetchInternal.json",
+    "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+    "verification_command": "python tools/compiler_probe.py game-httpget HTTPFetchInternal --omit-earlier destroyHTTPResponse"
+  },
+  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "supervisor_block": null,
+  "evidence_report": "docs/current/reports/game-httpget.json",
+  "verification_command": "python tools/check_function.py game-httpget HTTPFetchInternal",
+  "begin_command": "python tools/grinder_task.py begin game-httpget HTTPFetchInternal",
+  "promotion_command": "python tools/promote_function.py game-httpget HTTPFetchInternal",
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "interface_conflicts": [],
+  "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
+  "detailed_evidence": "docs/current/function-evidence/httpget/HTTPFetchInternal.json",
+  "evidence_counts": {
+    "relocation_mismatches": 0,
+    "direct_transfer_mismatches": 1,
+    "original_calls": 22,
+    "calls": 22,
+    "referenced_globals": 6
+  },
+  "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."
+}

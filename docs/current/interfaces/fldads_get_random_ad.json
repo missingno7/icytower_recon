@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "task_kind": "INTERFACE",
+  "function": "fldads_get_random_ad",
+  "source": "src/fld_adspot.c",
+  "body_edit_allowed": false,
+  "difference_class": "TYPE_LAYOUT_CONFLICT",
+  "status": "TYPE_LAYOUT_CONFLICT",
+  "state": "TYPE_LAYOUT_BLOCKED",
+  "difficulty": "SUPERVISOR",
+  "historical": [
+    {
+      "cu": "src/fld_adspot.c",
+      "return_type": "const FLDAdSpot*",
+      "parameter_types": [],
+      "variadic": false,
+      "calling_convention": null,
+      "die": 47147
+    }
+  ],
+  "type_layout_issues": [
+    {
+      "position": "return",
+      "historical_type": "FLDAdSpot",
+      "candidate_type": "FLDAdSpot",
+      "header": "include/recovered/FLDAdSpot.h",
+      "status": "MISMATCH",
+      "historical_size": 16,
+      "candidate_size": 16,
+      "member_difference_count": 3,
+      "first_member_differences": [
+        {
+          "member": "pLocalImagePath",
+          "historical": {
+            "offset": 4,
+            "size": 4,
+            "type": "char *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 4,
+            "size": 4,
+            "type": "const char *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "pRemoteImageURL",
+          "historical": {
+            "offset": 0,
+            "size": 4,
+            "type": "char *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 0,
+            "size": 4,
+            "type": "const char *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        },
+        {
+          "member": "pVisitURL",
+          "historical": {
+            "offset": 8,
+            "size": 4,
+            "type": "char *",
+            "qualifiers": [],
+            "bitfield": false
+          },
+          "candidate": {
+            "offset": 8,
+            "size": 4,
+            "type": "const char *",
+            "qualifiers": [],
+            "bitfield": false
+          }
+        }
+      ],
+      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+      "cu": "src/main.c",
+      "file": "src/main.c",
+      "line": 287
+    }
+  ],
+  "changes": [],
+  "verification_command": "python tools/interface_task.py check fldads_get_random_ad",
+  "begin_command": "python tools/interface_task.py begin fldads_get_random_ad",
+  "apply_command": "python tools/interface_task.py apply fldads_get_random_ad",
+  "promotion_command": "python tools/interface_task.py promote fldads_get_random_ad",
+  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
+  "reason": "Repair or establish the named aggregate layouts before editing this interface",
+  "priority": -20
+}
