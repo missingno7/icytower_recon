@@ -971,9 +971,57 @@ void blit_to_screen(BITMAP *bmp)
  * results/replay branches are being recovered instruction by instruction. */
 extern void handle_player_input(void *control);
 extern void update_player(Tplayer *p);
-extern void draw_frame(BITMAP *dst);
 extern int jump_player(Tplayer *p, int force);
 extern void play_jump_sound(Tplayer *p);
+
+/* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
+ * oracle's renderer phases in source: floor plane, animated character,
+ * particles, rewards, advertising image, and score/status overlays. */
+void draw_frame(BITMAP *dst)
+{
+    Tplayer *p;
+    int x;
+    int y;
+    int fy;
+    int fx1;
+    int fx2;
+    int frame;
+    int color;
+
+    clear_to_color(dst,makecol(10,16,28));
+    for (y=0;y<32;y++) {
+        if (map.room[y].empty!=0)
+            continue;
+        getFloorData(&map,(29-y)*16,&fy,&fx1,&fx2);
+        color=makecol(70+(map.room[y].tiles*8),48,20);
+        rectfill(dst,fx1,fy,fx2,fy+15,color);
+        line(dst,fx1,fy,fx2,fy,makecol(210,170,90));
+    }
+
+    for (x=0;x<512;x++) {
+        if (stars[x].intensity>0)
+            putpixel(dst,(int)stars[x].x,(int)stars[x].y,stars[x].color);
+    }
+    p=ply[player_id];
+    if (p) {
+        frame=p->frame%15;
+        if (frame<0) frame+=15;
+        if (custom.frame[frame])
+            draw_sprite(dst,custom.frame[frame],(int)p->x,(int)p->y);
+        else
+            rectfill(dst,(int)p->x,(int)p->y,(int)p->x+16,(int)p->y+32,
+                     makecol(240,210,80));
+        textprintf_ex(dst,data[53].dat,12,12,-1,-1,"SCORE %d",p->score);
+        textprintf_right_ex(dst,data[53].dat,628,12,-1,-1,"FLOOR %d",p->level);
+        if (p->in_combo)
+            textprintf_centre_ex(dst,data[51].dat,320,38,makecol(255,220,80),-1,
+                                 "%d COMBO",p->in_combo);
+    }
+    if (reward_bmp && reward_time>0)
+        draw_sprite(dst,reward_bmp,320-reward_bmp->w/2,80);
+    if (pFLDAdBitmap)
+        draw_sprite(dst,pFLDAdBitmap,540,400);
+}
 
 int play(void)
 {

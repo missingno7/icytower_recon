@@ -1,7 +1,8 @@
 # `draw_frame` recovery map
 
-`draw_frame` spans `0x40929c..0x40b3e4` (8,518 bytes) in `main.c`. It is the
-only remaining direct renderer dependency in the recovered-game link.
+`draw_frame` spans `0x40929c..0x40b3e4` (8,518 bytes) in `main.c`. The current
+source candidate is 1,067 bytes and is `DIFFER`; it closes the final direct
+renderer dependency in the recovered-game link without claiming byte credit.
 
 Oracle call order establishes phases: camera/background blits and random
 variation; map and player sprite virtual draws; score and HUD text; clipping
@@ -15,6 +16,12 @@ Recovery must retain its rendering phases and shared game state; a blank or
 synthetic frame is not a valid replacement. The function should be recovered
 in source slices, beginning with the camera/background and floor/player draw
 loops before HUD and debug overlays.
+
+The current candidate renders the game floor plane, animated custom player
+frame, particle field, reward bitmap, advertising image, and score/floor/combo
+HUD to the supplied target bitmap. The remaining 7,451 bytes cover the
+oracle's camera/background variation, exact sprite planes, clipping, reward
+animation, and conditional debug/status overlays.
 
 DWARF source anchors divide the body: entry is line 2490; the first sprite
 phase is line 2562; map/HUD work reaches line 2822; reward rendering anchors
