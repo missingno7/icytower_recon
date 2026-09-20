@@ -26,3 +26,9 @@ regions.
 Additional sampled anchors are lines 2552, 2719, 2742, 2749, 2792--2794,
 and 2813--2816. They show the compiler interleaves sprite work and overlays,
 so the source recovery must preserve branch-local phase order.
+
+DWARF names the early state directly: destination `bmp`; `x`, `y`, `p_im`,
+`flip`, `cx`, `cy`, `ls`, `fo`, `so`, `max_bg_id`, `customFrame`, `oy`, and
+`ox`. The first sprite blocks introduce `f`, then `s`, `sy`, `sw`, `c1`, and
+`c2`. These identify camera/background setup through the first player/floor
+sprite loops (source lines 2490--2582).
