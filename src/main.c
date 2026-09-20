@@ -576,6 +576,7 @@ extern int get_slider_value(Tmenu_slider *s);
 extern int get_selection_value(Tmenu_selection *s);
 extern void draw_menu(BITMAP *bmp, Tmenu *menu, Tmenu_params *mp,
                       int x, int y, int dx);
+extern void reset_menu(Tmenu *menu, Tmenu_params *mp, int selection);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
@@ -2514,12 +2515,37 @@ int _mangled_main(int argc, char **argv)
         log2file("Done...");
         return 1;
     }
+
+    if (itrcheck && demo) {
+        log2file("Running replay.");
+        run_demo(NULL);
+        if (closeButtonClicked) {
+            log2file("Done...");
+            allegro_exit();
+            return 0;
+        }
+    }
+    if (itrcheck)
+        load_new_ad_image();
     init_scroller(&greeting_scroller, data[54].dat, scroller_greetings,
                   640, 30, -1);
+    menu_params.font=data[51].dat;
+    menu_params.bullet=data[72].dat;
+    menu_params.pos=0;
+    menu_params.data=data;
+    reset_menu(main_menu,&menu_params,0);
     startMenuMusic();
     clear_keybuf();
 
     must_fade=1;
+    if (options.timesStarted==1 && !stricmp("guest",options.lastProfile)) {
+        main_menu_callback();
+        draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+        fadeIn(swap_screen,16);
+        force_create_profile();
+        syncOptionsFromProfile();
+        must_fade=0;
+    }
     redraw_menu=1;
     while (!closeButtonClicked) {
         if (redraw_menu) {

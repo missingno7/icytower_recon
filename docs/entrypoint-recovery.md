@@ -32,6 +32,8 @@ source-level recovery. After successful game initialization it calls
 `DATAFILE` array; the other five arguments resolve to the typed persistent
 objects and constants. This establishes the main-menu greeting state before
 menu music starts. `_mangled_main` remains `DIFFER`: the isolated TDM-2
-candidate is 1,319 bytes against the oracle's 1,938 bytes. Profile-creation
-pre-dispatch, special startup/replay cases, error exits, and exact compiler
-structure still require recovery.
+candidate is 1,644 bytes against the oracle's 1,938 bytes. The recovered
+setup now initializes the menu parameter assets and resets the typed main
+menu. It also handles the `-check` replay/ad path and the first-run
+`timesStarted == 1 && lastProfile == "guest"` profile-creation transition.
+Exceptional exit handling and exact compiler structure still require recovery.
