@@ -508,10 +508,10 @@ Tprofile_create *create_profile(char *handle, int overwrite)
     for (i = 0; i < 10; i++)
         p->rewards[i] = 0;
     for (i = 0; i < 32; i++)
-        p->best_replay_names[i][0] = 0;
+        *p->best_replay_names[i] = 0;
     p->total_jumps = 0;
-    p->jump_hold = 1;
     strcpy(p->last_avatar, "harold_the_homeboy");
+    p->jump_hold = 1;
     p->flash = 0;
     p->start_floor = 0;
     p->msc_volume = 150;
