@@ -360,6 +360,44 @@
     "body_end_line": 605,
     "body_sha256": "4652341bea07ab57df0407232e8b243d58e722ca1100319ea2be2ad160d095e5"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 393,
+      "candidate_addend": 192,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 439,
+      "candidate_addend": 217,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 464,
+      "candidate_addend": 220,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 527,
+      "candidate_addend": 232,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 713,
+      "candidate_addend": 175,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1134,6 +1172,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_poll_control",
@@ -1641,10 +1680,10 @@
       "evidence": "docs/attempts/interfaces/create_post.jsonl"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 45,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-menu.json",
   "verification_command": "python tools/check_function.py game-menu handle_menu",
@@ -1679,6 +1718,16 @@
       "state": "LOCAL_DECLARATION_REPAIR",
       "difficulty": "SUPERVISOR",
       "candidate_card": "docs/current/local-declarations/decl_menu_handle_menu_data.json"
+    }
+  ],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "handle_menu",
+      "source": "src/menu.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
     }
   ],
   "interface_conflicts": [
@@ -1769,7 +1818,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 561
+          "line": 562
         },
         {
           "position": "parameter 2",
@@ -1850,6 +1899,9 @@
   "evidence_counts": {
     "relocation_mismatches": 32,
     "direct_transfer_mismatches": 3,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 5,
+    "literal_dependencies": 0,
     "original_calls": 22,
     "calls": 21,
     "referenced_globals": 10

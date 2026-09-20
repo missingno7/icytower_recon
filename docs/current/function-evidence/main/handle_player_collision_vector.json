@@ -609,10 +609,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2214,
-    "body_end_line": 2258,
+    "body_start_line": 2215,
+    "body_end_line": 2259,
     "body_sha256": "cb4e9f794e868608727d4d7b065901264ad2126ad1f9c4587a4ed128c91db543"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1359,7 +1361,7 @@
         "assembly": "movl   $0xff439eb2,-0x1c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23912,
+            "die": 24006,
             "name": "floor_y",
             "type": "int",
             "base_type": "int",
@@ -1381,7 +1383,7 @@
         "assembly": "movl   $0x0,-0x20(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23927,
+            "die": 24021,
             "name": "floor_x1",
             "type": "int",
             "base_type": "int",
@@ -1403,7 +1405,7 @@
         "assembly": "movl   $0x0,-0x24(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23942,
+            "die": 24036,
             "name": "floor_x2",
             "type": "int",
             "base_type": "int",
@@ -1706,6 +1708,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_getFloorData",
@@ -1994,7 +1997,7 @@
     }
   ],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "line_intersect",
@@ -2019,7 +2022,7 @@
     },
     {
       "function": "line_alert",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 10200,
       "candidate_offset": 6192,
       "size_delta": 0
@@ -2053,10 +2056,10 @@
       "evidence": "docs/stack-frame-evidence.md"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 35,
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main handle_player_collision_vector",
@@ -2130,6 +2133,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "handle_player_collision_vector",
+      "source": "src/main.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "handle_player_collision_vector",

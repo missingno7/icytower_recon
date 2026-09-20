@@ -51,10 +51,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 80,
-    "body_end_line": 92,
+    "body_start_line": 38,
+    "body_end_line": 50,
     "body_sha256": "039d1eb5e63336a38da2b1ad4086ba090dae8f9860b020826cf2aa8582d969b8"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -129,35 +131,35 @@
     ],
     "candidate": [
       {
-        "address": 0,
+        "address": 128,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 1,
+        "address": 129,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 3,
+        "address": 131,
         "bytes": "57",
         "mnemonic": "push",
         "assembly": "push   %edi",
         "dwarf_variables": []
       },
       {
-        "address": 4,
+        "address": 132,
         "bytes": "56",
         "mnemonic": "push",
         "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 5,
+        "address": 133,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
@@ -241,6 +243,7 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_free",
@@ -293,21 +296,21 @@
       "function": "httpGetLastModified",
       "status": "FUNCTION_MATCH",
       "historical_offset": 0,
-      "candidate_offset": 2104,
+      "candidate_offset": 0,
       "size_delta": 0
     },
     {
       "function": "SplitURL",
       "status": "FUNCTION_MATCH",
       "historical_offset": 244,
-      "candidate_offset": 1644,
+      "candidate_offset": 244,
       "size_delta": 0
     },
     {
       "function": "extractHTTPResponse",
       "status": "DIFFER",
       "historical_offset": 512,
-      "candidate_offset": 116,
+      "candidate_offset": 512,
       "size_delta": -5
     }
   ],
@@ -323,6 +326,16 @@
   "promotion_command": "python tools/promote_function.py game-httpget destroyHTTPResponse",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "destroyHTTPResponse",
+      "source": "src/httpget.c",
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "destroyHTTPResponse",
@@ -418,6 +431,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 4,
     "calls": 5,
     "referenced_globals": 0

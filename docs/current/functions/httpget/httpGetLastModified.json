@@ -69,10 +69,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 33,
-    "body_end_line": 48,
+    "body_start_line": 254,
+    "body_end_line": 269,
     "body_sha256": "5438fc5754e1dc5c3355ba15c87099da57f178c95653dc7e1404fab32544cf4b"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -147,35 +149,35 @@
     ],
     "candidate": [
       {
-        "address": 2104,
+        "address": 0,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2105,
+        "address": 1,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2107,
+        "address": 3,
         "bytes": "57",
         "mnemonic": "push",
         "assembly": "push   %edi",
         "dwarf_variables": []
       },
       {
-        "address": 2108,
+        "address": 4,
         "bytes": "56",
         "mnemonic": "push",
         "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 2109,
+        "address": 5,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
@@ -265,7 +267,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4918",
-      "candidate_addend": 329,
+      "candidate_addend": 0,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -282,7 +284,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4926",
-      "candidate_addend": 343,
+      "candidate_addend": 14,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -294,6 +296,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_strptime",
@@ -340,7 +343,7 @@
       "function": "destroyHTTPResponse",
       "status": "FUNCTION_MATCH",
       "historical_offset": 128,
-      "candidate_offset": 0,
+      "candidate_offset": 128,
       "size_delta": 0
     }
   ],
@@ -356,6 +359,16 @@
   "promotion_command": "python tools/promote_function.py game-httpget httpGetLastModified",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "httpGetLastModified",
+      "source": "src/httpget.c",
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "httpGetLastModified",
@@ -451,6 +464,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 2,
     "calls": 2,
     "referenced_globals": 2

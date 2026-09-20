@@ -76,10 +76,45 @@
   "variadic": true,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1643,
-    "body_end_line": 1660,
+    "body_start_line": 1644,
+    "body_end_line": 1661,
     "body_sha256": "97a0ab7210501830bb63c77801a23b5152ddedc080f2a9d771f31ed63b9e74e4"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 58,
+      "candidate_addend": 110,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5066515,
+      "candidate_hex": "6174",
+      "original_hex": "6174",
+      "candidate_instruction": {
+        "address": 2446,
+        "bytes": "c74424046e000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x6e,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4250254,
+        "bytes": "c7442404134f4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4f13,0x4(%esp)"
+      },
+      "candidate_text": "at",
+      "original_text": "at",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 1652,
+          "text": "    fp = fopen(logfilename, \"at\");"
+        }
+      ]
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -239,7 +274,7 @@
         "assembly": "mov    0x8(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 19059,
+            "die": 19153,
             "name": "format",
             "type": "const char *",
             "base_type": "char",
@@ -275,7 +310,7 @@
         "assembly": "je     978 <_log2file+0x20>",
         "dwarf_variables": [
           {
-            "die": 19103,
+            "die": 19197,
             "name": "logfilename",
             "type": "char [1024]",
             "base_type": "char",
@@ -486,7 +521,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 101,
+      "candidate_addend": 110,
       "dwarf_type": null,
       "placement_confidence": "section base not independently established",
       "initial_value": null,
@@ -496,6 +531,23 @@
       "function_offsets": [
         58
       ]
+    }
+  ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 110,
+      "candidate_card": "docs/current/literals/game-main/6e.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        58
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
     }
   ],
   "calls": [
@@ -619,7 +671,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 58,
-      "addend": 101,
+      "addend": 110,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -703,7 +755,7 @@
     },
     {
       "function": "check_characters",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 32032,
       "candidate_offset": 2900,
       "size_delta": 0
@@ -919,6 +971,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "log2file",
+      "source": "src/main.c",
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "log2file",
@@ -948,6 +1010,9 @@
   "evidence_counts": {
     "relocation_mismatches": 2,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 1,
+    "literal_dependencies": 1,
     "original_calls": 8,
     "calls": 6,
     "referenced_globals": 8

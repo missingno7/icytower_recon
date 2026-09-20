@@ -63,7 +63,7 @@ char *fldads_get_local_cache_name(char *pFileName)
 
 void fldads_dump_local_cache(void)
 {
-    FILE *fp = fopen(fldads_get_local_cache_name("ads.csv"), "w");
+    FILE *fp = fopen(fldads_get_local_cache_name("ads.csv"), "wb");
     if (fp) {
         int i;
         pthread_mutex_lock(&gFLDADMutex);

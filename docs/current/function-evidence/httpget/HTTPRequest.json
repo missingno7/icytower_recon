@@ -181,10 +181,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 110,
-    "body_end_line": 125,
+    "body_start_line": 236,
+    "body_end_line": 251,
     "body_sha256": "02b735a540c1c03d865b60dc19ca977053e59701e8e9bb16949a84a039a09320"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -336,7 +338,7 @@
         "original_type": "const char *",
         "candidate_type": "char *",
         "original_die": 80665,
-        "candidate_die": 2507,
+        "candidate_die": 2614,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       },
@@ -345,7 +347,7 @@
         "original_type": "const char *",
         "candidate_type": "char *",
         "original_die": 80648,
-        "candidate_die": 2491,
+        "candidate_die": 2598,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -419,41 +421,41 @@
     ],
     "candidate": [
       {
-        "address": 1912,
+        "address": 2040,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 1913,
+        "address": 2041,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 1915,
+        "address": 2043,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 1916,
+        "address": 2044,
         "bytes": "83ec34",
         "mnemonic": "sub",
         "assembly": "sub    $0x34,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 1919,
+        "address": 2047,
         "bytes": "8b5d08",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 2491,
+            "die": 2598,
             "name": "pURL",
             "type": "char *",
             "base_type": "char",
@@ -558,7 +560,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4a77",
-      "candidate_addend": 295,
+      "candidate_addend": 331,
       "dwarf_type": null,
       "references": [
         119
@@ -579,6 +581,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_free",
@@ -654,27 +657,11 @@
       "transfer_kind": "call",
       "target_function": "SplitURL",
       "target_va": 4217220,
-      "candidate_target": 1644,
-      "candidate_displacement": -307,
+      "candidate_target": 244,
+      "candidate_displacement": -1835,
       "layout_operand_equal": false,
       "resolved_value": 4294965357,
       "original_value": 4294965357,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    },
-    {
-      "instruction_offset": 70,
-      "function_offset": 71,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "HTTPFetchInternal",
-      "target_va": 4218524,
-      "candidate_target": 1048,
-      "candidate_displacement": -939,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966625,
-      "original_value": 4294966625,
       "equal": true,
       "resolution": "Unique candidate and historical same-CU function entry"
     }
@@ -686,28 +673,28 @@
       "function": "SplitURL",
       "status": "FUNCTION_MATCH",
       "historical_offset": 244,
-      "candidate_offset": 1644,
+      "candidate_offset": 244,
       "size_delta": 0
     },
     {
       "function": "HTTPFetchInternal",
       "status": "DIFFER",
       "historical_offset": 1548,
-      "candidate_offset": 1048,
+      "candidate_offset": 1444,
       "size_delta": 0
     },
     {
       "function": "HTTPHead",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2280,
-      "candidate_offset": 2076,
+      "candidate_offset": 2176,
       "size_delta": 0
     },
     {
       "function": "HTTPGet",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2308,
-      "candidate_offset": 2048,
+      "candidate_offset": 2204,
       "size_delta": 0
     }
   ],
@@ -723,6 +710,16 @@
   "promotion_command": "python tools/promote_function.py game-httpget HTTPRequest --claim BODY_MATCH_LAYOUT_BLOCKED",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "HTTPRequest",
+      "source": "src/httpget.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "HTTPRequest",

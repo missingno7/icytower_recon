@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 from zipfile import ZipFile, ZIP_STORED
+from common import write_bytes_if_changed
 
 
 def durable_snapshot(backup,tree,journal,root):
@@ -45,7 +46,7 @@ def restore(backup,tree):
     for p in tree.rglob('*'):
         if p.is_file() and p.resolve() not in backup: p.unlink()
     for p,data in backup.items():
-        p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(data)
+        write_bytes_if_changed(p,data)
 
 
 @contextmanager

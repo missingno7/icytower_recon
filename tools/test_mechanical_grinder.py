@@ -1,5 +1,6 @@
 import unittest
 from mechanical_grinder import select_task,execute_task
+from task_outcomes import CANDIDATE_REJECTED_EXIT
 
 
 class MechanicalTests(unittest.TestCase):
@@ -9,12 +10,12 @@ class MechanicalTests(unittest.TestCase):
         self.assertEqual(select_task(tasks,{('ARRAY_EXTENT','first')})['function'],'second')
         with self.assertRaisesRegex(ValueError,'identifier'): select_task([{'function':'../bad','task_kind':'TYPE_VIEW','difficulty':'CHEAP'}])
 
-    def exercise(self,fail=None,recovery=False,cleanup_fails=False):
+    def exercise(self,fail=None,recovery=False,cleanup_fails=False,exitcode=CANDIDATE_REJECTED_EXIT):
         state={}; actions=[]
         def invoke(action,name,reason=None):
             actions.append(action)
             if action=='begin': state.update(kind='INTERFACE',function=name)
-            if action==fail: return {'returncode':1,'stderr':'concrete failure'}
+            if action==fail: return {'returncode':exitcode,'stderr':'concrete failure'}
             if action in ('abort','block') and cleanup_fails: return {'returncode':1}
             if action in ('abort','block','promote'): state.clear()
             return {'returncode':0}
@@ -32,6 +33,17 @@ class MechanicalTests(unittest.TestCase):
     def test_acceptance_failure_is_not_misclassified_as_a_source_blocker(self):
         result,actions,state=self.exercise('promote')
         self.assertEqual(actions[-1],'abort'); self.assertEqual(result['state'],'STOPPED_FOR_REVIEW'); self.assertFalse(result['continue']); self.assertFalse(state)
+
+    def test_unknown_fast_failures_restore_and_stop_without_source_block(self):
+        for code in (1,2,127,-9):
+            result,actions,state=self.exercise('check',exitcode=code)
+            self.assertEqual(actions[-1],'abort')
+            self.assertEqual(result['state'],'STOPPED_FOR_REVIEW')
+            self.assertFalse(result['continue']); self.assertFalse(state)
+
+    def test_apply_rejection_is_not_completed_candidate_evidence(self):
+        result,actions,state=self.exercise('apply')
+        self.assertEqual(actions[-1],'abort'); self.assertFalse(result['continue'])
 
     def test_unfinished_publication_never_restores_source_or_retries(self):
         result,actions,state=self.exercise('promote',recovery=True)

@@ -40,7 +40,7 @@ def eligible(report,name,claim):
     return row
 
 
-def no_regressions(before,after):
+def no_regressions(before,after,body_adaptations=None):
     current={r['name']:r for r in after['functions']}
     for old in before['functions']:
         new=current[old['name']]
@@ -48,7 +48,14 @@ def no_regressions(before,after):
         if old['status']=='FUNCTION_MATCH' and new['status']!='FUNCTION_MATCH' and not layout_preserved:
             raise ValueError('Exact neighbor regressed: '+old['name'])
         if old['workflow']['state'] in ('FUNCTION_MATCH','BODY_MATCH_LAYOUT_BLOCKED') and old.get('source_body_sha256')!=new.get('source_body_sha256'):
-            raise ValueError('Protected function body changed: '+old['name'])
+            pair=(body_adaptations or {}).get(old['name'])
+            code=lambda r: ''.join(i['bytes'] for i in r.get('instructions',[]))
+            fields=lambda r: [(x.get('symbol'),x.get('type'),x.get('function_offset'),x.get('addend'),x.get('target_va'),x.get('resolved_value'),x.get('equal')) for x in r.get('relocations',[])]
+            authorized=(pair and tuple(pair)==(old.get('source_body_sha256'),new.get('source_body_sha256'))
+                        and old['workflow']['state']==new['workflow']['state']=='FUNCTION_MATCH'
+                        and old['status']==new['status']=='FUNCTION_MATCH'
+                        and bool(code(old)) and code(old)==code(new) and fields(old)==fields(new))
+            if not authorized: raise ValueError('Protected function body changed: '+old['name'])
 
 
 
@@ -92,6 +99,11 @@ def promote(target,name,claim='FUNCTION_MATCH'):
             old=read_json(ROOT/ledger[source]['verified_report'])
             no_regressions(old,report)
             print(run([sys.executable,'tools/test_grinder.py']),end='')
+            print(run([sys.executable,'tools/test_control_transfers.py']),end='')
+            print(run([sys.executable,'tools/test_scheduling_diagnostics.py']),end='')
+            print(run([sys.executable,'tools/test_literal_diagnostics.py']),end='')
+            print(run([sys.executable,'tools/test_reference_diagnostics.py']),end='')
+            print(run([sys.executable,'tools/test_atomic_writes.py']),end='')
             print(run([sys.executable,'tools/test_data_owners.py']),end='')
             print(run([sys.executable,'tools/test_dwarf_locations.py']),end='')
             print(run([sys.executable,'tools/test_compiler_context.py']),end='')

@@ -907,6 +907,30 @@
     "body_end_line": 285,
     "body_sha256": "4472cd3a0079272a304fcc9bce4218c4c41f4629549c620d0c1b005556ab1b89"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 1045,
+      "candidate_addend": 16,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1448,
+      "candidate_addend": 16,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1732,
+      "candidate_addend": 16,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1988,6 +2012,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_create_bitmap",
@@ -3775,9 +3800,9 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -215,
+  "priority": -20,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-hisc.json",
   "verification_command": "python tools/check_function.py game-hisc view_scores",
@@ -3785,6 +3810,16 @@
   "promotion_command": "python tools/promote_function.py game-hisc view_scores",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "view_scores",
+      "source": "src/hisc.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "view_scores",
@@ -3844,7 +3879,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 581
+          "line": 582
         }
       ],
       "candidate_signatures": [

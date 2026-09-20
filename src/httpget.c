@@ -29,51 +29,9 @@ void log2file(char *fmt, ...);
 char *strptime(const char *s, const char *format, struct tm *tm);
 time_t timegm(struct tm *tm);
 
-time_t httpGetLastModified(HTTPResponse *pResponse)
+int getSocketError(void)
 {
-    if (pResponse) {
-        int i;
-
-        for (i = 0; i < pResponse->iNumHeaders; i++) {
-            if (!strcmp(pResponse->pHeaders[i].pHeader, "Last-Modified")) {
-                struct tm stm;
-
-                strptime(pResponse->pHeaders[i].pValue,
-                         "%a, %e %b %Y %H:%M:%S", &stm);
-                return timegm(&stm);
-            }
-        }
-    }
-    return 0;
-}
-
-int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)
-{
-    char *p;
-
-    *ppHost = NULL;
-    *ppPath = NULL;
-    *piPort = 80;
-    if (!strncmp(pURL, "http://", 7))
-        pURL += 7;
-    p = pURL;
-    while (*p) {
-        if (*p == ':' || *p == '/') {
-            int iHostLen = p - pURL;
-
-            *ppHost = malloc(iHostLen + 1);
-            memcpy(*ppHost, pURL, iHostLen);
-            (*ppHost)[iHostLen] = 0;
-            if (*p == ':')
-                *piPort = strtol(p, &p, 10);
-            *ppPath = strdup(p);
-            return 1;
-        }
-        p++;
-    }
-    free(*ppHost);
-    free(*ppPath);
-    return 0;
+    return WSAGetLastError();
 }
 
 void destroyHTTPResponse(HTTPResponse *pResponse)
@@ -91,41 +49,6 @@ void destroyHTTPResponse(HTTPResponse *pResponse)
     }
 }
 
-int getSocketError(void)
-{
-    return WSAGetLastError();
-}
-
-HTTPResponse *HTTPHead(char *pURL)
-{
-    return HTTPRequest(pURL, "HEAD");
-}
-
-HTTPResponse *HTTPGet(char *pURL)
-{
-    return HTTPRequest(pURL, "GET");
-}
-
-HTTPResponse *HTTPRequest(char *pURL, char *pMethod)
-{
-    char *pHost;
-    char *pPath;
-    int iPort;
-
-    if (SplitURL(pURL, &pHost, &pPath, &iPort)) {
-        HTTPResponse *pResponse = HTTPFetchInternal(pHost, iPort, pPath,
-                                                     pMethod);
-        free(pHost);
-        free(pPath);
-        return pResponse;
-    }
-
-    log2file("Could not split URL \"%s\"", pURL);
-    return NULL;
-}
-
-/* The line reader was inlined twice into extractHTTPResponse in the original
- * object. It returns consumed input bytes while omitting CR/LF from output. */
 static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,
                               int iOutSize)
 {
@@ -150,7 +73,6 @@ static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,
     return bytesRead;
 }
 
-/* The parser's historical call ABI passes its two arguments in EAX and EDX. */
 HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,
                                                                 int iResponseBytesCount)
 {
@@ -266,4 +188,82 @@ HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathT
     }
     log2file(">>> HTTP:  Socket creation failed: %d\n", getSocketError());
     return NULL;
+}
+
+int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)
+{
+    char *p;
+
+    *ppHost = NULL;
+    *ppPath = NULL;
+    *piPort = 80;
+    if (!strncmp(pURL, "http://", 7))
+        pURL += 7;
+    p = pURL;
+    while (*p) {
+        if (*p == ':' || *p == '/') {
+            int iHostLen = p - pURL;
+
+            *ppHost = malloc(iHostLen + 1);
+            memcpy(*ppHost, pURL, iHostLen);
+            (*ppHost)[iHostLen] = 0;
+            if (*p == ':')
+                *piPort = strtol(p, &p, 10);
+            *ppPath = strdup(p);
+            return 1;
+        }
+        p++;
+    }
+    free(*ppHost);
+    free(*ppPath);
+    return 0;
+}
+
+HTTPResponse *HTTPGet(char *pURL)
+{
+    return HTTPRequest(pURL, "GET");
+}
+
+/* The line reader was inlined twice into extractHTTPResponse in the original
+ * object. It returns consumed input bytes while omitting CR/LF from output. */
+HTTPResponse *HTTPHead(char *pURL)
+{
+    return HTTPRequest(pURL, "HEAD");
+}
+
+/* The parser's historical call ABI passes its two arguments in EAX and EDX. */
+HTTPResponse *HTTPRequest(char *pURL, char *pMethod)
+{
+    char *pHost;
+    char *pPath;
+    int iPort;
+
+    if (SplitURL(pURL, &pHost, &pPath, &iPort)) {
+        HTTPResponse *pResponse = HTTPFetchInternal(pHost, iPort, pPath,
+                                                     pMethod);
+        free(pHost);
+        free(pPath);
+        return pResponse;
+    }
+
+    log2file("Could not split URL \"%s\"", pURL);
+    return NULL;
+}
+
+time_t httpGetLastModified(HTTPResponse *pResponse)
+{
+    if (pResponse) {
+        int i;
+
+        for (i = 0; i < pResponse->iNumHeaders; i++) {
+            if (!strcmp(pResponse->pHeaders[i].pHeader, "Last-Modified")) {
+                struct tm stm;
+
+                strptime(pResponse->pHeaders[i].pValue,
+                         "%a, %e %b %Y %H:%M:%S", &stm);
+                return timegm(&stm);
+            }
+        }
+    }
+    return 0;
 }

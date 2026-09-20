@@ -2,6 +2,7 @@
 import argparse
 import json
 import sys
+from task_outcomes import CandidateRejected, CANDIDATE_REJECTED_EXIT, candidate_check
 from common import ROOT, read_json, write_json, identity, run
 from build import verify_inputs
 from recovery_pipeline import CURRENT, fresh_verify, validate_report, check_fixture
@@ -68,6 +69,9 @@ def begin(name):
         if plan is None:
             from static_scope_tasks import plans as scope_plans
             plan=next((p for p in scope_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from global_type_tasks import plans as global_plans
+            plan=next((p for p in global_plans(ledger) if p['function']==name),None)
         if plan is None: raise ValueError('No current mechanical task for '+name)
     else: plan=plan_interface(row,ledger)
     if plan['difficulty']!='CHEAP': raise ValueError('Supervisor required: '+plan['reason'])
@@ -96,46 +100,59 @@ def verify_interface(session,acceptance=False):
     for target in session['plan']['affected_targets']:
         report=fresh_verify(target,dest=ROOT/('build/acceptance/interfaces' if acceptance else 'build/fast/interfaces')/session['function']/target,locked=True)
         source=report['build']['config']['source']; old=read_json(ROOT/ledger[source]['verified_report'])
-        no_regressions(old,report)
-        if session['plan']['task_kind']=='SOURCE_ORDER':
+        from contribution_diagnostics import compare as contribution_changes
+        detail=ROOT/('build/acceptance/interfaces' if acceptance else 'build/fast/interfaces')/session['function']/target/'contribution-difference.json'
+        write_json(detail,contribution_changes(old,report))
+        session.setdefault('verification_diagnostics',[]).append(detail.relative_to(ROOT).as_posix())
+
+        if session['plan']['task_kind']=='GLOBAL_TYPE':
+            from global_type_tasks import verify as verify_global
+            adaptations=candidate_check(verify_global,old,report,session['plan'],session['sources'][source],(ROOT/source).read_bytes().decode('cp1252'))
+            candidate_check(no_regressions,old,report,adaptations)
+        else: candidate_check(no_regressions,old,report)
+        if session['plan']['task_kind']=='GLOBAL_TYPE':
+            pass  # Full declaration, source, allocation and contribution checks ran above.
+        elif session['plan']['task_kind']=='SOURCE_ORDER':
             original=session['sources'][source]; current=(ROOT/source).read_bytes().decode('cp1252')
             for name in session['plan']['current_order']:
-                if body_hash(original,name)!=body_hash(current,name): raise ValueError('Source-order task modified a function body: '+name)
+                if body_hash(original,name)!=body_hash(current,name): raise CandidateRejected('Source-order task modified a function body: '+name)
             before_implicit={d['name'] for d in declarations(old['interfaces_aux']) if d['kind']=='IC'}
             after_implicit={d['name'] for d in declarations(report['interfaces_aux']) if d['kind']=='IC'}
-            if after_implicit-before_implicit: raise ValueError('Source order needs explicit interface prerequisites: '+', '.join(sorted(after_implicit-before_implicit)))
+            if after_implicit-before_implicit: raise CandidateRejected('Source order needs explicit interface prerequisites: '+', '.join(sorted(after_implicit-before_implicit)))
             for section in old['initialized_data_comparison']:
                 if section['content_equal'] and not any(s['section']==section['section'] and s['content_equal'] for s in report['initialized_data_comparison']):
-                    raise ValueError('Previously exact initialized contribution regressed: '+section['section'])
+                    raise CandidateRejected('Previously exact initialized contribution regressed: '+section['section'])
             old_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in old.get('object_ownership',{}).get('accepted',[])}
             new_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in report.get('object_ownership',{}).get('accepted',[])}
-            if old_owners-new_owners: raise ValueError('Previously proven data owner regressed')
-            if contribution_fingerprint(old)['common']!=contribution_fingerprint(report)['common']: raise ValueError('Common allocation changed')
+            if old_owners-new_owners: raise CandidateRejected('Previously proven data owner regressed')
+            if contribution_fingerprint(old)['common']!=contribution_fingerprint(report)['common']: raise CandidateRejected('Common allocation changed')
             order_effects.append({'target':target,'exact_functions_before':old['function_matches'],'exact_functions_after':report['function_matches'],
                                   'text_contribution_equal':report['whole_text_contribution_equal'],'bodies_unchanged':True})
         elif session['plan']['task_kind']=='DATA_POINTER':
             from data_tasks import fingerprint,verify_owner
             if fingerprint(old,session['plan'])!=fingerprint(report,session['plan']):
-                raise ValueError('Data repair changed code/layout/data/relocations outside its authorized pointer field')
-            verify_owner(report,session['plan'])
+                raise CandidateRejected('Data repair changed code/layout/data/relocations outside its authorized pointer field')
+            candidate_check(verify_owner,report,session['plan'])
             old_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in old.get('object_ownership',{}).get('accepted',[])}
             new_owners={(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in report.get('object_ownership',{}).get('accepted',[])}
-            if old_owners-new_owners: raise ValueError('Data repair regressed a previously proven owner')
+            if old_owners-new_owners: raise CandidateRejected('Data repair regressed a previously proven owner')
         elif session['plan']['task_kind']=='STATIC_SCOPE':
             from static_scope_tasks import verify_scope
-            verify_scope(old,report,session['plan'])
+            candidate_check(verify_scope,old,report,session['plan'])
         elif session['plan']['task_kind']=='LOCAL_DECLARATION':
             from local_declarations import verify_local,emission_effect
-            verify_local(report,session['plan']); local_effect=emission_effect(old,report,session['plan'])
+            candidate_check(verify_local,report,session['plan']); local_effect=candidate_check(emission_effect,old,report,session['plan'])
         elif contribution_fingerprint(old)!=contribution_fingerprint(report):
-            raise ValueError('Interface repair changed emitted code/data/BSS/symbol/relocation contribution: '+target)
+            raise CandidateRejected('Interface repair changed emitted code/data/BSS/symbol/relocation contribution: '+target)
         old_text=next(s['sha256'] for s in old['object_sections'] if s['name']=='.text')
         new_text=next(s['sha256'] for s in report['object_sections'] if s['name']=='.text')
         if old_text!=new_text and session['plan']['task_kind'] not in ('SOURCE_ORDER','LOCAL_DECLARATION'):
             scheduling.append({'target':target,'before':old['candidate_zero_clear_projection'],'after':report['candidate_zero_clear_projection']})
         reports[source]=report
     observed=[]; state='INTERFACE_MATCH'
-    if session['plan']['task_kind']=='SOURCE_ORDER':
+    if session['plan']['task_kind']=='GLOBAL_TYPE':
+        expected=session['plan']['original']['type']; state='GLOBAL_TYPE_MATCH'
+    elif session['plan']['task_kind']=='SOURCE_ORDER':
         expected=session['plan']['definition_order']; state='HISTORICAL_SOURCE_ORDER'
     elif session['plan']['task_kind']=='DATA_POINTER':
         expected=session['plan']['changes'][0]['after']; state='DATA_POINTER_MATCH'
@@ -143,21 +160,21 @@ def verify_interface(session,acceptance=False):
         plan=session['plan']; owner=plan['historical_owner']; expected=plan['expected_count']; state='ARRAY_EXTENT_MATCH'
         matching=[o for o in reports[plan['source']].get('object_ownership',{}).get('accepted',[])
                   if o['name']==plan['object'] and tuple(o['scope'])==tuple(owner['scope']) and o['original_die']==owner['original_die']]
-        if len(matching)!=1: raise ValueError('Array still lacks exact original DWARF type and complete independently resolved initializer')
+        if len(matching)!=1: raise CandidateRejected('Array still lacks exact original DWARF type and complete independently resolved initializer')
         result_owner=matching[0]
-        if result_owner['dwarf_type']!=owner['dwarf_type']: raise ValueError('Historical array type changed')
+        if result_owner['dwarf_type']!=owner['dwarf_type']: raise CandidateRejected('Historical array type changed')
     elif session['plan']['task_kind']=='LOCAL_DECLARATION':
         expected=session['plan']['original']['type']; state='LOCAL_DECLARATION_MATCH'
     elif session['plan']['task_kind']=='STATIC_SCOPE':
         expected=session['plan']['original']['scope']; state='STATIC_SCOPE_MATCH'
     elif session['plan']['task_kind']=='TYPE_VIEW':
         from type_views import verify_view
-        verify_view(reports[session['plan']['source']],session['plan'])
+        candidate_check(verify_view,reports[session['plan']['source']],session['plan'])
         expected=session['plan']['canonical']; state='CANONICAL_VIEW_MATCH'
     elif session['plan']['task_kind']=='CANONICAL_TYPE':
         from generate_types import outputs
         header=ROOT/session['plan']['header']
-        if header.read_text(encoding='utf-8')!=outputs()[header]: raise ValueError('Canonical header differs from DWARF generation')
+        if header.read_text(encoding='utf-8')!=outputs()[header]: raise CandidateRejected('Canonical header differs from DWARF generation')
         expected=session['plan']['expected_declaration']; state='CANONICAL_TYPE_MATCH'
     else:
         expected=signature(session['plan']['historical'][0])
@@ -167,12 +184,12 @@ def verify_interface(session,acceptance=False):
                 if decl['name']==session['function'] and decl['file'].startswith(('src/','include/')):
                     observed.append(decl)
         if not observed or any(signature(d)!=expected for d in observed):
-            raise ValueError('Compiler declarations still disagree with the DWARF interface')
+            raise CandidateRejected('Compiler declarations still disagree with the DWARF interface')
     validate_interface_scope(session,applied=True)
     for report in reports.values(): validate_report(report)
     result={'state':state,'function':session['function'],'expected':expected,
             'declarations':observed,'affected_targets':session['plan']['affected_targets'],
-            'allocated_layout_and_data_unchanged':session['plan']['task_kind'] not in ('SOURCE_ORDER','DATA_POINTER') and local_effect!='EXACT_FUNCTION',
+            'allocated_layout_and_data_unchanged':session['plan']['task_kind'] not in ('SOURCE_ORDER','DATA_POINTER','GLOBAL_TYPE') and local_effect!='EXACT_FUNCTION',
             'local_declaration_effect':local_effect,
             'local_function_proof':({k:next(r for r in reports[session['plan']['source']]['functions'] if r['name']==session['plan']['target_function'])[k] for k in ('name','status','workflow','original_size','candidate_size','first_difference')} if session['plan']['task_kind']=='LOCAL_DECLARATION' else None),
             'authorized_data_field':({k:session['plan'][k] for k in ('object','field_offset','field_size','section_index','section_offset')} if session['plan']['task_kind']=='DATA_POINTER' else None),
@@ -190,7 +207,8 @@ def check(name):
         print(result['state'],name,'; planned source scope and existing exact proofs preserved')
         print(session['plan']['promotion_command'])
     except Exception as exc:
-        history(session,'FAST_FAILED',{'error':str(exc)})
+        history(session,'FAST_FAILED',{'error':str(exc),'failure_kind':'CANDIDATE_REJECTED' if isinstance(exc,CandidateRejected) else 'INFRASTRUCTURE_OR_UNKNOWN','exception':type(exc).__name__,'evidence':session.get('verification_diagnostics',[])})
+        for path in session.get('verification_diagnostics',[]): print('Focused contribution evidence:',path,file=sys.stderr)
         raise
 
 
@@ -202,6 +220,10 @@ def promote(name):
             run([sys.executable,'tools/test_grinder.py'])
             run([sys.executable,'tools/test_scheduling_diagnostics.py'])
             run([sys.executable,'tools/test_control_transfers.py'])
+            run([sys.executable,'tools/test_literal_diagnostics.py'])
+            run([sys.executable,'tools/test_reference_diagnostics.py'])
+            run([sys.executable,'tools/test_global_type_tasks.py'])
+            run([sys.executable,'tools/test_atomic_writes.py'])
             run([sys.executable,'tools/test_data_owners.py'])
             run([sys.executable,'tools/test_interface_tasks.py'])
             run([sys.executable,'tools/test_dwarf_locations.py'])
@@ -225,7 +247,7 @@ def promote(name):
             SESSION.unlink()
             print('PROMOTED '+result['state'],name,'; planned source scope and exact matches preserved')
         except Exception as exc:
-            history(session,'PROMOTION_REJECTED',{'error':str(exc)})
+            history(session,'PROMOTION_REJECTED',{'error':str(exc),'evidence':session.get('verification_diagnostics',[])})
             raise
 
 
@@ -251,4 +273,8 @@ def main():
     else: globals()[a.action](a.function)
 
 
-if __name__=='__main__': main()
+if __name__=='__main__':
+    try: main()
+    except CandidateRejected as exc:
+        print('CANDIDATE_REJECTED:',exc,file=sys.stderr)
+        raise SystemExit(CANDIDATE_REJECTED_EXIT)

@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 TC = ROOT / 'toolchain/tdm-gcc-4.4.1'
@@ -16,10 +17,28 @@ def identity(path):
     data = path.read_bytes()
     return {'size': len(data), 'sha256': sha(data)}
 
-def write_json(path, value):
+def write_bytes_if_changed(path, data):
+    """Preserve unchanged files; publish changed bytes without truncating the old file."""
     path = Path(path)
+    try:
+        if path.read_bytes() == data: return False
+    except FileNotFoundError: pass
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes((json.dumps(value, indent=2, ensure_ascii=True) + '\n').encode('utf-8'))
+    fd, name = tempfile.mkstemp(prefix='.'+path.name+'.', suffix='.pending', dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return True
+
+
+def write_json(path, value):
+    return write_bytes_if_changed(path, (json.dumps(value, indent=2, ensure_ascii=True) + '\n').encode('utf-8'))
 
 def read_json(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))

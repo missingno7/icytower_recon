@@ -7,13 +7,15 @@ from instructions import affected_instructions
 
 CLASSES = {'SOURCE_INCOMPLETE', 'REGISTER_OR_INSTRUCTION_SELECTION', 'SIGNEDNESS_OR_PROMOTION',
            'FLOAT_OR_X87_SHAPE', 'ALIGNMENT_OR_PADDING', 'SAME_CU_CALL_LAYOUT', 'STATIC_DATA_LAYOUT',
-           'RELOCATION_OR_LITERAL_LAYOUT', 'COMMON_BSS_LAYOUT', 'SOURCE_CONTROL_FLOW_SHAPE', 'UNKNOWN_SUPERVISOR', 'COMPILER_CONTEXT_DEPENDENCY', 'STACK_FRAME_LAYOUT', 'INSTRUCTION_ORDER', 'EXACT'}
+           'RELOCATION_OR_LITERAL_LAYOUT', 'COMMON_BSS_LAYOUT', 'SOURCE_CONTROL_FLOW_SHAPE', 'UNKNOWN_SUPERVISOR', 'COMPILER_CONTEXT_DEPENDENCY', 'STACK_FRAME_LAYOUT', 'INSTRUCTION_ORDER', 'LITERAL_CONTENT_DIFFERENCE', 'SYMBOLIC_REFERENCE_DIFFERENCE', 'EXACT'}
 
 
 def classify(row):
     if row['status'] == 'FUNCTION_MATCH':
         return 'EXACT'
     if row.get('tail_jump_layout'): return 'SAME_CU_CALL_LAYOUT'
+    if any(d['classification']=='SYMBOLIC_REFERENCE_DIFFERENCE' for d in row.get('reference_diagnostics',[])): return 'SYMBOLIC_REFERENCE_DIFFERENCE'
+    if any(d['classification']=='LITERAL_CONTENT_DIFFERENCE' for d in row.get('literal_diagnostics',[])): return 'LITERAL_CONTENT_DIFFERENCE'
     if row.get('compiler_context'): return 'COMPILER_CONTEXT_DEPENDENCY'
     if row['status'] == 'MISSING':
         return 'SOURCE_INCOMPLETE'
@@ -60,6 +62,15 @@ def workflow(row):
                 'reason':'Exact independently resolved prefix and identical terminal same-CU JMP target; only a range-forced short/near encoding differs. Raw function bytes and sizes do not match.'}
     if row['status']!='FUNCTION_MATCH' and row.get('compiler_context'):
         return {'state':'SOURCE_DIFFER','difference_class':'COMPILER_CONTEXT_DEPENDENCY','body_edit_allowed':False,'reason':'Route compiler-context sensitivity to supervisor; no body or layout match is claimed.'}
+    if row['status']!='FUNCTION_MATCH' and row.get('reference_source_pattern'):
+        return {'state':'SOURCE_DIFFER','difference_class':'SYMBOLIC_REFERENCE_DIFFERENCE','body_edit_allowed':True,
+                'reason':'A regenerated compiler-mapped assignment recipe satisfies the recorded declaration/reference prerequisites. Only a bounded experiment is authorized; no layout or match proof is claimed.'}
+    if row['status']!='FUNCTION_MATCH' and any(d['classification']=='SYMBOLIC_REFERENCE_DIFFERENCE' for d in row.get('reference_diagnostics',[])):
+        return {'state':'SOURCE_DIFFER','difference_class':'SYMBOLIC_REFERENCE_DIFFERENCE','body_edit_allowed':False,
+                'reason':'Aligned scalar references select different named global/field paths. Resolve the recorded declaration/reference prerequisites before body-only grinding; no layout-only proof is claimed.'}
+    if row['status']!='FUNCTION_MATCH' and any(d['classification']=='LITERAL_CONTENT_DIFFERENCE' for d in row.get('literal_diagnostics',[])):
+        return {'state':'SOURCE_DIFFER','difference_class':'LITERAL_CONTENT_DIFFERENCE','body_edit_allowed':True,
+                'reason':'Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.'}
     proven = row.get('relocation_resolved_equal') and row.get('instruction_boundaries_verified') and row['status'] == 'FUNCTION_MATCH'
     displaced = [t for t in row.get('direct_transfers', []) if not t.get('layout_operand_equal', True)]
     if proven and displaced:

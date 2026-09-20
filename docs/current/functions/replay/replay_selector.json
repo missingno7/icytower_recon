@@ -270,6 +270,51 @@
     "body_end_line": 453,
     "body_sha256": "32fdc1df7f583cba220aa742253c1889b22e372727c5d1ded59bfe5ebfa8c560"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 455,
+      "candidate_addend": 568,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 708,
+      "candidate_addend": 476,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 715,
+      "candidate_addend": 510,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 933,
+      "candidate_addend": 184,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 947,
+      "candidate_addend": 532,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 973,
+      "candidate_addend": 373,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1053,6 +1098,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_create_bitmap",
@@ -1737,9 +1783,9 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay replay_selector",
@@ -1795,6 +1841,16 @@
       "candidate_card": "docs/current/local-declarations/decl_replay_replay_selector_fname.json"
     }
   ],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "replay_selector",
+      "source": "src/replay.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "replay_selector",
@@ -1843,7 +1899,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 570
+          "line": 571
         },
         {
           "position": "return",
@@ -1890,6 +1946,9 @@
   "evidence_counts": {
     "relocation_mismatches": 74,
     "direct_transfer_mismatches": 6,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 6,
+    "literal_dependencies": 0,
     "original_calls": 60,
     "calls": 43,
     "referenced_globals": 18

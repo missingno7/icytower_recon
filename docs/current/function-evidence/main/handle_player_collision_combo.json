@@ -765,10 +765,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2317,
-    "body_end_line": 2381,
+    "body_start_line": 2318,
+    "body_end_line": 2382,
     "body_sha256": "3b7bf626468046e4e0d72a39bd241c149acdf83d8b0545f78bf57d9230728ec2"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1702,7 +1704,7 @@
         "assembly": "mov    0xc(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 23339,
+            "die": 23433,
             "name": "lastY",
             "type": "int",
             "base_type": "int",
@@ -1724,7 +1726,7 @@
         "assembly": "movl   $0xff439eb2,-0x1c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23369,
+            "die": 23463,
             "name": "floor_y",
             "type": "int",
             "base_type": "int",
@@ -1746,7 +1748,7 @@
         "assembly": "movl   $0x0,-0x20(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23384,
+            "die": 23478,
             "name": "floor_x1",
             "type": "int",
             "base_type": "int",
@@ -1768,7 +1770,7 @@
         "assembly": "movl   $0x0,-0x24(%ebp)",
         "dwarf_variables": [
           {
-            "die": 23399,
+            "die": 23493,
             "name": "floor_x2",
             "type": "int",
             "base_type": "int",
@@ -2237,6 +2239,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_is_solid",
@@ -2735,9 +2738,9 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main handle_player_collision_combo",
@@ -2876,6 +2879,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "handle_player_collision_combo",
+      "source": "src/main.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "handle_player_collision_combo",

@@ -7,10 +7,10 @@
   "historical_va": "0x41cce8",
   "historical_size": 254,
   "status": "CODEGEN_SIMILAR",
-  "state": "CODEGEN_SIMILAR",
-  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
-  "body_edit_allowed": false,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+  "body_edit_allowed": true,
+  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
   "prototype": "Treplay * create_replay(int size);",
   "return_type": "Treplay *",
   "parameters": [
@@ -77,9 +77,53 @@
     "body_end_line": 485,
     "body_sha256": "e486efbd1125b12eb2c9f63c1625a1aaa3037c73b923b51ec942c787761ae51a"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 127,
+      "candidate_addend": 0,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077630,
+      "candidate_hex": "7265706c6179",
+      "original_hex": "4861726f6c64",
+      "candidate_instruction": {
+        "address": 1082,
+        "bytes": "be00000000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x0,%esi"
+      },
+      "original_instruction": {
+        "address": 4312422,
+        "bytes": "be7e7a4d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d7a7e,%esi"
+      },
+      "candidate_text": "replay",
+      "original_text": "Harold",
+      "candidate_source_lines": []
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
-  "source_patterns": [],
+  "source_patterns": [
+    {
+      "id": "repair_literal_content",
+      "changes": [
+        {
+          "start": 15478,
+          "end": 15486,
+          "before": "\"replay\"",
+          "after": "\"Harold\"",
+          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+        }
+      ],
+      "reason": "Aligned instructions expose different string payloads; this is a source experiment, not ownership or equality proof.",
+      "application_command": "python tools/apply_pattern.py game-replay create_replay repair_literal_content"
+    }
+  ],
   "frame_layout": null,
   "signedness": {
     "variables": [
@@ -446,6 +490,23 @@
       ]
     }
   ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 0,
+      "candidate_card": "docs/current/literals/game-replay/0.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        127
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    }
+  ],
   "calls": [
     {
       "symbol": "_malloc",
@@ -560,11 +621,31 @@
       "size_delta": -4
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "aligned-literal-content-difference",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "symptom": "Instruction skeletons match, but aligned pointer operands reference different literal payloads.",
+      "known_source_cause": "Wrong filename format, file mode, default string, or formatting spaces can masquerade as relocation layout differences.",
+      "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+      },
+      "example_functions": [
+        "add_profile",
+        "fldads_dump_local_cache",
+        "create_replay",
+        "save_profile"
+      ],
+      "required_evidence": "literal_diagnostics",
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+    }
+  ],
   "difficulty": "SUPERVISOR",
-  "priority": 33,
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay create_replay",
@@ -584,6 +665,29 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [
+    {
+      "function_offset": 44,
+      "symbol": ".data",
+      "reason": "section base not independently established",
+      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
+    },
+    {
+      "function_offset": 52,
+      "symbol": ".data",
+      "reason": "section base not independently established",
+      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
+    }
+  ],
+  "interface_scope": [
+    {
+      "function": "create_replay",
+      "source": "src/replay.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "create_replay",
@@ -631,7 +735,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 780
+          "line": 781
         },
         {
           "position": "return",
@@ -678,6 +782,9 @@
   "evidence_counts": {
     "relocation_mismatches": 3,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 1,
+    "literal_dependencies": 1,
     "original_calls": 3,
     "calls": 3,
     "referenced_globals": 4

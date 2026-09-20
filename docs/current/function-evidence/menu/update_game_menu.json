@@ -356,6 +356,8 @@
     "body_end_line": 454,
     "body_sha256": "9404056900fb2de60266dc528e3faef33031ea8604f737732dbda2b4353d393b"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -959,6 +961,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_is_up",
@@ -1375,10 +1378,10 @@
       "confidence": "OBSERVED"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 77,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-menu.json",
   "verification_command": "python tools/check_function.py game-menu update_game_menu",
@@ -1400,6 +1403,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "update_game_menu",
+      "source": "src/menu.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "update_game_menu",

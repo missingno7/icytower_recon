@@ -590,6 +590,23 @@
     "body_end_line": 367,
     "body_sha256": "c7b16104a7a672576c2482dc01e36180c78b7d4f1d9adf2de7d6816f7a59455c"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 600,
+      "candidate_addend": 168,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 659,
+      "candidate_addend": 172,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1227,6 +1244,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_textout_ex",
@@ -1516,10 +1534,10 @@
       "evidence": "docs/stack-frame-evidence.md"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": -50,
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-menu.json",
   "verification_command": "python tools/check_function.py game-menu draw_menu",
@@ -1541,6 +1559,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "draw_menu",
+      "source": "src/menu.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "draw_menu",
@@ -1627,7 +1655,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 565
+          "line": 566
         },
         {
           "position": "parameter 3",

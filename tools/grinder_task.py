@@ -38,8 +38,8 @@ def begin(target,name,verify_only=False,medium=False):
     report=fresh_verify(target); row=next(r for r in report['functions'] if r['name']==name)
     card=card_for(target,report,row)
     if not verify_only:
-        if not card['body_edit_allowed'] or card['state']=='BODY_MATCH_LAYOUT_BLOCKED': raise ValueError('Body is protected: '+card['state'])
-        if card['difficulty'] not in (('CHEAP','MEDIUM') if medium else ('CHEAP',)): raise ValueError('Grinder skips '+card['difficulty']+' tasks')
+        if not card['body_edit_allowed'] or card['state']=='BODY_MATCH_LAYOUT_BLOCKED': raise ValueError('Body is protected: '+card['state']+'; '+card['reason'])
+        if card['difficulty'] not in (('CHEAP','MEDIUM') if medium else ('CHEAP',)): raise ValueError('Grinder skips '+card['difficulty']+' tasks: '+card.get('routing_reason','See the candidate card'))
     write_json(SESSION,{'target':target,'function':name,'source':card['source'],'source_text':(ROOT/card['source']).read_bytes().decode('cp1252'),
                         'files':snapshot_files(),'ledger':identity(ROOT/'src/recovery.json'),'verify_only':verify_only,
                         'baseline_report':report,'baseline_link':read_json(CURRENT/'link-status.json') if (CURRENT/'link-status.json').exists() else None,'card':card})

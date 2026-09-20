@@ -58,6 +58,8 @@
     "body_end_line": 177,
     "body_sha256": "eaf62f97335f5eb82db9847b343ec30f879564d083018b3c615dea69fc31ff24"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -287,9 +289,9 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4393",
-      "candidate_addend": 166,
+      "candidate_addend": 163,
       "dwarf_type": null,
-      "placement_confidence": "unique read-only literal or table content",
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -299,6 +301,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_csv_begin",
@@ -429,11 +432,11 @@
   "relocation_mismatches": [],
   "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "fldads_dump_local_cache",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 444,
       "candidate_offset": 204,
       "size_delta": 0
@@ -447,7 +450,7 @@
     },
     {
       "function": "fldads_update_local_adimg",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 1012,
       "candidate_offset": 772,
       "size_delta": 0
@@ -462,7 +465,7 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 37,
+  "priority": 42,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -472,6 +475,16 @@
   "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_update_cache",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "fldads_update_cache",
+      "source": "src/fld_adspot.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "fldads_update_cache",
@@ -500,6 +513,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 7,
     "calls": 8,
     "referenced_globals": 1

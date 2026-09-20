@@ -45,9 +45,10 @@ No runtime replay is used. The ordinary game link still reports max_speed.
 
 The generated queue now includes declaration, canonical-type, compatible partial-view,
 definition-order and array-extent work. Use its live counts instead of historical
-milestone totals. No unresolved body is currently classified CHEAP: bounded probes
-demonstrated cross-function compiler sensitivity in the last two apparent easy
-cases. They now have explicit supervisor evidence instead of repeated body guesses.
+milestone totals. The earlier instruction-order candidates remain supervisor work because bounded
+probes demonstrated cross-function compiler sensitivity. Literal-content analysis
+now identifies a separate class of CHEAP body repairs from aligned operands and
+explicit source tokens; current counts remain generated.
 Readiness is not yet majority-body automation. Mechanical declaration/data work
 supplies the inexpensive queue. Large control-flow
 mismatches, partial profile type views, unresolved initializer graphs and ambiguous
@@ -113,3 +114,84 @@ windows, maintained-source line mappings, and bounded source experiments where
 available. Unknown or context-sensitive remnants still route to a supervisor.
 
 The mechanical worker accepted historical source-order tasks for game_data and hisc. Its fld_adspot trial was restored and blocked; a narrow terminal-JMP layout proof now distinguishes the wrapper from the still-unresolved CSV-reader literal. See [branch relaxation evidence](branch-relaxation-evidence.md).
+
+Literal-content diagnostics now distinguish wrong payloads from equal data with
+unproved ownership. The generated add_profile filename-format repair passed FAST
+and exact acceptance in one attempt. `pattern_grinder.py` automates existing
+single-pattern CHEAP body tasks through the same guards. It never treats original
+operand data as an independent relocation binding. See [literal evidence](literal-content-evidence.md).
+
+Publication now skips byte-identical JSON outputs and atomically replaces changed
+files. Rollback also preserves unchanged files. A write/replace failure cannot
+truncate an existing published file; the durable journal still protects the whole
+multi-file transaction. The worker stopped correctly on a real publication failure
+and the recovery command restored the prior state before retrying.
+
+Typed global-reference prerequisites are in [reference-status.json](current/reference-status.json) and the function card. SOURCE_DIFFER may require an owner declaration repair before any body edit. Partial-function address observations do not establish source correspondence. See [reference evidence](reference-evidence.md); the play_char migration has now passed the dedicated global-type gate, including protected-body checks.
+
+Global declaration migrations use generated `GLOBAL_TYPE` tasks through
+`interface_task.py`. Apply only the listed recipe: generated aggregate declaration,
+header, and proved offset-zero scalar access adaptations. FAST verifies the complete
+layout and a separate locked-compiler COMMON allocation witness. Promotion preserves
+all existing exact proofs; layout-protected bodies are ineligible. Completion of a
+type task does not claim original BSS placement or a new function match.
+
+The worker also accepted the existing generated `line_alert` assignment swap after
+an explicit supervisor review confirmed that the accepted global-type migration
+had removed its separate register-clear mismatch. The old block and new receipt
+identity are preserved in `attempts/game-main/line_alert-supervisor-review.json`.
+Do not reopen blocks merely because a source hash changed. Generated pattern IDs
+may contain hyphens; the worker validates them as single arguments and never
+executes commands supplied by cards.
+
+The typed assignment recipe then repaired `check_characters` through one automated
+FAST attempt and explicit BODY_MATCH_LAYOUT_BLOCKED acceptance. Its seven remaining
+same-CU transfer operands are layout work; do not edit the proven body. This validates
+both generated source repair and the worker's choice of the narrower promotion claim.
+
+A four-task unattended mechanical run promoted `order_httpget`, `order_map`,
+`array_profile_rankCCCs` and `array_profile_rankCombos` through fresh strict
+acceptance: `attempts/mechanical-runs/20260920T221149063107Z.jsonl`.
+The workers now distinguish completed candidate rejection (FAST exit 10) from
+infrastructure/unknown failures. Only the former becomes a source blocker;
+other failures restore safely and stop for review.
+
+Function cards now link compact shared-literal dependency evidence. This separates
+anonymous pool ownership work from local source mismatches such as create_profile's
+store ordering. FAST pool cards live under its build evidence; canonical cards live
+under `current/literals`. Peer references and equal payloads are diagnostic only,
+never placement proof or authorization to edit another function.
+
+Global-type acceptance now rechecks the object name, complete expected layout,
+generated-header path, source and target against independent original/current
+report evidence before generating edits. Plan redirection is covered by negative
+controls.
+
+The Tprofile_general canonical-view trial remains unaccepted. Its target function
+emission was preserved, but five immediate initializations in select_profile moved
+within one 45-byte window. The full contribution gate rejected the change and the
+source was restored. Evidence is in attempts/type-view-initializer-order.json.
+Do not bypass the gate: a broader candidate-only scheduling proof would need
+explicit dependency, entry-point, relocation and memory-observability safeguards;
+it must never participate in original FUNCTION_MATCH comparison.
+
+The Tprofile_general trial was replayed to validate focused contribution failure
+reporting. It was again rejected, restored and explicitly supervisor-blocked.
+`attempts/type-view-contribution-diagnostic.json` identifies select_profile's
+164..209 instruction window, with DIFFER status both before and after. The worker
+must not retry this task until the blocking evidence has been addressed.
+
+Queue prerequisites now distinguish declarations compiled in the owning CU from
+remote conflicts. save_profile's profile.c declaration/type evidence agrees even
+though main.c still conflicts; its actual immediate blockers are two unproved
+empty-string owners. create_replay still has a local Treplay type conflict. Both
+facts are validated in attempts/interface-scope-validation.json. Global interface
+conflicts remain visible and unresolved; scoped agreement is not link proof.
+Generated recipes with other unresolved relocations route to supervisor work
+before a futile automatic attempt. Admission errors now name the routing reason.
+
+The final two profile-array prerequisites, rankLables and rankNMLs, also passed an
+unattended worker batch and strict acceptance. The complete run is
+`attempts/mechanical-runs/20260920T231319867975Z.jsonl`. All four profile array-extent
+repairs have now been accepted; their completion does not imply whole-object or
+whole-CU recovery.

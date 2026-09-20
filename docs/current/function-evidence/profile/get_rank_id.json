@@ -80,6 +80,8 @@
     "body_end_line": 72,
     "body_sha256": "5ed86053f51e6e0528a43e341863111fdfe73093e25c312f19c5a29e7236483a"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -509,23 +511,28 @@
       "references": [
         31
       ],
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "object_owners": [
         {
           "name": "rankCombos",
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 5847,
+          "candidate_die": 5831,
           "candidate_offset": 160,
           "section_index": 2,
           "section": ".data",
-          "size": 64,
+          "size": 48,
           "original_va": 4971616,
           "original_die": 201819,
           "dwarf_type": "int [12]",
-          "candidate_type": "int [16]",
-          "reason": "DWARF type/size/member layout differs or is incomplete"
+          "candidate_type": "int [12]",
+          "candidate_coff": 47,
+          "original_coff": 10264,
+          "initializer_relocations": [],
+          "proof": "Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer",
+          "initializer": "all initialized bytes equal after independent relocation resolution",
+          "initial_value": "0000000000000000070000000f00000019000000230000004600000078000000c80000002c010000900100008a020000"
         }
       ],
       "initial_value": null,
@@ -554,23 +561,28 @@
       "references": [
         43
       ],
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "object_owners": [
         {
           "name": "rankNMLs",
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 5895,
+          "candidate_die": 5879,
           "candidate_offset": 288,
           "section_index": 2,
           "section": ".data",
-          "size": 64,
+          "size": 48,
           "original_va": 4971744,
           "original_die": 201867,
           "dwarf_type": "int [12]",
-          "candidate_type": "int [16]",
-          "reason": "DWARF type/size/member layout differs or is incomplete"
+          "candidate_type": "int [12]",
+          "candidate_coff": 48,
+          "original_coff": 10084,
+          "initializer_relocations": [],
+          "proof": "Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer",
+          "initializer": "all initialized bytes equal after independent relocation resolution",
+          "initial_value": "0000000000000000000000000000000000000000000000000000000090010000f401000058020000bc020000b0040000"
         }
       ],
       "initial_value": null,
@@ -599,23 +611,28 @@
       "references": [
         58
       ],
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "object_owners": [
         {
           "name": "rankCCCs",
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 5872,
+          "candidate_die": 5856,
           "candidate_offset": 224,
           "section_index": 2,
           "section": ".data",
-          "size": 64,
+          "size": 48,
           "original_va": 4971680,
           "original_die": 201844,
           "dwarf_type": "int [12]",
-          "candidate_type": "int [16]",
-          "reason": "DWARF type/size/member layout differs or is incomplete"
+          "candidate_type": "int [12]",
+          "candidate_coff": 49,
+          "original_coff": 10842,
+          "initializer_relocations": [],
+          "proof": "Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer",
+          "initializer": "all initialized bytes equal after independent relocation resolution",
+          "initial_value": "000000000000000037000000410000004b000000550000005f00000069000000730000007d0000008700000091000000"
         }
       ],
       "initial_value": null,
@@ -634,6 +651,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [],
   "original_calls": [],
   "indirect_control_flow": 0,
@@ -667,48 +685,18 @@
   "verification_command": "python tools/check_function.py game-profile get_rank_id",
   "begin_command": "python tools/grinder_task.py begin game-profile get_rank_id",
   "promotion_command": "python tools/promote_function.py game-profile get_rank_id",
-  "storage_declarations": [
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
     {
-      "name": "rankCombos",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201819.json"
-    },
-    {
-      "name": "rankCCCs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201844.json"
-    },
-    {
-      "name": "rankNMLs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201867.json"
+      "function": "get_rank_id",
+      "source": "src/profile.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
     }
   ],
-  "local_declaration_tasks": [],
   "interface_conflicts": [
     {
       "function": "get_rank_id",

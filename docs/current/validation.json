@@ -3,146 +3,146 @@
   "results": [
     {
       "command": "python tools/check_function.py game-scroller draw_scroller",
-      "returncode": 1,
-      "expected_returncode": 1,
-      "seconds": 5.776,
+      "returncode": 10,
+      "expected_returncode": 10,
+      "seconds": 6.026,
       "stdout": "game-scroller:draw_scroller DIFFER / SOURCE_DIFFER\nsize 396 / 396; COMPILER_CONTEXT_DEPENDENCY; body edit False\nfirst difference: {'offset': 93, 'original_va': 4321609, 'candidate_byte': 69, 'original_byte': 77}\nint draw_scroller(Tscroller *sc, BITMAP *bmp, int x, int y, int color);\nlocals: int i\noriginal:\n  0041f13a  89442410               mov    %eax,0x10(%esp)\n  0041f13e  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  0041f141  034310                 add    0x10(%ebx),%eax ; sc: Tscroller *\n  0041f144  8944240c               mov    %eax,0xc(%esp)\n  0041f148  8b4d14                 mov    0x14(%ebp),%ecx ; y: int\n  0041f14b  894c2408               mov    %ecx,0x8(%esp)\n  0041f14f  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  0041f152  89442404               mov    %eax,0x4(%esp)\n  0041f156  8b550c                 mov    0xc(%ebp),%edx ; bmp: BITMAP *\ncandidate:\n  0000007a  89442410               mov    %eax,0x10(%esp)\n  0000007e  8b4510                 mov    0x10(%ebp),%eax ; x: int\n  00000081  034310                 add    0x10(%ebx),%eax ; sc: Tscroller *\n  00000084  8944240c               mov    %eax,0xc(%esp)\n  00000088  8b4514                 mov    0x14(%ebp),%eax ; y: int\n  0000008b  89442408               mov    %eax,0x8(%esp)\n  0000008f  8b5510                 mov    0x10(%ebp),%edx ; x: int\n  00000092  89542404               mov    %edx,0x4(%esp)\n  00000096  8b4d0c                 mov    0xc(%ebp),%ecx ; bmp: BITMAP *\nrelocation mismatches: 0 direct-transfer/layout differences: 0\nCompiler context: CONTEXT_EVIDENCE_NEEDS_REFRESH ; docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl\nFocused card: build/fast/game-scroller/draw_scroller.json\npython tools/promote_function.py game-scroller draw_scroller\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/check_function.py game-map add_floor",
-      "returncode": 1,
-      "expected_returncode": 1,
-      "seconds": 5.507,
-      "stdout": "game-map:add_floor DIFFER / SOURCE_DIFFER\nsize 608 / 608; REGISTER_OR_INSTRUCTION_SELECTION; body edit True\nfirst difference: {'offset': 297, 'original_va': 4286725, 'candidate_byte': 184, 'original_byte': 176}\nvoid add_floor(Tmap *m);\nlocals: int i, int width, int max_w\noriginal:\n  004168ee  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  004168f8  41                     inc    %ecx\n  004168f9  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  004168ff  e86800ffff             call   40696c <_get_demo>\n  00416904  8bb08c000000           mov    0x8c(%eax),%esi\n  0041690a  85f6                   test   %esi,%esi\n  0041690c  0f84aa000000           je     4169bc <_add_floor+0x1e0>\n  00416912  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00416918  3db70b0000             cmp    $0xbb7,%eax\ncandidate:\n  0000024a  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  00000254  41                     inc    %ecx\n  00000255  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  0000025b  e800000000             call   260 <_add_floor+0x128>\n  00000260  8bb88c000000           mov    0x8c(%eax),%edi\n  00000266  85ff                   test   %edi,%edi\n  00000268  0f8486000000           je     2f4 <_add_floor+0x1bc>\n  0000026e  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00000274  3db70b0000             cmp    $0xbb7,%eax\nrelocation mismatches: 6 direct-transfer/layout differences: 0\n  relocation +0x16e _rand: named symbol; independently resolved target 4959512\n  relocation +0x1bd _rand: named symbol; independently resolved target 4959512\n  relocation +0x1d1 _rand: named symbol; independently resolved target 4959512\n  relocation +0x1fd _rand: named symbol; independently resolved target 4959512\nFocused card: build/fast/game-map/add_floor.json\npython tools/promote_function.py game-map add_floor\n",
+      "returncode": 10,
+      "expected_returncode": 10,
+      "seconds": 5.782,
+      "stdout": "game-map:add_floor DIFFER / SOURCE_DIFFER\nsize 608 / 608; REGISTER_OR_INSTRUCTION_SELECTION; body edit True\nfirst difference: {'offset': 297, 'original_va': 4286725, 'candidate_byte': 184, 'original_byte': 176}\nvoid add_floor(Tmap *m);\nlocals: int i, int width, int max_w\noriginal:\n  004168ee  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  004168f8  41                     inc    %ecx\n  004168f9  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  004168ff  e86800ffff             call   40696c <_get_demo>\n  00416904  8bb08c000000           mov    0x8c(%eax),%esi\n  0041690a  85f6                   test   %esi,%esi\n  0041690c  0f84aa000000           je     4169bc <_add_floor+0x1e0>\n  00416912  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00416918  3db70b0000             cmp    $0xbb7,%eax\ncandidate:\n  0000024a  c783e802000000000000   movl   $0x0,0x2e8(%ebx) ; m: Tmap *\n  00000254  41                     inc    %ecx\n  00000255  898bf4020000           mov    %ecx,0x2f4(%ebx) ; m: Tmap *\n  0000025b  e800000000             call   260 <_add_floor+0x128>\n  00000260  8bb88c000000           mov    0x8c(%eax),%edi\n  00000266  85ff                   test   %edi,%edi\n  00000268  0f8486000000           je     2f4 <_add_floor+0x1bc>\n  0000026e  8b83f4020000           mov    0x2f4(%ebx),%eax ; m: Tmap *\n  00000274  3db70b0000             cmp    $0xbb7,%eax\nrelocation mismatches: 6 direct-transfer/layout differences: 0\n  relocation +0x16e _rand: named symbol; independently resolved target 4959512\n  relocation +0x1bd _rand: named symbol; independently resolved target 4959512\n  relocation +0x1d1 _rand: named symbol; independently resolved target 4959512\n  relocation +0x1fd _rand: named symbol; independently resolved target 4959512\n  literal +0x21a: UNALIGNED_OR_UNTYPED; candidate None; original None\n  literal +0x227: UNALIGNED_OR_UNTYPED; candidate None; original None\nFocused card: build/fast/game-map/add_floor.json\npython tools/promote_function.py game-map add_floor\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/check_function.py game-profile create_profile",
-      "returncode": 1,
-      "expected_returncode": 1,
-      "seconds": 6.45,
-      "stdout": "game-profile:create_profile DIFFER / SOURCE_DIFFER\nsize 823 / 823; UNKNOWN_SUPERVISOR; body edit True\nfirst difference: {'offset': 508, 'original_va': 4303748, 'candidate_byte': 220, 'original_byte': 36}\nTprofile * create_profile(char *handle, int overwrite);\nlocals: char [1024] file, Tprofile * p, int i, time_t now, struct tm * my_time, int year, int month, int day\noriginal:\n  0041ab6f  b913000000             mov    $0x13,%ecx\n  0041ab74  89c7                   mov    %eax,%edi\n  0041ab76  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  0041ab78  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  0041ab82  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  0041ab8c  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  0041ab96  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  0041aba0  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0041abaa  c7042400000000         movl   $0x0,(%esp)\ncandidate:\n  000018df  b913000000             mov    $0x13,%ecx\n  000018e4  89c7                   mov    %eax,%edi\n  000018e6  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  000018e8  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  000018f2  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  000018fc  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  00001906  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  00001910  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0000191a  c7042400000000         movl   $0x0,(%esp)\nrelocation mismatches: 2 direct-transfer/layout differences: 1\n  relocation +0x256 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  relocation +0x264 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  transfer +0x2c0 save_profile: target proof True; original layout operand False\n  instruction-order window +0x1fa; candidate source lines []\nNeighbor size deltas: select_profile: -444\nFocused card: build/fast/game-profile/create_profile.json\npython tools/promote_function.py game-profile create_profile\n",
+      "returncode": 10,
+      "expected_returncode": 10,
+      "seconds": 6.82,
+      "stdout": "game-profile:create_profile DIFFER / SOURCE_DIFFER\nsize 823 / 823; UNKNOWN_SUPERVISOR; body edit True\nfirst difference: {'offset': 508, 'original_va': 4303748, 'candidate_byte': 220, 'original_byte': 36}\nTprofile * create_profile(char *handle, int overwrite);\nlocals: char [1024] file, Tprofile * p, int i, time_t now, struct tm * my_time, int year, int month, int day\noriginal:\n  0041ab6f  b913000000             mov    $0x13,%ecx\n  0041ab74  89c7                   mov    %eax,%edi\n  0041ab76  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  0041ab78  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  0041ab82  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  0041ab8c  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  0041ab96  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  0041aba0  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0041abaa  c7042400000000         movl   $0x0,(%esp)\ncandidate:\n  000018df  b913000000             mov    $0x13,%ecx\n  000018e4  89c7                   mov    %eax,%edi\n  000018e6  f3a4                   rep movsb %ds:(%esi),%es:(%edi)\n  000018e8  c783e004000001000000   movl   $0x1,0x4e0(%ebx)\n  000018f2  c783dc04000000000000   movl   $0x0,0x4dc(%ebx)\n  000018fc  c7832405000000000000   movl   $0x0,0x524(%ebx)\n  00001906  c7832805000096000000   movl   $0x96,0x528(%ebx)\n  00001910  c7832c05000096000000   movl   $0x96,0x52c(%ebx)\n  0000191a  c7042400000000         movl   $0x0,(%esp)\nrelocation mismatches: 2 direct-transfer/layout differences: 1\n  relocation +0x256 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  relocation +0x264 .rdata: unique read-only literal or table content; independently resolved target 5075930\n  literal +0x256: CONTENT_EQUAL_OWNER_UNPROVEN; candidate ''; original ''\n  literal +0x264: CONTENT_EQUAL_OWNER_UNPROVEN; candidate ''; original ''\n  transfer +0x2c0 save_profile: target proof True; original layout operand False\n  instruction-order window +0x1fa; candidate source lines []\nNeighbor size deltas: select_profile: -444\nFocused card: build/fast/game-profile/create_profile.json\npython tools/promote_function.py game-profile create_profile\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/check_function.py game-main play_jump_sound",
       "returncode": 0,
       "expected_returncode": 0,
-      "seconds": 9.72,
+      "seconds": 10.562,
       "stdout": "game-main:play_jump_sound FUNCTION_MATCH / BODY_MATCH_LAYOUT_BLOCKED\nsize 141 / 141; SAME_CU_CALL_LAYOUT; body edit False\nfirst difference: None\nvoid play_jump_sound(Tplayer *p);\nlocals: \noriginal:\n  00406ecc  55                     push   %ebp\n  00406ecd  89e5                   mov    %esp,%ebp\n  00406ecf  83ec18                 sub    $0x18,%esp\n  00406ed2  8b4508                 mov    0x8(%ebp),%eax ; p: Tplayer *\n  00406ed5  dd4018                 fldl   0x18(%eax)\ncandidate:\n  00003c28  55                     push   %ebp\n  00003c29  89e5                   mov    %esp,%ebp\n  00003c2b  83ec18                 sub    $0x18,%esp\n  00003c2e  8b4508                 mov    0x8(%ebp),%eax ; p: Tplayer *\n  00003c31  dd4018                 fldl   0x18(%eax)\nrelocation mismatches: 0 direct-transfer/layout differences: 3\n  transfer +0x43 play_sound: target proof True; original layout operand False\n  transfer +0x65 play_sound: target proof True; original layout operand False\n  transfer +0x87 play_sound: target proof True; original layout operand False\n  storage custom: COMMON_DECLARATION_AGREES; docs/current/storage/game-main/137955.json\nNeighbor size deltas: handle_player_input: -499\nFocused card: build/fast/game-main/play_jump_sound.json\npython tools/promote_function.py game-main play_jump_sound --claim BODY_MATCH_LAYOUT_BLOCKED\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/grinder_task.py begin game-main play_jump_sound",
       "returncode": 1,
       "expected_returncode": 1,
-      "seconds": 10.049,
+      "seconds": 10.466,
       "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 103, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 98, in main\n    if a.action=='begin': begin(a.target,a.function,a.verify_only,a.medium)\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 41, in begin\n    if not card['body_edit_allowed'] or card['state']=='BODY_MATCH_LAYOUT_BLOCKED': raise ValueError('Body is protected: '+card['state'])\nValueError: Body is protected: BODY_MATCH_LAYOUT_BLOCKED\n",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 103, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 98, in main\n    if a.action=='begin': begin(a.target,a.function,a.verify_only,a.medium)\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 41, in begin\n    if not card['body_edit_allowed'] or card['state']=='BODY_MATCH_LAYOUT_BLOCKED': raise ValueError('Body is protected: '+card['state']+'; '+card['reason'])\nValueError: Body is protected: BODY_MATCH_LAYOUT_BLOCKED; Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.\n",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/promote_function.py game-scroller draw_scroller",
       "returncode": 1,
       "expected_returncode": 1,
-      "seconds": 6.5,
+      "seconds": 6.615,
       "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 126, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 123, in main\n    a=ap.parse_args(); promote(a.target,a.function,a.claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 90, in promote\n    row=eligible(report,name,claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 37, in eligible\n    raise ValueError('Promotion denied: '+name+' is '+row['status']+'; first mismatch '+str(row.get('first_difference')))\nValueError: Promotion denied: draw_scroller is DIFFER; first mismatch {'offset': 93, 'original_va': 4321609, 'candidate_byte': 69, 'original_byte': 77}\n",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 138, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 135, in main\n    a=ap.parse_args(); promote(a.target,a.function,a.claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 97, in promote\n    row=eligible(report,name,claim)\n  File \"D:\\Prog\\icytower_recon\\tools\\promote_function.py\", line 37, in eligible\n    raise ValueError('Promotion denied: '+name+' is '+row['status']+'; first mismatch '+str(row.get('first_difference')))\nValueError: Promotion denied: draw_scroller is DIFFER; first mismatch {'offset': 93, 'original_va': 4321609, 'candidate_byte': 69, 'original_byte': 77}\n",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/grinder_task.py begin game-map getFloorData --verify-only",
       "returncode": 0,
       "expected_returncode": 0,
-      "seconds": 6.213,
+      "seconds": 6.268,
       "stdout": "Task opened: src/map.c getFloorData verify-only\npython tools/check_function.py game-map getFloorData\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       }
     },
     {
       "command": "python tools/promote_function.py game-map getFloorData",
       "returncode": 0,
       "expected_returncode": 0,
-      "seconds": 59.397,
-      "stdout": "Recorded failure and restored only the task source; task blocked\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-map getFloorData FUNCTION_MATCH (exact function proof; no object/CU claim)\n",
+      "seconds": 55.203,
+      "stdout": "Recorded failure and restored only the task source; task blocked\n\nApplied p inside a.c:f\n\nRun python tools/check_function.py t f ; this edit is not a match claim.\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-map getFloorData FUNCTION_MATCH (exact function proof; no object/CU claim)\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803549f4c50f4716542c85a21646f4574dbf364a71685db0a3e81fde93cb88f6"
+        "size": 124958,
+        "sha256": "5205262693c1ab2ba55f110cf0d6fa0025663208b0cf1403ebfce688c62a5c11"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "803c628a52de604a15eb03a9a8ccb141f03af4f5ab300d07636a0be2327f9267"
+        "size": 124958,
+        "sha256": "2fc47be92978d2e36c285ccf64d79be50eadf357acdf9faace32d7fcefb0fcaa"
       }
     },
     {
       "command": "python tools/promote_function.py game-main play_jump_sound --claim BODY_MATCH_LAYOUT_BLOCKED",
       "returncode": 0,
       "expected_returncode": 0,
-      "seconds": 61.338,
-      "stdout": "Recorded failure and restored only the task source; task blocked\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-main play_jump_sound BODY_MATCH_LAYOUT_BLOCKED (exact function proof; no object/CU claim)\n",
+      "seconds": 60.08,
+      "stdout": "Recorded failure and restored only the task source; task blocked\n\nApplied p inside a.c:f\n\nRun python tools/check_function.py t f ; this edit is not a match claim.\n\nPASS: fixture, census, research snapshots, build-input locks, canonical recovery ledger, generated types/progress, 25-CU ownership, upstream copies, PE invariants.\nPROMOTED game-main play_jump_sound BODY_MATCH_LAYOUT_BLOCKED (exact function proof; no object/CU claim)\n",
       "stderr": "",
       "ledger_before": {
-        "size": 125065,
-        "sha256": "803c628a52de604a15eb03a9a8ccb141f03af4f5ab300d07636a0be2327f9267"
+        "size": 124958,
+        "sha256": "2fc47be92978d2e36c285ccf64d79be50eadf357acdf9faace32d7fcefb0fcaa"
       },
       "ledger_after": {
-        "size": 125065,
-        "sha256": "56c5ba54f608067081f5dafc7a2f88d7afe1aad5181819aeaaaaebcca8ef4351"
+        "size": 124958,
+        "sha256": "2fc47be92978d2e36c285ccf64d79be50eadf357acdf9faace32d7fcefb0fcaa"
       }
     },
     {

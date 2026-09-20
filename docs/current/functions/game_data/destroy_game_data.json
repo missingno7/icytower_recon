@@ -35,6 +35,8 @@
     "body_end_line": 149,
     "body_sha256": "82ed8678ef8898f58e4e9fb4ac1f30d7d50662dd1483bba12c23f12e1ab9a15b"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -170,6 +172,7 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_free",
@@ -216,6 +219,16 @@
   "promotion_command": "python tools/promote_function.py game-game-data destroy_game_data",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "destroy_game_data",
+      "source": "src/game_data.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "destroy_game_data",
@@ -323,7 +336,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 777
+          "line": 778
         }
       ],
       "candidate_signatures": [
@@ -338,6 +351,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 0,
     "calls": 1,
     "referenced_globals": 0

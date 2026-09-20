@@ -206,6 +206,16 @@
     "body_end_line": 320,
     "body_sha256": "8405146a3082d3b74522e6a76066ef6c9ca3c0b0afd794f47994702c9ddbbae7"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 105,
+      "candidate_addend": 133,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -768,7 +778,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1888,
+          "logical_size": 1880,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -779,6 +789,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_makecol",
@@ -943,10 +954,10 @@
       "confidence": "OBSERVED"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 90,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-profile.json",
   "verification_command": "python tools/check_function.py game-profile draw_buffer",
@@ -954,6 +965,16 @@
   "promotion_command": "python tools/promote_function.py game-profile draw_buffer",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "draw_buffer",
+      "source": "src/profile.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "draw_buffer",

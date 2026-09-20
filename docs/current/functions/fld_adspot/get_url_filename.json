@@ -47,6 +47,8 @@
     "body_end_line": 87,
     "body_sha256": "fd8dd1d59de8920f25e8577c92bacf5a0b4a00c331df1047515171b4bf54148a"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -253,17 +255,18 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [],
   "original_calls": [],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
   "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 1,
+  "exact_adjacent_functions": 2,
   "neighbor_layout": [
     {
       "function": "fldads_dump_local_cache",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 444,
       "candidate_offset": 204,
       "size_delta": 0
@@ -278,7 +281,7 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 44,
+  "priority": 49,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -288,6 +291,16 @@
   "promotion_command": "python tools/promote_function.py game-fld-adspot get_url_filename",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "get_url_filename",
+      "source": "src/fld_adspot.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "get_url_filename",
@@ -315,6 +328,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 0,
     "calls": 0,
     "referenced_globals": 0

@@ -10,51 +10,18 @@
   "affected_targets": [
     "game-map"
   ],
-  "difficulty": "CHEAP",
-  "priority": 300,
-  "changes": [
-    {
-      "file": "src/map.c",
-      "start": 425,
-      "end": 762,
-      "before": "int is_solid(Tmap *m, int cx, int cy)\n{\n    int x, y;\n    y = (cy + 1) >> 4;\n    if (29 - y < 0 || 29 - y > 31) return 0;\n    if (m->room[29 - y].empty != 0) return 0;\n    x = cx >> 4;\n    if (x < m->room[29 - y].start_tile) return 0;\n    if (x > m->room[29 - y].end_tile) return 0;\n    return cy - (m->offset % 16) + 10000 - (y << 4);\n}",
-      "after": "void add_floor(Tmap *m)\n{\n    int i;\n    int width;\n\n    for (i=0; i<31; i++)\n        m->room[i]=m->room[i+1];\n\n    m->room[31].tiles = m->room[31].level>4999 ? 10 : m->room[31].level/500;\n    if ((m->room[31].level%250==0 && m->room[31].level<=5004) || m->room[31].level%2500==0) {\n        m->room[31].empty=0;\n        m->room[31].level++;\n        m->room[31].start_tile=0;\n        m->room[31].end_tile=40;\n    }\n    else if (m->room[31].level%5==0) {\n        m->room[31].empty=0;\n        m->room[31].level++;\n        if (get_demo()->floor_shrink) {\n            if (m->room[31].level>2999) {\n                if (m->room[31].level<=5004)\n                    width=6;\n                else {\n                    width=5;\n                    if (m->room[31].level>7504) {\n                        width=4;\n                        if (m->room[31].level>10004)\n                            width=m->room[31].level<50005 ? 3 : 2;\n                    }\n                }\n            }\n            else {\n                width=rand();\n                if (((float)(300-m->room[31].level/5)/300.0f)*10.0f<1.0f) width=6;\n                else {\n                    int max_w=(int)(((float)(300-m->room[31].level/5)/300.0f)*10.0f);\n\n                    width=width%max_w+6;\n                }\n            }\n        }\n        else width=rand()%10+6;\n\n        width+=floor_size_modifiers[get_demo()->floor_size];\n        if (width>0) {\n            m->room[31].start_tile=rand()%(30-width)+5;\n            m->room[31].end_tile=m->room[31].start_tile+width;\n        }\n        else {\n            m->room[31].start_tile=rand()%29+5;\n            m->room[31].end_tile=m->room[31].start_tile+1;\n        }\n    }\n    else {\n        m->room[31].empty=-1;\n        m->room[31].level++;\n    }\n\n    if ((m->room[31].level-1)%50==0)\n        m->room[31].sign=m->room[31].level/5;\n    else\n        m->room[31].sign=0;\n}",
-      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
-    },
-    {
-      "file": "src/map.c",
-      "start": 764,
-      "end": 896,
-      "before": "int get_level(Tmap *m, int cy)\n{\n    int y = 29 - ((cy + 1) >> 4);\n    if (y < 0 || y > 31) return 0;\n    return m->room[y].level;\n}",
-      "after": "int is_solid(Tmap *m, int cx, int cy)\n{\n    int x, y;\n    y = (cy + 1) >> 4;\n    if (29 - y < 0 || 29 - y > 31) return 0;\n    if (m->room[29 - y].empty != 0) return 0;\n    x = cx >> 4;\n    if (x < m->room[29 - y].start_tile) return 0;\n    if (x > m->room[29 - y].end_tile) return 0;\n    return cy - (m->offset % 16) + 10000 - (y << 4);\n}",
-      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
-    },
-    {
-      "file": "src/map.c",
-      "start": 898,
-      "end": 1222,
-      "before": "void getFloorData(Tmap *m, int cy, int *fy, int *fx1, int *fx2)\n{\n    int y = (cy + 1) >> 4;\n    if (29 - y < 0 || 29 - y > 31) return;\n    if (m->room[29 - y].empty != 0) return;\n    *fx1 = (m->room[29 - y].start_tile << 4) - 2;\n    *fx2 = ((m->room[29 - y].end_tile + 1) << 4) + 1;\n    *fy = (y << 4) + (m->offset % 16);\n}",
-      "after": "int get_level(Tmap *m, int cy)\n{\n    int y = 29 - ((cy + 1) >> 4);\n    if (y < 0 || y > 31) return 0;\n    return m->room[y].level;\n}",
-      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
-    },
-    {
-      "file": "src/map.c",
-      "start": 1224,
-      "end": 3107,
-      "before": "void add_floor(Tmap *m)\n{\n    int i;\n    int width;\n\n    for (i=0; i<31; i++)\n        m->room[i]=m->room[i+1];\n\n    m->room[31].tiles = m->room[31].level>4999 ? 10 : m->room[31].level/500;\n    if ((m->room[31].level%250==0 && m->room[31].level<=5004) || m->room[31].level%2500==0) {\n        m->room[31].empty=0;\n        m->room[31].level++;\n        m->room[31].start_tile=0;\n        m->room[31].end_tile=40;\n    }\n    else if (m->room[31].level%5==0) {\n        m->room[31].empty=0;\n        m->room[31].level++;\n        if (get_demo()->floor_shrink) {\n            if (m->room[31].level>2999) {\n                if (m->room[31].level<=5004)\n                    width=6;\n                else {\n                    width=5;\n                    if (m->room[31].level>7504) {\n                        width=4;\n                        if (m->room[31].level>10004)\n                            width=m->room[31].level<50005 ? 3 : 2;\n                    }\n                }\n            }\n            else {\n                width=rand();\n                if (((float)(300-m->room[31].level/5)/300.0f)*10.0f<1.0f) width=6;\n                else {\n                    int max_w=(int)(((float)(300-m->room[31].level/5)/300.0f)*10.0f);\n\n                    width=width%max_w+6;\n                }\n            }\n        }\n        else width=rand()%10+6;\n\n        width+=floor_size_modifiers[get_demo()->floor_size];\n        if (width>0) {\n            m->room[31].start_tile=rand()%(30-width)+5;\n            m->room[31].end_tile=m->room[31].start_tile+width;\n        }\n        else {\n            m->room[31].start_tile=rand()%29+5;\n            m->room[31].end_tile=m->room[31].start_tile+1;\n        }\n    }\n    else {\n        m->room[31].empty=-1;\n        m->room[31].level++;\n    }\n\n    if ((m->room[31].level-1)%50==0)\n        m->room[31].sign=m->room[31].level/5;\n    else\n        m->room[31].sign=0;\n}",
-      "after": "void getFloorData(Tmap *m, int cy, int *fy, int *fx1, int *fx2)\n{\n    int y = (cy + 1) >> 4;\n    if (29 - y < 0 || 29 - y > 31) return;\n    if (m->room[29 - y].empty != 0) return;\n    *fx1 = (m->room[29 - y].start_tile << 4) - 2;\n    *fx2 = ((m->room[29 - y].end_tile + 1) << 4) + 1;\n    *fy = (y << 4) + (m->offset % 16);\n}",
-      "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
-    }
-  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
+  "changes": [],
   "source_identities": {
     "src/map.c": {
       "size": 3108,
-      "sha256": "8d0c526c4080275819460dbf680d2fde58761562a24d8f59e055e3e054ac5a82"
+      "sha256": "5179dcf3882dbf83be3b34d645e0f6affe7422e9a937b7c64d7d471f01788ff4"
     }
   },
   "body_edit_allowed": false,
-  "state": "SOURCE_ORDER_REPAIR",
-  "status": "DEFINITION_ORDER_DIFFERS",
+  "state": "NOT_QUEUED",
+  "status": "DEFINITION_ORDER_AGREES",
   "difference_class": "HISTORICAL_DEFINITION_ORDER",
   "definition_order": [
     {
@@ -84,11 +51,10 @@
   "promotion_command": "python tools/interface_task.py promote order_map",
   "current_order": [
     "reset_map",
+    "add_floor",
     "is_solid",
     "get_level",
-    "getFloorData",
-    "add_floor"
+    "getFloorData"
   ],
-  "reason": "Unique original declaration lines; only complete definitions move; every body is preserved byte-for-byte.",
-  "edit_scope": "Generated complete-definition reorder only. Freshly preserve every exact function and prohibit new implicit declarations. No linker placement or target addresses."
+  "reason": "Explicit function definitions already follow original DWARF lines"
 }

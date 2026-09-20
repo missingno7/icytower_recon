@@ -3,8 +3,9 @@ import argparse,json,re,subprocess,sys
 from datetime import datetime,timezone
 from common import ROOT,read_json,write_json
 from grinder_task import SESSION
+from task_outcomes import CANDIDATE_REJECTED_EXIT
 
-KINDS={'INTERFACE','CANONICAL_TYPE','TYPE_VIEW','SOURCE_ORDER','ARRAY_EXTENT','DATA_POINTER','LOCAL_DECLARATION','STATIC_SCOPE'}
+KINDS={'INTERFACE','CANONICAL_TYPE','TYPE_VIEW','SOURCE_ORDER','ARRAY_EXTENT','DATA_POINTER','LOCAL_DECLARATION','STATIC_SCOPE','GLOBAL_TYPE'}
 
 
 def select_task(tasks,attempted=()):
@@ -20,6 +21,8 @@ def execute_task(task,invoke,session_state,recovery_required):
     name=task['function']
     def owned():
         current=session_state()
+        if task.get('task_kind')=='FUNCTION_BODY':
+            return current is not None and current.get('kind')!='INTERFACE' and current.get('function')==name and current.get('target')==task['target']
         return current is not None and current.get('kind')=='INTERFACE' and current.get('function')==name
     for stage in ('begin','apply','check','promote'):
         if stage!='begin' and not owned(): return {'state':'RECOVERY_REQUIRED','stage':stage,'reason':'Expected task session is absent or belongs to another task','continue':False}
@@ -27,9 +30,9 @@ def execute_task(task,invoke,session_state,recovery_required):
         if result['returncode']:
             reason=(result.get('stderr') or result.get('stdout') or 'No diagnostic output').strip()[-1800:]
             if recovery_required(): return {'state':'RECOVERY_REQUIRED','stage':stage,'reason':reason,'continue':False}
-            # A failed FAST candidate is bounded task evidence. Acceptance or begin
-            # failures may be infrastructure failures: restore and stop, not blame source.
-            cleanup='block' if stage in ('apply','check') else 'abort'
+            # Only the explicit completed-FAST rejection contract can blame a candidate.
+            # Compiler, I/O, apply, admission and acceptance failures stop for review.
+            cleanup='block' if stage=='check' and result['returncode']==CANDIDATE_REJECTED_EXIT else 'abort'
             if owned():
                 restored=invoke(cleanup,name,stage+' failed: '+reason)
                 if restored['returncode'] or session_state() is not None:
@@ -58,10 +61,14 @@ def run_batch(limit):
         sequence+=1; args=[sys.executable,'tools/interface_task.py',action,name]
         if reason is not None: args+=['--reason',reason]
         print(action,name,flush=True)
-        completed=subprocess.run(args,cwd=ROOT,capture_output=True,text=True,errors='replace')
+        try:
+            completed=subprocess.run(args,cwd=ROOT,capture_output=True,text=True,errors='replace')
+            result={'returncode':completed.returncode,'stdout':completed.stdout,'stderr':completed.stderr}
+        except OSError as exc:
+            result={'returncode':1,'stdout':'','stderr':type(exc).__name__+': '+str(exc)}
         log=folder/('%03d-%s-%s.json'%(sequence,name,action))
-        result={'returncode':completed.returncode,'stdout':completed.stdout,'stderr':completed.stderr}; write_json(log,result)
-        record({'event':'STAGE','task':name,'action':action,'returncode':completed.returncode,'log':log.relative_to(ROOT).as_posix()})
+        write_json(log,result)
+        record({'event':'STAGE','task':name,'action':action,'returncode':result['returncode'],'log':log.relative_to(ROOT).as_posix()})
         return result
     state=lambda:read_json(SESSION) if SESSION.exists() else None
     for _ in range(limit):

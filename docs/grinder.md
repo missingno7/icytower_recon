@@ -222,3 +222,64 @@ change is a layout blocker only when its complete prefix, independently resolved
 target and range constraint are proved. Do not lengthen code, add padding, alter
 flags, or edit a protected body to force the encoding. Source-order acceptance may
 preserve this explicit layout proof while the raw function status remains DIFFER.
+
+
+Generated body experiments can run with `python tools/pattern_grinder.py --limit 3`.
+This selects only CHEAP function cards with exactly one generated pattern. It uses
+fixed tool arguments, recomputes the edit from current receipts, changes only the
+named body, runs one FAST attempt and then strict promotion. A failed FAST is
+recorded, restored and blocked; acceptance or infrastructure failures stop the run.
+An unfinished publication journal stops cleanup so recovery can restore state first.
+The worker does not invent source edits or commit changes.
+
+`LITERAL_CONTENT_DIFFERENCE` is a source diagnosis, not a layout blocker. Matching
+instruction shapes can still reference the wrong filename format, file mode or
+logging text. Cards show original and candidate payloads only when the operand
+instruction is aligned and its non-relocation bytes agree. String repairs require
+an explicit uniquely identified source token; repeated tokens additionally require
+compiler line evidence. Empty, macro-generated, concatenated, ambiguous or conflicting
+strings do not receive automatic repairs. Equal payloads remain
+`CONTENT_EQUAL_OWNER_UNPROVEN` until the existing independent resolver proves ownership.
+The original instruction operand is never used as a relocation acceptance binding.
+
+Typed global-reference prerequisites are in [reference-status.json](current/reference-status.json) and the function card. SOURCE_DIFFER may require an owner declaration repair before any body edit. Partial-function address observations do not establish source correspondence. See [reference evidence](reference-evidence.md); the isolated play_char migration has not modified maintained source or bypassed protected-body gates.
+
+Global declaration migrations use generated `GLOBAL_TYPE` tasks through
+`interface_task.py`. Apply only the listed recipe: generated aggregate declaration,
+header, and proved offset-zero scalar access adaptations. FAST verifies the complete
+layout and a separate locked-compiler COMMON allocation witness. Promotion preserves
+all existing exact proofs; layout-protected bodies are ineligible. Completion of a
+type task does not claim original BSS placement or a new function match.
+
+FAST commands use exit 10 only for a completed verification that rejects the
+candidate. Exit 0 means the stated FAST gate passed. Other nonzero exits, including
+compiler/input failures and argparse errors, are infrastructure or unknown failures.
+Workers restore and stop on those failures; they do not add a source blocker.
+Apply/admission/acceptance failures also stop, regardless of exit code. An unfinished
+publication journal still prevents automatic cleanup. See `tools/test_task_outcomes.py`
+and the worker failure-injection tests for the boundary checks.
+
+For function FAST, success is based on the generated proof state: FUNCTION_MATCH or
+BODY_MATCH_LAYOUT_BLOCKED. A raw DIFFER can still have the separately proven narrow
+terminal-jump layout state. The explicit promotion claim and body protection remain
+unchanged; exit 0 never upgrades layout-blocked evidence to exact function bytes.
+Real exit-code validation is in `docs/attempts/fast-exit-contract.json`.
+
+Mechanical FAST and acceptance now write `contribution-difference.json` beside each
+fresh CU report. Rejected FAST output and attempt history link it. It identifies
+changed allocated sections, normalized relocation/symbol/common metadata, changed
+functions, their proof statuses, first byte differences and small disassembly
+windows. A bounded instruction permutation is labeled only as an observation;
+no dependency or memory-observability proof is implied and the gate is unchanged.
+
+`interface_scope` distinguishes local declaration/type blockers from conflicts in
+other CUs. Remote conflicts remain in the global report and the function card, but
+do not block a body whose own compiled declarations and checked game layouts agree.
+Unknown CU ownership, ambiguous historical signatures and unavailable local evidence
+remain blockers. Owning-CU evidence uses the compiled CU, not the header filename.
+
+`source_pattern_prerequisites` lists unresolved relocations not repaired by the
+available recipe. A literal or assignment recipe with such prerequisites routes to
+SUPERVISOR rather than spending an automatic attempt on a known incomplete repair.
+This does not assert that equal literal content proves ownership or layout-only body
+correctness. The normal strict promotion gates remain unchanged.

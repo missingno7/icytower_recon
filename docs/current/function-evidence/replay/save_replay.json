@@ -455,6 +455,16 @@
     "body_end_line": 700,
     "body_sha256": "36bc57938cc302386128a5b2538a58156bf91e920de24c560eb8b581b1b2cbbb"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 16,
+      "candidate_addend": 800,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1149,6 +1159,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_sprintf",
@@ -1808,10 +1819,10 @@
       "evidence": "docs/attempts/interfaces/create_post.jsonl"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 75,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay save_replay",
@@ -1819,6 +1830,16 @@
   "promotion_command": "python tools/promote_function.py game-replay save_replay",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "save_replay",
+      "source": "src/replay.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "save_replay",
@@ -1870,7 +1891,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 572
+          "line": 573
         },
         {
           "position": "parameter 3",

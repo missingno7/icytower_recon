@@ -156,6 +156,8 @@
     "body_end_line": 99,
     "body_sha256": "25e78605764a3b4e4fa605a89885eabe49c410f698909753a6b712899c5a88f7"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -598,6 +600,7 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [],
   "original_calls": [],
   "indirect_control_flow": 0,
@@ -671,9 +674,9 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": 42,
+  "priority": -20,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-profile.json",
   "verification_command": "python tools/check_function.py game-profile generate_profile_checksum",
@@ -681,6 +684,16 @@
   "promotion_command": "python tools/promote_function.py game-profile generate_profile_checksum",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "generate_profile_checksum",
+      "source": "src/profile.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "generate_profile_checksum",

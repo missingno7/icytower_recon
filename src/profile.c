@@ -44,14 +44,14 @@ char *jcLabels[5] = {
     "Triples in a Row:   ", "Quadruples in a Row:",
     "Quintuples in a Row:"
 };
-char *rankLables[16] = {
+char *rankLables[12] = {
     "no rank", "F", "E", "D", "C", "B", "A", "*", "**", "***",
     "****", "*****"
 };
 int rankFloors[12] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
-int rankCombos[16] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
-int rankCCCs[16] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
-int rankNMLs[16] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
+int rankCombos[12] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
+int rankCCCs[12] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
+int rankNMLs[12] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
 char *comboNames[10] = {
     "Good:", "Sweet:", "Great:", "Super:", "WOW:", "Amazing:",
     "Extreme:", "Fantastic:", "Splendid:", "No way!"
@@ -395,7 +395,7 @@ void delete_profile(char *handle)
     sprintf(file, "%s%s.itp", file, handle);
     delete_file(file);
     get_profile_dir_for_profile(file, 1024, handle);
-    sprintf(file, "%s%s.itr", file, handle);
+    sprintf(file, "%s%s_stats.txt", file, handle);
     delete_file(file);
     get_profile_dir_for_profile(file, 1024, handle);
     rmdir(file);

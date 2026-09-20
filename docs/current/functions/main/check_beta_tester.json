@@ -64,10 +64,27 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1962,
-    "body_end_line": 1987,
+    "body_start_line": 1963,
+    "body_end_line": 1988,
     "body_sha256": "8c80b1bd99884eb7f348e60dae1d879de1806b6275804e76e1c723179948b645"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 215,
+      "candidate_addend": 202,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 237,
+      "candidate_addend": 225,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -200,9 +217,9 @@
     "candidate": [
       {
         "address": 3295,
-        "bytes": "c70424a7000000",
+        "bytes": "c70424bd000000",
         "mnemonic": "movl",
-        "assembly": "movl   $0xa7,(%esp)",
+        "assembly": "movl   $0xbd,(%esp)",
         "dwarf_variables": []
       },
       {
@@ -240,7 +257,7 @@
         "assembly": "mov    %eax,0xc(%esp)",
         "dwarf_variables": [
           {
-            "die": 19552,
+            "die": 19646,
             "name": "fp",
             "type": "FILE *",
             "base_type": "_iobuf",
@@ -387,7 +404,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5191",
-      "candidate_addend": 225,
+      "candidate_addend": 247,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -404,7 +421,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5154",
-      "candidate_addend": 164,
+      "candidate_addend": 186,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -421,7 +438,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5157",
-      "candidate_addend": 167,
+      "candidate_addend": 189,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -438,7 +455,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5164",
-      "candidate_addend": 180,
+      "candidate_addend": 202,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -455,7 +472,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d517b",
-      "candidate_addend": 203,
+      "candidate_addend": 225,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -467,6 +484,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_fopen",
@@ -606,7 +624,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 215,
-      "addend": 180,
+      "addend": 202,
       "target_va": 5067108,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067108,
@@ -634,7 +652,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 237,
-      "addend": 203,
+      "addend": 225,
       "target_va": 5067131,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067131,
@@ -661,7 +679,7 @@
     }
   ],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "log2file",
@@ -679,7 +697,7 @@
     },
     {
       "function": "check_characters",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 32032,
       "candidate_offset": 2900,
       "size_delta": 0
@@ -737,7 +755,7 @@
     }
   ],
   "difficulty": "MEDIUM",
-  "priority": 88,
+  "priority": 93,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -774,12 +792,17 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/main/check_beta_tester.json",
   "evidence_counts": {
     "relocation_mismatches": 4,
     "direct_transfer_mismatches": 1,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 2,
+    "literal_dependencies": 0,
     "original_calls": 7,
     "calls": 7,
     "referenced_globals": 7

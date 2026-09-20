@@ -1,0 +1,45 @@
+{
+  "save_profile": {
+    "scope": [
+      {
+        "function": "save_profile",
+        "source": "src/profile.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+      }
+    ],
+    "prerequisites": [
+      {
+        "function_offset": 290,
+        "symbol": ".rdata",
+        "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
+        "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
+      },
+      {
+        "function_offset": 304,
+        "symbol": ".rdata",
+        "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
+        "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
+      }
+    ]
+  },
+  "create_replay": {
+    "scope": [
+      {
+        "function": "create_replay",
+        "source": "src/replay.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+      }
+    ]
+  },
+  "admission": {
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 103, in <module>\n    if __name__=='__main__': main()\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 98, in main\n    if a.action=='begin': begin(a.target,a.function,a.verify_only,a.medium)\n  File \"D:\\Prog\\icytower_recon\\tools\\grinder_task.py\", line 42, in begin\n    if card['difficulty'] not in (('CHEAP','MEDIUM') if medium else ('CHEAP',)): raise ValueError('Grinder skips '+card['difficulty']+' tasks: '+card.get('routing_reason','See the candidate card'))\nValueError: Grinder skips SUPERVISOR tasks: Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.\n",
+    "source_and_ledger_unchanged": true,
+    "session_created": false
+  },
+  "limit": "Global cross-CU conflicts remain authoritative. Scoped agreement is a queue prerequisite fact, not function matching or link compatibility proof."
+}

@@ -1,3 +1,4 @@
+#include "recovered/Tmenu_char_selection.h"
 /* Partial historical main.c recovery. Other original entities remain absent. */
 #include <stdio.h>
 #include <stdarg.h>
@@ -118,8 +119,8 @@ void line_alert(char *text)
     width=0;
     height=0;
     if (gfx_driver) {
-        width=gfx_driver->w;
         height=gfx_driver->h;
+        width=gfx_driver->w;
     }
     rectfill(screen,0,0,width,height,color);
     solid_mode();
@@ -330,7 +331,7 @@ SAMPLE *combo_sound[10];
 int num_chars;
 Tcharacter *characters;
 int curr_char;
-int play_char;
+Tmenu_char_selection play_char;
 Tplayer *ply[1000];
 int player_id;
 int any11;
@@ -1773,7 +1774,7 @@ void set_current_avatar(void)
     for (i=0; i<num_chars; i++) {
         if (!stricmp(characters[i].name, ((Tavatar_profile *)profile)->avatar)) {
             curr_char=i;
-            play_char=i;
+            play_char.value=i;
         }
     }
 }
@@ -1884,7 +1885,7 @@ int add_profile(const char *filename, int attrib, void *param)
     file = get_filename(filename);
     if (*file != '.') {
         get_profile_dir_for_profile(buf, sizeof(buf), file);
-        sprintf(buf, "%s%s", buf, file);
+        sprintf(buf, "%s%s.itp", buf, file);
         if (exists(buf)) {
             numProfiles++;
             if (profiles)
@@ -2001,10 +2002,10 @@ int check_characters(void)
     strcpy(base_char_dir + base_char_dir_len, "/characters/");
     has_additional_char_dir = get_custom_characters_dir(
         additional_char_dir, sizeof(additional_char_dir));
-    log2file("Searching '%s'", base_char_dir);
+    log2file("Searching %s for characters", base_char_dir);
     for_each_directory(base_char_dir, check_dir);
     if (has_additional_char_dir) {
-        log2file("Searching '%s'", additional_char_dir);
+        log2file("Searching %s for characters", additional_char_dir);
         for_each_directory(additional_char_dir, check_dir);
     }
     if (!num_chars)
@@ -2015,7 +2016,7 @@ int check_characters(void)
         for_each_directory(additional_char_dir, load_character);
     if (!num_chars)
         return 0;
-    curr_char = num_chars - 1;
+    play_char.max = num_chars - 1;
     for (i = 0; i < num_chars; i++)
         characters[i].ok = characters[i].bmp != NULL;
     set_current_avatar();
@@ -2447,7 +2448,7 @@ int init_game(int argc, char **argv)
         log2file(" !!! Failed to get proper Winsock version (wanted 2.2, got %d.%d)",
                  LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
     curr_char=0;
-    play_char=0;
+    play_char.value=0;
     characters=NULL;
     replay_path=NULL;
     check=0;

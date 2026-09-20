@@ -16,13 +16,13 @@
       "candidate_die": 3621
     }
   ],
-  "difficulty": "CHEAP",
-  "priority": 238,
+  "difficulty": "SUPERVISOR",
+  "priority": -100,
   "changes": [
     {
       "file": "src/profile.c",
-      "start": 14847,
-      "end": 15128,
+      "start": 14853,
+      "end": 15134,
       "before": "typedef struct Tprofile_general {\n    unsigned char before_games_played[0x2c];\n    int games_played;\n    int custom_games_played;\n    int games_quit;\n    int seconds_spent_playing;\n    unsigned char before_creation_date[0x530 - 0x3c];\n    char creationDate[16];\n} Tprofile_general;",
       "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_general;",
       "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
@@ -34,8 +34,8 @@
   "body_edit_allowed": false,
   "source_identities": {
     "src/profile.c": {
-      "size": 30534,
-      "sha256": "ae33eeb107cb84c0f4701285c68d44c3de2a69e1216479e6ed5b9fe5b61e7770"
+      "size": 30540,
+      "sha256": "3da34252c12ea49e2cb027f86ecb9ad23fb991edb5e7d2dbf0b155272c967d5f"
     }
   },
   "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_general",
@@ -678,5 +678,18 @@
     "game-profile"
   ],
   "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
-  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers."
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "supervisor_block": {
+    "reason": "Unrecognized candidate initializer permutation in select_profile at offsets 164..209; strict contribution gate rejected it. Focused evidence: docs/attempts/type-view-contribution-diagnostic.json. Needs supervisor scheduling analysis; do not retry unchanged.",
+    "changes": [
+      {
+        "file": "src/profile.c",
+        "start": 14853,
+        "end": 15134,
+        "before": "typedef struct Tprofile_general {\n    unsigned char before_games_played[0x2c];\n    int games_played;\n    int custom_games_played;\n    int games_quit;\n    int seconds_spent_playing;\n    unsigned char before_creation_date[0x530 - 0x3c];\n    char creationDate[16];\n} Tprofile_general;",
+        "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_general;",
+        "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+      }
+    ]
+  }
 }

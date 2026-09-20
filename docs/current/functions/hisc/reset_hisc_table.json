@@ -102,6 +102,8 @@
     "body_end_line": 103,
     "body_sha256": "2233ff2694f1be319934085910f75189d35e739bfb74fead2ab5f3181d2c349d"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -322,6 +324,7 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_strcpy",
@@ -375,6 +378,16 @@
   "promotion_command": "python tools/promote_function.py game-hisc reset_hisc_table",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "reset_hisc_table",
+      "source": "src/hisc.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "reset_hisc_table",
@@ -436,7 +449,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 552
+          "line": 553
         }
       ],
       "candidate_signatures": [
@@ -451,6 +464,9 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 1,
     "calls": 1,
     "referenced_globals": 0

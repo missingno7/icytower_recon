@@ -135,6 +135,61 @@
     "body_end_line": 500,
     "body_sha256": "3b119575b6f4ce1dc1854466c5e22e589bbeb15071bbc7038447ca090e3b130e"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 598,
+      "candidate_addend": 594,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5075444,
+      "candidate_hex": "",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 6477,
+        "bytes": "bf52020000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x252,%edi"
+      },
+      "original_instruction": {
+        "address": 4303837,
+        "bytes": "bff4714d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d71f4,%edi"
+      },
+      "candidate_text": "",
+      "original_text": "",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 612,
+      "candidate_addend": 594,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5075444,
+      "candidate_hex": "",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 6491,
+        "bytes": "b952020000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x252,%ecx"
+      },
+      "original_instruction": {
+        "address": 4303851,
+        "bytes": "b9f4714d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d71f4,%ecx"
+      },
+      "candidate_text": "",
+      "original_text": "",
+      "candidate_source_lines": []
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": {
     "confidence": "DECODED_INSTRUCTION_PERMUTATIONS",
@@ -640,6 +695,29 @@
       ]
     }
   ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 594,
+      "candidate_card": "docs/current/literals/game-profile/252.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        598,
+        612
+      ],
+      "peer_function_count": 4,
+      "peer_functions": [
+        "draw_profile_selector",
+        "profile_data_page_general",
+        "save_profile",
+        "view_profile"
+      ],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 11,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    }
+  ],
   "calls": [
     {
       "symbol": "_get_profile_dir_for_profile",
@@ -865,7 +943,7 @@
     }
   ],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "save_profile",
@@ -876,7 +954,7 @@
     },
     {
       "function": "delete_profile",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 7900,
       "candidate_offset": 6704,
       "size_delta": 0
@@ -891,7 +969,7 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 15,
+  "priority": 20,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -901,6 +979,16 @@
   "promotion_command": "python tools/promote_function.py game-profile create_profile",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "create_profile",
+      "source": "src/profile.c",
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "create_profile",
@@ -1004,7 +1092,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 560
+          "line": 561
         }
       ],
       "candidate_signatures": [
@@ -1019,6 +1107,9 @@
   "evidence_counts": {
     "relocation_mismatches": 2,
     "direct_transfer_mismatches": 1,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 2,
+    "literal_dependencies": 1,
     "original_calls": 15,
     "calls": 15,
     "referenced_globals": 7

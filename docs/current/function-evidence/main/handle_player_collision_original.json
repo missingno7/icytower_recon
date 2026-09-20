@@ -135,10 +135,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2094,
-    "body_end_line": 2134,
+    "body_start_line": 2095,
+    "body_end_line": 2135,
     "body_sha256": "a451a7758758f7a47f1953091045a13fa0e5c237e85a950d2703815af9253945"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -415,7 +417,7 @@
         "assembly": "lea    (%eax,%ebx,1),%edx",
         "dwarf_variables": [
           {
-            "die": 24379,
+            "die": 24473,
             "name": "solid1",
             "type": "int",
             "base_type": "int",
@@ -428,7 +430,7 @@
             "relation": "register is used"
           },
           {
-            "die": 24395,
+            "die": 24489,
             "name": "solid2",
             "type": "int",
             "base_type": "int",
@@ -463,7 +465,7 @@
         "assembly": "mov    0x0,%eax",
         "dwarf_variables": [
           {
-            "die": 24395,
+            "die": 24489,
             "name": "solid2",
             "type": "int",
             "base_type": "int",
@@ -887,6 +889,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_is_solid",
@@ -1138,10 +1141,10 @@
       "evidence": "docs/attempts/interfaces/create_post.jsonl"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 81,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main handle_player_collision_original",
@@ -1267,6 +1270,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "handle_player_collision_original",
+      "source": "src/main.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "handle_player_collision_original",

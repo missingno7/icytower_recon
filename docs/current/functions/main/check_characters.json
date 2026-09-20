@@ -6,11 +6,11 @@
   "function": "check_characters",
   "historical_va": "0x40e680",
   "historical_size": 345,
-  "status": "DIFFER",
-  "state": "CODEGEN_SIMILAR",
-  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+  "status": "FUNCTION_MATCH",
+  "state": "BODY_MATCH_LAYOUT_BLOCKED",
+  "difference_class": "SAME_CU_CALL_LAYOUT",
   "body_edit_allowed": false,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
   "prototype": "int check_characters(void);",
   "return_type": "int",
   "parameters": [],
@@ -75,10 +75,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1992,
-    "body_end_line": 2023,
-    "body_sha256": "a230e0905a574c66df7d9295d42f1e76c5ded6b0e7090d9dfe1f93f80c8a8f36"
+    "body_start_line": 1993,
+    "body_end_line": 2024,
+    "body_sha256": "52099bd5c76e91863077dc1806f98491079b3bba2e248aeef06cb60e445e1066"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -140,148 +142,111 @@
     "-O2"
   ],
   "current_candidate_size": 345,
-  "first_difference": {
-    "offset": 96,
-    "original_va": 4253408,
-    "candidate_byte": 149,
-    "original_byte": 174
-  },
-  "mismatch_count": 9,
-  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
   "disassembly": {
     "original": [
       {
-        "address": 4253391,
-        "bytes": "893424",
+        "address": 4253312,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 4253313,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    %esi,(%esp)",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 4253394,
-        "bytes": "e8bd52ffff",
-        "mnemonic": "call",
-        "assembly": "call   403994 <_get_custom_characters_dir>",
+        "address": 4253315,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
         "dwarf_variables": []
       },
       {
-        "address": 4253399,
-        "bytes": "89c7",
-        "mnemonic": "mov",
-        "assembly": "mov    %eax,%edi",
+        "address": 4253316,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 4253401,
-        "bytes": "895c2404",
-        "mnemonic": "mov",
-        "assembly": "mov    %ebx,0x4(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4253405,
-        "bytes": "c70424ae514d00",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4d51ae,(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4253412,
-        "bytes": "e86ff3ffff",
-        "mnemonic": "call",
-        "assembly": "call   40da58 <_log2file>",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4253417,
-        "bytes": "c7442404c4ff4000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x40ffc4,0x4(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4253425,
-        "bytes": "891c24",
-        "mnemonic": "mov",
-        "assembly": "mov    %ebx,(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4253428,
-        "bytes": "e8c7e4ffff",
-        "mnemonic": "call",
-        "assembly": "call   40cbc0 <_for_each_directory>",
+        "address": 4253317,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
         "dwarf_variables": []
       }
     ],
     "candidate": [
       {
-        "address": 2979,
-        "bytes": "893424",
+        "address": 2900,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 2901,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    %esi,(%esp)",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2982,
-        "bytes": "e800000000",
-        "mnemonic": "call",
-        "assembly": "call   bab <_check_characters+0x57>",
+        "address": 2903,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
         "dwarf_variables": []
       },
       {
-        "address": 2987,
-        "bytes": "89c7",
-        "mnemonic": "mov",
-        "assembly": "mov    %eax,%edi",
+        "address": 2904,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 2989,
-        "bytes": "895c2404",
-        "mnemonic": "mov",
-        "assembly": "mov    %ebx,0x4(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 2993,
-        "bytes": "c7042495000000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x95,(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 3000,
-        "bytes": "e89bfdffff",
-        "mnemonic": "call",
-        "assembly": "call   958 <_log2file>",
-        "dwarf_variables": []
-      },
-      {
-        "address": 3005,
-        "bytes": "c7442404ac0d0000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0xdac,0x4(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 3013,
-        "bytes": "891c24",
-        "mnemonic": "mov",
-        "assembly": "mov    %ebx,(%esp)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 3016,
-        "bytes": "e81bfdffff",
-        "mnemonic": "call",
-        "assembly": "call   8e8 <_for_each_directory>",
+        "address": 2905,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
         "dwarf_variables": []
       }
     ]
   },
   "relevant_types": [],
   "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 818,
+      "address": 4253312,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 824,
+      "address": 4253324,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 825,
+      "address": 4253346,
+      "end_sequence": false,
+      "flags": "x"
+    },
     {
       "context": "F:/projects/icytower/trunk/source/main.c",
       "file": "main.c",
@@ -321,30 +286,6 @@
       "address": 4253441,
       "end_sequence": false,
       "flags": "x"
-    },
-    {
-      "context": "F:/projects/icytower/trunk/source/main.c",
-      "file": "main.c",
-      "line": 866,
-      "address": 4253450,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "F:/projects/icytower/trunk/source/main.c",
-      "file": "main.c",
-      "line": 867,
-      "address": 4253452,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "F:/projects/icytower/trunk/source/main.c",
-      "file": "main.c",
-      "line": 842,
-      "address": 4253464,
-      "end_sequence": false,
-      "flags": "x"
     }
   ],
   "referenced_globals": [
@@ -377,11 +318,11 @@
       "function_offsets": []
     },
     {
-      "symbol": "curr_char",
+      "symbol": "play_char",
       "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
-      "historical_address": "0x4dd270",
-      "dwarf_type": "int",
-      "size": 4,
+      "historical_address": "0x4fa318",
+      "dwarf_type": "Tmenu_char_selection",
+      "size": 1036,
       "section": ".bss",
       "placement_confidence": "DWARF_ADDRESS; candidate COFF section when present",
       "initial_value": null,
@@ -396,7 +337,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d51a1",
-      "candidate_addend": 136,
+      "candidate_addend": 145,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -412,12 +353,12 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\main.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 149,
+      "historical_address": "0x4d51ae",
+      "candidate_addend": 158,
       "dwarf_type": null,
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": [],
       "reference_count": 2,
       "function_offsets": [
@@ -462,6 +403,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_getcwd",
@@ -530,10 +472,10 @@
   ],
   "original_calls": [
     {
-      "address": 4253412,
-      "bytes": "e86ff3ffff",
+      "address": 4253341,
+      "bytes": "e856470a00",
       "mnemonic": "call",
-      "assembly": "call   40da58 <_log2file>"
+      "assembly": "call   4b2df8 <_getcwd>"
     },
     {
       "address": 4253394,
@@ -542,16 +484,16 @@
       "assembly": "call   403994 <_get_custom_characters_dir>"
     },
     {
+      "address": 4253412,
+      "bytes": "e86ff3ffff",
+      "mnemonic": "call",
+      "assembly": "call   40da58 <_log2file>"
+    },
+    {
       "address": 4253428,
       "bytes": "e8c7e4ffff",
       "mnemonic": "call",
       "assembly": "call   40cbc0 <_for_each_directory>"
-    },
-    {
-      "address": 4253341,
-      "bytes": "e856470a00",
-      "mnemonic": "call",
-      "assembly": "call   4b2df8 <_getcwd>"
     },
     {
       "address": 4253482,
@@ -579,50 +521,7 @@
     }
   ],
   "indirect_control_flow": 0,
-  "relocation_mismatches": [
-    {
-      "section": 1,
-      "offset": 2996,
-      "symbol_index": 107,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 96,
-      "addend": 149,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5067182,
-      "equal": false
-    },
-    {
-      "section": 1,
-      "offset": 3114,
-      "symbol_index": 134,
-      "symbol": "_curr_char",
-      "type": 6,
-      "function_offset": 214,
-      "addend": 0,
-      "target_va": 5100144,
-      "resolution": "named symbol",
-      "resolved_value": 5100144,
-      "original_value": 5219100,
-      "equal": false
-    },
-    {
-      "section": 1,
-      "offset": 3191,
-      "symbol_index": 107,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 291,
-      "addend": 149,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5067182,
-      "equal": false
-    }
-  ],
+  "relocation_mismatches": [],
   "direct_transfer_mismatches": [
     {
       "instruction_offset": 100,
@@ -776,16 +675,33 @@
       "size_delta": -142
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "common-allocation-is-not-type-size",
+      "difference_class": "COMMON_BSS_LAYOUT",
+      "symptom": "A correctly generated aggregate has a larger COFF COMMON allocation than its DWARF sizeof.",
+      "known_source_cause": "The locked compiler emits rounded COMMON storage; logical type size and allocation are different quantities.",
+      "known_fix_pattern": "Compile an independent declaration witness with the same locked flags and generated header. Verify logical type layout separately; allow only the witnessed target allocation change and preserve all other contributions. Never infer original BSS order from this witness.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "observed_example": "Tmenu_char_selection sizeof 1036, emitted COMMON allocation 1040"
+      },
+      "example_functions": [
+        "check_characters",
+        "set_current_avatar"
+      ],
+      "confidence": "FRESH_LOCKED_COMPILER_DECLARATION_WITNESS"
+    }
+  ],
   "difficulty": "SUPERVISOR",
-  "priority": 30,
+  "priority": 35,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main check_characters",
   "begin_command": "python tools/grinder_task.py begin game-main check_characters",
-  "promotion_command": "python tools/promote_function.py game-main check_characters",
+  "promotion_command": "python tools/promote_function.py game-main check_characters --claim BODY_MATCH_LAYOUT_BLOCKED",
   "storage_declarations": [
     {
       "name": "num_chars",
@@ -814,7 +730,7 @@
       "candidate_card": "docs/current/storage/game-main/137900.json"
     },
     {
-      "name": "curr_char",
+      "name": "play_char",
       "state": "COMMON_DECLARATION_AGREES",
       "original_scope": [
         "GLOBAL"
@@ -822,18 +738,23 @@
       "candidate_scope": [
         "GLOBAL"
       ],
-      "original_type": "int",
-      "candidate_type": "int",
-      "candidate_card": "docs/current/storage/game-main/137931.json"
+      "original_type": "Tmenu_char_selection",
+      "candidate_type": "Tmenu_char_selection",
+      "candidate_card": "docs/current/storage/game-main/138468.json"
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/main/check_characters.json",
   "evidence_counts": {
-    "relocation_mismatches": 3,
+    "relocation_mismatches": 0,
     "direct_transfer_mismatches": 7,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 10,
     "calls": 10,
     "referenced_globals": 7

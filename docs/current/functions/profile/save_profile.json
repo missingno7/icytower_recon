@@ -7,10 +7,10 @@
   "historical_va": "0x41a3b8",
   "historical_size": 1073,
   "status": "DIFFER",
-  "state": "CODEGEN_SIMILAR",
-  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
-  "body_edit_allowed": false,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "state": "SOURCE_DIFFER",
+  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+  "body_edit_allowed": true,
+  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
   "prototype": "int save_profile(Tprofile *p);",
   "return_type": "int",
   "parameters": [
@@ -190,9 +190,204 @@
     "body_end_line": 630,
     "body_sha256": "e07387ff357ec22fa00749af59867ee68dde21e4ced04e9a215aa299ba7500d8"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 290,
+      "candidate_addend": 594,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5075444,
+      "candidate_hex": "",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 5093,
+        "bytes": "b952020000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x252,%ecx"
+      },
+      "original_instruction": {
+        "address": 4302041,
+        "bytes": "b9f4714d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d71f4,%ecx"
+      },
+      "candidate_text": "",
+      "original_text": "",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 304,
+      "candidate_addend": 594,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5075444,
+      "candidate_hex": "",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 5107,
+        "bytes": "be52020000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x252,%esi"
+      },
+      "original_instruction": {
+        "address": 4302055,
+        "bytes": "bef4714d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d71f4,%esi"
+      },
+      "candidate_text": "",
+      "original_text": "",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 635,
+      "candidate_addend": 1228,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5076540,
+      "candidate_hex": "50726f66696c65206e616d653a202020202020202020202025730a",
+      "original_hex": "50726f66696c65206e616d653a2020202020202020202025730a",
+      "candidate_instruction": {
+        "address": 5435,
+        "bytes": "c7442404cc040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4cc,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4302383,
+        "bytes": "c74424043c764d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d763c,0x4(%esp)"
+      },
+      "candidate_text": "Profile name:           %s\n",
+      "original_text": "Profile name:          %s\n",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 655,
+      "candidate_addend": 1256,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5076567,
+      "candidate_hex": "4c61737420757064617465643a202020202020202020202025730a",
+      "original_hex": "4c61737420757064617465643a2020202020202020202025730a",
+      "candidate_instruction": {
+        "address": 5455,
+        "bytes": "c7442404e8040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4e8,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4302403,
+        "bytes": "c744240457764d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7657,0x4(%esp)"
+      },
+      "candidate_text": "Last updated:           %s\n",
+      "original_text": "Last updated:          %s\n",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 747,
+      "candidate_addend": 1284,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5076594,
+      "candidate_hex": "52616e6b3a2020202020202020202020202020202020202025730a",
+      "original_hex": "52616e6b3a20202020202020202020202020202020202025730a",
+      "candidate_instruction": {
+        "address": 5547,
+        "bytes": "c744240404050000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x504,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4302495,
+        "bytes": "c744240472764d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7672,0x4(%esp)"
+      },
+      "candidate_text": "Rank:                   %s\n",
+      "original_text": "Rank:                  %s\n",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 763,
+      "candidate_addend": 1312,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5076621,
+      "candidate_hex": "2020202020202020",
+      "original_hex": "20202020202020",
+      "candidate_instruction": {
+        "address": 5563,
+        "bytes": "c744240420050000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x520,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4302511,
+        "bytes": "c74424048d764d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d768d,0x4(%esp)"
+      },
+      "candidate_text": "        ",
+      "original_text": "       ",
+      "candidate_source_lines": []
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
-  "source_patterns": [],
+  "source_patterns": [
+    {
+      "id": "repair_literal_content",
+      "changes": [
+        {
+          "start": 18537,
+          "end": 18567,
+          "before": "\"Profile name:           %s\\n\"",
+          "after": "\"Profile name:          %s\\n\"",
+          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+        },
+        {
+          "start": 18597,
+          "end": 18627,
+          "before": "\"Last updated:           %s\\n\"",
+          "after": "\"Last updated:          %s\\n\"",
+          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+        },
+        {
+          "start": 18659,
+          "end": 18689,
+          "before": "\"Rank:                   %s\\n\"",
+          "after": "\"Rank:                  %s\\n\"",
+          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+        },
+        {
+          "start": 18790,
+          "end": 18800,
+          "before": "\"        \"",
+          "after": "\"       \"",
+          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+        }
+      ],
+      "reason": "Aligned instructions expose different string payloads; this is a source experiment, not ownership or equality proof.",
+      "application_command": "python tools/apply_pattern.py game-profile save_profile repair_literal_content"
+    }
+  ],
   "frame_layout": null,
   "signedness": {
     "variables": [
@@ -918,7 +1113,7 @@
       "historical_address": "0x4bdc60",
       "candidate_addend": 160,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -935,7 +1130,7 @@
       "historical_address": "0x4bdce0",
       "candidate_addend": 288,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -952,7 +1147,7 @@
       "historical_address": "0x4bdca0",
       "candidate_addend": 224,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -969,7 +1164,7 @@
       "historical_address": "0x4bdbe0",
       "candidate_addend": 32,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -1063,6 +1258,89 @@
       "function_offsets": [
         1059
       ]
+    }
+  ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 594,
+      "candidate_card": "docs/current/literals/game-profile/252.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        290,
+        304
+      ],
+      "peer_function_count": 4,
+      "peer_functions": [
+        "create_profile",
+        "draw_profile_selector",
+        "profile_data_page_general",
+        "view_profile"
+      ],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 11,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1228,
+      "candidate_card": "docs/current/literals/game-profile/4cc.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        635
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1256,
+      "candidate_card": "docs/current/literals/game-profile/4e8.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        655
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1284,
+      "candidate_card": "docs/current/literals/game-profile/504.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        747
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1312,
+      "candidate_card": "docs/current/literals/game-profile/520.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        763
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
     }
   ],
   "calls": [
@@ -1575,71 +1853,61 @@
       "size_delta": 0
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "aligned-literal-content-difference",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "symptom": "Instruction skeletons match, but aligned pointer operands reference different literal payloads.",
+      "known_source_cause": "Wrong filename format, file mode, default string, or formatting spaces can masquerade as relocation layout differences.",
+      "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+      },
+      "example_functions": [
+        "add_profile",
+        "fldads_dump_local_cache",
+        "create_replay",
+        "save_profile"
+      ],
+      "required_evidence": "literal_diagnostics",
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+    }
+  ],
   "difficulty": "SUPERVISOR",
-  "priority": 0,
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-profile.json",
   "verification_command": "python tools/check_function.py game-profile save_profile",
   "begin_command": "python tools/grinder_task.py begin game-profile save_profile",
   "promotion_command": "python tools/promote_function.py game-profile save_profile",
-  "storage_declarations": [
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [
     {
-      "name": "rankLables",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "char *[12]",
-      "candidate_type": "char *[16]",
-      "candidate_card": "docs/current/storage/game-profile/201753.json"
+      "function_offset": 290,
+      "symbol": ".rdata",
+      "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
     },
     {
-      "name": "rankCombos",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201819.json"
-    },
-    {
-      "name": "rankCCCs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201844.json"
-    },
-    {
-      "name": "rankNMLs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201867.json"
+      "function_offset": 304,
+      "symbol": ".rdata",
+      "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
     }
   ],
-  "local_declaration_tasks": [],
+  "interface_scope": [
+    {
+      "function": "save_profile",
+      "source": "src/profile.c",
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "save_profile",
@@ -1742,7 +2010,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 555
+          "line": 556
         }
       ],
       "candidate_signatures": [
@@ -1757,6 +2025,9 @@
   "evidence_counts": {
     "relocation_mismatches": 6,
     "direct_transfer_mismatches": 5,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 6,
+    "literal_dependencies": 5,
     "original_calls": 40,
     "calls": 40,
     "referenced_globals": 26

@@ -183,6 +183,8 @@
     "body_end_line": 163,
     "body_sha256": "fcfdad63740303e57c24d6c0be4dec92458fb89788cb6110cf320fef4c3242b1"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -577,6 +579,7 @@
     }
   ],
   "referenced_globals": [],
+  "literal_dependencies": [],
   "calls": [],
   "original_calls": [],
   "indirect_control_flow": 0,
@@ -616,9 +619,9 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 14,
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay calc_replay_checksum",
@@ -626,6 +629,16 @@
   "promotion_command": "python tools/promote_function.py game-replay calc_replay_checksum",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "calc_replay_checksum",
+      "source": "src/replay.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "calc_replay_checksum",
@@ -673,7 +686,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 571
+          "line": 572
         },
         {
           "position": "parameter 1",

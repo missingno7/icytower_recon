@@ -22,8 +22,8 @@ from data_diagnostics import capture_snapshot,diagnose
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
-                  'tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
+ANALYSIS_FILES = ['tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+                  'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
 
@@ -138,11 +138,17 @@ def evidence_for_function(unit,f,row,candidate=None):
     from scheduling_diagnostics import analyze as scheduling_analysis,assignment_patterns
     row['instruction_order']=scheduling_analysis(row,original,(candidate or {}).get('line_mappings',[]),unit['source'])
     patterns=assignment_patterns(row['instruction_order'],(ROOT/unit['source']).read_bytes().decode('cp1252')) if scope else []
+    from literal_diagnostics import patterns as literal_patterns
+    patterns+=literal_patterns(row,(ROOT/unit['source']).read_bytes().decode('cp1252')) if scope else []
+    from reference_diagnostics import source_pattern
+    row['reference_source_pattern']=source_pattern(row,(ROOT/unit['source']).read_bytes().decode('cp1252'),context.get('candidate',{}).get('variables',[])) if scope else None
+    if row['reference_source_pattern']:
+        patterns=[p for p in patterns if p['id']!='repair_literal_content']+[row['reference_source_pattern']]
     from stack_diagnostics import analyze as stack_analysis
     row['frame_layout']=stack_analysis(row,original,parameters+locals_,context.get('candidate',{}).get('variables',[]))
     return {'prototype':prototype,'return_type':ret,'parameters':parameters,'locals':locals_,
             'lexical_blocks':lexical,'variadic':variadic,'calling_convention':d['resolved'].get('DW_AT_calling_convention','not recorded (i386 C default candidate)') if d else None,
-            'source_scope':scope,'tail_jump_layout':row.get('tail_jump_layout'),'instruction_order':row['instruction_order'],'source_patterns':patterns,'frame_layout':row['frame_layout'],'signedness':signedness,'location_context':context,'localized_guards':row['localized_guards']},original
+            'source_scope':scope,'reference_diagnostics':row.get('reference_diagnostics',[]),'literal_diagnostics':row.get('literal_diagnostics',[]),'tail_jump_layout':row.get('tail_jump_layout'),'instruction_order':row['instruction_order'],'source_patterns':patterns,'frame_layout':row['frame_layout'],'signedness':signedness,'location_context':context,'localized_guards':row['localized_guards']},original
 
 
 def fresh_verify(target, dest=None, locked=False):
@@ -159,7 +165,12 @@ def fresh_verify(target, dest=None, locked=False):
     report['data_diagnostics']=diagnose(report)
     unit=unit_for_target(target)
     originals={f['name']:f for f in unit['functions']}
+    from literal_diagnostics import diagnose as diagnose_literals
+    from reference_diagnostics import diagnose as diagnose_references,historical_reference
+    literal_exe=Binary(ROOT/'assets/icytower15.exe')
     for row in report['functions']:
+        row['literal_diagnostics']=diagnose_literals(row,original_slice(row['va'],row['original_size']),report['data_snapshot'],report['object_sections'],literal_exe,report['candidate_debug'].get('line_mappings',[]),unit['source'])
+        row['reference_diagnostics']=diagnose_references(row,original_slice(row['va'],row['original_size']),report['candidate_debug']['globals'],lambda address:historical_reference(address,literal_exe),report['candidate_debug'].get('line_mappings',[]),unit['source'])
         ev,_=evidence_for_function(unit,originals[row['name']],row,report.get('candidate_debug'))
         row['source_body_sha256']=ev['source_scope']['body_sha256'] if ev['source_scope'] else None
         row['compiler_context']=load_context(report['build']['target'],row['name'],row,report['build']['local_inputs'])
@@ -226,7 +237,12 @@ def reanalyze_report(report):
     report['data_diagnostics']=diagnose(report)
     unit=unit_for_target(report['build']['target'])
     originals={f['name']:f for f in unit['functions']}
+    from literal_diagnostics import diagnose as diagnose_literals
+    from reference_diagnostics import diagnose as diagnose_references,historical_reference
+    literal_exe=Binary(ROOT/'assets/icytower15.exe')
     for row in report['functions']:
+        row['literal_diagnostics']=diagnose_literals(row,original_slice(row['va'],row['original_size']),report['data_snapshot'],report['object_sections'],literal_exe,report['candidate_debug'].get('line_mappings',[]),unit['source'])
+        row['reference_diagnostics']=diagnose_references(row,original_slice(row['va'],row['original_size']),report['candidate_debug']['globals'],lambda address:historical_reference(address,literal_exe),report['candidate_debug'].get('line_mappings',[]),unit['source'])
         ev,_=evidence_for_function(unit,originals[row['name']],row,report.get('candidate_debug'))
         row['source_body_sha256']=ev['source_scope']['body_sha256'] if ev['source_scope'] else None
         row['compiler_context']=load_context(report['build']['target'],row['name'],row,report['build']['local_inputs'])
@@ -320,6 +336,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     relevant=[r for r in rules if (r['difference_class']==wf['difference_class'] or row['name'] in r['example_functions']) and (not r.get('required_evidence') or ev.get(r['required_evidence']))]
     for pattern in ev['source_patterns']:
         pattern['application_command']='python tools/apply_pattern.py '+target+' '+row['name']+' '+pattern['id']
+    from literal_dependencies import groups as literal_groups,for_function as literal_dependencies
     data=ownership(report,row,old)
     from storage_diagnostics import function_storage
     storage=function_storage(report,row['name'],data)
@@ -343,13 +360,29 @@ def card_for(target,report,row,ledger=None,interface_index=None):
         interface_conflicts=interface_index.get(row['name'],[])
     elif interface_path.exists():
         interface_conflicts=[r for r in read_json(interface_path)['conflicts'] if r['function']==row['name']]
+    from interface_scope import partition as scoped_interfaces
+    local_interface_conflicts,interface_scope=scoped_interfaces(interface_conflicts,unit['source'])
     routing_reason='Conservative size, mismatch, dependency and control-flow ranking.'
-    if not supervisor and wf['body_edit_allowed'] and ev.get('localized_guards') and not interface_conflicts and ev['source_scope'] and f['size']<=1200:
+    if not supervisor and wf['body_edit_allowed'] and ev.get('localized_guards') and not local_interface_conflicts and ev['source_scope'] and f['size']<=1200:
         difficulty='CHEAP'; priority=180+max(0,30-f['size']//32)
         routing_reason='Only up to four decoded conditional-branch opcodes differ; targets and all other independently resolved bytes agree. Unchanged indirect calls do not obstruct this bounded guard task.'
-    if not supervisor and wf['body_edit_allowed'] and (ev.get('instruction_order') or {}).get('cheap_routing_eligible') and ev['source_patterns'] and not interface_conflicts:
+    if not supervisor and wf['body_edit_allowed'] and (ev.get('instruction_order') or {}).get('cheap_routing_eligible') and ev['source_patterns'] and not local_interface_conflicts:
         difficulty='CHEAP'; priority=185
         routing_reason='All differences are bounded decoded instruction permutations; emitted line mappings supply an adjacent-assignment experiment. Strict exact verification is still required.'
+    if not supervisor and wf['body_edit_allowed'] and wf['difference_class']=='LITERAL_CONTENT_DIFFERENCE' and any(p['id']=='repair_literal_content' for p in ev['source_patterns']) and not local_interface_conflicts:
+        difficulty='CHEAP'; priority=190
+        routing_reason='Aligned literal operands and unique explicit source tokens supply a bounded string repair; fresh strict proof is mandatory.'
+    if not supervisor and wf['body_edit_allowed'] and row.get('reference_source_pattern') and not local_interface_conflicts:
+        difficulty='CHEAP'; priority=195
+        routing_reason='A typed, uniquely mapped scalar assignment and any explicit literal repairs have one generated recipe; exact acceptance remains mandatory.'
+    if not supervisor and wf['body_edit_allowed'] and local_interface_conflicts:
+        difficulty='SUPERVISOR'; priority=-30
+        routing_reason='This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.'
+    from literal_dependencies import pattern_prerequisites
+    source_pattern_prerequisites=pattern_prerequisites(row,ev['source_patterns'])
+    if not supervisor and source_pattern_prerequisites:
+        difficulty='SUPERVISOR'; priority=-25
+        routing_reason='Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.'
     position=next(i for i,x in enumerate(report['functions']) if x['name']==row['name'])
     adjacent={x['name'] for x in report['functions'][max(0,position-1):position+2]}
     related=adjacent|{t['target_function'] for t in row.get('direct_transfers',[])}|{x['name'] for x in report['functions'] if any(t['target_function']==row['name'] for t in x.get('direct_transfers',[]))}
@@ -361,7 +394,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'compiler':report['build']['compiler'],'compiler_flags':report['build']['flags'],'current_candidate_size':row.get('candidate_size'),
             'first_difference':diff,'mismatch_count':len(row.get('difference_offsets',[])),'classification_confidence':'MECHANICAL_PROOF' if row['status']=='FUNCTION_MATCH' else 'OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN' if (row.get('frame_layout') or {}).get('first_mismatch_is_frame_allocation') else 'CONSERVATIVE_HYPOTHESIS',
             'disassembly':{'original':old_window,'candidate':new_window},'relevant_types':types,'original_line_window':sorted(nearest,key=lambda l:l['address']),
-            'referenced_globals':data,'calls':calls,'original_calls':original_calls,'indirect_control_flow':indirect,
+            'referenced_globals':data,'literal_dependencies':literal_dependencies(literal_groups(report),row['name']),'calls':calls,'original_calls':original_calls,'indirect_control_flow':indirect,
             'relocation_mismatches':[r for r in row.get('relocations',[]) if not r['equal']],
             'direct_transfer_mismatches':[t for t in row.get('direct_transfers',[]) if not t['equal'] or not t.get('layout_operand_equal',True)],
             'unresolved_call_symbols':unresolved,'exact_adjacent_functions':exact_neighbors,'neighbor_layout':neighbors,'known_rules':relevant,'difficulty':difficulty,'priority':priority,
@@ -371,13 +404,13 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'promotion_command':'python tools/promote_function.py '+target+' '+row['name']+(' --claim BODY_MATCH_LAYOUT_BLOCKED' if wf['state']=='BODY_MATCH_LAYOUT_BLOCKED' else ''),
             'storage_declarations':storage,
             'local_declaration_tasks':[{k:t[k] for k in ('function','status','state','difficulty','candidate_card')} for t in local_tasks],
-            'interface_conflicts':[{'function':c['function'],'historical':c['historical'],'type_layout_issues':c.get('type_layout_issues',[]),'candidate_signatures':sorted({str((d['return_type'],d['parameter_types'])) for d in c['candidate_declarations']}),'candidate_card':'docs/current/interfaces/'+c['function']+'.json'} for c in interface_conflicts],
+            'source_pattern_prerequisites':source_pattern_prerequisites,'interface_scope':interface_scope,'interface_conflicts':[{'function':c['function'],'historical':c['historical'],'type_layout_issues':c.get('type_layout_issues',[]),'candidate_signatures':sorted({str((d['return_type'],d['parameter_types'])) for d in c['candidate_declarations']}),'candidate_card':'docs/current/interfaces/'+c['function']+'.json'} for c in interface_conflicts],
             'edit_scope':'Function body only; use supervisor for prototypes/data/headers or missing implementations.'}
 
 
 def publish_cards(ledger,check=False):
     emit=check_json if check else write_json
-    queue=[]; statuses={}; classes={}
+    queue=[]; statuses={}; classes={}; reference_index=[]
     interface_index={}
     path=CURRENT/'interface-conflicts.json'
     if path.exists():
@@ -386,11 +419,16 @@ def publish_cards(ledger,check=False):
         if not entry.get('verified_report'): continue
         report=read_json(ROOT/entry['verified_report']); target=report['build']['target']
         emit(CURRENT/'objects'/(target+'.json'),{'source':source,**report.get('object_ownership',{}),'typed_initializer_diagnostics':report.get('data_diagnostics',{}).get('objects',[])})
+        from literal_dependencies import publish as publish_literals
+        publish_literals(report,ROOT,emit)
         for row in report['functions']:
             card=card_for(target,report,row,ledger,interface_index)
             path=CURRENT/'functions'/Path(source).stem/(row['name']+'.json')
             emit(ROOT/detail_path(card),card)
             emit(path,compact_card(card))
+            for observation in card.get('reference_diagnostics',[]):
+                reference_index.append({'source':source,'target':target,'function':row['name'],'candidate_card':path.relative_to(ROOT).as_posix(),
+                                        **{k:observation[k] for k in ('function_offset','classification','prerequisite','candidate_reference','expected_reference','expected_declaration_in_candidate')}})
             statuses[card['state']]=statuses.get(card['state'],0)+1
             classes[card['difference_class']]=classes.get(card['difference_class'],0)+1
             if card['state']!='FUNCTION_MATCH':
@@ -404,10 +442,12 @@ def publish_cards(ledger,check=False):
     queue.extend(read_json(CURRENT/'array-tasks.json').get('tasks',[]))
     queue.extend(read_json(CURRENT/'data-tasks.json').get('tasks',[]))
     queue.extend(read_json(CURRENT/'static-scope-tasks.json').get('tasks',[]))
+    queue.extend(read_json(CURRENT/'global-type-tasks.json').get('tasks',[]))
     for task in queue: task.setdefault('task_kind','FUNCTION_BODY')
     queue.sort(key=lambda x:(-x['priority'],x['size'],x['source'],x['function']))
     emit(CURRENT/'grinder-queue.json',{'authority':'src/recovery.json','default_difficulty':'CHEAP','tasks':queue})
     emit(CURRENT/'blockers.json',{'workflow_states':statuses,'difference_classes':classes,'tasks':[r for r in queue if r['difficulty']=='SUPERVISOR'],
                                      'historical_hypotheses':'docs/blockers.json'})
+    emit(CURRENT/'reference-status.json',{'scope':'Supported aligned named-global mismatch observations only; absence is not proof of correct references. No source edit or relocation binding is granted.','observations':reference_index})
     emit(CURRENT/'codegen-rules.json',read_json(ROOT/'docs/codegen-rules.json'))
     return queue

@@ -8,9 +8,9 @@
   "historical_size": 1147,
   "status": "DIFFER",
   "state": "SOURCE_DIFFER",
-  "difference_class": "UNKNOWN_SUPERVISOR",
+  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
   "body_edit_allowed": true,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
   "prototype": "int get_replay_property(const char *filename, int property);",
   "return_type": "int",
   "parameters": [
@@ -416,6 +416,129 @@
     "body_end_line": 630,
     "body_sha256": "d87a5afa5f1fc931cff9a4e19998c42cd2cb490f1ff9a8d7adc552ca0bba3735"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 19,
+      "candidate_addend": 7,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077637,
+      "candidate_hex": "7262",
+      "original_hex": "7262",
+      "candidate_instruction": {
+        "address": 1283,
+        "bytes": "c744240407000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x7,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4317779,
+        "bytes": "c7442404857a4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7a85,0x4(%esp)"
+      },
+      "candidate_text": "rb",
+      "original_text": "rb",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 102,
+      "candidate_addend": 27,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5078480,
+      "candidate_hex": "495452",
+      "original_hex": "495452313430",
+      "candidate_instruction": {
+        "address": 1369,
+        "bytes": "bf1b000000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x1b,%edi"
+      },
+      "original_instruction": {
+        "address": 4317865,
+        "bytes": "bfd07d4d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d7dd0,%edi"
+      },
+      "candidate_text": "ITR",
+      "original_text": "ITR140",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 227,
+      "candidate_addend": 7,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077637,
+      "candidate_hex": "7262",
+      "original_hex": "7262",
+      "candidate_instruction": {
+        "address": 1491,
+        "bytes": "c744240407000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x7,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4317987,
+        "bytes": "c7442404857a4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7a85,0x4(%esp)"
+      },
+      "candidate_text": "rb",
+      "original_text": "rb",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 913,
+      "candidate_addend": 158,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 947,
+      "candidate_addend": 32,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1013,
+      "candidate_addend": 146,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1059,
+      "candidate_addend": 170,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1092,
+      "candidate_addend": 132,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1126,
+      "candidate_addend": 100,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -1235,6 +1358,41 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 7,
+      "candidate_card": "docs/current/literals/game-replay/7.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        19,
+        227
+      ],
+      "peer_function_count": 1,
+      "peer_functions": [
+        "load_replay"
+      ],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 27,
+      "candidate_card": "docs/current/literals/game-replay/1b.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        102
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    }
+  ],
   "calls": [
     {
       "symbol": "_pack_fopen",
@@ -1937,9 +2095,29 @@
       "size_delta": -3
     }
   ],
-  "known_rules": [],
-  "difficulty": "SUPERVISOR",
-  "priority": 0,
+  "known_rules": [
+    {
+      "id": "aligned-literal-content-difference",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "symptom": "Instruction skeletons match, but aligned pointer operands reference different literal payloads.",
+      "known_source_cause": "Wrong filename format, file mode, default string, or formatting spaces can masquerade as relocation layout differences.",
+      "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+      },
+      "example_functions": [
+        "add_profile",
+        "fldads_dump_local_cache",
+        "create_replay",
+        "save_profile"
+      ],
+      "required_evidence": "literal_diagnostics",
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+    }
+  ],
+  "difficulty": "MEDIUM",
+  "priority": 65,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -1961,6 +2139,8 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

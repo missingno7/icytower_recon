@@ -102,6 +102,68 @@
     "body_end_line": 554,
     "body_sha256": "3b3335fb49b92d888bd7d93c36df45a58a010c4111761acd6187b1f9e5fb2da0"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 16,
+      "candidate_addend": 7,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077637,
+      "candidate_hex": "7262",
+      "original_hex": "7262",
+      "candidate_instruction": {
+        "address": 2908,
+        "bytes": "c744240407000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x7,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4312564,
+        "bytes": "c7442404857a4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7a85,0x4(%esp)"
+      },
+      "candidate_text": "rb",
+      "original_text": "rb",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 150,
+      "candidate_addend": 7,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077637,
+      "candidate_hex": "7262",
+      "original_hex": "7262",
+      "candidate_instruction": {
+        "address": 3042,
+        "bytes": "c744240407000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x7,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4312698,
+        "bytes": "c7442404857a4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7a85,0x4(%esp)"
+      },
+      "candidate_text": "rb",
+      "original_text": "rb",
+      "candidate_source_lines": []
+    },
+    {
+      "function_offset": 1124,
+      "candidate_addend": 200,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -492,6 +554,26 @@
       ]
     }
   ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 7,
+      "candidate_card": "docs/current/literals/game-replay/7.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        16,
+        150
+      ],
+      "peer_function_count": 1,
+      "peer_functions": [
+        "get_replay_property"
+      ],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    }
+  ],
   "calls": [
     {
       "symbol": "_pack_fopen",
@@ -829,9 +911,9 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 0,
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay load_replay",
@@ -851,6 +933,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "load_replay",
+      "source": "src/replay.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "load_replay",
@@ -898,7 +990,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 569
+          "line": 570
         },
         {
           "position": "return",
@@ -978,6 +1070,9 @@
   "evidence_counts": {
     "relocation_mismatches": 24,
     "direct_transfer_mismatches": 3,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 3,
+    "literal_dependencies": 1,
     "original_calls": 38,
     "calls": 38,
     "referenced_globals": 4

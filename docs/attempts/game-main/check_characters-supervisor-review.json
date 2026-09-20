@@ -1,0 +1,55 @@
+{
+  "decision": "REOPEN_GENERATED_REFERENCE_RECIPE",
+  "previous_block": {
+    "state": "BLOCKED_SUPERVISOR",
+    "reason": "check failed: 0040e752  8d43ff                 lea    -0x1(%ebx),%eax\n  0040e755  a31ca34f00             mov    %eax,0x4fa31c\n  0040e75a  85db                   test   %ebx,%ebx\n  0040e75c  7e26                   jle    40e784 <_check_characters+0x104>\n  0040e75e  a1c8dc4f00             mov    0x4fdcc8,%eax\n  0040e763  31d2                   xor    %edx,%edx\ncandidate:\n  00000c1c  8b1d00000000           mov    0x0,%ebx\n  00000c22  85db                   test   %ebx,%ebx\n  00000c24  74b8                   je     bde <_check_characters+0x8a>\n  00000c26  8d43ff                 lea    -0x1(%ebx),%eax\n  00000c29  a300000000             mov    %eax,0x0\n  00000c2e  85db                   test   %ebx,%ebx\n  00000c30  7e26                   jle    c58 <_check_characters+0x104>\n  00000c32  a100000000             mov    0x0,%eax\n  00000c37  31d2                   xor    %edx,%edx\nrelocation mismatches: 1 direct-transfer/layout differences: 7\n  relocation +0xd6 _curr_char: named symbol; independently resolved target 5100144\n  transfer +0x65 log2file: target proof True; original layout operand False\n  transfer +0x75 for_each_directory: target proof True; original layout operand False\n  transfer +0xc0 for_each_directory: target proof True; original layout operand False\n  transfer +0x105 set_current_avatar: target proof True; original layout operand False\n  storage num_chars: COMMON_DECLARATION_AGREES; docs/current/storage/game-main/137876.json\n  storage characters: COMMON_DECLARATION_AGREES; docs/current/storage/game-main/137900.json\n  storage curr_char: COMMON_DECLARATION_AGREES; docs/current/storage/game-main/137931.json\nNeighbor size deltas: check_beta_tester: -4, init_game: -142\nFocused card: build/fast/game-main/check_characters.json\npython tools/promote_function.py game-main check_characters",
+    "first_difference": {
+      "offset": 214,
+      "original_va": 4253526,
+      "candidate_byte": 112,
+      "original_byte": 28
+    },
+    "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+    "source_identity": {
+      "size": 91729,
+      "sha256": "85e8244ec9289bbc93f2f62a2806b9306bf1a9ca78c8d41cf551c73bcaa79435"
+    }
+  },
+  "current_report": {
+    "size": 5291803,
+    "sha256": "3c825e06b687a8828bf9213ec82e4b990e96000057daf65cfce8b639c1d7586e"
+  },
+  "current_source": {
+    "size": 91776,
+    "sha256": "92e17dce62de1d4e5be4cd4c65cb0bf8e61615f86d3b5b7dbc177a491d876e01"
+  },
+  "pattern": {
+    "id": "repair_symbolic_assignment",
+    "changes": [
+      {
+        "start": 58955,
+        "end": 58971,
+        "before": "\"Searching '%s'\"",
+        "after": "\"Searching %s for characters\"",
+        "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+      },
+      {
+        "start": 59091,
+        "end": 59107,
+        "before": "\"Searching '%s'\"",
+        "after": "\"Searching %s for characters\"",
+        "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
+      },
+      {
+        "start": 59488,
+        "end": 59497,
+        "before": "curr_char",
+        "after": "play_char.max",
+        "reason": "Compiler-mapped plain assignment selects the wrong evidenced scalar global path; fresh strict verification required."
+      }
+    ],
+    "reason": "Typed global paths, whole-function instruction correspondence and a unique compiler-mapped assignment supply one bounded experiment, including independently generated literal fixes. No original operand becomes an acceptance binding.",
+    "application_command": "python tools/apply_pattern.py game-main check_characters repair_symbolic_assignment"
+  },
+  "reason": "Accepted generated play_char declaration resolves the missing typed destination. New guarded source recipe combines the uniquely mapped assignment destination and two previously verified literal observations. One fresh bounded experiment, not a proof claim."
+}

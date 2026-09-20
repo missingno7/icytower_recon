@@ -317,6 +317,41 @@
       "required_evidence": "tail_jump_layout",
       "confidence": "REAL_REJECTED_SOURCE_ORDER_TRIAL",
       "evidence": "docs/branch-relaxation-evidence.md"
+    },
+    {
+      "id": "aligned-literal-content-difference",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "symptom": "Instruction skeletons match, but aligned pointer operands reference different literal payloads.",
+      "known_source_cause": "Wrong filename format, file mode, default string, or formatting spaces can masquerade as relocation layout differences.",
+      "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+      },
+      "example_functions": [
+        "add_profile",
+        "fldads_dump_local_cache",
+        "create_replay",
+        "save_profile"
+      ],
+      "required_evidence": "literal_diagnostics",
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+    },
+    {
+      "id": "common-allocation-is-not-type-size",
+      "difference_class": "COMMON_BSS_LAYOUT",
+      "symptom": "A correctly generated aggregate has a larger COFF COMMON allocation than its DWARF sizeof.",
+      "known_source_cause": "The locked compiler emits rounded COMMON storage; logical type size and allocation are different quantities.",
+      "known_fix_pattern": "Compile an independent declaration witness with the same locked flags and generated header. Verify logical type layout separately; allow only the witnessed target allocation change and preserve all other contributions. Never infer original BSS order from this witness.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "observed_example": "Tmenu_char_selection sizeof 1036, emitted COMMON allocation 1040"
+      },
+      "example_functions": [
+        "check_characters",
+        "set_current_avatar"
+      ],
+      "confidence": "FRESH_LOCKED_COMPILER_DECLARATION_WITNESS"
     }
   ]
 }

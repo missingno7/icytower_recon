@@ -183,10 +183,20 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1510,
-    "body_end_line": 1567,
+    "body_start_line": 1511,
+    "body_end_line": 1568,
     "body_sha256": "0080d997f6e2b172097312a380444d416431e206a6e302cac7fa03d6aee48fc0"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 19,
+      "candidate_addend": 516,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -221,7 +231,7 @@
         "original_bytes": 67,
         "candidate_bytes": 63,
         "candidate_minus_original": -4,
-        "candidate_source_line": 1512
+        "candidate_source_line": 1513
       }
     ],
     "proof": "Decoded constant SUB ESP in the straight-line entry prefix; no branches/calls crossed.",
@@ -373,7 +383,7 @@
         "original_type": "char [67]",
         "candidate_type": "char [63]",
         "original_die": 125367,
-        "candidate_die": 25073,
+        "candidate_die": 25167,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -527,7 +537,7 @@
         "assembly": "lea    -0x57(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 25073,
+            "die": 25167,
             "name": "letters",
             "type": "char [63]",
             "base_type": "char",
@@ -551,9 +561,9 @@
       },
       {
         "address": 16166,
-        "bytes": "bef0010000",
+        "bytes": "be04020000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x1f0,%esi",
+        "assembly": "mov    $0x204,%esi",
         "dwarf_variables": []
       },
       {
@@ -681,7 +691,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4b40",
-      "candidate_addend": 496,
+      "candidate_addend": 516,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -693,6 +703,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_text_height",
@@ -896,7 +907,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 19,
-      "addend": 496,
+      "addend": 516,
       "target_va": 5065536,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5065536,
@@ -1096,10 +1107,10 @@
       "evidence": "docs/stack-frame-evidence.md"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 51,
+  "difficulty": "SUPERVISOR",
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main get_string",
@@ -1127,6 +1138,16 @@
       "state": "LOCAL_DECLARATION_REPAIR",
       "difficulty": "SUPERVISOR",
       "candidate_card": "docs/current/local-declarations/decl_main_get_string_letters.json"
+    }
+  ],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "get_string",
+      "source": "src/main.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
     }
   ],
   "interface_conflicts": [
@@ -1166,6 +1187,9 @@
   "evidence_counts": {
     "relocation_mismatches": 21,
     "direct_transfer_mismatches": 2,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 1,
+    "literal_dependencies": 0,
     "original_calls": 20,
     "calls": 16,
     "referenced_globals": 4

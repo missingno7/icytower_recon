@@ -8,9 +8,9 @@
   "historical_size": 5788,
   "status": "DIFFER",
   "state": "SOURCE_DIFFER",
-  "difference_class": "UNKNOWN_SUPERVISOR",
+  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
   "body_edit_allowed": true,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
   "prototype": "int init_game(int argc, char **argv);",
   "return_type": "int",
   "parameters": [
@@ -1283,10 +1283,888 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2420,
-    "body_end_line": 2837,
-    "body_sha256": "390e87d3ba6f4a5bd6d6b829d00d0caa9fafb6873a2ff8f39d3ca9df727a47be"
+    "body_start_line": 2421,
+    "body_end_line": 2838,
+    "body_sha256": "30023c773a701916af9aab85132ccb10a60f5715b37f4d79cef24836b8094038"
   },
+  "reference_diagnostics": [
+    {
+      "function_offset": 160,
+      "access": "WRITE",
+      "access_bytes": 4,
+      "candidate_symbol": "_curr_char",
+      "candidate_reference": {
+        "expression": "curr_char",
+        "offset": 0,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "steps": [],
+        "root": "curr_char",
+        "root_va": 5100144,
+        "root_die": 137931,
+        "root_offset": 0,
+        "original_type": "int",
+        "original_size": 4,
+        "owner_source": "src/main.c",
+        "owner_card": "docs/current/storage/game-main/137931.json",
+        "generated_header": null
+      },
+      "expected_reference": {
+        "expression": "play_char.max",
+        "offset": 4,
+        "size": 4,
+        "kind": "base_type",
+        "type": "int",
+        "encoding": "5\t(signed)",
+        "steps": [
+          {
+            "member": "max",
+            "index": 1
+          }
+        ],
+        "root": "play_char",
+        "root_va": 5219096,
+        "root_die": 138468,
+        "root_offset": 4,
+        "original_type": "Tmenu_char_selection",
+        "original_size": 1036,
+        "owner_source": "src/main.c",
+        "owner_card": "docs/current/storage/game-main/138468.json",
+        "generated_header": "include/recovered/Tmenu_char_selection.h"
+      },
+      "candidate_declaration": {
+        "declaration_count": 1,
+        "candidate_type": "int",
+        "candidate_size": 4,
+        "field": {
+          "expression": "curr_char",
+          "offset": 0,
+          "size": 4,
+          "kind": "base_type",
+          "type": "int",
+          "steps": []
+        },
+        "agrees": true
+      },
+      "expected_declaration_in_candidate": {
+        "declaration_count": 1,
+        "candidate_type": "struct {\n    int value;\n    int max;\n    BITMAP *bmp;\n    PALETTE pal;\n} ",
+        "candidate_size": 1036,
+        "field": {
+          "expression": "play_char.max",
+          "offset": 4,
+          "size": 4,
+          "kind": "base_type",
+          "type": "int",
+          "encoding": "5\t(signed)",
+          "steps": [
+            {
+              "member": "max",
+              "index": 1
+            }
+          ]
+        },
+        "agrees": true
+      },
+      "candidate_instruction": {
+        "address": 20790,
+        "bytes": "c7050000000000000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,0x0"
+      },
+      "original_instruction": {
+        "address": 4253818,
+        "bytes": "c7051ca34f0000000000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x0,0x4fa31c"
+      },
+      "classification": "ALIGNED_REFERENCE_OBSERVATION",
+      "prerequisite": "ESTABLISH_INSTRUCTION_CORRESPONDENCE",
+      "body_edit_allowed": false,
+      "limit": "Original address identifies a diagnostic typed path. No target binding, body equality or automated source edit is granted. Whole-function instruction shape differs; correspondence of source operations at this offset is unproved.",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2450,
+          "text": "    curr_char=0;"
+        }
+      ]
+    }
+  ],
+  "literal_diagnostics": [
+    {
+      "function_offset": 32,
+      "candidate_addend": 1226,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5067210,
+      "candidate_hex": "494e49542047414d45",
+      "original_hex": "0a494e49542047414d45",
+      "candidate_instruction": {
+        "address": 20661,
+        "bytes": "c70424ca040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4ca,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4253689,
+        "bytes": "c70424ca514d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d51ca,(%esp)"
+      },
+      "candidate_text": "INIT GAME",
+      "original_text": "\nINIT GAME",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2440,
+          "text": "    log2file(\"INIT GAME\");"
+        }
+      ]
+    },
+    {
+      "function_offset": 634,
+      "candidate_addend": 1441,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 654,
+      "candidate_addend": 1448,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 714,
+      "candidate_addend": 1538,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 761,
+      "candidate_addend": 1620,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 795,
+      "candidate_addend": 1704,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 858,
+      "candidate_addend": 1787,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 879,
+      "candidate_addend": 1794,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 903,
+      "candidate_addend": 1814,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 916,
+      "candidate_addend": 1834,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1009,
+      "candidate_addend": 1787,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1131,
+      "candidate_addend": 1908,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1222,
+      "candidate_addend": 2184,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1299,
+      "candidate_addend": 2217,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1368,
+      "candidate_addend": 2229,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1380,
+      "candidate_addend": 2251,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1394,
+      "candidate_addend": 2268,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1426,
+      "candidate_addend": 2316,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1598,
+      "candidate_addend": 2343,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1630,
+      "candidate_addend": 2363,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1714,
+      "candidate_addend": 2387,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1746,
+      "candidate_addend": 2405,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1768,
+      "candidate_addend": 2425,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1813,
+      "candidate_addend": 2442,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1882,
+      "candidate_addend": 2470,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1894,
+      "candidate_addend": 2494,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1914,
+      "candidate_addend": 2508,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1926,
+      "candidate_addend": 2494,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1945,
+      "candidate_addend": 1202,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1959,
+      "candidate_addend": 1210,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1974,
+      "candidate_addend": 1215,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 1989,
+      "candidate_addend": 1205,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2016,
+      "candidate_addend": 2541,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2049,
+      "candidate_addend": 2647,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2147,
+      "candidate_addend": 2702,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2179,
+      "candidate_addend": 2715,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5066062,
+      "candidate_hex": "646174612f646174612e646174",
+      "original_hex": "7269676874",
+      "candidate_instruction": {
+        "address": 22808,
+        "bytes": "c704249b0a0000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0xa9b,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4255836,
+        "bytes": "c704244e4d4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4d4e,(%esp)"
+      },
+      "candidate_text": "data/data.dat",
+      "original_text": "right",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2697,
+          "text": "    data=load_datafile_callback(\"data/data.dat\",datafile_callback_slow);"
+        }
+      ]
+    },
+    {
+      "function_offset": 2221,
+      "candidate_addend": 2754,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2355,
+      "candidate_addend": 2810,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2453,
+      "candidate_addend": 2930,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2482,
+      "candidate_addend": 2958,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2507,
+      "candidate_addend": 2974,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2568,
+      "candidate_addend": 3094,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2598,
+      "candidate_addend": 3124,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2654,
+      "candidate_addend": 3156,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2692,
+      "candidate_addend": 1538,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2812,
+      "candidate_addend": 1455,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2873,
+      "candidate_addend": 1280,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2891,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2947,
+      "candidate_addend": 1744,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2971,
+      "candidate_addend": 1250,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 2991,
+      "candidate_addend": 1969,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3118,
+      "candidate_addend": 1484,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3137,
+      "candidate_addend": 1512,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3169,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3243,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3299,
+      "candidate_addend": 1940,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3319,
+      "candidate_addend": 2592,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3354,
+      "candidate_addend": 1886,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3371,
+      "candidate_addend": 1865,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3408,
+      "candidate_addend": 1463,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3471,
+      "candidate_addend": 2875,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3531,
+      "candidate_addend": 2892,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3583,
+      "candidate_addend": 2548,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3651,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3663,
+      "candidate_addend": 1837,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3695,
+      "candidate_addend": 2840,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3727,
+      "candidate_addend": 1999,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3783,
+      "candidate_addend": 2028,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3846,
+      "candidate_addend": 2284,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3866,
+      "candidate_addend": 1467,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3907,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 3963,
+      "candidate_addend": 2664,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4038,
+      "candidate_addend": 1552,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4050,
+      "candidate_addend": 1608,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4079,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4135,
+      "candidate_addend": 2729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4169,
+      "candidate_addend": 3250,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4198,
+      "candidate_addend": 3262,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4218,
+      "candidate_addend": 3278,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4230,
+      "candidate_addend": 3293,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4259,
+      "candidate_addend": 3303,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4283,
+      "candidate_addend": 3321,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4762,
+      "candidate_addend": 3351,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4782,
+      "candidate_addend": 3435,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4918,
+      "candidate_addend": 3455,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 4935,
+      "candidate_addend": 3467,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5116,
+      "candidate_addend": 1729,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5172,
+      "candidate_addend": 2772,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5192,
+      "candidate_addend": 1473,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5261,
+      "candidate_addend": 2988,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5274,
+      "candidate_addend": 586,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5281,
+      "candidate_addend": 3012,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5293,
+      "candidate_addend": 586,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5326,
+      "candidate_addend": 586,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5350,
+      "candidate_addend": 3049,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5375,
+      "candidate_addend": 2875,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5431,
+      "candidate_addend": 3071,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5451,
+      "candidate_addend": 1478,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5492,
+      "candidate_addend": 3376,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5504,
+      "candidate_addend": 3407,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5528,
+      "candidate_addend": 3417,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5608,
+      "candidate_addend": 1656,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 5620,
+      "candidate_addend": 1608,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -2080,7 +2958,7 @@
         "assembly": "mov    0xc(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 26229,
+            "die": 26323,
             "name": "argv",
             "type": "char **",
             "base_type": "char",
@@ -2102,7 +2980,7 @@
         "assembly": "movb   $0x0,-0x38(%ebp)",
         "dwarf_variables": [
           {
-            "die": 26351,
+            "die": 26445,
             "name": "tmpHandle",
             "type": "char [32]",
             "base_type": "char",
@@ -2126,9 +3004,9 @@
       },
       {
         "address": 20661,
-        "bytes": "c70424b6040000",
+        "bytes": "c70424ca040000",
         "mnemonic": "movl",
-        "assembly": "movl   $0x4b6,(%esp)",
+        "assembly": "movl   $0x4ca,(%esp)",
         "dwarf_variables": []
       },
       {
@@ -3358,7 +4236,7 @@
           "index": 135,
           "name": "_play_char",
           "section": 0,
-          "value": 16,
+          "value": 1040,
           "storage_class": 2
         }
       ],
@@ -3760,7 +4638,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d51cb",
-      "candidate_addend": 1206,
+      "candidate_addend": 1226,
       "dwarf_type": null,
       "references": [
         32
@@ -3770,7 +4648,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3796,7 +4674,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3812,7 +4690,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d51d5",
-      "candidate_addend": 1216,
+      "candidate_addend": 1236,
       "dwarf_type": null,
       "references": [
         65
@@ -3822,7 +4700,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3838,7 +4716,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5242",
-      "candidate_addend": 1326,
+      "candidate_addend": 1346,
       "dwarf_type": null,
       "references": [
         211
@@ -3848,7 +4726,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3864,7 +4742,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5247",
-      "candidate_addend": 1331,
+      "candidate_addend": 1351,
       "dwarf_type": null,
       "references": [
         228
@@ -3874,7 +4752,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3890,7 +4768,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d524c",
-      "candidate_addend": 1336,
+      "candidate_addend": 1356,
       "dwarf_type": null,
       "references": [
         245
@@ -3900,7 +4778,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3916,7 +4794,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5251",
-      "candidate_addend": 1341,
+      "candidate_addend": 1361,
       "dwarf_type": null,
       "references": [
         282,
@@ -3928,7 +4806,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3944,7 +4822,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5258",
-      "candidate_addend": 1348,
+      "candidate_addend": 1368,
       "dwarf_type": null,
       "references": [
         299
@@ -3954,7 +4832,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3970,7 +4848,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d525e",
-      "candidate_addend": 1354,
+      "candidate_addend": 1374,
       "dwarf_type": null,
       "references": [
         316
@@ -3980,7 +4858,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -3996,7 +4874,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5263",
-      "candidate_addend": 1359,
+      "candidate_addend": 1379,
       "dwarf_type": null,
       "references": [
         333
@@ -4006,7 +4884,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4022,7 +4900,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d526a",
-      "candidate_addend": 1366,
+      "candidate_addend": 1386,
       "dwarf_type": null,
       "references": [
         350
@@ -4032,7 +4910,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4048,7 +4926,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5272",
-      "candidate_addend": 1374,
+      "candidate_addend": 1394,
       "dwarf_type": null,
       "references": [
         367
@@ -4058,7 +4936,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4074,7 +4952,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5279",
-      "candidate_addend": 1381,
+      "candidate_addend": 1401,
       "dwarf_type": null,
       "references": [
         404
@@ -4084,7 +4962,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4100,7 +4978,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d527e",
-      "candidate_addend": 1386,
+      "candidate_addend": 1406,
       "dwarf_type": null,
       "references": [
         438
@@ -4110,7 +4988,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4126,7 +5004,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5286",
-      "candidate_addend": 1394,
+      "candidate_addend": 1414,
       "dwarf_type": null,
       "references": [
         455
@@ -4136,7 +5014,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4152,7 +5030,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d528f",
-      "candidate_addend": 1403,
+      "candidate_addend": 1423,
       "dwarf_type": null,
       "references": [
         472
@@ -4162,7 +5040,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4178,7 +5056,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5294",
-      "candidate_addend": 1408,
+      "candidate_addend": 1428,
       "dwarf_type": null,
       "references": [
         519
@@ -4188,7 +5066,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4204,7 +5082,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d529b",
-      "candidate_addend": 1415,
+      "candidate_addend": 1435,
       "dwarf_type": null,
       "references": [
         553
@@ -4214,7 +5092,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4230,7 +5108,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52a1",
-      "candidate_addend": 1421,
+      "candidate_addend": 1441,
       "dwarf_type": null,
       "references": [
         634
@@ -4240,7 +5118,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4256,7 +5134,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52a8",
-      "candidate_addend": 1428,
+      "candidate_addend": 1448,
       "dwarf_type": null,
       "references": [
         654
@@ -4266,7 +5144,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4282,7 +5160,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52cc",
-      "candidate_addend": 1518,
+      "candidate_addend": 1538,
       "dwarf_type": null,
       "references": [
         714,
@@ -4293,7 +5171,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4309,7 +5187,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5354",
-      "candidate_addend": 1600,
+      "candidate_addend": 1620,
       "dwarf_type": null,
       "references": [
         761
@@ -4319,7 +5197,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4335,7 +5213,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 1684,
+      "candidate_addend": 1704,
       "dwarf_type": null,
       "references": [
         795
@@ -4345,7 +5223,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4373,7 +5251,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 31794,
+          "candidate_die": 31888,
           "candidate_offset": 64,
           "section_index": 2,
           "section": ".data",
@@ -4390,7 +5268,7 @@
               "section_offset": 64,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4643,
+              "addend": 4663,
               "target_va": 5071593,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4399,7 +5277,7 @@
               "section_offset": 68,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4655,
+              "addend": 4675,
               "target_va": 5071605,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4408,7 +5286,7 @@
               "section_offset": 72,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4667,
+              "addend": 4687,
               "target_va": 5071617,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4417,7 +5295,7 @@
               "section_offset": 76,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4682,
+              "addend": 4702,
               "target_va": 5071632,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4426,7 +5304,7 @@
               "section_offset": 80,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4702,
+              "addend": 4722,
               "target_va": 5071652,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4435,7 +5313,7 @@
               "section_offset": 84,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4724,
+              "addend": 4744,
               "target_va": 5071674,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4444,7 +5322,7 @@
               "section_offset": 88,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4742,
+              "addend": 4762,
               "target_va": 5071692,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4453,7 +5331,7 @@
               "section_offset": 92,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4760,
+              "addend": 4780,
               "target_va": 5071710,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4462,7 +5340,7 @@
               "section_offset": 96,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4778,
+              "addend": 4798,
               "target_va": 5071728,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4471,7 +5349,7 @@
               "section_offset": 100,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4796,
+              "addend": 4816,
               "target_va": 5071746,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4480,7 +5358,7 @@
               "section_offset": 104,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4814,
+              "addend": 4834,
               "target_va": 5071764,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4489,7 +5367,7 @@
               "section_offset": 108,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4835,
+              "addend": 4855,
               "target_va": 5071785,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4498,7 +5376,7 @@
               "section_offset": 112,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4856,
+              "addend": 4876,
               "target_va": 5071806,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4507,7 +5385,7 @@
               "section_offset": 116,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4877,
+              "addend": 4897,
               "target_va": 5071827,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -4516,7 +5394,7 @@
               "section_offset": 120,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 4901,
+              "addend": 4921,
               "target_va": 5071851,
               "resolution": "unique read-only initializer literal or table content"
             }
@@ -4552,7 +5430,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d53f7",
-      "candidate_addend": 1767,
+      "candidate_addend": 1787,
       "dwarf_type": null,
       "references": [
         858,
@@ -4563,7 +5441,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4579,7 +5457,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d53fe",
-      "candidate_addend": 1774,
+      "candidate_addend": 1794,
       "dwarf_type": null,
       "references": [
         879
@@ -4589,7 +5467,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4605,7 +5483,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5412",
-      "candidate_addend": 1794,
+      "candidate_addend": 1814,
       "dwarf_type": null,
       "references": [
         903
@@ -4615,7 +5493,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4631,7 +5509,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5426",
-      "candidate_addend": 1814,
+      "candidate_addend": 1834,
       "dwarf_type": null,
       "references": [
         916
@@ -4641,7 +5519,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4657,7 +5535,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5494",
-      "candidate_addend": 1888,
+      "candidate_addend": 1908,
       "dwarf_type": null,
       "references": [
         1131
@@ -4667,7 +5545,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4683,7 +5561,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5588",
-      "candidate_addend": 2164,
+      "candidate_addend": 2184,
       "dwarf_type": null,
       "references": [
         1222
@@ -4693,7 +5571,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4709,7 +5587,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d55a9",
-      "candidate_addend": 2197,
+      "candidate_addend": 2217,
       "dwarf_type": null,
       "references": [
         1299
@@ -4719,7 +5597,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4735,7 +5613,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d55b5",
-      "candidate_addend": 2209,
+      "candidate_addend": 2229,
       "dwarf_type": null,
       "references": [
         1368
@@ -4745,7 +5623,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4761,7 +5639,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d55cb",
-      "candidate_addend": 2231,
+      "candidate_addend": 2251,
       "dwarf_type": null,
       "references": [
         1380
@@ -4771,7 +5649,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4787,7 +5665,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 2248,
+      "candidate_addend": 2268,
       "dwarf_type": null,
       "references": [
         1394
@@ -4797,7 +5675,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4813,7 +5691,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d560c",
-      "candidate_addend": 2296,
+      "candidate_addend": 2316,
       "dwarf_type": null,
       "references": [
         1426
@@ -4823,7 +5701,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4839,7 +5717,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5627",
-      "candidate_addend": 2323,
+      "candidate_addend": 2343,
       "dwarf_type": null,
       "references": [
         1598
@@ -4849,7 +5727,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4865,7 +5743,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d563b",
-      "candidate_addend": 2343,
+      "candidate_addend": 2363,
       "dwarf_type": null,
       "references": [
         1630
@@ -4875,7 +5753,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4945,7 +5823,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5653",
-      "candidate_addend": 2367,
+      "candidate_addend": 2387,
       "dwarf_type": null,
       "references": [
         1714
@@ -4955,7 +5833,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4971,7 +5849,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5665",
-      "candidate_addend": 2385,
+      "candidate_addend": 2405,
       "dwarf_type": null,
       "references": [
         1746
@@ -4981,7 +5859,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -4997,7 +5875,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5679",
-      "candidate_addend": 2405,
+      "candidate_addend": 2425,
       "dwarf_type": null,
       "references": [
         1768
@@ -5007,7 +5885,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5023,7 +5901,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d568a",
-      "candidate_addend": 2422,
+      "candidate_addend": 2442,
       "dwarf_type": null,
       "references": [
         1813
@@ -5033,7 +5911,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5049,7 +5927,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d56a6",
-      "candidate_addend": 2450,
+      "candidate_addend": 2470,
       "dwarf_type": null,
       "references": [
         1882
@@ -5059,7 +5937,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5075,7 +5953,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d56be",
-      "candidate_addend": 2474,
+      "candidate_addend": 2494,
       "dwarf_type": null,
       "references": [
         1894,
@@ -5086,7 +5964,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5102,7 +5980,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d56cc",
-      "candidate_addend": 2488,
+      "candidate_addend": 2508,
       "dwarf_type": null,
       "references": [
         1914
@@ -5112,7 +5990,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5128,7 +6006,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4d41",
-      "candidate_addend": 1182,
+      "candidate_addend": 1202,
       "dwarf_type": null,
       "references": [
         1945
@@ -5138,7 +6016,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5154,7 +6032,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4d49",
-      "candidate_addend": 1190,
+      "candidate_addend": 1210,
       "dwarf_type": null,
       "references": [
         1959
@@ -5164,7 +6042,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5180,7 +6058,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4d4e",
-      "candidate_addend": 1195,
+      "candidate_addend": 1215,
       "dwarf_type": null,
       "references": [
         1974
@@ -5190,7 +6068,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5206,7 +6084,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4d44",
-      "candidate_addend": 1185,
+      "candidate_addend": 1205,
       "dwarf_type": null,
       "references": [
         1989
@@ -5216,7 +6094,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5232,7 +6110,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d56ed",
-      "candidate_addend": 2521,
+      "candidate_addend": 2541,
       "dwarf_type": null,
       "references": [
         2016
@@ -5242,7 +6120,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5258,7 +6136,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5757",
-      "candidate_addend": 2627,
+      "candidate_addend": 2647,
       "dwarf_type": null,
       "references": [
         2049
@@ -5268,7 +6146,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5298,7 +6176,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 31886,
+          "candidate_die": 31980,
           "candidate_offset": 284,
           "section_index": 2,
           "section": ".data",
@@ -5341,7 +6219,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d578e",
-      "candidate_addend": 2682,
+      "candidate_addend": 2702,
       "dwarf_type": null,
       "references": [
         2147
@@ -5351,7 +6229,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5385,7 +6263,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d579b",
-      "candidate_addend": 2695,
+      "candidate_addend": 2715,
       "dwarf_type": null,
       "references": [
         2179
@@ -5395,7 +6273,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5411,7 +6289,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d57c2",
-      "candidate_addend": 2734,
+      "candidate_addend": 2754,
       "dwarf_type": null,
       "references": [
         2221
@@ -5421,7 +6299,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5437,7 +6315,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d57fa",
-      "candidate_addend": 2790,
+      "candidate_addend": 2810,
       "dwarf_type": null,
       "references": [
         2355
@@ -5447,7 +6325,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5463,7 +6341,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5872",
-      "candidate_addend": 2910,
+      "candidate_addend": 2930,
       "dwarf_type": null,
       "references": [
         2453
@@ -5473,7 +6351,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5489,7 +6367,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d588e",
-      "candidate_addend": 2938,
+      "candidate_addend": 2958,
       "dwarf_type": null,
       "references": [
         2482
@@ -5499,7 +6377,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5515,7 +6393,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d589e",
-      "candidate_addend": 2954,
+      "candidate_addend": 2974,
       "dwarf_type": null,
       "references": [
         2507
@@ -5525,7 +6403,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5541,7 +6419,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5916",
-      "candidate_addend": 3074,
+      "candidate_addend": 3094,
       "dwarf_type": null,
       "references": [
         2568
@@ -5551,7 +6429,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5567,7 +6445,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5934",
-      "candidate_addend": 3104,
+      "candidate_addend": 3124,
       "dwarf_type": null,
       "references": [
         2598
@@ -5577,7 +6455,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5593,7 +6471,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5954",
-      "candidate_addend": 3136,
+      "candidate_addend": 3156,
       "dwarf_type": null,
       "references": [
         2654
@@ -5603,7 +6481,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5619,7 +6497,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52af",
-      "candidate_addend": 1435,
+      "candidate_addend": 1455,
       "dwarf_type": null,
       "references": [
         2812
@@ -5629,7 +6507,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5645,7 +6523,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5200",
-      "candidate_addend": 1260,
+      "candidate_addend": 1280,
       "dwarf_type": null,
       "references": [
         2873
@@ -5655,7 +6533,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5671,7 +6549,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 1709,
+      "candidate_addend": 1729,
       "dwarf_type": null,
       "references": [
         2891,
@@ -5687,7 +6565,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5703,7 +6581,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d53cc",
-      "candidate_addend": 1724,
+      "candidate_addend": 1744,
       "dwarf_type": null,
       "references": [
         2947
@@ -5713,7 +6591,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5729,7 +6607,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d51e3",
-      "candidate_addend": 1230,
+      "candidate_addend": 1250,
       "dwarf_type": null,
       "references": [
         2971
@@ -5739,7 +6617,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5755,7 +6633,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5474",
-      "candidate_addend": 1949,
+      "candidate_addend": 1969,
       "dwarf_type": null,
       "references": [
         2991
@@ -5765,7 +6643,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5781,7 +6659,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d531c",
-      "candidate_addend": 1464,
+      "candidate_addend": 1484,
       "dwarf_type": null,
       "references": [
         3118
@@ -5791,7 +6669,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5807,7 +6685,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5338",
-      "candidate_addend": 1492,
+      "candidate_addend": 1512,
       "dwarf_type": null,
       "references": [
         3137
@@ -5817,7 +6695,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5833,7 +6711,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d54b4",
-      "candidate_addend": 1920,
+      "candidate_addend": 1940,
       "dwarf_type": null,
       "references": [
         3299
@@ -5843,7 +6721,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5859,7 +6737,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5720",
-      "candidate_addend": 2572,
+      "candidate_addend": 2592,
       "dwarf_type": null,
       "references": [
         3319
@@ -5869,7 +6747,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5885,7 +6763,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d545e",
-      "candidate_addend": 1866,
+      "candidate_addend": 1886,
       "dwarf_type": null,
       "references": [
         3354
@@ -5895,7 +6773,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5911,7 +6789,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5449",
-      "candidate_addend": 1845,
+      "candidate_addend": 1865,
       "dwarf_type": null,
       "references": [
         3371
@@ -5921,7 +6799,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5937,7 +6815,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52b7",
-      "candidate_addend": 1443,
+      "candidate_addend": 1463,
       "dwarf_type": null,
       "references": [
         3408
@@ -5947,7 +6825,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5963,7 +6841,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d583b",
-      "candidate_addend": 2855,
+      "candidate_addend": 2875,
       "dwarf_type": null,
       "references": [
         3471,
@@ -5974,7 +6852,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -5990,7 +6868,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d584c",
-      "candidate_addend": 2872,
+      "candidate_addend": 2892,
       "dwarf_type": null,
       "references": [
         3531
@@ -6000,7 +6878,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6016,7 +6894,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d56f4",
-      "candidate_addend": 2528,
+      "candidate_addend": 2548,
       "dwarf_type": null,
       "references": [
         3583
@@ -6026,7 +6904,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6042,7 +6920,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d542d",
-      "candidate_addend": 1817,
+      "candidate_addend": 1837,
       "dwarf_type": null,
       "references": [
         3663
@@ -6052,7 +6930,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6068,7 +6946,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5818",
-      "candidate_addend": 2820,
+      "candidate_addend": 2840,
       "dwarf_type": null,
       "references": [
         3695
@@ -6078,7 +6956,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6094,7 +6972,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d54d1",
-      "candidate_addend": 1979,
+      "candidate_addend": 1999,
       "dwarf_type": null,
       "references": [
         3727
@@ -6104,7 +6982,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6120,7 +6998,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d54ec",
-      "candidate_addend": 2008,
+      "candidate_addend": 2028,
       "dwarf_type": null,
       "references": [
         3783
@@ -6130,7 +7008,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6146,7 +7024,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d55ec",
-      "candidate_addend": 2264,
+      "candidate_addend": 2284,
       "dwarf_type": null,
       "references": [
         3846
@@ -6156,7 +7034,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6172,7 +7050,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52bb",
-      "candidate_addend": 1447,
+      "candidate_addend": 1467,
       "dwarf_type": null,
       "references": [
         3866
@@ -6182,7 +7060,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6198,7 +7076,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5768",
-      "candidate_addend": 2644,
+      "candidate_addend": 2664,
       "dwarf_type": null,
       "references": [
         3963
@@ -6208,7 +7086,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6224,7 +7102,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52d8",
-      "candidate_addend": 1532,
+      "candidate_addend": 1552,
       "dwarf_type": null,
       "references": [
         4038
@@ -6234,7 +7112,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6250,7 +7128,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5310",
-      "candidate_addend": 1588,
+      "candidate_addend": 1608,
       "dwarf_type": null,
       "references": [
         4050,
@@ -6261,7 +7139,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6277,7 +7155,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d57a9",
-      "candidate_addend": 2709,
+      "candidate_addend": 2729,
       "dwarf_type": null,
       "references": [
         4135
@@ -6287,7 +7165,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6303,7 +7181,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d59b2",
-      "candidate_addend": 3230,
+      "candidate_addend": 3250,
       "dwarf_type": null,
       "references": [
         4169
@@ -6313,7 +7191,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6329,7 +7207,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d59be",
-      "candidate_addend": 3242,
+      "candidate_addend": 3262,
       "dwarf_type": null,
       "references": [
         4198
@@ -6339,7 +7217,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6373,7 +7251,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d59ce",
-      "candidate_addend": 3258,
+      "candidate_addend": 3278,
       "dwarf_type": null,
       "references": [
         4218
@@ -6383,7 +7261,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6399,7 +7277,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a1a",
-      "candidate_addend": 3273,
+      "candidate_addend": 3293,
       "dwarf_type": null,
       "references": [
         4230
@@ -6409,7 +7287,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6425,7 +7303,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a24",
-      "candidate_addend": 3283,
+      "candidate_addend": 3303,
       "dwarf_type": null,
       "references": [
         4259
@@ -6435,7 +7313,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6451,7 +7329,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a36",
-      "candidate_addend": 3301,
+      "candidate_addend": 3321,
       "dwarf_type": null,
       "references": [
         4283
@@ -6461,7 +7339,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6477,7 +7355,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a54",
-      "candidate_addend": 3331,
+      "candidate_addend": 3351,
       "dwarf_type": null,
       "references": [
         4762
@@ -6487,7 +7365,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6503,7 +7381,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a6c",
-      "candidate_addend": 3415,
+      "candidate_addend": 3435,
       "dwarf_type": null,
       "references": [
         4782
@@ -6513,7 +7391,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6541,7 +7419,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 31302,
+          "candidate_die": 31396,
           "candidate_offset": 32,
           "section_index": 2,
           "section": ".data",
@@ -6596,7 +7474,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 31335,
+          "candidate_die": 31429,
           "candidate_offset": 48,
           "section_index": 2,
           "section": ".data",
@@ -6639,7 +7517,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a80",
-      "candidate_addend": 3435,
+      "candidate_addend": 3455,
       "dwarf_type": null,
       "references": [
         4918
@@ -6649,7 +7527,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6665,7 +7543,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4dc5",
-      "candidate_addend": 3447,
+      "candidate_addend": 3467,
       "dwarf_type": null,
       "references": [
         4935
@@ -6675,7 +7553,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6691,7 +7569,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d57d4",
-      "candidate_addend": 2752,
+      "candidate_addend": 2772,
       "dwarf_type": null,
       "references": [
         5172
@@ -6701,7 +7579,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6717,7 +7595,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52c1",
-      "candidate_addend": 1453,
+      "candidate_addend": 1473,
       "dwarf_type": null,
       "references": [
         5192
@@ -6727,7 +7605,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6743,7 +7621,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d58ac",
-      "candidate_addend": 2968,
+      "candidate_addend": 2988,
       "dwarf_type": null,
       "references": [
         5261
@@ -6753,7 +7631,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6769,7 +7647,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4b86",
-      "candidate_addend": 566,
+      "candidate_addend": 586,
       "dwarf_type": null,
       "references": [
         5274,
@@ -6781,7 +7659,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6797,7 +7675,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d58c4",
-      "candidate_addend": 2992,
+      "candidate_addend": 3012,
       "dwarf_type": null,
       "references": [
         5281
@@ -6807,7 +7685,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6823,7 +7701,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d58e9",
-      "candidate_addend": 3029,
+      "candidate_addend": 3049,
       "dwarf_type": null,
       "references": [
         5350
@@ -6833,7 +7711,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6849,7 +7727,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d58ff",
-      "candidate_addend": 3051,
+      "candidate_addend": 3071,
       "dwarf_type": null,
       "references": [
         5431
@@ -6859,7 +7737,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6875,7 +7753,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d52c6",
-      "candidate_addend": 1458,
+      "candidate_addend": 1478,
       "dwarf_type": null,
       "references": [
         5451
@@ -6885,7 +7763,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6901,7 +7779,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d59e0",
-      "candidate_addend": 3356,
+      "candidate_addend": 3376,
       "dwarf_type": null,
       "references": [
         5492
@@ -6911,7 +7789,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6927,7 +7805,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 3387,
+      "candidate_addend": 3407,
       "dwarf_type": null,
       "references": [
         5504
@@ -6937,7 +7815,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6953,7 +7831,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5a08",
-      "candidate_addend": 3397,
+      "candidate_addend": 3417,
       "dwarf_type": null,
       "references": [
         5528
@@ -6963,7 +7841,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6979,7 +7857,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5378",
-      "candidate_addend": 1636,
+      "candidate_addend": 1656,
       "dwarf_type": null,
       "references": [
         5608
@@ -6989,7 +7867,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -6998,6 +7876,38 @@
       ],
       "blocker": null,
       "initializer_blockers": []
+    }
+  ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1226,
+      "candidate_card": "docs/current/literals/game-main/4ca.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        32
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
+    },
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 2715,
+      "candidate_card": "docs/current/literals/game-main/a9b.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        2179
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
     }
   ],
   "calls": [
@@ -9983,7 +10893,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 32,
-      "addend": 1206,
+      "addend": 1226,
       "target_va": 5067211,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067211,
@@ -10025,7 +10935,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 634,
-      "addend": 1421,
+      "addend": 1441,
       "target_va": 5067425,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067425,
@@ -10053,7 +10963,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 654,
-      "addend": 1428,
+      "addend": 1448,
       "target_va": 5067432,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067432,
@@ -10095,7 +11005,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 714,
-      "addend": 1518,
+      "addend": 1538,
       "target_va": 5067468,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067468,
@@ -10151,7 +11061,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 761,
-      "addend": 1600,
+      "addend": 1620,
       "target_va": 5067604,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067604,
@@ -10179,7 +11089,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 795,
-      "addend": 1684,
+      "addend": 1704,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -10235,7 +11145,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 858,
-      "addend": 1767,
+      "addend": 1787,
       "target_va": 5067767,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067767,
@@ -10263,7 +11173,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 879,
-      "addend": 1774,
+      "addend": 1794,
       "target_va": 5067774,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067774,
@@ -10305,7 +11215,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 903,
-      "addend": 1794,
+      "addend": 1814,
       "target_va": 5067794,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067794,
@@ -10319,7 +11229,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 916,
-      "addend": 1814,
+      "addend": 1834,
       "target_va": 5067814,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067814,
@@ -10403,7 +11313,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1009,
-      "addend": 1767,
+      "addend": 1787,
       "target_va": 5067767,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067767,
@@ -10543,7 +11453,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1131,
-      "addend": 1888,
+      "addend": 1908,
       "target_va": 5067924,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067924,
@@ -10599,7 +11509,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1222,
-      "addend": 2164,
+      "addend": 2184,
       "target_va": 5068168,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068168,
@@ -10683,7 +11593,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1299,
-      "addend": 2197,
+      "addend": 2217,
       "target_va": 5068201,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068201,
@@ -10753,7 +11663,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1368,
-      "addend": 2209,
+      "addend": 2229,
       "target_va": 5068213,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068213,
@@ -10781,7 +11691,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1380,
-      "addend": 2231,
+      "addend": 2251,
       "target_va": 5068235,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068235,
@@ -10809,7 +11719,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1394,
-      "addend": 2248,
+      "addend": 2268,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -10837,7 +11747,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1426,
-      "addend": 2296,
+      "addend": 2316,
       "target_va": 5068300,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068300,
@@ -10921,7 +11831,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1598,
-      "addend": 2323,
+      "addend": 2343,
       "target_va": 5068327,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068327,
@@ -10963,7 +11873,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1630,
-      "addend": 2343,
+      "addend": 2363,
       "target_va": 5068347,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068347,
@@ -11089,7 +11999,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1714,
-      "addend": 2367,
+      "addend": 2387,
       "target_va": 5068371,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068371,
@@ -11131,7 +12041,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1746,
-      "addend": 2385,
+      "addend": 2405,
       "target_va": 5068389,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068389,
@@ -11159,7 +12069,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1768,
-      "addend": 2405,
+      "addend": 2425,
       "target_va": 5068409,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068409,
@@ -11187,7 +12097,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1813,
-      "addend": 2422,
+      "addend": 2442,
       "target_va": 5068426,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068426,
@@ -11257,7 +12167,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1882,
-      "addend": 2450,
+      "addend": 2470,
       "target_va": 5068454,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068454,
@@ -11271,7 +12181,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1894,
-      "addend": 2474,
+      "addend": 2494,
       "target_va": 5068478,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068478,
@@ -11299,7 +12209,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1914,
-      "addend": 2488,
+      "addend": 2508,
       "target_va": 5068492,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068492,
@@ -11313,7 +12223,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1926,
-      "addend": 2474,
+      "addend": 2494,
       "target_va": 5068478,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068478,
@@ -11355,7 +12265,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1945,
-      "addend": 1182,
+      "addend": 1202,
       "target_va": 5066049,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5066049,
@@ -11369,7 +12279,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1959,
-      "addend": 1190,
+      "addend": 1210,
       "target_va": 5066057,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5066057,
@@ -11383,7 +12293,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1974,
-      "addend": 1195,
+      "addend": 1215,
       "target_va": 5066062,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5066062,
@@ -11397,7 +12307,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 1989,
-      "addend": 1185,
+      "addend": 1205,
       "target_va": 5066052,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5066052,
@@ -11411,7 +12321,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2016,
-      "addend": 2521,
+      "addend": 2541,
       "target_va": 5068525,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068525,
@@ -11439,7 +12349,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2049,
-      "addend": 2627,
+      "addend": 2647,
       "target_va": 5068631,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068631,
@@ -11523,7 +12433,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2147,
-      "addend": 2682,
+      "addend": 2702,
       "target_va": 5068686,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068686,
@@ -11579,7 +12489,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2179,
-      "addend": 2695,
+      "addend": 2715,
       "target_va": 5068699,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068699,
@@ -11635,7 +12545,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2221,
-      "addend": 2734,
+      "addend": 2754,
       "target_va": 5068738,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068738,
@@ -11817,7 +12727,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2355,
-      "addend": 2790,
+      "addend": 2810,
       "target_va": 5068794,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068794,
@@ -11873,7 +12783,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2453,
-      "addend": 2910,
+      "addend": 2930,
       "target_va": 5068914,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068914,
@@ -11887,7 +12797,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2482,
-      "addend": 2938,
+      "addend": 2958,
       "target_va": 5068942,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068942,
@@ -11915,7 +12825,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2507,
-      "addend": 2954,
+      "addend": 2974,
       "target_va": 5068958,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068958,
@@ -11999,7 +12909,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2568,
-      "addend": 3074,
+      "addend": 3094,
       "target_va": 5069078,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069078,
@@ -12013,7 +12923,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2598,
-      "addend": 3104,
+      "addend": 3124,
       "target_va": 5069108,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069108,
@@ -12041,7 +12951,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2654,
-      "addend": 3136,
+      "addend": 3156,
       "target_va": 5069140,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069140,
@@ -12069,7 +12979,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2692,
-      "addend": 1518,
+      "addend": 1538,
       "target_va": 5067468,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067468,
@@ -12209,7 +13119,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2812,
-      "addend": 1435,
+      "addend": 1455,
       "target_va": 5067439,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067439,
@@ -12251,7 +13161,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2873,
-      "addend": 1260,
+      "addend": 1280,
       "target_va": 5067264,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067264,
@@ -12265,7 +13175,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2891,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -12293,7 +13203,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2947,
-      "addend": 1724,
+      "addend": 1744,
       "target_va": 5067724,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067724,
@@ -12321,7 +13231,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2971,
-      "addend": 1230,
+      "addend": 1250,
       "target_va": 5067235,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067235,
@@ -12335,7 +13245,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 2991,
-      "addend": 1949,
+      "addend": 1969,
       "target_va": 5067892,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067892,
@@ -12391,7 +13301,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3118,
-      "addend": 1464,
+      "addend": 1484,
       "target_va": 5067548,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067548,
@@ -12419,7 +13329,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3137,
-      "addend": 1492,
+      "addend": 1512,
       "target_va": 5067576,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067576,
@@ -12447,7 +13357,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3169,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -12489,7 +13399,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3243,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -12517,7 +13427,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3299,
-      "addend": 1920,
+      "addend": 1940,
       "target_va": 5067956,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067956,
@@ -12545,7 +13455,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3319,
-      "addend": 2572,
+      "addend": 2592,
       "target_va": 5068576,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068576,
@@ -12587,7 +13497,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3354,
-      "addend": 1866,
+      "addend": 1886,
       "target_va": 5067870,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067870,
@@ -12601,7 +13511,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3371,
-      "addend": 1845,
+      "addend": 1865,
       "target_va": 5067849,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067849,
@@ -12643,7 +13553,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3408,
-      "addend": 1443,
+      "addend": 1463,
       "target_va": 5067447,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067447,
@@ -12713,7 +13623,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3471,
-      "addend": 2855,
+      "addend": 2875,
       "target_va": 5068859,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068859,
@@ -12741,7 +13651,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3531,
-      "addend": 2872,
+      "addend": 2892,
       "target_va": 5068876,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068876,
@@ -12769,7 +13679,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3583,
-      "addend": 2528,
+      "addend": 2548,
       "target_va": 5068532,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068532,
@@ -12797,7 +13707,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3651,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -12811,7 +13721,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3663,
-      "addend": 1817,
+      "addend": 1837,
       "target_va": 5067821,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067821,
@@ -12853,7 +13763,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3695,
-      "addend": 2820,
+      "addend": 2840,
       "target_va": 5068824,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068824,
@@ -12881,7 +13791,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3727,
-      "addend": 1979,
+      "addend": 1999,
       "target_va": 5067985,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067985,
@@ -12909,7 +13819,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3783,
-      "addend": 2008,
+      "addend": 2028,
       "target_va": 5068012,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068012,
@@ -12951,7 +13861,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3846,
-      "addend": 2264,
+      "addend": 2284,
       "target_va": 5068268,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068268,
@@ -12979,7 +13889,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3866,
-      "addend": 1447,
+      "addend": 1467,
       "target_va": 5067451,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067451,
@@ -13021,7 +13931,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3907,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -13049,7 +13959,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 3963,
-      "addend": 2644,
+      "addend": 2664,
       "target_va": 5068648,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068648,
@@ -13105,7 +14015,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4038,
-      "addend": 1532,
+      "addend": 1552,
       "target_va": 5067480,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067480,
@@ -13133,7 +14043,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4050,
-      "addend": 1588,
+      "addend": 1608,
       "target_va": 5067536,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067536,
@@ -13161,7 +14071,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4079,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -13189,7 +14099,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4135,
-      "addend": 2709,
+      "addend": 2729,
       "target_va": 5068713,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068713,
@@ -13245,7 +14155,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4169,
-      "addend": 3230,
+      "addend": 3250,
       "target_va": 5069234,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069234,
@@ -13287,7 +14197,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4198,
-      "addend": 3242,
+      "addend": 3262,
       "target_va": 5069246,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069246,
@@ -13315,7 +14225,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4218,
-      "addend": 3258,
+      "addend": 3278,
       "target_va": 5069262,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069262,
@@ -13343,7 +14253,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4230,
-      "addend": 3273,
+      "addend": 3293,
       "target_va": 5069338,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069338,
@@ -13371,7 +14281,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4259,
-      "addend": 3283,
+      "addend": 3303,
       "target_va": 5069348,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069348,
@@ -13399,7 +14309,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4283,
-      "addend": 3301,
+      "addend": 3321,
       "target_va": 5069366,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069366,
@@ -13721,7 +14631,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4762,
-      "addend": 3331,
+      "addend": 3351,
       "target_va": 5069396,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069396,
@@ -13749,7 +14659,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4782,
-      "addend": 3415,
+      "addend": 3435,
       "target_va": 5069420,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069420,
@@ -13987,7 +14897,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4918,
-      "addend": 3435,
+      "addend": 3455,
       "target_va": 5069440,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069440,
@@ -14001,7 +14911,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 4935,
-      "addend": 3447,
+      "addend": 3467,
       "target_va": 5066181,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5066181,
@@ -14197,7 +15107,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5116,
-      "addend": 1709,
+      "addend": 1729,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -14225,7 +15135,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5172,
-      "addend": 2752,
+      "addend": 2772,
       "target_va": 5068756,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068756,
@@ -14253,7 +15163,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5192,
-      "addend": 1453,
+      "addend": 1473,
       "target_va": 5067457,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067457,
@@ -14337,7 +15247,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5261,
-      "addend": 2968,
+      "addend": 2988,
       "target_va": 5068972,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068972,
@@ -14351,7 +15261,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5274,
-      "addend": 566,
+      "addend": 586,
       "target_va": 5065606,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5065606,
@@ -14365,7 +15275,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5281,
-      "addend": 2992,
+      "addend": 3012,
       "target_va": 5068996,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068996,
@@ -14379,7 +15289,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5293,
-      "addend": 566,
+      "addend": 586,
       "target_va": 5065606,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5065606,
@@ -14421,7 +15331,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5326,
-      "addend": 566,
+      "addend": 586,
       "target_va": 5065606,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5065606,
@@ -14463,7 +15373,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5350,
-      "addend": 3029,
+      "addend": 3049,
       "target_va": 5069033,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069033,
@@ -14491,7 +15401,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5375,
-      "addend": 2855,
+      "addend": 2875,
       "target_va": 5068859,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5068859,
@@ -14519,7 +15429,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5431,
-      "addend": 3051,
+      "addend": 3071,
       "target_va": 5069055,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069055,
@@ -14547,7 +15457,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5451,
-      "addend": 1458,
+      "addend": 1478,
       "target_va": 5067462,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067462,
@@ -14589,7 +15499,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5492,
-      "addend": 3356,
+      "addend": 3376,
       "target_va": 5069280,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069280,
@@ -14603,7 +15513,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5504,
-      "addend": 3387,
+      "addend": 3407,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -14631,7 +15541,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5528,
-      "addend": 3397,
+      "addend": 3417,
       "target_va": 5069320,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5069320,
@@ -14673,7 +15583,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5608,
-      "addend": 1636,
+      "addend": 1656,
       "target_va": 5067640,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067640,
@@ -14701,7 +15611,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 5620,
-      "addend": 1588,
+      "addend": 1608,
       "target_va": 5067536,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5067536,
@@ -16502,7 +17412,7 @@
     }
   ],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "pwd_garble_string",
@@ -16562,7 +17472,7 @@
     },
     {
       "function": "check_characters",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 32032,
       "candidate_offset": 2900,
       "size_delta": 0
@@ -16582,9 +17492,29 @@
       "size_delta": -282
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "aligned-literal-content-difference",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "symptom": "Instruction skeletons match, but aligned pointer operands reference different literal payloads.",
+      "known_source_cause": "Wrong filename format, file mode, default string, or formatting spaces can masquerade as relocation layout differences.",
+      "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+      },
+      "example_functions": [
+        "add_profile",
+        "fldads_dump_local_cache",
+        "create_replay",
+        "save_profile"
+      ],
+      "required_evidence": "literal_diagnostics",
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+    }
+  ],
   "difficulty": "SUPERVISOR",
-  "priority": -50,
+  "priority": -40,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -16970,7 +17900,7 @@
     },
     {
       "name": "play_char",
-      "state": "STORAGE_TYPE_DIFFERS",
+      "state": "COMMON_DECLARATION_AGREES",
       "original_scope": [
         "GLOBAL"
       ],
@@ -16978,7 +17908,7 @@
         "GLOBAL"
       ],
       "original_type": "Tmenu_char_selection",
-      "candidate_type": "int",
+      "candidate_type": "Tmenu_char_selection",
       "candidate_card": "docs/current/storage/game-main/138468.json"
     },
     {
@@ -17035,6 +17965,8 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

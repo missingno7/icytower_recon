@@ -6,6 +6,7 @@ import time
 from common import ROOT, identity, read_json, write_json, run
 from build import COMPILERS, verify_inputs
 from recovery_pipeline import CURRENT
+from task_outcomes import fast_exit
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
     ledger=read_json(ROOT/'src/recovery.json')
     examples=[('game-scroller','src/scroller.c','draw_scroller'),('game-map','src/map.c','add_floor'),('game-profile','src/profile.c','create_profile')]
     for target,source,name in examples:
-        command(['tools/check_function.py',target,name],0 if ledger[source]['functions'][name]=='FUNCTION_MATCH' else 1)
+        command(['tools/check_function.py',target,name],fast_exit(ledger[source]['workflow'][name]['state']))
     command(['tools/check_function.py','game-main','play_jump_sound'],0)
     command(['tools/grinder_task.py','begin','game-main','play_jump_sound'],1)
     unresolved=next(((target,name) for target,source,name in examples if ledger[source]['functions'][name]!='FUNCTION_MATCH'),None)

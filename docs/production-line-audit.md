@@ -310,3 +310,17 @@ the strict function oracle when changed code is accepted. The exact-code branch
 uses the existing oracle; the live declaration example exercised preserved emission.
 
 The mechanical worker accepted historical source-order tasks for game_data and hisc. Its fld_adspot trial was restored and blocked; a narrow terminal-JMP layout proof now distinguishes the wrapper from the still-unresolved CSV-reader literal. See [branch relaxation evidence](branch-relaxation-evidence.md).
+
+
+Literal classification audit: aligned operand diagnostics exposed wrong filename,
+file-mode and logging payloads previously grouped with relocation layout. Generated
+repairs promoted add_profile, fldads_dump_local_cache and delete_profile. The new
+pattern worker automatically restored and blocked check_characters after the
+literal repair exposed a distinct named-global mismatch. No masked equality or
+original operand value was admitted as an independent relocation proof.
+Publication failure during this validation also exposed unnecessary writes of every
+current document. Byte-identical outputs are now untouched; changed files and rollback
+use atomic replacement. Failure-injection tests preserve old bytes on write/replace
+errors. See literal-content-evidence.md and docs/attempts/pattern-runs/.
+
+Global-reference audit: check_characters has a wrong scalar reference plus a missing aggregate declaration, not merely literal placement. Generated diagnostics now separate supported whole-skeleton reference conflicts from four weaker aligned observations. The isolated 4-to-1,036-byte play_char type probe preserved existing exact functions and exposed only the known line_alert clear-order effect. That isolated probe was followed by the implemented GLOBAL_TYPE gate: the migration passed strict acceptance, the generated line_alert repair then reached exact match, and check_characters reached BODY_MATCH_LAYOUT_BLOCKED through the guarded assignment/literal recipe. The seven remaining same-CU transfer operands remain explicit layout work.

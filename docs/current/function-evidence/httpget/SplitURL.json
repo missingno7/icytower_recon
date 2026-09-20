@@ -278,10 +278,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 51,
-    "body_end_line": 77,
+    "body_start_line": 194,
+    "body_end_line": 220,
     "body_sha256": "9334467b20fb0ac99a4c6f2ad6fb94ec9419a789879f71c32cac05e266c7de80"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -522,7 +524,7 @@
         "original_type": "const char *",
         "candidate_type": "char *",
         "original_die": 79661,
-        "candidate_die": 2419,
+        "candidate_die": 1717,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       },
@@ -531,7 +533,7 @@
         "original_type": "const char *",
         "candidate_type": "char *",
         "original_die": 79591,
-        "candidate_die": 2349,
+        "candidate_die": 1647,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -590,35 +592,35 @@
     ],
     "candidate": [
       {
-        "address": 1644,
+        "address": 244,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 1645,
+        "address": 245,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 1647,
+        "address": 247,
         "bytes": "57",
         "mnemonic": "push",
         "assembly": "push   %edi",
         "dwarf_variables": []
       },
       {
-        "address": 1648,
+        "address": 248,
         "bytes": "56",
         "mnemonic": "push",
         "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 1649,
+        "address": 249,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
@@ -700,7 +702,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d493c",
-      "candidate_addend": 287,
+      "candidate_addend": 36,
       "dwarf_type": null,
       "references": [
         40
@@ -721,6 +723,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_free",
@@ -795,21 +798,21 @@
       "function": "destroyHTTPResponse",
       "status": "FUNCTION_MATCH",
       "historical_offset": 128,
-      "candidate_offset": 0,
+      "candidate_offset": 128,
       "size_delta": 0
     },
     {
       "function": "extractHTTPResponse",
       "status": "DIFFER",
       "historical_offset": 512,
-      "candidate_offset": 116,
+      "candidate_offset": 512,
       "size_delta": -5
     },
     {
       "function": "HTTPRequest",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2144,
-      "candidate_offset": 1912,
+      "candidate_offset": 2040,
       "size_delta": 0
     }
   ],
@@ -825,6 +828,16 @@
   "promotion_command": "python tools/promote_function.py game-httpget SplitURL",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "SplitURL",
+      "source": "src/httpget.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "SplitURL",

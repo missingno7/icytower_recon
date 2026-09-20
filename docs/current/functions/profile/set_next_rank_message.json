@@ -139,6 +139,37 @@
     "body_end_line": 350,
     "body_sha256": "68e03ac42ef7be201cf66f416124c1984d9c99a403075bde9a0d237ef1fc6baa"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 188,
+      "candidate_addend": 96,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 223,
+      "candidate_addend": 0,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 268,
+      "candidate_addend": 23,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 316,
+      "candidate_addend": 52,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -629,7 +660,7 @@
       "historical_address": "0x4bdc60",
       "candidate_addend": 160,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -647,7 +678,7 @@
       "historical_address": "0x4bdce0",
       "candidate_addend": 288,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -665,7 +696,7 @@
       "historical_address": "0x4bdca0",
       "candidate_addend": 224,
       "dwarf_type": null,
-      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "initial_value": null,
       "blocker": null,
       "initializer_blockers": [],
@@ -744,6 +775,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_sprintf",
@@ -796,7 +828,7 @@
       "function_offset": 104,
       "addend": 160,
       "target_va": 4971616,
-      "resolution": "independent section base (COFF ownership, symbol, or unique content)",
+      "resolution": "independent DWARF/COFF object owner and complete initializer",
       "resolved_value": 4971616,
       "original_value": 3833432320,
       "equal": false
@@ -1042,57 +1074,27 @@
       "evidence": "docs/attempts/interfaces/create_post.jsonl"
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 87,
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-profile.json",
   "verification_command": "python tools/check_function.py game-profile set_next_rank_message",
   "begin_command": "python tools/grinder_task.py begin game-profile set_next_rank_message",
   "promotion_command": "python tools/promote_function.py game-profile set_next_rank_message",
-  "storage_declarations": [
+  "storage_declarations": [],
+  "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
     {
-      "name": "rankCombos",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201819.json"
-    },
-    {
-      "name": "rankCCCs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201844.json"
-    },
-    {
-      "name": "rankNMLs",
-      "state": "STORAGE_TYPE_DIFFERS",
-      "original_scope": [
-        "GLOBAL"
-      ],
-      "candidate_scope": [
-        "GLOBAL"
-      ],
-      "original_type": "int [12]",
-      "candidate_type": "int [16]",
-      "candidate_card": "docs/current/storage/game-profile/201867.json"
+      "function": "set_next_rank_message",
+      "source": "src/profile.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
     }
   ],
-  "local_declaration_tasks": [],
   "interface_conflicts": [
     {
       "function": "set_next_rank_message",
@@ -1204,6 +1206,9 @@
   "evidence_counts": {
     "relocation_mismatches": 9,
     "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 4,
+    "literal_dependencies": 0,
     "original_calls": 4,
     "calls": 4,
     "referenced_globals": 12

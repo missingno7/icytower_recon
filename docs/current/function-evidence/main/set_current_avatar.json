@@ -44,10 +44,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1771,
-    "body_end_line": 1779,
-    "body_sha256": "492e4161c032729e8351c99da2b6f56d4d77796146b40facc979677da24cde6a"
+    "body_start_line": 1772,
+    "body_end_line": 1780,
+    "body_sha256": "cf54bb17d67b6696891830cb9b04a61dac36c5fef874cc98d8a8a3006b6611fc"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -364,7 +366,7 @@
           "index": 135,
           "name": "_play_char",
           "section": 0,
-          "value": 16,
+          "value": 1040,
           "storage_class": 2
         }
       ],
@@ -383,6 +385,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_stricmp",
@@ -428,15 +431,32 @@
     },
     {
       "function": "check_characters",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 32032,
       "candidate_offset": 2900,
       "size_delta": 0
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "common-allocation-is-not-type-size",
+      "difference_class": "COMMON_BSS_LAYOUT",
+      "symptom": "A correctly generated aggregate has a larger COFF COMMON allocation than its DWARF sizeof.",
+      "known_source_cause": "The locked compiler emits rounded COMMON storage; logical type size and allocation are different quantities.",
+      "known_fix_pattern": "Compile an independent declaration witness with the same locked flags and generated header. Verify logical type layout separately; allow only the witnessed target allocation change and preserve all other contributions. Never infer original BSS order from this witness.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "observed_example": "Tmenu_char_selection sizeof 1036, emitted COMMON allocation 1040"
+      },
+      "example_functions": [
+        "check_characters",
+        "set_current_avatar"
+      ],
+      "confidence": "FRESH_LOCKED_COMPILER_DECLARATION_WITNESS"
+    }
+  ],
   "difficulty": "SUPERVISOR",
-  "priority": 47,
+  "priority": 52,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -499,7 +519,7 @@
     },
     {
       "name": "play_char",
-      "state": "STORAGE_TYPE_DIFFERS",
+      "state": "COMMON_DECLARATION_AGREES",
       "original_scope": [
         "GLOBAL"
       ],
@@ -507,11 +527,13 @@
         "GLOBAL"
       ],
       "original_type": "Tmenu_char_selection",
-      "candidate_type": "int",
+      "candidate_type": "Tmenu_char_selection",
       "candidate_card": "docs/current/storage/game-main/138468.json"
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

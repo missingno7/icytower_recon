@@ -69,10 +69,48 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2386,
-    "body_end_line": 2414,
+    "body_start_line": 2387,
+    "body_end_line": 2415,
     "body_sha256": "c3aae98c9c9583e39d9cf06ca83990f0aa33c36063046bbd3837ef2e4c653d4d"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 55,
+      "candidate_addend": 5088,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 106,
+      "candidate_addend": 5080,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 148,
+      "candidate_addend": 5080,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 157,
+      "candidate_addend": 5088,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    },
+    {
+      "function_offset": 217,
+      "candidate_addend": 5096,
+      "classification": "UNALIGNED_OR_UNTYPED",
+      "content_equal": null,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -283,7 +321,7 @@
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 24605,
+            "die": 24699,
             "name": "control",
             "type": "void *",
             "base_type": null,
@@ -305,7 +343,7 @@
         "assembly": "test   %ebx,%ebx",
         "dwarf_variables": [
           {
-            "die": 24625,
+            "die": 24719,
             "name": "input",
             "type": "Tcontrol *",
             "base_type": null,
@@ -507,7 +545,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 5064,
+      "candidate_addend": 5088,
       "dwarf_type": null,
       "placement_confidence": "section base not independently established",
       "initial_value": null,
@@ -525,7 +563,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 5056,
+      "candidate_addend": 5080,
       "dwarf_type": null,
       "placement_confidence": "section base not independently established",
       "initial_value": null,
@@ -543,7 +581,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6d48",
-      "candidate_addend": 5072,
+      "candidate_addend": 5096,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -555,6 +593,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_is_left",
@@ -708,7 +747,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 55,
-      "addend": 5064,
+      "addend": 5088,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -736,7 +775,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 106,
-      "addend": 5056,
+      "addend": 5080,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -764,7 +803,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 148,
-      "addend": 5056,
+      "addend": 5080,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -824,9 +863,9 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 8,
+  "priority": -30,
   "compiler_context": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main handle_player_input",
@@ -926,6 +965,16 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "handle_player_input",
+      "source": "src/main.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "handle_player_input",
@@ -951,7 +1000,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 1017
+          "line": 1018
         },
         {
           "position": "parameter 1",
@@ -962,7 +1011,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 2385
+          "line": 2386
         }
       ],
       "candidate_signatures": [
@@ -976,6 +1025,9 @@
   "evidence_counts": {
     "relocation_mismatches": 11,
     "direct_transfer_mismatches": 1,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 5,
+    "literal_dependencies": 0,
     "original_calls": 11,
     "calls": 5,
     "referenced_globals": 10

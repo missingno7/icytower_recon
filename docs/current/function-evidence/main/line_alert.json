@@ -6,10 +6,10 @@
   "function": "line_alert",
   "historical_va": "0x409138",
   "historical_size": 353,
-  "status": "DIFFER",
-  "state": "SOURCE_DIFFER",
-  "difference_class": "INSTRUCTION_ORDER",
-  "body_edit_allowed": true,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
   "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void line_alert(char *txt);",
   "return_type": "void",
@@ -79,128 +79,15 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 110,
-    "body_end_line": 128,
-    "body_sha256": "e7b5fddbd764cedaf4b8f90b505735ddb31b5aa53611a603bd76236bdf935a3a"
+    "body_start_line": 111,
+    "body_end_line": 129,
+    "body_sha256": "2bac6449c80bf655f56b89b1b86cb828f931044a374578dc30c93c94e3c10bf0"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
-  "instruction_order": {
-    "confidence": "DECODED_INSTRUCTION_PERMUTATIONS",
-    "windows": [
-      {
-        "function_offset": 122,
-        "byte_length": 6,
-        "original": [
-          {
-            "address": 4231602,
-            "bytes": "8b7270",
-            "mnemonic": "mov",
-            "assembly": "mov    0x70(%edx),%esi"
-          },
-          {
-            "address": 4231605,
-            "bytes": "8b5a6c",
-            "mnemonic": "mov",
-            "assembly": "mov    0x6c(%edx),%ebx"
-          }
-        ],
-        "candidate": [
-          {
-            "address": 6314,
-            "bytes": "8b5a6c",
-            "mnemonic": "mov",
-            "assembly": "mov    0x6c(%edx),%ebx"
-          },
-          {
-            "address": 6317,
-            "bytes": "8b7270",
-            "mnemonic": "mov",
-            "assembly": "mov    0x70(%edx),%esi"
-          }
-        ],
-        "candidate_source_lines": [
-          {
-            "file": "src/main.c",
-            "line": 121,
-            "text": "        width=gfx_driver->w;"
-          },
-          {
-            "file": "src/main.c",
-            "line": 122,
-            "text": "        height=gfx_driver->h;"
-          }
-        ],
-        "observation": "Same decoded instructions occur in a different order; source cause and semantic independence are not inferred."
-      },
-      {
-        "function_offset": 344,
-        "byte_length": 4,
-        "original": [
-          {
-            "address": 4231824,
-            "bytes": "31f6",
-            "mnemonic": "xor",
-            "assembly": "xor    %esi,%esi"
-          },
-          {
-            "address": 4231826,
-            "bytes": "31db",
-            "mnemonic": "xor",
-            "assembly": "xor    %ebx,%ebx"
-          }
-        ],
-        "candidate": [
-          {
-            "address": 6536,
-            "bytes": "31db",
-            "mnemonic": "xor",
-            "assembly": "xor    %ebx,%ebx"
-          },
-          {
-            "address": 6538,
-            "bytes": "31f6",
-            "mnemonic": "xor",
-            "assembly": "xor    %esi,%esi"
-          }
-        ],
-        "candidate_source_lines": [
-          {
-            "file": "src/main.c",
-            "line": 120,
-            "text": "    if (gfx_driver) {"
-          }
-        ],
-        "observation": "Same decoded instructions occur in a different order; source cause and semantic independence are not inferred."
-      }
-    ],
-    "all_other_resolved_bytes_equal": true,
-    "remaining_difference_count": 0,
-    "remaining_difference_offsets": [],
-    "unresolved_relocation_offsets": [],
-    "indirect_jump_present": false,
-    "cheap_routing_eligible": true,
-    "limit": "Routing and source-experiment evidence only. Neither instruction reordering nor equality after reordering proves FUNCTION_MATCH or a layout-only body."
-  },
-  "source_patterns": [
-    {
-      "id": "swap-adjacent-assignments-121-122",
-      "source_lines": [
-        121,
-        122
-      ],
-      "function_offset": 122,
-      "changes": [
-        {
-          "start": 2895,
-          "end": 2954,
-          "before": "        width=gfx_driver->w;\n        height=gfx_driver->h;\n",
-          "after": "        height=gfx_driver->h;\n        width=gfx_driver->w;\n"
-        }
-      ],
-      "reason": "The decoded mismatch is an instruction-order window sourced from these two adjacent assignments. This is a bounded hypothesis; fresh exact acceptance remains mandatory.",
-      "application_command": "python tools/apply_pattern.py game-main line_alert swap-adjacent-assignments-121-122"
-    }
-  ],
+  "instruction_order": null,
+  "source_patterns": [],
   "frame_layout": null,
   "signedness": {
     "variables": [
@@ -243,148 +130,95 @@
     "-O2"
   ],
   "current_candidate_size": 353,
-  "first_difference": {
-    "offset": 123,
-    "original_va": 4231603,
-    "candidate_byte": 90,
-    "original_byte": 114
-  },
-  "mismatch_count": 6,
-  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
   "disassembly": {
     "original": [
       {
-        "address": 4231583,
-        "bytes": "e8f47a0400",
-        "mnemonic": "call",
-        "assembly": "call   450c98 <_makecol>",
+        "address": 4231480,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 4231588,
-        "bytes": "8b1584da4d00",
+        "address": 4231481,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    0x4dda84,%edx",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 4231594,
-        "bytes": "85d2",
-        "mnemonic": "test",
-        "assembly": "test   %edx,%edx",
+        "address": 4231483,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 4231596,
-        "bytes": "0f84de000000",
-        "mnemonic": "je",
-        "assembly": "je     409290 <_line_alert+0x158>",
+        "address": 4231484,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 4231602,
-        "bytes": "8b7270",
-        "mnemonic": "mov",
-        "assembly": "mov    0x70(%edx),%esi",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4231605,
-        "bytes": "8b5a6c",
-        "mnemonic": "mov",
-        "assembly": "mov    0x6c(%edx),%ebx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4231608,
-        "bytes": "8b158cda4d00",
-        "mnemonic": "mov",
-        "assembly": "mov    0x4dda8c,%edx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4231614,
-        "bytes": "8b4a1c",
-        "mnemonic": "mov",
-        "assembly": "mov    0x1c(%edx),%ecx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4231617,
-        "bytes": "89442414",
-        "mnemonic": "mov",
-        "assembly": "mov    %eax,0x14(%esp)",
+        "address": 4231485,
+        "bytes": "83ec20",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x20,%esp",
         "dwarf_variables": []
       }
     ],
     "candidate": [
       {
-        "address": 6295,
-        "bytes": "e800000000",
-        "mnemonic": "call",
-        "assembly": "call   189c <_line_alert+0x6c>",
+        "address": 6192,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6300,
-        "bytes": "8b1500000000",
+        "address": 6193,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    0x0,%edx",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6306,
-        "bytes": "85d2",
-        "mnemonic": "test",
-        "assembly": "test   %edx,%edx",
+        "address": 6195,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 6308,
-        "bytes": "0f84de000000",
-        "mnemonic": "je",
-        "assembly": "je     1988 <_line_alert+0x158>",
+        "address": 6196,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 6314,
-        "bytes": "8b5a6c",
-        "mnemonic": "mov",
-        "assembly": "mov    0x6c(%edx),%ebx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 6317,
-        "bytes": "8b7270",
-        "mnemonic": "mov",
-        "assembly": "mov    0x70(%edx),%esi",
-        "dwarf_variables": []
-      },
-      {
-        "address": 6320,
-        "bytes": "8b1500000000",
-        "mnemonic": "mov",
-        "assembly": "mov    0x0,%edx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 6326,
-        "bytes": "8b4a1c",
-        "mnemonic": "mov",
-        "assembly": "mov    0x1c(%edx),%ecx",
-        "dwarf_variables": []
-      },
-      {
-        "address": 6329,
-        "bytes": "89442414",
-        "mnemonic": "mov",
-        "assembly": "mov    %eax,0x14(%esp)",
+        "address": 6197,
+        "bytes": "83ec20",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x20,%esp",
         "dwarf_variables": []
       }
     ]
   },
   "relevant_types": [],
   "original_line_window": [
+    {
+      "context": "F:/projects/icytower/trunk/source/main.c",
+      "file": "main.c",
+      "line": 437,
+      "address": 4231480,
+      "end_sequence": false,
+      "flags": "x"
+    },
     {
       "context": "F:/projects/icytower/trunk/source/main.c",
       "file": "main.c",
@@ -438,14 +272,6 @@
       "file": "draw.inl",
       "line": 238,
       "address": 4231673,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "F:/projects/icytower/trunk/source/main.c",
-      "file": "main.c",
-      "line": 447,
-      "address": 4231710,
       "end_sequence": false,
       "flags": "x"
     }
@@ -559,7 +385,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4b8c",
-      "candidate_addend": 572,
+      "candidate_addend": 592,
       "dwarf_type": null,
       "references": [
         241
@@ -569,7 +395,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5084,
+          "logical_size": 5108,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -580,6 +406,7 @@
       "initializer_blockers": []
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_set_trans_blender",
@@ -699,44 +526,13 @@
       ],
       "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
       "evidence": "docs/attempts/interfaces/create_post.jsonl"
-    },
-    {
-      "id": "decoded-instruction-order-source-experiment",
-      "difference_class": "INSTRUCTION_ORDER",
-      "symptom": "A bounded window contains exactly the same decoded MOV or register-clear instructions in a different order.",
-      "known_source_cause": "Adjacent assignment order or expression evaluation may affect instruction scheduling. The permutation alone does not establish the source cause or instruction independence.",
-      "known_fix_pattern": "Use candidate line mappings and the generated adjacent-assignment experiment when present. Verify the entire function; changes to other windows, operands or peeled iterations still fail acceptance.",
-      "compiler_scope": {
-        "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle."
-      },
-      "example_functions": [
-        "line_alert",
-        "calc_replay_checksum_131"
-      ],
-      "required_evidence": "instruction_order",
-      "confidence": "DECODED_PERMUTATION_ONLY"
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -100,
+  "priority": 4,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
-  "supervisor_block": {
-    "state": "BLOCKED_SUPERVISOR",
-    "reason": "Generated assignment swap fixes the load-order window at +122. Reversing the two earlier zero assignments does not change the remaining XOR-clear permutation at +344 (first differing byte +345). The existing declaration-UID rule records this function's sensitivity to prototype edits; do not keep editing the body to chase it. Complete relevant declaration work or refresh compiler-context evidence first. Both FAST candidates and the baseline are retained.",
-    "first_difference": {
-      "offset": 345,
-      "original_va": 4231825,
-      "candidate_byte": 219,
-      "original_byte": 246
-    },
-    "difference_class": "INSTRUCTION_ORDER",
-    "source_identity": {
-      "size": 91699,
-      "sha256": "33f9a563a9e1e3ed20caae3919d1f13120f9b0c99e0c50e7d50ad582cff103b2"
-    }
-  },
+  "supervisor_block": null,
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main line_alert",
   "begin_command": "python tools/grinder_task.py begin game-main line_alert",
@@ -757,6 +553,8 @@
     }
   ],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

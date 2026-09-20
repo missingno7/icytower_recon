@@ -130,33 +130,130 @@
   },
   "candidate": {
     "name": "play_char",
-    "die": 30875,
+    "die": 30969,
     "scope": [
       "GLOBAL"
     ],
-    "type": "int",
-    "size": 4,
+    "type": "Tmenu_char_selection",
+    "size": 1036,
     "layout": {
-      "kind": "base_type",
-      "size": 4,
-      "type": "int",
-      "encoding": "5\t(signed)"
+      "kind": "structure_type",
+      "size": 1036,
+      "type": "struct {\n    int value;\n    int max;\n    BITMAP *bmp;\n    PALETTE pal;\n} ",
+      "members": [
+        {
+          "name": "value",
+          "offset": 0,
+          "bitfield": false,
+          "layout": {
+            "kind": "base_type",
+            "size": 4,
+            "type": "int",
+            "encoding": "5\t(signed)"
+          }
+        },
+        {
+          "name": "max",
+          "offset": 4,
+          "bitfield": false,
+          "layout": {
+            "kind": "base_type",
+            "size": 4,
+            "type": "int",
+            "encoding": "5\t(signed)"
+          }
+        },
+        {
+          "name": "bmp",
+          "offset": 8,
+          "bitfield": false,
+          "layout": {
+            "kind": "pointer_type",
+            "size": 4,
+            "type": "BITMAP *"
+          }
+        },
+        {
+          "name": "pal",
+          "offset": 12,
+          "bitfield": false,
+          "layout": {
+            "kind": "array_type",
+            "size": 1024,
+            "type": "RGB [256]",
+            "dimensions": [
+              256
+            ],
+            "element": {
+              "kind": "structure_type",
+              "size": 4,
+              "type": "struct RGB",
+              "members": [
+                {
+                  "name": "r",
+                  "offset": 0,
+                  "bitfield": false,
+                  "layout": {
+                    "kind": "base_type",
+                    "size": 1,
+                    "type": "unsigned char",
+                    "encoding": "8\t(unsigned char)"
+                  }
+                },
+                {
+                  "name": "g",
+                  "offset": 1,
+                  "bitfield": false,
+                  "layout": {
+                    "kind": "base_type",
+                    "size": 1,
+                    "type": "unsigned char",
+                    "encoding": "8\t(unsigned char)"
+                  }
+                },
+                {
+                  "name": "b",
+                  "offset": 2,
+                  "bitfield": false,
+                  "layout": {
+                    "kind": "base_type",
+                    "size": 1,
+                    "type": "unsigned char",
+                    "encoding": "8\t(unsigned char)"
+                  }
+                },
+                {
+                  "name": "filler",
+                  "offset": 3,
+                  "bitfield": false,
+                  "layout": {
+                    "kind": "base_type",
+                    "size": 1,
+                    "type": "unsigned char",
+                    "encoding": "8\t(unsigned char)"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
     },
     "coff": [
       {
         "name": "_play_char",
         "section": 0,
-        "value": 16,
+        "value": 1040,
         "storage_class": 2,
         "index": 135,
         "section_name": "COMMON"
       }
     ],
-    "declaration_line": 333,
+    "declaration_line": 334,
     "declaration_file": "src/main.c",
     "section": "COMMON"
   },
-  "state": "STORAGE_TYPE_DIFFERS",
+  "state": "COMMON_DECLARATION_AGREES",
   "owner_rejection": [],
   "candidate_alternatives": []
 }

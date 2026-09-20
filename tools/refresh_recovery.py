@@ -68,6 +68,8 @@ def publish_status(ledger,check=False):
     publish_storage(ledger,check)
     from static_scope_tasks import publish_scopes
     publish_scopes(ledger,check)
+    from global_type_tasks import publish as publish_globals
+    publish_globals(ledger,check)
     publish_cards(ledger,check)
 
 

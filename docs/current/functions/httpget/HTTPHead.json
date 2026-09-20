@@ -7,10 +7,10 @@
   "historical_va": "0x406178",
   "historical_size": 27,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "HTTPResponse * HTTPHead(const char *pURL);",
   "return_type": "HTTPResponse *",
   "parameters": [
@@ -31,10 +31,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 100,
-    "body_end_line": 102,
+    "body_start_line": 230,
+    "body_end_line": 232,
     "body_sha256": "77a83def0b366866ce077f5743f45b710b37f6816a5e972249aaafae2142b7c3"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -60,7 +62,7 @@
         "original_type": "const char *",
         "candidate_type": "char *",
         "original_die": 80792,
-        "candidate_die": 2685,
+        "candidate_die": 2743,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -134,41 +136,41 @@
     ],
     "candidate": [
       {
-        "address": 2076,
+        "address": 2176,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2077,
+        "address": 2177,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2079,
+        "address": 2179,
         "bytes": "83ec18",
         "mnemonic": "sub",
         "assembly": "sub    $0x18,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 2082,
-        "bytes": "c744240444010000",
+        "address": 2182,
+        "bytes": "c744240464010000",
         "mnemonic": "movl",
-        "assembly": "movl   $0x144,0x4(%esp)",
+        "assembly": "movl   $0x164,0x4(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 2090,
+        "address": 2190,
         "bytes": "8b4508",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 2685,
+            "die": 2743,
             "name": "pURL",
             "type": "char *",
             "base_type": "char",
@@ -219,7 +221,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4a90",
-      "candidate_addend": 324,
+      "candidate_addend": 356,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -231,6 +233,7 @@
       ]
     }
   ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "HTTPRequest",
@@ -253,24 +256,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 20,
-      "function_offset": 21,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "HTTPRequest",
-      "target_va": 4219120,
-      "candidate_target": 1912,
-      "candidate_displacement": -189,
-      "layout_operand_equal": false,
-      "resolved_value": 4294967135,
-      "original_value": 4294967135,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -278,14 +264,14 @@
       "function": "HTTPRequest",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2144,
-      "candidate_offset": 1912,
+      "candidate_offset": 2040,
       "size_delta": 0
     },
     {
       "function": "HTTPGet",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2308,
-      "candidate_offset": 2048,
+      "candidate_offset": 2204,
       "size_delta": 0
     }
   ],
@@ -298,9 +284,19 @@
   "evidence_report": "docs/current/reports/game-httpget.json",
   "verification_command": "python tools/check_function.py game-httpget HTTPHead",
   "begin_command": "python tools/grinder_task.py begin game-httpget HTTPHead",
-  "promotion_command": "python tools/promote_function.py game-httpget HTTPHead --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-httpget HTTPHead",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "HTTPHead",
+      "source": "src/httpget.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "HTTPHead",
@@ -395,7 +391,10 @@
   "detailed_evidence": "docs/current/function-evidence/httpget/HTTPHead.json",
   "evidence_counts": {
     "relocation_mismatches": 0,
-    "direct_transfer_mismatches": 1,
+    "direct_transfer_mismatches": 0,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 0,
+    "literal_dependencies": 0,
     "original_calls": 1,
     "calls": 1,
     "referenced_globals": 1

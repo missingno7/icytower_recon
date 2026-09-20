@@ -80,6 +80,35 @@
     "body_end_line": 385,
     "body_sha256": "e128a9315d12268a23bf13b1a17e667f7fa62579629013576bd6b015b6914227"
   },
+  "reference_diagnostics": [],
+  "literal_diagnostics": [
+    {
+      "function_offset": 68,
+      "candidate_addend": 1412,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5076629,
+      "candidate_hex": "7262",
+      "original_hex": "7262",
+      "candidate_instruction": {
+        "address": 6992,
+        "bytes": "c744240484050000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x584,0x4(%esp)"
+      },
+      "original_instruction": {
+        "address": 4302892,
+        "bytes": "c744240495764d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d7695,0x4(%esp)"
+      },
+      "candidate_text": "rb",
+      "original_text": "rb",
+      "candidate_source_lines": []
+    }
+  ],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -134,7 +163,7 @@
   "first_difference": {
     "offset": 68,
     "original_va": 4302896,
-    "candidate_byte": 141,
+    "candidate_byte": 132,
     "original_byte": 149
   },
   "mismatch_count": 3,
@@ -236,9 +265,9 @@
       },
       {
         "address": 6992,
-        "bytes": "c74424048d050000",
+        "bytes": "c744240484050000",
         "mnemonic": "movl",
-        "assembly": "movl   $0x58d,0x4(%esp)",
+        "assembly": "movl   $0x584,0x4(%esp)",
         "dwarf_variables": []
       },
       {
@@ -370,7 +399,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 1421,
+      "candidate_addend": 1412,
       "dwarf_type": null,
       "placement_confidence": "section base not independently established",
       "initial_value": null,
@@ -380,6 +409,23 @@
       "function_offsets": [
         68
       ]
+    }
+  ],
+  "literal_dependencies": [
+    {
+      "candidate_section": ".rdata",
+      "candidate_addend": 1412,
+      "candidate_card": "docs/current/literals/game-profile/584.json",
+      "placement_confidence": "UNPROVEN",
+      "multiple_historical_addresses": false,
+      "function_offsets": [
+        68
+      ],
+      "peer_function_count": 0,
+      "peer_functions": [],
+      "historical_address_count": 1,
+      "unaligned_reference_count": 0,
+      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
     }
   ],
   "calls": [
@@ -543,7 +589,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 68,
-      "addend": 1421,
+      "addend": 1412,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -570,7 +616,7 @@
     }
   ],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "generate_profile_checksum",
@@ -588,7 +634,7 @@
     },
     {
       "function": "delete_profile",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 7900,
       "candidate_offset": 6704,
       "size_delta": 0
@@ -603,7 +649,7 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 35,
+  "priority": 40,
   "compiler_context": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,
@@ -613,6 +659,16 @@
   "promotion_command": "python tools/promote_function.py game-profile load_profile",
   "storage_declarations": [],
   "local_declaration_tasks": [],
+  "source_pattern_prerequisites": [],
+  "interface_scope": [
+    {
+      "function": "load_profile",
+      "source": "src/profile.c",
+      "blocking": true,
+      "state": "LOCAL_INTERFACE_CONFLICT",
+      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+    }
+  ],
   "interface_conflicts": [
     {
       "function": "load_profile",
@@ -715,7 +771,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 559
+          "line": 560
         },
         {
           "position": "return",
@@ -812,6 +868,9 @@
   "evidence_counts": {
     "relocation_mismatches": 1,
     "direct_transfer_mismatches": 1,
+    "reference_diagnostics": 0,
+    "literal_diagnostics": 1,
+    "literal_dependencies": 1,
     "original_calls": 10,
     "calls": 10,
     "referenced_globals": 2

@@ -18,6 +18,15 @@ def compact_card(full,details=None):
     for key in ('relocation_mismatches','direct_transfer_mismatches'):
         rows=card[key]; card['evidence_counts'][key]=len(rows)
         if len(rows)>8: card[key]=sorted(rows,key=lambda r:abs(r['function_offset']-offset))[:8]
+    if 'reference_diagnostics' in card:
+        card['evidence_counts']['reference_diagnostics']=len(card['reference_diagnostics'])
+        card['reference_diagnostics']=sorted(card['reference_diagnostics'],key=lambda r:abs(r['function_offset']-offset))[:8]
+    if 'literal_diagnostics' in card:
+        card['evidence_counts']['literal_diagnostics']=len(card['literal_diagnostics'])
+        card['literal_diagnostics']=sorted(card['literal_diagnostics'],key=lambda r:abs(r['function_offset']-offset))[:8]
+    if 'literal_dependencies' in card:
+        card['evidence_counts']['literal_dependencies']=len(card['literal_dependencies'])
+        card['literal_dependencies']=card['literal_dependencies'][:8]
     card['evidence_counts']['original_calls']=len(card['original_calls'])
     card['original_calls']=sorted(card['original_calls'],key=lambda r:abs(r['address']-int(card['historical_va'],16)-offset))[:8]
     for key in ('calls','referenced_globals'):
