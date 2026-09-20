@@ -812,8 +812,8 @@ extern int rebuild_profile_list(char **profs);
 extern void replaceBadCharacters(char *string, char newChar);
 extern void play_menu_select(void);
 extern void play_menu_move(void);
-extern int get_string(void *bmp, char *text, int x, int y, int maxlen,
-                      void *fnt, int color, int background);
+extern int get_string(void *bmp, char *text, int w, int max_chars, void *fnt,
+                      int pos_x, int pos_y, int colour, int bg_color);
 
 /* Recovered from profile.c lines 705--867.  The selector owns neither the
  * packed name list nor its input control; it returns a newly loaded profile. */
@@ -915,8 +915,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     draw_sprite(swap_screen, data[88].dat, 100, 140);
                     textprintf_ex(swap_screen, data[51].dat, 140, 140,
                                   -1, -1, "Enter profile name:");
-                    if (get_string(swap_screen, input, 340, 210, 32,
-                                   data[54].dat, -1, makecol(0, 0, 0)) >= 0 &&
+                    if (get_string(swap_screen, input, 340, 32, data[54].dat,
+                                   140, 191, makecol(0, 0, 0), -1) >= 0 &&
                         input[0]) {
                         replaceBadCharacters(input, '_');
                         selectedProfile = create_profile(input, 0);

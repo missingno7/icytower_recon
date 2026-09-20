@@ -931,6 +931,69 @@ void replaceBadCharacters(char *string, char newChar)
             string[i] = newChar;
 }
 
+/* Oracle: main.c:5367, 0x40bc44..0x40bf59.  The editor owns only its
+ * temporary backing bitmap; callers retain the supplied string and screen. */
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
+               int pos_x, int pos_y, int colour, int bg_color)
+{
+    BITMAP *block;
+    char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int i;
+    int tick;
+    int c;
+
+    block = create_bitmap(w, text_height(f) + 2);
+    if (!block)
+        return -1;
+    i = strlen(string);
+    blit(bmp, block, pos_x - 1, pos_y - 1, 0, 0, block->w, block->h);
+    while (key[KEY_LCONTROL] || key[KEY_RCONTROL])
+        ;
+    clear_keybuf();
+    tick = 0;
+    for (;;) {
+        while (!cycle_count)
+            rest(2);
+        if (closeButtonClicked) {
+            destroy_bitmap(block);
+            return 0;
+        }
+        tick++;
+        cycle_count = 0;
+        checkMenuFocus();
+        string[i] = (tick & 8) ? '|' : ' ';
+        string[i + 1] = 0;
+        vsync();
+        blit(block, bmp, 0, 0, pos_x - 1, pos_y - 1, block->w, block->h);
+        if (bg_color >= 0)
+            rectfill(bmp, pos_x, pos_y, pos_x + block->w - 1,
+                     pos_y + block->h - 3, bg_color);
+        textout_ex(bmp, f, string, pos_x + 2, pos_y, colour, -1);
+        blit_to_screen(bmp);
+        if (!keypressed())
+            continue;
+        c = readkey();
+        if ((c >> 8) == KEY_ESC) {
+            string[i] = 0;
+            destroy_bitmap(block);
+            return -2;
+        }
+        if ((c >> 8) == KEY_ENTER) {
+            string[i] = 0;
+            destroy_bitmap(block);
+            return 0;
+        }
+        if ((c >> 8) == KEY_BACKSPACE) {
+            if (i)
+                i--;
+            continue;
+        }
+        if (i < max_chars - 2 && strchr(letters, c) &&
+            text_length(f, string) < w - 9)
+            string[i++] = (char)c;
+    }
+}
+
 void pwd_garble_string(char *str, int key)
 {
     int i;
