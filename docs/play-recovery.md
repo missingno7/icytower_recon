@@ -13,9 +13,13 @@ and music stop. It is explicitly **PARTIAL**: it does not yet recover the
 floor, combo/reward, replay, result-screen, high-score, or terminal return
 state machines described below. The independent recovered-game linker now
 resolves `play`; its next direct game dependencies are
-`handle_player_input`, `update_player`, `draw_frame`, and the four missing
+`handle_player_input`, `update_player`, `draw_frame`, and the three remaining
 collision variants. `handle_player_collision_original` already resolves from
-the current main source.
+the current main source. The legacy `handle_player_collision_old` now also
+resolves: oracle range `0x407fd8..0x408358` proves it tests the current feet
+and, only during a downward move, tests a midpoint sweep before applying the
+same floor correction. The remaining direct collision frontier is the combo,
+vector, and vector-2 modes.
 
 DWARF records its gameplay state directly: `playing`, `old_map_pos`, `level`,
 `diff`, `quit`, scrolling state (`scroll_acc`, `scroll`, `max_scroll`), speed
