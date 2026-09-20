@@ -243,7 +243,7 @@ void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int cx, int y, int dx)
         x = cx + dx * pos;
         build_menu_string(m, str);
         if (m->flags & 64) {
-            char key_str[50];
+            char key_str[32];
 
             key_to_str(*(int *)m->data, key_str);
             textprintf_ex(bmp, (FONT *)mp->font, x, y, -1, -1, "%s:", m->caption);
@@ -297,10 +297,12 @@ void build_menu_string(Tmenu *m, char *dest)
         v = (int *)m->data;
         sprintf(dest, "%s: %s", m->caption, *v ? "YES" : "NO");
     } else if (m->flags & 64) {
-        char str[50];
+        char str[32];
         key_to_str(*(int *)m->data, str);
         sprintf(dest, "%s: (%s)", m->caption, str);
-    } else if (m->flags & 16 || m->flags & 32) {
+    } else if (m->flags & 16) {
+        sprintf(dest, "%s:", m->caption);
+    } else if (m->flags & 32) {
         sprintf(dest, "%s:", m->caption);
     } else
         strcpy(dest, m->caption);
