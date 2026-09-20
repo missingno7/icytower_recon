@@ -1935,7 +1935,31 @@ void handle_player_input(void *control)
 }
 
 /* DWARF signature for the remaining historical main body. */
-int _mangled_main(int argc, char **argv);
+extern int init_game(void);
+
+/* Partial recovery of main.c:5761, 0x415f10..0x4166a2.  This preserves the
+ * oracle's initialization/game/teardown lifecycle while menu dispatch is
+ * recovered from its source-line branches. */
+int _mangled_main(int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    log2file("INIT");
+    if (!init_game()) {
+        log2file("Initialization failed");
+        uninit_game();
+        return 1;
+    }
+    startMenuMusic();
+    clear_keybuf();
+    if (new_game()) {
+        play();
+        end_game();
+    }
+    stopMenuMusic();
+    uninit_game();
+    return 0;
+}
 
 #ifndef ICYTOWER_SYNTHETIC_LINK
 END_OF_MAIN()
