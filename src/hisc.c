@@ -200,13 +200,13 @@ void view_scores(Thisc_table **tables,char **names)
             canDone=1;
 
         pageY+=(int)((targetY-pageY)*0.2f);
-        dark+=(int)((targetDark-dark)*0.2f);
         blit(bg,swap_screen,0,0,0,0,SCREEN_W,SCREEN_H);
         set_trans_blender(0,0,0,dark);
         drawing_mode(DRAW_MODE_TRANS,0,0,0);
         rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
         solid_mode();
         draw_sprite(swap_screen,bmp,160,pageY);
+        dark+=(int)((targetDark-dark)*0.2f);
         blit_to_screen(swap_screen);
         while (!cycle_count)
             rest(2);
