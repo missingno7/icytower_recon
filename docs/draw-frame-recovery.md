@@ -15,3 +15,10 @@ Recovery must retain its rendering phases and shared game state; a blank or
 synthetic frame is not a valid replacement. The function should be recovered
 in source slices, beginning with the camera/background and floor/player draw
 loops before HUD and debug overlays.
+
+DWARF source anchors divide the body: entry is line 2490; the first sprite
+phase is line 2562; map/HUD work reaches line 2822; reward rendering anchors
+at line 2722; compositing is at line 2707; and control-sensitive presentation
+continues through line 2780. These anchors intentionally overlap in address
+order because the original compiler interleaves branches from the same source
+regions.
