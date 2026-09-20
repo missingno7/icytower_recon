@@ -18,3 +18,9 @@ for and sanitizes a filename, replaces its extension, rejects existing paths,
 then calls `save_replay`. The load path destroys any prior replay, calls
 `load_replay`, and rejects a checksum mismatch before returning to the menu.
 These calls and their failure alerts define the required source control flow.
+
+At entry, the oracle compares `profile->handle` with `"guest"`, logs the
+menu transition, initializes `play_again` to zero and `ret` to `-1`, then
+calls `handle_menu(replay_menu, &menu_params, &ctrl, swap_screen,
+replay_menu_callback, 180, 160, 0)`. The outer loop ends when the close button
+is set or the menu returns `l`; `e` sets `play_again` before exiting.
