@@ -2702,7 +2702,6 @@ int init_game(int argc, char **argv)
         allegro_message("Failed to load datafile.");
         return 0;
     }
-    strcpy(sfx_file,"sfx15.dat");
     packfile_password(NULL);
     draw_progress_bar();
     player_id=rand()%1000;
@@ -2750,6 +2749,7 @@ int init_game(int argc, char **argv)
         draw_progress_bar();
         packfile_password(init_string);
         sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
+        strcpy(sfx_file,"sfx15.dat");
         packfile_password(NULL);
         if (sfx) {
             draw_progress_bar();
