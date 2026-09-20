@@ -931,6 +931,41 @@ void replaceBadCharacters(char *string, char newChar)
             string[i] = newChar;
 }
 
+/* Oracle: main.c:2267, 0x40b6bc..0x40bc43.  Debug keys select the historical
+ * presentation experiments; ordinary play always takes the direct path. */
+int debug;
+int blit_mode;
+
+void blit_to_screen(BITMAP *bmp)
+{
+    if (debug) {
+        if (key[56]) blit_mode = 0;
+        if (key[57]) blit_mode = 1;
+        if (key[58]) blit_mode = 2;
+        if (key[59]) blit_mode = 3;
+        if (key[60]) blit_mode = 4;
+        if (key[61]) blit_mode = 5;
+        if (key[62]) blit_mode = 6;
+    }
+    acquire_screen();
+    switch (blit_mode) {
+    case 1:
+        draw_sprite_h_flip(screen, bmp, 0, 0);
+        break;
+    case 2:
+        draw_sprite_v_flip(screen, bmp, 0, 0);
+        break;
+    case 5:
+        stretch_blit(bmp, screen, 0, 0, bmp->w, bmp->h,
+                     160, 120, 320, 240);
+        break;
+    default:
+        blit(bmp, screen, 0, 0, 0, 0, bmp->w, bmp->h);
+        break;
+    }
+    release_screen();
+}
+
 /* Oracle: main.c:5367, 0x40bc44..0x40bf59.  The editor owns only its
  * temporary backing bitmap; callers retain the supplied string and screen. */
 int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
