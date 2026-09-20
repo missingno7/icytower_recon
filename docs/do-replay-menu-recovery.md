@@ -35,3 +35,6 @@ the filename with `replace_extension`, rejects an existing full path, then
 calls `save_replay(replay_directory, filename, demo, demo->size + 2, 1)`.
 Its success and failure branches return through modal alerts before rejoining
 the replay menu.
+
+The persistence object is the global `demo`; the load-validation branch checks
+the replay checksum against global `uberChecksum` before accepting it.
