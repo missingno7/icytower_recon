@@ -452,6 +452,43 @@ Tmenu replay_menu[5] = {
     { "Main Menu",     'l', 0, 0, 0x80, NULL }
 };
 
+/* Candidate recovered from the complete 0x40cd68..0x40d452 modal path. */
+int my_alert(char *func, char *txt, int choice, int enter_hint)
+{
+    Tcontrol *menu_ctrl = (Tcontrol *)menu_params.ctrl;
+    int status = 0;
+    int done = 0;
+
+    set_trans_blender(0, 0, 0, 158);
+    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+    rectfill(screen, 0, 0, SCREEN_W - 1, SCREEN_H - 1, makecol(0, 0, 0));
+    solid_mode();
+    blit(screen, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+    textprintf_centre_ex(screen, data[204].dat, 320, 135, -1, -1, "%s", func ? func : "");
+    if (txt)
+        textout_centre_ex(screen, data[216].dat, txt, 320, 180, makecol(0, 0, 0), -1);
+    while (is_any(&ctrl) || is_any(menu_ctrl) || key[KEY_ESC]) {
+        poll_control(&ctrl, 0); poll_control(menu_ctrl, 0); rest(2);
+    }
+    clear_keybuf();
+    while (!done && !closeButtonClicked) {
+        poll_control(&ctrl, 0); poll_control(menu_ctrl, 0);
+        if (is_left(&ctrl) || is_left(menu_ctrl)) status = -1;
+        if (is_right(&ctrl) || is_right(menu_ctrl)) status = 0;
+        if (is_fire(&ctrl) || is_fire(menu_ctrl) || is_enter(menu_ctrl)) done = -1;
+        if (choice) {
+            draw_sprite(screen, data[status == -1 ? 11 : 10].dat, 240, 220);
+            draw_sprite(screen, data[status == -1 ? 8 : 7].dat, 365, 220);
+        }
+        if (enter_hint)
+            textout_right_ex(screen, data[216].dat, "Enter", 520, 200,
+                             makecol(80, 80, 80), -1);
+        if (!done) rest(2);
+    }
+    blit(swap_screen, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+    return status;
+}
+
 void show_credits(void)
 {
     double vol;
