@@ -30,6 +30,11 @@ local image timestamp with HTTP metadata, downloads stale or missing payloads,
 and writes successful responses in binary mode.
 `fldads_threadmain` loads the local cache, refreshes a listing older than three
 days, validates the HTTP response and payload, and reports the final count.
-The cache-path helper retains its 64-byte masked body. The URL wrapper,
-CSV loader, and local-cache loader are now exact. No original code or object
-content is linked into this target.
+Historical DWARF confirms the outer `shouldDownloadAds` and `statCsv` locals
+plus the lexical `pResponse` local. The 223-byte oracle spills `pResponse` to
+the frame across the logging and update calls, while the 204-byte candidate
+keeps the same local in `ebx`; both preserve the null-response, status, payload,
+cleanup, and cache-age branches. No unsupported source change is retained for
+this register-allocation difference. The cache-path helper retains its 64-byte
+masked body. The URL wrapper, CSV loader, and local-cache loader are now exact.
+No original code or object content is linked into this target.
