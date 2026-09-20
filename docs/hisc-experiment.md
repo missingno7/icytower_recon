@@ -14,14 +14,14 @@ the recovered source preserves the allocation/failure paths, ordered `free`
 calls, reset loop, checksum recurrence, score qualification, and insertion
 sort.
 
-`view_scores` remains a partial 2,408-byte candidate against the historical
+`view_scores` remains a partial 2,464-byte candidate against the historical
 2,552-byte body. DWARF declares `data` as `DATAFILE *`; the original's
 `+0x420`, `+0x410`, and `+0x400` loads therefore select entries 66, 65, and
 64, rather than doubled indices. The viewer also draws entries 9 and 6 at
 `x = 626 - dark`, at y positions 380 and 40, after each overlay update.
-Its interaction loop preserves the DWARF-confirmed
-`canDone` debounce: fire completes immediately, while a close request must
-first observe a released control state. The panel begins at the original
+Its interaction loop preserves the original `canDone` debounce: fire completes
+immediately; F1, Enter, and K complete only after all three have been released.
+`closeButtonClicked` is the outer-loop exit condition. The panel begins at the original
 `pageY = 500`, eases toward zero while darkening toward 158, clamps its
 scroll at `485 - panel_height` and zero, then slides back to 500 while clearing
 the overlay before teardown. Its entry overlay renders at the prior alpha and

@@ -145,7 +145,7 @@ void view_scores(Thisc_table **tables,char **names)
     bg=create_bitmap(SCREEN_W,SCREEN_H);
     blit(screen,bg,0,0,0,0,SCREEN_W,SCREEN_H);
     clear_keybuf();
-    while (is_any(get_controls()) || closeButtonClicked)
+    while (is_any(get_controls()) || key[KEY_K])
         poll_control(get_controls(),0);
     clear_keybuf();
 
@@ -183,7 +183,7 @@ void view_scores(Thisc_table **tables,char **names)
     targetDark=158;
     done=0;
     canDone=0;
-    while (!done) {
+    while (!closeButtonClicked && !done) {
         cycle_count=0;
         checkMenuFocus();
         poll_control(get_controls(),0);
@@ -196,9 +196,9 @@ void view_scores(Thisc_table **tables,char **names)
                 targetY=0;
         }
         done=is_fire(get_controls());
-        if (closeButtonClicked && canDone)
+        if ((key[KEY_F1] || key[KEY_ENTER] || key[KEY_K]) && canDone)
             done=1;
-        if (!closeButtonClicked)
+        if (!key[KEY_F1] && !key[KEY_ENTER] && !key[KEY_K])
             canDone=1;
 
         pageY+=(int)((targetY-pageY)*0.2f);
