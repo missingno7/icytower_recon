@@ -226,8 +226,10 @@ exactly.
 the next unused `screenshots/icytower_%04d.png` name with the historical
 post-increment counter, enforces the 9999 limit after every existence test,
 saves a sub-bitmap with the current palette, and waits for F12 release. Its
-static counter allocation and direct same-CU logging call remain
-layout-dependent, so it is recorded as `DIFFER`.
+instruction stream, calls, and literals match; the only unresolved relocations
+are the function-static counter allocation and the external Allegro
+keyboard-array placement. It is `CODEGEN_SIMILAR`, rather than an exact
+function match.
 
 `open_web_browser` recovers its complete 111-byte URL-launch helper. It builds
 the historical `url.dll, FileProtocolHandler` argument, logs the command, and
