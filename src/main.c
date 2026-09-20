@@ -1827,7 +1827,7 @@ void update_frame(void)
     if (reward_time) {
         if (reward_time>60)
             reward_scale+=3277;
-        else if (reward_time<=9)
+        if (reward_time<=9)
             reward_scale-=6554;
         reward_time--;
     }

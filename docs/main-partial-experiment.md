@@ -158,12 +158,14 @@ compares each of the DWARF-sized 2188-byte character records against the
 profile avatar field, and writes the matching index to both named selection
 globals. All five global references and the `stricmp` call resolve by symbol.
 
-`update_frame` recovers the typed reward, player-death, edge-draw, and frame
-advance transitions. The death-counter update does not suppress the edge-draw
-or frame-advance work: the original continues into both checks after updating
-the counter. Its 121-byte candidate differs from the historical 120-byte
-branch layout by an alignment byte, so it is recorded as `DIFFER` and receives
-no exact-function credit.
+`update_frame` exactly reproduces the typed reward, player-death, edge-draw,
+and frame-advance transitions in 120 bytes. The reward thresholds are two
+independent checks: above 60 ticks it adds 3277, and at nine ticks or below it
+subtracts 6554. Those ranges do not overlap, but preserving the separate
+checks gives the historical high-reward tail block and resolves every
+relocation. The death-counter update does not suppress the edge-draw or
+frame-advance work: the original continues into both checks after updating the
+counter.
 
 `checkMenuFocus` recovers the replay-menu guard and the focus-change music
 transition over the named `in_replay_menu`, `hasFocus`, and `lastFocus`
