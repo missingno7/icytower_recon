@@ -1,26 +1,10 @@
-# `view_profile` recovery map
+# `view_profile` recovery status
 
-`view_profile` is the partially reconstructed `profile.c` routine at
-`0x419aec..0x41a3b5` (2,249 bytes), declared at source line 538 with one
-profile argument. Its oracle prologue drains the shared game control, clears
-the keyboard buffer, creates a 640x480 presentation bitmap, and allocates a
-second content bitmap sized from datafile record 86 plus a 50-pixel border.
+`view_profile` spans `0x419aec..0x41a3b5` (2,249 bytes) in `profile.c`. The
+current independently compiled source candidate is `DIFFER` at 1,802 bytes,
+not missing. It constructs the profile data pages, rank panel, animated
+slide-in/slide-out display, control loop, and cleanup path.
 
-The content construction calls the recovered page helpers in this order:
-`profile_data_page_general`, `profile_data_page_basic`, and
-`profile_data_page_advanced`; it also calls `draw_buffer` for each page and
-`set_next_rank_message` for the rank panel. The source-level loop must retain
-those calls rather than duplicate their string layouts.
-
-DWARF establishes the three generated page pointers (`data_basic`,
-`data_advanced`, and `data_general`), `pageY`, `targetY`, `bg`, and `bmp`.
-The profile rank comparisons use the existing rank tables and profile fields
-at offsets `0x4c`, `0x50`, `0x58`, and `0x88`.
-
-The current source implements the observed page construction, rank badge and
-next-rank panel, input debounce, snapshot background, 500-to-15 entry
-animation, 15-to-500 exit animation, presentation blits, and every observed
-release. The recovered link reaches the next genuine functions
-(`_mangled_main`, `select_profile`, `play`, and `blit_to_screen`). The body is
-still marked partial because byte-level code generation has not yet matched
-the 2,249-byte oracle function.
+The remaining 447 bytes cover unrecovered layout and presentation details.
+This status was established by compiling the current source with the pinned
+toolchain and comparing its function body against the local oracle.
