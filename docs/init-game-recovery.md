@@ -17,6 +17,10 @@ swap buffer. It is sufficient for the independent linker to resolve
 `init_game`; the remaining 5,215 bytes cover the original network,
 configuration, profile, resource-loader, and staged progress work.
 
+The verified base resource is `data/data.dat`, loaded with the manifest's
+`CHEESE` packfile password. The candidate resets the password at entry, then
+sets this password immediately before loading that datafile.
+
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
 `cfgfilename`, `check`, `checkFile`, `loader`, `fldLogo`, and `whiteColor`.

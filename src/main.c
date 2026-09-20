@@ -2015,7 +2015,8 @@ int init_game(int argc, char **argv)
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     init_control(&ctrl);
 
-    data=load_datafile("icytower.dat");
+    packfile_password("CHEESE");
+    data=load_datafile("data/data.dat");
     if (!data) return 0;
     swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
     if (!swap_screen) {
