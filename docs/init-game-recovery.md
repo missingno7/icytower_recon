@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 4,375-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 4,749-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 1,413 bytes cover the original graphics fallback,
+remaining 1,039 bytes cover the original graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -76,12 +76,15 @@ advancing progress once per changed ten-tick boundary, seeds `new_rand` from
 `rand() % 2367`, fades and clears the display, clears input, marks `init_ok`,
 and returns `-1` as the successful startup result.
 
-`-check` is now parsed in the initializer's argument path. It loads the
-specified replay before configuration and graphics setup, records an invalid
-replay through `dropped_file_is_not_a_replay`, and enables `itrcheck` only
-after a successful load. The candidate no longer accepts non-oracle
-`-windowed` or `-fullscreen` switches, and it no longer treats every ordinary
-non-option argument as a replay.
+`-check` is now parsed in the initializer's multi-argument path. It loads the
+specified replay before configuration and graphics setup, emits the original
+machine-readable failure result through `printf`, records an invalid replay
+through `dropped_file_is_not_a_replay`, and enables `itrcheck` only after a
+successful load. A single filename argument first attempts replay loading;
+when that fails, its basename is validated as a profile, then becomes the
+selected profile after configuration loading. Invalid single-file profile
+arguments show the original misspelled diagnostic. The candidate no longer
+accepts non-oracle `-windowed` or `-fullscreen` switches.
 
 The pre-graphics network setup is recovered from `0x40e811..0x40e87a`. It
 formats the `Icy Tower v1.5.1` window title, requests Winsock 2.2 through the

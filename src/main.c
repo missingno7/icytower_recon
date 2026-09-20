@@ -611,6 +611,8 @@ extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
 extern int calc_replay_checksum(Treplay *r);
 extern int save_replay(char *path, char *file, Treplay *r, int size,
                        int make_new_date);
+extern char *get_filename(const char *path);
+extern char *get_extension(const char *path);
 extern void fldads_start(void);
 extern void run_demo(char *file_name);
 extern int new_game(void);
@@ -2461,6 +2463,7 @@ int init_game(int argc, char **argv)
     unsigned short wVersionRequested;
     char cfgfilename[256];
     char profiles_dir[1024];
+    char profile_name[64];
     char *replay_path;
     PACKFILE *cfg;
     DATAFILE *loader;
@@ -2489,6 +2492,7 @@ int init_game(int argc, char **argv)
     memset(&cmdline,0,sizeof(cmdline));
     replay_path=NULL;
     check=0;
+    profile_name[0]=0;
     reset_options(&options);
     eyecandy_selection.value=0;
     eyecandy_selection.size=3;
@@ -2517,29 +2521,51 @@ int init_game(int argc, char **argv)
     gravity_selection.caption[1]=strdup("Normal");
     gravity_selection.caption[2]=strdup("Heavy");
     fldads_start();
-    for (i=1;i<argc;i++) {
-        if (argv[i][0]!='-')
-            replay_path=argv[i];
-        if (!stricmp(argv[i],"-check")) check=1;
-        else if (!stricmp(argv[i],"-jumps")) cmdline.jumps=1;
-        else if (!stricmp(argv[i],"-combos")) cmdline.combos=1;
-        else if (!stricmp(argv[i],"-sd")) cmdline.sd=1;
-        else if (!stricmp(argv[i],"-keys")) cmdline.keys=1;
-        else if (!stricmp(argv[i],"-all")) {
-            cmdline.jumps=1;
-            cmdline.combos=1;
-            cmdline.sd=1;
-            cmdline.keys=1;
+    if (argc>2) {
+        for (i=1;i<argc;i++) {
+            if (argv[i][0]!='-')
+                replay_path=argv[i];
+            if (!stricmp(argv[i],"-check")) check=1;
+            else if (!stricmp(argv[i],"-jumps")) cmdline.jumps=1;
+            else if (!stricmp(argv[i],"-combos")) cmdline.combos=1;
+            else if (!stricmp(argv[i],"-sd")) cmdline.sd=1;
+            else if (!stricmp(argv[i],"-keys")) cmdline.keys=1;
+            else if (!stricmp(argv[i],"-all")) {
+                cmdline.jumps=1;
+                cmdline.combos=1;
+                cmdline.sd=1;
+                cmdline.keys=1;
+            }
+            else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1;
         }
-        else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1;
-    }
-    if (check) {
-        demo=load_replay(replay_path);
+        if (check) {
+            demo=load_replay(replay_path);
+            if (!demo) {
+                set_gfx_mode(GFX_TEXT,0,0,0,0);
+                printf("<itrcheck_results status=\"error\">%s</itrcheck_results>\n",
+                       get_filename(replay_path));
+                dropped_file_is_not_a_replay=1;
+                return 0;
+            }
+            itrcheck=1;
+        }
+    } else if (argc==2) {
+        demo=load_replay(argv[1]);
         if (!demo) {
-            dropped_file_is_not_a_replay=1;
-            return 0;
+            strcpy(profile_name,get_filename(argv[1]));
+            get_extension(profile_name)[-1]=0;
+            profile=load_profile(profile_name);
+            if (!profile) {
+                profile_name[0]=0;
+                set_gfx_mode(GFX_TEXT,0,0,0,0);
+                allegro_message("The file\n<%s>\nis not a vaild Icy Tower profile.",
+                               get_filename(argv[1]));
+                dropped_file_is_not_a_replay=1;
+                return 0;
+            }
+            free(profile);
+            profile=NULL;
         }
-        itrcheck=1;
     }
     get_configfile_path(cfgfilename,sizeof(cfgfilename));
     for (i=0;i<15;i++) {
@@ -2561,6 +2587,8 @@ int init_game(int argc, char **argv)
         pack_fclose(cfg);
     } else
         reset_options(&options);
+    if (profile_name[0])
+        strcpy(options.lastProfile,profile_name);
     if (!itrcheck)
         options.timesStarted++;
 
