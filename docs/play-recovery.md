@@ -49,3 +49,11 @@ an active voice. In the applicable replay path it sets the replay-menu state,
 calls `do_replay_menu`, clears that state, and returns the menu result. The
 ordinary caller must receive this real return value rather than a synthetic
 success code.
+
+The game-over/results segment covers lines 4700--4950. It keeps updating
+frames and particles while rendering `draw_frame` followed by `draw_results`,
+stops the active sample at the transition, initializes and scrolls its result
+scroller, and continues screenshot/presentation handling. Its input loop
+uses the shared control and keyboard state before entering and sorting the
+high-score table; subsequent calls save the replay variants. This is a
+continuation of the same `play` lifecycle, not a separate menu implementation.
