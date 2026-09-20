@@ -266,7 +266,7 @@ read-only data, independently of masked instruction equality. That exact
 dependency permits the recovered particle CU to enter the separate synthetic
 custom-audio link.
 
-`start_reward` now recovers the nine level bands, 80-frame reward setup, selected `data[90 + r]` image, combo sound, and non-flash particle burst. Its 476-byte candidate is four bytes longer than the original 472-byte body because its burst branch has a different register allocation and placement; it is recorded as `DIFFER`. Typing its `reward_bmp`, `combo_sound`, and 512-entry `stars` globals also resolves the complete bodies of two existing helpers.
+`start_reward` now recovers the nine level bands, 80-frame reward setup, selected `data[90 + r]` image, combo sound, and non-flash particle burst. Its 476-byte candidate is four bytes longer than the original 472-byte body because its burst branch has a different register allocation and placement. In particular, the original keeps `itrcheck` in `edi` and reuses it as the burst-loop counter, while the candidate uses `ebx` for the guard before the loop. It is recorded as `DIFFER`; future source experiments must preserve this guard live range without changing reward behavior. Typing its `reward_bmp`, `combo_sound`, and 512-entry `stars` globals also resolves the complete bodies of two existing helpers.
 
 `update_reward` was independently derived from its named `reward_time` and
 `reward_scale` globals, but both source control-flow forms tested at -O2 emit
