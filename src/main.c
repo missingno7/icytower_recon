@@ -129,6 +129,7 @@ void blit_to_screen(BITMAP *bmp);
 void checkMenuFocus(void);
 
 BITMAP *swap_screen;
+BITMAP *gameover_bmp;
 
 void fadeIn(BITMAP *bmp, int speed)
 {
@@ -2592,7 +2593,11 @@ int init_game(int argc, char **argv)
     if (!itrcheck)
         options.timesStarted++;
 
-    if (allegro_init()!=0) return 0;
+    if (allegro_init()!=0) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("For some reason, the game failed to go into\ngraphics mode. Try starting the game again.\n\nIf this problem persists,\nplease visit www.freelunchdesign.com.");
+        return 0;
+    }
     set_color_depth(32);
     if (options.full_screen) {
         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
@@ -2701,76 +2706,82 @@ int init_game(int argc, char **argv)
         allegro_message("Failed to allocate memory for player.");
         return 0;
     }
-    get_profiles_dir(profiles_dir,sizeof(profiles_dir));
-    if (!file_exists(profiles_dir,FA_DIREC,0))
-        mkdir(profiles_dir);
-    if (!file_exists(profiles_dir,FA_DIREC,0)) {
-        set_gfx_mode(GFX_TEXT,0,0,0,0);
-        allegro_message("Failed to create profile directory %s",profiles_dir);
-        return 0;
-    }
-    draw_progress_bar();
-    rebuild_profile_list(0);
-    draw_progress_bar();
-    profile=load_profile(options.lastProfile);
-    if (!profile)
-        profile=load_profile("guest");
-    if (!profile)
-        profile=create_profile("guest",1);
-    if (!profile) {
-        set_gfx_mode(GFX_TEXT,0,0,0,0);
-        allegro_message("Failed create profile.");
-        return 0;
-    }
-    strcpy(options.lastProfile,profile->handle);
-    syncOptionsFromProfile();
-    draw_progress_bar();
-    if (!check_characters()) {
-        set_gfx_mode(GFX_TEXT,0,0,0,0);
-        allegro_message("No characters available.\nPlease reinstall game or add custom characters.\nRefer to readme.txt.");
-        return 0;
-    }
-    select_palette(data[0].dat);
-    draw_progress_bar();
-    packfile_password("CHEESE");
-    sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
-    packfile_password(NULL);
-    if (sfx) {
+    if (!itrcheck) {
+        ((RGB *)data[0].dat)[0].r=0;
+        ((RGB *)data[0].dat)[0].g=0;
+        ((RGB *)data[0].dat)[0].b=0;
+        gameover_bmp=data[55].dat;
+        get_profiles_dir(profiles_dir,sizeof(profiles_dir));
+        if (!file_exists(profiles_dir,FA_DIREC,0))
+            mkdir(profiles_dir);
+        if (!file_exists(profiles_dir,FA_DIREC,0)) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("Failed to create profile directory %s",profiles_dir);
+            return 0;
+        }
         draw_progress_bar();
-        combo_sound[0]=getSampleFromOggDatafile(sfx,8);
-        combo_sound[1]=getSampleFromOggDatafile(sfx,18);
-        combo_sound[2]=getSampleFromOggDatafile(sfx,9);
-        combo_sound[3]=getSampleFromOggDatafile(sfx,17);
-        combo_sound[4]=getSampleFromOggDatafile(sfx,21);
-        combo_sound[5]=getSampleFromOggDatafile(sfx,1);
-        combo_sound[6]=getSampleFromOggDatafile(sfx,5);
-        combo_sound[7]=getSampleFromOggDatafile(sfx,6);
-        combo_sound[8]=getSampleFromOggDatafile(sfx,15);
-        combo_sound[9]=getSampleFromOggDatafile(sfx,20);
-        bg_beat=getSampleFromOggDatafile(sfx,2);
-        bg_menu=getSampleFromOggDatafile(sfx,3);
-        speaker[0]=getSampleFromOggDatafile(sfx,10);
-        speaker[1]=getSampleFromOggDatafile(sfx,7);
-        speaker[2]=getSampleFromOggDatafile(sfx,19);
-        menu_sounds[0]=getSampleFromOggDatafile(sfx,0);
-        menu_sounds[1]=getSampleFromOggDatafile(sfx,13);
-        sounds[2]=getSampleFromOggDatafile(sfx,0);
-        sounds[4]=getSampleFromOggDatafile(sfx,13);
-        sounds[6]=getSampleFromOggDatafile(sfx,14);
-        sounds[7]=getSampleFromOggDatafile(sfx,4);
-        sounds[8]=getSampleFromOggDatafile(sfx,16);
-        unload_datafile(sfx);
+        rebuild_profile_list(0);
+        draw_progress_bar();
+        profile=load_profile(options.lastProfile);
+        if (!profile)
+            profile=load_profile("guest");
+        if (!profile)
+            profile=create_profile("guest",1);
+        if (!profile) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("Failed create profile.");
+            return 0;
+        }
+        strcpy(options.lastProfile,profile->handle);
+        syncOptionsFromProfile();
+        draw_progress_bar();
+        if (!check_characters()) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("No characters available.\nPlease reinstall game or add custom characters.\nRefer to readme.txt.");
+            return 0;
+        }
+        select_palette(data[0].dat);
+        draw_progress_bar();
+        packfile_password("CHEESE");
+        sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
+        packfile_password(NULL);
+        if (sfx) {
+            draw_progress_bar();
+            combo_sound[0]=getSampleFromOggDatafile(sfx,8);
+            combo_sound[1]=getSampleFromOggDatafile(sfx,18);
+            combo_sound[2]=getSampleFromOggDatafile(sfx,9);
+            combo_sound[3]=getSampleFromOggDatafile(sfx,17);
+            combo_sound[4]=getSampleFromOggDatafile(sfx,21);
+            combo_sound[5]=getSampleFromOggDatafile(sfx,1);
+            combo_sound[6]=getSampleFromOggDatafile(sfx,5);
+            combo_sound[7]=getSampleFromOggDatafile(sfx,6);
+            combo_sound[8]=getSampleFromOggDatafile(sfx,15);
+            combo_sound[9]=getSampleFromOggDatafile(sfx,20);
+            bg_beat=getSampleFromOggDatafile(sfx,2);
+            bg_menu=getSampleFromOggDatafile(sfx,3);
+            speaker[0]=getSampleFromOggDatafile(sfx,10);
+            speaker[1]=getSampleFromOggDatafile(sfx,7);
+            speaker[2]=getSampleFromOggDatafile(sfx,19);
+            menu_sounds[0]=getSampleFromOggDatafile(sfx,0);
+            menu_sounds[1]=getSampleFromOggDatafile(sfx,13);
+            sounds[2]=getSampleFromOggDatafile(sfx,0);
+            sounds[4]=getSampleFromOggDatafile(sfx,13);
+            sounds[6]=getSampleFromOggDatafile(sfx,14);
+            sounds[7]=getSampleFromOggDatafile(sfx,4);
+            sounds[8]=getSampleFromOggDatafile(sfx,16);
+            unload_datafile(sfx);
+        }
+        snd_volume_slider.value=options.snd_volume;
+        msc_volume_slider.value=options.msc_volume;
+        eyecandy_selection.value=options.flash;
+        gravity_selection.value=options.gravity;
+        floor_size_selection.value=options.floor_size;
+        scroll_speed_selection.value=options.start_speed;
+        floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
+        floors.value=profile->start_floor;
+        if (floors.value>floors.max)
+            floors.value=floors.max;
     }
-    snd_volume_slider.value=options.snd_volume;
-    msc_volume_slider.value=options.msc_volume;
-    eyecandy_selection.value=options.flash;
-    gravity_selection.value=options.gravity;
-    floor_size_selection.value=options.floor_size;
-    scroll_speed_selection.value=options.start_speed;
-    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
-    floors.value=profile->start_floor;
-    if (floors.value>floors.max)
-        floors.value=floors.max;
     draw_progress_bar();
     draw_progress_bar();
     i=0;

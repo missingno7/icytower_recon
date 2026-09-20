@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 4,749-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 4,743-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 1,039 bytes cover the original graphics fallback,
+remaining 1,045 bytes cover the original graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -113,6 +113,13 @@ High-score allocation now reports its distinct text-mode failure. A missing
 configuration file resets the option state, while timer and keyboard
 installation remain nonfatal as observed; timer setup also resets
 `cycle_count` before startup progress continues.
+
+Successful replay checks retain the oracle's distinct short path: they load
+the core data and allocate the player, then bypass profile discovery, custom
+character setup, and SFX/menu setup before the common loading tail. Ordinary
+startup clears palette entry zero before using the primary datafile and stores
+entry 55 as the game-over bitmap. Allegro initialization failure now uses the
+original text-mode diagnostic.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
