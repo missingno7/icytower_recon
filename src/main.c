@@ -1934,8 +1934,50 @@ void handle_player_input(void *control)
     p->jump_key = 0;
 }
 
-/* DWARF signature for the remaining historical main body. */
-extern int init_game(void);
+/* Partial recovery of main.c:1375, 0x40e7dc..0x40fe78.  The oracle starts
+ * with packfile/network state, command-line processing, and the platform
+ * subsystems before it exposes the datafile-backed game globals. */
+int init_game(int argc, char **argv)
+{
+    int i;
+
+    log2file("INIT GAME");
+    packfile_password(NULL);
+    init_ok=0;
+    closeButtonClicked=0;
+    in_replay_menu=0;
+    hasFocus=1;
+    lastFocus=1;
+    memset(&cmdline,0,sizeof(cmdline));
+    for (i=1;i<argc;i++) {
+        if (!stricmp(argv[i],"-windowed")) options.full_screen=0;
+        else if (!stricmp(argv[i],"-fullscreen")) options.full_screen=1;
+        else if (!stricmp(argv[i],"-replay")) cmdline.jumps=1;
+    }
+
+    if (allegro_init()!=0) return 0;
+    set_color_depth(32);
+    if (set_gfx_mode(options.full_screen ? GFX_AUTODETECT_FULLSCREEN :
+                     GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0)
+        return 0;
+    if (install_timers()!=0) return 0;
+    if (install_keyboard()!=0) return 0;
+    install_mouse();
+    got_joystick=(install_joystick(JOY_TYPE_AUTODETECT)==0);
+    install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
+    init_control(&ctrl);
+
+    data=load_datafile("icytower.dat");
+    if (!data) return 0;
+    swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
+    if (!swap_screen) {
+        unload_datafile(data);
+        data=NULL;
+        return 0;
+    }
+    init_ok=1;
+    return 1;
+}
 
 /* Partial recovery of main.c:5761, 0x415f10..0x4166a2.  This preserves the
  * oracle's initialization/game/teardown lifecycle while menu dispatch is
@@ -1945,7 +1987,7 @@ int _mangled_main(int argc, char **argv)
     (void)argc;
     (void)argv;
     log2file("INIT");
-    if (!init_game()) {
+    if (!init_game(argc,argv)) {
         log2file("Initialization failed");
         uninit_game();
         return 1;
