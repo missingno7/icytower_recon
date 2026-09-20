@@ -243,7 +243,7 @@ typedef struct Tmenu_slider {
 typedef struct Tmenu_selection {
     int value;
     int size;
-    char caption[128];
+    char *caption[32];
 } Tmenu_selection;
 
 typedef struct Tmenu_floor_selection {
@@ -595,6 +595,7 @@ extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
 extern int calc_replay_checksum(Treplay *r);
 extern int save_replay(char *path, char *file, Treplay *r, int size,
                        int make_new_date);
+extern void fldads_start(void);
 extern void run_demo(char *file_name);
 extern int new_game(void);
 extern int play(void);
@@ -2471,6 +2472,33 @@ int init_game(int argc, char **argv)
                 reset_hisc_table(hisc_tables[i],"Harold",1000,0);
         pack_fclose(cfg);
     }
+    eyecandy_selection.value=0;
+    eyecandy_selection.size=3;
+    eyecandy_selection.caption[0]=strdup("Lots");
+    eyecandy_selection.caption[1]=strdup("Some");
+    eyecandy_selection.caption[2]=strdup("None");
+    scroll_speed_selection.value=0;
+    scroll_speed_selection.size=6;
+    scroll_speed_selection.caption[5]=strdup("Normal");
+    scroll_speed_selection.caption[4]=strdup("Hasty");
+    scroll_speed_selection.caption[3]=strdup("Fast");
+    scroll_speed_selection.caption[2]=strdup("Faster");
+    scroll_speed_selection.caption[1]=strdup("Fastest");
+    scroll_speed_selection.caption[0]=strdup("Insane");
+    floor_size_selection.value=0;
+    floor_size_selection.size=5;
+    floor_size_selection.caption[0]=strdup("Wide");
+    floor_size_selection.caption[1]=strdup("Normal");
+    floor_size_selection.caption[2]=strdup("Shorter");
+    floor_size_selection.caption[3]=strdup("Shortest");
+    floor_size_selection.caption[4]=strdup("Tiny");
+    floor_size_selection.value=2;
+    gravity_selection.value=0;
+    gravity_selection.size=3;
+    gravity_selection.caption[0]=strdup("Helium");
+    gravity_selection.caption[1]=strdup("Normal");
+    gravity_selection.caption[2]=strdup("Heavy");
+    fldads_start();
     for (i=1;i<argc;i++) {
         if (argv[i][0]!='-')
             replay_path=argv[i];
@@ -2571,6 +2599,9 @@ int init_game(int argc, char **argv)
         return 0;
     strcpy(options.lastProfile,profile->handle);
     syncOptionsFromProfile();
+    gravity_selection.value=options.gravity;
+    floor_size_selection.value=options.floor_size;
+    scroll_speed_selection.value=options.start_speed;
     if (!check_characters())
         return 0;
     if (replay_path) {

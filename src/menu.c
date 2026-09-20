@@ -16,7 +16,7 @@ typedef struct Tmenu_slider {
 typedef struct Tmenu_selection {
     int value;
     int size;
-    char caption[128];
+    char *caption[32];
 } Tmenu_selection;
 
 typedef struct Tmenu_floor_selection {
@@ -202,12 +202,6 @@ void reset_menu(Tmenu *m, Tmenu_params *mp, int sel_pos)
 }
 
 
-typedef struct Tmenu_selection_data {
-    int value;
-    int max;
-    char *choices[1];
-} Tmenu_selection_data;
-
 extern void key_to_str(int key, char *dest);
 extern void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int x, int y,
                       int step_in);
@@ -295,9 +289,9 @@ void build_menu_string(Tmenu *m, char *dest)
         for (; i < t; i++)
             strcat(dest, "{");
     } else if (m->flags & 8) {
-        Tmenu_selection_data *s;
-        s = (Tmenu_selection_data *)m->data;
-        sprintf(dest, "%s: %s", m->caption, s->choices[s->value]);
+        Tmenu_selection *s;
+        s = (Tmenu_selection *)m->data;
+        sprintf(dest, "%s: %s", m->caption, s->caption[s->value]);
     } else if (m->flags & 4) {
         int *v;
         v = (int *)m->data;
