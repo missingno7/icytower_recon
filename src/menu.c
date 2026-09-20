@@ -470,6 +470,7 @@ int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp,
 {
     int menu_return;
     int handle_keys;
+    int done;
     int data;
     int key_counter;
 

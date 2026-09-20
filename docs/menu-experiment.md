@@ -37,8 +37,10 @@ The candidate is 956 bytes against
 the historical 1,118-byte function and is recorded as `DIFFER`; its shorter
 code results from equivalent compiler register allocation and branch folding.
 
-handle_menu now reconstructs the menu event loop. It resets the selected entry,
-draws through an optional callback, debounces both controls, dispatches nested
+handle_menu now reconstructs the menu event loop. Its source-local sequence
+includes the optimized-out `done` declaration between `handle_keys` and `data`,
+as established by historical DWARF. It resets the selected entry, draws through
+an optional callback, debounces both controls, dispatches nested
 menus, adjusts sliders and each selection type within its historical bounds,
 toggles boolean options, captures control keys, and handles profile actions.
 The original return-code table and menu data tables establish these actions.
