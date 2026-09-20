@@ -2554,6 +2554,7 @@ int init_game(int argc, char **argv)
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     init_control(&ctrl);
 
+    set_color_conversion(0x00ffffff);
     packfile_password("CHEESE");
     data=load_datafile("data/data.dat");
     if (!data) return 0;
