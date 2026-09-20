@@ -27,3 +27,7 @@ modal name field, normalizes bad characters to `_`, calls `create_profile`,
 then presents success or failure alerts. Load failure presents the broken
 profile alert. The selected or newly-created allocation becomes the return
 value after exit animation.
+
+The current `profile.c` source implements these paths and resolves
+`select_profile` in the ordinary reconstructed link. Its emitted code has not
+yet been matched against the 3,070-byte oracle body, so it remains `PARTIAL`.
