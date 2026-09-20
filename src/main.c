@@ -2442,6 +2442,7 @@ int init_game(int argc, char **argv)
     char cfgfilename[256];
     char *replay_path;
     PACKFILE *cfg;
+    DATAFILE *sfx;
     int i;
 
     log2file("INIT GAME");
@@ -2504,6 +2505,32 @@ int init_game(int argc, char **argv)
     packfile_password("CHEESE");
     data=load_datafile("data/data.dat");
     if (!data) return 0;
+    sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
+    if (sfx) {
+        combo_sound[0]=getSampleFromOggDatafile(sfx,8);
+        combo_sound[1]=getSampleFromOggDatafile(sfx,18);
+        combo_sound[2]=getSampleFromOggDatafile(sfx,9);
+        combo_sound[3]=getSampleFromOggDatafile(sfx,17);
+        combo_sound[4]=getSampleFromOggDatafile(sfx,21);
+        combo_sound[5]=getSampleFromOggDatafile(sfx,1);
+        combo_sound[6]=getSampleFromOggDatafile(sfx,5);
+        combo_sound[7]=getSampleFromOggDatafile(sfx,6);
+        combo_sound[8]=getSampleFromOggDatafile(sfx,15);
+        combo_sound[9]=getSampleFromOggDatafile(sfx,20);
+        bg_beat=getSampleFromOggDatafile(sfx,2);
+        bg_menu=getSampleFromOggDatafile(sfx,3);
+        speaker[0]=getSampleFromOggDatafile(sfx,10);
+        speaker[1]=getSampleFromOggDatafile(sfx,7);
+        speaker[2]=getSampleFromOggDatafile(sfx,19);
+        menu_sounds[0]=getSampleFromOggDatafile(sfx,0);
+        menu_sounds[1]=getSampleFromOggDatafile(sfx,13);
+        sounds[2]=getSampleFromOggDatafile(sfx,0);
+        sounds[4]=getSampleFromOggDatafile(sfx,13);
+        sounds[6]=getSampleFromOggDatafile(sfx,14);
+        sounds[7]=getSampleFromOggDatafile(sfx,4);
+        sounds[8]=getSampleFromOggDatafile(sfx,16);
+        unload_datafile(sfx);
+    }
     swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
     if (!swap_screen) {
         unload_datafile(data);
