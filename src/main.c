@@ -379,6 +379,9 @@ void *hisc_tables[15];
 static int count;
 char summary_scroller_message[5120];
 Tscroller summary_scroller;
+static char *result_categories[5] = {
+    "Score", "Best Combo", "Floor", "Lost Combo", "Top Floor, No Combos"
+};
 
 /* Initialized menu data recovered from main.c's DWARF declarations and the
  * original .data bytes.  Links stay symbolic so the ordinary linker owns the
@@ -1023,6 +1026,42 @@ void replay_menu_callback(void)
     draw_scroller(&summary_scroller,swap_screen,1,0,makecol(150,150,150));
     if (!draw_scroller(&summary_scroller,swap_screen,0,0,makecol(200,200,200)))
         restart_scroller(&summary_scroller);
+}
+
+/* Partial recovery of main.c:3359, 0x4076c0..0x407a07.  This result panel
+ * presents the score, floor, and best-combo categories and their markers. */
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified,
+                  int *qValues, int showQ)
+{
+    int categories[5] = { 0, 2, 1 };
+    int numCats = 3;
+    int padding = 30;
+    int dist;
+    int pos = 0;
+    int i;
+
+    draw_sprite(bmp,logo,320-logo->w/2,y);
+    for (i=0; i<numCats; i++) {
+        textprintf_ex(bmp,data[52].dat,200,y+logo->h+3+pos,-1,-1,"%s:",
+                      result_categories[categories[i]]);
+        textprintf_right_ex(bmp,data[52].dat,440,y+logo->h+3+pos,-1,-1,"%d",
+                            qValues[categories[i]]);
+        if (showQ) {
+            if (new_personal_best[categories[i]]>0 &&
+                stricmp(profile->handle,"guest")) {
+                draw_sprite(bmp,data[69].dat,476,y+logo->h+13+pos);
+                dist = 18;
+            }
+            else
+                dist = -4;
+            if (qualified[categories[i]]>0) {
+                draw_sprite(bmp,data[68].dat,480+dist,y+logo->h+13+pos);
+                textprintf_ex(bmp,data[53].dat,480+dist+7,y+logo->h+18+pos,
+                              makecol(0,0,0),-1,"%d",qualified[categories[i]]);
+            }
+        }
+        pos += padding;
+    }
 }
 
 /* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
