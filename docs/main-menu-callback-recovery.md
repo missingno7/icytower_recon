@@ -27,3 +27,12 @@ The first rendering phase then blits `data[126]` to `swap_screen`, draws
 `(0, 280)`. The head construction starts from `data[58 + face]` and the
 shadow asset at `data[61]`; later animation remains to be recovered with its
 fixed-point sine expressions and local lifetimes intact.
+
+The decoded line table provides the required complete phase map. Lines
+5220--5228 scroll and render the welcome scroller; lines 5231--5248 choose
+between the guest welcome text and the ranked-profile presentation, including
+four `get_rank` rows. Lines 5255--5277 refresh music sliders and the welcome
+message; lines 5282--5288 transfer the four gameplay selections; line 5293
+adjusts menu music. Any implementation must include all of these phases and
+the exceptional screenshot, cursor, browser, and scroller-restart edges that
+branch back into them.
