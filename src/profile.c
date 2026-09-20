@@ -428,8 +428,8 @@ typedef struct Tprofile_create {
     int rewards[10];
     int total_jumps;
     char best_replay_names[32][32];
-    int jump_hold;
     int flash;
+    int jump_hold;
     char last_avatar[64];
     int start_floor;
     int msc_volume;
@@ -510,9 +510,9 @@ Tprofile_create *create_profile(char *handle, int overwrite)
     for (i = 0; i < 32; i++)
         p->best_replay_names[i][0] = 0;
     p->total_jumps = 0;
-    p->flash = 1;
+    p->jump_hold = 1;
     strcpy(p->last_avatar, "harold_the_homeboy");
-    p->jump_hold = 0;
+    p->flash = 0;
     p->start_floor = 0;
     p->msc_volume = 150;
     p->snd_volume = 150;
