@@ -33,9 +33,9 @@ the DATAFILE entry's data pointer and byte count without a substitute layer.
 The loading progress callbacks recover `datafile_callback` as the 12-byte
 progress-bar tail call and `color_map_callback` as its 22-byte
 every-sixteenth-entry form. `datafile_callback_slow` has the original 33-byte
-counter-based body, but remains `DIFFER`: its private `p` counter is a
+counter-based body and is `CODEGEN_SIMILAR`: its private `p` counter is a
 function-scoped DWARF static whose candidate BSS placement conflicts with the
-independently observed ordering of other partial-CU statics. Its relocation is
+independently observed ordering of other partial-CU statics. Its only relocation is
 therefore not accepted as an exact match.
 
 `syncProfileFromOptions` matches its 58-byte body, copying the four named
