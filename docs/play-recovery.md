@@ -35,3 +35,10 @@ are cleared. It resets frame counters, seeds timing and music-position
 tracking, then runs player input and player update before particle iteration
 or collision dispatch. These initialization dependencies belong to `play` and
 must not be moved into a launcher or synthetic harness.
+
+After the first update and pause gate, source lines 3815--3823 dispatch on
+the oracle collision-mode global at `0x4dd140`. The five cases call,
+respectively, `handle_player_collision_vector_2`, `_vector`, `_old`,
+`_original`, or `_combo`, each with the current player coordinates. The next
+control poll is anchored at line 4251. This dispatch remains part of `play`;
+the handlers must not be selected by a replacement loop.
