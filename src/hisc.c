@@ -1,6 +1,10 @@
+#include <allegro.h>
+#include "control.h"
+#include "timer.h"
+
 /* Historical CU: F:\projects\icytower\trunk\source\hisc.c
  * Ownership: GAME
- * UNKNOWN: view_scores @ 0x00404c38, 2552 bytes
+ * PARTIAL: view_scores @ 0x00404c38, 2552 bytes
  */
 
 typedef struct {
@@ -13,22 +17,15 @@ typedef struct {
     Thisc_post *posts;
 } Thisc_table;
 
-typedef struct {
-    void *dat;
-    int type;
-    long size;
-    void *prop;
-} DATAFILE;
-
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
 extern char *strcpy(char *dst,const char *src);
-extern long pack_fread(void *buffer,long bytes,void *fp);
-extern long pack_fwrite(const void *buffer,long bytes,void *fp);
 extern DATAFILE *data;
-extern int makecol(int r,int g,int b);
-extern void textprintf_ex(void *dst,void *font,int x,int y,int color,int bg,const char *fmt,...);
-extern void textprintf_right_ex(void *dst,void *font,int x,int y,int color,int bg,const char *fmt,...);
+extern BITMAP *swap_screen;
+extern int closeButtonClicked;
+extern Tcontrol *get_controls(void);
+extern void checkMenuFocus(void);
+extern void blit_to_screen(BITMAP *bmp);
 
 void destroy_hisc_table(Thisc_table *table)
 {
@@ -118,6 +115,111 @@ int draw_table(void *dst,int x,int y,char *header,Thisc_table *table)
         }
     }
     return yPos;
+}
+
+/* Source candidate recovered from the viewer's bitmap construction, control
+ * flow, and rendering call surface.  Its animation constants and asset order
+ * are oracle-derived; the complete 2552-byte function still needs matching
+ * source structure for exact code generation. */
+void view_scores(Thisc_table **tables,char **names)
+{
+    int i;
+    BITMAP *bg;
+    BITMAP *bmp;
+    int pageY;
+    int targetY;
+    int dark;
+    int targetDark;
+    int listHeight;
+    int th;
+    int mh;
+    int bh;
+    int lh;
+    int bmpHeight;
+    int yPos;
+    int done;
+
+    bg=create_bitmap(SCREEN_W,SCREEN_H);
+    blit(screen,bg,0,0,0,0,SCREEN_W,SCREEN_H);
+    clear_keybuf();
+    while (is_any(get_controls()) || closeButtonClicked)
+        poll_control(get_controls(),0);
+    clear_keybuf();
+
+    listHeight=0;
+    for (i=0;i<15;i++) {
+        if (tables[i] && tables[i]->posts && tables[i]->posts[0].value) {
+            listHeight=draw_table(0,0,listHeight,names[i],tables[i]);
+            listHeight+=18;
+        }
+    }
+
+    th=((BITMAP *)data[132].dat)->h;
+    mh=((BITMAP *)data[130].dat)->h;
+    bh=((BITMAP *)data[128].dat)->h;
+    lh=listHeight/bh;
+    bmpHeight=lh>2 ? lh-1 : 2;
+    bmp=create_bitmap(((BITMAP *)data[132].dat)->w,bh+th+bmpHeight*mh);
+    clear_to_color(bmp,makecol(255,0,255));
+    draw_sprite(bmp,(BITMAP *)data[132].dat,0,0);
+    for (i=0;i<bmpHeight;i++)
+        draw_sprite(bmp,(BITMAP *)data[130].dat,0,th+i*mh);
+    draw_sprite(bmp,(BITMAP *)data[128].dat,0,bmp->h-bh);
+
+    yPos=80;
+    for (i=0;i<15;i++) {
+        if (tables[i] && tables[i]->posts && tables[i]->posts[0].value) {
+            yPos=draw_table(bmp,40,yPos,names[i],tables[i]);
+            yPos+=18;
+        }
+    }
+
+    pageY=0;
+    targetY=0;
+    dark=0;
+    targetDark=0;
+    done=0;
+    while (!closeButtonClicked && !done) {
+        cycle_count=0;
+        checkMenuFocus();
+        poll_control(get_controls(),0);
+        if (is_down(get_controls()) && targetY>480-bmp->h)
+            targetY-=16;
+        else if (is_up(get_controls()) && targetY<0)
+            targetY+=16;
+        done=is_fire(get_controls()) || keypressed();
+
+        pageY+=(int)((targetY-pageY)*0.2f);
+        dark+=(int)((targetDark-dark)*0.2f);
+        blit(bg,swap_screen,0,0,0,0,SCREEN_W,SCREEN_H);
+        set_trans_blender(0,0,0,dark);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+        draw_sprite(swap_screen,bmp,160,pageY);
+        blit_to_screen(swap_screen);
+        while (!cycle_count)
+            rest(2);
+    }
+
+    targetDark=255;
+    while (dark<250) {
+        cycle_count=0;
+        checkMenuFocus();
+        dark+=(int)((targetDark-dark)*0.2f);
+        blit(bg,swap_screen,0,0,0,0,SCREEN_W,SCREEN_H);
+        set_trans_blender(0,0,0,dark);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+        draw_sprite(swap_screen,bmp,160,pageY);
+        blit_to_screen(swap_screen);
+        while (!cycle_count)
+            rest(2);
+    }
+    clear_keybuf();
+    destroy_bitmap(bmp);
+    destroy_bitmap(bg);
 }
 
 void enter_hisc_table(Thisc_table *table,int value,char *name)

@@ -6,6 +6,12 @@ loop. The oracle polls the shared controls, uses up/down/fire navigation,
 checks menu focus, composites through `blit_to_screen`, waits on frame timing,
 then clears keyboard state and destroys its temporary bitmap.
 
+The current source candidate is 1,992 bytes at `-O2`. It captures the observed
+asset order: it builds the score-panel bitmap from datafile entries 132, 130,
+and 128; draws each non-empty table at `x=40`; scrolls in 16-pixel steps; and
+fades the panel over a captured screen bitmap. It is `DIFFER`, not an exact
+recovery: the original has additional 560 bytes of animation and layout flow.
+
 The source recovery must retain the selection and animated table presentation;
 calling `draw_table` once or substituting a static score list is not an
 equivalent viewer lifecycle.
