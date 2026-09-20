@@ -388,6 +388,13 @@ int recording;
 int rec_seed;
 int hurry_y;
 void *hisc_tables[15];
+char *hisc_names[15] = {
+    "Best Scores", "Best Combos", "Highest Floors", "Biggest Lost Combos",
+    "Top Floors, No Combos", "Clock Challenge 1", "Clock Challenge 2",
+    "Clock Challenge 3", "Clock Challenge 4", "Clock Challenge 5",
+    "Single Jump Sequence", "Double Jump Sequence", "Triple Jump Sequence",
+    "Quadruple Jump Sequence", "Quintuple Jump Sequence"
+};
 static int face;
 static int count;
 char scroller_greetings[156] = {
@@ -565,6 +572,9 @@ void show_credits(void)
 extern void save_options(Toptions *o, PACKFILE *fp);
 extern void load_options(Toptions *o, PACKFILE *fp);
 extern void reset_options(Toptions *o);
+extern void *make_hisc_table(char *name);
+extern void reset_hisc_table(void *table, char *name, int hi, int lo);
+extern int load_hisc_table(void *table, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
 extern void save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
@@ -2443,9 +2453,18 @@ int init_game(int argc, char **argv)
     memset(&cmdline,0,sizeof(cmdline));
     reset_options(&options);
     get_configfile_path(cfgfilename,sizeof(cfgfilename));
+    for (i=0;i<15;i++) {
+        hisc_tables[i]=make_hisc_table(hisc_names[i]);
+        if (!hisc_tables[i])
+            return 0;
+        reset_hisc_table(hisc_tables[i],"Harold",1000,0);
+    }
     cfg=pack_fopen(cfgfilename,"rp");
     if (cfg) {
         load_options(&options,cfg);
+        for (i=0;i<15;i++)
+            if (!load_hisc_table(hisc_tables[i],cfg))
+                reset_hisc_table(hisc_tables[i],"Harold",1000,0);
         pack_fclose(cfg);
     }
     for (i=1;i<argc;i++) {
@@ -2608,7 +2627,7 @@ int _mangled_main(int argc, char **argv)
             must_fade=1;
         }
         else if (ret=='i') {
-            view_scores(hisc_tables,result_categories);
+            view_scores(hisc_tables,hisc_names);
             must_fade=0;
         }
         else if (ret=='h') {
