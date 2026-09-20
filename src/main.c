@@ -2605,6 +2605,7 @@ int init_game(int argc, char **argv)
             allegro_message("Failed to set graphics mode.");
             return 0;
         }
+        window=0;
     } else if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) {
         options.full_screen=-1;
         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
@@ -2612,7 +2613,8 @@ int init_game(int argc, char **argv)
             allegro_message("Failed to set graphics mode.");
             return 0;
         }
-    }
+    } else
+        window=1;
     if (!screen) {
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("ERROR: screen was not set");
@@ -2658,10 +2660,10 @@ int init_game(int argc, char **argv)
     draw_progress_bar();
     got_joystick=(install_joystick(JOY_TYPE_AUTODETECT)==0);
     if (got_joystick) {
-        gamepad.up=1;
-        pad=get_gamepad();
+        ctrl.use_joy=1;
         if (exists("gamepad.txt")) {
             set_config_file("gamepad.txt");
+            pad=get_gamepad();
             pad->up=get_gamepad_value("up");
             pad->left=get_gamepad_value("left");
             pad->right=get_gamepad_value("right");
@@ -2671,6 +2673,7 @@ int init_game(int argc, char **argv)
                 pad->b[i-1]=get_gamepad_value(cfgfilename);
             }
         } else {
+            pad=get_gamepad();
             pad->up=4;
             pad->left=1;
             pad->right=2;
