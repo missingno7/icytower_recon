@@ -2541,17 +2541,21 @@ int init_game(int argc, char **argv)
             else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1;
         }
         if (check) {
+            log2file("Loading %s",replay_path);
             demo=load_replay(replay_path);
             if (!demo) {
                 set_gfx_mode(GFX_TEXT,0,0,0,0);
                 printf("<itrcheck_results status=\"error\">%s</itrcheck_results>\n",
                        get_filename(replay_path));
+                log2file("*** Failed!");
                 dropped_file_is_not_a_replay=1;
                 return 0;
             }
             itrcheck=1;
+            log2file("ITRCHECK activated, checking <%s>",replay_path);
         }
     } else if (argc==2) {
+        log2file("Loading %s",argv[1]);
         demo=load_replay(argv[1]);
         if (!demo) {
             strcpy(tmpHandle,get_filename(argv[1]));
@@ -2562,6 +2566,7 @@ int init_game(int argc, char **argv)
                 set_gfx_mode(GFX_TEXT,0,0,0,0);
                 allegro_message("The file\n<%s>\nis not a vaild Icy Tower profile.",
                                get_filename(argv[1]));
+                log2file("*** Failed!");
                 dropped_file_is_not_a_replay=1;
                 return 0;
             }
@@ -2570,16 +2575,20 @@ int init_game(int argc, char **argv)
         }
     }
     get_configfile_path(cfgfilename,sizeof(cfgfilename));
+    log2file("Creating hiscore tables.");
     for (i=0;i<15;i++) {
         hisc_tables[i]=make_hisc_table(hisc_names[i]);
         if (!hisc_tables[i]) {
+            log2file("*** failed.");
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("Failed reserve memory for highscore table.");
             return 0;
         }
         reset_hisc_table(hisc_tables[i],"Harold",1000,0);
     }
+    log2file("Initiating controls");
     init_control(&ctrl);
+    log2file("Loading config file");
     cfg=pack_fopen(cfgfilename,"rp");
     if (cfg) {
         load_options(&options,cfg);
@@ -2588,11 +2597,19 @@ int init_game(int argc, char **argv)
                 reset_hisc_table(hisc_tables[i],"Harold",1000,0);
         pack_fclose(cfg);
     } else
+    {
+        log2file("*** failed.");
+        log2file("Resetting to default config");
         reset_options(&options);
-    if (tmpHandle[0])
+    }
+    if (tmpHandle[0]) {
+        log2file("Setting last profile");
         strcpy(options.lastProfile,tmpHandle);
-    if (!itrcheck)
+    }
+    if (!itrcheck) {
         options.timesStarted++;
+        log2file("Game started %d times",options.timesStarted);
+    }
 
     if (allegro_init()!=0) {
         set_gfx_mode(GFX_TEXT,0,0,0,0);
@@ -2601,26 +2618,32 @@ int init_game(int argc, char **argv)
     }
     set_color_depth(32);
     if (options.full_screen) {
+        log2file("Setting fullscreen mode 640x480");
         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("Failed to set graphics mode.");
             return 0;
         }
         window=0;
-    } else if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) {
-        options.full_screen=-1;
-        if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
-            set_gfx_mode(GFX_TEXT,0,0,0,0);
-            allegro_message("Failed to set graphics mode.");
-            return 0;
-        }
-    } else
-        window=1;
+    } else {
+        log2file("Setting windowed mode 640x480");
+        if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) {
+            log2file("*** failed.");
+            options.full_screen=-1;
+            if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
+                set_gfx_mode(GFX_TEXT,0,0,0,0);
+                allegro_message("Failed to set graphics mode.");
+                return 0;
+            }
+        } else
+            window=1;
+    }
     if (!screen) {
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("ERROR: screen was not set");
         return 0;
     }
+    log2file("Graphics mode set. (screen = %d)",screen);
     install_mouse();
     enable_hardware_cursor();
     select_mouse_cursor(2);
@@ -2632,12 +2655,14 @@ int init_game(int argc, char **argv)
     set_color_conversion(COLORCONV_NONE);
     packfile_password("(c) Free Lunch Design");
     loader=load_datafile("data/loading.dat");
+    log2file("Loading loader.");
     if (!loader) {
         set_gfx_mode(GFX_TEXT,0,0,0,0);
         allegro_message("Failed to load loader datafile.");
         return 0;
     }
     packfile_password(NULL);
+    log2file("Putting FLD Logo on screen");
     fldLogo=loader[1].dat;
     select_palette(loader[0].dat);
     whiteColor=makecol(255,255,255);
@@ -2645,24 +2670,32 @@ int init_game(int argc, char **argv)
     draw_sprite(screen,fldLogo,320-fldLogo->w/2,200-fldLogo->h/2);
     unload_datafile(loader);
 
+    log2file("Setting focus modes");
     set_display_switch_mode(options.full_screen ? SWITCH_BACKAMNESIA :
                             SWITCH_BACKGROUND);
+    log2file("Setting focus callbacks");
     set_display_switch_callback(SWITCH_IN,switchedToProgram);
     set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
     set_close_button_callback(clickedCloseButton);
     srand((unsigned int)time(NULL));
+    log2file("Installing timers");
     draw_progress_bar();
     install_timers();
     cycle_count=0;
+    log2file("Installing keyboard");
     draw_progress_bar();
     install_keyboard();
+    log2file("Installing sound");
     draw_progress_bar();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
+    log2file("Installing joystick/gamepad");
     draw_progress_bar();
     got_joystick=(install_joystick(JOY_TYPE_AUTODETECT)==0);
     if (got_joystick) {
         ctrl.use_joy=1;
+        log2file(" gamepad has %d buttons",joy[0].num_buttons);
         if (exists("gamepad.txt")) {
+            log2file(" getting values from gamepad.txt");
             set_config_file("gamepad.txt");
             pad=get_gamepad();
             pad->up=get_gamepad_value("up");
@@ -2674,6 +2707,7 @@ int init_game(int argc, char **argv)
                 pad->b[i-1]=get_gamepad_value(cfgfilename);
             }
         } else {
+            log2file(" gamepad.txt is missing, setting defaults");
             pad=get_gamepad();
             pad->up=4;
             pad->left=1;
@@ -2682,8 +2716,10 @@ int init_game(int argc, char **argv)
             for (i=0;i<32;i++)
                 pad->b[i]=16;
         }
-    }
+    } else
+        log2file(" no gamepad or joystick found, play with keyboard only");
 
+    log2file("Reserving memory");
     draw_progress_bar();
     swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
     if (!swap_screen) {
@@ -2695,6 +2731,7 @@ int init_game(int argc, char **argv)
     set_color_conversion(0x00ffffff);
     draw_progress_bar();
     pwd_garble_string(init_string,50);
+    log2file("Loading data");
     packfile_password(init_string);
     data=load_datafile_callback("data/data.dat",datafile_callback_slow);
     if (!data) {
@@ -2704,6 +2741,7 @@ int init_game(int argc, char **argv)
     }
     packfile_password(NULL);
     draw_progress_bar();
+    log2file("Initiating player");
     player_id=rand()%1000;
     ply[player_id]=malloc(sizeof(*ply[player_id]));
     if (!ply[player_id]) {
@@ -2716,42 +2754,66 @@ int init_game(int argc, char **argv)
         ((RGB *)data[0].dat)[0].g=0;
         ((RGB *)data[0].dat)[0].b=0;
         gameover_bmp=data[55].dat;
+        log2file("Checking profile directory");
         get_profiles_dir(profiles_dir,sizeof(profiles_dir));
-        if (!file_exists(profiles_dir,FA_DIREC,0))
-            mkdir(profiles_dir);
         if (!file_exists(profiles_dir,FA_DIREC,0)) {
+            log2file("  does not exist, trying to create");
+            mkdir(profiles_dir);
+        }
+        if (!file_exists(profiles_dir,FA_DIREC,0)) {
+            log2file("  *** failed!");
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("Failed to create profile directory %s",profiles_dir);
             return 0;
         }
+        log2file("Checking available profiles");
         draw_progress_bar();
         rebuild_profile_list(0);
+        log2file("Loading profile");
         draw_progress_bar();
+        log2file(" loading '%s'",options.lastProfile);
         profile=load_profile(options.lastProfile);
-        if (!profile)
-            profile=load_profile("guest");
-        if (!profile)
-            profile=create_profile("guest",1);
         if (!profile) {
+            log2file(" profile not found '%s'",options.lastProfile);
+            log2file(" trying to load default profile '%s'","guest");
+            profile=load_profile("guest");
+            if (!profile) {
+                profile=create_profile("guest",1);
+                log2file(" created profile '%s'",profile->handle);
+            }
+        }
+        if (!profile) {
+            log2file("  *** failed!");
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("Failed create profile.");
             return 0;
         }
         strcpy(options.lastProfile,profile->handle);
         syncOptionsFromProfile();
+        log2file("Checking available characters");
         draw_progress_bar();
         if (!check_characters()) {
+            log2file(" *** no characters available");
             set_gfx_mode(GFX_TEXT,0,0,0,0);
             allegro_message("No characters available.\nPlease reinstall game or add custom characters.\nRefer to readme.txt.");
             return 0;
         }
         select_palette(data[0].dat);
+        log2file("Loading SFX");
         draw_progress_bar();
         packfile_password(init_string);
+        log2file(" loading sounds");
         sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
         strcpy(sfx_file,"sfx15.dat");
+        if (sfx)
+            log2file(" sfx15.dat loaded");
+        else {
+            log2file(" could not load data/sfx15.dat");
+            log2file(" no sound");
+        }
         packfile_password(NULL);
         if (sfx) {
+            log2file("Getting sounds from data file");
             draw_progress_bar();
             combo_sound[0]=getSampleFromOggDatafile(sfx,8);
             combo_sound[1]=getSampleFromOggDatafile(sfx,18);
@@ -2775,8 +2837,11 @@ int init_game(int argc, char **argv)
             sounds[6]=getSampleFromOggDatafile(sfx,14);
             sounds[7]=getSampleFromOggDatafile(sfx,4);
             sounds[8]=getSampleFromOggDatafile(sfx,16);
+            log2file("Releasing ogg datafile.");
             unload_datafile(sfx);
-        }
+        } else
+            log2file(" no sounds loaded");
+        log2file("Setting menu values");
         snd_volume_slider.value=options.snd_volume;
         msc_volume_slider.value=options.msc_volume;
         eyecandy_selection.value=options.flash;
@@ -2788,6 +2853,7 @@ int init_game(int argc, char **argv)
         if (floors.value>floors.max)
             floors.value=floors.max;
     }
+    log2file("Cleaning up");
     draw_progress_bar();
     draw_progress_bar();
     i=0;

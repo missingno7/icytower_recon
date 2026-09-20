@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 4,856-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 5,610-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 932 bytes cover the original graphics fallback,
+remaining 178 bytes cover compiler layout and the remaining source detail.
 resource-loader,
 and staged progress work.
 
@@ -132,6 +132,12 @@ through `pwd_garble_string` before use, clears it after loading, and reuses
 the decoded state for SFX. It also stores the original `sfx15.dat` filename in
 the 512-byte startup buffer and uses the original 32-byte temporary profile
 handle for single-file startup validation.
+
+The initializer now restores the original diagnostic trace across replay
+validation, configuration fallback, graphics setup, loader presentation,
+input installation, profile selection, resource loading, SFX conversion, and
+the final cleanup stage. These logs are observable state for the historical
+launcher and account for most of the prior code-size gap.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
