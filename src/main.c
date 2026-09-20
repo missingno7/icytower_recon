@@ -2617,6 +2617,10 @@ int init_game(int argc, char **argv)
     gravity_selection.value=options.gravity;
     floor_size_selection.value=options.floor_size;
     scroll_speed_selection.value=options.start_speed;
+    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
+    floors.value=profile->start_floor;
+    if (floors.value>floors.max)
+        floors.value=floors.max;
     if (!check_characters())
         return 0;
     if (replay_path) {
