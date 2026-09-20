@@ -36,6 +36,34 @@ The direct game callees are `init_game`, `run_demo`, `load_new_ad_image`,
 `uninit_game`.  Their recovery order follows the ordinary linker frontier;
 no stub entrypoint is acceptable.
 
+## Menu-dispatch constraints
+
+The normal menu loop begins after `clear_keybuf`, with `must_fade` initially
+true. It takes its presentation bitmap from `data[?]` through the established
+main-menu data path, installs the profile-derived menu coordinates, and uses
+the typed `main_menu` and `menu_params` globals rather than a private menu
+instance. The oracle dispatch values are `0x65` (new game), `0x85` (the
+alternate new-game route), `0x69` (scores), `0x68` (instructions), `0x7a`
+(replay selection), and `0x6b` (return to the menu loop). Any other result
+falls through the timer-rest and redraw path.
+
+Both new-game values set the observed replay-mode flag according to whether
+the return was `0x65`, fade out, stop menu music, destroy and clear a pending
+replay, then call `new_game`. On a successful creation they call `play`,
+`end_game`, and fade out; a nonzero `play` result retries the new-game branch.
+On a failed creation the entrypoint restores menu music when it exists and
+returns to the menu loop. Scores draw the five oracle labels, instructions
+fade out before invoking their screen, and replay selection runs the selected
+replay before rebuilding and fading in the menu.
+
+When no active profile exists, the entrypoint calls `init_scroller`, copies
+the menu assets and state from the loaded data record, initializes controls,
+resets the menu, forces profile creation, synchronizes its options, and then
+enters the same dispatch loop. A special command-line mode follows the same
+menu setup after a case-insensitive selector check. These edges are from the
+complete `0x416109..0x416652` oracle range and must remain source-level calls,
+not an injected control-flow replacement.
+
 Reproduce the current dependency measurement with:
 
 ```powershell
