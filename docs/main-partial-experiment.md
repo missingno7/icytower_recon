@@ -33,10 +33,9 @@ the DATAFILE entry's data pointer and byte count without a substitute layer.
 The loading progress callbacks recover `datafile_callback` as the 12-byte
 progress-bar tail call and `color_map_callback` as its 22-byte
 every-sixteenth-entry form. `datafile_callback_slow` has the original 33-byte
-counter-based body and is `CODEGEN_SIMILAR`: its private `p` counter is a
-function-scoped DWARF static whose candidate BSS placement conflicts with the
-independently observed ordering of other partial-CU statics. Its only relocation is
-therefore not accepted as an exact match.
+counter-based body. A fresh current-source census classifies it `DIFFER`:
+its private `p` counter is a function-scoped DWARF static whose placement no
+longer yields masked object equality in the partial CU.
 
 `syncProfileFromOptions` matches its 58-byte body, copying the four named
 options settings (flash, jump hold, music volume, and sound volume) into the
@@ -189,8 +188,8 @@ fast-forward pitch doubling, and Allegro `play_sample` call. Every symbolic
 reference, instruction sequence, and the direct same-CU `new_rand` target
 matches. The `32.0f` pan-offset literal has the original bytes but occurs more
 than once in the partial-CU read-only data, so its relocation target is not
-independently established. It is `CODEGEN_SIMILAR`, rather than an exact
-function match.
+independently established. The fresh current-source census classifies it
+`DIFFER`, rather than an exact function match.
 
 `play_jump_sound` similarly recovers its full 141-byte threshold selector. It
 selects one of the three typed `custom.jump_sound` entries from the player
@@ -206,20 +205,19 @@ translation-unit layout is recovered.
 `stopGameMusic` and `startGameMusic` recover the three-source music lifecycle:
 the custom sample, custom MIDI, and fallback beat sample, with the typed
 `gameMusicVoiceID` state reset and cleaned up through the corresponding Allegro
-APIs. Their candidates have the historical 58-byte and 144-byte extents and
-are `CODEGEN_SIMILAR`. `stopGameMusic` has a masked-equal 58-byte body; its
-only unresolved relocation is the same-CU data-section placement of
-`gameMusicVoiceID`. `startGameMusic` retains its separately documented MIDI
-guard register-allocation difference, so neither routine receives exact-function
-credit.
+APIs. Their candidates have the historical 58-byte and 144-byte extents.
+`stopGameMusic` is `DIFFER` in the fresh current-source census because its
+same-CU `gameMusicVoiceID` placement no longer yields masked equality.
+`startGameMusic` retains its separately documented MIDI guard register-allocation
+difference, so neither routine receives exact-function credit.
 
 `syncOptionsFromProfile` recovers its full 157-byte reverse profile sync. It
 copies the four persisted option fields, updates the three menu-control values,
 selects the saved avatar, and rebuilds the profile replay directory with its
 `"replays/"` suffix. The instruction stream, avatar call, and literal target
-all agree. The only unresolved relocations are the same-CU `.data` placements
-of the sound and music volume sliders, so it is `CODEGEN_SIMILAR`, rather than
-an exact function match.
+all agree. The same-CU `.data` placements of the sound and music volume
+sliders leave the fresh current-source object `DIFFER`, rather than an exact
+function match.
 
 `get_gamepad_value` matches its complete 166-byte configuration-action parser.
 It reads the requested action with the fallback `"nothing"`, maps `up`,
@@ -240,8 +238,8 @@ post-increment counter, enforces the 9999 limit after every existence test,
 saves a sub-bitmap with the current palette, and waits for F12 release. Its
 instruction stream, calls, and literals match; the only unresolved relocations
 are the function-static counter allocation and the external Allegro
-keyboard-array placement. It is `CODEGEN_SIMILAR`, rather than an exact
-function match.
+keyboard-array placement. The fresh current-source census classifies it
+`DIFFER`, rather than an exact function match.
 
 `open_web_browser` recovers its complete 111-byte URL-launch helper. It builds
 the historical `url.dll, FileProtocolHandler` argument, logs the command, and
@@ -249,8 +247,8 @@ calls the stdcall `ShellExecuteA` API through `rundll32` with show mode 4. The
 instruction stream, named call targets, and nonempty literal targets match. Its
 only unresolved relocation is the empty working-directory string: the original
 uses a NUL byte pooled after an unrelated literal while this partial CU emits a
-different empty-string occurrence. It is therefore `CODEGEN_SIMILAR`, not an
-exact function match.
+different empty-string occurrence. The fresh current-source census therefore
+classifies it `DIFFER`, not an exact function match.
 
 `load_new_ad_image` recovers the complete 100-byte application-side ad bridge.
 It selects an `FLDAdSpot`, logs its typed local image path, destroys the prior
