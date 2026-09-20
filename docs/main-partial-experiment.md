@@ -210,9 +210,10 @@ credit.
 `syncOptionsFromProfile` recovers its full 157-byte reverse profile sync. It
 copies the four persisted option fields, updates the three menu-control values,
 selects the saved avatar, and rebuilds the profile replay directory with its
-`"replays/"` suffix. All named data references resolve, while the direct
-same-CU avatar call and a duplicated suffix literal remain layout-dependent;
-it is therefore recorded as `DIFFER`.
+`"replays/"` suffix. The instruction stream, avatar call, and literal target
+all agree. The only unresolved relocations are the same-CU `.data` placements
+of the sound and music volume sliders, so it is `CODEGEN_SIMILAR`, rather than
+an exact function match.
 
 `get_gamepad_value` matches its complete 166-byte configuration-action parser.
 It reads the requested action with the fallback `"nothing"`, maps `up`,
