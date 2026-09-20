@@ -69,3 +69,41 @@ int jump_player(Tplayer *p, int force)
     p->angle = 0;
     return -1;
 }
+
+/* Partial recovery of player.c, 0x418740..0x4189cb.  The core integration
+ * and state transition order are oracle-backed; mode-table tuning is pending. */
+void update_player(Tplayer *p)
+{
+    double max_speed = 12.0;
+
+    if (p->sy < -100.0)
+        p->sy = -max_speed;
+    else if (p->sy > max_speed)
+        p->sy = max_speed;
+    if (p->sx < -max_speed)
+        p->sx = -max_speed;
+    else if (p->sx > max_speed)
+        p->sx = max_speed;
+
+    p->x += p->sx;
+    p->y += p->sy;
+    if (p->y > 1000.0)
+        p->y = 1000.0;
+    if (p->x < 0.0) {
+        p->x = 0.0;
+        p->sx *= -0.9;
+        if (p->sx == 4.0)
+            p->edge_drawn = 20;
+    }
+    else if (p->x > 555.0) {
+        p->x = 555.0;
+        p->sx *= -0.9;
+        if (p->sx == -4.0)
+            p->edge_drawn = -20;
+    }
+    if (p->status) {
+        p->sy += 0.8;
+        if (p->status == 1 && p->sy >= 0.0)
+            p->status = 2;
+    }
+}
