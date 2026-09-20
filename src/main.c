@@ -971,7 +971,7 @@ void blit_to_screen(BITMAP *bmp)
  * results/replay branches are being recovered instruction by instruction. */
 extern void handle_player_input(void *control);
 extern void update_player(Tplayer *p);
-extern void draw_frame(void);
+extern void draw_frame(BITMAP *dst);
 extern int jump_player(Tplayer *p, int force);
 extern void play_jump_sound(Tplayer *p);
 
@@ -1010,7 +1010,7 @@ int play(void)
         case 3: handle_player_collision_original((int)p->x, (int)p->y); break;
         default: handle_player_collision_combo((int)p->x, (int)p->y); break;
         }
-        draw_frame();
+        draw_frame(screen);
         blit_to_screen(screen);
         if (p->dead > 299)
             playing = 0;
