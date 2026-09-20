@@ -1,6 +1,6 @@
 # `view_profile` recovery map
 
-`view_profile` is the unresolved `profile.c` routine at
+`view_profile` is the partially reconstructed `profile.c` routine at
 `0x419aec..0x41a3b5` (2,249 bytes), declared at source line 538 with one
 profile argument. Its oracle prologue drains the shared game control, clears
 the keyboard buffer, creates a 640x480 presentation bitmap, and allocates a
@@ -15,6 +15,12 @@ those calls rather than duplicate their string layouts.
 DWARF establishes the three generated page pointers (`data_basic`,
 `data_advanced`, and `data_general`), `pageY`, `targetY`, `bg`, and `bmp`.
 The profile rank comparisons use the existing rank tables and profile fields
-at offsets `0x4c`, `0x50`, `0x58`, and `0x88`. The unfinished tail is the
-scroll/input loop, page blits, and freeing of all three generated buffers and
-both bitmaps; recover it before emitting the C body.
+at offsets `0x4c`, `0x50`, `0x58`, and `0x88`.
+
+The current source implements the observed page construction, rank badge and
+next-rank panel, input debounce, snapshot background, 500-to-15 entry
+animation, 15-to-500 exit animation, presentation blits, and every observed
+release. The recovered link reaches the next genuine functions
+(`_mangled_main`, `select_profile`, `play`, and `blit_to_screen`). The body is
+still marked partial because byte-level code generation has not yet matched
+the 2,249-byte oracle function.
