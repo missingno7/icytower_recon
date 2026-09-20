@@ -107,13 +107,16 @@ error paths. The bytecode and every named or uniquely resolved literal target
 match, including the file modes after the beta-test literals establish their
 candidate read-only-data neighbourhoods.
 
-`check_beta_tester` recovers its full 254-byte body. It reads and garbles the
+`check_beta_tester` recovers its full source behavior from the 254-byte
+historical body. It reads and garbles the
 eight-byte password, compares it against each typed 276-byte beta record,
 sets the selected tester, and reports the historical missing-file and
 no-match paths. Its 16-byte initializer contains an explicit second NUL;
 that source detail is required for the historical ten-byte initialization
-copy. The combined partial snapshot's literal neighbourhood remains reported
-by the generated comparison inventory.
+copy. The current candidate is 250 bytes: its only observed source-layout gap
+is after the `fopen` failure branch, so it remains `DIFFER`. The combined
+partial snapshot's literal neighbourhood remains reported by the generated
+comparison inventory.
 
 `check_characters` recovers the 345-byte character discovery and loading
 workflow. It enumerates the base and optional custom directories, allocates
