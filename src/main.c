@@ -2445,6 +2445,7 @@ int init_game(int argc, char **argv)
     char *replay_path;
     PACKFILE *cfg;
     DATAFILE *sfx;
+    Tgamepad *pad;
     int i;
 
     log2file("INIT GAME");
@@ -2528,6 +2529,28 @@ int init_game(int argc, char **argv)
     if (install_keyboard()!=0) return 0;
     install_mouse();
     got_joystick=(install_joystick(JOY_TYPE_AUTODETECT)==0);
+    if (got_joystick) {
+        gamepad.up=1;
+        pad=get_gamepad();
+        if (exists("gamepad.txt")) {
+            set_config_file("gamepad.txt");
+            pad->up=get_gamepad_value("up");
+            pad->left=get_gamepad_value("left");
+            pad->right=get_gamepad_value("right");
+            pad->down=get_gamepad_value("down");
+            for (i=1;i<=32;i++) {
+                sprintf(cfgfilename,"b%d",i);
+                pad->b[i-1]=get_gamepad_value(cfgfilename);
+            }
+        } else {
+            pad->up=4;
+            pad->left=1;
+            pad->right=2;
+            pad->down=8;
+            for (i=0;i<32;i++)
+                pad->b[i]=16;
+        }
+    }
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     init_control(&ctrl);
 
@@ -2576,14 +2599,6 @@ int init_game(int argc, char **argv)
     ply[player_id]=malloc(sizeof(*ply[player_id]));
     if (!ply[player_id])
         return 0;
-    if (got_joystick) {
-        gamepad.up=4;
-        gamepad.down=8;
-        gamepad.left=1;
-        gamepad.right=2;
-        for (i=0;i<32;i++)
-            gamepad.b[i]=16;
-    }
     get_profiles_dir(profiles_dir,sizeof(profiles_dir));
     if (!file_exists(profiles_dir,FA_DIREC,0))
         mkdir(profiles_dir);

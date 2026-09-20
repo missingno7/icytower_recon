@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 2,514-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 2,782-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -25,11 +25,14 @@ and recovers the profile/character discovery path. It also restores the
 string pointers. The initializer allocates the original eye-candy, speed,
 floor-size, and gravity captions in their observed storage order, starts FLD
 advertisement discovery, and carries the loaded custom-game settings into
-their menu controls. It rebuilds the profile
+their menu controls. It recovers the original joystick configuration branch:
+when a joystick is installed it loads `gamepad.txt` and maps `up`, `down`,
+`left`, `right`, and `b1` through `b32`; otherwise it installs the original
+default controls. It rebuilds the profile
 list, loads the remembered profile with the guest fallback/create sequence,
 synchronizes profile options, and propagates character-loading failure.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 3,274 bytes cover the original network, graphics fallback,
+remaining 3,006 bytes cover the original network, graphics fallback,
 resource-loader,
 and staged progress work.
 
