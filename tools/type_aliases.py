@@ -4,12 +4,13 @@ from collections import defaultdict
 from common import ROOT,identity
 from type_graph import graph
 from dwarf_layout import layout
+from interface_type_probe import interface_typedefs
 from type_views import shape_key
 
 
 def canonical_aliases(report):
     g=graph(); types=defaultdict(list)
-    for t in report.get('candidate_debug',{}).get('typedefs',[]): types[t['name']].append(t)
+    for t in interface_typedefs(report): types[t['name']].append(t)
     aliases={}
     for name,rows in types.items():
         if len(rows)!=1 or not rows[0].get('alias_of'): continue
@@ -41,7 +42,7 @@ def annotate_declaration(row,aliases):
 def layout_checks(declaration,original,report):
     """Compare game aggregate definitions, even when declarations use the same name."""
     g=graph(); types=defaultdict(list)
-    for t in report.get('candidate_debug',{}).get('typedefs',[]): types[t['name']].append(t)
+    for t in interface_typedefs(report): types[t['name']].append(t)
     pairs=[('return',original['return_type'],declaration['return_type'])]
     pairs += [('parameter '+str(i+1),a,b) for i,(a,b) in enumerate(zip(original['parameter_types'],declaration['parameter_types']))]
     result=[]
@@ -54,6 +55,7 @@ def layout_checks(declaration,original,report):
               'header':'include/recovered/'+a[1]+'.h','status':'UNAVAILABLE'}
         if not b or len(types[b[1]])!=1:
             item['reason']='Candidate named type layout is missing or ambiguous'; result.append(item); continue
+        if types[b[1]][0].get('evidence_source'): item['evidence_source']=types[b[1]][0]['evidence_source']
         current=types[b[1]][0]['layout']
         if not current.get('size'):
             item['reason']='Candidate type is incomplete'; result.append(item); continue

@@ -1,0 +1,75 @@
+"""Supplement missing interface layouts with a separate emission-preserving debug build.
+
+Never use the probe's function bytes, locations or globals in reconstruction proof.
+"""
+import json
+import re
+from common import ROOT, identity
+from binary import Binary
+from build import compile_target
+from dwarf_locations import candidate_debug
+
+FLAG = '-fno-eliminate-unused-debug-types'
+
+
+def fingerprint(sections, symbols, relocations):
+    names = {s['index']:s['name'] for s in sections}
+    allocated = {i for i,name in names.items() if not name.startswith('.debug')}
+    def symbol(s):
+        return (s['name'], names.get(s['section'],s['section']), s['value'], s['type'], s['storage_class'])
+    by_index = {s['index']:s for s in symbols}
+    return json.loads(json.dumps({
+        'sections': sorted((s['name'],s['virtual_size'],s['raw_size'],s['characteristics'],s['sha256']) for s in sections if s['index'] in allocated),
+        'symbols': sorted((symbol(s) for s in symbols if s['storage_class'] != 103 and (s['section'] in allocated or s['section'] in (0,-1))),key=str),
+        'relocations': sorted(((names[r['section']],r['offset'],r['type'],symbol(by_index[r['symbol_index']])) for r in relocations if r['section'] in allocated),key=str)}))
+
+
+def report_fingerprint(report):
+    return fingerprint(report['object_sections'],report['object_symbols'],report['object_relocations'])
+
+
+def validate(report):
+    probe=report.get('interface_type_probe')
+    if not probe: return
+    a,b=report['build'],probe['build']
+    for key in ('target','compiler','config','local_inputs','toolchain_lock','candidate_toolchain_lock'):
+        if a.get(key)!=b.get(key): raise ValueError('Interface type probe input differs: '+key)
+    if not b.get('inputs_verified_around_compile'): raise ValueError('Interface type probe lacks dependency race checks')
+    extra=a['config'].get('flags',[])
+    flags=a['flags'][:-len(extra)] if extra else a['flags']
+    if b['flags']!=[*flags,FLAG,*extra]: raise ValueError('Unexpected interface type probe flags')
+    if probe['fingerprint']!=report_fingerprint(report): raise ValueError('Interface type probe changed emitted contributions')
+    if probe['object']!=b['object']: raise ValueError('Interface type probe object identity differs')
+
+
+def supplement(report,dest,objdump):
+    from type_graph import graph
+    names=set()
+    for source in report['build']['local_inputs']:
+        if source.startswith(('src/','include/')):
+            names.update(re.findall(r'\b[A-Za-z_]\w*\b',(ROOT/source).read_bytes().decode('cp1252')))
+    present={t['name'] for t in report['candidate_debug']['typedefs']}
+    missing=(names & set(graph().game_types))-present
+    if not missing: return
+    build=report['build'];extra=build['config'].get('flags',[])
+    flags=build['flags'][:-len(extra)] if extra else build['flags']
+    obj,probe_build=compile_target(build['target'],flags=[*flags,FLAG],dest=dest/'interface-types',compiler=build['compiler'])
+    binary=Binary(obj)
+    debug=candidate_debug(probe_build,objdump)
+    if identity(obj)!=probe_build['object']: raise ValueError('Interface type probe changed during extraction')
+    report['interface_type_probe']={
+        'build':probe_build,'object':debug['object'],
+        'fingerprint':fingerprint(binary.sections,binary.symbols,binary.relocations),
+        'typedefs':[t for t in debug['typedefs'] if t['name'] in missing],
+        'requested_types':sorted(missing),
+        'scope':'Missing interface typedef layouts only. Separate debug-retention build; exact non-debug bytes/symbols/relocations and input identities must match. No replacement of baseline typedefs or reconstruction proof.'}
+    validate(report)
+
+
+def interface_typedefs(report):
+    primary=list(report.get('candidate_debug',{}).get('typedefs',[]))
+    probe=report.get('interface_type_probe')
+    if not probe: return primary
+    validate(report)
+    present={t['name'] for t in primary}
+    return primary+[dict(t,evidence_source='EMISSION_PRESERVING_DEBUG_PROBE') for t in probe['typedefs'] if t['name'] not in present]

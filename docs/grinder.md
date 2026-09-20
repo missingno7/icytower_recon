@@ -292,3 +292,13 @@ four bytes at the candidate field offset; instruction-length changes can make it
 span opcodes or unrelated operands. Do not interpret it as a pointer, displacement
 or ownership conflict. Inspect the supplied instruction pair first. Even an
 aligned operand is diagnostic evidence only, never an independent target binding.
+
+
+Interface layouts omitted by optimized DWARF are collected automatically in a
+separate owning-CU debug-retention build (`-fno-eliminate-unused-debug-types`).
+Its receipt must preserve the primary source/dependency and toolchain identities,
+raw non-debug sections, symbols and relocations. Only missing interface typedef
+layouts are supplemented; existing or ambiguous primary definitions take
+precedence. Cards label supplemental layouts `EMISSION_PRESERVING_DEBUG_PROBE`.
+The primary historical flags, function proof, locals, globals and source-edit
+permissions remain unchanged. Missing or conflicting evidence still blocks work.

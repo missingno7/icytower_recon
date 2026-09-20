@@ -342,3 +342,23 @@ source were preserved. Fresh locked compilation of every configured CU passed
 non-regression checks; the five changed files also preserved every non-debug
 section byte, symbol/relocation contribution and function byte/status. The
 comparison results are in `docs/attempts/source-banner-cleanup.json`.
+
+
+## Unused interface type evidence
+
+Historical GCC omits unused typedef layouts from ordinary optimized DWARF. This
+created repeated supervisor tasks for declarations in control.h included by hisc,
+menu and replay. A separate owning-CU build with
+`-fno-eliminate-unused-debug-types` now supplements only missing interface typedefs.
+Its dependency/configuration/toolchain identities and raw non-debug section, symbol
+and relocation fingerprints must equal the primary build. Existing primary types
+are never replaced; ambiguous supplemental types remain ambiguous. Probe function
+bytes, locations and globals do not enter the historical acceptance oracle.
+
+Fresh verification recovered Tcontrol/Tgamepad evidence in hisc, Tgamepad and
+Tmenu_char_selection in menu, and Tgamepad in replay. Seven previously incomplete
+interfaces now agree without source changes; real void/unknown declarations and
+layout conflicts remain blocked. All function statuses and workflows are unchanged.
+The full 249-test suite passed, including probe input/flag/code/symbol/relocation
+rejection, serialization and primary-type precedence. See
+`docs/attempts/interface-type-probe-validation.json`.

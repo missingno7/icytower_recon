@@ -23,7 +23,7 @@ from relocation_diagnostics import mismatch_views
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -162,6 +162,8 @@ def fresh_verify(target, dest=None, locked=False):
     report.update(build=build,fixture=identity(ROOT/'assets/icytower15.exe'),analysis_tool=identity(OBJDUMP),
                   verifier=LOADED_VERIFIER_IDENTITY,analysis_identity=LOADED_ANALYSIS_IDENTITY,schema=4)
     report['candidate_debug']=candidate_debug(build,OBJDUMP)
+    from interface_type_probe import supplement
+    supplement(report,out,OBJDUMP)
     report['data_snapshot']=capture_snapshot(report)
     report['data_diagnostics']=diagnose(report)
     unit=unit_for_target(target)
@@ -185,6 +187,8 @@ def fresh_verify(target, dest=None, locked=False):
 
 def validate_report(report, check_sources=True, check_analysis=True):
     build=report['build']
+    from interface_type_probe import validate as validate_type_probe
+    validate_type_probe(report)
     if not build.get('inputs_verified_around_compile'): raise ValueError('Compile lacks dependency race check')
     if report.get('schema') not in (3,4) or {p:report.get('verifier',{}).get(p) for p in VERIFIER_FILES}!=verifier_identity():
         raise ValueError('Stale verifier identity; refresh '+build['target'])
