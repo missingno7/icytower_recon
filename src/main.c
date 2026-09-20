@@ -361,7 +361,6 @@ Tmenu_slider msc_volume_slider;
 Tmenu_selection eyecandy_selection;
 Tmenu_floor_selection floors;
 Tmenu_params menu_params;
-Tmenu main_menu[7];
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
