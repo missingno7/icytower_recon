@@ -28,6 +28,13 @@ The first rendering phase then blits `data[126]` to `swap_screen`, draws
 shadow asset at `data[61]`; later animation remains to be recovered with its
 fixed-point sine expressions and local lifetimes intact.
 
+The callback's persistent scroller state is now emitted by `main.c` from
+DWARF and the pinned executable-data asset records: `scroller_greetings[156]`
+and `init_string[7]` reproduce their manifest SHA-256 values, and
+`greeting_scroller` is a typed `Tscroller` BSS object. This removes the global
+state barrier to source recovery; it does not claim that the callback body is
+present.
+
 The decoded line table provides the required complete phase map. Lines
 5220--5228 scroll and render the welcome scroller; lines 5231--5248 choose
 between the guest welcome text and the ranked-profile presentation, including
