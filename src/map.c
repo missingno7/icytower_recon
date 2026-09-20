@@ -47,7 +47,7 @@ void getFloorData(Tmap *m, int cy, int *fy, int *fx1, int *fx2)
     if (29 - y < 0 || 29 - y > 31) return;
     if (m->room[29 - y].empty != 0) return;
     *fx1 = (m->room[29 - y].start_tile << 4) - 2;
-    *fx2 = (m->room[29 - y].end_tile << 4) + 17;
+    *fx2 = ((m->room[29 - y].end_tile + 1) << 4) + 1;
     *fy = (y << 4) + (m->offset % 16);
 }
 

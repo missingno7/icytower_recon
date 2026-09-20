@@ -4,9 +4,10 @@
 and 40-byte bodies at -O2. DWARF fixes the `Tfloor` layout at six integers
 and `Tmap` at 32 floors plus its scroll offset.
 
-`getFloorData` has the historical 107-byte extent and matches its signed
-tile-row calculation, bounds checks, empty-row check, first edge, and output
-order. Its right-edge `+17` selects `add` instead of the original `lea`.
+`getFloorData` has the historical 107-byte extent and now fully matches its
+signed tile-row calculation, bounds checks, empty-row check, both edges, and
+output order. The algebraically equivalent right-edge source form selects the
+original `lea` sequence.
 `add_floor` now has a 606-byte source reconstruction. It shifts the 31 prior
 floors, evolves the new room's `level` and periodic `level / 5` `sign` marker, applies the
 250/2500/5-floor reset rules, computes replay-controlled floor widths, and
