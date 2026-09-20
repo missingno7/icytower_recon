@@ -9,12 +9,12 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 3,277-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 3,111-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
-five original gameplay command switches and a replay-file argument, then
-display mode arguments, initializes Allegro's graphics, timer, input,
+original `-check` replay-validation path and five gameplay command switches,
+then initializes Allegro's graphics, timer, input,
 joystick, and audio subsystems, installs the display-focus and close callbacks,
 seeds runtime randomness, establishes the original joystick defaults, loads
 the main and SFX datafiles, assigns the exact decoded Ogg sound-record mapping
@@ -37,7 +37,7 @@ to nine tiers exactly as the oracle does.
 Before loading packed graphics, the candidate now restores the oracle's full
 Allegro color-conversion mask (`0x00ffffff`).
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 2,511 bytes cover the original network, graphics fallback,
+remaining 2,677 bytes cover the original network, graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -59,6 +59,13 @@ primary-data stage, and resets the main datafile password before profile
 discovery. It loads SFX only after the player, profile, and character stages,
 following palette selection; the SFX password is cleared before the recovered
 Ogg sample mapping runs.
+
+`-check` is now parsed in the initializer's argument path. It loads the
+specified replay before configuration and graphics setup, records an invalid
+replay through `dropped_file_is_not_a_replay`, and enables `itrcheck` only
+after a successful load. The candidate no longer accepts non-oracle
+`-windowed` or `-fullscreen` switches, and it no longer treats every ordinary
+non-option argument as a replay.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
