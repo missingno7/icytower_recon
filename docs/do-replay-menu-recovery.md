@@ -38,3 +38,6 @@ the replay menu.
 
 The persistence object is the global `demo`; the load-validation branch checks
 the replay checksum against global `uberChecksum` before accepting it.
+
+DWARF line mapping places the save/load UI and its alert outcomes at source
+lines 5508--5636, following the outer dispatch at line 5474.
