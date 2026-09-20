@@ -36,6 +36,10 @@ the profile's `best_floor` and persisted `start_floor`, limiting its maximum
 to nine tiers exactly as the oracle does.
 Before loading packed graphics, the candidate now restores the oracle's full
 Allegro color-conversion mask (`0x00ffffff`).
+The pre-configuration order now matches the oracle: it allocates all menu
+selection captions and starts FLD discovery before argument parsing; replay
+validation then precedes high-score table allocation, control initialization,
+and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
 remaining 2,218 bytes cover the original graphics fallback,
 resource-loader,

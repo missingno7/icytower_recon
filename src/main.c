@@ -2490,6 +2490,33 @@ int init_game(int argc, char **argv)
     replay_path=NULL;
     check=0;
     reset_options(&options);
+    eyecandy_selection.value=0;
+    eyecandy_selection.size=3;
+    eyecandy_selection.caption[0]=strdup("Lots");
+    eyecandy_selection.caption[1]=strdup("Some");
+    eyecandy_selection.caption[2]=strdup("None");
+    scroll_speed_selection.value=0;
+    scroll_speed_selection.size=6;
+    scroll_speed_selection.caption[5]=strdup("Normal");
+    scroll_speed_selection.caption[4]=strdup("Hasty");
+    scroll_speed_selection.caption[3]=strdup("Fast");
+    scroll_speed_selection.caption[2]=strdup("Faster");
+    scroll_speed_selection.caption[1]=strdup("Fastest");
+    scroll_speed_selection.caption[0]=strdup("Insane");
+    floor_size_selection.value=0;
+    floor_size_selection.size=5;
+    floor_size_selection.caption[0]=strdup("Wide");
+    floor_size_selection.caption[1]=strdup("Normal");
+    floor_size_selection.caption[2]=strdup("Shorter");
+    floor_size_selection.caption[3]=strdup("Shortest");
+    floor_size_selection.caption[4]=strdup("Tiny");
+    floor_size_selection.value=2;
+    gravity_selection.value=0;
+    gravity_selection.size=3;
+    gravity_selection.caption[0]=strdup("Helium");
+    gravity_selection.caption[1]=strdup("Normal");
+    gravity_selection.caption[2]=strdup("Heavy");
+    fldads_start();
     for (i=1;i<argc;i++) {
         if (argv[i][0]!='-')
             replay_path=argv[i];
@@ -2530,33 +2557,6 @@ int init_game(int argc, char **argv)
                 reset_hisc_table(hisc_tables[i],"Harold",1000,0);
         pack_fclose(cfg);
     }
-    eyecandy_selection.value=0;
-    eyecandy_selection.size=3;
-    eyecandy_selection.caption[0]=strdup("Lots");
-    eyecandy_selection.caption[1]=strdup("Some");
-    eyecandy_selection.caption[2]=strdup("None");
-    scroll_speed_selection.value=0;
-    scroll_speed_selection.size=6;
-    scroll_speed_selection.caption[5]=strdup("Normal");
-    scroll_speed_selection.caption[4]=strdup("Hasty");
-    scroll_speed_selection.caption[3]=strdup("Fast");
-    scroll_speed_selection.caption[2]=strdup("Faster");
-    scroll_speed_selection.caption[1]=strdup("Fastest");
-    scroll_speed_selection.caption[0]=strdup("Insane");
-    floor_size_selection.value=0;
-    floor_size_selection.size=5;
-    floor_size_selection.caption[0]=strdup("Wide");
-    floor_size_selection.caption[1]=strdup("Normal");
-    floor_size_selection.caption[2]=strdup("Shorter");
-    floor_size_selection.caption[3]=strdup("Shortest");
-    floor_size_selection.caption[4]=strdup("Tiny");
-    floor_size_selection.value=2;
-    gravity_selection.value=0;
-    gravity_selection.size=3;
-    gravity_selection.caption[0]=strdup("Helium");
-    gravity_selection.caption[1]=strdup("Normal");
-    gravity_selection.caption[2]=strdup("Heavy");
-    fldads_start();
     if (!itrcheck)
         options.timesStarted++;
 
