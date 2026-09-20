@@ -1073,7 +1073,8 @@ void force_create_profile(void)
 {
     BITMAP *bg;
     int ok;
-    char new_name[128];
+    char y[128];
+    char new_name[32];
 
     bg=create_bitmap(gfx_driver->w,gfx_driver->h);
     blit(screen,bg,0,0,0,0,gfx_driver->w,gfx_driver->h);
@@ -1112,8 +1113,8 @@ void force_create_profile(void)
             my_alert("That profile name is taken.","Ooops!",0,1);
             continue;
         }
-        sprintf(new_name,"Welcome %s!",profile->handle);
-        my_alert(new_name,"Your profile has been created!",0,1);
+        sprintf(y,"Welcome %s!",profile->handle);
+        my_alert(y,"Your profile has been created!",0,1);
         break;
     }
     destroy_bitmap(bg);
