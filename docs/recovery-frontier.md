@@ -7,3 +7,7 @@ non-matching or missing bodies across the historical CUs, including main game
 flow and presentation, replay, profile, menu, map, high-score, custom data,
 and advertising paths. Future work must use the ledger's per-function status
 and oracle verification, not link closure alone, to claim CU completion.
+
+The main-CU ledger was refreshed from a current isolated `-O2` comparison:
+collision modes, player input, frame blitting, string input, alert handling,
+and `play` have source candidates and are `DIFFER`, rather than missing.
