@@ -198,9 +198,11 @@ translation-unit layout is recovered.
 the custom sample, custom MIDI, and fallback beat sample, with the typed
 `gameMusicVoiceID` state reset and cleaned up through the corresponding Allegro
 APIs. Their candidates have the historical 58-byte and 144-byte extents and
-all symbolic targets resolve. The compiler chooses a different register for a
-MIDI guard, so both remain `DIFFER` pending the original full-CU register
-allocation.
+are `CODEGEN_SIMILAR`. `stopGameMusic` has a masked-equal 58-byte body; its
+only unresolved relocation is the same-CU data-section placement of
+`gameMusicVoiceID`. `startGameMusic` retains its separately documented MIDI
+guard register-allocation difference, so neither routine receives exact-function
+credit.
 
 `syncOptionsFromProfile` recovers its full 157-byte reverse profile sync. It
 copies the four persisted option fields, updates the three menu-control values,
