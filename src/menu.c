@@ -43,7 +43,7 @@ typedef struct Tmenu {
 typedef struct Tmenu_params {
     void *font;
     int font_height;
-    int ctrl[9];
+    Tcontrol ctrl;
     void *bullet;
     int pos;
     void *data;
@@ -330,11 +330,11 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
     old_pos = pos;
     draw_menu(bmp, m, mp, x, y, stepIn);
     if (ctrl) {
-        if (is_up(ctrl) || is_up((Tcontrol *)&mp->ctrl[0])) {
+        if (is_up(ctrl) || is_up(&mp->ctrl)) {
             pos--;
             if (pos < 0)
                 pos = num_posts;
-        } else if (is_down(ctrl) || is_down((Tcontrol *)&mp->ctrl[0])) {
+        } else if (is_down(ctrl) || is_down(&mp->ctrl)) {
             pos++;
             if (pos > num_posts)
                 pos = 0;
@@ -349,12 +349,12 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
         play_menu_move();
     }
     if (ctrl) {
-        if (is_fire(ctrl) || is_enter((Tcontrol *)&mp->ctrl[0]) ||
-            is_fire((Tcontrol *)&mp->ctrl[0]))
+        if (is_fire(ctrl) || is_enter(&mp->ctrl) ||
+            is_fire(&mp->ctrl))
             return_value = m[pos].return_select;
-        else if (is_left(ctrl) || is_left((Tcontrol *)&mp->ctrl[0]))
+        else if (is_left(ctrl) || is_left(&mp->ctrl))
             return_value = m[pos].return_left;
-        else if (is_right(ctrl) || is_right((Tcontrol *)&mp->ctrl[0]))
+        else if (is_right(ctrl) || is_right(&mp->ctrl))
             return_value = m[pos].return_right;
     }
     *data = (int)m[pos].data;
@@ -389,7 +389,7 @@ int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp,
             menu_return = 0;
         blit_to_screen(bmp);
 
-        if (is_any(ctrl) || is_any((Tcontrol *)&mp->ctrl[0]) || key[KEY_F1]) {
+        if (is_any(ctrl) || is_any(&mp->ctrl) || key[KEY_F1]) {
             if (key_counter)
                 key_counter--;
             else
@@ -400,7 +400,7 @@ int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp,
             handle_keys = -1;
         }
         poll_control(ctrl, 1);
-        poll_control((Tcontrol *)&mp->ctrl[0], 0);
+        poll_control(&mp->ctrl, 0);
 
         if (menu_return) {
             play_menu_select();

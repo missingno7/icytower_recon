@@ -264,7 +264,7 @@ typedef struct Tmenu {
 typedef struct Tmenu_params {
     void *font;
     int font_height;
-    int ctrl[9];
+    Tcontrol ctrl;
     void *bullet;
     int pos;
     void *data;
@@ -494,7 +494,7 @@ Tmenu replay_menu[5] = {
 /* Candidate recovered from the complete 0x40cd68..0x40d452 modal path. */
 int my_alert(char *func, char *txt, int choice, int enter_hint)
 {
-    Tcontrol *menu_ctrl = (Tcontrol *)menu_params.ctrl;
+    Tcontrol *menu_ctrl = &menu_params.ctrl;
     int status = 0;
     int done = 0;
 
@@ -2533,6 +2533,7 @@ int _mangled_main(int argc, char **argv)
     menu_params.bullet=data[72].dat;
     menu_params.pos=0;
     menu_params.data=data;
+    init_control(&menu_params.ctrl);
     reset_menu(main_menu,&menu_params,0);
     startMenuMusic();
     clear_keybuf();

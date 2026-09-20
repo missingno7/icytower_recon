@@ -81,10 +81,10 @@ The source now implements the normal dispatch loop after `clear_keybuf`:
 both game routes, score viewing, instructions, replay selection/replay
 execution, and credits all use their typed source-level callees and preserve
 the decoded fade and music transitions. It initializes the menu assets and
-state through the recovered `DATAFILE` records, handles the `-check`
-replay/ad route, and implements the first-run guest-profile transition. The
-isolated `-O2` candidate is 1,644 bytes, so this is behavioral/source recovery
-rather than an exact match. Exceptional exit handling and the remaining
+embedded `Tcontrol` through the recovered `DATAFILE` records, handles the
+`-check` replay/ad route, and implements the first-run guest-profile
+transition. The isolated `-O2` candidate is 1,656 bytes, so this is
+behavioral/source recovery rather than an exact match. Exceptional exit handling and the remaining
 compiler layout remain open.
 
 Reproduce the current dependency measurement with:
