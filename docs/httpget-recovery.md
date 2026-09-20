@@ -65,8 +65,8 @@ DWARF records a one-byte initial response allocation, 512-byte send and
 1024-byte receive buffers, and the local order `sendbuff`, `sprintf`,
 `recvbuff`, then `send`. The receive buffer is therefore allocated before the
 send call even though it is first consumed in the receive loop. These details
-are preserved here as an implementation boundary; the transport body remains
-unrecovered until an ordinary C candidate matches all 594 historical bytes.
+are preserved in the ordinary source candidate now compiled into
+`src/httpget.c`; it is a 594-byte `DIFFER`, not an exact-function claim.
 
 The line program fixes the original source shape more tightly than the
 disassembly alone. `HTTPFetchInternal` begins at source line 149, with
@@ -83,8 +83,9 @@ The parser call itself uses the target's observed two-register ABI:
 `extractHTTPResponse(dataPtr, totBytes)` receives `dataPtr` in `EAX` and the
 byte count in `EDX`, consistent with a GCC `regparm(2)` declaration. A scoped
 candidate with that declaration reproduces the 594-byte extent, all external
-relocation targets, the VLA layout, and the receive loop. It is still not
-admitted: its stack-alignment filler after `gethostbyname` is `push %ebx`,
+relocation targets, the VLA layout, and the receive loop. It is admitted to
+the ordinary reconstructed link, but remains non-exact: its stack-alignment
+filler after `gethostbyname` is `push %ebx`,
 where the oracle has `push %ecx`. Candidates that reproduce the latter
 instruction rearrange the failure blocks and differ elsewhere. This one-byte
 difference is retained as a source-form constraint, never normalized or
