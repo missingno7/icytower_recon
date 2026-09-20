@@ -65,6 +65,7 @@ extern char *get_extension(const char *path);
 
 Treplay_post itr_file_list[1024];
 int num_itr_files;
+static char replay_header[] = "ITR140";
 
 typedef struct Treplay_data {
     unsigned char type;
@@ -459,7 +460,7 @@ Treplay *create_replay(int size)
     r = malloc(sizeof(Treplay));
     if (!r)
         return 0;
-    strncpy(r->header, "ITR140", 6);
+    memcpy(r->header, replay_header, 6);
     r->comment[0] = 0;
     r->size = size;
     r->combo = 0;
