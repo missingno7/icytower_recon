@@ -329,7 +329,8 @@ int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
             pos--;
             if (pos < 0)
                 pos = num_posts;
-        } else if (is_down(ctrl) || is_down(&mp->ctrl)) {
+        }
+        if (is_down(ctrl) || is_down(&mp->ctrl)) {
             pos++;
             if (pos > num_posts)
                 pos = 0;

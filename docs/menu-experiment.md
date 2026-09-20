@@ -18,10 +18,11 @@ is the original 415-byte body with no non-relocation byte difference.
 `update_game_menu` now keeps the historical F1 jump inside the primary-control
 path: with no primary control it leaves the selected entry unchanged. It finds
 the selected entry through the terminating flag, draws the current page,
-accepts primary and alternate control navigation, updates the selected bit and
-movement sound, then returns the selected/left/right action with the entry
-data. The candidate is 484 bytes against the historical 583 and is recorded
-as `DIFFER`.
+accepts primary and alternate control navigation, and evaluates up and down
+independently as the original does. It updates the selected bit and movement
+sound, then returns the selected/left/right action with the entry data. The
+candidate is 518 bytes against the historical 583 and is recorded as
+`DIFFER`.
 
 draw_menu now reconstructs the historical rendering loop from its independent
 DWARF types and original control flow. It advances rows by `font_height - 12`,
