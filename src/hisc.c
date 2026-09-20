@@ -186,22 +186,6 @@ void view_scores(Thisc_table **tables,char **names)
     while (!closeButtonClicked && !done) {
         cycle_count=0;
         checkMenuFocus();
-        poll_control(get_controls(),0);
-        if (is_down(get_controls()) && targetY>485-bmp->h)
-            targetY-=16;
-        else if (is_up(get_controls())) {
-            if (targetY < -15)
-                targetY+=16;
-            else
-                targetY=0;
-        }
-        done=is_fire(get_controls());
-        if ((key[KEY_F1] || key[KEY_ENTER] || key[KEY_K]) && canDone)
-            done=1;
-        if (!key[KEY_F1] && !key[KEY_ENTER] && !key[KEY_K])
-            canDone=1;
-
-        pageY+=(int)((targetY-pageY)*0.2f);
         blit(bg,swap_screen,0,0,0,0,SCREEN_W,SCREEN_H);
         set_trans_blender(0,0,0,dark);
         drawing_mode(DRAW_MODE_TRANS,0,0,0);
@@ -212,8 +196,23 @@ void view_scores(Thisc_table **tables,char **names)
         draw_sprite(swap_screen,data[9].dat,626-dark,380);
         draw_sprite(swap_screen,data[6].dat,626-dark,40);
         blit_to_screen(swap_screen);
+        poll_control(get_controls(),0);
+        if (is_up(get_controls())) {
+            if (targetY < -15)
+                targetY+=16;
+            else
+                targetY=0;
+        }
+        if (is_down(get_controls()) && targetY>485-bmp->h)
+            targetY-=16;
+        done=is_fire(get_controls());
+        if ((key[KEY_F1] || key[KEY_ENTER] || key[KEY_K]) && canDone)
+            done=1;
+        if (!key[KEY_F1] && !key[KEY_ENTER] && !key[KEY_K])
+            canDone=1;
         while (!cycle_count)
             rest(2);
+        pageY+=(int)((targetY-pageY)*0.2f);
     }
 
     targetY=500;
