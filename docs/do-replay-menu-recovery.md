@@ -29,3 +29,9 @@ The initial source candidate implements that outer loop plus the Play Again
 and Watch Replay dispatches. It is `DIFFER` at 305 bytes; the filename save,
 guest confirmation, replay load, checksum, and alert subflows remain to be
 recovered from the oracle body.
+
+The save tail copies the active profile name into the replay metadata, derives
+the filename with `replace_extension`, rejects an existing full path, then
+calls `save_replay(replay_directory, filename, demo, demo->size + 2, 1)`.
+Its success and failure branches return through modal alerts before rejoining
+the replay menu.
