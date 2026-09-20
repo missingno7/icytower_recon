@@ -22,3 +22,7 @@ at line 2722; compositing is at line 2707; and control-sensitive presentation
 continues through line 2780. These anchors intentionally overlap in address
 order because the original compiler interleaves branches from the same source
 regions.
+
+Additional sampled anchors are lines 2552, 2719, 2742, 2749, 2792--2794,
+and 2813--2816. They show the compiler interleaves sprite work and overlays,
+so the source recovery must preserve branch-local phase order.
