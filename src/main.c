@@ -2592,8 +2592,11 @@ int init_game(int argc, char **argv)
     set_color_conversion(COLORCONV_NONE);
     packfile_password("(c) Free Lunch Design");
     loader=load_datafile("data/loading.dat");
-    if (!loader)
+    if (!loader) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed to load loader datafile.");
         return 0;
+    }
     packfile_password(NULL);
     fldLogo=loader[1].dat;
     select_palette(loader[0].dat);
@@ -2641,20 +2644,30 @@ int init_game(int argc, char **argv)
 
     draw_progress_bar();
     swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
-    if (!swap_screen)
+    if (!swap_screen) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed reserve memory screen buffers.");
         return 0;
+    }
 
     set_color_conversion(0x00ffffff);
     draw_progress_bar();
     packfile_password("CHEESE");
     data=load_datafile_callback("data/data.dat",datafile_callback_slow);
-    if (!data) return 0;
+    if (!data) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed to load datafile.");
+        return 0;
+    }
     packfile_password(NULL);
     draw_progress_bar();
     player_id=rand()%1000;
     ply[player_id]=malloc(sizeof(*ply[player_id]));
-    if (!ply[player_id])
+    if (!ply[player_id]) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed to allocate memory for player.");
         return 0;
+    }
     get_profiles_dir(profiles_dir,sizeof(profiles_dir));
     if (!file_exists(profiles_dir,FA_DIREC,0))
         mkdir(profiles_dir);
