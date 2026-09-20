@@ -28,3 +28,10 @@ oracle: line 3485 enters the play setup, lines 3493--3530 establish timing,
 and lines 3553--3559 start samples and game music. The first update phase is
 anchored at lines 3702--3711 (input/player/particles), 3789 (floor advance),
 3842--3851 (reward/combo), and 3983--4100 (sound and jump-sequence state).
+
+The executable prologue also proves that replay-control state is copied before
+the loop; when the corresponding game state is present, five 100-entry banks
+are cleared. It resets frame counters, seeds timing and music-position
+tracking, then runs player input and player update before particle iteration
+or collision dispatch. These initialization dependencies belong to `play` and
+must not be moved into a launcher or synthetic harness.
