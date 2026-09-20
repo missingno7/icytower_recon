@@ -2716,8 +2716,23 @@ int init_game(int argc, char **argv)
     floors.value=profile->start_floor;
     if (floors.value>floors.max)
         floors.value=floors.max;
+    draw_progress_bar();
+    draw_progress_bar();
+    i=0;
+    while (!keypressed() && cycle_count<=149) {
+        if (!(cycle_count%10) && i!=cycle_count) {
+            draw_progress_bar();
+            i=cycle_count;
+        }
+        rest(2);
+    }
+    seed=rand()%2367;
+    fadeOut(16);
+    clear_bitmap(screen);
+    vsync();
+    clear_keybuf();
     init_ok=1;
-    return 1;
+    return -1;
 }
 
 /* Source recovery of main.c:5761, 0x415f10..0x4166a2.  This retains the

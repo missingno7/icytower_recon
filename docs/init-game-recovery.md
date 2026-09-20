@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 3,570-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 3,726-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 2,218 bytes cover the original graphics fallback,
+remaining 2,062 bytes cover the original graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -69,6 +69,12 @@ eye-candy, gravity, floor-size, and scroll-speed values in the original
 sequence, then derives the capped start-floor selector from the profile. This
 keeps the final menu widget setup at `0x40fc7e..0x40fce4`, after the resource
 stages that the oracle uses.
+
+The initializer tail now includes the original loading cadence. It adds the
+two final progress steps, waits until input or the 150-tick cutoff while
+advancing progress once per changed ten-tick boundary, seeds `new_rand` from
+`rand() % 2367`, fades and clears the display, clears input, marks `init_ok`,
+and returns `-1` as the successful startup result.
 
 `-check` is now parsed in the initializer's argument path. It loads the
 specified replay before configuration and graphics setup, records an invalid
