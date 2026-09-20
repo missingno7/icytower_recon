@@ -134,11 +134,12 @@ state while removing failed entries. The compiler retains the filename and
 basename in the opposite registers and merges the success return path into a
 315-byte candidate, so this evidence-backed source remains `DIFFER`.
 
-`update_reward` recovers the inline fixed-point reward transition over the
-typed `reward_time` and `reward_scale` globals. It adds 3277 above 60 ticks,
-subtracts 6554 at nine ticks or below, and decrements the timer. The candidate
-has the original operands and relocations but a 54-byte equivalent branch
-layout rather than the original 55-byte layout, so it also remains `DIFFER`.
+`update_reward` exactly reproduces the 55-byte inline fixed-point reward
+transition over the typed `reward_time` and `reward_scale` globals. Its
+independent threshold checks add 3277 above 60 ticks and subtract 6554 at nine
+ticks or below before decrementing the timer. The ranges do not overlap, and
+the separate source checks are required for the historical branch layout and
+alignment NOP.
 
 `myDeleteFile` recovers the 63-byte path/file deletion wrapper: it formats the
 two input strings into a 2048-byte local buffer with `"%s%s"`, then calls
