@@ -472,7 +472,7 @@ Treplay *create_replay(int size)
         r->name[i] = 0;
     strcpy(r->name, "replay");
     strcpy(r->date, "no date");
-    r->data = malloc(size * sizeof(Treplay_data) + 32);
+    r->data = malloc(r->size * sizeof(Treplay_data) + 32);
     if (!r->data) {
         free(r);
         return 0;
