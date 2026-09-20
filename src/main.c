@@ -537,6 +537,8 @@ extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *p
 extern int rebuild_profile_list(Tavailable_profile **profs);
 extern Tprofile *load_profile(char *handle);
 extern Tprofile *create_profile(char *handle, int overwrite);
+extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
+                       BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int new_game(void);
@@ -1028,6 +1030,34 @@ void replay_menu_callback(void)
     draw_scroller(&summary_scroller,swap_screen,1,0,makecol(150,150,150));
     if (!draw_scroller(&summary_scroller,swap_screen,0,0,makecol(200,200,200)))
         restart_scroller(&summary_scroller);
+}
+
+/* Initial source recovery of main.c:5474, 0x410f98..0x4119fd. */
+int do_replay_menu(void)
+{
+    int ret = -1;
+    int play_again = 0;
+    int isGuest = !stricmp("guest",profile->handle);
+    char filename[1024];
+
+    log2file(" replay_menu launched");
+    while (!closeButtonClicked && ret!='l') {
+        ret=handle_menu(replay_menu,&menu_params,&ctrl,swap_screen,
+                        replay_menu_callback,180,160,0);
+        if (ret=='e') {
+            log2file("  play again selected");
+            play_again=1;
+        }
+        else if (ret=='|') {
+            log2file("  view replay selected");
+            fadeOut(16);
+            sprintf(filename,"%slast_game.itr",replay_directory);
+            run_demo(filename);
+        }
+        else if (ret=='{' && !isGuest)
+            log2file("  save replay selected");
+    }
+    return play_again;
 }
 
 /* Partial recovery of main.c:3359, 0x4076c0..0x407a07.  This result panel

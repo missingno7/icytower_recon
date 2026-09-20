@@ -24,3 +24,8 @@ menu transition, initializes `play_again` to zero and `ret` to `-1`, then
 calls `handle_menu(replay_menu, &menu_params, &ctrl, swap_screen,
 replay_menu_callback, 180, 160, 0)`. The outer loop ends when the close button
 is set or the menu returns `l`; `e` sets `play_again` before exiting.
+
+The initial source candidate implements that outer loop plus the Play Again
+and Watch Replay dispatches. It is `DIFFER` at 305 bytes; the filename save,
+guest confirmation, replay load, checksum, and alert subflows remain to be
+recovered from the oracle body.
