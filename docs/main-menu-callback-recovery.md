@@ -10,3 +10,9 @@ animation regions, rotation, three rectangle fills, and a final inline
 `syncProfileFromOptions` region. Recovery must retain the menu music-volume
 transition, animated head presentation, scroller/welcome state, and option
 synchronization in ordinary source; the routine remains missing.
+
+Its entry lines 5142--5177 are an update/poster control path: random selection,
+window-resolution checks, optional browser launch, and alert fallback precede
+the visual work. Rendering begins at line 5187 with backdrop blits and reaches
+head bitmap/shadow construction at lines 5206--5212. These two regions must
+remain coupled in the recovered callback.
