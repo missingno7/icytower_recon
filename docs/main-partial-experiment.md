@@ -232,8 +232,11 @@ layout-dependent, so it is recorded as `DIFFER`.
 `open_web_browser` recovers its complete 111-byte URL-launch helper. It builds
 the historical `url.dll, FileProtocolHandler` argument, logs the command, and
 calls the stdcall `ShellExecuteA` API through `rundll32` with show mode 4. The
-local logging call and a duplicated empty string make the partial-CU candidate
-layout-dependent, so it remains `DIFFER`.
+instruction stream, named call targets, and nonempty literal targets match. Its
+only unresolved relocation is the empty working-directory string: the original
+uses a NUL byte pooled after an unrelated literal while this partial CU emits a
+different empty-string occurrence. It is therefore `CODEGEN_SIMILAR`, not an
+exact function match.
 
 `load_new_ad_image` recovers the complete 100-byte application-side ad bridge.
 It selects an `FLDAdSpot`, logs its typed local image path, destroys the prior
