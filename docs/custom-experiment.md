@@ -4,7 +4,12 @@ All ten historical functions now have independent C implementations, reconstruct
 from the original disassembly, DWARF types, lexical scopes and function order.
 At `-O2`, nine functions match after independent relocation resolution, including
 the 2392-byte `load_frames` and 1729-byte `load_sounds`. The remaining function,
-`load_character_bmp`, differs. This is not complete text, object or CU equality.
+`load_character_bmp`, differs. Its 1,993-byte candidate matches the historical
+prologue, all local layouts, and early parsing transfers through byte 133; the
+first mismatch is the `fopen`-failure branch target. The original places that
+error block at offset `0x56d`, while the pinned compiler moves the equivalent
+block to the function tail at `0x77b`, causing the later layout drift. This is
+not complete text, object or CU equality.
 
 The original 1260-byte Tcustom layout is declared in `include/custom.h`.
 Its frame array, palette, sounds and datafile fields retain historical offsets.
