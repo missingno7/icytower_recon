@@ -563,6 +563,8 @@ void show_credits(void)
 
 
 extern void save_options(Toptions *o, PACKFILE *fp);
+extern void load_options(Toptions *o, PACKFILE *fp);
+extern void reset_options(Toptions *o);
 extern void save_hisc_table(void *table, PACKFILE *fp);
 extern void save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
@@ -2427,6 +2429,8 @@ void handle_player_input(void *control)
  * subsystems before it exposes the datafile-backed game globals. */
 int init_game(int argc, char **argv)
 {
+    char cfgfilename[256];
+    PACKFILE *cfg;
     int i;
 
     log2file("INIT GAME");
@@ -2437,11 +2441,20 @@ int init_game(int argc, char **argv)
     hasFocus=1;
     lastFocus=1;
     memset(&cmdline,0,sizeof(cmdline));
+    reset_options(&options);
+    get_configfile_path(cfgfilename,sizeof(cfgfilename));
+    cfg=pack_fopen(cfgfilename,"rp");
+    if (cfg) {
+        load_options(&options,cfg);
+        pack_fclose(cfg);
+    }
     for (i=1;i<argc;i++) {
         if (!stricmp(argv[i],"-windowed")) options.full_screen=0;
         else if (!stricmp(argv[i],"-fullscreen")) options.full_screen=1;
         else if (!stricmp(argv[i],"-replay")) cmdline.jumps=1;
     }
+    if (!itrcheck)
+        options.timesStarted++;
 
     if (allegro_init()!=0) return 0;
     set_color_depth(32);
@@ -2464,6 +2477,18 @@ int init_game(int argc, char **argv)
         data=NULL;
         return 0;
     }
+    rebuild_profile_list(0);
+    profile=load_profile(options.lastProfile);
+    if (!profile)
+        profile=load_profile("guest");
+    if (!profile)
+        profile=create_profile("guest",1);
+    if (!profile)
+        return 0;
+    strcpy(options.lastProfile,profile->handle);
+    syncOptionsFromProfile();
+    if (!check_characters())
+        return 0;
     init_ok=1;
     return 1;
 }
