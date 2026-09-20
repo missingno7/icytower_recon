@@ -388,6 +388,7 @@ int recording;
 int rec_seed;
 int hurry_y;
 void *hisc_tables[15];
+static int face;
 static int count;
 char scroller_greetings[156] = {
     0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
@@ -1912,6 +1913,7 @@ int check_characters(void)
 
 int load_character(const char *filename, int attrib, void *param)
 {
+    static int count;
     char *name;
 
     name = get_filename(filename);

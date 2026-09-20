@@ -35,6 +35,12 @@ and `init_string[7]` reproduce their manifest SHA-256 values, and
 state barrier to source recovery; it does not claim that the callback body is
 present.
 
+The callback's two internal persistent scalars are now represented separately:
+`face` and `count` correspond to DWARF addresses `0x4dd31c` and `0x4dd318`.
+The character-loading callback has its own function-static `count` at
+`0x4dd330`; keeping that counter at function scope prevents character discovery
+from sharing main-menu animation state.
+
 The decoded line table provides the required complete phase map. Lines
 5220--5228 scroll and render the welcome scroller; lines 5231--5248 choose
 between the guest welcome text and the ranked-profile presentation, including
