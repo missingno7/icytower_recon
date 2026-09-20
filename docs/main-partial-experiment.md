@@ -274,11 +274,11 @@ custom-audio link.
 
 `start_reward` now recovers the nine level bands, 80-frame reward setup, selected `data[90 + r]` image, combo sound, and non-flash particle burst. Its 476-byte candidate is four bytes longer than the original 472-byte body because its burst branch has a different register allocation and placement. In particular, the original keeps `itrcheck` in `edi` and reuses it as the burst-loop counter, while the candidate uses `ebx` for the guard before the loop. DWARF confirms that the recovered local declaration order is already exact: `r` at line 2344 and `i, p` at line 2345. It is recorded as `DIFFER`; future source experiments must preserve this guard live range without changing reward behavior. Typing its `reward_bmp`, `combo_sound`, and 512-entry `stars` globals also resolves the complete bodies of two existing helpers.
 
-`update_reward` was independently derived from its named `reward_time` and
-`reward_scale` globals, but both source control-flow forms tested at -O2 emit
-a 54-byte body with the high-reward branch placed after the shared epilogue;
-the original is 55 bytes and places that branch first. It remains non-exact
-pending a source-level explanation for that compiler layout.
+`update_reward` is an exact 55-byte `FUNCTION_MATCH`. The historical sequence
+uses two independent conditions: it increases `reward_scale` when
+`reward_time > 60`, then separately decreases it when `reward_time <= 9`.
+Retaining those as independent `if` statements preserves the original
+branch ordering and matches its complete relocation-resolved body at `-O2`.
 
 This is intentionally a partial CU report: there are 82 original main.c
 functions, so it cannot support a CU-wide text or object claim. The exact
