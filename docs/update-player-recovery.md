@@ -17,3 +17,10 @@ changes to falling (`status == 2`) when the resulting vertical speed reaches
 zero. Recovery must preserve this ordering: clamp, integrate, position clamp,
 then gravity/status transition. The collision-mode table values and exact
 floating constants remain the outstanding evidence needed for a source body.
+
+The oracle constants are now captured: `0x4d7130 = -2.0f`,
+`0x4d7134 = -22.0f`, `0x4d7138 = -100.0f`, `0x4d713c = 1000.0f`,
+`0x4d7140 = 555.0f`, `0x4d7144 = 85.0f`, `0x4d7148 = -0.9`,
+`0x4d7150 = 4.0f`, `0x4d7154 = -4.0f`, and `0x4d7158 = 0.8`.
+The speed table at `0x4bdb80` begins `12.0, 12.0, 12.2, 12.2, 12.0` as
+double values; the adjacent `0x4bdba8` table provides the mode adjustment.
