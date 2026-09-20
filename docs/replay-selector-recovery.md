@@ -8,7 +8,11 @@ directory visibility, selected version, and custom-replay flag.
 `replay_selector` spans `0x41d258..0x41dd75` (2,845 bytes), source line 701.
 It owns controller input, path, replay result, current file, paging/debounce,
 rename eligibility, update state, and slide animation bitmap/coordinates.
-Both remain missing and must be recovered as a renderer/controller pair.
+Both now have source-level renderer/controller bodies and ordinary-link
+dependencies. Their pinned-toolchain candidates remain `DIFFER`: the renderer
+is 2,347 bytes against 3,726 and the controller is 1,902 against 2,845. The
+status records that their full lifecycle is present in source, while their
+historical drawing layout and branch shapes still require recovery.
 
 The controller setup at `0x41d258..0x41d364` is now directly decoded. It
 saves the current font as `old_font`, creates `bg` at the active display

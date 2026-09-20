@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <allegro.h>
+#include "control.h"
 
 /* Partial historical replay.c recovery.
  * Ownership: GAME.
@@ -10,10 +12,10 @@
  * PARTIAL: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes
  * DIFFER: calc_replay_checksum @ 0x0041bac4, 676 bytes
  * EXACT: update_file_list @ 0x0041bda0, 184 bytes
- * UNKNOWN: draw_replay_selector @ 0x0041be58, 3726 bytes
+ * DIFFER: draw_replay_selector @ 0x0041be58, 3726 bytes
  * DIFFER: create_replay @ 0x0041cce8, 254 bytes
  * DIFFER: load_replay @ 0x0041cde8, 1136 bytes
- * UNKNOWN: replay_selector @ 0x0041d258, 2845 bytes
+ * DIFFER: replay_selector @ 0x0041d258, 2845 bytes
  * DIFFER: save_replay @ 0x0041dd78, 1227 bytes
  * DIFFER: get_replay_property @ 0x0041e244, 1147 bytes
  * UNKNOWN: my_strcmp @ 0x0041e6c0, 128 bytes
@@ -101,12 +103,16 @@ typedef struct Treplay {
 } Treplay;
 
 extern void free(void *ptr);
-extern void *pack_fopen(const char *filename, const char *mode);
-extern long pack_fread(void *buffer, long bytes, void *fp);
-extern long pack_fwrite(const void *buffer, long bytes, void *fp);
-extern void pack_fclose(void *fp);
 extern int memcmp(const void *a, const void *b, size_t size);
 extern void log2file(const char *format, ...);
+extern DATAFILE *data;
+extern int is_custom_replay(Treplay *r);
+extern void blit_to_screen(BITMAP *bmp);
+extern void checkMenuFocus(void);
+extern void play_menu_move(void);
+extern void play_menu_select(void);
+extern int my_alert(char *func, char *txt, int choice, int enter_hint);
+Treplay *load_replay(char *filename);
 
 int calc_replay_checksum_131(Treplay *r)
 {
@@ -177,6 +183,272 @@ void update_file_list(char *path)
     sprintf(full_path, "%s/*", path);
     for_each_file_ex(full_path, 0, 0, add_itr_file, 0);
     qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);
+}
+
+/* Recovered from replay.c:460, 0x41be58..0x41cce6.  The oracle's inline
+ * Allegro drawing expands more heavily than this source form, but all list,
+ * detail, clipping, version, and custom-replay presentation paths remain in
+ * the owning replay CU. */
+void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
+                          int selection, int offset, int max_posts, int x, int y)
+{
+    int w = 310;
+    int h = 305;
+    int fh = text_height(font);
+    int i;
+    int fg = makecol(25, 25, 25);
+    int mg = makecol(85, 85, 85);
+    float view_percentage = max_posts ? (float)num_itr_files / max_posts : 1.0f;
+    float view_offset = max_posts ? (float)offset / max_posts : 0.0f;
+    char curr_filename[1024];
+    int show_directory = 0;
+    int selected_version = 0;
+    int isCustom = 0;
+
+    if (view_percentage > 1.0f)
+        view_percentage = 1.0f;
+    if (data && data[86].dat)
+        stretch_sprite(bmp, data[86].dat, x - 15, y - 15, w + 30, h + 30);
+    else
+        rectfill(bmp, x - 15, y - 15, x + w + 15, y + h + 15, mg);
+
+    set_trans_blender(0, 0, 0, 150);
+    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+    rect(bmp, x + 5, y + 30, x + w - 5, y + 305, fg);
+    rect(bmp, x + 7, y + 32, x + w - 7, y + 303, fg);
+    solid_mode();
+
+    set_clip_rect(bmp, x + 10, y + 35, x + 185, y + 300);
+    for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {
+        Treplay_post *post = &file_list[i];
+        int row = y + 40 + (i - offset) * fh;
+        char *name = get_filename(post->full_path);
+
+        if (i == selection)
+            rectfill(bmp, x + 10, row - 1, x + 185, row + fh, mg);
+        if (post->directory) {
+            show_directory = 1;
+            textprintf_ex(bmp, font, x + 14, row, fg, -1, "[%s]", name);
+        } else {
+            textout_ex(bmp, font, name, x + 14, row, fg, -1);
+        }
+    }
+    set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
+
+    if (selection >= 0 && selection < num_itr_files)
+        strcpy(curr_filename, get_filename(file_list[selection].full_path));
+    else
+        curr_filename[0] = 0;
+    textprintf_ex(bmp, font, x + 12, y + 14, fg, -1, "REPLAY SELECTOR: %s",
+                  curr_filename);
+
+    if (num_itr_files > max_posts && max_posts > 0) {
+        int bar_top = y + 40 + (int)(view_offset * 260.0f);
+        int bar_height = (int)(view_percentage * 260.0f);
+        rectfill(bmp, x + 190, bar_top, x + 196, bar_top + bar_height, fg);
+    }
+
+    if (rep) {
+        isCustom = is_custom_replay(rep);
+        if (selection >= 0 && selection < num_itr_files)
+            selected_version = file_list[selection].version;
+        set_clip_rect(bmp, x + 205, y + 35, x + w, y + 300);
+        textout_ex(bmp, font, rep->name, x + 210, y + 44, fg, -1);
+        textout_right_ex(bmp, font, rep->date, x + w - 8, y + 44, fg, -1);
+        textprintf_ex(bmp, font, x + 210, y + 68, fg, -1, "Score: %d", rep->score);
+        textprintf_right_ex(bmp, font, x + w - 8, y + 68, fg, -1,
+                            "Floor: %d", rep->floor);
+        textprintf_right_ex(bmp, font, x + w - 8, y + 68 + fh, fg, -1,
+                            "Combo: %d", rep->combo);
+        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 2, fg, -1,
+                      "Version: %d%s", selected_version, isCustom ? " custom" : "");
+        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 3, fg, -1,
+                      "%s", rep->comment);
+        set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
+    } else if (show_directory) {
+        textout_ex(bmp, font, "Select a folder or replay", x + 210, y + 50,
+                   fg, -1);
+    }
+
+    textout_ex(bmp, font, "Enter: select   Del: delete   Esc: back",
+               x + 12, y + h - fh, fg, -1);
+}
+
+/* Recovered from replay.c:701, 0x41d258..0x41dd75.  This keeps the complete
+ * selector lifecycle in source: file-list rebuilding, preview ownership,
+ * keyboard/controller dispatch, directory/file selection, animated display,
+ * and cleanup. */
+Treplay *replay_selector(Tcontrol *ctrl, char *path)
+{
+    FONT *old_font = font;
+    BITMAP *bg = create_bitmap(SCREEN_W, SCREEN_H);
+    Treplay *rep = NULL;
+    int curr_file_id = 0;
+    int done = 0;
+    int ctrl_wait = 1000;
+    int page_size;
+    int offset = 0;
+    int need_to_update = 1;
+    int ok_to_rename = 0;
+    int pageY = 500;
+    int targetY = 0;
+    char fname[1024];
+
+    if (!bg)
+        return NULL;
+    blit(screen, bg, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+    if (data)
+        font = data[54].dat;
+    page_size = 270 / text_height(font);
+    clear_keybuf();
+
+    while (!done) {
+        int kp = 0;
+
+        if (need_to_update) {
+            if (rep) {
+                destroy_replay(rep);
+                rep = NULL;
+            }
+            if (num_itr_files > 0 && curr_file_id >= 0 &&
+                curr_file_id < num_itr_files && !itr_file_list[curr_file_id].directory)
+                rep = load_replay(itr_file_list[curr_file_id].full_path);
+            need_to_update = 0;
+        }
+
+        poll_control(ctrl, 1);
+        if (is_any(ctrl) && ctrl_wait == 0) {
+            if (is_down(ctrl))
+                simulate_keypress(KEY_DOWN << 8);
+            else if (is_up(ctrl))
+                simulate_keypress(KEY_UP << 8);
+            else if (is_fire(ctrl))
+                simulate_keypress(KEY_ENTER << 8);
+        }
+        if (ctrl_wait > 0)
+            ctrl_wait--;
+
+        if (keypressed())
+            kp = readkey() >> 8;
+        if (kp) {
+            ctrl_wait = 20;
+            switch (kp) {
+            case KEY_UP:
+                if (curr_file_id > 0) {
+                    curr_file_id--;
+                    if (curr_file_id < offset)
+                        offset--;
+                    play_menu_move();
+                    need_to_update = 1;
+                }
+                break;
+            case KEY_DOWN:
+                if (curr_file_id + 1 < num_itr_files) {
+                    curr_file_id++;
+                    if (curr_file_id >= offset + page_size)
+                        offset++;
+                    play_menu_move();
+                    need_to_update = 1;
+                }
+                break;
+            case KEY_ENTER:
+                if (curr_file_id >= 0 && curr_file_id < num_itr_files) {
+                    Treplay_post *post = &itr_file_list[curr_file_id];
+                    if (post->directory) {
+                        strcpy(path, post->full_path);
+                        canonicalize_filename(fname, path, sizeof(fname));
+                        strcpy(path, fname);
+                        update_file_list(path);
+                        curr_file_id = offset = 0;
+                        need_to_update = 1;
+                    } else if (rep) {
+                        play_menu_select();
+                        done = 1;
+                    }
+                }
+                break;
+            case KEY_DEL:
+                if (curr_file_id >= 0 && curr_file_id < num_itr_files &&
+                    !itr_file_list[curr_file_id].directory && rep &&
+                    my_alert("Really delete replay?", "WARNING: It will be gone forever.",
+                             1, 0)) {
+                    delete_file(itr_file_list[curr_file_id].full_path);
+                    need_to_update = 1;
+                }
+                break;
+            case KEY_ESC:
+                play_menu_select();
+                destroy_replay(rep);
+                rep = NULL;
+                done = -1;
+                break;
+            case KEY_F1:
+                set_sort_method(1);
+                need_to_update = 1;
+                break;
+            case KEY_F2:
+                set_sort_method(2);
+                need_to_update = 1;
+                break;
+            case KEY_F3:
+                set_sort_method(3);
+                need_to_update = 1;
+                break;
+            case KEY_F4:
+                set_sort_method(4);
+                need_to_update = 1;
+                break;
+            case KEY_F5:
+                install_mouse();
+                file_select_ex("Select a new folder and press OK", path, "itr",
+                               sizeof(fname), 400, 400);
+                remove_mouse();
+                replace_filename(fname, path, "", sizeof(fname));
+                strcpy(path, fname);
+                update_file_list(path);
+                curr_file_id = offset = 0;
+                need_to_update = 1;
+                ok_to_rename = 1;
+                break;
+            default:
+                break;
+            }
+        }
+
+        if (need_to_update) {
+            update_file_list(path);
+            if (curr_file_id >= num_itr_files)
+                curr_file_id = num_itr_files - 1;
+            if (curr_file_id < 0)
+                curr_file_id = 0;
+            if (offset > curr_file_id)
+                offset = curr_file_id;
+        }
+
+        if (pageY > targetY)
+            pageY -= (pageY - targetY) / 3 + 1;
+        blit(bg, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+        set_trans_blender(0, 0, 0, (500 - pageY) / 3);
+        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+        rectfill(screen, 0, 0, SCREEN_W, SCREEN_H, makecol(0, 0, 0));
+        solid_mode();
+        draw_replay_selector(screen, rep, itr_file_list, curr_file_id, offset,
+                             page_size, 120, pageY + 120);
+        blit_to_screen(screen);
+        checkMenuFocus();
+        rest(2);
+        (void)ok_to_rename;
+    }
+
+    destroy_bitmap(bg);
+    font = old_font;
+    for (curr_file_id = 0; curr_file_id < num_itr_files; curr_file_id++) {
+        free(itr_file_list[curr_file_id].full_path);
+        itr_file_list[curr_file_id].parent = 0;
+        itr_file_list[curr_file_id].directory = 0;
+    }
+    num_itr_files = 0;
+    return rep;
 }
 
 Treplay *create_replay(int size)
