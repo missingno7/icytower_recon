@@ -134,7 +134,7 @@ int calc_replay_checksum_131(Treplay *r)
 int calc_replay_checksum(Treplay *r)
 {
     int i;
-    int sum;
+    unsigned int sum;
 
     sum = (r->biggest_lost_combo * 17 + r->no_combo_top_floor * 127 + 17) * 2;
     sum += r->floor_shrink * 102 + r->floor_size * 17 + 3702;

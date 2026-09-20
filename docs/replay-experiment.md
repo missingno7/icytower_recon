@@ -17,9 +17,12 @@ settings, score and combo counters, the three 100-element timing curves,
 name/date/comment bytes, and packed input records, before applying the local
 hash mixer. The initial accumulator is `(biggest_lost_combo * 17 +
 no_combo_top_floor * 127 + 17) * 2`: the original carries the `17`
-before doubling, contributing 34 at this stage. The `-O2` candidate is 656
-bytes; its arithmetic scheduling differs from the historical 676-byte body,
-so the inventory records it as `DIFFER`.
+before doubling, contributing 34 at this stage. Historical DWARF also types
+its `sum` local as `unsigned int` even though the function returns `int`; that
+restores the original unsigned timing-curve conversions and brings the `-O2`
+candidate from 656 to 675 bytes. Its remaining byte and arithmetic scheduling
+differ from the historical 676-byte body, so the inventory records it as
+`DIFFER`.
 
 `load_replay` now reconstructs the ITR140 reader. It opens once to validate the
 six-byte header and allocate the event buffer from its size, then reopens and
@@ -40,7 +43,7 @@ requested event count, recalculates the checksum, and writes the same complete
 field sequence consumed by `load_replay`. Its candidate reaches the historical
 1,227-byte length and remains `DIFFER` only in instruction scheduling.
 
-`my_strcmp` now recovers the 24-byte replay-post layout and comparator behavior: directory entries rank ahead of replay files, file rows use the selected score/floor/combo property when sorting modes 2–4 are active, and the remaining names compare case-insensitively. The original's `lea`/unsigned-range check establishes the property-mode test as `(unsigned)(sort_method - 2) <= 2`; the recovered source now preserves that form. Its 123-byte candidate still differs from the historical 128-byte body because the pinned compiler places the directory-mismatch return path differently, so the comparison inventory records it as `DIFFER`.
+`my_strcmp` now recovers the 24-byte replay-post layout and comparator behavior: directory entries rank ahead of replay files, file rows use the selected score/floor/combo property when sorting modes 2â€“4 are active, and the remaining names compare case-insensitively. The original's `lea`/unsigned-range check establishes the property-mode test as `(unsigned)(sort_method - 2) <= 2`; the recovered source now preserves that form. Its 123-byte candidate still differs from the historical 128-byte body because the pinned compiler places the directory-mismatch return path differently, so the comparison inventory records it as `DIFFER`.
 
 `update_file_list` matches its complete 184-byte body. It frees and clears all existing 24-byte posts, resets the independently typed 1,024-entry list, scans the original `"%s/*"` pattern through `add_itr_file`, and sorts with `my_strcmp`. Every data, string, callback, and call relocation resolves exactly.
 
