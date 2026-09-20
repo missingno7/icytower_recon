@@ -541,6 +541,7 @@ extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
                        BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
+extern void run_demo(char *file_name);
 extern int new_game(void);
 extern int play(void);
 extern int load_character(const char *filename, int attrib, void *param);
