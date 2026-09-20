@@ -1,6 +1,9 @@
 /* Partial historical main.c recovery. Other original entities remain absent. */
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <pthread.h>
 #include <allegro.h>
 #include "loadpng.h"
@@ -37,16 +40,36 @@ int closeButtonClicked;
 int window;
 int lastFocus;
 int in_replay_menu;
+int collision_type;
+int got_joystick;
+int scroll_count;
+int scroll_delay;
+int gdLastJumpDiff;
+int last_stripe_y;
+int new_personal_best[15];
 Tbeta *testers;
 Tbeta *the_tester;
 
 typedef struct Treplay {
-    unsigned char reserved[140];
+    char header[6];
+    int size;
+    char name[32];
+    char date[32];
+    int checksum;
+    int score;
+    int floor;
+    int combo;
+    int no_combo_top_floor;
+    int biggest_lost_combo;
+    int ccc[5];
+    int jc[5];
     int floor_shrink;
     int floor_size;
     int start_speed;
     int speed_increase;
     int gravity;
+    int rejump;
+    int random_seed;
 } Treplay;
 Treplay *demo;
 Tcontrol ctrl;
@@ -268,6 +291,16 @@ typedef struct Tplayer {
     int jc[5];
 } Tplayer;
 
+typedef struct Tgame_data {
+    Treplay *replay;
+} Tgame_data;
+
+typedef struct Tjump_sequence {
+    int start;
+    int dist;
+    int num;
+} Tjump_sequence;
+
 Toptions options;
 Tprofile *profile;
 Tavailable_profile *profiles;
@@ -296,6 +329,9 @@ int any21;
 int any22;
 int any23;
 Tmap map;
+Tgame_data *gameData;
+int rejump;
+Tjump_sequence jumpSequence;
 int fast_forward;
 int fast_fast_forward;
 int gameMusicVoiceID;
@@ -308,6 +344,10 @@ char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;
 DATAFILE *data;
+int rec_pos;
+int recording;
+int rec_seed;
+int hurry_y;
 void *hisc_tables[15];
 static int count;
 
@@ -549,6 +589,118 @@ inline int is_custom_replay(Treplay *r)
 {
     return r->floor_shrink != 1 || r->floor_size != 1 ||
            r->start_speed != 5 || r->speed_increase != 1 || r->gravity != 1;
+}
+
+extern void destroy_game_data(Tgame_data *gd);
+extern Tgame_data *create_game_data(void);
+extern void reset_player(Tplayer *p);
+extern Treplay *create_replay(int size);
+
+/* Recovered from the full 0x40dc9c..0x40e10f control-flow range.  The
+ * candidate retains the original state transitions and API boundary; its
+ * instruction layout remains under recovery. */
+int new_game(void)
+{
+    int i;
+    Tplayer *p;
+
+    log2file(" init new game");
+    collision_type = 2;
+    new_srand(rand() % 0x18ff8);
+    rec_pos = 0;
+    cmdline.jumps = 0;
+    cmdline.combos = 0;
+    cmdline.sd = 0;
+    cmdline.keys = 0;
+    cmdline.tiny = 0;
+    last_stripe_y = 0;
+
+    if (!itrcheck) {
+        floors.max = profile->best_floor / 100;
+        if (floors.max > 9)
+            floors.max = 9;
+        floors.value = floors.max;
+        if (floors.value > profile->start_floor)
+            floors.value = profile->start_floor;
+    }
+
+    jumpSequence.start = 0;
+    jumpSequence.dist = 0;
+    jumpSequence.num = 0;
+    gdLastJumpDiff = 0;
+    if (gameData)
+        destroy_game_data(gameData);
+    gameData = create_game_data();
+    if (!gameData) {
+        log2file("*** failed to allocate memory for gameData, prepare for crash");
+        return 0;
+    }
+    gameData->replay = demo;
+
+    if (demo) {
+        log2file(" preparing to show replay");
+        recording = 0;
+        rejump = demo->rejump;
+        rec_seed = demo->random_seed;
+        if (is_custom_replay(demo))
+            gdLastJumpDiff = 1;
+    } else {
+        log2file(" setting up for replay recording");
+        recording = 1;
+        demo = create_replay(64000);
+        if (!demo)
+            return 0;
+        strcpy(demo->name, profile->handle);
+        if (itrcheck) {
+            demo->floor_shrink = options.floor_shrink;
+            demo->floor_size = options.floor_size;
+            demo->start_speed = options.start_speed;
+            demo->speed_increase = options.speed_increase;
+            demo->gravity = options.gravity;
+        } else {
+            demo->floor_shrink = 1;
+            demo->floor_size = 1;
+            demo->start_speed = 5;
+            demo->speed_increase = 1;
+            demo->gravity = 1;
+        }
+        rejump = options.jump_hold;
+        srand(time(0));
+        rec_seed = rand();
+        demo->random_seed = rec_seed;
+    }
+
+    scroll_count = 0;
+    scroll_delay = 100;
+    for (i = 0; i < 15; i++)
+        new_personal_best[i] = 0;
+    srand(rec_seed);
+    log2file(" creating map layout");
+    reset_map(&map);
+    for (i = 0; i < 30; i++)
+        add_floor(&map);
+    p = ply[player_id];
+    reset_player(p);
+    p->x = 200.0;
+    p->y = 431.0;
+    p->status = 0;
+    p->sx = 0.001;
+    reward_time = 0;
+    hurry_y = 480;
+    if (itrcheck)
+        return 1;
+
+    reset_particles(stars);
+    log2file(" loading custom character: %s", characters[curr_char].name);
+    init_custom(&custom, characters[curr_char].name,
+                characters[curr_char].uses_datafile);
+    if (!load_frames(&custom))
+        return 1;
+    load_sounds(&custom);
+    log2file(" cc done");
+    if (got_joystick)
+        ctrl.use_joy = 1;
+    return 1;
 }
 
 int show_name(char *name, int attribs)

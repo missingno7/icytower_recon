@@ -16,7 +16,7 @@ from build import COMPILERS, compile_target, verify_inputs
 GAME_TARGETS = [
     'game-beta', 'game-control', 'game-csv', 'game-httpget', 'game-directories', 'game-timer',
     'game-stars', 'game-options', 'game-replay', 'game-main-partial',
-    'game-map', 'game-scroller', 'game-particle', 'game-fld-adspot',
+    'game-map', 'game-scroller', 'game-particle', 'game-player', 'game-fld-adspot',
     'game-hisc', 'game-menu', 'game-game-data', 'game-profile', 'game-custom',
     'game-loadpng', 'game-savepng', 'game-regpng',
     'game-strptime', 'game-timecompat',
