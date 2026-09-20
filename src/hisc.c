@@ -20,6 +20,8 @@ typedef struct {
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
 extern char *strcpy(char *dst,const char *src);
+/* DWARF declares the shared list as DATAFILE *.  The original's 0x420,
+ * 0x410, and 0x400 offsets identify entries 66, 65, and 64. */
 extern DATAFILE *data;
 extern BITMAP *swap_screen;
 extern int closeButtonClicked;
@@ -149,27 +151,27 @@ void view_scores(Thisc_table **tables,char **names)
 
     listHeight=0;
     for (i=0;i<15;i++) {
-        if (tables[i] && tables[i]->posts && tables[i]->posts[0].value) {
+        if (tables[i]->posts[0].value) {
             listHeight=draw_table(0,0,listHeight,names[i],tables[i]);
             listHeight+=18;
         }
     }
 
-    th=((BITMAP *)data[132].dat)->h;
-    mh=((BITMAP *)data[130].dat)->h;
-    bh=((BITMAP *)data[128].dat)->h;
+    th=((BITMAP *)data[66].dat)->h;
+    mh=((BITMAP *)data[65].dat)->h;
+    bh=((BITMAP *)data[64].dat)->h;
     lh=listHeight/bh;
     bmpHeight=lh>2 ? lh-1 : 2;
-    bmp=create_bitmap(((BITMAP *)data[132].dat)->w,bh+th+bmpHeight*mh);
+    bmp=create_bitmap(((BITMAP *)data[66].dat)->w,bh+th+bmpHeight*mh);
     clear_to_color(bmp,makecol(255,0,255));
-    draw_sprite(bmp,(BITMAP *)data[132].dat,0,0);
+    draw_sprite(bmp,(BITMAP *)data[66].dat,0,0);
     for (i=0;i<bmpHeight;i++)
-        draw_sprite(bmp,(BITMAP *)data[130].dat,0,th+i*mh);
-    draw_sprite(bmp,(BITMAP *)data[128].dat,0,bmp->h-bh);
+        draw_sprite(bmp,(BITMAP *)data[65].dat,0,th+i*mh);
+    draw_sprite(bmp,(BITMAP *)data[64].dat,0,bmp->h-bh);
 
     yPos=80;
     for (i=0;i<15;i++) {
-        if (tables[i] && tables[i]->posts && tables[i]->posts[0].value) {
+        if (tables[i]->posts[0].value) {
             yPos=draw_table(bmp,40,yPos,names[i],tables[i]);
             yPos+=18;
         }
@@ -207,6 +209,8 @@ void view_scores(Thisc_table **tables,char **names)
         solid_mode();
         draw_sprite(swap_screen,bmp,160,pageY);
         dark+=(int)((targetDark-dark)*0.2f);
+        draw_sprite(swap_screen,data[9].dat,626-dark,380);
+        draw_sprite(swap_screen,data[6].dat,626-dark,40);
         blit_to_screen(swap_screen);
         while (!cycle_count)
             rest(2);
@@ -225,6 +229,8 @@ void view_scores(Thisc_table **tables,char **names)
         rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
         solid_mode();
         draw_sprite(swap_screen,bmp,160,pageY);
+        draw_sprite(swap_screen,data[9].dat,626-dark,380);
+        draw_sprite(swap_screen,data[6].dat,626-dark,40);
         blit_to_screen(swap_screen);
         while (!cycle_count)
             rest(2);
