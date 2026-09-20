@@ -29,7 +29,7 @@ The source candidate now contains the full modal save/load flow recovered from
 the oracle: three 512-byte editor fields, the named-profile prefill and guest
 owner prompt, filename normalization, metadata copy, temporary-replay reload,
 checksum gate, overwrite confirmation, and save-result alerts.  It remains
-`DIFFER` at 2,126 bytes against the oracle's 2,661-byte body: the remaining
+`DIFFER` at 2,146 bytes against the oracle's 2,661-byte body: the remaining
 gap is source-shape and control-flow fidelity, not an omitted persistence
 subsystem.  The isolated `-O2` object compiled successfully and the complete
 independent recovered-game link succeeded after this update.

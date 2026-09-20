@@ -1099,13 +1099,12 @@ int do_replay_menu(void)
                          makecol(50,50,50));
                 blit_to_screen(swap_screen);
                 if (state==0) {
-                    if (get_string(swap_screen,player_name,340,512,data[54].dat,
-                                   140,210,makecol(255,255,255),makecol(0,0,0)) < 0)
+                    state=get_string(swap_screen,player_name,340,512,data[54].dat,
+                                     140,210,makecol(255,255,255),makecol(0,0,0));
+                    replaceBadCharacters(player_name,'_');
+                    state++;
+                    if (!state)
                         state='*';
-                    else {
-                        replaceBadCharacters(player_name,'_');
-                        state=1;
-                    }
                 }
                 else if (state==1) {
                     if (!filename[0] && player_name[0]) {
@@ -1114,7 +1113,7 @@ int do_replay_menu(void)
                         replaceBadCharacters(filename,'_');
                     }
                     if (get_string(swap_screen,filename,340,512,data[54].dat,
-                                   140,250,makecol(255,255,255),makecol(0,0,0)) < 0)
+                                   140,250,makecol(255,255,255),makecol(0,0,0)) == -1)
                         state='*';
                     else {
                         replaceBadCharacters(filename,'_');
@@ -1126,8 +1125,10 @@ int do_replay_menu(void)
 
                     edit_result=get_string(swap_screen,comment,340,42,data[54].dat,
                                            140,290,makecol(255,255,255),makecol(0,0,0));
-                    if (edit_result < 0)
+                    if (edit_result == -1)
                         state='*';
+                    else if (edit_result == -2)
+                        state=!isGuest;
                     else
                         state=3;
                 }
@@ -1163,11 +1164,14 @@ int do_replay_menu(void)
                         state=1;
                         continue;
                     }
-                    if (save_replay(replay_directory,replay_filename,demo,demo->size+2,1)<0)
+                    if (save_replay(replay_directory,replay_filename,demo,demo->size+2,1)<0) {
                         my_alert("Failed to save replay.",full_filename,0,1);
-                    else
+                        state=1;
+                    }
+                    else {
                         my_alert("Replay saved.",0,0,1);
-                    state='*';
+                        state='*';
+                    }
                 }
             }
         }
