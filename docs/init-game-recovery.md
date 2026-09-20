@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 4,169-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 4,375-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -41,7 +41,7 @@ selection captions and starts FLD discovery before argument parsing; replay
 validation then precedes high-score table allocation, control initialization,
 and config-file loading.
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 1,619 bytes cover the original graphics fallback,
+remaining 1,413 bytes cover the original graphics fallback,
 resource-loader,
 and staged progress work.
 
@@ -105,6 +105,11 @@ through to bare returns.
 The profile-directory, guest-profile, and character-discovery failures now
 also switch to text mode with their oracle diagnostics, including the profile
 directory path and the multiline character installation guidance.
+
+High-score allocation now reports its distinct text-mode failure. A missing
+configuration file resets the option state, while timer and keyboard
+installation remain nonfatal as observed; timer setup also resets
+`cycle_count` before startup progress continues.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,

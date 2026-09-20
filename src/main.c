@@ -2544,8 +2544,11 @@ int init_game(int argc, char **argv)
     get_configfile_path(cfgfilename,sizeof(cfgfilename));
     for (i=0;i<15;i++) {
         hisc_tables[i]=make_hisc_table(hisc_names[i]);
-        if (!hisc_tables[i])
+        if (!hisc_tables[i]) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("Failed reserve memory for highscore table.");
             return 0;
+        }
         reset_hisc_table(hisc_tables[i],"Harold",1000,0);
     }
     init_control(&ctrl);
@@ -2556,7 +2559,8 @@ int init_game(int argc, char **argv)
             if (!load_hisc_table(hisc_tables[i],cfg))
                 reset_hisc_table(hisc_tables[i],"Harold",1000,0);
         pack_fclose(cfg);
-    }
+    } else
+        reset_options(&options);
     if (!itrcheck)
         options.timesStarted++;
 
@@ -2612,9 +2616,10 @@ int init_game(int argc, char **argv)
     set_close_button_callback(clickedCloseButton);
     srand((unsigned int)time(NULL));
     draw_progress_bar();
-    if (install_timers()!=0) return 0;
+    install_timers();
+    cycle_count=0;
     draw_progress_bar();
-    if (install_keyboard()!=0) return 0;
+    install_keyboard();
     draw_progress_bar();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     draw_progress_bar();
