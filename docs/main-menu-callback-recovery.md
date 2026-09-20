@@ -43,3 +43,12 @@ message; lines 5282--5288 transfer the four gameplay selections; line 5293
 adjusts menu music. Any implementation must include all of these phases and
 the exceptional screenshot, cursor, browser, and scroller-restart edges that
 branch back into them.
+
+The direct-call map fixes the phase boundaries: `0x41010a..0x4101e7` contains
+random/update/browser/alert handling; `0x410261..0x4104bf` contains backdrop,
+ad, head, and blend work; `0x410598..0x41075c` drives the greeting scroller;
+`0x4107df..0x410bd3` is the guest/profile rank presentation; and
+`0x410c3f..0x410db6` reads menu values and adjusts music. The exceptional
+cursor, screenshot, and scroller restart calls lie at `0x410e73`, `0x410e8d`,
+and `0x410ea9`. These ranges are a complete call-level checklist, rather than
+a substitute for recovering the callback's source body.
