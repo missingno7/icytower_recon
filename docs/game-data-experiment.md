@@ -12,7 +12,9 @@ function boundaries, and relocations are recorded in
 layout and XML literals. Its `Tgame_data.replay` member is a typed pointer to
 the historical `Treplay` structure, rather than a layout-only `void *`; the
 shared replay definition retains the six-byte header and 42-byte comment
-fields, with normal C alignment preserving the serializer offsets. It allocates the original 128000-byte output buffer,
+fields, with normal C alignment preserving the serializer offsets. The
+five-field global command-line mirror likewise retains its historical
+`Tcommandline` type identity. It allocates the original 128000-byte output buffer,
 formats the player, game, claimed and actual result blocks, and retains both
 mutually exclusive output paths: `cmdline.tiny` emits only the result verdict,
 whereas the normal path emits the optional combos, jumps, keys, and sample-data

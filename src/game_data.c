@@ -25,7 +25,7 @@ typedef struct {
     int sd;
     int keys;
     int tiny;
-} Tcmdline;
+} Tcommandline;
 
 struct Treplay {
     char header[6];
@@ -56,7 +56,7 @@ extern void free(void *ptr);
 extern void *malloc(unsigned int size);
 extern int sprintf(char *str, const char *format, ...);
 extern char *strcat(char *dest, const char *src);
-extern Tcmdline cmdline;
+extern Tcommandline cmdline;
 
 void add_jump_sequence(Tgame_data *gd,Tgd_jump_sequence *js)
 {
