@@ -9,7 +9,7 @@ setup stages through `draw_progress_bar`.
 Its source body must preserve load/error cleanup and this ordering; a reduced
 initializer would not establish the game state used by the real lifecycle.
 
-The current source candidate is a 2,874-byte `DIFFER` body. It fixes the DWARF
+The current source candidate is a 3,212-byte `DIFFER` body. It fixes the DWARF
 interface to `init_game(argc, argv)`, resets packfile and application state,
 creates and resets the 15 original high-score tables, loads or resets options
 and each persisted table, increments the ordinary-run counter, processes the
@@ -37,13 +37,19 @@ to nine tiers exactly as the oracle does.
 Before loading packed graphics, the candidate now restores the oracle's full
 Allegro color-conversion mask (`0x00ffffff`).
 It is sufficient for the independent linker to resolve `init_game`; the
-remaining 2,914 bytes cover the original network, graphics fallback,
+remaining 2,576 bytes cover the original network, graphics fallback,
 resource-loader,
 and staged progress work.
 
-The verified base resource is `data/data.dat`, loaded with the manifest's
-`CHEESE` packfile password. The candidate resets the password at entry, then
-sets this password immediately before loading that datafile.
+The loader presentation is now recovered from `0x40edfe..0x40eede`: it prints
+the standard wait message, disables color conversion, opens
+`data/loading.dat` under the `(c) Free Lunch Design` password, resets that
+password, selects the datafile's first-entry palette, clears the display
+white, centers the second-entry FLD logo at `(320,200)`, and releases the
+temporary datafile. The verified base resource is `data/data.dat`, loaded
+with the manifest's `CHEESE` packfile password. The candidate resets the
+password at entry, then sets this password immediately before loading that
+datafile.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,

@@ -2444,8 +2444,11 @@ int init_game(int argc, char **argv)
     char profiles_dir[1024];
     char *replay_path;
     PACKFILE *cfg;
+    DATAFILE *loader;
     DATAFILE *sfx;
+    BITMAP *fldLogo;
     Tgamepad *pad;
+    int whiteColor;
     int i;
 
     log2file("INIT GAME");
@@ -2525,6 +2528,22 @@ int init_game(int argc, char **argv)
     if (set_gfx_mode(options.full_screen ? GFX_AUTODETECT_FULLSCREEN :
                      GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0)
         return 0;
+
+    textprintf_centre_ex(screen,font,320,220,makecol(180,180,180),-1,
+                         "please wait");
+    set_color_conversion(COLORCONV_NONE);
+    packfile_password("(c) Free Lunch Design");
+    loader=load_datafile("data/loading.dat");
+    if (!loader)
+        return 0;
+    packfile_password(NULL);
+    fldLogo=loader[1].dat;
+    select_palette(loader[0].dat);
+    whiteColor=makecol(255,255,255);
+    clear_to_color(screen,whiteColor);
+    draw_sprite(screen,fldLogo,320-fldLogo->w/2,200-fldLogo->h/2);
+    unload_datafile(loader);
+
     if (install_timers()!=0) return 0;
     if (install_keyboard()!=0) return 0;
     install_mouse();
