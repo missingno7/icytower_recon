@@ -2476,6 +2476,8 @@ int init_game(int argc, char **argv)
     int check;
     int i;
 
+    tmpHandle[0]=0;
+    init_ok=0;
     log2file("INIT GAME");
     packfile_password(NULL);
     sprintf(title,"Icy Tower v%s","1.5.1");
@@ -2486,13 +2488,11 @@ int init_game(int argc, char **argv)
     if (LOBYTE(wsaData.wVersion)<2 || HIBYTE(wsaData.wVersion)<2)
         log2file(" !!! Failed to get proper Winsock version (wanted 2.2, got %d.%d)",
                  LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
-    init_ok=0;
     curr_char=0;
     play_char=0;
     characters=NULL;
     replay_path=NULL;
     check=0;
-    tmpHandle[0]=0;
     eyecandy_selection.value=0;
     eyecandy_selection.size=3;
     eyecandy_selection.caption[0]=strdup("Lots");

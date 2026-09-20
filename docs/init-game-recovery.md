@@ -149,6 +149,8 @@ launcher and account for most of the prior code-size gap.
 The source now has the same 65 `log2file` calls as the oracle initializer,
 including the final `Welcome to Icy Tower` trace between its two final
 progress updates.
+Its prologue also matches the oracle through the first logger call: the
+temporary profile handle and `init_ok` are cleared before logging starts.
 
 DWARF names the original inputs and setup locals: `argc`, `argv`, `fp`,
 `black`, `i`, `title`, `tmpHandle`, `wsaData`, `wVersionRequested`,
