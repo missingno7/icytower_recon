@@ -15,6 +15,7 @@
 #include "timer.h"
 #include "particle.h"
 #include "map.h"
+#include "scroller.h"
 
 /* This exported extension belongs to the separately reconstructed logg CU. */
 SAMPLE *logg_load_memory(void *pData, size_t iSize);
@@ -376,6 +377,8 @@ int rec_seed;
 int hurry_y;
 void *hisc_tables[15];
 static int count;
+char summary_scroller_message[5120];
+Tscroller summary_scroller;
 
 /* Initialized menu data recovered from main.c's DWARF declarations and the
  * original .data bytes.  Links stay symbolic so the ordinary linker owns the
@@ -995,6 +998,31 @@ void draw_reward(BITMAP *bmp)
                              itofix(320)-fixmul(itofix(reward_bmp->h),reward_scale)/2,
                              itofix(0),reward_scale);
     }
+}
+
+/* Partial recovery of main.c:5337, 0x4073f8..0x4076c0.  The replay menu
+ * uses a striped datafile backdrop and overlays the optional summary scroll. */
+void replay_menu_callback(void)
+{
+    int i;
+
+    for (i=0; i<640; i+=2) {
+        vline(swap_screen,i,0,480,0);
+        hline(swap_screen,0,i,640,0);
+    }
+    draw_sprite(swap_screen,data[87].dat,120,140);
+    if (!summary_scroller_message[0])
+        return;
+    scroll_scroller(&summary_scroller,-2);
+    drawing_mode(DRAW_MODE_TRANS,0,0,0);
+    set_trans_blender(0,0,0,110);
+    rectfill(swap_screen,0,0,639,20,makecol(0,0,0));
+    rectfill(swap_screen,0,0,639,18,makecol(0,0,0));
+    rectfill(swap_screen,0,0,639,16,makecol(0,0,0));
+    solid_mode();
+    draw_scroller(&summary_scroller,swap_screen,1,0,makecol(150,150,150));
+    if (!draw_scroller(&summary_scroller,swap_screen,0,0,makecol(200,200,200)))
+        restart_scroller(&summary_scroller);
 }
 
 /* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
