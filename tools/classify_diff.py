@@ -14,6 +14,8 @@ def classify(row):
     transfers = row.get('direct_transfers', [])
     if row['status'] == 'CODEGEN_SIMILAR':
         return 'RELOCATION_OR_LITERAL_LAYOUT'
+    if relocs and all(x.get('symbol') == '.bss' and x.get('target_va') is None for x in relocs):
+        return 'BSS_STATIC_PLACEMENT'
     if transfers and any(not x['equal'] for x in transfers):
         return 'SAME_CU_CALL_LAYOUT'
     if row.get('candidate_size') == row.get('original_size') and relocs and all(x.get('equal') for x in relocs):

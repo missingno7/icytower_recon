@@ -32,15 +32,22 @@ def load_ledger(path=ROOT / 'src/recovery.json'):
     return ledger
 
 
-def function_dimensions(status):
+def function_dimensions(status, override=None):
     """Conservative dimensions derived only from the recorded codegen result."""
     if status == 'FUNCTION_MATCH':
-        return {'source': 'RECOVERED', 'semantic': 'VERIFIED', 'difference': 'EXACT'}
-    if status == 'MISSING':
-        return {'source': 'INCOMPLETE', 'semantic': 'UNKNOWN', 'difference': 'SOURCE_INCOMPLETE'}
-    if status == 'CODEGEN_SIMILAR':
-        return {'source': 'RECOVERED', 'semantic': 'UNVERIFIED', 'difference': 'RELOCATION_OR_LAYOUT'}
-    return {'source': 'CANDIDATE', 'semantic': 'UNVERIFIED', 'difference': 'UNCLASSIFIED'}
+        result = {'source': 'RECOVERED', 'semantic': 'VERIFIED', 'difference': 'EXACT'}
+    elif status == 'MISSING':
+        result = {'source': 'INCOMPLETE', 'semantic': 'UNKNOWN', 'difference': 'SOURCE_INCOMPLETE'}
+    elif status == 'CODEGEN_SIMILAR':
+        result = {'source': 'RECOVERED', 'semantic': 'UNVERIFIED', 'difference': 'RELOCATION_OR_LAYOUT'}
+    else:
+        result = {'source': 'CANDIDATE', 'semantic': 'UNVERIFIED', 'difference': 'UNCLASSIFIED'}
+    if override:
+        unexpected = set(override) - set(result)
+        if unexpected:
+            raise ValueError('Unknown function dimension: ' + ', '.join(sorted(unexpected)))
+        result.update(override)
+    return result
 
 
 def progress_document(ledger=None):
@@ -62,7 +69,7 @@ def progress_document(ledger=None):
             if name not in by_name:
                 raise ValueError('%s is absent from units inventory for %s' % (name, source))
             statuses[status] += 1
-            dimensions[function_dimensions(status)['difference']] += 1
+            dimensions[function_dimensions(status, row.get('function_dimensions', {}).get(name))['difference']] += 1
             if unit['classification'] == 'GAME':
                 total_bytes += by_name[name]['size']
                 if status == 'FUNCTION_MATCH':
@@ -93,6 +100,6 @@ def frontier_rows(ledger=None):
                 continue
             f = by_name[name]
             rows.append({'source': source, 'function': name, 'status': status,
-                         'dimensions': function_dimensions(status), 'va': f['va'], 'size': f['size'],
+                         'dimensions': function_dimensions(status, row.get('function_dimensions', {}).get(name)), 'va': f['va'], 'size': f['size'],
                          'classification': unit['classification']})
     return rows
