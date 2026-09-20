@@ -2562,9 +2562,30 @@ int init_game(int argc, char **argv)
 
     if (allegro_init()!=0) return 0;
     set_color_depth(32);
-    if (set_gfx_mode(options.full_screen ? GFX_AUTODETECT_FULLSCREEN :
-                     GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0)
+    if (options.full_screen) {
+        if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("Failed to set graphics mode.");
+            return 0;
+        }
+    } else if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) {
+        options.full_screen=-1;
+        if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) {
+            set_gfx_mode(GFX_TEXT,0,0,0,0);
+            allegro_message("Failed to set graphics mode.");
+            return 0;
+        }
+    }
+    if (!screen) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("ERROR: screen was not set");
         return 0;
+    }
+    install_mouse();
+    enable_hardware_cursor();
+    select_mouse_cursor(2);
+    if (!options.full_screen)
+        show_mouse(screen);
 
     textprintf_centre_ex(screen,font,320,220,makecol(180,180,180),-1,
                          "please wait");
@@ -2591,7 +2612,6 @@ int init_game(int argc, char **argv)
     if (install_timers()!=0) return 0;
     draw_progress_bar();
     if (install_keyboard()!=0) return 0;
-    install_mouse();
     draw_progress_bar();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     draw_progress_bar();
