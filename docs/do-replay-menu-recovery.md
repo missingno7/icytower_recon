@@ -10,3 +10,11 @@ The current source has the recovered `replay_menu` data and its exact
 must keep the callback-driven replay menu lifecycle and the guest-profile and
 play-again branches in source; neither may be replaced by a synthetic menu
 return path.
+
+The oracle dispatches `handle_menu` returns `e`, `|`, and `{` to Play Again,
+Watch Replay, and Save Replay. Watch Replay fades out, formats the selected
+replay path, calls `run_demo`, and returns to the menu. Save Replay prompts
+for and sanitizes a filename, replaces its extension, rejects existing paths,
+then calls `save_replay`. The load path destroys any prior replay, calls
+`load_replay`, and rejects a checksum mismatch before returning to the menu.
+These calls and their failure alerts define the required source control flow.
