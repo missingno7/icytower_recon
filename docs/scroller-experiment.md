@@ -8,7 +8,10 @@ offset, row count, horizontal text length, and 512 line pointers.
 `draw_scroller` has the historical 396-byte body size and matches its bounds
 checks, clipping, vertical row loop, signed width shift, and all resolved
 calls. It remains DIFFER at the first vertical `set_clip_rect` argument setup:
-the candidate uses equivalent registers in a different order. This is not a
+the candidate uses equivalent registers in a different order. Reversing either
+or both of the vertical clip-right expressions (`x + width` and `y + height`)
+left the same 396-byte body and first mismatch at offset 93, so expression
+operand order is ruled out without changing the recovered source. This is not a
 complete-text, object, or CU claim. See
 `docs/experiments/game-scroller-O2.json` for the full comparison record.
 
