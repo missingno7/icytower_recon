@@ -31,9 +31,12 @@ fixed-point sine expressions and local lifetimes intact.
 The callback's persistent scroller state is now emitted by `main.c` from
 DWARF and the pinned executable-data asset records: `scroller_greetings[156]`
 and `init_string[7]` reproduce their manifest SHA-256 values, and
-`greeting_scroller` is a typed `Tscroller` BSS object. This removes the global
-state barrier to source recovery; it does not claim that the callback body is
-present.
+`greeting_scroller` is a typed `Tscroller` BSS object. The callback now has a
+source-level lifecycle body using this state: ad/input handling, backdrop and
+head rendering, greeting scrolling, guest/profile presentation, slider and
+selection synchronization, and menu-music adjustment. Its pinned-toolchain
+candidate is 2,571 bytes against the 3,741-byte oracle and remains `DIFFER`;
+the remaining gap is historical visual and branch layout recovery.
 
 The callback's two internal persistent scalars are now represented separately:
 `face` and `count` correspond to DWARF addresses `0x4dd31c` and `0x4dd318`.

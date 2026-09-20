@@ -572,6 +572,8 @@ extern Tprofile *load_profile(char *handle);
 extern Tprofile *create_profile(char *handle, int overwrite);
 extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
                        BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
+extern int get_slider_value(Tmenu_slider *s);
+extern int get_selection_value(Tmenu_selection *s);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int calc_replay_checksum(Treplay *r);
@@ -1067,6 +1069,119 @@ void replay_menu_callback(void)
     draw_scroller(&summary_scroller,swap_screen,1,0,makecol(150,150,150));
     if (!draw_scroller(&summary_scroller,swap_screen,0,0,makecol(200,200,200)))
         restart_scroller(&summary_scroller);
+}
+
+/* Source recovery of main.c:5136, 0x4100f8..0x410f95.  This retains the
+ * oracle's complete menu-frame lifecycle while the exact historical drawing
+ * expansion is still classified DIFFER. */
+void main_menu_callback(void)
+{
+    static int old_msc;
+    int scroller_step = -1;
+    BITMAP *head_bmp;
+    BITMAP *head_shadow;
+    BITMAP *head;
+    int headX;
+    int headY;
+    char welcomeMessage[512];
+
+    count++;
+    if (new_rand() % 198 == 1) {
+        face++;
+        if (face == 3)
+            face = 0;
+    }
+
+    if (key[KEY_PRTSCR]) {
+        take_screenshot(swap_screen);
+        while (key[KEY_PRTSCR])
+            rest(2);
+    }
+    testWindowResolution();
+
+    if (pFLDAd && pFLDAdBitmap) {
+        int mouseInAd = mouse_x < pFLDAdBitmap->w &&
+                        mouse_y >= SCREEN_H - pFLDAdBitmap->h;
+
+        if (mouseInAd && (mouse_b & 1) && !(old_msc & 1)) {
+            testWindowResolution();
+            open_web_browser((char *)pFLDAd->pVisitURL);
+            my_alert("Icy Tower", "Your web browser has been opened.", 0, 1);
+        }
+        old_msc = mouse_b;
+        set_mouse_sprite(NULL);
+    } else {
+        old_msc = mouse_b;
+    }
+
+    if (data && data[126].dat)
+        blit(data[126].dat, swap_screen, 0, 0, 0, 0, 640, 480);
+    if (data && data[71].dat)
+        draw_sprite(swap_screen, data[71].dat, 330, 280);
+    if (pFLDAdBitmap)
+        draw_trans_sprite(swap_screen, pFLDAdBitmap, 0, 280);
+
+    head = data ? data[58 + face].dat : NULL;
+    head_shadow = data ? data[61].dat : NULL;
+    if (head) {
+        head_bmp = create_bitmap(head->w, head->h);
+        if (head_bmp) {
+            clear_to_color(head_bmp, makecol(255, 0, 255));
+            if (head_shadow)
+                draw_sprite(head_bmp, head_shadow, 0, 0);
+            draw_sprite(head_bmp, head, 0, 0);
+            headX = 445 + ((count % 32) - 16) / 4;
+            headY = 38 + ((count % 24) - 12) / 6;
+            draw_sprite(swap_screen, head_bmp, headX, headY);
+            destroy_bitmap(head_bmp);
+        }
+    }
+
+    scroll_scroller(&greeting_scroller, scroller_step);
+    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+    set_trans_blender(0, 0, 0, 110);
+    rectfill(swap_screen, 0, 0, 639, 20, makecol(0, 0, 0));
+    rectfill(swap_screen, 0, 0, 639, 18, makecol(0, 0, 0));
+    rectfill(swap_screen, 0, 0, 639, 16, makecol(0, 0, 0));
+    solid_mode();
+    draw_scroller(&greeting_scroller, swap_screen, 1, 0, makecol(150, 150, 150));
+    if (!draw_scroller(&greeting_scroller, swap_screen, 0, 0,
+                       makecol(200, 200, 200)))
+        restart_scroller(&greeting_scroller);
+
+    if (!profile || !stricmp(profile->handle, "guest")) {
+        textprintf_ex(swap_screen, data[54].dat, 25, 215, makecol(255, 255, 255),
+                      -1, "Welcome to Icy Tower!");
+        textprintf_ex(swap_screen, data[54].dat, 25, 235, makecol(220, 220, 220),
+                      -1, "Play as guest or create a profile from the menu.");
+    } else {
+        sprintf(welcomeMessage, "Welcome back, %s!", profile->handle);
+        textprintf_ex(swap_screen, data[54].dat, 25, 215, makecol(255, 255, 255),
+                      -1, "%s", welcomeMessage);
+        textprintf_right_ex(swap_screen, data[54].dat, 315, 240,
+                            makecol(220, 220, 220), -1, "Best score: %d",
+                            profile->best_score);
+        textprintf_right_ex(swap_screen, data[54].dat, 315, 260,
+                            makecol(220, 220, 220), -1, "Best floor: %d",
+                            profile->best_floor);
+        textprintf_right_ex(swap_screen, data[54].dat, 315, 280,
+                            makecol(220, 220, 220), -1, "Best combo: %d",
+                            profile->best_combo);
+        textprintf_right_ex(swap_screen, data[54].dat, 315, 300,
+                            makecol(220, 220, 220), -1, "Games played: %d",
+                            profile->games_played);
+    }
+
+    options.snd_volume = get_slider_value(&snd_volume_slider);
+    options.msc_volume = get_slider_value(&msc_volume_slider);
+    options.flash = get_selection_value(&eyecandy_selection);
+    options.floor_shrink = floors.value;
+    options.start_speed = get_selection_value(&scroll_speed_selection);
+    options.floor_size = get_selection_value(&floor_size_selection);
+    options.gravity = get_selection_value(&gravity_selection);
+    if (bg_menu && old_msc != options.msc_volume)
+        adjust_sample(bg_menu, options.msc_volume, 128, 1000, 1);
+    old_msc = options.msc_volume;
 }
 
 /* Source recovery of main.c:5474, 0x410f98..0x4119fd. */
