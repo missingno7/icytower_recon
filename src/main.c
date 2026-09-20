@@ -2440,6 +2440,7 @@ void handle_player_input(void *control)
 int init_game(int argc, char **argv)
 {
     char cfgfilename[256];
+    char *replay_path;
     PACKFILE *cfg;
     int i;
 
@@ -2451,6 +2452,7 @@ int init_game(int argc, char **argv)
     hasFocus=1;
     lastFocus=1;
     memset(&cmdline,0,sizeof(cmdline));
+    replay_path=NULL;
     reset_options(&options);
     get_configfile_path(cfgfilename,sizeof(cfgfilename));
     for (i=0;i<15;i++) {
@@ -2468,9 +2470,21 @@ int init_game(int argc, char **argv)
         pack_fclose(cfg);
     }
     for (i=1;i<argc;i++) {
+        if (argv[i][0]!='-')
+            replay_path=argv[i];
         if (!stricmp(argv[i],"-windowed")) options.full_screen=0;
         else if (!stricmp(argv[i],"-fullscreen")) options.full_screen=1;
-        else if (!stricmp(argv[i],"-replay")) cmdline.jumps=1;
+        else if (!stricmp(argv[i],"-jumps")) cmdline.jumps=1;
+        else if (!stricmp(argv[i],"-combos")) cmdline.combos=1;
+        else if (!stricmp(argv[i],"-sd")) cmdline.sd=1;
+        else if (!stricmp(argv[i],"-keys")) cmdline.keys=1;
+        else if (!stricmp(argv[i],"-all")) {
+            cmdline.jumps=1;
+            cmdline.combos=1;
+            cmdline.sd=1;
+            cmdline.keys=1;
+        }
+        else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1;
     }
     if (!itrcheck)
         options.timesStarted++;
@@ -2508,6 +2522,14 @@ int init_game(int argc, char **argv)
     syncOptionsFromProfile();
     if (!check_characters())
         return 0;
+    if (replay_path) {
+        demo=load_replay(replay_path);
+        if (!demo) {
+            dropped_file_is_not_a_replay=1;
+            return 0;
+        }
+        itrcheck=1;
+    }
     init_ok=1;
     return 1;
 }
