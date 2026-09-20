@@ -64,11 +64,19 @@ menu setup after a case-insensitive selector check. These edges are from the
 complete `0x416109..0x416652` oracle range and must remain source-level calls,
 not an injected control-flow replacement.
 
-The supporting `menu_params` object is now emitted from its DWARF layout as a
-60-byte main-CU `.bss` record. `main_menu` instead resides in initialized
-`.data` as seven 148-byte `Tmenu` records; its captions, action codes, and
-pointer relocations must be recovered from that source data before it is
-emitted. It must not be replaced with a zeroed table.
+The supporting `menu_params` object is emitted from its DWARF layout as a
+60-byte main-CU `.bss` record. The initialized main-CU menu objects have also
+been recovered: `ctrl_menu[6]`, `snd_menu[3]`, `gfx_menu[5]`, `game_menu[1]`,
+`profile_menu[3]`, `opt_menu[4]`, `custom_menu[5]`, `play_menu[3]`,
+`main_menu[7]`, and `replay_menu[5]`. Their declaration sizes come from DWARF
+and their captions, navigation codes, flags, and data links come from the
+corresponding `.data` records at `0x4bc1c0..0x4bda84`. Each data link is a C
+symbolic address, so normal COFF relocation owns the final pointer value.
+
+The candidate TDM-2 object matches every table byte after masking only the
+final four-byte `data` relocation of each 148-byte record. This includes the
+main menu's links to the play, profile, and options tables. It must not be
+replaced with a zeroed table or a pre-relocated address blob.
 
 Reproduce the current dependency measurement with:
 

@@ -322,6 +322,8 @@ typedef struct Tjump_sequence {
 } Tjump_sequence;
 
 Toptions options;
+int start_speeds[6] = { 5, 4, 3, 2, 1, 0 };
+char *version_str = "1.5.1";
 Tprofile *profile;
 Tavailable_profile *profiles;
 int numProfiles;
@@ -354,12 +356,15 @@ int rejump;
 Tjump_sequence jumpSequence;
 int fast_forward;
 int fast_fast_forward;
-int gameMusicVoiceID;
+int gameMusicVoiceID = -1;
 SAMPLE *bg_beat;
-Tmenu_slider snd_volume_slider;
-Tmenu_slider msc_volume_slider;
+Tmenu_slider snd_volume_slider = { 0, 0, 250, 25 };
+Tmenu_slider msc_volume_slider = { 0, 0, 250, 25 };
 Tmenu_selection eyecandy_selection;
 Tmenu_floor_selection floors;
+Tmenu_selection scroll_speed_selection;
+Tmenu_selection floor_size_selection;
+Tmenu_selection gravity_selection;
 Tmenu_params menu_params;
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
@@ -371,6 +376,81 @@ int rec_seed;
 int hurry_y;
 void *hisc_tables[15];
 static int count;
+
+/* Initialized menu data recovered from main.c's DWARF declarations and the
+ * original .data bytes.  Links stay symbolic so the ordinary linker owns the
+ * final relocations. */
+Tmenu ctrl_menu[6] = {
+    { "LEFT",   'r', 0,   0,   0x40, &ctrl.key_left },
+    { "RIGHT",  'r', 0,   0,   0x40, &ctrl.key_right },
+    { "JUMP",   'r', 0,   0,   0x40, &ctrl.key_fire },
+    { "PAUSE",  'r', 0,   0,   0x40, &ctrl.key_pause },
+    { "ReJump", 'q', 'q', 'q', 0x04, &rejump },
+    { "Back",   'l', 0,   0,   0x80, NULL }
+};
+
+Tmenu snd_menu[3] = {
+    { "Sound",   0, 'n', 'm', 0x02, &snd_volume_slider },
+    { "Music\\\\", 0, 'n', 'm', 0x02, &msc_volume_slider },
+    { "Back",   'l', 0,   0,   0x80, NULL }
+};
+
+Tmenu gfx_menu[5] = {
+    { "Character",   0,   'x', 'y', 0x20, &play_char },
+    { "Start floor", 0,   'v', 'w', 0x10, &floors },
+    { "Eye Candy",   0,   'p', 'o', 0x08, &eyecandy_selection },
+    { "Fullscreen",  'q', 'q', 'q', 0x04, &options.full_screen },
+    { "Back",        'l', 0,   0,   0x80, NULL }
+};
+
+Tmenu game_menu[1] = {
+    { "Back", 'l', 0, 0, 0x80, NULL }
+};
+
+Tmenu profile_menu[3] = {
+    { "View Profile",   0x83, 0, 0, 0, NULL },
+    { "Change Profile", 0x84, 0, 0, 0, NULL },
+    { "Back",           'l',  0, 0, 0x80, NULL }
+};
+
+Tmenu opt_menu[4] = {
+    { "GFX Options",   'g', 0, 0, 0, gfx_menu },
+    { "Sound Options", 'g', 0, 0, 0, snd_menu },
+    { "Controls",      'g', 0, 0, 0, ctrl_menu },
+    { "Back",          'l', 0, 0, 0x80, NULL }
+};
+
+Tmenu custom_menu[5] = {
+    { "Start Game", 0x85, 0,   0,   0,    NULL },
+    { "Speed",      0,    'p', 'o', 0x08, &scroll_speed_selection },
+    { "Floors",     0,    'p', 'o', 0x08, &floor_size_selection },
+    { "Gravity",    0,    'p', 'o', 0x08, &gravity_selection },
+    { "Back",       'l',  0,   0,   0x80, NULL }
+};
+
+Tmenu play_menu[3] = {
+    { "Classic Game", 'e', 0, 0, 0,    NULL },
+    { "Custom Game",  'g', 0, 0, 0,    custom_menu },
+    { "Back",         'l', 0, 0, 0x80, NULL }
+};
+
+Tmenu main_menu[7] = {
+    { "Play Game",   'g', 0, 0, 0,    play_menu },
+    { "Instructions", 'h', 0, 0, 0,    NULL },
+    { "Profile",     'g', 0, 0, 0,    profile_menu },
+    { "High Scores", 'i', 0, 0, 0,    NULL },
+    { "Load Replay", 'z', 0, 0, 0,    NULL },
+    { "Options",     'g', 0, 0, 0,    opt_menu },
+    { "Exit",        'k', 0, 0, 0x80, NULL }
+};
+
+Tmenu replay_menu[5] = {
+    { "Play Again",    'e', 0, 0, 0,    NULL },
+    { "Watch Replay",  '|', 0, 0, 0,    NULL },
+    { "Save Replay",   '{', 0, 0, 0,    NULL },
+    { "View Profile",  0x83, 0, 0, 0,  NULL },
+    { "Main Menu",     'l', 0, 0, 0x80, NULL }
+};
 
 void show_credits(void)
 {
