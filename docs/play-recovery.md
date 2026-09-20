@@ -14,3 +14,11 @@ rank state, replay controls, and clock/query-performance/time instrumentation.
 Recovery must retain the full loop and its game, replay, profile, audio,
 timing, and presentation transitions. A reduced loop would only hide the
 real boundary and is not an acceptable resolution for this function.
+
+Its oracle call graph fixes the update order: `handle_player_input`,
+`update_player`, `update_particle`, `add_floor`, combo/reward updates, then
+one of the five collision handlers. Rendering calls `draw_frame` and
+`blit_to_screen`; the terminal paths draw results, update high scores, save
+profiles and replays, stop music/voices, and either re-enter the game or
+return to the menu. Pause, screenshot, replay-menu, and scroller paths are
+also owned by this function and must remain in the recovered source.
