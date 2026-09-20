@@ -13,7 +13,10 @@ and music stop. It is explicitly **PARTIAL**: it does not yet recover the
 floor, combo/reward, replay, result-screen, high-score, or terminal return
 state machines described below. The independent recovered-game linker now
 resolves `play`; its next direct game dependencies are
-`jump_player`, `update_player`, and `draw_frame`. The normal
+`update_player`, and `draw_frame`. `jump_player` now resolves from
+`player.c`: its oracle forced-jump behavior (`status = 1`, `sy = -12 * force`)
+is recovered, while normal launch-vector tuning remains partial pending the
+collision-mode table constants. The normal
 `handle_player_input` path now resolves from its `0x40b3e4..0x40b6bc` oracle
 range: left/right acceleration, damping, one jump per fire press, and release
 reset are recovered. The replay-control recording branch is explicitly

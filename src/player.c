@@ -48,3 +48,24 @@ void reset_player(Tplayer *p)
         p->jc[i] = 0;
     }
 }
+
+/* Partial recovery of player.c: 0x418678..0x418740.  The forced-jump path is
+ * direct from the oracle; normal launch-vector tuning still needs its
+ * collision-mode table constants. */
+int jump_player(Tplayer *p, int force)
+{
+    if (force) {
+        p->status = 1;
+        p->sy = -12.0 * force;
+        return -1;
+    }
+    if (p->status)
+        return 0;
+
+    p->status = 1;
+    p->sy = -12.0;
+    p->max_s = p->sx * 2.0;
+    p->rotate = p->max_s != 0.0;
+    p->angle = 0;
+    return -1;
+}
