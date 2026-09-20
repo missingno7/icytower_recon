@@ -180,8 +180,11 @@ named Allegro `for_each_file_ex` callback API with directory attributes.
 `play_sound` exactly recovers its full 215-byte source body. It preserves the
 `itrcheck` gate, randomized pitch, sound-volume guard, player-x pan conversion,
 fast-forward pitch doubling, and Allegro `play_sample` call. Every symbolic
-reference and instruction sequence matches, including the direct same-CU
-`new_rand` target.
+reference, instruction sequence, and the direct same-CU `new_rand` target
+matches. The `32.0f` pan-offset literal has the original bytes but occurs more
+than once in the partial-CU read-only data, so its relocation target is not
+independently established. It is `CODEGEN_SIMILAR`, rather than an exact
+function match.
 
 `play_jump_sound` similarly recovers its full 141-byte threshold selector. It
 selects one of the three typed `custom.jump_sound` entries from the player
