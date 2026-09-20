@@ -428,8 +428,8 @@ typedef struct Tprofile_create {
     int rewards[10];
     int total_jumps;
     char best_replay_names[32][32];
-    int flash;
     int jump_hold;
+    int flash;
     char last_avatar[64];
     int start_floor;
     int msc_volume;
