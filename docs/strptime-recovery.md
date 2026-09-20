@@ -16,11 +16,9 @@ Three functions are independently recovered:
   Its first three arguments use GCC `regparm(3)` (`eax`, `edx`, and `ecx`);
   the state pointer is the fourth stack argument.
 
-`first_day` and `match_string` are retained explicitly only while their sole,
-unrecovered caller is absent; the retention annotations do not alter their
-emitted function bytes. The current comparison reports `FUNCTION_MATCH` for
-all three recovered functions. `__strptime` (2028 bytes) remains unrecovered,
-so this compilation unit is not yet complete.
+The current comparison reports `FUNCTION_MATCH` for the two helpers and public
+wrapper. `_strptime` (2028 bytes) is now present as an ordinary source
+candidate, but remains `DIFFER`, so this compilation unit is not yet complete.
 
 The source now also restores the parser's original static table declarations:
 eight abbreviated weekdays, eight full weekdays, thirteen abbreviated months,
@@ -77,9 +75,10 @@ CRT `tzname` entries to set `tm_isdst`. The public stateful parser linked below
 confirms that exact `cp`/`zonestr`/`alloca` structure and its
 `isupper((unsigned char)*cp)` form. The target's bounded two-digit-year pivot
 is also independently visible: values above 99 fail before the 70-year rule.
-A source-shaped candidate with those rules retains exact helpers and wrapper
-but emits a 2003-byte parser, still 25 bytes short. It therefore remains a
-constrained recovery baseline only; the complete body is not yet promoted.
+A source-shaped candidate with those rules retains the exact helpers and
+wrapper. Integrated with the required exported `regparm(3)` ABI, it emits a
+2,005-byte parser, still 23 bytes short. It is compiled and linked as a
+constrained recovery baseline only; it does not make an exact-body claim.
 
 Research references: the [2002 Newlib import](https://github.com/mirror/newlib-cygwin/blob/dea7e25ca71e6a6c690f09a43b04f2858c1c348d/newlib/libc/time/strptime.c), the
 [1999 Heimdal source](https://github.com/heimdal/heimdal/blob/0d3fc31121aa/lib/roken/strptime.c), and the
