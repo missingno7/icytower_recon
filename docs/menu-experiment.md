@@ -25,7 +25,9 @@ candidate is 518 bytes against the historical 583 and is recorded as
 `DIFFER`.
 
 draw_menu now reconstructs the historical rendering loop from its independent
-DWARF types and original control flow. It advances rows by `font_height - 12`,
+DWARF types and original control flow. Its source-local declaration order is
+`pos`, `str[256]`, then `h`, matching the historical debug record. It advances
+rows by `font_height - 12`,
 formats every entry, renders key bindings in two columns, draws the selection
 bullet, and renders the three-piece and movable slider assets through Allegro's
 historical inline `draw_sprite` dispatch. The movable asset is one row below

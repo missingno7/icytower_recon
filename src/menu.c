@@ -336,8 +336,8 @@ void build_menu_string(Tmenu *m, char *dest);
 void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int cx, int y, int dx)
 {
     int pos;
-    int h;
     char str[256];
+    int h;
 
     stepIn = dx;
     h = mp->font_height - 12;
