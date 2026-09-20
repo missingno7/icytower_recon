@@ -71,8 +71,17 @@ typedef struct Treplay {
     int gravity;
     int rejump;
     int random_seed;
+    char comment[42];
+    int tc_posts;
+    float tc_c_data[100];
+    float tc_q_data[100];
+    float tc_t_data[100];
+    float tc_s_data[100];
+    float tc_f_data[100];
+    void *data;
 } Treplay;
 Treplay *demo;
+int uberChecksum;
 Tcontrol ctrl;
 extern DATAFILE *data;
 
@@ -541,6 +550,9 @@ extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
                        BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
+extern int calc_replay_checksum(Treplay *r);
+extern int save_replay(char *path, char *file, Treplay *r, int size,
+                       int make_new_date);
 extern void run_demo(char *file_name);
 extern int new_game(void);
 extern int play(void);
@@ -1033,13 +1045,19 @@ void replay_menu_callback(void)
         restart_scroller(&summary_scroller);
 }
 
-/* Initial source recovery of main.c:5474, 0x410f98..0x4119fd. */
+/* Source recovery of main.c:5474, 0x410f98..0x4119fd. */
 int do_replay_menu(void)
 {
     int ret = -1;
     int play_again = 0;
     int isGuest = !stricmp("guest",profile->handle);
-    char filename[1024];
+    int state = !isGuest;
+    char filename[512];
+    char player_name[512];
+    char comment[512];
+    char full_filename[512];
+    char replay_filename[2048];
+    char temporary_filename[2048];
 
     log2file(" replay_menu launched");
     while (!closeButtonClicked && ret!='l') {
@@ -1052,11 +1070,107 @@ int do_replay_menu(void)
         else if (ret=='|') {
             log2file("  view replay selected");
             fadeOut(16);
-            sprintf(filename,"%slast_game.itr",replay_directory);
-            run_demo(filename);
+            sprintf(temporary_filename,"%slast_game.itr",replay_directory);
+            run_demo(temporary_filename);
         }
-        else if (ret=='{' && !isGuest)
+        else if (ret=='{') {
             log2file("  save replay selected");
+            memset(filename,' ',511);
+            filename[511]=0;
+            memset(player_name,' ',511);
+            player_name[511]=0;
+            memset(comment,' ',511);
+            comment[511]=0;
+            if (isGuest)
+                strcpy(player_name," - ");
+            else
+                strcpy(player_name,profile->handle);
+            state=!isGuest;
+            while (!closeButtonClicked && state!='*') {
+                stretch_sprite(swap_screen,data[86].dat,120,140,380,200);
+                textout_ex(swap_screen,data[51].dat,"SAVE REPLAY",140,150,-1,-1);
+                textout_ex(swap_screen,data[54].dat,"(enter to advance)",320,312,
+                           makecol(80,80,80),-1);
+                drawSlot(swap_screen,140,210,"Your name:",player_name,
+                         makecol(50,50,50));
+                drawSlot(swap_screen,140,250,"Filename:",filename,
+                         makecol(50,50,50));
+                drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                         makecol(50,50,50));
+                blit_to_screen(swap_screen);
+                if (state==0) {
+                    if (get_string(swap_screen,player_name,340,512,data[54].dat,
+                                   140,210,makecol(255,255,255),makecol(0,0,0)) < 0)
+                        state='*';
+                    else {
+                        replaceBadCharacters(player_name,'_');
+                        state=1;
+                    }
+                }
+                else if (state==1) {
+                    if (!filename[0] && player_name[0]) {
+                        sprintf(filename,"%s_%d_%d_%d",player_name,demo->score,
+                                demo->floor,demo->combo);
+                        replaceBadCharacters(filename,'_');
+                    }
+                    if (get_string(swap_screen,filename,340,512,data[54].dat,
+                                   140,250,makecol(255,255,255),makecol(0,0,0)) < 0)
+                        state='*';
+                    else {
+                        replaceBadCharacters(filename,'_');
+                        state=2;
+                    }
+                }
+                else if (state==2) {
+                    int edit_result;
+
+                    edit_result=get_string(swap_screen,comment,340,42,data[54].dat,
+                                           140,290,makecol(255,255,255),makecol(0,0,0));
+                    if (edit_result < 0)
+                        state='*';
+                    else
+                        state=3;
+                }
+                else if (state==3) {
+                    sprintf(temporary_filename,"%slast_game.itr",replay_directory);
+                    if (!player_name[0]) {
+                        state=0;
+                        continue;
+                    }
+                    if (!filename[0]) {
+                        state=1;
+                        continue;
+                    }
+                    if (demo)
+                        destroy_replay(demo);
+                    demo=load_replay(temporary_filename);
+                    if (!demo) {
+                        my_alert("Failed to save replay.",
+                                 "Temporary file not found.",0,1);
+                        continue;
+                    }
+                    if (calc_replay_checksum(demo)!=uberChecksum) {
+                        my_alert("Failed to save replay.",
+                                 "Temporary file mismatch.",0,1);
+                        continue;
+                    }
+                    strncpy(demo->name,player_name,30);
+                    strcpy(demo->comment,comment);
+                    replace_extension(replay_filename,filename,"itr",512);
+                    sprintf(full_filename,"%s%s",replay_directory,replay_filename);
+                    if (exists(full_filename) &&
+                        !my_alert("The file exists.","Do you want to overwrite it?",1,0)) {
+                        state=1;
+                        continue;
+                    }
+                    if (save_replay(replay_directory,replay_filename,demo,demo->size+2,1)<0)
+                        my_alert("Failed to save replay.",full_filename,0,1);
+                    else
+                        my_alert("Replay saved.",0,0,1);
+                    state='*';
+                }
+            }
+        }
     }
     return play_again;
 }

@@ -25,16 +25,21 @@ calls `handle_menu(replay_menu, &menu_params, &ctrl, swap_screen,
 replay_menu_callback, 180, 160, 0)`. The outer loop ends when the close button
 is set or the menu returns `l`; `e` sets `play_again` before exiting.
 
-The initial source candidate implements that outer loop plus the Play Again
-and Watch Replay dispatches. It is `DIFFER` at 305 bytes; the filename save,
-guest confirmation, replay load, checksum, and alert subflows remain to be
-recovered from the oracle body.
+The source candidate now contains the full modal save/load flow recovered from
+the oracle: three 512-byte editor fields, the named-profile prefill and guest
+owner prompt, filename normalization, metadata copy, temporary-replay reload,
+checksum gate, overwrite confirmation, and save-result alerts.  It remains
+`DIFFER` at 2,126 bytes against the oracle's 2,661-byte body: the remaining
+gap is source-shape and control-flow fidelity, not an omitted persistence
+subsystem.  The isolated `-O2` object compiled successfully and the complete
+independent recovered-game link succeeded after this update.
 
-The save tail copies the active profile name into the replay metadata, derives
-the filename with `replace_extension`, rejects an existing full path, then
-calls `save_replay(replay_directory, filename, demo, demo->size + 2, 1)`.
-Its success and failure branches return through modal alerts before rejoining
-the replay menu.
+The save tail copies the selected owner name into replay metadata with a
+30-byte `strncpy`, copies the optional comment, derives the filename with
+`replace_extension`, rejects an existing full path unless the user confirms
+overwrite, then calls `save_replay(replay_directory, filename, demo,
+demo->size + 2, 1)`.  Its success and failure branches return through modal
+alerts before rejoining the replay menu.
 
 The persistence object is the global `demo`; the load-validation branch checks
 the replay checksum against global `uberChecksum` before accepting it.
