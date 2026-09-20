@@ -58,8 +58,17 @@ Its error paths log the original socket errors. The 267-byte `SplitURL`
 recovery initializes all output pointers, accepts the optional `http://`
 prefix, extracts the host on `:` or `/`, converts a colon-prefixed port with
 `strtol`, and releases both output allocations on failure.
-`extractHTTPResponse` remains the 923-byte recovery body, with exact DWARF
-extent and oracle disassembly available.
+`extractHTTPResponse` is now an ordinary source candidate for the 923-byte
+body at `0x405a90`. DWARF names its two 1024-byte buffers `slaskbuf` and
+`linebuf`, its input-byte cursor `i`, and the inlined `extractLine` helper.
+That helper consumes a CRLF-terminated line into a CR/LF-free buffer while
+returning the count from the original input. The parser accepts the first line
+only when `sscanf(linebuf, "HTTP/%s %d", slaskbuf, &status)` converts both
+fields; on failure it logs `"Malformed HTTP response:\n%s"`, destroys the
+allocation, and returns null. It then grows the header pair array one entry at
+a time, splitting at the first colon (with the source's separate empty-name
+path for a colon-leading line), and copies all remaining bytes as an optional
+NUL-terminated payload. This preserves the oracle's raw-count header slicing.
 
 DWARF records a one-byte initial response allocation, 512-byte send and
 1024-byte receive buffers, and the local order `sendbuff`, `sprintf`,

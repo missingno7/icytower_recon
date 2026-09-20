@@ -124,10 +124,86 @@ HTTPResponse *HTTPRequest(char *pURL, char *pMethod)
     return NULL;
 }
 
-/* The parser's historical call ABI passes its two arguments in EAX and EDX.
- * The transport is source-recovered but remains a code-generation DIFFER. */
+/* The line reader was inlined twice into extractHTTPResponse in the original
+ * object. It returns consumed input bytes while omitting CR/LF from output. */
+static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,
+                              int iOutSize)
+{
+    int bytesRead = 0;
+    char last = 0;
+
+    pOutBuffer[0] = 0;
+    while (iDataLeft - bytesRead > 0) {
+        char c = pBuffer[bytesRead++];
+
+        if (c == '\n' && last == '\r')
+            break;
+        if (c != '\r') {
+            *pOutBuffer++ = c;
+            *pOutBuffer = 0;
+            if (--iOutSize == 1)
+                break;
+        }
+        last = c;
+    }
+    pOutBuffer[--iOutSize] = 0;
+    return bytesRead;
+}
+
+/* The parser's historical call ABI passes its two arguments in EAX and EDX. */
 HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,
-                                                                int iResponseBytesCount);
+                                                                int iResponseBytesCount)
+{
+    char slaskbuf[1024];
+    char linebuf[1024];
+    int i;
+    HTTPResponse *pResponse = malloc(sizeof(HTTPResponse));
+
+    memset(pResponse, 0, sizeof(HTTPResponse));
+    i = extractLine(pHTTPData, iResponseBytesCount, linebuf, sizeof(linebuf));
+    if (sscanf(linebuf, "HTTP/%s %d", slaskbuf, &pResponse->iStatusCode) != 2) {
+        log2file("Malformed HTTP response:\n%s", pHTTPData);
+        destroyHTTPResponse(pResponse);
+        return NULL;
+    }
+
+    while (1) {
+        int bytesRead = extractLine(pHTTPData + i, iResponseBytesCount - i,
+                                    linebuf, sizeof(linebuf));
+        HTTPHeader *header;
+        int j;
+
+        i += bytesRead;
+        if (bytesRead == 2)
+            break;
+        pResponse->iNumHeaders++;
+        pResponse->pHeaders = realloc(pResponse->pHeaders,
+                                      pResponse->iNumHeaders * sizeof(HTTPHeader));
+        header = &pResponse->pHeaders[pResponse->iNumHeaders - 1];
+        if (linebuf[0] == ':') {
+            j = 0;
+        } else {
+            for (j = 1; j < bytesRead; j++) {
+                if (linebuf[j] == ':')
+                    break;
+            }
+        }
+        header->pHeader = malloc(j + 1);
+        memcpy(header->pHeader, linebuf, j);
+        header->pHeader[j] = 0;
+        header->pValue = malloc(bytesRead - j - 1);
+        memcpy(header->pValue, linebuf + j + 2, bytesRead - j - 2);
+        header->pValue[bytesRead - j - 2] = 0;
+    }
+
+    pResponse->iPayloadSize = iResponseBytesCount - i;
+    if (pResponse->iPayloadSize) {
+        pResponse->pPayload = malloc(pResponse->iPayloadSize + 1);
+        memcpy(pResponse->pPayload, pHTTPData + i, pResponse->iPayloadSize);
+        pResponse->pPayload[pResponse->iPayloadSize] = 0;
+    }
+    return pResponse;
+}
 
 HTTPResponse *HTTPFetchInternal(char *pHost, int iPort, char *pPathToFile,
                                 char *pMethod)
