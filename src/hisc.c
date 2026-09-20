@@ -175,7 +175,7 @@ void view_scores(Thisc_table **tables,char **names)
         }
     }
 
-    pageY=0;
+    pageY=500;
     targetY=0;
     dark=0;
     targetDark=0;

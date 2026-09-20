@@ -17,5 +17,6 @@ sort.
 `view_scores` remains a partial 1,988-byte candidate against the historical
 2,552-byte body. Its interaction loop now preserves the DWARF-confirmed
 `canDone` debounce: fire completes immediately, while a close request must
-first observe a released control state. The original text is used only as an
+first observe a released control state. The panel also begins at the original
+`pageY = 500` and eases toward zero. The original text is used only as an
 oracle by `build/experiments/tdm-2/game-hisc/O2`.
