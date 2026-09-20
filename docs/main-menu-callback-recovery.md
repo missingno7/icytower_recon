@@ -41,6 +41,18 @@ The character-loading callback has its own function-static `count` at
 `0x4dd330`; keeping that counter at function scope prevents character discovery
 from sharing main-menu animation state.
 
+The entry block is now decoded through its return branches. Each invocation
+increments the menu `count`; when `new_rand() % 198 == 1`, it increments
+`face`, wrapping `3` back to `0`. The screenshot-input branch calls
+`take_screenshot(swap_screen)` and waits for its observed byte-sized input
+flag to clear before returning to the resolution/ad path. The ad gate first
+tests the horizontal input coordinate against the loaded bitmap's first word;
+its true branch derives the vertical gate from the display-state object and
+the bitmap's second word. It then preserves the mouse-button transition across
+the browser launch and alert before restoring the normal cursor. The unnamed
+Allegro input and display fields remain described by their oracle addresses in
+the disassembly until their typed declarations are independently recovered.
+
 The decoded line table provides the required complete phase map. Lines
 5220--5228 scroll and render the welcome scroller; lines 5231--5248 choose
 between the guest welcome text and the ranked-profile presentation, including
