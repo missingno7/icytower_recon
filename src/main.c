@@ -2503,6 +2503,7 @@ int init_game(int argc, char **argv)
     gravity_selection.caption[1]=strdup("Normal");
     gravity_selection.caption[2]=strdup("Heavy");
     fldads_start();
+    init_control(&ctrl);
     for (i=1;i<argc;i++) {
         if (argv[i][0]!='-')
             replay_path=argv[i];
@@ -2544,9 +2545,20 @@ int init_game(int argc, char **argv)
     draw_sprite(screen,fldLogo,320-fldLogo->w/2,200-fldLogo->h/2);
     unload_datafile(loader);
 
+    set_display_switch_mode(options.full_screen ? SWITCH_BACKAMNESIA :
+                            SWITCH_BACKGROUND);
+    set_display_switch_callback(SWITCH_IN,switchedToProgram);
+    set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
+    set_close_button_callback(clickedCloseButton);
+    srand((unsigned int)time(NULL));
+    draw_progress_bar();
     if (install_timers()!=0) return 0;
+    draw_progress_bar();
     if (install_keyboard()!=0) return 0;
     install_mouse();
+    draw_progress_bar();
+    install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
+    draw_progress_bar();
     got_joystick=(install_joystick(JOY_TYPE_AUTODETECT)==0);
     if (got_joystick) {
         gamepad.up=1;
@@ -2570,15 +2582,57 @@ int init_game(int argc, char **argv)
                 pad->b[i]=16;
         }
     }
-    install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
-    init_control(&ctrl);
+
+    draw_progress_bar();
+    swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
+    if (!swap_screen)
+        return 0;
 
     set_color_conversion(0x00ffffff);
+    draw_progress_bar();
     packfile_password("CHEESE");
     data=load_datafile_callback("data/data.dat",datafile_callback_slow);
     if (!data) return 0;
+    packfile_password(NULL);
+    draw_progress_bar();
+    player_id=rand()%1000;
+    ply[player_id]=malloc(sizeof(*ply[player_id]));
+    if (!ply[player_id])
+        return 0;
+    get_profiles_dir(profiles_dir,sizeof(profiles_dir));
+    if (!file_exists(profiles_dir,FA_DIREC,0))
+        mkdir(profiles_dir);
+    if (!file_exists(profiles_dir,FA_DIREC,0))
+        return 0;
+    draw_progress_bar();
+    rebuild_profile_list(0);
+    draw_progress_bar();
+    profile=load_profile(options.lastProfile);
+    if (!profile)
+        profile=load_profile("guest");
+    if (!profile)
+        profile=create_profile("guest",1);
+    if (!profile)
+        return 0;
+    strcpy(options.lastProfile,profile->handle);
+    syncOptionsFromProfile();
+    gravity_selection.value=options.gravity;
+    floor_size_selection.value=options.floor_size;
+    scroll_speed_selection.value=options.start_speed;
+    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
+    floors.value=profile->start_floor;
+    if (floors.value>floors.max)
+        floors.value=floors.max;
+    draw_progress_bar();
+    if (!check_characters())
+        return 0;
+    select_palette(data[0].dat);
+    draw_progress_bar();
+    packfile_password("CHEESE");
     sfx=load_datafile_callback("data/sfx15.dat",datafile_callback);
+    packfile_password(NULL);
     if (sfx) {
+        draw_progress_bar();
         combo_sound[0]=getSampleFromOggDatafile(sfx,8);
         combo_sound[1]=getSampleFromOggDatafile(sfx,18);
         combo_sound[2]=getSampleFromOggDatafile(sfx,9);
@@ -2603,46 +2657,6 @@ int init_game(int argc, char **argv)
         sounds[8]=getSampleFromOggDatafile(sfx,16);
         unload_datafile(sfx);
     }
-    swap_screen=create_bitmap(SCREEN_W,SCREEN_H);
-    if (!swap_screen) {
-        unload_datafile(data);
-        data=NULL;
-        return 0;
-    }
-    set_display_switch_mode(options.full_screen ? SWITCH_BACKAMNESIA :
-                            SWITCH_BACKGROUND);
-    set_display_switch_callback(SWITCH_IN,switchedToProgram);
-    set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
-    set_close_button_callback(clickedCloseButton);
-    srand((unsigned int)time(NULL));
-    player_id=rand()%1000;
-    ply[player_id]=malloc(sizeof(*ply[player_id]));
-    if (!ply[player_id])
-        return 0;
-    get_profiles_dir(profiles_dir,sizeof(profiles_dir));
-    if (!file_exists(profiles_dir,FA_DIREC,0))
-        mkdir(profiles_dir);
-    if (!file_exists(profiles_dir,FA_DIREC,0))
-        return 0;
-    rebuild_profile_list(0);
-    profile=load_profile(options.lastProfile);
-    if (!profile)
-        profile=load_profile("guest");
-    if (!profile)
-        profile=create_profile("guest",1);
-    if (!profile)
-        return 0;
-    strcpy(options.lastProfile,profile->handle);
-    syncOptionsFromProfile();
-    gravity_selection.value=options.gravity;
-    floor_size_selection.value=options.floor_size;
-    scroll_speed_selection.value=options.start_speed;
-    floors.max=profile->best_floor>999 ? 9 : profile->best_floor/100;
-    floors.value=profile->start_floor;
-    if (floors.value>floors.max)
-        floors.value=floors.max;
-    if (!check_characters())
-        return 0;
     if (replay_path) {
         demo=load_replay(replay_path);
         if (!demo) {
