@@ -2356,6 +2356,8 @@ int _mangled_main(int argc, char **argv)
         uninit_game();
         return 1;
     }
+    init_scroller(&greeting_scroller, data[54].dat, scroller_greetings,
+                  640, 30, -1);
     startMenuMusic();
     clear_keybuf();
     if (new_game()) {
