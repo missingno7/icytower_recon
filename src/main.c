@@ -2671,8 +2671,11 @@ int init_game(int argc, char **argv)
     get_profiles_dir(profiles_dir,sizeof(profiles_dir));
     if (!file_exists(profiles_dir,FA_DIREC,0))
         mkdir(profiles_dir);
-    if (!file_exists(profiles_dir,FA_DIREC,0))
+    if (!file_exists(profiles_dir,FA_DIREC,0)) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed to create profile directory %s",profiles_dir);
         return 0;
+    }
     draw_progress_bar();
     rebuild_profile_list(0);
     draw_progress_bar();
@@ -2681,13 +2684,19 @@ int init_game(int argc, char **argv)
         profile=load_profile("guest");
     if (!profile)
         profile=create_profile("guest",1);
-    if (!profile)
+    if (!profile) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("Failed create profile.");
         return 0;
+    }
     strcpy(options.lastProfile,profile->handle);
     syncOptionsFromProfile();
     draw_progress_bar();
-    if (!check_characters())
+    if (!check_characters()) {
+        set_gfx_mode(GFX_TEXT,0,0,0,0);
+        allegro_message("No characters available.\nPlease reinstall game or add custom characters.\nRefer to readme.txt.");
         return 0;
+    }
     select_palette(data[0].dat);
     draw_progress_bar();
     packfile_password("CHEESE");
