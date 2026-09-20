@@ -9,7 +9,8 @@ function boundaries, and relocations are recorded in
 `build/experiments/tdm-2/game-game-data/O2`.
 
 `getGameDataXML` is reconstructed from the original serializer's fixed replay
-layout and XML literals. Its `Tgame_data.replay` member is a typed pointer to
+layout and XML literals. DWARF lists no local replay-pointer cache, so the
+recovery reads `gd->replay` directly. Its `Tgame_data.replay` member is a typed pointer to
 the historical `Treplay` structure, rather than a layout-only `void *`; the
 shared replay definition retains the six-byte header and 42-byte comment
 fields, with normal C alignment preserving the serializer offsets. The
@@ -20,12 +21,13 @@ mutually exclusive output paths: `cmdline.tiny` emits only the result verdict,
 whereas the normal path emits the optional combos, jumps, keys, and sample-data
 blocks selected by the corresponding command-line flags. The actual level rows
 remain gated by the claimed replay counters, including the original off-by-one
-claimed-counter layout.
+claimed-counter layout; all four gates require a strictly positive claimed
+counter, as shown by the original signed branch tests.
 
 Its local serializer buffers use the original DWARF bounds: `playerTag` and
 `keysTag` are 256 bytes, `gameTag` is 512 bytes, `claimTag` and `actualTag`
 are 1024 bytes, and the combo, jump, and sample-data buffers are each 5120
 bytes. Those bounds restore the historical 0x485c stack allocation. DWARF also
 confirms `misses` as an `int` local scoped only to the tiny-output branch; the
-source preserves that lexical scope. The resulting 1853-byte candidate still
-differs from the 1855-byte original in formatter and branch scheduling.
+source preserves that lexical scope. The resulting 1814-byte candidate still
+differs from the 1855-byte original in compiler scheduling and branch layout.
