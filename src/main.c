@@ -238,6 +238,26 @@ typedef struct Tmenu_floor_selection {
     int max;
 } Tmenu_floor_selection;
 
+/* menu.h layout recovered from the main-CU DWARF inventory. */
+typedef struct Tmenu {
+    char caption[128];
+    int return_select;
+    int return_left;
+    int return_right;
+    int flags;
+    void *data;
+} Tmenu;
+
+typedef struct Tmenu_params {
+    void *font;
+    int font_height;
+    int ctrl[9];
+    void *bullet;
+    int pos;
+    void *data;
+    int fo;
+} Tmenu_params;
+
 typedef struct FLDAdSpot {
     const char *pRemoteImageURL;
     const char *pLocalImagePath;
@@ -340,6 +360,8 @@ Tmenu_slider snd_volume_slider;
 Tmenu_slider msc_volume_slider;
 Tmenu_selection eyecandy_selection;
 Tmenu_floor_selection floors;
+Tmenu_params menu_params;
+Tmenu main_menu[7];
 char replay_directory[1024];
 BITMAP *pFLDAdBitmap;
 const FLDAdSpot *pFLDAd;

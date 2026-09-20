@@ -64,6 +64,12 @@ menu setup after a case-insensitive selector check. These edges are from the
 complete `0x416109..0x416652` oracle range and must remain source-level calls,
 not an injected control-flow replacement.
 
+The supporting main-CU BSS objects are now emitted from their DWARF layouts:
+`menu_params` is the 60-byte `Tmenu_params` record and `main_menu` contains
+seven 148-byte `Tmenu` records. Their initial contents remain zero, as the
+original `.bss` storage requires; construction of their runtime menu entries
+belongs to the recovered initialization path.
+
 Reproduce the current dependency measurement with:
 
 ```powershell
