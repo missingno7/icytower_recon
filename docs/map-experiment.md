@@ -4,12 +4,14 @@
 and 40-byte bodies at -O2. DWARF fixes the `Tfloor` layout at six integers
 and `Tmap` at 32 floors plus its scroll offset.
 
-`getFloorData` has the historical 107-byte extent and now fully matches its
-signed tile-row calculation, bounds checks, empty-row check, both edges, and
-output order. The algebraically equivalent right-edge source form selects the
-original `lea` sequence. A fresh isolated `game-map -O2` comparison confirms
-`FUNCTION_MATCH`: relative layout, masked bytes, and relocation-resolved bytes
-are all equal.
+`getFloorData` has the historical 107-byte extent and preserves its signed
+tile-row calculation, bounds checks, empty-row check, both edges, and output
+order. It remains `DIFFER`: the original computes the right edge with
+`lea ebx, [eax + 17]` before loading the `fx2` pointer, while the current
+source-equivalent candidate emits `add eax, 17` and uses `ebx` for that
+pointer. Historical DWARF lists only `y` as a local, and both a direct
+shifted-plus-17 expression and a temporary-right-edge probe produced the same
+candidate, so neither artificial form is retained.
 `add_floor` now has a 606-byte source reconstruction. It shifts the 31 prior
 floors, evolves the new room's `level` and periodic `level / 5` `sign` marker, applies the
 250/2500/5-floor reset rules, computes replay-controlled floor widths, and
