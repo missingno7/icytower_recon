@@ -2440,6 +2440,7 @@ void handle_player_input(void *control)
 int init_game(int argc, char **argv)
 {
     char cfgfilename[256];
+    char profiles_dir[1024];
     char *replay_path;
     PACKFILE *cfg;
     DATAFILE *sfx;
@@ -2543,6 +2544,10 @@ int init_game(int argc, char **argv)
     set_display_switch_callback(SWITCH_OUT,switchedFromProgram);
     set_close_button_callback(clickedCloseButton);
     srand((unsigned int)time(NULL));
+    player_id=rand()%1000;
+    ply[player_id]=malloc(sizeof(*ply[player_id]));
+    if (!ply[player_id])
+        return 0;
     if (got_joystick) {
         gamepad.up=4;
         gamepad.down=8;
@@ -2551,6 +2556,11 @@ int init_game(int argc, char **argv)
         for (i=0;i<32;i++)
             gamepad.b[i]=16;
     }
+    get_profiles_dir(profiles_dir,sizeof(profiles_dir));
+    if (!file_exists(profiles_dir,FA_DIREC,0))
+        mkdir(profiles_dir);
+    if (!file_exists(profiles_dir,FA_DIREC,0))
+        return 0;
     rebuild_profile_list(0);
     profile=load_profile(options.lastProfile);
     if (!profile)
