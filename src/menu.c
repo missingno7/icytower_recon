@@ -265,7 +265,7 @@ void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int cx, int y, int dx)
             BITMAP *b;
 
             b = ((BITMAP **)m->data)[2];
-            draw_sprite(bmp, b, x + 244 - b->w / 2, y + y - b->h + 10);
+            draw_sprite(bmp, b, x + 244 - b->w / 2, y + h - b->h + 10);
         }
         m++;
         y += h;

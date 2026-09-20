@@ -27,7 +27,9 @@ draw_menu now reconstructs the historical rendering loop from its independent
 DWARF types and original control flow. It advances rows by `font_height - 12`,
 formats every entry, renders key bindings in two columns, draws the selection
 bullet, and renders the three-piece and movable slider assets through Allegro's
-historical inline `draw_sprite` dispatch. The candidate is 952 bytes against
+historical inline `draw_sprite` dispatch. The movable asset is one row below
+the text baseline (`y + h`), rather than the incorrect `y + y` placeholder.
+The candidate is 956 bytes against
 the historical 1,118-byte function and is recorded as `DIFFER`; its shorter
 code results from equivalent compiler register allocation and branch folding.
 
