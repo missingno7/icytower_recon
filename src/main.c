@@ -535,6 +535,8 @@ extern void save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
 extern int rebuild_profile_list(Tavailable_profile **profs);
+extern Tprofile *load_profile(char *handle);
+extern Tprofile *create_profile(char *handle, int overwrite);
 extern void destroy_replay(Treplay *r);
 extern Treplay *load_replay(char *filename);
 extern int new_game(void);
@@ -1062,6 +1064,61 @@ void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified,
         }
         pos += padding;
     }
+}
+
+/* Partial recovery of main.c:5650, 0x40d454..0x40da56.  This mandatory
+ * first-run flow captures the display, creates or loads a profile, and
+ * returns with the profile list and remembered handle synchronized. */
+void force_create_profile(void)
+{
+    BITMAP *bg;
+    int ok;
+    char new_name[128];
+
+    bg=create_bitmap(gfx_driver->w,gfx_driver->h);
+    blit(screen,bg,0,0,0,0,gfx_driver->w,gfx_driver->h);
+    memset(new_name,0,sizeof(new_name));
+    for (;;) {
+        checkMenuFocus();
+        blit(bg,screen,0,0,0,0,gfx_driver->w,gfx_driver->h);
+        set_trans_blender(0,0,0,158);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(screen,0,0,gfx_driver->w,gfx_driver->h,makecol(0,0,0));
+        solid_mode();
+        draw_sprite(screen,data[87].dat,100,120);
+        textout_ex(screen,data[51].dat,"Welcome to Icy Tower",130,127,-1,-1);
+        textout_ex(screen,data[54].dat,"Yo, wazup? In Icy Tower, all your highscores",130,160,0,-1);
+        textout_ex(screen,data[54].dat,"and progress will be stored in a personal profile.",130,175,0,-1);
+        textout_ex(screen,data[54].dat,"AWESOME!",130,190,0,-1);
+        textout_ex(screen,data[54].dat,"Please enter a name for your profile:",130,220,0,-1);
+        textout_right_ex(screen,data[54].dat,"...and press enter.",430,260,0,-1);
+        rect(screen,129,240,430,258,makecol(255,255,255));
+        rectfill(screen,129,240,430,258,makecol(80,80,80));
+        blit_to_screen(screen);
+        ok=get_string(screen,new_name,300,32,data[54].dat,130,240,makecol(0,0,0),-1);
+        if (ok<0 || (ok>0 && !new_name[0]))
+            continue;
+        if (ok==0) {
+            my_alert("You can create a profile later in the OPTIONS menu.","Oh Well...",0,1);
+            profile=load_profile("guest");
+            if (!profile)
+                profile=create_profile("guest",1);
+            syncOptionsFromProfile();
+            break;
+        }
+        replaceBadCharacters(new_name,'_');
+        profile=create_profile(new_name,0);
+        if (!profile) {
+            my_alert("That profile name is taken.","Ooops!",0,1);
+            continue;
+        }
+        sprintf(new_name,"Welcome %s!",profile->handle);
+        my_alert(new_name,"Your profile has been created!",0,1);
+        break;
+    }
+    destroy_bitmap(bg);
+    strcpy(options.lastProfile,profile->handle);
+    rebuild_profile_list(0);
 }
 
 /* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
