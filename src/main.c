@@ -1657,12 +1657,10 @@ void update_frame(void)
     p=ply[player_id];
     if (p->dead && p->dead<=299)
         p->dead+=8;
-    else {
-        if (p->edge)
-            p->edge_drawn++;
-        if (logic_count%10==0)
-            p->frame++;
-    }
+    if (p->edge)
+        p->edge_drawn++;
+    if (logic_count%10==0)
+        p->frame++;
 }
 #endif
 

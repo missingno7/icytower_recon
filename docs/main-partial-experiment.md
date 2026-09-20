@@ -156,9 +156,11 @@ profile avatar field, and writes the matching index to both named selection
 globals. All five global references and the `stricmp` call resolve by symbol.
 
 `update_frame` recovers the typed reward, player-death, edge-draw, and frame
-advance transitions. Its 125-byte candidate differs from the historical
-120-byte branch layout, so it is recorded as `DIFFER` and receives no exact
-function credit.
+advance transitions. The death-counter update does not suppress the edge-draw
+or frame-advance work: the original continues into both checks after updating
+the counter. Its 121-byte candidate differs from the historical 120-byte
+branch layout by an alignment byte, so it is recorded as `DIFFER` and receives
+no exact-function credit.
 
 `checkMenuFocus` recovers the replay-menu guard and the focus-change music
 transition over the named `in_replay_menu`, `hasFocus`, and `lastFocus`
