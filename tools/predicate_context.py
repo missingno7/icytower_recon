@@ -14,8 +14,8 @@ def load(target,function,build,fixture,verifier):
         and record.get('fixture')==fixture and record.get('verifier')==verifier and bool(fixture) and bool(verifier)
         and set(tools)==required and all((ROOT/p).is_file() and identity(ROOT/p)==v for p,v in tools.items()))
     return {'baseline_state':'CURRENT_INPUTS' if current else 'HISTORICAL_REQUIRES_REFRESH',
-        'expression':record.get('expression'),'outcome':record.get('outcome'),
+        'expression':record.get('expression'),'invert_guard':record.get('invert_guard'),'outcome':record.get('outcome'),
         'evidence':path.relative_to(ROOT).as_posix(),
-        'variants':[{'variant':v['variant'],'target_result':v.get('target_result'),'compile_failed':'error' in v} for v in record.get('variants',[])[:2]],
-        'omitted_variants':max(0,len(record.get('variants',[]))-2),
+        'variants':[{'variant':v['variant'],'target_result':v.get('target_result'),'compile_failed':'error' in v} for v in record.get('variants',[])[:4]],
+        'omitted_variants':max(0,len(record.get('variants',[]))-4),
         'limit':'Diagnostic only. A partial improvement does not prove the source cause, grant admission, or establish exact recovery.'}

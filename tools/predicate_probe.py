@@ -21,17 +21,47 @@ def plan(text,function,expression):
     return text[:a]+change["after"]+text[b:],change
 
 
-def probe(target,function,expression):
+def invert_return_guard(text,function,condition):
+    scalar=r'[A-Za-z_]\w*(?:\s*->\s*[A-Za-z_]\w*)?'
+    if not re.fullmatch(scalar+r'\s*(?:==|!=)\s*'+scalar,condition):raise ValueError('Only a scalar equality guard is supported')
+    lo,hi=function_span(text,function);clean=sanitized(text)
+    spelling=r'\s*'.join(re.escape(t) for t in re.findall(r'->|==|!=|\w+',condition))
+    matches=list(re.finditer(r'\bif\s*\(\s*('+spelling+r')\s*\)\s*\{',clean[lo:hi]))
+    if len(matches)!=1:raise ValueError('Expected one braced equality guard')
+    match=matches[0];start=lo+match.start();opening=lo+match.end()-1
+    if clean[lo:start].count('{')-clean[lo:start].count('}')!=1:raise ValueError('Guard must be at function scope')
+    depth=1;end=opening+1
+    while end<hi and depth:
+        depth+=(clean[end]=='{')-(clean[end]=='}');end+=1
+    body=clean[opening+1:end-1]
+    terminal=re.search(r'\breturn\b[^;{}]*;\s*$',body)
+    if not terminal or body[:terminal.start()].count('{')!=body[:terminal.start()].count('}'):raise ValueError('Guard needs an unconditional terminal return')
+    prefix=body[:terminal.start()].rstrip()
+    if prefix and prefix[-1] not in ';}':raise ValueError('Terminal return may still be controlled by an unbraced statement')
+    tail=clean[end:hi-1]
+    if not tail.strip() or re.match(r'\s*else\b',tail):raise ValueError('Expected a following function tail without else')
+    if re.search(r'(?m)^\s*#|\b(?:goto|case|default)\b|(?:^|[;{}])\s*\w+\s*:',clean[start:hi-1]):raise ValueError('Labels or preprocessing require review')
+    after='if (!('+text[lo+match.start(1):lo+match.end(1)]+')) {'+text[end:hi-1]+'} else '+text[opening:end]
+    change={'start':start,'end':hi-1,'before':text[start:hi-1],'after':after}
+    return text[:start]+after+text[hi-1:],change
+
+
+def probe(target,function,expression,invert_guard=None):
     out=ROOT/'build/predicate-probes'/target/function
     reference=fresh_verify(target,dest=out/'reference');build=reference['build']
     source=build['config']['source'];original=(ROOT/source).read_bytes().decode('cp1252')
     candidate,recipe=plan(original,function,expression)
+    variants=[('baseline',original),('equal-to-one',candidate)]
+    guard_changes=[]
+    if invert_guard:
+        for label,text in [('inverted-guard',original),('equal-one-and-inverted-guard',candidate)]:
+            changed,edit=invert_return_guard(text,function,invert_guard);variants.append((label,changed));guard_changes.append({'variant':label,'change':edit})
     inputs=dict(build['local_inputs'])
     tools={p:identity(ROOT/p) for p in ['tools/predicate_probe.py','tools/source_scope.py']}
-    result={'scope':'Scratch-only experiment; no production edits or promotion proof.','target':target,'function':function,'expression':expression,'recipe':recipe,
+    result={'scope':'Scratch-only experiment; no production edits or promotion proof.','target':target,'function':function,'expression':expression,'recipe':recipe,'guard_changes':guard_changes,'invert_guard':invert_guard,
             'source_inputs':inputs,'probe_tools':tools,'compiler':build,'fixture':reference['fixture'],'verifier':reference['verifier'],
             'baseline_source':original,'outcome':'COMPLETE','variants':[]}
-    for label,text in [('baseline',original),('equal-to-one',candidate)]:
+    for label,text in variants:
         folder=out/label;folder.mkdir(parents=True,exist_ok=True);copy=folder/'probe.c';copy.write_bytes(text.encode('cp1252'))
         args=list(build['command'])
         for flag,value in [('-MF',folder/'unit.d'),('-aux-info',folder/'interfaces.aux'),('-c',copy),('-o',folder/'unit.o')]:args[args.index(flag)+1]=str(value)
@@ -62,5 +92,5 @@ def probe(target,function,expression):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('target');p.add_argument('function');p.add_argument('expression');a=p.parse_args()
-    raise SystemExit(0 if probe(a.target,a.function,a.expression)['outcome']=='COMPLETE' else 1)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('target');p.add_argument('function');p.add_argument('expression');p.add_argument('--invert-guard');a=p.parse_args()
+    raise SystemExit(0 if probe(a.target,a.function,a.expression,a.invert_guard)['outcome']=='COMPLETE' else 1)

@@ -13,6 +13,22 @@ class PredicateTests(unittest.TestCase):
             with self.assertRaises(ValueError):plan(text,'f',expression)
 
 
+class ReturnGuardTests(unittest.TestCase):
+    def test_moves_only_returning_guard_and_function_tail(self):
+        from predicate_probe import invert_return_guard
+        text='int f(P*a,P*b){ int x=0; if(a->v != b->v){if(a->v)return -1;return 1;} return g(x); } int h(){return 4;}'
+        changed,edit=invert_return_guard(text,'f','a->v != b->v')
+        self.assertIn('if (!(a->v != b->v)) { return g(x); } else {if(a->v)return -1;return 1;}',changed)
+        self.assertTrue(changed.endswith('} int h(){return 4;}'))
+        self.assertEqual(text[:edit['start']],changed[:edit['start']])
+    def test_fallthrough_nested_else_and_labels_rejected(self):
+        from predicate_probe import invert_return_guard
+        for body in ['if(a!=b){x++;} return 1;', 'if(a!=b){if(x)return 1;}return 2;',
+                     'if(a!=b){return 1;}else{return 2;}', 'if(x){if(a!=b){return 1;}}return 2;',
+                     'if(a!=b){return 1;} label: return 2;']:
+            with self.assertRaises(ValueError):invert_return_guard('int f(){'+body+'}','f','a!=b')
+
+
 class PredicateMemoryTests(unittest.TestCase):
     def test_changed_tool_or_source_marks_trial_historical(self):
         import tempfile,json

@@ -1021,3 +1021,20 @@ result and mark it historical after source/tool/compiler/oracle changes, avoidin
 repeat rediscovery. No new recipe admission or exact claim was introduced. The
 152-test function suite passes; all raw function/workflow proof states are unchanged.
 Evidence: docs/attempts/predicate-probes/game-replay/my_strcmp.json.
+
+
+## Guard-tail interaction trial
+
+The predicate probe additionally accepts --invert-guard for one top-level braced
+scalar equality guard with an unconditional terminal return. It moves the remaining
+function tail into the negated branch and keeps the returning branch as else.
+Nested guards, a final return controlled by an unbraced statement, fallthrough,
+existing else branches, labels and preprocessing are rejected. This remains an
+isolated supervisor experiment, not a semantics proof or grinder recipe.
+
+On my_strcmp, guard inversion alone preserves the baseline raw contribution; the
+equality-to-one plus inversion variant remains non-exact, like equality-to-one
+alone. All four variants remain DIFFER. The function card retains all four with
+source/tool freshness checks; older trials remain archived. The 154-test function
+suite passes and all function/workflow proof states are unchanged. This rules out
+the simple outer-guard inversion hypothesis without modifying production source.

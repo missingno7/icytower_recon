@@ -9,6 +9,27 @@
     "before": "a->directory",
     "after": "(a->directory) == 1"
   },
+  "guard_changes": [
+    {
+      "variant": "inverted-guard",
+      "change": {
+        "start": 22663,
+        "end": 23229,
+        "before": "if (a->directory != b->directory) {\n        if (a->directory)\n            return -1;\n        return 1;\n    }\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n",
+        "after": "if (!(a->directory != b->directory)) {\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n} else {\n        if (a->directory)\n            return -1;\n        return 1;\n    }"
+      }
+    },
+    {
+      "variant": "equal-one-and-inverted-guard",
+      "change": {
+        "start": 22663,
+        "end": 23236,
+        "before": "if (a->directory != b->directory) {\n        if ((a->directory) == 1)\n            return -1;\n        return 1;\n    }\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n",
+        "after": "if (!(a->directory != b->directory)) {\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n} else {\n        if ((a->directory) == 1)\n            return -1;\n        return 1;\n    }"
+      }
+    }
+  ],
+  "invert_guard": "a->directory != b->directory",
   "source_inputs": {
     "src/replay.c": {
       "size": 24377,
@@ -225,8 +246,8 @@
   },
   "probe_tools": {
     "tools/predicate_probe.py": {
-      "size": 4697,
-      "sha256": "b4a9b3b3d7c18eb997e26373ce5cad4e6b6204cdbf6173b0fd48f025bcef7634"
+      "size": 6942,
+      "sha256": "5db4548c65ce75a8f468c51ef8308827b716f401b88292f0bd9b1388325823fd"
     },
     "tools/source_scope.py": {
       "size": 1351,
@@ -810,6 +831,298 @@
                   "bytes": "7434",
                   "mnemonic": "je",
                   "assembly": "je     b48 <_my_strcmp+0x74>"
+                },
+                {
+                  "address": 2836,
+                  "bytes": "b801000000",
+                  "mnemonic": "mov",
+                  "assembly": "mov    $0x1,%eax"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          }
+        ],
+        "metadata_changes": [],
+        "preservation_fingerprint_equal": false
+      }
+    },
+    {
+      "variant": "inverted-guard",
+      "object": {
+        "size": 42700,
+        "sha256": "a08929202bf15f1b884796b0e6145436239fe94ed1296954cedc8229d583bc76"
+      },
+      "source_identity": {
+        "size": 24388,
+        "sha256": "123ada3b55054887269625b1d3f2375fd4843e16f343c24893c4496473f1fedf"
+      },
+      "raw_contributions_equal": true,
+      "raw_fingerprint_delta": {},
+      "function_matches": 5,
+      "target_result": {
+        "status": "DIFFER",
+        "candidate_size": 123,
+        "original_size": 128,
+        "first_difference": {
+          "offset": 21,
+          "original_va": 4318933,
+          "candidate_byte": 38,
+          "original_byte": 90
+        },
+        "body_shape_equal": false
+      },
+      "contribution_diagnostics": {
+        "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
+        "changed_sections": [],
+        "changed_functions": [],
+        "metadata_changes": [],
+        "preservation_fingerprint_equal": true
+      }
+    },
+    {
+      "variant": "equal-one-and-inverted-guard",
+      "object": {
+        "size": 42728,
+        "sha256": "af1bb3b07c1a2e6f62af3456a0479444e78fadb1b3fa457a5ed51c45c5802a15"
+      },
+      "source_identity": {
+        "size": 24395,
+        "sha256": "de400f92d3fdb4a3f56bd507c3001ee74e5c24bb5f9d1054eea8ff9e4a0272aa"
+      },
+      "raw_contributions_equal": false,
+      "raw_fingerprint_delta": {
+        "sections": {
+          "removed": [
+            [
+              ".text",
+              0,
+              9708,
+              1613758496,
+              "61b9928048a3161fceaa851f398c0cc5b25777c877fc1c46304e56290a9db01d"
+            ]
+          ],
+          "added": [
+            [
+              ".text",
+              0,
+              9708,
+              1613758496,
+              "97f2e8f3c4f6e7b7c3605fbe9a7ac7ec6358df812842d2d96edb19bff816fe55"
+            ]
+          ],
+          "before_count": 4,
+          "after_count": 4
+        }
+      },
+      "function_matches": 5,
+      "target_result": {
+        "status": "DIFFER",
+        "candidate_size": 122,
+        "original_size": 128,
+        "first_difference": {
+          "offset": 21,
+          "original_va": 4318933,
+          "candidate_byte": 38,
+          "original_byte": 90
+        },
+        "body_shape_equal": false
+      },
+      "contribution_diagnostics": {
+        "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
+        "changed_sections": [
+          {
+            "section": ".text",
+            "before": [
+              {
+                "virtual_size": 0,
+                "raw_size": 9708,
+                "characteristics": 1613758496,
+                "sha256": "61b9928048a3161fceaa851f398c0cc5b25777c877fc1c46304e56290a9db01d"
+              }
+            ],
+            "after": [
+              {
+                "virtual_size": 0,
+                "raw_size": 9708,
+                "characteristics": 1613758496,
+                "sha256": "97f2e8f3c4f6e7b7c3605fbe9a7ac7ec6358df812842d2d96edb19bff816fe55"
+              }
+            ]
+          }
+        ],
+        "changed_functions": [
+          {
+            "function": "my_strcmp",
+            "status_before": "DIFFER",
+            "status_after": "DIFFER",
+            "workflow_before": "SOURCE_DIFFER",
+            "workflow_after": null,
+            "offset_before": 2772,
+            "offset_after": 2772,
+            "size_before": 123,
+            "size_after": 122,
+            "emitted_instruction_bytes_equal": false,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "DIFFER",
+                "workflow": {
+                  "state": "SOURCE_DIFFER",
+                  "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+                  "body_edit_allowed": true,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 128,
+                "candidate_size": 123,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 21,
+                  "original_va": 4318933,
+                  "candidate_byte": 38,
+                  "original_byte": 90
+                },
+                "relocation_mismatch_count": 3,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 27,
+                    "symbol": "_sort_method",
+                    "resolved_value": 4971872,
+                    "original_value": 205883651,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 93,
+                    "symbol": "_sort_method",
+                    "resolved_value": 4971872,
+                    "original_value": 973078523,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 56,
+                    "symbol": "_stricmp",
+                    "resolved_value": 607964,
+                    "original_value": 1996683651,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 2,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "DIFFER",
+                "workflow": null,
+                "historical_size": 128,
+                "candidate_size": 122,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 21,
+                  "original_va": 4318933,
+                  "candidate_byte": 38,
+                  "original_byte": 90
+                },
+                "relocation_mismatch_count": 3,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 27,
+                    "symbol": "_sort_method",
+                    "resolved_value": 4971872,
+                    "original_value": 205883651,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 93,
+                    "symbol": "_sort_method",
+                    "resolved_value": 4971872,
+                    "original_value": 973078523,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 56,
+                    "symbol": "_stricmp",
+                    "resolved_value": 607964,
+                    "original_value": 1996683651,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 2,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": 60,
+            "differing_byte_count": 9,
+            "difference_offsets": [
+              60,
+              61,
+              62,
+              63,
+              115,
+              116,
+              120,
+              121,
+              122
+            ],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 2826,
+                  "bytes": "c9",
+                  "mnemonic": "leave",
+                  "assembly": "leave"
+                },
+                {
+                  "address": 2827,
+                  "bytes": "e900000000",
+                  "mnemonic": "jmp",
+                  "assembly": "jmp    b10 <_my_strcmp+0x3c>"
+                },
+                {
+                  "address": 2832,
+                  "bytes": "84c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %al,%al"
+                },
+                {
+                  "address": 2834,
+                  "bytes": "7534",
+                  "mnemonic": "jne",
+                  "assembly": "jne    b48 <_my_strcmp+0x74>"
+                },
+                {
+                  "address": 2836,
+                  "bytes": "b801000000",
+                  "mnemonic": "mov",
+                  "assembly": "mov    $0x1,%eax"
+                }
+              ],
+              "after": [
+                {
+                  "address": 2826,
+                  "bytes": "c9",
+                  "mnemonic": "leave",
+                  "assembly": "leave"
+                },
+                {
+                  "address": 2827,
+                  "bytes": "e900000000",
+                  "mnemonic": "jmp",
+                  "assembly": "jmp    b10 <_my_strcmp+0x3c>"
+                },
+                {
+                  "address": 2832,
+                  "bytes": "fec8",
+                  "mnemonic": "dec",
+                  "assembly": "dec    %al"
+                },
+                {
+                  "address": 2834,
+                  "bytes": "7433",
+                  "mnemonic": "je",
+                  "assembly": "je     b47 <_my_strcmp+0x73>"
                 },
                 {
                   "address": 2836,
