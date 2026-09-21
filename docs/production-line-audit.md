@@ -508,3 +508,18 @@ omissions or stack occupancy. Eight stack/compaction controls and global audit
 passed; live FAST retains the expected unresolved result. The entire queue and
 ledger function states remain unchanged. See
 `docs/attempts/frame-local-inventory-validation.json`.
+
+
+## Bounded reference context
+
+Grouped calls and globals were still unbounded in compact function cards:
+init_game displayed 71 call groups and 160 global groups. Cards now show the
+eight nearest groups per list, retain aggregate reference counts, and report
+total/omitted groups. Unknown positions sort last. Complete target evidence is
+unchanged and remains linked. This reduces serialized init_game context from
+119,657 to 50,894 characters while retaining every local and proof field.
+
+Tests cover nearest-group ordering, repeated references, unknown positions,
+omission counts and input preservation. All 24 grinder tests and 205 interface
+acceptance tests passed. Queue content and function states are unchanged. See
+`docs/attempts/card-reference-bounds-validation.json`.

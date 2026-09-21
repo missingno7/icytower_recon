@@ -212,6 +212,30 @@ with publication([l,t/'card.json'],t,r/'publication.zip',r):
             with self.assertRaisesRegex(ValueError,'outside publication scope'): restore_journal(journal,root,tree,[])
             self.assertEqual(forbidden.read_bytes(),b'current source')
 
+    def test_compact_references_rank_groups_and_report_all_omissions(self):
+        from card_view import compact_card
+        card={'source':'src/example.c','function':'example','parameters':[],'locals':[],
+              'lexical_blocks':[],'signedness':{'variables':[]},'first_difference':{'offset':100},
+              'relocation_mismatches':[],'direct_transfer_mismatches':[],'original_calls':[],
+              'calls':[],'referenced_globals':[]}
+        rows=[{'symbol':'unknown','historical_address':1}]
+        rows += [{'symbol':'g'+str(i),'historical_address':1000+i,'references':[i*10]} for i in range(12)]
+        rows += [{'symbol':'g0','historical_address':1000,'references':[101]}]
+        card['referenced_globals']=rows
+        card['calls']=copy.deepcopy(rows)
+        before=copy.deepcopy(card); compact=compact_card(card)
+        self.assertEqual(card,before)
+        for key in ('calls','referenced_globals'):
+            self.assertEqual(len(compact[key]),8)
+            self.assertEqual(compact[key][0]['symbol'],'g10')
+            self.assertEqual(compact[key][1]['symbol'],'g0')
+            self.assertEqual(compact[key][1]['reference_count'],2)
+            self.assertEqual(compact[key][1]['function_offsets'],[101,0])
+            self.assertNotIn('unknown',[r['symbol'] for r in compact[key]])
+            self.assertEqual(compact['evidence_counts'][key],14)
+            self.assertEqual(compact['evidence_counts'][key+'_groups'],13)
+            self.assertEqual(compact['evidence_counts'][key+'_omitted_groups'],5)
+
     def test_compact_card_keeps_proof_and_links_full_target_evidence(self):
         from card_view import compact_card
         card=read_json(ROOT/'docs/current/functions/main/init_game.json')

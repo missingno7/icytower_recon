@@ -57,6 +57,12 @@ def compact_card(full,details=None):
         for item in grouped.values():
             item['function_offsets']=sorted(item['function_offsets'],key=lambda n:abs(n-offset))[:8]
             item.pop('references',None)
-        card[key]=list(grouped.values())
+        groups=list(grouped.values())
+        card['evidence_counts'][key+'_groups']=len(groups)
+        # Unknown positions sort last, not as if they occurred at offset zero.
+        def distance(item):
+            return min((abs(p-offset) for p in item['function_offsets']),default=float('inf'))
+        card[key]=sorted(groups,key=distance)[:8]
+        card['evidence_counts'][key+'_omitted_groups']=max(0,len(groups)-8)
     card['evidence_note']='Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence.'
     return card

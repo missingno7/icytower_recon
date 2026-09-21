@@ -373,3 +373,9 @@ shadowed names. FAST prints counts; the compact card prioritizes exceptions and
 links full details. A missing debug declaration does not prove missing source,
 and type sizes are not a stack-allocation total. Use the recorded locations and
 separate width evidence before proposing a bounded change.
+
+
+Compact cards show at most eight grouped calls and globals nearest the first
+mismatch. `evidence_counts` records raw references, total groups and omitted
+groups. Unknown positions sort last. Use `detailed_evidence` for complete lists
+before making changes involving a dependency outside the displayed window.
