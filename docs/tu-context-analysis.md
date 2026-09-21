@@ -146,3 +146,42 @@ retained whole-unit probe is fresh and loss-free; `order_main` remains SUPERVISO
 context-accidental losses named.  The way to clear it is unchanged: reconstruct `play`'s call
 structure, `draw_frame`, `_mangled_main` and `init_game` against the historical layout in the probe
 overlay (`--order historical --body ...`), then land the order and the bodies as one transaction.
+
+## 6. Structural convergence of `main.c` (2026-09-21, later)
+
+Two more mechanisms became visible once large bodies were reconstructed against the historical
+layout, and both are now reported by the probe.
+
+**Inlining hides source-level edges.**  GCC's optimized call graph loses every call it inlined
+into its caller, so a reconstruction that is *smaller* than history shows edges as missing that
+its source really makes: with a 5007-byte `play`, 34 callees (including `handle_player_input`,
+`update_player`, the five collision handlers and `poll_control`) were inlined into it, while the
+17420-byte historical `play` was far past the inliner's size limits and called all of them.  The
+probe therefore reads source-level edges from the pre-inlining section of the dump and reports
+what was inlined separately (`--focus`).  Edge deficits close as the body grows; they are not a
+reason to add calls.
+
+**Undeclared historical interfaces.**  `main.c` was missing six of its own globals
+(`is_playing_custom_game`, `gdComboStart`, `hints`, `fall_count`, `clock_angle`,
+`checkMusicVoiceID`, all DWARF variables of the CU with an address and a decl line) and seven
+cross-CU prototypes (`get_rank_id`, `getGameDataXML`, `add_combo`, `add_jump_sequence`,
+`qualify_hisc_table`, `sort_hisc_table`, `enter_hisc_table`).  Both sets were restored as
+`TU_CONTEXT` transactions with `add_top_level` declaration edits, each placed next to its nearest
+historical neighbour: 54 exact before and after, no loss, no data-owner regression.  The same
+mechanism replaced the hand-written `ShellExecuteA`/`WSAStartup`/`WSADATA`/`MAKEWORD` substitutes
+with Allegro's `<winalleg.h>`, which also removed the last implicit declaration (`LoadLibraryA`)
+and the linker's stdcall fixup warning.
+
+**Where the historical order stands.**  With the reconstructed `play` present, the historical
+definition order costs only two matches instead of three, and both are downstream of bodies that
+are still incomplete:
+
+| function | why it is not exact under the historical order |
+|---|---|
+| `line_alert` | three bytes: its `.rdata` addend, i.e. the read-only literal pool offset, which moves when `draw_frame`'s literals are restored |
+| `run_demo` | scratch cursor: it is emitted directly after `play`, whose four peephole scratch finds are those of a 5007-byte body, not of the 17420-byte original |
+
+Historical predecessors under that order rose from 31 to 71 of 82, and `check_beta_tester` and
+`uninit_game` returned on their own.  The remaining work is body reconstruction, not ordering:
+`draw_frame` (literal pool) and the rest of `play` (cursor).  When both reach zero losses, the
+order, the bodies and the declarations land as one transaction.
