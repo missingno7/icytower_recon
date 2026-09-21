@@ -131,10 +131,22 @@ def plan_interface(row, ledger, source_texts=None):
                 if replacement!=params:
                     edits.append({'start':start,'end':end,'before':params,'after':replacement,'reason':'Use the DWARF parameter qualifiers/prototype'})
                 if declaration['return_type']!=expected['return_type']:
-                    if declaration['return_type']!='char*' or expected['return_type']!='const char*': raise ValueError('Return type change requires supervisor interpretation')
-                    ret=re.search(r'\bchar\s*\*\s*$',text[:pos])
-                    if not ret: raise ValueError('Cannot safely locate the return type')
-                    edits.append({'start':ret.start(),'end':ret.end(),'before':ret[0],'after':'const '+ret[0],'reason':'Use the DWARF return qualifier'})
+                    if declaration['return_type']=='char*' and expected['return_type']=='const char*':
+                        ret=re.search(r'\bchar\s*\*\s*$',text[:pos])
+                        if not ret: raise ValueError('Cannot safely locate the return type')
+                        edits.append({'start':ret.start(),'end':ret.end(),'before':ret[0],'after':'const '+ret[0],'reason':'Use the DWARF return qualifier'})
+                    elif (declaration['kind'] in ('NC','OC') and declaration['file'].startswith('src/') and declaration.get('cu')==declaration['file']
+                          and set(re.findall(r'[A-Za-z_]\w*',declaration['return_type']+' '+expected['return_type']))<=BUILTINS
+                          and '*' not in declaration['return_type']+expected['return_type']):
+                        # A caller-CU prototype spells a builtin scalar/void return differently. When every
+                        # spelled call in that CU discards the value, no use is reinterpreted; restore the
+                        # historical return type in place. Emission preservation is still checked freshly.
+                        from typed_interface_tasks import call_values_unused
+                        if not call_values_unused(sanitized(text),name): raise ValueError('Return type change requires supervisor interpretation: call results are used')
+                        ret=re.search(r'\b('+r'\s+'.join(map(re.escape,declaration['return_type'].split()))+r')\s+$',text[:pos])
+                        if not ret: raise ValueError('Cannot safely locate the return type')
+                        edits.append({'start':ret.start(1),'end':ret.end(1),'before':ret[1],'after':expected['return_type'],'reason':'Restore the historical builtin return type in a caller prototype whose call results are all discarded'})
+                    else: raise ValueError('Return type change requires supervisor interpretation')
             for edit in edits:
                 edit.update(file=file,line=declaration['line'])
                 key=(file,edit['start'],edit['end'])

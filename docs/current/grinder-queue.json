@@ -3,6 +3,31 @@
   "default_difficulty": "CHEAP",
   "tasks": [
     {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "change_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 105,
+      "difficulty": "MEDIUM",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 13,
+        "original_va": 4252121,
+        "candidate_byte": 15,
+        "original_byte": 116
+      },
+      "verification_command": "python tools/check_function.py game-main change_profile",
+      "begin_command": "python tools/grinder_task.py begin game-main change_profile",
+      "promotion_command": "python tools/promote_function.py game-main change_profile",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+      "size": 188,
+      "candidate_card": "docs/current/functions/main/change_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/player.c",
       "target": "game-player",
       "function": "reset_player",
@@ -1825,41 +1850,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "save_profile",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Return type change requires supervisor interpretation",
-      "begin_command": "python tools/interface_task.py begin save_profile",
-      "verification_command": "python tools/interface_task.py check save_profile",
-      "promotion_command": "python tools/interface_task.py promote save_profile",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_profile.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "change_profile",
-          "candidate_card": "docs/current/functions/main/change_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/main.c",
-          "function": "play",
-          "candidate_card": "docs/current/functions/main/play.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "select_profile",
       "source": "src/profile.c",
       "sources": null,
@@ -1992,40 +1982,6 @@
       ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "change_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -20,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 13,
-        "original_va": 4252121,
-        "candidate_byte": 15,
-        "original_byte": 116
-      },
-      "verification_command": "python tools/check_function.py game-main change_profile",
-      "begin_command": "python tools/grinder_task.py begin game-main change_profile",
-      "promotion_command": "python tools/promote_function.py game-main change_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: save_profile",
-      "size": 188,
-      "candidate_card": "docs/current/functions/main/change_profile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "save_profile",
-          "candidate_card": "docs/current/interfaces/save_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
     },
     {
       "source": "src/main.c",
@@ -4257,14 +4213,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "save_profile",
-          "candidate_card": "docs/current/interfaces/save_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]

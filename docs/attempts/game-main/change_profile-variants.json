@@ -1,0 +1,27 @@
+{
+ "function": "change_profile",
+ "target": "game-main",
+ "scope": "Isolated scratch variants compiled with the locked command; production source untouched; never acceptance input.",
+ "observation": "Candidate specializes the profile==NULL path: 6-byte near je to a trailing xor %edx,%edx; jmp back past the reload of profile (RTL PRE with constant propagation). The original reloads profile on both paths (short je +0x4c). Sizes 196 vs 188 = near je (+4) + xor/jmp (+4).",
+ "variants": [
+  {
+   "name": "V1_local_copy",
+   "change": "Tprofile *current = profile; test and save via current; select_profile(profile,...)",
+   "result": "DIFFER 196/188, first difference unchanged at 13"
+  },
+  {
+   "name": "V2_else_branch",
+   "change": "explicit if/else with select_profile(0,...) on the null path",
+   "result": "DIFFER 232/188"
+  },
+  {
+   "name": "V3_free_unconditional",
+   "change": "free(profile) without the inner null test",
+   "result": "DIFFER 192/188, frame changed (push ebx), first difference at 3"
+  }
+ ],
+ "next_hypotheses": [
+  "Find what makes the profile load unavailable on the null edge in the historical source (an intervening store or call before select_profile).",
+  "Compare RTL gcse/cprop dumps between variants with tools/compiler_probe.py once a candidate hypothesis exists."
+ ]
+}

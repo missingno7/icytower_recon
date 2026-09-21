@@ -300,32 +300,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/save_profile.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 0,
-      "repair_card": "docs/current/interfaces/save_profile.json",
-      "repair_state": "INTERFACE_REPAIR",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/save_profile.json",
-          "source": "src/main.c",
-          "function": "change_profile",
-          "candidate_card": "docs/current/functions/main/change_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "prerequisite": "docs/current/interfaces/save_profile.json",
-          "source": "src/main.c",
-          "function": "play",
-          "candidate_card": "docs/current/functions/main/play.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/set_next_rank_message.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 2,
@@ -788,6 +762,41 @@
     },
     {
       "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-main:SOURCE_CONTROL_FLOW_SHAPE",
+      "target": "game-main",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "affected_function_count": 3,
+      "examples": [
+        {
+          "source": "src/main.c",
+          "function": "change_profile",
+          "candidate_card": "docs/current/functions/main/change_profile.json",
+          "size": 188,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
+        },
+        {
+          "source": "src/main.c",
+          "function": "draw_progress_bar",
+          "candidate_card": "docs/current/functions/main/draw_progress_bar.json",
+          "size": 486,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+        },
+        {
+          "source": "src/main.c",
+          "function": "fadeOut",
+          "candidate_card": "docs/current/functions/main/fadeOut.json",
+          "size": 609,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-replay:UNKNOWN_SUPERVISOR",
       "target": "game-replay",
       "difference_class": "UNKNOWN_SUPERVISOR",
@@ -816,33 +825,6 @@
           "size": 1136,
           "body_edit_allowed": true,
           "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
-    },
-    {
-      "kind": "CU_SYMPTOM_INVESTIGATION",
-      "key": "game-main:SOURCE_CONTROL_FLOW_SHAPE",
-      "target": "game-main",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "affected_function_count": 2,
-      "examples": [
-        {
-          "source": "src/main.c",
-          "function": "draw_progress_bar",
-          "candidate_card": "docs/current/functions/main/draw_progress_bar.json",
-          "size": 486,
-          "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
-        },
-        {
-          "source": "src/main.c",
-          "function": "fadeOut",
-          "candidate_card": "docs/current/functions/main/fadeOut.json",
-          "size": 609,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow"
         }
       ],
       "omitted_examples": 0,

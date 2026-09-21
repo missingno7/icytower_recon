@@ -11,11 +11,11 @@ from instructions import zero_clear_projection
 
 
 class InterfaceTests(unittest.TestCase):
-    def plan(self,text,expected,actual,kind='NF',line=1):
+    def plan(self,text,expected,actual,kind='NF',line=1,cu=False):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); (root/'src').mkdir(); (root/'src/a.c').write_bytes(text.encode('cp1252'))
             row={'function':'f','historical':[{'cu':'src/a.c','return_type':expected[0],'parameter_types':expected[1],'variadic':False,'calling_convention':None}],
-                 'candidate_declarations':[{'file':'src/a.c','line':line,'kind':kind,'name':'f','return_type':actual[0],'parameter_types':actual[1]}]}
+                 'candidate_declarations':[{'file':'src/a.c','line':line,'kind':kind,'name':'f','return_type':actual[0],'parameter_types':actual[1],**({'cu':'src/a.c'} if cu else {})}]}
             with patch('interface_tasks.ROOT',root),patch('interface_tasks.affected_targets',return_value=['game-a']):
                 return plan_interface(row,{})
 
@@ -80,6 +80,18 @@ class InterfaceTests(unittest.TestCase):
         text='char *f(char *s) { return s; }\n'
         plan=self.plan(text,('const char*',['const char*']),('char*',['char*']))
         self.assertEqual(patch_text(text,plan['changes']),'const char *f(const char *s) { return s; }\n')
+
+    def test_caller_builtin_return_restored_only_when_results_are_discarded(self):
+        text='extern void f(int *p);\nvoid caller(int *p) { f(p); if (p) f(p); }\n'
+        plan=self.plan(text,('int',['int*']),('void',['int*']),'NC',cu=True)
+        self.assertEqual(plan['difficulty'],'CHEAP',plan.get('reason'))
+        self.assertEqual(patch_text(text,plan['changes']),'extern int f(int *p);\nvoid caller(int *p) { f(p); if (p) f(p); }\n')
+        used='extern void f(int *p);\nint caller(int *p) { return f(p); }\n'
+        self.assertEqual(self.plan(used,('int',['int*']),('void',['int*']),'NC',cu=True)['difficulty'],'SUPERVISOR')
+        # Definitions, pointer returns and non-CU-local declarations stay with the supervisor.
+        self.assertEqual(self.plan('void f(int *p) { }\n',('int',['int*']),('void',['int*']),'NF',cu=True)['difficulty'],'SUPERVISOR')
+        self.assertEqual(self.plan('extern void *f(int *p);\n',('int',['int*']),('void*',['int*']),'NC',cu=True)['difficulty'],'SUPERVISOR')
+        self.assertEqual(self.plan(text,('int',['int*']),('void',['int*']),'NC')['difficulty'],'SUPERVISOR')
 
     def test_void_prototype(self):
         plan=self.plan('int f();\n',('int',[]),('int',['/*???*/']),'OC')

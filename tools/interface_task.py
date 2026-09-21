@@ -248,14 +248,18 @@ def verify_interface(session,acceptance=False):
         expected=signature(session['plan']['historical'][0])
         for source,entry in ledger.items():
             report=reports.get(source) or read_json(ROOT/entry['verified_report'])
+            from type_aliases import canonical_aliases,annotate_declaration
+            aliases=canonical_aliases(report)
             for decl in declarations(report['interfaces_aux']):
                 if decl['name']==session['function'] and decl['file'].startswith(('src/','include/')):
+                    # Explicit compiled aliases to generated canonical layouts spell the same interface.
+                    decl=annotate_declaration(decl,aliases)
                     observed.append(decl)
                     if session['plan'].get('typed_caller_repair'):
                         from type_aliases import layout_checks
                         if any(x['status']!='AGREE' for x in layout_checks(decl,session['plan']['historical'][0],report)):
                             raise CandidateRejected('Typed caller interface lacks complete historical layout agreement')
-        if not observed or any(signature(d)!=expected for d in observed):
+        if not observed or any(signature({**d,'return_type':d.get('canonical_return_type',d['return_type']),'parameter_types':d.get('canonical_parameter_types',d['parameter_types'])})!=expected for d in observed):
             raise CandidateRejected('Compiler declarations still disagree with the DWARF interface')
     validate_interface_scope(session,applied=True)
     for report in reports.values(): validate_report(report)

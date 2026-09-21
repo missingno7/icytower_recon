@@ -568,24 +568,6 @@
       "size": 0
     },
     {
-      "function": "save_profile",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Return type change requires supervisor interpretation",
-      "begin_command": "python tools/interface_task.py begin save_profile",
-      "verification_command": "python tools/interface_task.py check save_profile",
-      "promotion_command": "python tools/interface_task.py promote save_profile",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_profile.json",
-      "size": 0
-    },
-    {
       "function": "select_profile",
       "source": "src/profile.c",
       "sources": null,
@@ -18754,12 +18736,12 @@
           "line": 485,
           "kind": "NC",
           "name": "save_profile",
-          "return_type": "void",
+          "return_type": "int",
           "parameter_types": [
             "Tprofile*"
           ],
-          "declaration": "extern void save_profile (Tprofile *);",
-          "canonical_return_type": "void",
+          "declaration": "extern int save_profile (Tprofile *);",
+          "canonical_return_type": "int",
           "canonical_parameter_types": [
             "Tprofile*"
           ],
@@ -18825,9 +18807,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -25346,102 +25328,6 @@
               "historical_type": "Toptions",
               "candidate_type": "Toptions",
               "header": "include/recovered/Toptions.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "save_profile",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 199329
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 485,
-          "kind": "NC",
-          "name": "save_profile",
-          "return_type": "void",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "declaration": "extern void save_profile (Tprofile *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tprofile*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 396,
-          "kind": "NC",
-          "name": "save_profile",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_create*"
-          ],
-          "declaration": "extern int save_profile (Tprofile_create *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 547,
-          "kind": "NF",
-          "name": "save_profile",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_create*"
-          ],
-          "declaration": "extern int save_profile (Tprofile_create *p);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
               "status": "AGREE"
             }
           ]

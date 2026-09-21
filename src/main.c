@@ -482,7 +482,7 @@ extern Thisc_table *make_hisc_table(char*);
 extern void reset_hisc_table(Thisc_table*, char*, int, int);
 extern int load_hisc_table(void *table, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
-extern void save_profile(Tprofile *profile);
+extern int save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
 extern int rebuild_profile_list(Tavailable_profile **profs);
