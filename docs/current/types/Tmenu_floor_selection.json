@@ -2,60 +2,9 @@
   "schema": 1,
   "task_kind": "CANONICAL_TYPE",
   "function": "Tmenu_floor_selection",
-  "source": "src/main.c",
-  "sources": [
-    "src/main.c",
-    "src/menu.c"
-  ],
-  "changes": [
-    {
-      "file": "src/main.c",
-      "start": 6047,
-      "end": 6138,
-      "before": "typedef struct Tmenu_floor_selection {\n    int value;\n    int max;\n} Tmenu_floor_selection;",
-      "after": "#include \"recovered/Tmenu_floor_selection.h\"",
-      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
-    },
-    {
-      "file": "src/menu.c",
-      "start": 353,
-      "end": 444,
-      "before": "typedef struct Tmenu_floor_selection {\n    int value;\n    int max;\n} Tmenu_floor_selection;",
-      "after": "#include \"recovered/Tmenu_floor_selection.h\"",
-      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
-    }
-  ],
-  "header": "include/recovered/Tmenu_floor_selection.h",
-  "header_identity": {
-    "size": 675,
-    "sha256": "db77d3b62791d0ae1065f370d66ddffe590bc841a58def6ad0280001d1e236b9"
-  },
-  "source_identities": {
-    "src/main.c": {
-      "size": 91582,
-      "sha256": "0732d44e178a0527fadb09b45bd1ec004dee934c35643a20a1f1a998e3c199a3"
-    },
-    "src/menu.c": {
-      "size": 16057,
-      "sha256": "613cbba22329fbf2c0c1ecba6300adde63d0c7794e2db4e2c2010d4b9464b593"
-    }
-  },
-  "expected_declaration": "typedef struct {\n    int value;\n    int max;\n} Tmenu_floor_selection;",
-  "affected_targets": [
-    "game-main",
-    "game-menu"
-  ],
-  "difficulty": "CHEAP",
-  "priority": 239,
-  "state": "CANONICAL_TYPE_REPAIR",
-  "status": "DUPLICATE_TYPE",
-  "difference_class": "CANONICAL_TYPE_DECLARATION",
+  "state": "NOT_QUEUED",
+  "status": "NO_MECHANICAL_DUPLICATE_TASK",
   "body_edit_allowed": false,
-  "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
-  "begin_command": "python tools/interface_task.py begin Tmenu_floor_selection",
-  "apply_command": "python tools/interface_task.py apply Tmenu_floor_selection",
-  "verification_command": "python tools/interface_task.py check Tmenu_floor_selection",
-  "promotion_command": "python tools/interface_task.py promote Tmenu_floor_selection",
-  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate.",
-  "canonical_dependencies": []
+  "changes": [],
+  "header": "include/recovered/Tmenu_floor_selection.h"
 }

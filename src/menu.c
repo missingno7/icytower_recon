@@ -7,23 +7,11 @@
 #include "timer.h"
 #include "recovered/Tmenu_slider.h"
 
-typedef struct Tmenu_selection {
-    int value;
-    int size;
-    char *caption[32];
-} Tmenu_selection;
+#include "recovered/Tmenu_selection.h"
 
-typedef struct Tmenu_floor_selection {
-    int value;
-    int max;
-} Tmenu_floor_selection;
+#include "recovered/Tmenu_floor_selection.h"
 
-typedef struct Tmenu_char_selection {
-    int value;
-    int max;
-    BITMAP *bmp;
-    PALETTE pal;
-} Tmenu_char_selection;
+#include "recovered/Tmenu_char_selection.h"
 
 #include "recovered/Tmenu.h"
 

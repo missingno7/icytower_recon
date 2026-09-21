@@ -240,16 +240,9 @@ typedef struct Tprofile {
 
 #include "recovered/Tmenu_slider.h"
 
-typedef struct Tmenu_selection {
-    int value;
-    int size;
-    char *caption[32];
-} Tmenu_selection;
+#include "recovered/Tmenu_selection.h"
 
-typedef struct Tmenu_floor_selection {
-    int value;
-    int max;
-} Tmenu_floor_selection;
+#include "recovered/Tmenu_floor_selection.h"
 
 /* menu.h layout recovered from the main-CU DWARF inventory. */
 #include "recovered/Tmenu.h"

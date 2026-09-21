@@ -186,8 +186,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 573,
-    "body_end_line": 635,
+    "body_start_line": 556,
+    "body_end_line": 618,
     "body_sha256": "e07387ff357ec22fa00749af59867ee68dde21e4ced04e9a215aa299ba7500d8"
   },
   "reference_diagnostics": [],
@@ -412,29 +412,29 @@
       "id": "repair_literal_content",
       "changes": [
         {
-          "start": 18870,
-          "end": 18900,
+          "start": 18425,
+          "end": 18455,
           "before": "\"Profile name:           %s\\n\"",
           "after": "\"Profile name:          %s\\n\"",
           "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
         },
         {
-          "start": 18930,
-          "end": 18960,
+          "start": 18485,
+          "end": 18515,
           "before": "\"Last updated:           %s\\n\"",
           "after": "\"Last updated:          %s\\n\"",
           "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
         },
         {
-          "start": 18992,
-          "end": 19022,
+          "start": 18547,
+          "end": 18577,
           "before": "\"Rank:                   %s\\n\"",
           "after": "\"Rank:                  %s\\n\"",
           "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
         },
         {
-          "start": 19123,
-          "end": 19133,
+          "start": 18678,
+          "end": 18688,
           "before": "\"        \"",
           "after": "\"       \"",
           "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
@@ -1009,7 +1009,7 @@
         "assembly": "mov    0xc(%eax),%eax",
         "dwarf_variables": [
           {
-            "die": 4282,
+            "die": 4097,
             "name": "my_time",
             "type": "Tprofile_tm *",
             "base_type": "Tprofile_tm",
@@ -1030,7 +1030,7 @@
         "assembly": "cmp    $0x9,%eax",
         "dwarf_variables": [
           {
-            "die": 4337,
+            "die": 4152,
             "name": "day",
             "type": "int",
             "base_type": "int",
@@ -1065,7 +1065,7 @@
         "assembly": "cmp    $0x9,%edx",
         "dwarf_variables": [
           {
-            "die": 4319,
+            "die": 4134,
             "name": "month",
             "type": "int",
             "base_type": "int",
@@ -1100,7 +1100,7 @@
         "assembly": "lea    0x540(%ebx),%edi",
         "dwarf_variables": [
           {
-            "die": 4235,
+            "die": 4050,
             "name": "p",
             "type": "Tprofile_create *",
             "base_type": null,
@@ -1985,111 +1985,6 @@
   "callee_interface_scope": {
     "observations": [
       {
-        "function": "generate_profile_checksum",
-        "source": "src/profile.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          365
-        ],
-        "candidate_card": "docs/current/interfaces/generate_profile_checksum.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "Tprofile_checksum*"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "Tprofile_checksum*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Tprofile",
-            "candidate_type": "Tprofile_checksum",
-            "header": "include/recovered/Tprofile.h",
-            "status": "MISMATCH",
-            "historical_size": 1360,
-            "candidate_size": 1364,
-            "member_difference_count": 32,
-            "first_member_differences": [
-              {
-                "member": "before_checksum",
-                "historical": null,
-                "candidate": {
-                  "offset": 0,
-                  "size": 40,
-                  "type": "unsigned char [40]",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "best_combo",
-                "historical": {
-                  "offset": 80,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_floor",
-                "historical": {
-                  "offset": 76,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_replay_names",
-                "historical": {
-                  "offset": 220,
-                  "size": 1024,
-                  "type": "char [32][32]",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_score",
-                "historical": {
-                  "offset": 84,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "biggest_lost_combo",
-                "historical": {
-                  "offset": 92,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 1
-      },
-      {
         "function": "get_profile_dir_for_profile",
         "source": "src/profile.c",
         "blocking": true,
@@ -2292,111 +2187,6 @@
         "call_offset_count": 1
       },
       {
-        "function": "profile_data_page_basic",
-        "source": "src/profile.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          785
-        ],
-        "candidate_card": "docs/current/interfaces/profile_data_page_basic.json",
-        "local_declarations": [
-          {
-            "return_type": "char*",
-            "parameter_types": [
-              "Tprofile_basic*"
-            ],
-            "canonical_return_type": "char*",
-            "canonical_parameter_types": [
-              "Tprofile_basic*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Tprofile",
-            "candidate_type": "Tprofile_basic",
-            "header": "include/recovered/Tprofile.h",
-            "status": "MISMATCH",
-            "historical_size": 1360,
-            "candidate_size": 176,
-            "member_difference_count": 23,
-            "first_member_differences": [
-              {
-                "member": "before_games_played",
-                "historical": null,
-                "candidate": {
-                  "offset": 0,
-                  "size": 44,
-                  "type": "unsigned char [44]",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "before_jc",
-                "historical": null,
-                "candidate": {
-                  "offset": 96,
-                  "size": 60,
-                  "type": "unsigned char [60]",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "before_total_floors",
-                "historical": null,
-                "candidate": {
-                  "offset": 48,
-                  "size": 12,
-                  "type": "unsigned char [12]",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "best_replay_names",
-                "historical": {
-                  "offset": 220,
-                  "size": 1024,
-                  "type": "char [32][32]",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "ccc",
-                "historical": {
-                  "offset": 136,
-                  "size": 20,
-                  "type": "int [5]",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "cccNum",
-                "historical": {
-                  "offset": 96,
-                  "size": 20,
-                  "type": "int [5]",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 1
-      },
-      {
         "function": "profile_data_page_advanced",
         "source": "src/profile.c",
         "blocking": true,
@@ -2531,12 +2321,10 @@
       }
     ],
     "blocking_functions": [
-      "generate_profile_checksum",
       "get_controls",
       "get_profile_dir_for_profile",
       "log2file",
       "profile_data_page_advanced",
-      "profile_data_page_basic",
       "profile_data_page_general",
       "save_control"
     ],
@@ -2671,7 +2459,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 534
+          "line": 527
         }
       ],
       "candidate_signatures": [
@@ -2686,7 +2474,7 @@
   "evidence_counts": {
     "relocation_mismatches": 6,
     "direct_transfer_mismatches": 5,
-    "callee_interface_observations": 8,
+    "callee_interface_observations": 6,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 6,

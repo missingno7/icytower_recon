@@ -13,7 +13,7 @@
       "variable": "p",
       "historical_type": "Tprofile",
       "historical_die": 199726,
-      "candidate_die": 4879
+      "candidate_die": 4694
     },
     {
       "function": "load_profile",
@@ -22,7 +22,7 @@
       "historical_die": 199643,
       "candidate_declaration": {
         "file": "src/profile.c",
-        "line": 368,
+        "line": 351,
         "kind": "NF",
         "name": "load_profile",
         "return_type": "Tprofile_load*",
@@ -34,13 +34,13 @@
       "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     }
   ],
-  "difficulty": "CHEAP",
-  "priority": 238,
+  "difficulty": "SUPERVISOR",
+  "priority": -100,
   "changes": [
     {
       "file": "src/profile.c",
-      "start": 11250,
-      "end": 11399,
+      "start": 10805,
+      "end": 10954,
       "before": "typedef struct Tprofile_load {\n    unsigned char before_checksum[0x28];\n    int checksum;\n    unsigned char remainder[0x550 - 0x2c];\n} Tprofile_load;",
       "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_load;",
       "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
@@ -52,8 +52,8 @@
   "body_edit_allowed": false,
   "source_identities": {
     "src/profile.c": {
-      "size": 30873,
-      "sha256": "6e5ee5a8ba2a777f04692f5d10ae4883b7ab3afe9f73f94c6a2617dd19ba1853"
+      "size": 30428,
+      "sha256": "92e588a17abc6e8b5afc817b3f1c2787ebd62b9c9cc9a582dfcd7ef1ca7a86bd"
     }
   },
   "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_load",
@@ -600,5 +600,179 @@
     "game-profile"
   ],
   "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
-  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers."
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "supervisor_block": {
+    "reason": "check failed: Focused contribution evidence: docs/attempts/interface-diagnostics/view_profile_Tprofile_load/game-profile-3dd41c3fe813ae3753aaaa3cf524c412eda77df02a9389fed35acfa5d72729f0.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-profile",
+    "changes": [
+      {
+        "file": "src/profile.c",
+        "start": 10805,
+        "end": 10954,
+        "before": "typedef struct Tprofile_load {\n    unsigned char before_checksum[0x28];\n    int checksum;\n    unsigned char remainder[0x550 - 0x2c];\n} Tprofile_load;",
+        "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_load;",
+        "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
+      }
+    ],
+    "failure_context": {
+      "outcome": "FAST_FAILED",
+      "error": "Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-profile",
+      "evidence": [
+        {
+          "path": "docs/attempts/interface-diagnostics/view_profile_Tprofile_load/game-profile-3dd41c3fe813ae3753aaaa3cf524c412eda77df02a9389fed35acfa5d72729f0.json",
+          "identity": {
+            "size": 8333,
+            "sha256": "3dd41c3fe813ae3753aaaa3cf524c412eda77df02a9389fed35acfa5d72729f0"
+          },
+          "changed_function_count": 1,
+          "changed_functions": [
+            {
+              "function": "select_profile",
+              "source_body_unchanged": true,
+              "size_before": 2626,
+              "size_after": 2626,
+              "original_comparison": {
+                "before": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 3070,
+                  "candidate_size": 2626,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 13,
+                    "original_va": 4304077,
+                    "candidate_byte": 125,
+                    "original_byte": 117
+                  },
+                  "relocation_mismatch_count": 91,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 140,
+                      "symbol": "_closeButtonClicked",
+                      "resolved_value": 5100132,
+                      "original_value": 113410824,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 214,
+                      "symbol": "_cycle_count",
+                      "resolved_value": 5269816,
+                      "original_value": 4294967000,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 223,
+                      "symbol": "_checkMenuFocus",
+                      "resolved_value": 4294885845,
+                      "original_value": 142973,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 239,
+                      "symbol": "_poll_control",
+                      "resolved_value": 4294863781,
+                      "original_value": 850984959,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 247,
+                      "symbol": "_is_any",
+                      "resolved_value": 4294863661,
+                      "original_value": 1208344024,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 286,
+                      "symbol": "_keypressed",
+                      "resolved_value": 142910,
+                      "original_value": 3657433086,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 85,
+                  "direct_transfer_mismatch_count": 5,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                },
+                "after": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 3070,
+                  "candidate_size": 2626,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 13,
+                    "original_va": 4304077,
+                    "candidate_byte": 125,
+                    "original_byte": 117
+                  },
+                  "relocation_mismatch_count": 91,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 140,
+                      "symbol": "_closeButtonClicked",
+                      "resolved_value": 5100132,
+                      "original_value": 113410824,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 214,
+                      "symbol": "_cycle_count",
+                      "resolved_value": 5269816,
+                      "original_value": 4294967000,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 223,
+                      "symbol": "_checkMenuFocus",
+                      "resolved_value": 4294885845,
+                      "original_value": 142973,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 239,
+                      "symbol": "_poll_control",
+                      "resolved_value": 4294863781,
+                      "original_value": 850984959,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 247,
+                      "symbol": "_is_any",
+                      "resolved_value": 4294863661,
+                      "original_value": 1208344024,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 286,
+                      "symbol": "_keypressed",
+                      "resolved_value": 142910,
+                      "original_value": 3657433086,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 85,
+                  "direct_transfer_mismatch_count": 5,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                }
+              }
+            }
+          ],
+          "omitted_changed_functions": 0
+        }
+      ],
+      "omitted_evidence": 0,
+      "limit": "Historical rejected attempt for this source plan; not current proof or permission to edit bodies."
+    }
+  }
 }

@@ -79,11 +79,8 @@ inline char *get_rank(Tprofile_rank *profile)
 {
     return rankLables[get_rank_id(profile)];
 }
-typedef struct Tprofile_checksum {
-    unsigned char before_checksum[0x28];
-    int checksum;
-    unsigned char remainder[0x554 - 0x2c];
-} Tprofile_checksum;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_checksum;
 
 int generate_profile_checksum(Tprofile_checksum *p)
 {
@@ -117,22 +114,8 @@ char *profile_data_page_extra(Tprofile_extra *p)
     return data;
 }
 
-typedef struct Tprofile_basic {
-    unsigned char before_games_played[0x2c];
-    int games_played;
-    unsigned char before_total_floors[0xc];
-    int total_floors;
-    int total_score;
-    int total_combos;
-    int total_combo_floors;
-    int best_floor;
-    int best_combo;
-    int best_score;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    unsigned char before_jc[0x3c];
-    int jc[5];
-} Tprofile_basic;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_basic;
 
 
 char *profile_data_page_basic(Tprofile_basic *p)

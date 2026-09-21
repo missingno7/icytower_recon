@@ -413,32 +413,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/generate_profile_checksum.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/generate_profile_checksum.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/generate_profile_checksum.json",
-          "source": "src/profile.c",
-          "function": "generate_profile_checksum",
-          "candidate_card": "docs/current/functions/profile/generate_profile_checksum.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/generate_profile_checksum.json",
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/get_profile_dir_for_profile.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 0,
@@ -536,32 +510,6 @@
           "function": "view_profile",
           "candidate_card": "docs/current/functions/profile/view_profile.json",
           "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/profile_data_page_basic.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/profile_data_page_basic.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/profile_data_page_basic.json",
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/profile_data_page_basic.json",
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
         }
       ],
       "omitted_examples": 0,
@@ -1442,6 +1390,25 @@
           "size": 188,
           "body_edit_allowed": false,
           "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-profile:UNKNOWN_SUPERVISOR",
+      "target": "game-profile",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "affected_function_count": 1,
+      "examples": [
+        {
+          "source": "src/profile.c",
+          "function": "generate_profile_checksum",
+          "candidate_card": "docs/current/functions/profile/generate_profile_checksum.json",
+          "size": 112,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class"
         }
       ],
       "omitted_examples": 0,

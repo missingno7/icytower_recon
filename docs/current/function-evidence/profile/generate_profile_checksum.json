@@ -152,8 +152,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 89,
-    "body_end_line": 104,
+    "body_start_line": 86,
+    "body_end_line": 101,
     "body_sha256": "25e78605764a3b4e4fa605a89885eabe49c410f698909753a6b712899c5a88f7"
   },
   "reference_diagnostics": [],
@@ -566,10 +566,10 @@
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 2748,
+            "die": 2563,
             "name": "p",
             "type": "Tprofile_checksum *",
-            "base_type": "Tprofile_checksum",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "memory",
@@ -616,7 +616,7 @@
         "assembly": "xchg   %ax,%ax",
         "dwarf_variables": [
           {
-            "die": 2761,
+            "die": 2576,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -637,10 +637,10 @@
         "assembly": "mov    (%ebx,%eax,4),%ecx",
         "dwarf_variables": [
           {
-            "die": 2748,
+            "die": 2563,
             "name": "p",
             "type": "Tprofile_checksum *",
-            "base_type": "Tprofile_checksum",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "register",
@@ -650,7 +650,7 @@
             "relation": "register is used"
           },
           {
-            "die": 2761,
+            "die": 2576,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -671,7 +671,7 @@
         "assembly": "inc    %eax",
         "dwarf_variables": [
           {
-            "die": 2761,
+            "die": 2576,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -885,12 +885,12 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -20,
+  "priority": 37,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -926,119 +926,7 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "generate_profile_checksum",
-      "source": "src/profile.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "generate_profile_checksum",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 196733
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_checksum",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1364,
-          "member_difference_count": 32,
-          "first_member_differences": [
-            {
-              "member": "before_checksum",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 40,
-                "type": "unsigned char [40]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_score",
-              "historical": {
-                "offset": 84,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "biggest_lost_combo",
-              "historical": {
-                "offset": 92,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 88
-        }
-      ],
-      "candidate_signatures": [
-        "('int', ['Tprofile_checksum*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/generate_profile_checksum.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

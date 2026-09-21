@@ -1071,3 +1071,20 @@ All 268 interface tests pass. Replaying the archived real pre-migration replay
 source and compiled type evidence yields exactly the prior 12-edit recipe; this
 replay is diagnostic, not new acceptance proof. Evidence is indexed in
 docs/attempts/pointee-root-scope-validation.json.
+
+
+## Mixed canonical-type and profile-view batch
+
+One unattended worker run promoted Tmenu_char_selection, Tmenu_floor_selection,
+Tmenu_selection, Tprofile_basic and Tprofile_checksum. It rejected Tcustom,
+Tprofile_advanced, Tprofile_control and Tprofile_load, archived focused contribution
+differences, restored only the attempted source edits, recorded supervisor blocks
+and continued automatically. Five promotions and four safe rejections completed
+without manual source edits or intervention. Existing function/workflow proofs
+are unchanged and the task session is closed.
+
+Failed canonicalizations include same-size instruction permutations; no exception
+to the preservation gate was introduced. Detailed changed-function evidence and
+remaining queue availability are indexed in docs/attempts/type-batch-validation.json.
+This validates sustained mechanical work across several task shapes but leaves
+the cheap body-recovery requirement open.
