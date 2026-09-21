@@ -538,14 +538,14 @@ int get_replay_property(const char *filename, int property)
     pack_fread(r_temp.header, 6, pf);
     pack_fread(&r_temp.size, 4, pf);
     pack_fclose(pf);
-    if (memcmp(r_temp.header, "ITR", 3)) {
+    if (memcmp(r_temp.header, "ITR140", 3)) {
         log2file("%s has wrong first 3 bytes of header", filename);
         return -1000;
     }
     if (r_temp.header[3] != '1' || r_temp.header[4] != '4' ||
         r_temp.header[5] != '0') {
         log2file("%s has wrong header version", filename);
-        if (r_temp.header[3] == '0' && r_temp.header[4] == '1' &&
+        if (r_temp.header[3] == '0' && r_temp.header[4] == '0' &&
             r_temp.header[5] == '1')
             return -1001;
         if (r_temp.header[3] == '1' && r_temp.header[4] == '3' &&
@@ -584,15 +584,19 @@ int get_replay_property(const char *filename, int property)
     pack_fread(&r->gravity, 4, pf);
     pack_fclose(pf);
     retval = 0;
-    if (property == 2) {
+    switch (property) {
+    case 2:
         retval = r->score;
         log2file("%s:score=%d", filename, retval);
-    } else if (property == 3) {
+        break;
+    case 3:
         retval = r->combo;
         log2file("%s:combo=%d", filename, retval);
-    } else if (property == 4) {
+        break;
+    case 4:
         retval = r->floor;
         log2file("%s:floor=%d", filename, retval);
+        break;
     }
     destroy_replay(r);
     return retval;

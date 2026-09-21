@@ -578,7 +578,7 @@ void draw_progress_bar(void)
         size=maxVal;
     acquire_screen();
     ypos=400;
-    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));
+    rect(screen,108,ypos,532,ypos+10,makecol(150,150,150));
     rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));
     rectfill(screen,0,420,639,430,makecol(255,255,255));
     textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));
@@ -2003,7 +2003,7 @@ int start_reward(int lev)
         if (!options.flash && r > 2) {
             for (i = 0; i < (r - 2) * 16; i++) {
                 p = create_particle(stars, 320, 360);
-                stars[p].sy = (((new_rand() % 500) + 500) << 16) / 100;
+                stars[p].sy = -((((new_rand() % 500) + 500) << 16) / 100);
                 stars[p].sx = ((((new_rand() % 1000) - 500) << 16) * (r - 2)) / 100;
             }
         }

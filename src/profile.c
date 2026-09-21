@@ -97,10 +97,7 @@ int generate_profile_checksum(Tprofile_checksum *p)
     pos = (int *)p;
     p->checksum = 0;
     cs = 0;
-    for (i = 0; i < 0x154; i++) {
-        cs += *pos * (i + 1);
-        pos++;
-    }
+    for (i = 0; i < sizeof(Tprofile) / 4; i++) cs += pos[i] * (i + 1);
     p->checksum = oldCS;
     return hash2(cs);
 }

@@ -217,7 +217,7 @@
   "source_scope": {
     "body_start_line": 1986,
     "body_end_line": 2014,
-    "body_sha256": "bf8491284fd009bc7a97f2bf560d95f59320b793ad8a50413d3864132f050a1e"
+    "body_sha256": "12d90487fb87cd52e2538269bde1224be70a10a3cb703a0e83529d3f84709ba4"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [],
@@ -427,7 +427,7 @@
     "declaration_differences": [],
     "cast_chains": [],
     "shifts": [
-      "stars[p].sy = (((new_rand() % 500) + 500) << 16) / 100;",
+      "stars[p].sy = -((((new_rand() % 500) + 500) << 16) / 100);",
       "stars[p].sx = ((((new_rand() % 1000) - 500) << 16) * (r - 2)) / 100;"
     ],
     "confidence": "NO_INSTRUCTION_EVIDENCE",
@@ -561,8 +561,8 @@
             },
             {
               "offset": 127,
-              "assembly": "jle    39ec <_start_reward+0x18c>",
-              "bytes": "0f8e07010000"
+              "assembly": "jle    39e8 <_start_reward+0x188>",
+              "bytes": "0f8e03010000"
             },
             {
               "offset": 133,
@@ -646,21 +646,21 @@
   "compiler_flags": [
     "-O2"
   ],
-  "current_candidate_size": 476,
+  "current_candidate_size": 472,
   "first_difference": {
     "offset": 40,
     "original_va": 4226144,
     "candidate_byte": 29,
     "original_byte": 61
   },
-  "mismatch_count": 170,
+  "mismatch_count": 4,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
   "instruction_alignment": {
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 125,
-    "candidate_instruction_count": 127,
-    "changed_group_count": 12,
-    "shown_group_count": 3,
+    "candidate_instruction_count": 125,
+    "changed_group_count": 2,
+    "shown_group_count": 2,
     "hunks": [
       {
         "kind": "replace",
@@ -743,37 +743,6 @@
               "bytes": "85c9",
               "mnemonic": "test",
               "assembly": "test   %ecx,%ecx"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "replace",
-        "original": {
-          "instruction_start": 36,
-          "instruction_end": 37,
-          "function_offset": 127,
-          "instructions": [
-            {
-              "address": 4226231,
-              "bytes": "0f8e03010000",
-              "mnemonic": "jle",
-              "assembly": "jle    407dc0 <_start_reward+0x188>"
-            }
-          ],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 36,
-          "instruction_end": 37,
-          "function_offset": 127,
-          "instructions": [
-            {
-              "address": 14559,
-              "bytes": "0f8e07010000",
-              "mnemonic": "jle",
-              "assembly": "jle    39ec <_start_reward+0x18c>"
             }
           ],
           "omitted_instructions": 0
@@ -1274,9 +1243,9 @@
     {
       "symbol": "new_rand",
       "function": "new_rand",
-      "function_offset": 322,
+      "function_offset": 319,
       "target_va": 4221316,
-      "verified": false
+      "verified": true
     }
   ],
   "original_calls": [
@@ -1306,72 +1275,7 @@
     }
   ],
   "indirect_control_flow": 0,
-  "relocation_mismatches": [
-    {
-      "section": 1,
-      "offset": 14749,
-      "symbol_index": 160,
-      "symbol": "_stars",
-      "type": 6,
-      "function_offset": 317,
-      "addend": 16,
-      "target_va": 5221592,
-      "resolution": "named symbol",
-      "resolved_value": 5221592,
-      "original_value": 3960072192,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 14747,
-          "bytes": "899310000000",
-          "mnemonic": "mov",
-          "assembly": "mov    %edx,0x10(%ebx)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4226416,
-          "bytes": "8993d8ac4f00",
-          "mnemonic": "mov",
-          "assembly": "mov    %edx,0x4facd8(%ebx)"
-        }
-      }
-    },
-    {
-      "section": 1,
-      "offset": 14808,
-      "symbol_index": 160,
-      "symbol": "_stars",
-      "type": 6,
-      "function_offset": 376,
-      "addend": 12,
-      "target_va": 5221588,
-      "resolution": "named symbol",
-      "resolved_value": 5221588,
-      "original_value": 2101036800,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 14806,
-          "bytes": "89930c000000",
-          "mnemonic": "mov",
-          "assembly": "mov    %edx,0xc(%ebx)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4226475,
-          "bytes": "8993d4ac4f00",
-          "mnemonic": "mov",
-          "assembly": "mov    %edx,0x4facd4(%ebx)"
-        }
-      }
-    }
-  ],
+  "relocation_mismatches": [],
   "direct_transfer_mismatches": [
     {
       "instruction_offset": 109,
@@ -1406,19 +1310,19 @@
       "resolution": "Unique candidate and historical same-CU function entry"
     },
     {
-      "instruction_offset": 321,
-      "function_offset": 322,
+      "instruction_offset": 318,
+      "function_offset": 319,
       "opcode": 232,
       "operand_size": 4,
       "transfer_kind": "call",
       "target_function": "new_rand",
       "target_va": 4221316,
       "candidate_target": 36,
-      "candidate_displacement": -14722,
+      "candidate_displacement": -14719,
       "layout_operand_equal": false,
-      "resolved_value": 4294962182,
-      "original_value": 65583871,
-      "equal": false,
+      "resolved_value": 4294962185,
+      "original_value": 4294962185,
+      "equal": true,
       "resolution": "Unique candidate and historical same-CU function entry"
     }
   ],
@@ -1544,13 +1448,13 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 76,
+  "difficulty": "CHEAP",
+  "priority": 176,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+  "routing_reason": "All base CHEAP eligibility checks met; fresh admission and strict acceptance remain required.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1558,15 +1462,15 @@
       "source_body_located": true,
       "calls_resolved": true,
       "indirect_flow_within_medium_limit": true,
-      "same_size_and_at_most_12_differing_bytes": false,
+      "same_size_and_at_most_12_differing_bytes": true,
       "no_indirect_flow": true,
       "historical_size_at_most_900": true,
       "cheap_difference_class": true
     },
     "observed": {
       "historical_size": 472,
-      "candidate_size": 476,
-      "differing_bytes": 170,
+      "candidate_size": 472,
+      "differing_bytes": 4,
       "unresolved_calls": 0,
       "indirect_transfers": 0
     },
