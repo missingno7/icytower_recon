@@ -612,7 +612,7 @@ extern int closeButtonClicked;
 extern int keypressed(void);
 extern void clear_keybuf(void);
 extern void checkMenuFocus(void);
-extern void blit_to_screen(void *bmp);
+extern void blit_to_screen(BITMAP*);
 
 void view_profile(void *profile)
 {

@@ -1369,6 +1369,18 @@
     "instruction_differences": [],
     "instruction_count_hypotheses": [
       {
+        "signed_instruction": "jl",
+        "unsigned_instruction": "jb",
+        "original_counts": [
+          2,
+          0
+        ],
+        "candidate_counts": [
+          3,
+          0
+        ]
+      },
+      {
         "signed_instruction": "jle",
         "unsigned_instruction": "jbe",
         "original_counts": [
@@ -1388,7 +1400,7 @@
           0
         ],
         "candidate_counts": [
-          3,
+          2,
           0
         ]
       }
@@ -1639,7 +1651,7 @@
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 486,
     "candidate_instruction_count": 461,
-    "changed_group_count": 71,
+    "changed_group_count": 70,
     "shown_group_count": 3,
     "hunks": [
       {
@@ -3884,9 +3896,9 @@
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
           "address": 3572,
-          "bytes": "39148560000000",
+          "bytes": "3b148560000000",
           "mnemonic": "cmp",
-          "assembly": "cmp    %edx,0x60(,%eax,4)"
+          "assembly": "cmp    0x60(,%eax,4),%edx"
         },
         "original_instruction_at_offset": {
           "address": 4300073,
@@ -5805,31 +5817,6 @@
   "callee_interface_scope": {
     "observations": [
       {
-        "function": "blit_to_screen",
-        "source": "src/profile.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1127,
-          1692
-        ],
-        "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "void*"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "void*"
-            ]
-          }
-        ],
-        "layout_issues": []
-      },
-      {
         "function": "profile_data_page_general",
         "source": "src/profile.c",
         "blocking": true,
@@ -6043,7 +6030,6 @@
       }
     ],
     "blocking_functions": [
-      "blit_to_screen",
       "profile_data_page_general",
       "set_next_rank_message"
     ],

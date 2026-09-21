@@ -171,7 +171,8 @@ def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
         # Nothing may jump directly to the jcc (its condition changes), and no protected byte
         # (relocation field or entry) may change; an untouched displacement field is fine.
         jcc_start=rows[index+1]['address']
-        if jcc_start in targets or any(t in changed for t in targets): continue
+        # A jump to the compare itself executes the whole pair and is fine; the opcode byte may change there.
+        if jcc_start in targets or any(t in changed and t!=start for t in targets): continue
         if changed:
             blocks.append({'start':start,'end':end,'original_bytes':raw[start:end].hex(),'canonical_bytes':code.hex(),'instructions':[row,rows[index+1]],
                            'kind':'compare_operand_order'})

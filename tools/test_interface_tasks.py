@@ -210,6 +210,8 @@ class InterfaceTests(unittest.TestCase):
             x=project(codes,mnems); y=project([codes[0][:2]+('c6' if codes[0][2:]=='f0' else 'f0')]+[('7d' if codes[1][:2]=='7e' else '79' if codes[1][:2]=='78' else codes[1][:2])+codes[1][2:]]+codes[2:],mnems)
             self.assertNotEqual(x['sha256'],y['sha256'],(codes,mnems))
         self.assertNotEqual(project(['39f0','7e03']+tail,['cmp','jle']+tm,protected_targets=[2])['sha256'],project(['39c6','7d03']+tail,['cmp','jge']+tm,protected_targets=[2])['sha256'])
+        # A loop head jumping to the compare itself does not block the pair.
+        self.assertEqual(project(['39f0','7e03']+tail,['cmp','jle']+tm,protected_targets=[0])['sha256'],project(['39c6','7d03']+tail,['cmp','jge']+tm,protected_targets=[0])['sha256'])
 
     def test_projection_respects_decoding_and_cfg(self):
         raw=bytes.fromhex('31f631dbebfc')

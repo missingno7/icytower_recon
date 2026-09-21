@@ -38,26 +38,6 @@
       "size": 0
     },
     {
-      "function": "blit_to_screen",
-      "source": "src/main.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
-      "begin_command": "python tools/interface_task.py begin blit_to_screen",
-      "verification_command": "python tools/interface_task.py check blit_to_screen",
-      "promotion_command": "python tools/interface_task.py promote blit_to_screen",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-      "size": 0
-    },
-    {
       "function": "destroyHTTPResponse",
       "source": "src/httpget.c",
       "sources": null,
@@ -1668,20 +1648,20 @@
           "name": "blit_to_screen",
           "return_type": "void",
           "parameter_types": [
-            "void*"
+            "BITMAP*"
           ],
-          "declaration": "extern void blit_to_screen (void *);",
+          "declaration": "extern void blit_to_screen (BITMAP *);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "void*"
+            "BITMAP*"
           ],
           "cu": "src/profile.c",
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -21012,129 +20992,6 @@
           "line": 22
         }
       ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "blit_to_screen",
-      "historical": [
-        {
-          "cu": "src/main.c",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 124632
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/hisc.c",
-          "line": 26,
-          "kind": "NC",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "declaration": "extern void blit_to_screen (BITMAP *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "BITMAP*"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/main.c",
-          "line": 109,
-          "kind": "NC",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "declaration": "extern void blit_to_screen (BITMAP *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "BITMAP*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/main.c",
-          "line": 950,
-          "kind": "NF",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "declaration": "extern void blit_to_screen (BITMAP *bmp);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "BITMAP*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/menu.c",
-          "line": 286,
-          "kind": "NC",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "declaration": "extern void blit_to_screen (BITMAP *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "BITMAP*"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/replay.c",
-          "line": 80,
-          "kind": "NC",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*"
-          ],
-          "declaration": "extern void blit_to_screen (BITMAP *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "BITMAP*"
-          ],
-          "cu": "src/replay.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/profile.c",
-          "line": 615,
-          "kind": "NC",
-          "name": "blit_to_screen",
-          "return_type": "void",
-          "parameter_types": [
-            "void*"
-          ],
-          "declaration": "extern void blit_to_screen (void *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },

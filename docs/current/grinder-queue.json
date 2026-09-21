@@ -3061,14 +3061,6 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "blit_to_screen",
-          "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "profile_data_page_general",
           "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
           "difficulty": "SUPERVISOR",
@@ -3152,14 +3144,6 @@
       "candidate_card": "docs/current/functions/profile/select_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "blit_to_screen",
-          "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "draw_profile_selector",
           "candidate_card": "docs/current/interfaces/draw_profile_selector.json",
@@ -3431,43 +3415,6 @@
       "candidate_card": "docs/current/type-views/view_httpget_HTTPResponse.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "blit_to_screen",
-      "source": "src/main.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
-      "begin_command": "python tools/interface_task.py begin blit_to_screen",
-      "verification_command": "python tools/interface_task.py check blit_to_screen",
-      "promotion_command": "python tools/interface_task.py promote blit_to_screen",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
