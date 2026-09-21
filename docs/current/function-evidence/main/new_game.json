@@ -85,8 +85,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 788,
-    "body_end_line": 889,
+    "body_start_line": 789,
+    "body_end_line": 890,
     "body_sha256": "306400d7cb5ad67e9e5103f3021edb12d3596e681428d0fe859025353cadb055"
   },
   "reference_diagnostics": [
@@ -186,7 +186,7 @@
       "candidate_source_lines": [
         {
           "file": "src/main.c",
-          "line": 797,
+          "line": 798,
           "text": "    cmdline.combos = 0;"
         }
       ]
@@ -287,7 +287,7 @@
       "candidate_source_lines": [
         {
           "file": "src/main.c",
-          "line": 798,
+          "line": 799,
           "text": "    cmdline.sd = 0;"
         }
       ]
@@ -388,7 +388,7 @@
       "candidate_source_lines": [
         {
           "file": "src/main.c",
-          "line": 799,
+          "line": 800,
           "text": "    cmdline.keys = 0;"
         }
       ]
@@ -4550,7 +4550,7 @@
   "priority": -20,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, create_replay, destroy_game_data",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, destroy_game_data",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -4682,9 +4682,9 @@
       {
         "function": "create_replay",
         "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
         "call_offsets": [
           878
         ],
@@ -4701,38 +4701,7 @@
             ]
           }
         ],
-        "layout_issues": [
-          {
-            "position": "return",
-            "historical_type": "Treplay",
-            "candidate_type": "Treplay",
-            "header": "include/recovered/Treplay.h",
-            "status": "MISMATCH",
-            "historical_size": 2220,
-            "candidate_size": 2220,
-            "member_difference_count": 1,
-            "first_member_differences": [
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "Trecord *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ]
+        "layout_issues": []
       },
       {
         "function": "destroy_game_data",
@@ -4885,7 +4854,6 @@
     ],
     "blocking_functions": [
       "create_game_data",
-      "create_replay",
       "destroy_game_data"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."

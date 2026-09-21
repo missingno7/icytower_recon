@@ -48,6 +48,33 @@ class ViewTests(unittest.TestCase):
             else: node['members'][1]['layout']['size']=None
             with self.assertRaises(ValueError): compatible_members(node,self.expected(),'')
 
+    def test_void_pointer_member_repair_is_explicit_and_extent_preserving(self):
+        g=graph();expected=layout(g,g.game_types['Treplay'][0]['type_ref']);candidate=copy.deepcopy(expected)
+        candidate['members'][-1]['layout']['type']='void *'
+        with self.assertRaises(ValueError): compatible_members(candidate,expected,'')
+        repairs=[];compatible_members(candidate,expected,'',{'Trecord'},repairs)
+        self.assertEqual(repairs[0]['member'],'data')
+        self.assertEqual(repairs[0]['historical_type'],'Trecord *')
+        self.assertEqual(repairs[0]['offset'],2216)
+        for mutation in ('offset','size','qualifier','typed','nested','unknown'):
+            bad=copy.deepcopy(candidate);member=bad['members'][-1];pointees={'Trecord'}
+            if mutation=='offset':member['offset']-=4
+            elif mutation=='size':member['layout']['size']=8
+            elif mutation=='qualifier':member['layout']['qualifiers']=['volatile']
+            elif mutation=='typed':member['layout']['type']='int *'
+            elif mutation=='nested':member['layout']['type']='void **'
+            else:pointees=set()
+            with self.assertRaises(ValueError,msg=mutation): compatible_members(bad,expected,'',pointees,[])
+
+    def test_member_only_replacement_keeps_tag_and_other_source_bytes(self):
+        from type_views import member_replacement
+        source='typedef struct Replay { int n; /* keep */ void *data; } Replay;'
+        repair={'member':'data','historical_type':'Trecord *'}
+        after=member_replacement(source,repair,'\r\n')
+        self.assertEqual(after,'#include "recovered/Trecord.h"\r\n'+source.replace('void *data','Trecord *data'))
+        for source in ('typedef struct { int *data; } R;', 'typedef struct { void *data; void *data; } R;'):
+            with self.assertRaises(ValueError):member_replacement(source,repair,'\n')
+
     def test_scalar_layout_preserves_qualifiers(self):
         a={'kind':'base_type','size':4,'type':'int','encoding':'signed'}
         self.assertNotEqual(shape_key(a),shape_key(dict(a,qualifiers=['volatile'])))

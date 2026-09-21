@@ -439,3 +439,8 @@ bonus. This does not lower body difficulty or promise that the repair removes al
 blockers. Follow the refreshed queue after promotion. The complete edge list is
 in `docs/current/task-dependencies.json`; bounded queue entries record omitted
 counts. Remote-only conflicts and protected bodies do not create these edges.
+
+A TYPE_VIEW card with `repair_mode: POINTER_MEMBER_ONLY` preserves the local struct
+and repairs one DWARF-evidenced `void *` member. Use its generated commands; success
+is `DWARF_MEMBER_MATCH`, not whole-struct canonicalization or a function match.
+The same unchanged-emission and complete-layout acceptance checks apply.

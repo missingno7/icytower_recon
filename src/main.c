@@ -74,6 +74,7 @@ int new_personal_best[15];
 Tbeta *testers;
 Tbeta *the_tester;
 
+#include "recovered/Trecord.h"
 typedef struct Treplay {
     char header[6];
     int size;
@@ -101,7 +102,7 @@ typedef struct Treplay {
     float tc_t_data[100];
     float tc_s_data[100];
     float tc_f_data[100];
-    void *data;
+    Trecord *data;
 } Treplay;
 Treplay *demo;
 int uberChecksum;

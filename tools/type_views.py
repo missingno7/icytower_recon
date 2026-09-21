@@ -24,7 +24,7 @@ def shape_key(node):
     return key
 
 
-def compatible_members(candidate,expected,source):
+def compatible_members(candidate,expected,source,canonical_pointers=(),pointer_repairs=None):
     if candidate['kind']!='structure_type' or expected['kind']!='structure_type': raise ValueError('Only complete struct layouts are eligible')
     if not candidate.get('size') or not expected.get('size'): raise ValueError('Struct size is unknown')
     if candidate.get('qualifiers') or expected.get('qualifiers'): raise ValueError('Qualified aggregate requires supervisor review')
@@ -37,8 +37,17 @@ def compatible_members(candidate,expected,source):
         occupied.update(extent)
         old=old_members.get(m['name'])
         if old:
-            if old['bitfield'] or old['offset']!=offset or shape_key(old['layout'])!=shape_key(m['layout']):
+            if old['bitfield'] or old['offset']!=offset:
                 raise ValueError('Member differs in offset/type/qualifiers: '+m['name'])
+            if shape_key(old['layout'])!=shape_key(m['layout']):
+                a=m['layout']; b=old['layout']; target=POINTER.fullmatch(b.get('type',''))
+                placeholder=(pointer_repairs is not None and a['kind']==b['kind']=='pointer_type'
+                    and a.get('size')==b.get('size')==4 and not a.get('qualifiers') and not b.get('qualifiers')
+                    and re.fullmatch(r'void\s*\*',a.get('type','')) and target and target[1] in canonical_pointers)
+                if not placeholder: raise ValueError('Member differs in offset/type/qualifiers: '+m['name'])
+                pointer_repairs.append({'member':m['name'],'offset':offset,'size':4,
+                    'candidate_type':a['type'],'historical_type':b['type'],
+                    'reason':'DWARF identifies a single canonical pointee; replace void-pointer placeholder without changing field extent. Fresh emission preservation remains required.'})
             retained.append({'member':m['name'],'offset':offset,'size':size,'type':m['layout'].get('type')})
         else:
             node=m['layout']; element=node.get('element',{})
@@ -50,6 +59,14 @@ def compatible_members(candidate,expected,source):
             ignored.append({'member':m['name'],'offset':offset,'size':size,'reason':'Unreferenced byte-array filler; no canonical field identity assumed'})
     if not retained: raise ValueError('No canonical field correspondence')
     return retained,ignored
+
+
+def member_replacement(declaration, repair, newline):
+    pointee=POINTER.fullmatch(repair['historical_type'])
+    matches=list(re.finditer(r'\bvoid(?=\s*\*\s*'+re.escape(repair['member'])+r'\s*;)',sanitized(declaration)))
+    if not pointee or len(matches)!=1: raise ValueError('Pointer member source spelling is ambiguous')
+    match=matches[0]
+    return '#include "recovered/'+pointee[1]+'.h"'+newline+declaration[:match.start()]+pointee[1]+declaration[match.end():]
 
 
 def return_evidence(report, units, g):
@@ -142,12 +159,17 @@ def plan(source,report,match,observations,ledger,texts):
             if re.match(r'\s*\*',tail): continue
             if re.search(r'\bsizeof\s*\(\s*$',prefix) and re.match(r'\s*\)',tail) and candidate['size']==expected['size']: continue
             raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
-        retained,ignored=compatible_members(candidate,expected,outside)
+        pointer_repairs=[]
+        pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
+        retained,ignored=compatible_members(candidate,expected,outside,pointees,pointer_repairs)
         targets=affected_targets(ledger,[source])
         if targets!=[report['build']['target']]: raise ValueError('View requires broader dependency closure')
         # A canonical parent can include child declarations that still exist locally.
         from type_tasks import generated_dependencies
-        required=generated_dependencies(canonical,ROOT)
+        if pointer_repairs and (len(pointer_repairs)!=1 or ignored or candidate['size']!=expected['size'] or len(candidate['members'])!=len(expected['members'])):
+            raise ValueError('Member-only repair requires one pointer placeholder in an otherwise complete layout')
+        pointee=POINTER.fullmatch(pointer_repairs[0]['historical_type'])[1] if pointer_repairs else None
+        required=({pointee}|generated_dependencies(pointee,ROOT)) if pointee else generated_dependencies(canonical,ROOT)
         conflicts=[{'type':declaration[3],'source':path,'header':'include/recovered/'+declaration[3]+'.h'}
                    for path in maintained if not path.startswith('include/recovered/')
                    for declaration in STRUCT.finditer(sanitized(texts[path])) if declaration[3] in required]
@@ -158,12 +180,23 @@ def plan(source,report,match,observations,ledger,texts):
         newline='\r\n' if '\r\n' in texts[source] else '\n'
         after='#include "recovered/'+canonical+'.h"'
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
+        if pointer_repairs:
+            repair=pointer_repairs[0]
+            original=texts[source][match.start():match.end()]
+            after=member_replacement(original,repair,newline)
+            name='member_'+Path(source).stem+'_'+alias+'_'+repair['member']
+            card.update(function=name,repair_mode='POINTER_MEMBER_ONLY',
+                compiled_headers=['include/recovered/'+pointee+'.h'],
+                begin_command='python tools/interface_task.py begin '+name,
+                apply_command='python tools/interface_task.py apply '+name,
+                verification_command='python tools/interface_task.py check '+name,
+                promotion_command='python tools/interface_task.py promote '+name)
         card.update(canonical=canonical,header=header.relative_to(ROOT).as_posix(),header_identity=identity(header),expected_layout=expected,
-                    candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,
+                    candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,pointer_member_repairs=pointer_repairs,
                     affected_targets=targets,difficulty='CHEAP',priority=238,
                     changes=[{'file':source,'start':match.start(),'end':match.end(),'before':texts[source][match.start():match.end()],
-                              'after':after,'reason':'Unique historical pointer correspondence and compatible member layouts; use the generated struct via a source alias'}],
-                    reason='Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.',
+                              'after':after,'reason':'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}],
+                    reason='Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.',
                     edit_scope='Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.')
     except ValueError as exc: card['reason']=str(exc)
     blocked=ROOT/'docs/current/interface-blocks.json'
@@ -184,7 +217,7 @@ def plans(ledger):
             if clean[:match.start()].count('{')!=clean[:match.start()].count('}'): continue
             card=plan(source,report,match,observed[match[3]],ledger,texts)
             # Exact duplicates have a narrower existing CANONICAL_TYPE task.
-            if card['difficulty']=='CHEAP' and card.get('canonical')==match[3] and card.get('candidate_size')==card.get('historical_size') and not card.get('removed_fillers'):
+            if card['difficulty']=='CHEAP' and card.get('canonical')==match[3] and card.get('candidate_size')==card.get('historical_size') and not card.get('removed_fillers') and not card.get('pointer_member_repairs'):
                 continue
             cards.append(card)
     return cards
@@ -197,7 +230,10 @@ def verify_view(report,plan):
     from generate_types import outputs
     header=ROOT/plan['header']
     if header.read_text(encoding='utf-8')!=outputs()[header]: raise ValueError('Canonical header differs from DWARF generation')
-    if plan['header'] not in report['build']['local_inputs']: raise ValueError('Generated canonical header is not a compiled dependency')
+    for required in plan.get('compiled_headers',[plan['header']]):
+        dependency=ROOT/required
+        if dependency.read_text(encoding='utf-8')!=outputs()[dependency]: raise ValueError('Compiled type header differs from DWARF generation')
+        if required not in report['build']['local_inputs']: raise ValueError('Generated canonical header is not a compiled dependency')
 
 
 def publish_views(ledger,check=False):

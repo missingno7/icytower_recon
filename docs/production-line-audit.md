@@ -779,3 +779,23 @@ parent repair. An isolated locked-compiler build reproduces the Treplay conflict
 real task admission refuses the parent without creating a session. The 245-test
 interface suite passes and all recovery proofs remain unchanged. Evidence is in
 `docs/attempts/type-view-scope-validation.json` and its linked compiler probe.
+
+
+## Pointer placeholders without whole-struct replacement
+
+The type-view planner now recognizes one unqualified four-byte void-pointer member
+at its exact historical offset in an otherwise complete struct. A generated
+canonical pointee is required. Typed-pointer substitutions, qualifiers, multiple
+pointer levels, changed extents and incomplete layouts are excluded. The bounded
+repair retains the local struct tag and every other source byte in the declaration,
+imports the generated pointee, and changes only the member type. Fresh acceptance
+requires the complete historical layout and unchanged emitted contributions.
+
+The real Treplay.data case demonstrated why these are separate operations. Whole
+Treplay replacement reordered two instructions in do_replay_menu and was rejected,
+restored and archived for the supervisor. An isolated, baseline-checked member-only
+trial preserved emission. The generated member_main_Treplay_data task then passed
+FAST and strict promotion with 247 tests, ordinary link check and global audit.
+No function or workflow proof changed. Removed caller-interface prerequisites,
+both trials and the retained failure are indexed in
+`docs/attempts/pointer-member-validation.json`.

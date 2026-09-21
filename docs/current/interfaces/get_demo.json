@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "get_demo",
-  "source": "src/main.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "TYPE_LAYOUT_CONFLICT",
-  "status": "TYPE_LAYOUT_CONFLICT",
-  "state": "TYPE_LAYOUT_BLOCKED",
-  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -18,47 +14,5 @@
       "die": 117313
     }
   ],
-  "type_layout_issues": [
-    {
-      "position": "return",
-      "historical_type": "Treplay",
-      "candidate_type": "Treplay",
-      "header": "include/recovered/Treplay.h",
-      "status": "MISMATCH",
-      "historical_size": 2220,
-      "candidate_size": 2220,
-      "member_difference_count": 1,
-      "first_member_differences": [
-        {
-          "member": "data",
-          "historical": {
-            "offset": 2216,
-            "size": 4,
-            "type": "Trecord *",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": {
-            "offset": 2216,
-            "size": 4,
-            "type": "void *",
-            "qualifiers": [],
-            "bitfield": false
-          }
-        }
-      ],
-      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-      "cu": "src/main.c",
-      "file": "src/main.c",
-      "line": 590
-    }
-  ],
-  "changes": [],
-  "verification_command": "python tools/interface_task.py check get_demo",
-  "begin_command": "python tools/interface_task.py begin get_demo",
-  "apply_command": "python tools/interface_task.py apply get_demo",
-  "promotion_command": "python tools/interface_task.py promote get_demo",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Repair or establish the named aggregate layouts before editing this interface",
-  "priority": -20
+  "changes": []
 }

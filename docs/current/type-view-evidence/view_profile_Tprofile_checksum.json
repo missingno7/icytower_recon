@@ -25,7 +25,7 @@
       "end": 3035,
       "before": "typedef struct Tprofile_checksum {\n    unsigned char before_checksum[0x28];\n    int checksum;\n    unsigned char remainder[0x554 - 0x2c];\n} Tprofile_checksum;",
       "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_checksum;",
-      "reason": "Unique historical pointer correspondence and compatible member layouts; use the generated struct via a source alias"
+      "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
     }
   ],
   "state": "TYPE_VIEW_REPAIR",
@@ -577,9 +577,10 @@
       "reason": "Unreferenced byte-array filler; no canonical field identity assumed"
     }
   ],
+  "pointer_member_repairs": [],
   "affected_targets": [
     "game-profile"
   ],
-  "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+  "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
   "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers."
 }

@@ -227,7 +227,7 @@ def verify_interface(session,acceptance=False):
     elif session['plan']['task_kind']=='TYPE_VIEW':
         from type_views import verify_view
         candidate_check(verify_view,reports[session['plan']['source']],session['plan'])
-        expected=session['plan']['canonical']; state='CANONICAL_VIEW_MATCH'
+        expected=session['plan']['canonical']; state='DWARF_MEMBER_MATCH' if session['plan'].get('repair_mode')=='POINTER_MEMBER_ONLY' else 'CANONICAL_VIEW_MATCH'
     elif session['plan']['task_kind']=='CANONICAL_TYPE':
         from generate_types import outputs
         header=ROOT/session['plan']['header']

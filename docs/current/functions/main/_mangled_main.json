@@ -172,8 +172,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2845,
-    "body_end_line": 3000,
+    "body_start_line": 2846,
+    "body_end_line": 3001,
     "body_sha256": "bc4d5a88664897276029bd04777664855ba70848bcc91787eaf0f3c15da03325"
   },
   "reference_diagnostics": [],
@@ -270,12 +270,12 @@
           "original": [],
           "candidate": [
             {
-              "die": 28395,
+              "die": 28460,
               "type": "char [1024]",
-              "scope": 28321,
+              "scope": 28386,
               "byte_size": 1024,
               "location": "3 byte block: 91 e0 75 \t(DW_OP_fbreg: -1312)",
-              "declaration_line": 2846
+              "declaration_line": 2847
             }
           ]
         },
@@ -300,12 +300,12 @@
           "original": [],
           "candidate": [
             {
-              "die": 28448,
+              "die": 28513,
               "type": "FILE *",
-              "scope": 28321,
+              "scope": 28386,
               "byte_size": 4,
               "location": "0x31c1 (location list)",
-              "declaration_line": 2848
+              "declaration_line": 2849
             }
           ]
         },
@@ -345,12 +345,12 @@
           "original": [],
           "candidate": [
             {
-              "die": 28423,
+              "die": 28488,
               "type": "char [256]",
-              "scope": 28321,
+              "scope": 28386,
               "byte_size": 256,
               "location": "3 byte block: 91 e0 7d \t(DW_OP_fbreg: -288)",
-              "declaration_line": 2847
+              "declaration_line": 2848
             }
           ]
         },
@@ -781,7 +781,7 @@
         "assembly": "mov    0x8(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 28361,
+            "die": 28426,
             "name": "argc",
             "type": "int",
             "base_type": "int",
@@ -803,7 +803,7 @@
         "assembly": "mov    0xc(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 28378,
+            "die": 28443,
             "name": "argv",
             "type": "char **",
             "base_type": "char",
@@ -2076,121 +2076,6 @@
         "call_offset_count": 3
       },
       {
-        "function": "destroy_replay",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1015,
-          1169
-        ],
-        "candidate_card": "docs/current/interfaces/destroy_replay.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "Treplay*"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "Treplay*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Treplay",
-            "candidate_type": "Treplay",
-            "header": "include/recovered/Treplay.h",
-            "status": "MISMATCH",
-            "historical_size": 2220,
-            "candidate_size": 2220,
-            "member_difference_count": 1,
-            "first_member_differences": [
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "Trecord *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 2
-      },
-      {
-        "function": "replay_selector",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1200
-        ],
-        "candidate_card": "docs/current/interfaces/replay_selector.json",
-        "local_declarations": [
-          {
-            "return_type": "Treplay*",
-            "parameter_types": [
-              "Tcontrol*",
-              "char*"
-            ],
-            "canonical_return_type": "Treplay*",
-            "canonical_parameter_types": [
-              "Tcontrol*",
-              "char*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "return",
-            "historical_type": "Treplay",
-            "candidate_type": "Treplay",
-            "header": "include/recovered/Treplay.h",
-            "status": "MISMATCH",
-            "historical_size": 2220,
-            "candidate_size": 2220,
-            "member_difference_count": 1,
-            "first_member_differences": [
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "Trecord *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 1
-      },
-      {
         "function": "view_scores",
         "source": "src/main.c",
         "blocking": true,
@@ -2306,13 +2191,64 @@
         ],
         "layout_issues": [],
         "call_offset_count": 1
+      },
+      {
+        "function": "destroy_replay",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1015,
+          1169
+        ],
+        "candidate_card": "docs/current/interfaces/destroy_replay.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Treplay*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Treplay*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 2
+      },
+      {
+        "function": "replay_selector",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1200
+        ],
+        "candidate_card": "docs/current/interfaces/replay_selector.json",
+        "local_declarations": [
+          {
+            "return_type": "Treplay*",
+            "parameter_types": [
+              "Tcontrol*",
+              "char*"
+            ],
+            "canonical_return_type": "Treplay*",
+            "canonical_parameter_types": [
+              "Tcontrol*",
+              "char*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
       }
     ],
     "blocking_functions": [
-      "destroy_replay",
       "draw_menu",
       "handle_menu",
-      "replay_selector",
       "reset_menu",
       "view_scores"
     ],

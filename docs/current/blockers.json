@@ -1291,6 +1291,30 @@
       "dependency_priority_bonus": 0
     },
     {
+      "task_kind": "CANONICAL_TYPE",
+      "function": "Treplay",
+      "source": "src/main.c",
+      "sources": [
+        "src/main.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -20,
+      "reason": "Tagged struct is used outside the replaceable declarations",
+      "state": "CANONICAL_TYPE_REPAIR",
+      "status": "DUPLICATE_TYPE",
+      "body_edit_allowed": false,
+      "difference_class": "CANONICAL_TYPE_DECLARATION",
+      "begin_command": "python tools/interface_task.py begin Treplay",
+      "verification_command": "python tools/interface_task.py check Treplay",
+      "promotion_command": "python tools/interface_task.py promote Treplay",
+      "size": 0,
+      "candidate_card": "docs/current/types/Treplay.json",
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
+      "omitted_dependents": 0,
+      "dependency_priority_bonus": 0
+    },
+    {
       "function": "blit_to_screen",
       "source": "src/main.c",
       "sources": null,
@@ -1392,28 +1416,6 @@
           "planned_in_caller_cu": false
         }
       ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "get_demo",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin get_demo",
-      "verification_command": "python tools/interface_task.py check get_demo",
-      "promotion_command": "python tools/interface_task.py promote get_demo",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/get_demo.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -2274,14 +2276,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
       "size": 0,
-      "prerequisite_for_count": 4,
+      "prerequisite_for_count": 3,
       "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": false
-        },
         {
           "source": "src/replay.c",
           "function": "calc_replay_checksum",
@@ -2350,14 +2346,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/create_replay.json",
       "size": 0,
-      "prerequisite_for_count": 4,
+      "prerequisite_for_count": 3,
       "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "new_game",
-          "candidate_card": "docs/current/functions/main/new_game.json",
-          "planned_in_caller_cu": false
-        },
         {
           "source": "src/replay.c",
           "function": "create_replay",
@@ -2397,20 +2387,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/destroy_replay.json",
       "size": 0,
-      "prerequisite_for_count": 5,
+      "prerequisite_for_count": 3,
       "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": false
-        },
         {
           "source": "src/replay.c",
           "function": "get_replay_property",
@@ -2538,14 +2516,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/replay_selector.json",
       "size": 0,
-      "prerequisite_for_count": 2,
+      "prerequisite_for_count": 1,
       "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "planned_in_caller_cu": false
-        },
         {
           "source": "src/replay.c",
           "function": "replay_selector",
@@ -2744,7 +2716,7 @@
       "begin_command": "python tools/grinder_task.py begin game-main new_game",
       "promotion_command": "python tools/promote_function.py game-main new_game",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, create_replay, destroy_game_data",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, destroy_game_data",
       "size": 1139,
       "candidate_card": "docs/current/functions/main/new_game.json",
       "task_kind": "FUNCTION_BODY",
@@ -2752,14 +2724,6 @@
         {
           "function": "create_game_data",
           "candidate_card": "docs/current/interfaces/create_game_data.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "create_replay",
-          "candidate_card": "docs/current/interfaces/create_replay.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
@@ -3077,30 +3041,6 @@
       "promotion_command": "python tools/interface_task.py promote view_main_Tprofile",
       "size": 0,
       "candidate_card": "docs/current/type-views/view_main_Tprofile.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_main_Treplay",
-      "source": "src/main.c",
-      "sources": [
-        "src/main.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -25,
-      "reason": "Member differs in offset/type/qualifiers: data",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_main_Treplay",
-      "verification_command": "python tools/interface_task.py check view_main_Treplay",
-      "promotion_command": "python tools/interface_task.py promote view_main_Treplay",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_main_Treplay.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,
@@ -3805,14 +3745,6 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "destroy_replay",
-          "candidate_card": "docs/current/interfaces/destroy_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "draw_menu",
           "candidate_card": "docs/current/interfaces/draw_menu.json",
           "difficulty": "SUPERVISOR",
@@ -3823,14 +3755,6 @@
         {
           "function": "handle_menu",
           "candidate_card": "docs/current/interfaces/handle_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "replay_selector",
-          "candidate_card": "docs/current/interfaces/replay_selector.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
@@ -4991,27 +4915,11 @@
       "begin_command": "python tools/grinder_task.py begin game-main do_replay_menu",
       "promotion_command": "python tools/promote_function.py game-main do_replay_menu",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: calc_replay_checksum, destroy_replay, drawSlot, get_string, handle_menu, load_replay, save_replay",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string, handle_menu, load_replay, save_replay",
       "size": 2661,
       "candidate_card": "docs/current/functions/main/do_replay_menu.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "calc_replay_checksum",
-          "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "destroy_replay",
-          "candidate_card": "docs/current/interfaces/destroy_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "drawSlot",
           "candidate_card": "docs/current/interfaces/drawSlot.json",
@@ -5562,6 +5470,30 @@
     },
     {
       "task_kind": "TYPE_VIEW",
+      "function": "view_main_Treplay",
+      "source": "src/main.c",
+      "sources": [
+        "src/main.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -100,
+      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
+      "state": "TYPE_VIEW_REPAIR",
+      "status": "PARTIAL_STRUCT_VIEW",
+      "body_edit_allowed": false,
+      "difference_class": "CANONICAL_TYPE_VIEW",
+      "begin_command": "python tools/interface_task.py begin view_main_Treplay",
+      "verification_command": "python tools/interface_task.py check view_main_Treplay",
+      "promotion_command": "python tools/interface_task.py promote view_main_Treplay",
+      "size": 0,
+      "candidate_card": "docs/current/type-views/view_main_Treplay.json",
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
+      "omitted_dependents": 0,
+      "dependency_priority_bonus": 0
+    },
+    {
+      "task_kind": "TYPE_VIEW",
       "function": "view_profile_Tprofile_general",
       "source": "src/profile.c",
       "sources": [
@@ -5569,7 +5501,7 @@
       ],
       "difficulty": "SUPERVISOR",
       "priority": -100,
-      "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
+      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
       "state": "TYPE_VIEW_REPAIR",
       "status": "PARTIAL_STRUCT_VIEW",
       "body_edit_allowed": false,
