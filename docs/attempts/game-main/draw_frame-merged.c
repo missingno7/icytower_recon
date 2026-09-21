@@ -73,72 +73,91 @@ void draw_frame(BITMAP *bmp)
     }
 
     {
-        Tfloor *fl = &map.room[31];    /* 0x4f8e00: function_data_refs names this map.room[31] */
+        /* 2547: real loop, evidenced by the back-edge test `cmpl $0x1e0,-0x178(%ebp)` (cx)
+         * at offset 1580 sitting AFTER the sign-text block (main.c:2562..2575) but tagged
+         * to line 2547 -- a rotated for-loop whose test/increment sit at the bottom. `esi`
+         * (the per-row Tfloor pointer) is decremented by sizeof(Tfloor)==0x18 each pass
+         * (offset 1570 `sub $0x18,%esi`) in lockstep with cx += 0x10 (offset 1573), for
+         * 0x1e0/0x10 == 30 rows. Field offsets (empty=0, start_tile=4, end_tile=8, level=12,
+         * sign=16, tiles=20) match Tfloor exactly for BOTH the floor body below (2548..2560)
+         * and the sign body carried into D2 (2562..2575): they are the SAME loop over the
+         * SAME `room` pointer, so this loop opens here and its closing brace is in D2.c. */
+        Tfloor *room = &map.room[31]; /* ? starting row; map.room[32], matches the historical sign scan bound */
 
-        if (!fl->empty) {              /* 2548 */
-            int f = 0xffffffe0;        /* y-cursor base for the floor row; DWARF block-local `f` */
-            int tile;
-            int rowy;
+        for (cx = 0; cx != 0x1e0; cx += 0x10) {      /* 2547 */
+            if (!room->empty) {                       /* 2548 */
+                int tile;
+                int rowy = cx + (map.offset & 0xf) - 6; /* ? sign-preserving mod-16 term, 2552 */
 
-            ls = fo + fl->tiles * 3;   /* 2549 */
-            if (ls > 0x2c) {
-                ls = 0x2c;
+                ls = fo + room->tiles * 3;   /* 2549 */
+                if (ls > 0x2c) {
+                    ls = 0x2c;
+                }
+                if (room->level > 0x1387) {  /* 2550 */
+                    ls += 3;
+                }
+
+                tile = room->start_tile;     /* 2551 */
+
+                /* left edge tile */
+                cy = tile * 16 - 5;          /* 2552, stored at -0x174(%ebp) */
+                x = cy;                      /* ? DWARF tracks a separate `x` over this same span; mirrored here */
+                draw_sprite(bmp, data[ls].dat, x, rowy);
+
+                /* middle tiles: 2553..2556 */
+                for (tile++; tile < room->end_tile; tile++) {
+                    cy = tile * 16;
+                    x = cy;                  /* ? */
+                    draw_sprite(bmp, data[ls + 1].dat, x, rowy);
+                }
+
+                /* right edge tile, 2558 */
+                cy = tile * 16;
+                x = cy;                      /* ? */
+                draw_sprite(bmp, data[ls + 2].dat, x, rowy);
+
+                if (debug && !key[KEY_F2]) {  /* 2560 */
+                    textprintf_ex(bmp, font, 0x208, cx + (map.offset & 0xf), 15, -1, "%d",
+                                  (room->level - 1) / 10);
+                }
             }
-            if (fl->level > 0x1387) {  /* 2550 */
-                ls += 3;
+
+            /* lines 2562..2575 continue this same per-row loop (sign text) in D2.c;
+             * loop closes and `room` is decremented at the end of D2.c's chunk. */
+    /* still inside the D1 per-row loop for 2562..2575, then combo text / rewards for 2589..2651 */
+            if (room->sign) {                  /* 2562, same `room` row as the floor draw above */
+                int s;
+                int sy;
+                int sw;
+                int c1;
+                int c2;
+
+                s = so + room->tiles;          /* 2563 */
+                if (s > 0x6e) {
+                    s = 0x6e;
+                }
+                if (room->level > 0x1387) {    /* 2564 */
+                    s++;
+                }
+                sy = cx + (map.offset & 0xf) + 10;  /* ? sign-preserving mod-16 term like 2552's, 2565 */
+                sw = ((BITMAP *)data[s].dat)->w;     /* 2566 */
+                cy = room->start_tile + (room->end_tile - room->start_tile) / 2; /* 2567 */
+                cy *= 16;
+                draw_sprite(bmp, data[s].dat, cy, sy);
+                c1 = makecol(255, 255, 255);   /* 2569 */
+                c2 = makecol(55, 55, 55);      /* 2570 */
+                cy += sw / 2;                  /* 2571 */
+                /* shadowed stripe-number text: four gray offsets then one white on top */
+                textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 7, c2, -1, "%d", room->sign); /* 2571 */
+                textprintf_centre_ex(bmp, data[54].dat, cy + 2, sy + 6, c2, -1, "%d", room->sign); /* 2572 */
+                textprintf_centre_ex(bmp, data[54].dat, cy,     sy + 6, c2, -1, "%d", room->sign); /* 2573 */
+                textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 5, c2, -1, "%d", room->sign); /* 2574 */
+                textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 6, c1, -1, "%d", room->sign); /* 2575 */
             }
 
-            tile = fl->start_tile;     /* 2551 */
-            rowy = f + (map.offset & 0xf) - 6; /* ? sign-preserving mod-16 term, 2552 */
-
-            /* left edge tile */
-            draw_sprite(bmp, data[ls].dat, tile * 16 - 5, rowy); /* 2552 */
-
-            /* middle tiles: 2553..2556 */
-            for (tile++; tile < fl->end_tile; tile++) {
-                draw_sprite(bmp, data[ls + 1].dat, tile * 16, rowy);
-            }
-
-            /* right edge tile, 2558 */
-            draw_sprite(bmp, data[ls + 2].dat, tile * 16, rowy);
-
-            if (debug && !key[KEY_F2]) {   /* 2560 */
-                textprintf_ex(bmp, font, 0x208, f + (map.offset & 0xf), 15, -1, "%d",
-                              (fl->level - 1) / 10);
-            }
-        }
-    }
-
-    for (ls = 31; ls >= 0; ls--) {          /* ? loop bound/index inherited from D1's setup over map.room[32]; not directly evidenced in this range */
-        if (map.room[ls].sign) {
-            int s;
-            int sy;
-            int sw;
-            int c1;
-            int c2;
-
-            s = so + map.room[ls].tiles;
-            if (s > 0x6e)
-                s = 0x6e;
-            if (map.room[ls].level > 0x1387)
-                s++;
-            sy = cx + (map.offset % 16) + 10;
-            sw = ((BITMAP *)data[s].dat)->w;
-            cy = map.room[ls].start_tile + (map.room[ls].end_tile - map.room[ls].start_tile) / 2;
-            cy *= 16;
-            draw_sprite(bmp, data[s].dat, cy, sy);
-            c1 = makecol(255, 255, 255);
-            c2 = makecol(55, 55, 55);
-            cy += sw / 2;
-            /* shadowed stripe-number text: four gray offsets then one white on top */
-            textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 7, c2, -1, "%d", map.room[ls].sign);
-            textprintf_centre_ex(bmp, data[54].dat, cy + 2, sy + 6, c2, -1, "%d", map.room[ls].sign);
-            textprintf_centre_ex(bmp, data[54].dat, cy,     sy + 6, c2, -1, "%d", map.room[ls].sign);
-            textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 5, c2, -1, "%d", map.room[ls].sign);
-            textprintf_centre_ex(bmp, data[54].dat, cy + 1, sy + 6, c1, -1, "%d", map.room[ls].sign);
-        }
-        cx += 0x10;
-    }
+            room--;                            /* offset 1570 `sub $0x18,%esi`, sizeof(Tfloor) */
+        }   /* closes the for (cx = 0; ...) loop opened in D1.c (2547) */
+    }       /* closes the `{ Tfloor *room = ...; ... }` scope opened in D1.c */
 
     for (fo = 0; fo < 512; fo++) {          /* ? loop index reuses fo; not otherwise evidenced as the star-loop counter */
         if (stars[fo].intensity) {
@@ -169,12 +188,14 @@ void draw_frame(BITMAP *bmp)
             p_im = 6;
         }
 
-        if (p_im == 6) {                                  /* ? refine default frame by horizontal speed thresholds */
+        if (p_im == 6 && ply[player_id]->sx != 0.0) {     /* 2594: fucom vs 0.0 guards the narrow-band check */
             if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
-                if (ply[player_id]->sx > 0.01 || ply[player_id]->sx < -0.01)   /* ? */
-                    p_im = 8;
+                p_im = 8;
             }
         }
+        /* 2595/2597: a further +-0.01 fucompp pair (separate literals from 2594's +-0.02)
+         * follows in the historical code and can still change p_im here; not reconstructed --
+         * this region's `esi` bookkeeping across 2589..2606 was not fully traced. */
 
         if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
             ply[player_id]->frame = 0;
@@ -194,6 +215,14 @@ void draw_frame(BITMAP *bmp)
             }
             else {
                 ply[player_id]->frame = 0;
+                if (customFrame) {                            /* 2624: was entirely missing; fldl+fistpl truncation
+                                                                 * pair on ply->y (offset 8) and ply->x (offset 0),
+                                                                 * folded into the screen-position accumulators ahead
+                                                                 * of the fo selection below -- register flow into
+                                                                 * and out of this block (ecx/edx) not fully traced */
+                    ox = customFrame->w / 2 + (int)ply[player_id]->y;  /* ? */
+                    oy = (int)ply[player_id]->x - 0xb;               /* ? */
+                }
                 if (map.offset > 0xc8) {                     /* ? */
                     if (logic_count <= 11)
                         fo = 9;

@@ -77,29 +77,40 @@ int play(void)
                         update_particle(&stars[i]);
                 }
             }
-            /* 3717..3732: fall-height "shake" accumulator kept in map.offset;
-             * bracket boundaries (160/140/120/100/80/60/40/20/0) and per-bracket
-             * deltas (1,1,1,1,1,2,2,3) are evidenced by the fucom cascade; the exact
-             * >= vs > edges on each threshold are approximate. */
+            /* 3717..3732: fall-height "shake" accumulator. old_map_pos captures map.offset
+             * before this update (ebx, live only in a register -- DWARF gives it no stack
+             * slot, matching "never written" in the skeleton check: it is read once, right
+             * back out). The bracket ladder (thresholds 160/140/120/100/80/60/40/20/0) builds
+             * scroll_acc (DW_OP_reg1/ecx across this whole span) as a running total, not a
+             * mutually-exclusive choice: each of the lower 7 thresholds (jne skip-just-the-
+             * add-and-fall-through, evidenced at 3722..3728) adds its delta on top of
+             * whichever base the first (140) test picked, and the y>=0 test (fldz/fucompp,
+             * 3728) is unconditionally true for a valid y -- kept literal per the evidenced
+             * compare, see report. map.offset, y and level are then updated once from
+             * old_map_pos + scroll_acc (the single store at 3729/3731/3732), not per bracket. */
             if (ply[player_id]->y < 160.0) {                            /* 3719 */
-                if (ply[player_id]->y >= 140.0)                         /* 3721 */
-                    map.offset = 1;
-                else if (ply[player_id]->y >= 120.0)                    /* 3722 */
-                    map.offset++;
-                else if (ply[player_id]->y >= 100.0)                    /* 3723 */
-                    map.offset++;
-                else if (ply[player_id]->y >= 80.0)                     /* 3724 */
-                    map.offset++;
-                else if (ply[player_id]->y >= 60.0)                     /* 3725 */
-                    map.offset++;
-                else if (ply[player_id]->y >= 40.0)                     /* 3726 */
-                    map.offset += 2;
-                else if (ply[player_id]->y >= 20.0)                     /* 3727 */
-                    map.offset += 2;
-                else                                                    /* 3728 */
-                    map.offset += 3;
-                ply[player_id]->y += map.offset;                        /* 3731 */
-                level += map.offset;                                    /* 3732 */
+                old_map_pos = map.offset;                                /* 3717 (evidence: read here) */
+                scroll_acc = (ply[player_id]->y >= 140.0) ? 2 : 1;       /* 3721 */
+                if (ply[player_id]->y >= 120.0)                         /* 3722 */
+                    scroll_acc++;
+                if (ply[player_id]->y >= 100.0)                         /* 3723 */
+                    scroll_acc++;
+                if (ply[player_id]->y >= 80.0)                          /* 3724 */
+                    scroll_acc++;
+                if (ply[player_id]->y >= 60.0)                          /* 3725 */
+                    scroll_acc++;
+                if (ply[player_id]->y >= 40.0)                          /* 3726 */
+                    scroll_acc += 2;
+                if (ply[player_id]->y >= 20.0)                          /* 3727 */
+                    scroll_acc += 2;
+                if (ply[player_id]->y >= 0.0)                           /* 3728; ? always true for a valid y */
+                    scroll_acc += 3;
+                map.offset = old_map_pos + scroll_acc;                  /* 3729 */
+                ply[player_id]->y += scroll_acc;                        /* 3731 */
+                level += scroll_acc;                                    /* 3732 */
+                tot_scroll = scroll_acc;                                /* shares ecx with scroll_acc through
+                                                                          * the collision switch below (evidence:
+                                                                          * DW_OP_reg1 live range extends to 3823) */
             }
             if (!ply[player_id]->dead)                                  /* 3736 */
                 clock_angle++;

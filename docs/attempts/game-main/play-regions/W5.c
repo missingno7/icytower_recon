@@ -75,12 +75,14 @@ int play(void)
     /* REGION W5: lines 4687..5021 (results screens, name entry, highscore entry, epilogue, replay menu) */
     {
         /* DWARF block (outer, shared with REGION W4): results-panel/highscore state. */
-        float hy;
+        float hy = 0.0f;   /* slides in toward 136.0; block 133269 opens at main.c:4650, shared
+                            * with REGION W4 which is out of this region's reach, so no write is
+                            * visible inside 4687..5021 -- initialize at first use here */
         int gotHigh;
         int qualify[15];
         int qualifyValue[15];
-        int alpha_pos;
-        char *initials;
+        int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
+        char *initials = NULL;
 
         {
             /* DWARF block (inner): name-entry / rank-up state. */
@@ -101,11 +103,38 @@ int play(void)
             len = strlen(letters) - 1;                                              /* 4688 */
             isGuest = !stricmp(profile->handle, "guest");                           /* 4692 */
 
+            for (i = 0; i < 15; i++)
+                qualify[i] = 0;
+            qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;
+            qualifyValue[2] = ply[player_id]->level;
+            qualifyValue[1] = ply[player_id]->best_combo;
+            qualifyValue[3] = ply[player_id]->biggest_lost_combo;
+            qualifyValue[4] = ply[player_id]->no_combo_top_floor;
+            for (i = 0; i < 5; i++) {
+                qualifyValue[5 + i] = ply[player_id]->ccc[i];
+                qualifyValue[10 + i] = ply[player_id]->jcTop[i];
+            }
+            gotHigh = 0;
+            for (i = 0; i < 15; i++) {
+                qualify[i] = qualify_hisc_table(hisc_tables[i], qualifyValue[i]);
+                gotHigh += qualify[i];
+            }
+            if (!recording || is_playing_custom_game)
+                gotHigh = 0;
+            /* the three tables above live in DWARF block 133269 (main.c:4650..end), the same
+             * lexical block as REGION W4's highscore accounting; that region's own copies go
+             * out of scope at its closing brace right before this marker, so this region
+             * cannot see the values its own draw_results()/enter_hisc_table() calls need and
+             * recomputes them identically to main.c:4650..4679 (out of this region's reach) */
+
             /* results screen: slide the results panel in and wait for the
              * highscore chime / fade timer (4695..4737). */
             for (;;) {
                 if (hy < 140.0)                                                     /* 4695 */
-                    scrollerY = rank_bmp_id;  /* ? unresolved -0x928 slot, best effort */
+                    scrollerY = 0;  /* offset 11886 stores esi (0 here) while the panel is
+                                     * still sliding in, pinning the shake counter until hy
+                                     * settles past 140; an earlier pass misread this as a
+                                     * store into the rank sprite id, which is not yet set */
                 cycle_count = 0;                                                     /* 4696 */
                 ply[player_id]->dead -= 16;                                          /* 4697 */
                 hy = hy + (136.0 - hy) * 0.1;                                        /* 4699 */
@@ -174,6 +203,8 @@ int play(void)
                            640, 30, -1);                                              /* 4781 */
             scroll_scroller(&summary_scroller, -150);                                  /* 4782 */
             new_rank_id = get_rank_id(profile);                                        /* 4787 */
+            pos = 0;
+            skip_keys = 0;
 
             for (;;) {
                 if (skip_keys == 20)                    /* ? approximated loop-exit predicate, 4792 */
@@ -260,11 +291,18 @@ int play(void)
                             pos = len;
                     }
                     if (is_fire(&ctrl)) {                                                  /* 4894 */
-                        if (letters[pos] != (char)0xa4) {                                  /* 4895 */
-                            if (pos != 0)
-                                pos++;
+                        if (letters[pos] == (char)0xa4) {                                  /* 4895: blank slot confirmed */
+                            buf[pos * 2] = '.';                                             /* 4896 */
+                            if (pos > 1)                                                    /* 4899 */
+                                pos--;
                             else
-                                pos--;                       /* ? mirrors 4899's esi<=1 special case */
+                                pos++;
+                            if (skip_keys != 20)                                            /* 4900 */
+                                skip_keys = 19;                                              /* 4902 */
+                        } else if (pos != 0) {               /* ? best-effort for the non-blank confirm case */
+                            pos++;
+                        } else {
+                            pos--;
                         }
                     }
                     if (!is_any(&ctrl) && !key[KEY_DEL] && key[KEY_BACKSPACE]) {            /* 4913 */
@@ -278,10 +316,31 @@ int play(void)
                     if (isGuest && gotHigh && !is_playing_custom_game) {                /* 4921 */
                         if (keypressed()) {                                                 /* 4922 */
                             if (skip_keys != 20) {
+                                int matched = 0;
+                                char typed = 0;
+
                                 k = readkey() & 0xff;                                        /* 4866 */
-                                k -= 0x20;
-                                if (k >= 0 && k < len) {                                     /* 4871 */
-                                    buf[pos * 2] = letters[k];                               /* 4875 */
+                                k -= 0x20;             /* lowercase ascii -> uppercase letter code */
+                                if (k == -24) {                                              /* 4867: BACKSPACE (ascii 8) */
+                                    typed = (char)0xa4;
+                                    matched = 1;
+                                } else if (k == 14) {                                        /* 4868: '.' (ascii 46) */
+                                    typed = '.';
+                                    matched = 1;
+                                } else if (k == 1) {                                         /* 4869: '!' (ascii 33) */
+                                    typed = '!';
+                                    matched = 1;
+                                } else if (k != 0x20) {                                      /* 4870: '@' (ascii 64) is dropped */
+                                    for (i = 0; i < len; i++) {                              /* 4871..4872: scan letters[] */
+                                        if (letters[i] == (char)k) {
+                                            typed = letters[i];
+                                            matched = 1;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (matched) {                                               /* 4875 */
+                                    buf[pos * 2] = typed;
                                     pos++;                                                    /* 4876 */
                                     if (pos == 3)
                                         skip_keys = 20;                                       /* 4877 */
