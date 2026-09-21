@@ -258,6 +258,8 @@ def verify_view(report,plan):
 def publish_views(ledger,check=False):
     emit=check_json if check else write_json; cards=plans(ledger); active=set(); tasks=[]
     for card in cards:
+        from type_trial_context import summaries
+        card['compiler_trials']=summaries(card)
         path=ROOT/'docs/current/type-views'/(card['function']+'.json'); active.add(path)
         detail=ROOT/'docs/current/type-view-evidence'/path.name; emit(detail,card)
         compact={k:v for k,v in card.items() if k!='expected_layout'}

@@ -72,6 +72,8 @@ def plans(ledger):
 def publish_types(ledger,check=False):
     emit=check_json if check else write_json; cards=plans(ledger); tasks=[]
     for card in cards:
+        from type_trial_context import summaries
+        card['compiler_trials']=summaries(card)
         path=ROOT/'docs/current/types'/(card['function']+'.json'); emit(path,card)
         tasks.append({k:card[k] for k in ('task_kind','function','source','sources','difficulty','priority','reason','state','status','body_edit_allowed','difference_class','begin_command','verification_command','promotion_command')} | {'size':0,'candidate_card':path.relative_to(ROOT).as_posix()})
     active={card['function'] for card in cards}

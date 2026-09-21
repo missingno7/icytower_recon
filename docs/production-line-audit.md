@@ -1114,3 +1114,19 @@ contribution, link, test and audit acceptance. Tcustom remains blocked. All 269
 interface tests pass, including wrong/incomplete/duplicate/non-preserving probe
 rejection. Every function/workflow proof is unchanged. See
 docs/attempts/type-reconsideration-validation.json.
+
+
+## Type-trial memory in task cards
+
+Canonical-type and partial-view task cards now show bounded per-CU summaries of
+their latest type-context experiments: raw and preservation verdicts, changed
+functions, and full evidence links. Source/header, compiler configuration, oracle
+and probe-tool identities determine whether a trial is current or historical.
+The summary is presentation only, outside the edit plan and proof predicates.
+Unplanned supervisor cards without affected targets receive no inferred trials.
+
+Fresh reconsideration probes for Tprofile_control and Tprofile_general remain
+non-preserving both with and without assertion declarations; their blocks remain
+intact. Both cards now expose those current negative results, preventing repeated
+blind retries. The 271-test interface suite passes and all function/workflow proof
+states are unchanged. See docs/attempts/type-trial-card-validation.json.
