@@ -1,0 +1,95 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/replay.c",
+  "target": "game-replay",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 152,
+  "candidate_card": "docs/current/literals/game-replay/98.json",
+  "source_identity": {
+    "size": 24691,
+    "sha256": "8693cba2c133ad46422435c00394c3b45fa6e9d2a295ff32abe50c8263c2c3b6"
+  },
+  "consumers": [
+    {
+      "function": "create_replay",
+      "function_offset": 127,
+      "historical_operand_va": 5077630,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": null,
+      "relocation_equal": false,
+      "resolution": "section base not independently established",
+      "candidate_source_lines": [
+        {
+          "file": "src/replay.c",
+          "line": 112,
+          "text": "    strcpy(r->name, \"replay\");"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "create_replay"
+  ],
+  "historical_observed_addresses": [
+    5077630
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "7265706c6179",
+      "bytes": 7
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 127,
+      "candidate_addend": 152,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5077630,
+      "candidate_hex": "7265706c6179",
+      "original_hex": "4861726f6c64",
+      "candidate_instruction": {
+        "address": 3670,
+        "bytes": "be98000000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x98,%esi"
+      },
+      "original_instruction": {
+        "address": 4312422,
+        "bytes": "be7e7a4d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d7a7e,%esi"
+      },
+      "placement_evidence": {
+        "resolved_target": null,
+        "resolution": "section base not independently established",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5066681,
+          5070376
+        ],
+        "occurrence_count": 2,
+        "occurrence_count_lower_bound": 2,
+        "locations_truncated": false,
+        "state": "CONTENT_LOCATION_AMBIGUOUS"
+      },
+      "candidate_text": "replay",
+      "original_text": "Harold",
+      "candidate_source_lines": [
+        {
+          "file": "src/replay.c",
+          "line": 112,
+          "text": "    strcpy(r->name, \"replay\");"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}

@@ -73,15 +73,15 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 425,
-    "body_end_line": 454,
+    "body_start_line": 95,
+    "body_end_line": 124,
     "body_sha256": "1a1998e5f60dbb78e8f1d0f79f8a853f771374eb5c42e0791ffdc6e1bdc0dd6a"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [
     {
       "function_offset": 127,
-      "candidate_addend": 0,
+      "candidate_addend": 152,
       "classification": "LITERAL_CONTENT_DIFFERENCE",
       "content_equal": false,
       "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
@@ -90,10 +90,10 @@
       "candidate_hex": "7265706c6179",
       "original_hex": "4861726f6c64",
       "candidate_instruction": {
-        "address": 1082,
-        "bytes": "be00000000",
+        "address": 3670,
+        "bytes": "be98000000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x0,%esi"
+        "assembly": "mov    $0x98,%esi"
       },
       "original_instruction": {
         "address": 4312422,
@@ -116,7 +116,13 @@
       },
       "candidate_text": "replay",
       "original_text": "Harold",
-      "candidate_source_lines": []
+      "candidate_source_lines": [
+        {
+          "file": "src/replay.c",
+          "line": 112,
+          "text": "    strcpy(r->name, \"replay\");"
+        }
+      ]
     }
   ],
   "tail_jump_layout": null,
@@ -126,8 +132,8 @@
       "id": "repair_literal_content",
       "changes": [
         {
-          "start": 15061,
-          "end": 15069,
+          "start": 3862,
+          "end": 3870,
           "before": "\"replay\"",
           "after": "\"Harold\"",
           "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
@@ -288,7 +294,7 @@
       "nearest_branches": [
         {
           "offset": 37,
-          "instruction": "je     49e <_create_replay+0xe2>",
+          "instruction": "je     eba <_create_replay+0xe2>",
           "encoding_bytes": 6,
           "kind": "conditional",
           "condition": "zero/equal",
@@ -320,7 +326,7 @@
         },
         {
           "offset": 105,
-          "instruction": "jne    41c <_create_replay+0x60>",
+          "instruction": "jne    e38 <_create_replay+0x60>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "nonzero/not equal",
@@ -352,7 +358,7 @@
         },
         {
           "offset": 121,
-          "instruction": "jne    42c <_create_replay+0x70>",
+          "instruction": "jne    e48 <_create_replay+0x70>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "nonzero/not equal",
@@ -430,7 +436,7 @@
           "function_offset": 43,
           "instructions": [
             {
-              "address": 999,
+              "address": 3587,
               "bytes": "a100000000",
               "mnemonic": "mov",
               "assembly": "mov    0x0,%eax"
@@ -461,7 +467,7 @@
           "function_offset": 50,
           "instructions": [
             {
-              "address": 1006,
+              "address": 3594,
               "bytes": "66a104000000",
               "mnemonic": "mov",
               "assembly": "mov    0x4,%ax"
@@ -492,10 +498,10 @@
           "function_offset": 126,
           "instructions": [
             {
-              "address": 1082,
-              "bytes": "be00000000",
+              "address": 3670,
+              "bytes": "be98000000",
               "mnemonic": "mov",
-              "assembly": "mov    $0x0,%esi"
+              "assembly": "mov    $0x98,%esi"
             }
           ],
           "omitted_instructions": 0
@@ -588,13 +594,13 @@
     ],
     "candidate": [
       {
-        "address": 985,
+        "address": 3573,
         "bytes": "8945e4",
         "mnemonic": "mov",
         "assembly": "mov    %eax,-0x1c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 11296,
+            "die": 12224,
             "name": "r",
             "type": "Treplay *",
             "base_type": null,
@@ -610,56 +616,56 @@
         ]
       },
       {
-        "address": 988,
+        "address": 3576,
         "bytes": "85c0",
         "mnemonic": "test",
         "assembly": "test   %eax,%eax",
         "dwarf_variables": []
       },
       {
-        "address": 990,
+        "address": 3578,
         "bytes": "8b55e0",
         "mnemonic": "mov",
         "assembly": "mov    -0x20(%ebp),%edx",
         "dwarf_variables": []
       },
       {
-        "address": 993,
+        "address": 3581,
         "bytes": "0f84b7000000",
         "mnemonic": "je",
-        "assembly": "je     49e <_create_replay+0xe2>",
+        "assembly": "je     eba <_create_replay+0xe2>",
         "dwarf_variables": []
       },
       {
-        "address": 999,
+        "address": 3587,
         "bytes": "a100000000",
         "mnemonic": "mov",
         "assembly": "mov    0x0,%eax",
         "dwarf_variables": []
       },
       {
-        "address": 1004,
+        "address": 3592,
         "bytes": "8903",
         "mnemonic": "mov",
         "assembly": "mov    %eax,(%ebx)",
         "dwarf_variables": []
       },
       {
-        "address": 1006,
+        "address": 3594,
         "bytes": "66a104000000",
         "mnemonic": "mov",
         "assembly": "mov    0x4,%ax",
         "dwarf_variables": []
       },
       {
-        "address": 1012,
+        "address": 3600,
         "bytes": "66894304",
         "mnemonic": "mov",
         "assembly": "mov    %ax,0x4(%ebx)",
         "dwarf_variables": []
       },
       {
-        "address": 1016,
+        "address": 3604,
         "bytes": "c683a800000000",
         "mnemonic": "movb",
         "assembly": "movb   $0x0,0xa8(%ebx)",
@@ -789,7 +795,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": null,
-      "candidate_addend": 0,
+      "candidate_addend": 152,
       "dwarf_type": null,
       "placement_confidence": "section base not independently established",
       "initial_value": null,
@@ -818,8 +824,8 @@
   "literal_dependencies": [
     {
       "candidate_section": ".rdata",
-      "candidate_addend": 0,
-      "candidate_card": "docs/current/literals/game-replay/0.json",
+      "candidate_addend": 152,
+      "candidate_card": "docs/current/literals/game-replay/98.json",
       "placement_confidence": "UNPROVEN",
       "multiple_historical_addresses": false,
       "function_offsets": [
@@ -881,7 +887,7 @@
   "relocation_mismatches": [
     {
       "section": 1,
-      "offset": 1000,
+      "offset": 3588,
       "symbol_index": 22,
       "symbol": ".data",
       "type": 6,
@@ -898,7 +904,7 @@
         "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 999,
+          "address": 3587,
           "bytes": "a100000000",
           "mnemonic": "mov",
           "assembly": "mov    0x0,%eax"
@@ -915,7 +921,7 @@
     },
     {
       "section": 1,
-      "offset": 1008,
+      "offset": 3596,
       "symbol_index": 22,
       "symbol": ".data",
       "type": 6,
@@ -932,7 +938,7 @@
         "reason": "Same instruction byte field; this encoding is not supported for operand interpretation.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 1006,
+          "address": 3594,
           "bytes": "66a104000000",
           "mnemonic": "mov",
           "assembly": "mov    0x4,%ax"
@@ -947,12 +953,12 @@
     },
     {
       "section": 1,
-      "offset": 1083,
+      "offset": 3671,
       "symbol_index": 32,
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 127,
-      "addend": 0,
+      "addend": 152,
       "target_va": null,
       "resolution": "section base not independently established",
       "resolved_value": null,
@@ -964,10 +970,10 @@
         "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 1082,
-          "bytes": "be00000000",
+          "address": 3670,
+          "bytes": "be98000000",
           "mnemonic": "mov",
-          "assembly": "mov    $0x0,%esi"
+          "assembly": "mov    $0x98,%esi"
         },
         "original_instruction_at_offset": {
           "address": 4312422,
@@ -988,38 +994,38 @@
       "function": "draw_replay_selector",
       "status": "DIFFER",
       "historical_offset": 1196,
-      "candidate_offset": 5276,
+      "candidate_offset": 1196,
       "size_delta": -1379
     },
     {
       "function": "load_replay",
       "status": "DIFFER",
       "historical_offset": 5180,
-      "candidate_offset": 2900,
+      "candidate_offset": 3800,
       "size_delta": 12
     },
     {
       "function": "get_replay_property",
       "status": "DIFFER",
       "historical_offset": 10392,
-      "candidate_offset": 1268,
+      "candidate_offset": 8080,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 8,
-    "candidate_position": 5,
+    "candidate_position": 8,
     "historical_predecessor": "draw_replay_selector",
-    "candidate_predecessor": "calc_replay_checksum",
-    "predecessor_same": false,
+    "candidate_predecessor": "draw_replay_selector",
+    "predecessor_same": true,
     "predecessor_exact": false,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 5,
+    "cu_same_predecessor_count": 15,
     "cu_function_count": 15,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor calc_replay_checksum versus historical draw_replay_selector); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
   },
   "known_rules": [
     {

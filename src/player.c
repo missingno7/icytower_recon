@@ -12,6 +12,17 @@
 double max_speed[5] = { 12.0, 12.0, 12.2, 12.2, 12.0 };
 double gravity_modifier[3] = { -0.2, 0.0, 0.2 };
 
+/* DWARF names the second parameter cheat.  The normal jump preserves the
+ * original two-path x87 expression instead of reducing it to fabs(sx). */
+extern int collision_type;
+#include "recovered/Treplay.h"
+extern Treplay *get_demo(void);
+
+/* Forward declarations; definitions follow in their original source order. */
+void reset_player(Tplayer *p);
+void update_player(Tplayer *p);
+int jump_player(Tplayer *p, int cheat);
+
 /* DWARF names parameter p at original line 18. This body preserves the
  * original reset set; x, y, and angle deliberately remain untouched. */
 void reset_player(Tplayer *p)
@@ -48,31 +59,6 @@ void reset_player(Tplayer *p)
         p->jcTop[i] = 0;
 }
 
-/* DWARF names the second parameter cheat.  The normal jump preserves the
- * original two-path x87 expression instead of reducing it to fabs(sx). */
-extern int collision_type;
-#include "recovered/Treplay.h"
-extern Treplay *get_demo(void);
-
-int jump_player(Tplayer *p, int cheat)
-{
-    if (cheat) {
-        p->status = 1;
-        p->sy = (double)(-(cheat * 12));
-        return -1;
-    }
-    if (p->status)
-        return 0;
-
-    p->status = 1;
-    p->sy = MIN(-ABS(p->sx * 2), -max_speed[collision_type]);
-    p->max_s = p->sx;
-    if (p->sy < -22)
-        p->rotate = 1;
-    p->angle = 0;
-    return -1;
-}
-
 /* Partial recovery of player.c, 0x418740..0x4189cb.  The core integration
  * and state transition order are oracle-backed; mode-table tuning is pending. */
 void update_player(Tplayer *p)
@@ -100,4 +86,23 @@ void update_player(Tplayer *p)
         if (p->status == 1 && p->sy > 0)
             p->status = 2;
     }
+}
+
+int jump_player(Tplayer *p, int cheat)
+{
+    if (cheat) {
+        p->status = 1;
+        p->sy = (double)(-(cheat * 12));
+        return -1;
+    }
+    if (p->status)
+        return 0;
+
+    p->status = 1;
+    p->sy = MIN(-ABS(p->sx * 2), -max_speed[collision_type]);
+    p->max_s = p->sx;
+    if (p->sy < -22)
+        p->rotate = 1;
+    p->angle = 0;
+    return -1;
 }

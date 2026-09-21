@@ -1,0 +1,173 @@
+{
+  "task": "order_profile",
+  "plan": {
+    "schema": 1,
+    "task_kind": "TU_CONTEXT",
+    "function": "order_profile",
+    "source": "src/profile.c",
+    "sources": [
+      "src/profile.c"
+    ],
+    "target": "game-profile",
+    "affected_targets": [
+      "game-profile"
+    ],
+    "difficulty": "CHEAP",
+    "priority": 200,
+    "spec": {
+      "target": "game-profile",
+      "source": "src/profile.c",
+      "order": "historical"
+    },
+    "edits": {
+      "order": [
+        "hash2",
+        "generate_profile_checksum",
+        "create_profile",
+        "get_rank_id",
+        "get_rank",
+        "set_next_rank_message",
+        "delete_profile",
+        "load_profile",
+        "profile_data_page_extra",
+        "profile_data_page_general",
+        "profile_data_page_basic",
+        "profile_data_page_advanced",
+        "save_profile",
+        "draw_buffer",
+        "view_profile",
+        "draw_profile_selector",
+        "select_profile"
+      ],
+      "definition_order_with_static": [
+        [
+          "hash2",
+          false
+        ],
+        [
+          "generate_profile_checksum",
+          false
+        ],
+        [
+          "create_profile",
+          false
+        ],
+        [
+          "get_rank_id",
+          false
+        ],
+        [
+          "get_rank",
+          false
+        ],
+        [
+          "set_next_rank_message",
+          false
+        ],
+        [
+          "delete_profile",
+          false
+        ],
+        [
+          "load_profile",
+          false
+        ],
+        [
+          "profile_data_page_extra",
+          false
+        ],
+        [
+          "profile_data_page_general",
+          false
+        ],
+        [
+          "profile_data_page_basic",
+          false
+        ],
+        [
+          "profile_data_page_advanced",
+          false
+        ],
+        [
+          "save_profile",
+          false
+        ],
+        [
+          "draw_buffer",
+          false
+        ],
+        [
+          "view_profile",
+          false
+        ],
+        [
+          "draw_profile_selector",
+          false
+        ],
+        [
+          "select_profile",
+          false
+        ]
+      ],
+      "bodies": {},
+      "statics": [],
+      "prototypes": "auto",
+      "headers": {}
+    },
+    "source_identities": {
+      "src/profile.c": {
+        "size": 28685,
+        "sha256": "ada0fa6cba7c993c8225df95d5d34c9b5d6cc3551e0d838b21b0995e22e8f588"
+      }
+    },
+    "new_text_identity": {
+      "size": 29777,
+      "sha256": "d3f960c3d89b42b289957bb8941f59143fc5dc4f906afe66521f14dc308091b1"
+    },
+    "new_header_identities": {},
+    "preserved_definitions": [
+      "create_profile",
+      "delete_profile",
+      "draw_buffer",
+      "draw_profile_selector",
+      "generate_profile_checksum",
+      "get_rank",
+      "get_rank_id",
+      "hash2",
+      "load_profile",
+      "profile_data_page_advanced",
+      "profile_data_page_basic",
+      "profile_data_page_extra",
+      "profile_data_page_general",
+      "save_profile",
+      "select_profile",
+      "set_next_rank_message",
+      "view_profile"
+    ],
+    "replaced_definitions": [],
+    "body_edit_allowed": false,
+    "state": "TU_CONTEXT_TRANSACTION",
+    "begin_command": "python tools/tu_context_task.py begin order_profile",
+    "apply_command": "python tools/tu_context_task.py apply order_profile",
+    "verification_command": "python tools/tu_context_task.py check order_profile",
+    "promotion_command": "python tools/tu_context_task.py promote order_profile",
+    "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+  },
+  "result": {
+    "exact_before": 8,
+    "exact_after": 11,
+    "gains": [
+      "load_profile",
+      "profile_data_page_advanced",
+      "save_profile"
+    ]
+  },
+  "matches_after": 11,
+  "source_identity_after": {
+    "size": 29777,
+    "sha256": "d3f960c3d89b42b289957bb8941f59143fc5dc4f906afe66521f14dc308091b1"
+  },
+  "report": "docs/current/reports/game-profile.json",
+  "state": "PROMOTED_TU_CONTEXT",
+  "limit": "Whole-unit transaction accepted on its final verified state; every function status inside remains the strict verifier verdict."
+}

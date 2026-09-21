@@ -358,8 +358,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 296,
-    "body_end_line": 323,
+    "body_start_line": 284,
+    "body_end_line": 311,
     "body_sha256": "50d6fe889934120ae85af18460c1d7ddfe22fac0d9764d5800c5720980898c60"
   },
   "reference_diagnostics": [],
@@ -958,7 +958,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13423,
+          "candidate_die": 13440,
           "candidate_offset": 96,
           "section_index": 2,
           "section": ".data",
@@ -1009,7 +1009,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13448,
+          "candidate_die": 13465,
           "candidate_offset": 160,
           "section_index": 2,
           "section": ".data",
@@ -1060,7 +1060,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13496,
+          "candidate_die": 13513,
           "candidate_offset": 288,
           "section_index": 2,
           "section": ".data",
@@ -1111,7 +1111,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13473,
+          "candidate_die": 13490,
           "candidate_offset": 224,
           "section_index": 2,
           "section": ".data",
@@ -1315,21 +1315,21 @@
       "function": "get_rank",
       "status": "FUNCTION_MATCH",
       "historical_offset": 260,
-      "candidate_offset": 148,
+      "candidate_offset": 260,
       "size_delta": 0
     },
     {
       "function": "draw_profile_selector",
       "status": "DIFFER",
       "historical_offset": 776,
-      "candidate_offset": 7576,
+      "candidate_offset": 960,
       "size_delta": -26
     },
     {
       "function": "view_profile",
       "status": "DIFFER",
       "historical_offset": 4384,
-      "candidate_offset": 3104,
+      "candidate_offset": 4348,
       "size_delta": -89
     }
   ],
@@ -1337,16 +1337,16 @@
     "historical_position": 4,
     "candidate_position": 4,
     "historical_predecessor": "get_rank",
-    "candidate_predecessor": "generate_profile_checksum",
-    "predecessor_same": false,
+    "candidate_predecessor": "get_rank",
+    "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 8,
+    "cu_same_predecessor_count": 14,
     "cu_function_count": 17,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor generate_profile_checksum versus historical get_rank); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
@@ -1497,7 +1497,89 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 295
+          "line": 120
+        },
+        {
+          "position": "parameter 2",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 283
         }
       ],
       "candidate_signatures": [

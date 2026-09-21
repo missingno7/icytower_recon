@@ -7,10 +7,10 @@
   "historical_va": "0x4174dc",
   "historical_size": 415,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void build_menu_string(Tmenu *m, char *dest);",
   "return_type": "void",
   "parameters": [
@@ -285,8 +285,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 351,
-    "body_end_line": 384,
+    "body_start_line": 58,
+    "body_end_line": 91,
     "body_sha256": "48649e428287239d6be78cf55a9244d9a162638145033d693edd552c0de1fc50"
   },
   "reference_diagnostics": [],
@@ -894,24 +894,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 374,
-      "function_offset": 375,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "key_to_str",
-      "target_va": 4287132,
-      "candidate_target": 176,
-      "candidate_displacement": -2923,
-      "layout_operand_equal": false,
-      "resolved_value": 4294964293,
-      "original_value": 4294964293,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 1,
   "neighbor_layout": [
@@ -919,14 +902,14 @@
       "function": "key_to_str",
       "status": "FUNCTION_MATCH",
       "historical_offset": 96,
-      "candidate_offset": 176,
+      "candidate_offset": 96,
       "size_delta": 0
     },
     {
       "function": "reset_menu",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2640,
-      "candidate_offset": 96,
+      "candidate_offset": 2640,
       "size_delta": 0
     },
     {
@@ -941,16 +924,16 @@
     "historical_position": 6,
     "candidate_position": 6,
     "historical_predecessor": "reset_menu",
-    "candidate_predecessor": "key_to_str",
-    "predecessor_same": false,
+    "candidate_predecessor": "reset_menu",
+    "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 7,
+    "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor key_to_str versus historical reset_menu); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
@@ -985,7 +968,7 @@
   "evidence_report": "docs/current/reports/game-menu.json",
   "verification_command": "python tools/check_function.py game-menu build_menu_string",
   "begin_command": "python tools/grinder_task.py begin game-menu build_menu_string",
-  "promotion_command": "python tools/promote_function.py game-menu build_menu_string --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-menu build_menu_string",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

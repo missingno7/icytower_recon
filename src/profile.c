@@ -8,6 +8,128 @@ extern int is_up(Tcontrol*);
 extern int is_fire(Tcontrol*);
 extern int is_down(Tcontrol*);
 extern int is_any(Tcontrol*);
+
+typedef struct Tprofile_rank {
+    unsigned char before_score[0x4c];
+    int score;
+    int combo;
+    unsigned char before_ccc[4];
+    int ccc;
+    unsigned char before_nml[0x2c];
+    int no_combo_lost;
+} Tprofile_rank;
+
+char *jcLabels[5] = {
+    "Singles in a Row:   ", "Doubles in a Row:   ",
+    "Triples in a Row:   ", "Quadruples in a Row:",
+    "Quintuples in a Row:"
+};
+char *rankLables[12] = {
+    "no rank", "F", "E", "D", "C", "B", "A", "*", "**", "***",
+    "****", "*****"
+};
+int rankFloors[12] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
+int rankCombos[12] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
+int rankCCCs[12] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
+int rankNMLs[12] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
+char *comboNames[10] = {
+    "Good:", "Sweet:", "Great:", "Super:", "WOW:", "Amazing:",
+    "Extreme:", "Fantastic:", "Splendid:", "No way!"
+};
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_checksum;
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_extra;
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_basic;
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_advanced;
+
+typedef struct Tprofile_datafile {
+    void *dat;
+    int type;
+    long size;
+    void *prop;
+} Tprofile_datafile;
+
+extern Tprofile_datafile *data;
+extern int makecol(int r, int g, int b);
+extern int stricmp(const char *s1, const char *s2);
+extern void set_trans_blender(int r, int g, int b, int a);
+extern void solid_mode(void);
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_load;
+
+extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
+                                       const char *profile);
+extern Tcontrol *get_controls(void);
+extern void load_control(Tcontrol*, FILE*);
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_create;
+
+typedef struct Tprofile_tm {
+    int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;
+} Tprofile_tm;
+
+extern void log2file(const char *format, ...);
+extern long time(long *t);
+extern void init_control(Tcontrol*);
+extern int save_profile(Tprofile_create *p);
+
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_general;
+
+/* These interfaces and the profile viewer's layout are recovered from
+ * profile.c lines 538--633 and 0x419aec..0x41a3b5. */
+typedef struct Tprofile_bitmap {
+    int w;
+    int h;
+} Tprofile_bitmap;
+
+extern void *swap_screen;
+extern volatile int cycle_count;
+extern int closeButtonClicked;
+extern int keypressed(void);
+extern void clear_keybuf(void);
+extern void checkMenuFocus(void);
+extern void blit_to_screen(BITMAP*);
+
+#include "recovered/Tcontrol.h"
+typedef Tcontrol Tprofile_control;
+extern int readkey(void);
+extern void simulate_keypress(int keycode);
+extern int my_alert(char *func, char *txt, int choice, int enter_hint);
+extern int rebuild_profile_list(char **profs);
+extern void replaceBadCharacters(char *string, char newChar);
+extern void play_menu_select(void);
+extern void play_menu_move(void);
+extern int get_string(BITMAP*, char*, int, int, FONT*, int, int, int, int);
+
+/* Forward declarations; definitions follow in their original source order. */
+unsigned int hash2(unsigned int a);
+int generate_profile_checksum(Tprofile_checksum *p);
+Tprofile_create *create_profile(char *handle, int overwrite);
+inline int get_rank_id(Tprofile_rank *profile);
+inline char *get_rank(Tprofile_rank *profile);
+void set_next_rank_message(char *buf, Tprofile_rank *p);
+void delete_profile(char *handle);
+Tprofile_load *load_profile(char *handle);
+char *profile_data_page_extra(Tprofile_extra *p);
+char *profile_data_page_general(Tprofile_general *p, char *filler);
+char *profile_data_page_basic(Tprofile_basic *p);
+char *profile_data_page_advanced(Tprofile_advanced *p);
+int save_profile(Tprofile_create *p);
+int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
+void view_profile(void *profile);
+void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
+Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);
+
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
  * Current recovery status: src/recovery.json and docs/current/.
@@ -39,53 +161,6 @@ unsigned int hash2(unsigned int a)
     a ^= a >> 15;
     return a;
 }
-typedef struct Tprofile_rank {
-    unsigned char before_score[0x4c];
-    int score;
-    int combo;
-    unsigned char before_ccc[4];
-    int ccc;
-    unsigned char before_nml[0x2c];
-    int no_combo_lost;
-} Tprofile_rank;
-
-char *jcLabels[5] = {
-    "Singles in a Row:   ", "Doubles in a Row:   ",
-    "Triples in a Row:   ", "Quadruples in a Row:",
-    "Quintuples in a Row:"
-};
-char *rankLables[12] = {
-    "no rank", "F", "E", "D", "C", "B", "A", "*", "**", "***",
-    "****", "*****"
-};
-int rankFloors[12] = { 0, 50, 100, 150, 200, 300, 400, 500, 600, 750, 1000, 1500 };
-int rankCombos[12] = { 0, 0, 7, 15, 25, 35, 70, 120, 200, 300, 400, 650 };
-int rankCCCs[12] = { 0, 0, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145 };
-int rankNMLs[12] = { 0, 0, 0, 0, 0, 0, 0, 400, 500, 600, 700, 1200 };
-char *comboNames[10] = {
-    "Good:", "Sweet:", "Great:", "Super:", "WOW:", "Amazing:",
-    "Extreme:", "Fantastic:", "Splendid:", "No way!"
-};
-
-inline int get_rank_id(Tprofile_rank *profile)
-{
-    int i;
-
-    for (i = 11; i >= 0; i--) {
-        if (profile->score >= rankFloors[i]
-         && profile->combo >= rankCombos[i]
-         && profile->ccc >= rankNMLs[i]
-         && profile->no_combo_lost >= rankCCCs[i])
-            return i;
-    }
-    return 0;
-}
-inline char *get_rank(Tprofile_rank *profile)
-{
-    return rankLables[get_rank_id(profile)];
-}
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_checksum;
 
 int generate_profile_checksum(Tprofile_checksum *p)
 {
@@ -101,287 +176,6 @@ int generate_profile_checksum(Tprofile_checksum *p)
     p->checksum = oldCS;
     return hash2(cs);
 }
-
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_extra;
-
-char *profile_data_page_extra(Tprofile_extra *p)
-{
-    char *data;
-
-    data = malloc(2048);
-    data[0] = 0;
-    sprintf(data, "%sTotal jumps:    %d\n", data, p->total_jumps);
-    sprintf(data, "%s\n", data);
-    return data;
-}
-
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_basic;
-
-
-char *profile_data_page_basic(Tprofile_basic *p)
-{
-    char *data;
-    int i;
-
-    data = malloc(2048);
-    data[0] = 0;
-    sprintf(data, "%sBest score ever:    %7d\n", data, p->best_score);
-    if (p->games_played > 0)
-        sprintf(data, "%sAvg score per game: %7d\n", data,
-                p->total_score / p->games_played);
-    sprintf(data, "%sTotal score:        %7d\n", data, p->total_score);
-    sprintf(data, "%s\n", data);
-    sprintf(data, "%sHighest floor ever: %7d\n", data, p->best_floor);
-    if (p->games_played > 0)
-        sprintf(data, "%sAvg floors per game:%7d\n", data,
-                p->total_floors / p->games_played);
-    sprintf(data, "%sFloors jumped:      %7d\n", data, p->total_floors);
-    sprintf(data, "%s\n", data);
-    if (p->no_combo_top_floor) {
-        sprintf(data, "%sTop Floor, No Combo:%7d\n", data,
-                p->no_combo_top_floor);
-        sprintf(data, "%s\n", data);
-    }
-    sprintf(data, "%sBest combo ever:    %7d\n", data, p->best_combo);
-    if (p->games_played > 0)
-        sprintf(data, "%sAvg combos per game:%7d\n", data,
-                p->total_combos / p->games_played);
-    if (p->total_combos > 0)
-        sprintf(data, "%sAvg combo length:   %7d\n", data,
-                p->total_combo_floors / p->total_combos);
-    sprintf(data, "%sCombos jumped:      %7d\n", data, p->total_combos);
-    sprintf(data, "%s\n", data);
-    if (p->biggest_lost_combo > 0) {
-        sprintf(data, "%sLongest Lost Combo: %7d\n", data,
-                p->biggest_lost_combo);
-        sprintf(data, "%s\n", data);
-    }
-    for (i = 0; i < 5; i++)
-        if (p->jc[i] > 0)
-            sprintf(data, "%s%s%7d\n", data, jcLabels[i], p->jc[i]);
-    if (p->jc[0] + p->jc[1] + p->jc[2] + p->jc[3] + p->jc[4] > 0)
-        sprintf(data, "%s\n", data);
-    return data;
-}
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_advanced;
-
-
-char *profile_data_page_advanced(Tprofile_advanced *p)
-{
-    char *data;
-    int i;
-    int rows;
-
-    data = malloc(2048);
-    data[0] = 0;
-    for (i = 1; i < 6; i++)
-        if (p->ccc[i - 1] > 0)
-            sprintf(data, "%sClock Challenge %d:  %7d\n", data, i,
-                    p->ccc[i - 1]);
-    if (p->ccc[0] > 0)
-        sprintf(data, "%s\n", data);
-    for (i = 0; i < 5; i++)
-        if (p->ccc[i] > 0 && p->cccNum[i] > 0)
-            sprintf(data, "%sAverage CC %d:       %7d\n", data, i + 1,
-                    p->cccTotal[i] / p->cccNum[i]);
-    if (p->cccTotal[0] > 0)
-        sprintf(data, "%s\n", data);
-    rows = 0;
-    for (i = 0; i < 10; i++)
-        if (p->rewards[i] > 0) {
-            sprintf(data, "%s%-12s        %7d\n", data, comboNames[i],
-                    p->rewards[i]);
-            rows++;
-        }
-    if (rows)
-        sprintf(data, "%s\n", data);
-    return data;
-}
-
-typedef struct Tprofile_datafile {
-    void *dat;
-    int type;
-    long size;
-    void *prop;
-} Tprofile_datafile;
-
-extern Tprofile_datafile *data;
-extern int makecol(int r, int g, int b);
-extern int stricmp(const char *s1, const char *s2);
-extern void set_trans_blender(int r, int g, int b, int a);
-extern void solid_mode(void);
-
-void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
-                           int numProfiles, int selection, int offset,
-                           int max_posts, int x, int y)
-{
-    int fh;
-    int fg;
-    double view_percentage;
-    double view_offset;
-    int i;
-    int profile_index;
-    int row_y;
-    char *profile_name;
-    char *current;
-
-    fh=text_height(font);
-    fg=makecol(25,25,25);
-    view_percentage=(double)max_posts/numProfiles;
-    if (view_percentage>1.0)
-        view_percentage=1.0;
-
-    draw_sprite(bmp,data[86].dat,x-15,y-15);
-    set_trans_blender(0,0,0,150);
-    drawing_mode(5,0,0,0);
-    rect(bmp,x+5,y+30,x+265,y+329,fg);
-    rect(bmp,x+255,y+30,x+265,y+329,fg);
-    view_offset=(1.0-view_percentage)*328/(numProfiles-max_posts)*offset;
-    rectfill(bmp,x+257,y+32+view_offset,x+263,y+view_percentage*328+view_offset,fg);
-    solid_mode();
-    textout_ex(bmp,data[51].dat,x+10,y-12,-1,-1,"SELECT PROFILE");
-    draw_sprite(bmp,data[73].dat,x+270,y+24);
-    set_clip_rect(bmp,x+6,0,x+290,((int *)bmp)[1]-1);
-
-    row_y=y+fh+31;
-    for (i=1,profile_index=offset;
-         i<=max_posts && profile_index<numProfiles;
-         i++,profile_index++,row_y+=fh) {
-        profile_name=profiles+profile_index*32;
-        current=stricmp(profile_name,current_profile)==0 ? "(current)" : "";
-        if (profile_index==selection) {
-            drawing_mode(5,0,0,0);
-            set_trans_blender(0,0,0,50);
-            rectfill(bmp,x+7,row_y-47,x+263,row_y+fh,fg);
-            solid_mode();
-        }
-        textprintf_ex(bmp,data[51].dat,x+8,row_y,fg,-1,"%c %c %s %s.",
-                      profile_index==selection ? '>' : ' ',
-                      profile_index<1 ? '~' : '{',profile_name,current);
-    }
-    set_clip_rect(bmp,0,0,((int *)bmp)[0]-1,((int *)bmp)[1]-1);
-}
-
-int draw_buffer(BITMAP *bmp, char *buffer, int x, int y)
-{
-    int pos;
-    char tempBuf[256];
-    int tempPos;
-    char c;
-
-    pos = y;
-    tempPos = 0;
-    c = *buffer;
-    while (c) {
-        if (c == '\n') {
-            tempBuf[tempPos] = 0;
-            textprintf_ex(bmp, data[53].dat, x, pos, makecol(30, 20, 10),
-                          -1, "%s", tempBuf);
-            pos += 10;
-            tempPos = 0;
-        } else {
-            tempBuf[tempPos] = c;
-            tempPos++;
-        }
-        c = buffer[1];
-        buffer++;
-    }
-    return pos;
-}
-
-void set_next_rank_message(char *buf, Tprofile_rank *p)
-{
-    int current_rank;
-    int next_rank;
-    int next_floor;
-    int next_combo;
-    int next_nml;
-    int next_ccc;
-
-    buf[0] = 0;
-    current_rank = get_rank_id(p);
-    if (current_rank == 11)
-        return;
-    next_rank = current_rank + 1;
-    next_floor = rankFloors[next_rank];
-    next_combo = rankCombos[next_rank];
-    next_nml = rankNMLs[next_rank];
-    next_ccc = rankCCCs[next_rank];
-    if ((next_floor > p->score || p->score == 0) && next_floor)
-        sprintf(buf, "%s\n - Get to floor %d!", buf, next_floor);
-    if ((next_combo > p->combo || p->combo == 0) && next_combo)
-        sprintf(buf, "%s\n - Make a %d floor combo!", buf, next_combo);
-    if ((next_ccc > p->no_combo_lost || p->no_combo_lost == 0) && next_ccc)
-        sprintf(buf, "%s\n - Reach floor %d before 1st Hurry Up!", buf,
-                next_ccc);
-    if ((next_nml > p->ccc || p->ccc == 0) && next_nml)
-        sprintf(buf, "%s\n - Reach floor %d without combos!", buf,
-                next_nml);
-}
-
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_load;
-
-extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
-                                       const char *profile);
-extern Tcontrol *get_controls(void);
-extern void load_control(Tcontrol*, FILE*);
-
-Tprofile_load *load_profile(char *handle)
-{
-    char file[1024];
-    void *fp;
-    Tprofile_load *p;
-    int cs;
-
-    get_profile_dir_for_profile(file, 1024, handle);
-    sprintf(file, "%s%s.itp", file, handle);
-    fp = fopen(file, "rb");
-    if (!fp)
-        return 0;
-    p = malloc(0x550);
-    fread(p, 0x550, 1, fp);
-    load_control(get_controls(), fp);
-    fclose(fp);
-    cs = generate_profile_checksum(p);
-    if (cs != p->checksum) {
-        free(p);
-        p = 0;
-    }
-    return p;
-}
-
-void delete_profile(char *handle)
-{
-    char file[1024];
-
-    get_profile_dir_for_profile(file, 1024, handle);
-    strcat(file, "replays");
-    rmdir(file);
-    get_profile_dir_for_profile(file, 1024, handle);
-    sprintf(file, "%s%s.itp", file, handle);
-    delete_file(file);
-    get_profile_dir_for_profile(file, 1024, handle);
-    sprintf(file, "%s%s_stats.txt", file, handle);
-    delete_file(file);
-    get_profile_dir_for_profile(file, 1024, handle);
-    rmdir(file);
-}
-
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_create;
-
-typedef struct Tprofile_tm {
-    int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;
-} Tprofile_tm;
-
-extern void log2file(const char *format, ...);
-extern long time(long *t);
-extern void init_control(Tcontrol*);
-extern int save_profile(Tprofile_create *p);
 
 Tprofile_create *create_profile(char *handle, int overwrite)
 {
@@ -467,8 +261,106 @@ Tprofile_create *create_profile(char *handle, int overwrite)
     return p;
 }
 
-#include "recovered/Tprofile.h"
-typedef Tprofile Tprofile_general;
+inline int get_rank_id(Tprofile_rank *profile)
+{
+    int i;
+
+    for (i = 11; i >= 0; i--) {
+        if (profile->score >= rankFloors[i]
+         && profile->combo >= rankCombos[i]
+         && profile->ccc >= rankNMLs[i]
+         && profile->no_combo_lost >= rankCCCs[i])
+            return i;
+    }
+    return 0;
+}
+
+inline char *get_rank(Tprofile_rank *profile)
+{
+    return rankLables[get_rank_id(profile)];
+}
+
+void set_next_rank_message(char *buf, Tprofile_rank *p)
+{
+    int current_rank;
+    int next_rank;
+    int next_floor;
+    int next_combo;
+    int next_nml;
+    int next_ccc;
+
+    buf[0] = 0;
+    current_rank = get_rank_id(p);
+    if (current_rank == 11)
+        return;
+    next_rank = current_rank + 1;
+    next_floor = rankFloors[next_rank];
+    next_combo = rankCombos[next_rank];
+    next_nml = rankNMLs[next_rank];
+    next_ccc = rankCCCs[next_rank];
+    if ((next_floor > p->score || p->score == 0) && next_floor)
+        sprintf(buf, "%s\n - Get to floor %d!", buf, next_floor);
+    if ((next_combo > p->combo || p->combo == 0) && next_combo)
+        sprintf(buf, "%s\n - Make a %d floor combo!", buf, next_combo);
+    if ((next_ccc > p->no_combo_lost || p->no_combo_lost == 0) && next_ccc)
+        sprintf(buf, "%s\n - Reach floor %d before 1st Hurry Up!", buf,
+                next_ccc);
+    if ((next_nml > p->ccc || p->ccc == 0) && next_nml)
+        sprintf(buf, "%s\n - Reach floor %d without combos!", buf,
+                next_nml);
+}
+
+void delete_profile(char *handle)
+{
+    char file[1024];
+
+    get_profile_dir_for_profile(file, 1024, handle);
+    strcat(file, "replays");
+    rmdir(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itp", file, handle);
+    delete_file(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s_stats.txt", file, handle);
+    delete_file(file);
+    get_profile_dir_for_profile(file, 1024, handle);
+    rmdir(file);
+}
+
+Tprofile_load *load_profile(char *handle)
+{
+    char file[1024];
+    void *fp;
+    Tprofile_load *p;
+    int cs;
+
+    get_profile_dir_for_profile(file, 1024, handle);
+    sprintf(file, "%s%s.itp", file, handle);
+    fp = fopen(file, "rb");
+    if (!fp)
+        return 0;
+    p = malloc(0x550);
+    fread(p, 0x550, 1, fp);
+    load_control(get_controls(), fp);
+    fclose(fp);
+    cs = generate_profile_checksum(p);
+    if (cs != p->checksum) {
+        free(p);
+        p = 0;
+    }
+    return p;
+}
+
+char *profile_data_page_extra(Tprofile_extra *p)
+{
+    char *data;
+
+    data = malloc(2048);
+    data[0] = 0;
+    sprintf(data, "%sTotal jumps:    %d\n", data, p->total_jumps);
+    sprintf(data, "%s\n", data);
+    return data;
+}
 
 char *profile_data_page_general(Tprofile_general *p, char *filler)
 {
@@ -521,6 +413,83 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     return data;
 }
 
+char *profile_data_page_basic(Tprofile_basic *p)
+{
+    char *data;
+    int i;
+
+    data = malloc(2048);
+    data[0] = 0;
+    sprintf(data, "%sBest score ever:    %7d\n", data, p->best_score);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg score per game: %7d\n", data,
+                p->total_score / p->games_played);
+    sprintf(data, "%sTotal score:        %7d\n", data, p->total_score);
+    sprintf(data, "%s\n", data);
+    sprintf(data, "%sHighest floor ever: %7d\n", data, p->best_floor);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg floors per game:%7d\n", data,
+                p->total_floors / p->games_played);
+    sprintf(data, "%sFloors jumped:      %7d\n", data, p->total_floors);
+    sprintf(data, "%s\n", data);
+    if (p->no_combo_top_floor) {
+        sprintf(data, "%sTop Floor, No Combo:%7d\n", data,
+                p->no_combo_top_floor);
+        sprintf(data, "%s\n", data);
+    }
+    sprintf(data, "%sBest combo ever:    %7d\n", data, p->best_combo);
+    if (p->games_played > 0)
+        sprintf(data, "%sAvg combos per game:%7d\n", data,
+                p->total_combos / p->games_played);
+    if (p->total_combos > 0)
+        sprintf(data, "%sAvg combo length:   %7d\n", data,
+                p->total_combo_floors / p->total_combos);
+    sprintf(data, "%sCombos jumped:      %7d\n", data, p->total_combos);
+    sprintf(data, "%s\n", data);
+    if (p->biggest_lost_combo > 0) {
+        sprintf(data, "%sLongest Lost Combo: %7d\n", data,
+                p->biggest_lost_combo);
+        sprintf(data, "%s\n", data);
+    }
+    for (i = 0; i < 5; i++)
+        if (p->jc[i] > 0)
+            sprintf(data, "%s%s%7d\n", data, jcLabels[i], p->jc[i]);
+    if (p->jc[0] + p->jc[1] + p->jc[2] + p->jc[3] + p->jc[4] > 0)
+        sprintf(data, "%s\n", data);
+    return data;
+}
+
+char *profile_data_page_advanced(Tprofile_advanced *p)
+{
+    char *data;
+    int i;
+    int rows;
+
+    data = malloc(2048);
+    data[0] = 0;
+    for (i = 1; i < 6; i++)
+        if (p->ccc[i - 1] > 0)
+            sprintf(data, "%sClock Challenge %d:  %7d\n", data, i,
+                    p->ccc[i - 1]);
+    if (p->ccc[0] > 0)
+        sprintf(data, "%s\n", data);
+    for (i = 0; i < 5; i++)
+        if (p->ccc[i] > 0 && p->cccNum[i] > 0)
+            sprintf(data, "%sAverage CC %d:       %7d\n", data, i + 1,
+                    p->cccTotal[i] / p->cccNum[i]);
+    if (p->cccTotal[0] > 0)
+        sprintf(data, "%s\n", data);
+    rows = 0;
+    for (i = 0; i < 10; i++)
+        if (p->rewards[i] > 0) {
+            sprintf(data, "%s%-12s        %7d\n", data, comboNames[i],
+                    p->rewards[i]);
+            rows++;
+        }
+    if (rows)
+        sprintf(data, "%s\n", data);
+    return data;
+}
 
 int save_profile(Tprofile_create *p)
 {
@@ -587,20 +556,32 @@ int save_profile(Tprofile_create *p)
     return 0;
 }
 
-/* These interfaces and the profile viewer's layout are recovered from
- * profile.c lines 538--633 and 0x419aec..0x41a3b5. */
-typedef struct Tprofile_bitmap {
-    int w;
-    int h;
-} Tprofile_bitmap;
+int draw_buffer(BITMAP *bmp, char *buffer, int x, int y)
+{
+    int pos;
+    char tempBuf[256];
+    int tempPos;
+    char c;
 
-extern void *swap_screen;
-extern volatile int cycle_count;
-extern int closeButtonClicked;
-extern int keypressed(void);
-extern void clear_keybuf(void);
-extern void checkMenuFocus(void);
-extern void blit_to_screen(BITMAP*);
+    pos = y;
+    tempPos = 0;
+    c = *buffer;
+    while (c) {
+        if (c == '\n') {
+            tempBuf[tempPos] = 0;
+            textprintf_ex(bmp, data[53].dat, x, pos, makecol(30, 20, 10),
+                          -1, "%s", tempBuf);
+            pos += 10;
+            tempPos = 0;
+        } else {
+            tempBuf[tempPos] = c;
+            tempPos++;
+        }
+        c = buffer[1];
+        buffer++;
+    }
+    return pos;
+}
 
 void view_profile(void *profile)
 {
@@ -709,16 +690,56 @@ void view_profile(void *profile)
     clear_keybuf();
 }
 
-#include "recovered/Tcontrol.h"
-typedef Tcontrol Tprofile_control;
-extern int readkey(void);
-extern void simulate_keypress(int keycode);
-extern int my_alert(char *func, char *txt, int choice, int enter_hint);
-extern int rebuild_profile_list(char **profs);
-extern void replaceBadCharacters(char *string, char newChar);
-extern void play_menu_select(void);
-extern void play_menu_move(void);
-extern int get_string(BITMAP*, char*, int, int, FONT*, int, int, int, int);
+void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
+                           int numProfiles, int selection, int offset,
+                           int max_posts, int x, int y)
+{
+    int fh;
+    int fg;
+    double view_percentage;
+    double view_offset;
+    int i;
+    int profile_index;
+    int row_y;
+    char *profile_name;
+    char *current;
+
+    fh=text_height(font);
+    fg=makecol(25,25,25);
+    view_percentage=(double)max_posts/numProfiles;
+    if (view_percentage>1.0)
+        view_percentage=1.0;
+
+    draw_sprite(bmp,data[86].dat,x-15,y-15);
+    set_trans_blender(0,0,0,150);
+    drawing_mode(5,0,0,0);
+    rect(bmp,x+5,y+30,x+265,y+329,fg);
+    rect(bmp,x+255,y+30,x+265,y+329,fg);
+    view_offset=(1.0-view_percentage)*328/(numProfiles-max_posts)*offset;
+    rectfill(bmp,x+257,y+32+view_offset,x+263,y+view_percentage*328+view_offset,fg);
+    solid_mode();
+    textout_ex(bmp,data[51].dat,x+10,y-12,-1,-1,"SELECT PROFILE");
+    draw_sprite(bmp,data[73].dat,x+270,y+24);
+    set_clip_rect(bmp,x+6,0,x+290,((int *)bmp)[1]-1);
+
+    row_y=y+fh+31;
+    for (i=1,profile_index=offset;
+         i<=max_posts && profile_index<numProfiles;
+         i++,profile_index++,row_y+=fh) {
+        profile_name=profiles+profile_index*32;
+        current=stricmp(profile_name,current_profile)==0 ? "(current)" : "";
+        if (profile_index==selection) {
+            drawing_mode(5,0,0,0);
+            set_trans_blender(0,0,0,50);
+            rectfill(bmp,x+7,row_y-47,x+263,row_y+fh,fg);
+            solid_mode();
+        }
+        textprintf_ex(bmp,data[51].dat,x+8,row_y,fg,-1,"%c %c %s %s.",
+                      profile_index==selection ? '>' : ' ',
+                      profile_index<1 ? '~' : '{',profile_name,current);
+    }
+    set_clip_rect(bmp,0,0,((int *)bmp)[0]-1,((int *)bmp)[1]-1);
+}
 
 /* Recovered from profile.c lines 705--867.  The selector owns neither the
  * packed name list nor its input control; it returns a newly loaded profile. */

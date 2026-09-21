@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "task_kind": "SOURCE_ORDER",
+  "task_kind": "TU_CONTEXT",
   "function": "order_main",
   "source": "src/main.c",
   "sources": [
@@ -21,7 +21,7 @@
   },
   "body_edit_allowed": false,
   "state": "SOURCE_ORDER_REPAIR",
-  "status": "DEFINITION_ORDER_DIFFERS",
+  "status": "HISTORICAL_ORDER_LOSES_CONTEXT_ACCIDENTAL_MATCHES",
   "difference_class": "HISTORICAL_DEFINITION_ORDER",
   "definition_order": [
     {
@@ -349,10 +349,10 @@
       "historical_line": 5761
     }
   ],
-  "begin_command": "python tools/interface_task.py begin order_main",
-  "apply_command": "python tools/interface_task.py apply order_main",
-  "verification_command": "python tools/interface_task.py check order_main",
-  "promotion_command": "python tools/interface_task.py promote order_main",
+  "begin_command": "python tools/tu_context_task.py begin order_main",
+  "apply_command": "python tools/tu_context_task.py apply order_main",
+  "verification_command": "python tools/tu_context_task.py check order_main",
+  "promotion_command": "python tools/tu_context_task.py promote order_main",
   "current_order": [
     "line_alert",
     "fadeIn",
@@ -436,5 +436,31 @@
     "init_game",
     "_mangled_main"
   ],
-  "reason": "Interleaved top-level declarations/directives require supervisor review"
+  "spec": {
+    "target": "game-main",
+    "source": "src/main.c",
+    "order": "historical"
+  },
+  "plan_command": "python tools/tu_context_task.py plan order_main docs/current/source-order/game-main-spec.json",
+  "edit_scope": "Generated whole-unit definition reorder in historical DWARF line order with derived forward prototypes; every definition island is preserved byte-for-byte; no body, flag or linker edits. Accepted only on the final unit state.",
+  "probe_evidence": "docs/attempts/tu-context/game-main/hist-order.json",
+  "probe_summary": {
+    "matches_before": 54,
+    "matches_after": 52,
+    "gains": [
+      "start_reward"
+    ],
+    "losses": [
+      "check_beta_tester",
+      "line_alert",
+      "uninit_game"
+    ],
+    "same_historical_predecessor": {
+      "before": 28,
+      "after": 62,
+      "total": 82
+    },
+    "new_implicit_declarations": []
+  },
+  "reason": "Historical definition order is right but the retained probe loses check_beta_tester, line_alert, uninit_game: these functions match today only through the current emission order/register-cursor context; recover their historical emission prefixes (bodies and call structure) and land everything as one TU_CONTEXT transaction."
 }

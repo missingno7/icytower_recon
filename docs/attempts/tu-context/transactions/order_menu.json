@@ -1,0 +1,127 @@
+{
+  "task": "order_menu",
+  "plan": {
+    "schema": 1,
+    "task_kind": "TU_CONTEXT",
+    "function": "order_menu",
+    "source": "src/menu.c",
+    "sources": [
+      "src/menu.c"
+    ],
+    "target": "game-menu",
+    "affected_targets": [
+      "game-menu"
+    ],
+    "difficulty": "CHEAP",
+    "priority": 200,
+    "spec": {
+      "target": "game-menu",
+      "source": "src/menu.c",
+      "order": "historical"
+    },
+    "edits": {
+      "order": [
+        "build_menu_string",
+        "draw_menu",
+        "reset_menu",
+        "update_game_menu",
+        "handle_menu",
+        "key_to_str",
+        "get_slider_value",
+        "set_slider_value",
+        "get_selection_value",
+        "set_selection_value"
+      ],
+      "definition_order_with_static": [
+        [
+          "build_menu_string",
+          false
+        ],
+        [
+          "draw_menu",
+          false
+        ],
+        [
+          "reset_menu",
+          false
+        ],
+        [
+          "update_game_menu",
+          false
+        ],
+        [
+          "handle_menu",
+          false
+        ],
+        [
+          "key_to_str",
+          false
+        ],
+        [
+          "get_slider_value",
+          false
+        ],
+        [
+          "set_slider_value",
+          false
+        ],
+        [
+          "get_selection_value",
+          false
+        ],
+        [
+          "set_selection_value",
+          false
+        ]
+      ],
+      "bodies": {},
+      "statics": [],
+      "prototypes": "auto",
+      "headers": {}
+    },
+    "source_identities": {
+      "src/menu.c": {
+        "size": 15898,
+        "sha256": "15a79924ff073bd21517b3b131d17d743f9b2bc363566e6dc14ca6c266c72220"
+      }
+    },
+    "new_text_identity": {
+      "size": 16604,
+      "sha256": "9496bbbaadc1b1cf646ddc733ed5e040ff18c7106e58d20f57c2212d611a5003"
+    },
+    "new_header_identities": {},
+    "preserved_definitions": [
+      "build_menu_string",
+      "draw_menu",
+      "get_selection_value",
+      "get_slider_value",
+      "handle_menu",
+      "key_to_str",
+      "reset_menu",
+      "set_selection_value",
+      "set_slider_value",
+      "update_game_menu"
+    ],
+    "replaced_definitions": [],
+    "body_edit_allowed": false,
+    "state": "TU_CONTEXT_TRANSACTION",
+    "begin_command": "python tools/tu_context_task.py begin order_menu",
+    "apply_command": "python tools/tu_context_task.py apply order_menu",
+    "verification_command": "python tools/tu_context_task.py check order_menu",
+    "promotion_command": "python tools/tu_context_task.py promote order_menu",
+    "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+  },
+  "result": {
+    "exact_before": 7,
+    "exact_after": 7,
+    "gains": []
+  },
+  "matches_after": 7,
+  "source_identity_after": {
+    "size": 16604,
+    "sha256": "9496bbbaadc1b1cf646ddc733ed5e040ff18c7106e58d20f57c2212d611a5003"
+  },
+  "report": "docs/current/reports/game-menu.json",
+  "state": "PROMOTED_TU_CONTEXT",
+  "limit": "Whole-unit transaction accepted on its final verified state; every function status inside remains the strict verifier verdict."
+}

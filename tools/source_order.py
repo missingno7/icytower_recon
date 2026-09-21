@@ -52,8 +52,8 @@ def plan_order(unit,ledger):
             card.update(state='NOT_QUEUED',status='DEFINITION_ORDER_AGREES',reason='Explicit function definitions already follow original DWARF lines')
             return card
         clean=sanitized(text)
-        for left,right in zip(spans,spans[1:]):
-            if clean[left['end']:right['start']].strip(): raise ValueError('Interleaved top-level declarations/directives require supervisor review')
+        if any(clean[left['end']:right['start']].strip() for left,right in zip(spans,spans[1:])):
+            return tu_context_order(card,unit,target,source,ordered)
         for slot,definition in zip(spans,ordered):
             before=text[slot['start']:slot['end']]; after=text[definition['start']:definition['end']]
             if before!=after: card['changes'].append({'file':source,'start':slot['start'],'end':slot['end'],'before':before,'after':after,
@@ -63,6 +63,39 @@ def plan_order(unit,ledger):
     except ValueError as exc: card['reason']=str(exc)
     blocked=ROOT/'docs/current/interface-blocks.json'
     if blocked.exists() and name in read_json(blocked): card.update(difficulty='SUPERVISOR',priority=-100,supervisor_block=read_json(blocked)[name])
+    return card
+
+
+def tu_context_order(card,unit,target,source,ordered):
+    """Whole-unit historical order for a unit whose definitions interleave with declarations: the source-order
+    card becomes a TU_CONTEXT transaction (tools/tu_context_task.py) whose islands (definition plus leading
+    comment) move while every other top-level text keeps its relative order.  It is queued only when the
+    retained isolated probe of the same source and object (docs/attempts/tu-context/<target>/hist-order.json)
+    compiled with no exact-function loss and no new implicit declaration; otherwise the probe's losses are the
+    recorded reason.  Source order and emission order are different things: the probe reports both."""
+    name='order_'+Path(source).stem.replace('-','_')
+    card.update(task_kind='TU_CONTEXT',spec={'target':target,'source':source,'order':'historical'},
+                begin_command='python tools/tu_context_task.py begin '+name,apply_command='python tools/tu_context_task.py apply '+name,
+                verification_command='python tools/tu_context_task.py check '+name,promotion_command='python tools/tu_context_task.py promote '+name,
+                plan_command='python tools/tu_context_task.py plan '+name+' docs/current/source-order/'+target+'-spec.json',
+                edit_scope='Generated whole-unit definition reorder in historical DWARF line order with derived forward prototypes; every definition island is preserved byte-for-byte; no body, flag or linker edits. Accepted only on the final unit state.')
+    evidence=ROOT/'docs/attempts/tu-context'/target/'hist-order.json'
+    if not evidence.exists():
+        card.update(reason='Interleaved top-level declarations: needs a retained whole-unit probe (python tools/tu_context_probe.py %s %s hist-order --order historical)'%(target,source)); return card
+    record=read_json(evidence); card['probe_evidence']=evidence.relative_to(ROOT).as_posix()
+    ledger_object=read_json(ROOT/read_json(ROOT/'src/recovery.json')[source]['verified_report'])['build'].get('object')
+    if record.get('source_identity')!=identity(ROOT/source) or record.get('object_identity')!=ledger_object:
+        card.update(reason='Retained whole-unit probe is stale for the current source/object; rerun tools/tu_context_probe.py'); return card
+    if record.get('compile')!='OK':
+        card.update(reason='Retained whole-unit probe failed to compile: '+'; '.join(record.get('errors') or [])[:300]); return card
+    summary={'matches_before':record['matches_before'],'matches_after':record['matches_after'],'gains':record['gains'],'losses':record['losses'],
+             'same_historical_predecessor':record['same_historical_predecessor'],'new_implicit_declarations':record['new_implicit_declarations']}
+    card['probe_summary']=summary
+    if record['losses'] or record['new_implicit_declarations']:
+        card.update(difficulty='SUPERVISOR',priority=-30,status='HISTORICAL_ORDER_LOSES_CONTEXT_ACCIDENTAL_MATCHES',
+                    reason='Historical definition order is right but the retained probe loses %s: these functions match today only through the current emission order/register-cursor context; recover their historical emission prefixes (bodies and call structure) and land everything as one TU_CONTEXT transaction.'%', '.join(record['losses']))
+        return card
+    card.update(difficulty='CHEAP',priority=300,reason='Retained whole-unit probe: historical definition order compiles with no exact-function loss (gains: %s; historical predecessors %s -> %s of %s). Fresh strict final-state acceptance remains mandatory.'%(', '.join(record['gains']) or 'none',summary['same_historical_predecessor']['before'],summary['same_historical_predecessor']['after'],summary['same_historical_predecessor']['total']))
     return card
 
 
@@ -76,6 +109,7 @@ def publish_orders(ledger,check=False):
     emit=check_json if check else write_json; tasks=[]
     for card in plans(ledger):
         path=ROOT/'docs/current/source-order'/((card['target']+'-'+card['function'] if card.get('moved_function') else card['target'])+'.json'); emit(path,card)
+        if card.get('task_kind')=='TU_CONTEXT': emit(ROOT/'docs/current/source-order'/(card['target']+'-spec.json'),card['spec'])
         if card['state']=='NOT_QUEUED': continue
         tasks.append({k:card[k] for k in ('task_kind','function','source','sources','difficulty','priority','reason','state','status','body_edit_allowed','difference_class','begin_command','verification_command','promotion_command')} | {'size':0,'candidate_card':path.relative_to(ROOT).as_posix()})
     emit(ROOT/'docs/current/source-order-tasks.json',{'authority':'Original DWARF source file and declaration lines; executable addresses never determine source order','tasks':tasks})

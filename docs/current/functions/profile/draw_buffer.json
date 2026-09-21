@@ -98,8 +98,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 269,
-    "body_end_line": 293,
+    "body_start_line": 560,
+    "body_end_line": 584,
     "body_sha256": "8405146a3082d3b74522e6a76066ef6c9ca3c0b0afd794f47994702c9ddbbae7"
   },
   "reference_diagnostics": [],
@@ -413,7 +413,7 @@
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 55,
     "candidate_instruction_count": 55,
-    "changed_group_count": 5,
+    "changed_group_count": 6,
     "shown_group_count": 3,
     "hunks": [
       {
@@ -465,26 +465,33 @@
         }
       },
       {
-        "kind": "delete",
+        "kind": "replace",
         "original": {
-          "instruction_start": 43,
-          "instruction_end": 44,
-          "function_offset": 161,
+          "instruction_start": 30,
+          "instruction_end": 31,
+          "function_offset": 102,
           "instructions": [
             {
-              "address": 4297321,
-              "bytes": "8a4301",
-              "mnemonic": "mov",
-              "assembly": "mov    0x1(%ebx),%al"
+              "address": 4297262,
+              "bytes": "c74424180b724d00",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x4d720b,0x18(%esp)"
             }
           ],
           "omitted_instructions": 0
         },
         "candidate": {
-          "instruction_start": 43,
-          "instruction_end": 43,
-          "function_offset": 160,
-          "instructions": [],
+          "instruction_start": 30,
+          "instruction_end": 31,
+          "function_offset": 101,
+          "instructions": [
+            {
+              "address": 877,
+              "bytes": "c744241885000000",
+              "mnemonic": "movl",
+              "assembly": "movl   $0x85,0x18(%esp)"
+            }
+          ],
           "omitted_instructions": 0
         }
       }
@@ -610,7 +617,7 @@
         "assembly": "mov    0x10(%ebp),%edi",
         "dwarf_variables": [
           {
-            "die": 9140,
+            "die": 9131,
             "name": "x",
             "type": "int",
             "base_type": "int",
@@ -632,7 +639,7 @@
         "assembly": "mov    0x14(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 9154,
+            "die": 9145,
             "name": "y",
             "type": "int",
             "base_type": "int",
@@ -661,7 +668,7 @@
         "assembly": "test   %al,%al",
         "dwarf_variables": [
           {
-            "die": 9224,
+            "die": 9215,
             "name": "c",
             "type": "char",
             "base_type": "char",
@@ -710,7 +717,7 @@
         "assembly": "mov    %al,-0x118(%ebp,%edx,1)",
         "dwarf_variables": [
           {
-            "die": 9204,
+            "die": 9195,
             "name": "tempPos",
             "type": "int",
             "base_type": "int",
@@ -723,7 +730,7 @@
             "relation": "register is used"
           },
           {
-            "die": 9224,
+            "die": 9215,
             "name": "c",
             "type": "char",
             "base_type": "char",
@@ -812,12 +819,12 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\profile.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": "0x4d720b",
+      "historical_address": null,
       "candidate_addend": 133,
       "dwarf_type": null,
-      "placement_confidence": "unique read-only literal or table content",
+      "placement_confidence": "section base not independently established",
       "initial_value": null,
-      "blocker": null,
+      "blocker": "RELOCATION_OWNER_BLOCKED",
       "initializer_blockers": [],
       "reference_count": 1,
       "function_offsets": [
@@ -920,9 +927,9 @@
       "type": 6,
       "function_offset": 105,
       "addend": 133,
-      "target_va": 5075467,
-      "resolution": "unique read-only literal or table content",
-      "resolved_value": 5075467,
+      "target_va": null,
+      "resolution": "section base not independently established",
+      "resolved_value": null,
       "original_value": 1299319576,
       "equal": false,
       "comparison_context": {
@@ -1011,27 +1018,27 @@
   ],
   "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "draw_profile_selector",
       "status": "DIFFER",
       "historical_offset": 776,
-      "candidate_offset": 7576,
+      "candidate_offset": 960,
       "size_delta": -26
     },
     {
       "function": "profile_data_page_advanced",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 2232,
-      "candidate_offset": 960,
+      "candidate_offset": 2204,
       "size_delta": 0
     },
     {
       "function": "view_profile",
       "status": "DIFFER",
       "historical_offset": 4384,
-      "candidate_offset": 3104,
+      "candidate_offset": 4348,
       "size_delta": -89
     }
   ],
@@ -1044,10 +1051,10 @@
     "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 8,
+    "cu_same_predecessor_count": 14,
     "cu_function_count": 17,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": -10,
+    "priority_adjustment": 0,
     "note": "Emission-order context differs from history (candidate predecessor set_next_rank_message versus historical draw_profile_selector); part of the mismatch may be a neighbor artifact."
   },
   "known_rules": [
@@ -1123,13 +1130,13 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 80,
+  "difficulty": "SUPERVISOR",
+  "priority": -20,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1163,7 +1170,15 @@
     "omitted_observations": 0
   },
   "storage_declarations": [],
-  "ownership_prerequisites": [],
+  "ownership_prerequisites": [
+    {
+      "function_offset": 105,
+      "symbol": ".rdata",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    }
+  ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
   "interface_scope": [],
@@ -1174,7 +1189,7 @@
     "relocation_mismatches": 4,
     "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
-    "ownership_prerequisites": 0,
+    "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,
     "literal_dependencies": 0,

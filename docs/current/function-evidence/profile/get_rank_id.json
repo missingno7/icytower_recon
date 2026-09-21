@@ -76,8 +76,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 71,
-    "body_end_line": 82,
+    "body_start_line": 265,
+    "body_end_line": 276,
     "body_sha256": "5ed86053f51e6e0528a43e341863111fdfe73093e25c312f19c5a29e7236483a"
   },
   "reference_diagnostics": [],
@@ -187,34 +187,34 @@
     ],
     "candidate": [
       {
-        "address": 72,
+        "address": 184,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 73,
+        "address": 185,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 75,
+        "address": 187,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 76,
+        "address": 188,
         "bytes": "8b4d08",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%ecx",
         "dwarf_variables": [
           {
-            "die": 8585,
+            "die": 8726,
             "name": "profile",
             "type": "Tprofile_rank *",
             "base_type": "Tprofile_rank",
@@ -230,7 +230,7 @@
         ]
       },
       {
-        "address": 79,
+        "address": 191,
         "bytes": "8b514c",
         "mnemonic": "mov",
         "assembly": "mov    0x4c(%ecx),%edx",
@@ -470,7 +470,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13423,
+          "candidate_die": 13440,
           "candidate_offset": 96,
           "section_index": 2,
           "section": ".data",
@@ -520,7 +520,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13448,
+          "candidate_die": 13465,
           "candidate_offset": 160,
           "section_index": 2,
           "section": ".data",
@@ -570,7 +570,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13496,
+          "candidate_die": 13513,
           "candidate_offset": 288,
           "section_index": 2,
           "section": ".data",
@@ -620,7 +620,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 13473,
+          "candidate_die": 13490,
           "candidate_offset": 224,
           "section_index": 2,
           "section": ".data",
@@ -666,31 +666,31 @@
       "function": "generate_profile_checksum",
       "status": "FUNCTION_MATCH",
       "historical_offset": 72,
-      "candidate_offset": 232,
+      "candidate_offset": 72,
       "size_delta": 0
     },
     {
       "function": "get_rank",
       "status": "FUNCTION_MATCH",
       "historical_offset": 260,
-      "candidate_offset": 148,
+      "candidate_offset": 260,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 2,
-    "candidate_position": 1,
+    "candidate_position": 2,
     "historical_predecessor": "generate_profile_checksum",
-    "candidate_predecessor": "hash2",
-    "predecessor_same": false,
+    "candidate_predecessor": "generate_profile_checksum",
+    "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 8,
+    "cu_same_predecessor_count": 14,
     "cu_function_count": 17,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor hash2 versus historical generate_profile_checksum); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
@@ -840,7 +840,89 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 70
+          "line": 118
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 264
         }
       ],
       "candidate_signatures": [

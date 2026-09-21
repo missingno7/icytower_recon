@@ -3,31 +3,6 @@
   "default_difficulty": "CHEAP",
   "tasks": [
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "profile_data_page_advanced",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 185,
-      "difficulty": "CHEAP",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 203,
-        "original_va": 4297551,
-        "candidate_byte": 75,
-        "original_byte": 123
-      },
-      "verification_command": "python tools/check_function.py game-profile profile_data_page_advanced",
-      "begin_command": "python tools/grinder_task.py begin game-profile profile_data_page_advanced",
-      "promotion_command": "python tools/promote_function.py game-profile profile_data_page_advanced",
-      "body_edit_allowed": true,
-      "routing_reason": "All base CHEAP eligibility checks met; fresh admission and strict acceptance remain required.",
-      "size": 332,
-      "candidate_card": "docs/current/functions/profile/profile_data_page_advanced.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "start_reward",
@@ -148,31 +123,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "draw_buffer",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 80,
-      "difficulty": "MEDIUM",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 27,
-        "original_va": 4297187,
-        "candidate_byte": 137,
-        "original_byte": 141
-      },
-      "verification_command": "python tools/check_function.py game-profile draw_buffer",
-      "begin_command": "python tools/grinder_task.py begin game-profile draw_buffer",
-      "promotion_command": "python tools/promote_function.py game-profile draw_buffer",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
-      "size": 185,
-      "candidate_card": "docs/current/functions/profile/draw_buffer.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "load_character",
@@ -194,6 +144,31 @@
       "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
       "size": 330,
       "candidate_card": "docs/current/functions/main/load_character.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "add_itr_file",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 79,
+      "difficulty": "MEDIUM",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 59,
+        "original_va": 4319099,
+        "candidate_byte": 116,
+        "original_byte": 15
+      },
+      "verification_command": "python tools/check_function.py game-replay add_itr_file",
+      "begin_command": "python tools/grinder_task.py begin game-replay add_itr_file",
+      "promotion_command": "python tools/promote_function.py game-replay add_itr_file",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+      "size": 360,
+      "candidate_card": "docs/current/functions/replay/add_itr_file.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -488,6 +463,26 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "load_profile",
+      "status": "FUNCTION_MATCH",
+      "state": "BODY_MATCH_LAYOUT_BLOCKED",
+      "priority": 45,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SAME_CU_CALL_LAYOUT",
+      "first_difference": null,
+      "verification_command": "python tools/check_function.py game-profile load_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile load_profile",
+      "promotion_command": "python tools/promote_function.py game-profile load_profile --claim BODY_MATCH_LAYOUT_BLOCKED",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
+      "size": 188,
+      "candidate_card": "docs/current/functions/profile/load_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "end_game",
@@ -649,31 +644,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 159,
       "candidate_card": "docs/current/functions/main/run_demo.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "load_profile",
-      "status": "DIFFER",
-      "state": "CODEGEN_SIMILAR",
-      "priority": 40,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
-      "first_difference": {
-        "offset": 68,
-        "original_va": 4302896,
-        "candidate_byte": 108,
-        "original_byte": 149
-      },
-      "verification_command": "python tools/check_function.py game-profile load_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile load_profile",
-      "promotion_command": "python tools/promote_function.py game-profile load_profile",
-      "body_edit_allowed": false,
-      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
-      "size": 188,
-      "candidate_card": "docs/current/functions/profile/load_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -883,26 +853,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/menu.c",
-      "target": "game-menu",
-      "function": "build_menu_string",
-      "status": "FUNCTION_MATCH",
-      "state": "BODY_MATCH_LAYOUT_BLOCKED",
-      "priority": 33,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SAME_CU_CALL_LAYOUT",
-      "first_difference": null,
-      "verification_command": "python tools/check_function.py game-menu build_menu_string",
-      "begin_command": "python tools/grinder_task.py begin game-menu build_menu_string",
-      "promotion_command": "python tools/promote_function.py game-menu build_menu_string --claim BODY_MATCH_LAYOUT_BLOCKED",
-      "body_edit_allowed": false,
-      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
-      "size": 415,
-      "candidate_card": "docs/current/functions/menu/build_menu_string.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "testWindowResolution",
@@ -943,6 +893,26 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "save_profile",
+      "status": "FUNCTION_MATCH",
+      "state": "BODY_MATCH_LAYOUT_BLOCKED",
+      "priority": 15,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SAME_CU_CALL_LAYOUT",
+      "first_difference": null,
+      "verification_command": "python tools/check_function.py game-profile save_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile save_profile",
+      "promotion_command": "python tools/promote_function.py game-profile save_profile --claim BODY_MATCH_LAYOUT_BLOCKED",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class",
+      "size": 1073,
+      "candidate_card": "docs/current/functions/profile/save_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "calc_replay_checksum",
@@ -964,31 +934,6 @@
       "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
       "size": 676,
       "candidate_card": "docs/current/functions/replay/calc_replay_checksum.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "save_profile",
-      "status": "DIFFER",
-      "state": "CODEGEN_SIMILAR",
-      "priority": 10,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
-      "first_difference": {
-        "offset": 290,
-        "original_va": 4302042,
-        "candidate_byte": 218,
-        "original_byte": 244
-      },
-      "verification_command": "python tools/check_function.py game-profile save_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile save_profile",
-      "promotion_command": "python tools/promote_function.py game-profile save_profile",
-      "body_edit_allowed": false,
-      "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class",
-      "size": 1073,
-      "candidate_card": "docs/current/functions/profile/save_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1029,7 +974,7 @@
       "first_difference": {
         "offset": 19,
         "original_va": 4317783,
-        "candidate_byte": 7,
+        "candidate_byte": 159,
         "original_byte": 133
       },
       "verification_command": "python tools/check_function.py game-replay get_replay_property",
@@ -1616,6 +1561,31 @@
       "dependency_priority_bonus": 0
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "draw_buffer",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 27,
+        "original_va": 4297187,
+        "candidate_byte": 137,
+        "original_byte": 141
+      },
+      "verification_command": "python tools/check_function.py game-profile draw_buffer",
+      "begin_command": "python tools/grinder_task.py begin game-profile draw_buffer",
+      "promotion_command": "python tools/promote_function.py game-profile draw_buffer",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 185,
+      "candidate_card": "docs/current/functions/profile/draw_buffer.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "log2file",
@@ -1837,31 +1807,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "add_itr_file",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 42,
-        "original_va": 4319082,
-        "candidate_byte": 186,
-        "original_byte": 86
-      },
-      "verification_command": "python tools/check_function.py game-replay add_itr_file",
-      "begin_command": "python tools/grinder_task.py begin game-replay add_itr_file",
-      "promotion_command": "python tools/promote_function.py game-replay add_itr_file",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 360,
-      "candidate_card": "docs/current/functions/replay/add_itr_file.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "handle_player_input",
@@ -1966,7 +1911,7 @@
       "first_difference": {
         "offset": 16,
         "original_va": 4312568,
-        "candidate_byte": 7,
+        "candidate_byte": 159,
         "original_byte": 133
       },
       "verification_command": "python tools/check_function.py game-replay load_replay",
@@ -2064,6 +2009,48 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "view_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 62,
+        "original_va": 4299562,
+        "candidate_byte": 232,
+        "original_byte": 160
+      },
+      "verification_command": "python tools/check_function.py game-profile view_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
+      "promotion_command": "python tools/promote_function.py game-profile view_profile",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 2249,
+      "candidate_card": "docs/current/functions/profile/view_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": [
+        {
+          "function": "set_next_rank_message",
+          "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
+          "difficulty": "SUPERVISOR",
+          "state": "LOCAL_INTERFACE_CONFLICT",
+          "planned_in_caller_cu": true,
+          "limit": "Must reverify the caller after repair; other blockers may remain."
+        },
+        {
+          "function": "view_profile",
+          "candidate_card": "docs/current/interfaces/view_profile.json",
+          "difficulty": "SUPERVISOR",
+          "state": "LOCAL_INTERFACE_CONFLICT",
+          "planned_in_caller_cu": true,
+          "limit": "Must reverify the caller after repair; other blockers may remain."
+        }
+      ]
+    },
+    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "draw_replay_selector",
@@ -2098,7 +2085,7 @@
       ]
     },
     {
-      "task_kind": "SOURCE_ORDER",
+      "task_kind": "TU_CONTEXT",
       "function": "order_main",
       "source": "src/main.c",
       "sources": [
@@ -2106,14 +2093,14 @@
       ],
       "difficulty": "SUPERVISOR",
       "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
+      "reason": "Historical definition order is right but the retained probe loses check_beta_tester, line_alert, uninit_game: these functions match today only through the current emission order/register-cursor context; recover their historical emission prefixes (bodies and call structure) and land everything as one TU_CONTEXT transaction.",
       "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
+      "status": "HISTORICAL_ORDER_LOSES_CONTEXT_ACCIDENTAL_MATCHES",
       "body_edit_allowed": false,
       "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_main",
-      "verification_command": "python tools/interface_task.py check order_main",
-      "promotion_command": "python tools/interface_task.py promote order_main",
+      "begin_command": "python tools/tu_context_task.py begin order_main",
+      "verification_command": "python tools/tu_context_task.py check order_main",
+      "promotion_command": "python tools/tu_context_task.py promote order_main",
       "size": 0,
       "candidate_card": "docs/current/source-order/game-main.json",
       "prerequisite_for_count": 0,
@@ -2166,78 +2153,6 @@
       "promotion_command": "python tools/interface_task.py promote scope_main_value",
       "size": 0,
       "candidate_card": "docs/current/static-scope-tasks/scope_main_value.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_menu",
-      "source": "src/menu.c",
-      "sources": [
-        "src/menu.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_menu",
-      "verification_command": "python tools/interface_task.py check order_menu",
-      "promotion_command": "python tools/interface_task.py promote order_menu",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-menu.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_player",
-      "source": "src/player.c",
-      "sources": [
-        "src/player.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_player",
-      "verification_command": "python tools/interface_task.py check order_player",
-      "promotion_command": "python tools/interface_task.py promote order_player",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-player.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_profile",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_profile",
-      "verification_command": "python tools/interface_task.py check order_profile",
-      "promotion_command": "python tools/interface_task.py promote order_profile",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-profile.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,
@@ -2342,30 +2257,6 @@
       "promotion_command": "python tools/interface_task.py promote decl_replay_draw_replay_selector_view_percentage",
       "size": 0,
       "candidate_card": "docs/current/local-declarations/decl_replay_draw_replay_selector_view_percentage.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_replay",
-      "source": "src/replay.c",
-      "sources": [
-        "src/replay.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_replay",
-      "verification_command": "python tools/interface_task.py check order_replay",
-      "promotion_command": "python tools/interface_task.py promote order_replay",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-replay.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,
@@ -2482,48 +2373,6 @@
       ]
     },
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "view_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 62,
-        "original_va": 4299562,
-        "candidate_byte": 232,
-        "original_byte": 160
-      },
-      "verification_command": "python tools/check_function.py game-profile view_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
-      "promotion_command": "python tools/promote_function.py game-profile view_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 2249,
-      "candidate_card": "docs/current/functions/profile/view_profile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "set_next_rank_message",
-          "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "view_profile",
-          "candidate_card": "docs/current/interfaces/view_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "replay_selector",
@@ -2608,6 +2457,31 @@
       ]
     },
     {
+      "source": "src/menu.c",
+      "target": "game-menu",
+      "function": "draw_menu",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -35,
+      "difficulty": "MEDIUM",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 8,
+        "original_va": 4290180,
+        "candidate_byte": 92,
+        "original_byte": 108
+      },
+      "verification_command": "python tools/check_function.py game-menu draw_menu",
+      "begin_command": "python tools/grinder_task.py begin game-menu draw_menu",
+      "promotion_command": "python tools/promote_function.py game-menu draw_menu",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
+      "size": 1118,
+      "candidate_card": "docs/current/functions/menu/draw_menu.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "init_game",
@@ -2654,31 +2528,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, no_indirect_flow, cheap_difference_class",
       "size": 839,
       "candidate_card": "docs/current/functions/main/draw_results.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/menu.c",
-      "target": "game-menu",
-      "function": "draw_menu",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -45,
-      "difficulty": "MEDIUM",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4290180,
-        "candidate_byte": 92,
-        "original_byte": 108
-      },
-      "verification_command": "python tools/check_function.py game-menu draw_menu",
-      "begin_command": "python tools/grinder_task.py begin game-menu draw_menu",
-      "promotion_command": "python tools/promote_function.py game-menu draw_menu",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
-      "size": 1118,
-      "candidate_card": "docs/current/functions/menu/draw_menu.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },

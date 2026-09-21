@@ -1,0 +1,85 @@
+{
+  "task": "order_player",
+  "plan": {
+    "schema": 1,
+    "task_kind": "TU_CONTEXT",
+    "function": "order_player",
+    "source": "src/player.c",
+    "sources": [
+      "src/player.c"
+    ],
+    "target": "game-player",
+    "affected_targets": [
+      "game-player"
+    ],
+    "difficulty": "CHEAP",
+    "priority": 200,
+    "spec": {
+      "target": "game-player",
+      "source": "src/player.c",
+      "order": "historical"
+    },
+    "edits": {
+      "order": [
+        "reset_player",
+        "update_player",
+        "jump_player"
+      ],
+      "definition_order_with_static": [
+        [
+          "reset_player",
+          false
+        ],
+        [
+          "update_player",
+          false
+        ],
+        [
+          "jump_player",
+          false
+        ]
+      ],
+      "bodies": {},
+      "statics": [],
+      "prototypes": "auto",
+      "headers": {}
+    },
+    "source_identities": {
+      "src/player.c": {
+        "size": 2880,
+        "sha256": "036b12725ffa51216a4aef93324f5e3c0b50468e9a8ae68f0171c0f92215ad03"
+      }
+    },
+    "new_text_identity": {
+      "size": 3063,
+      "sha256": "ce5af46f58ce133d93062ab734c95375d617e9576c5a9134126cd6f3ebd539a3"
+    },
+    "new_header_identities": {},
+    "preserved_definitions": [
+      "jump_player",
+      "reset_player",
+      "update_player"
+    ],
+    "replaced_definitions": [],
+    "body_edit_allowed": false,
+    "state": "TU_CONTEXT_TRANSACTION",
+    "begin_command": "python tools/tu_context_task.py begin order_player",
+    "apply_command": "python tools/tu_context_task.py apply order_player",
+    "verification_command": "python tools/tu_context_task.py check order_player",
+    "promotion_command": "python tools/tu_context_task.py promote order_player",
+    "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+  },
+  "result": {
+    "exact_before": 2,
+    "exact_after": 2,
+    "gains": []
+  },
+  "matches_after": 2,
+  "source_identity_after": {
+    "size": 3063,
+    "sha256": "ce5af46f58ce133d93062ab734c95375d617e9576c5a9134126cd6f3ebd539a3"
+  },
+  "report": "docs/current/reports/game-player.json",
+  "state": "PROMOTED_TU_CONTEXT",
+  "limit": "Whole-unit transaction accepted on its final verified state; every function status inside remains the strict verifier verdict."
+}

@@ -22,7 +22,7 @@
       "candidate_card": "docs/current/source-order/game-fld-adspot.json"
     },
     {
-      "task_kind": "SOURCE_ORDER",
+      "task_kind": "TU_CONTEXT",
       "function": "order_main",
       "source": "src/main.c",
       "sources": [
@@ -30,96 +30,16 @@
       ],
       "difficulty": "SUPERVISOR",
       "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
+      "reason": "Historical definition order is right but the retained probe loses check_beta_tester, line_alert, uninit_game: these functions match today only through the current emission order/register-cursor context; recover their historical emission prefixes (bodies and call structure) and land everything as one TU_CONTEXT transaction.",
       "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
+      "status": "HISTORICAL_ORDER_LOSES_CONTEXT_ACCIDENTAL_MATCHES",
       "body_edit_allowed": false,
       "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_main",
-      "verification_command": "python tools/interface_task.py check order_main",
-      "promotion_command": "python tools/interface_task.py promote order_main",
+      "begin_command": "python tools/tu_context_task.py begin order_main",
+      "verification_command": "python tools/tu_context_task.py check order_main",
+      "promotion_command": "python tools/tu_context_task.py promote order_main",
       "size": 0,
       "candidate_card": "docs/current/source-order/game-main.json"
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_menu",
-      "source": "src/menu.c",
-      "sources": [
-        "src/menu.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_menu",
-      "verification_command": "python tools/interface_task.py check order_menu",
-      "promotion_command": "python tools/interface_task.py promote order_menu",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-menu.json"
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_player",
-      "source": "src/player.c",
-      "sources": [
-        "src/player.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_player",
-      "verification_command": "python tools/interface_task.py check order_player",
-      "promotion_command": "python tools/interface_task.py promote order_player",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-player.json"
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_profile",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_profile",
-      "verification_command": "python tools/interface_task.py check order_profile",
-      "promotion_command": "python tools/interface_task.py promote order_profile",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-profile.json"
-    },
-    {
-      "task_kind": "SOURCE_ORDER",
-      "function": "order_replay",
-      "source": "src/replay.c",
-      "sources": [
-        "src/replay.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Interleaved top-level declarations/directives require supervisor review",
-      "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_replay",
-      "verification_command": "python tools/interface_task.py check order_replay",
-      "promotion_command": "python tools/interface_task.py promote order_replay",
-      "size": 0,
-      "candidate_card": "docs/current/source-order/game-replay.json"
     }
   ]
 }
