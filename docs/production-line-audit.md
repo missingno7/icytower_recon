@@ -722,3 +722,23 @@ and strict promotion, including 234 interface acceptance tests, ordinary link
 check and global audit. No function or workflow proof changed. Both runs and the
 retained rejected-task diagnostic are indexed by
 `docs/attempts/queue-dependency-validation.json`.
+
+
+## Distinguish useful rejected edits from accepted recovery
+
+Contribution diagnostics now retain original-oracle snapshots before and after
+a mechanical edit: body shape, historical/candidate sizes, verdict/workflow,
+first mismatch, bounded relocation details and complete mismatch counts.
+The rejected log2file experiment is a concrete example: fldads_threadmain grows
+from 204 to historical 223 bytes and matches body shape, while literal relocation
+ownership still fails. This evidence directs the next investigation but cannot
+bypass the unchanged emission gate or claim layout-only correctness.
+
+New supervisor blocks retain summaries of the last failed attempt for the exact
+source plan, stopping at the session BEGIN boundary. Only existing content-addressed
+diagnostic files with verified filename hashes are included. A changed archive or
+a different plan supplies no such evidence. The interface acceptance suite passes
+240 tests, including archive tampering, session boundaries, unresolved relocations
+and bounded-display controls. The saved candidate pair reproduces every field of
+the original archived rejection before enrichment; see
+`docs/attempts/interface-emission-diagnostic-validation.json`.

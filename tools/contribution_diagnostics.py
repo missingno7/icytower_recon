@@ -4,6 +4,21 @@ from instructions import window
 from scheduling_diagnostics import byte_stream
 
 
+def original_comparison(row):
+    relocations=[r for r in row.get('relocations',[]) if not r.get('equal')]
+    transfers=[r for r in row.get('direct_transfers',[]) if not r.get('equal')]
+    return {'status':row['status'],'workflow':row.get('workflow'),
+        'historical_size':row.get('original_size'),'candidate_size':row.get('candidate_size'),
+        'body_shape_equal':row.get('body_shape_equal'),
+        'relocation_resolved_equal':row.get('relocation_resolved_equal'),
+        'first_difference':row.get('first_difference'),
+        'relocation_mismatch_count':len(relocations),
+        'relocation_mismatches':[{k:r.get(k) for k in ('function_offset','symbol','resolved_value','original_value','resolution')} for r in relocations[:6]],
+        'omitted_relocation_mismatches':max(0,len(relocations)-6),
+        'direct_transfer_mismatch_count':len(transfers),
+        'limit':'Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness.'}
+
+
 def function_change(old,new):
     if old is None or new is None:
         return {'function':(old or new)['name'],'observation':'FUNCTION_INVENTORY_CHANGED'}
@@ -16,7 +31,8 @@ def function_change(old,new):
             'offset_before':old.get('candidate_offset'),'offset_after':new.get('candidate_offset'),
             'size_before':old.get('candidate_size'),'size_after':new.get('candidate_size'),
             'emitted_instruction_bytes_equal':same_bytes,
-            'source_body_unchanged':bool(old.get('source_body_sha256') and old.get('source_body_sha256')==new.get('source_body_sha256'))}
+            'source_body_unchanged':bool(old.get('source_body_sha256') and old.get('source_body_sha256')==new.get('source_body_sha256')),
+            'original_comparison':{'before':original_comparison(old),'after':original_comparison(new)}}
     raw_a=byte_stream(a,old.get('candidate_offset',0),old.get('candidate_size',0))
     raw_b=byte_stream(b,new.get('candidate_offset',0),new.get('candidate_size',0))
     if raw_a is None or raw_b is None:

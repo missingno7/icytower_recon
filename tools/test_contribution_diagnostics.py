@@ -26,6 +26,22 @@ class ContributionDiagnosticTests(unittest.TestCase):
         self.assertEqual(r['status_after'],'DIFFER');self.assertNotIn('body_edit_allowed',r)
         self.assertEqual((a,b),before)
 
+    def test_shape_improvement_retains_unresolved_original_proof(self):
+        a=function(['90']); b=function(['9090'])
+        a.update(original_size=2,body_shape_equal=False)
+        b.update(original_size=2,body_shape_equal=True,relocation_resolved_equal=False,
+                 workflow={'state':'CODEGEN_SIMILAR','body_edit_allowed':False},
+                 relocations=[{'function_offset':i,'symbol':'.rdata','equal':False,'resolved_value':None} for i in range(9)],
+                 direct_transfers=[{'equal':True}])
+        r=function_change(a,b)['original_comparison']
+        self.assertFalse(r['before']['body_shape_equal'])
+        self.assertTrue(r['after']['body_shape_equal'])
+        self.assertEqual(r['after']['status'],'DIFFER')
+        self.assertEqual(r['after']['relocation_mismatch_count'],9)
+        self.assertEqual(len(r['after']['relocation_mismatches']),6)
+        self.assertEqual(r['after']['omitted_relocation_mismatches'],3)
+        self.assertEqual(r['after']['direct_transfer_mismatch_count'],0)
+
     def test_changed_operand_is_not_a_permutation(self):
         r=function_change(function(['b801000000','bb02000000']),function(['bb03000000','b801000000']))
         self.assertEqual(r['first_difference'],0)

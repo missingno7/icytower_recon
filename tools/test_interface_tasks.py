@@ -19,6 +19,25 @@ class InterfaceTests(unittest.TestCase):
             with patch('interface_tasks.ROOT',root),patch('interface_tasks.affected_targets',return_value=['game-a']):
                 return plan_interface(row,{})
 
+    def test_failure_context_is_bound_to_plan_and_durable_diagnostic_identity(self):
+        import interface_task
+        import json
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);detail=root/'build/difference.json';detail.parent.mkdir()
+            session={'function':'repair','plan':{'changes':[{'before':'old','after':'new'}]}}
+            with patch.object(interface_task,'ROOT',root):
+                detail.write_text(json.dumps({'changed_functions':[{'function':'caller','source_body_unchanged':True}]}))
+                archived=interface_task.archive_diagnostic(detail,'repair','game-a')
+                interface_task.history(session,'BEGIN',{})
+                interface_task.history(session,'FAST_FAILED',{'error':'changed emission','evidence':[archived]})
+                context=interface_task.failure_context(session)
+                self.assertEqual(context['evidence'][0]['changed_functions'][0]['function'],'caller')
+                (root/archived).write_text('{}')
+                self.assertEqual(interface_task.failure_context(session)['evidence'],[])
+                self.assertIsNone(interface_task.failure_context(dict(session,plan={'different':True})))
+                interface_task.history(session,'BEGIN',{})
+                self.assertIsNone(interface_task.failure_context(session))
+
     def test_focused_diagnostic_survives_build_cleanup_without_overwrite(self):
         import interface_task
         import shutil

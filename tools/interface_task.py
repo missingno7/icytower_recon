@@ -67,6 +67,32 @@ def archive_diagnostic(path, task, target):
     return destination.relative_to(ROOT).as_posix()
 
 
+def failure_context(session):
+    """Retain the last failure from this exact plan, never another task attempt."""
+    path=ROOT/'docs/attempts/interfaces'/(session['function']+'.jsonl')
+    if not path.exists(): return None
+    for line in reversed(path.read_text(encoding='utf-8').splitlines()):
+        row=json.loads(line)
+        if row.get('plan')!=session['plan']: continue
+        if row['outcome']=='BEGIN': return None
+        if row['outcome'] not in ('FAST_FAILED','PROMOTION_REJECTED'): continue
+        details=row['details']; evidence=[]
+        for name in details.get('evidence',[]):
+            diagnostic=ROOT/name
+            if not diagnostic.resolve().is_relative_to((ROOT/'docs/attempts/interface-diagnostics').resolve()): continue
+            if not diagnostic.is_file(): continue
+            ident=identity(diagnostic)
+            if not diagnostic.stem.endswith('-'+ident['sha256']): continue
+            data=read_json(diagnostic); changed=data.get('changed_functions',[])
+            evidence.append({'path':name,'identity':ident,'changed_function_count':len(changed),
+                'changed_functions':[{k:f[k] for k in ('function','source_body_unchanged','size_before','size_after','original_comparison') if k in f} for f in changed[:4]],
+                'omitted_changed_functions':max(0,len(changed)-4)})
+        return {'outcome':row['outcome'],'error':details.get('error'),
+            'evidence':evidence[:3],'omitted_evidence':max(0,len(evidence)-3),
+            'limit':'Historical rejected attempt for this source plan; not current proof or permission to edit bodies.'}
+    return None
+
+
 def history(session,outcome,details):
     path=ROOT/'docs/attempts/interfaces'/(session['function']+'.jsonl')
     path.parent.mkdir(parents=True,exist_ok=True)
@@ -274,7 +300,7 @@ def stop(name,reason,blocked=True):
     for path,text in session['sources'].items(): (ROOT/path).write_bytes(text.encode('cp1252'))
     if blocked:
         path=CURRENT/'interface-blocks.json'; blocks=read_json(path) if path.exists() else {}
-        blocks[name]={'reason':reason,'changes':session['plan']['changes']}; write_json(path,blocks)
+        blocks[name]={'reason':reason,'changes':session['plan']['changes'],'failure_context':failure_context(session)}; write_json(path,blocks)
     SESSION.unlink()
     from refresh_recovery import publish_status
     ledger=read_json(ROOT/'src/recovery.json'); validate_ledger(ledger); publish_status(ledger)
