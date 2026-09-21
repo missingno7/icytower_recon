@@ -85,14 +85,16 @@ void draw_frame(BITMAP *bmp)
             p_im = 6;
         }
 
-        if (p_im == 6 && ply[player_id]->sx != 0.0) {     /* 2594: fucom vs 0.0 guards the narrow-band check */
-            if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
-                p_im = 8;
+        if ((unsigned)(p_im - 5) <= 2) {          /* 2594/2595: range test on p_im, not p_im==6 -- p_im is
+                                                    * only ever 5/6/7 here so the compiler couldn't fold it away */
+            if (ply[player_id]->sx != 0.0) {      /* 2594: fucom vs 0.0 */
+                if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {   /* 2594: outer +-0.02 band */
+                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595/2597: inner +-0.01 band */
+                        p_im = 8;
+                    }
+                }
             }
         }
-        /* 2595/2597: a further +-0.01 fucompp pair (separate literals from 2594's +-0.02)
-         * follows in the historical code and can still change p_im here; not reconstructed --
-         * this region's `esi` bookkeeping across 2589..2606 was not fully traced. */
 
         if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
             ply[player_id]->frame = 0;
@@ -105,21 +107,24 @@ void draw_frame(BITMAP *bmp)
             p_im = 1;                                       /* ? base-index selection below is only approximately reconstructed */
         }
 
+        /* 2606: `oy` seeded from custom.frame[0]'s height ahead of the edge branch --
+         * every draw below (edge h-flip, edge plain, final pose) accumulates onto this
+         * same `oy`, never a fresh -(h/2) of the frame actually drawn. */
+        oy = 1 - custom.frame[0]->h;
+
         if (ply[player_id]->edge) {
             customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];
+
+            oy = (int)ply[player_id]->y + oy;               /* 2624/2629 truncation pair, shared by both edge sub-cases */
+
             if (ply[player_id]->edge == 2) {
-                ply[player_id]->frame = 0;
+                ox = (int)ply[player_id]->x - customFrame->w + 0xb;   /* 3536/3538: subtracts the *full* w, not w/2 */
+                draw_sprite_h_flip(bmp, customFrame, ox, oy);          /* draw.inl:280, offset 3451..3581 */
             }
             else {
-                ply[player_id]->frame = 0;
-                if (customFrame) {                            /* 2624: was entirely missing; fldl+fistpl truncation
-                                                                 * pair on ply->y (offset 8) and ply->x (offset 0),
-                                                                 * folded into the screen-position accumulators ahead
-                                                                 * of the fo selection below -- register flow into
-                                                                 * and out of this block (ecx/edx) not fully traced */
-                    ox = customFrame->w / 2 + (int)ply[player_id]->y;  /* ? */
-                    oy = (int)ply[player_id]->x - 0xb;               /* ? */
-                }
+                ox = (int)ply[player_id]->x - 0xb;          /* 2461: no customFrame->w term on this side */
+                draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2383..2497 */
+
                 if (map.offset > 0xc8) {                     /* ? */
                     if (logic_count <= 11)
                         fo = 9;
@@ -132,17 +137,25 @@ void draw_frame(BITMAP *bmp)
             }
         }
 
-        customFrame = custom.frame[fo + ply[player_id]->frame];
-
         flip = ply[player_id]->rotate;
 
-        if (customFrame) {
+        if (flip) {
+            customFrame = custom.frame[12];                 /* 2644: bypasses the fo+frame index entirely */
+            rotate_sprite(bmp, customFrame, (int)ply[player_id]->x, (int)ply[player_id]->y,
+                           ply[player_id]->angle);            /* draw.inl:345, offset 6639..6852;
+                                                                 x/y args not fully traced -- the 200-byte
+                                                                 inline body wasn't walked past its w/h loads */
+        }
+        else {
+            customFrame = custom.frame[fo + ply[player_id]->frame];
             ox = -(customFrame->w / 2);
-            oy = -(customFrame->h / 2);
-            if (ply[player_id]->sx == 0) {                  /* ? fldl 0x10(%esi)/fldz/fucompp guards this whole adjustment */
-                oy = (int)ply[player_id]->y + oy;            /* ? fistpl-truncated y folded into the centering offset */
-                ox = (int)ply[player_id]->x + ox;            /* ? fistpl-truncated x folded into the centering offset */
+            if (ply[player_id]->sx == 0) {                  /* 2686: fldl 0x10(%edx)/fldz/fucompp guards the draw */
+                oy = (int)ply[player_id]->y + oy;            /* 2706..2755: fistpl-truncated y added onto the running oy */
+                ox = (int)ply[player_id]->x + ox;            /* 2757..2783: fistpl-truncated x added onto ox */
+                draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2786..2824 */
             }
+            /* ? ply[player_id]->sx != 0.0 (jne to offset 7917) leaves this region entirely --
+             * not reconstructed here, out of scope for D2 (historical lines end at 2651). */
         }
     }
 

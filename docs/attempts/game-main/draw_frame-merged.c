@@ -188,14 +188,16 @@ void draw_frame(BITMAP *bmp)
             p_im = 6;
         }
 
-        if (p_im == 6 && ply[player_id]->sx != 0.0) {     /* 2594: fucom vs 0.0 guards the narrow-band check */
-            if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
-                p_im = 8;
+        if ((unsigned)(p_im - 5) <= 2) {          /* 2594/2595: range test on p_im, not p_im==6 -- p_im is
+                                                    * only ever 5/6/7 here so the compiler couldn't fold it away */
+            if (ply[player_id]->sx != 0.0) {      /* 2594: fucom vs 0.0 */
+                if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {   /* 2594: outer +-0.02 band */
+                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595/2597: inner +-0.01 band */
+                        p_im = 8;
+                    }
+                }
             }
         }
-        /* 2595/2597: a further +-0.01 fucompp pair (separate literals from 2594's +-0.02)
-         * follows in the historical code and can still change p_im here; not reconstructed --
-         * this region's `esi` bookkeeping across 2589..2606 was not fully traced. */
 
         if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
             ply[player_id]->frame = 0;
@@ -208,21 +210,24 @@ void draw_frame(BITMAP *bmp)
             p_im = 1;                                       /* ? base-index selection below is only approximately reconstructed */
         }
 
+        /* 2606: `oy` seeded from custom.frame[0]'s height ahead of the edge branch --
+         * every draw below (edge h-flip, edge plain, final pose) accumulates onto this
+         * same `oy`, never a fresh -(h/2) of the frame actually drawn. */
+        oy = 1 - custom.frame[0]->h;
+
         if (ply[player_id]->edge) {
             customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];
+
+            oy = (int)ply[player_id]->y + oy;               /* 2624/2629 truncation pair, shared by both edge sub-cases */
+
             if (ply[player_id]->edge == 2) {
-                ply[player_id]->frame = 0;
+                ox = (int)ply[player_id]->x - customFrame->w + 0xb;   /* 3536/3538: subtracts the *full* w, not w/2 */
+                draw_sprite_h_flip(bmp, customFrame, ox, oy);          /* draw.inl:280, offset 3451..3581 */
             }
             else {
-                ply[player_id]->frame = 0;
-                if (customFrame) {                            /* 2624: was entirely missing; fldl+fistpl truncation
-                                                                 * pair on ply->y (offset 8) and ply->x (offset 0),
-                                                                 * folded into the screen-position accumulators ahead
-                                                                 * of the fo selection below -- register flow into
-                                                                 * and out of this block (ecx/edx) not fully traced */
-                    ox = customFrame->w / 2 + (int)ply[player_id]->y;  /* ? */
-                    oy = (int)ply[player_id]->x - 0xb;               /* ? */
-                }
+                ox = (int)ply[player_id]->x - 0xb;          /* 2461: no customFrame->w term on this side */
+                draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2383..2497 */
+
                 if (map.offset > 0xc8) {                     /* ? */
                     if (logic_count <= 11)
                         fo = 9;
@@ -235,17 +240,25 @@ void draw_frame(BITMAP *bmp)
             }
         }
 
-        customFrame = custom.frame[fo + ply[player_id]->frame];
-
         flip = ply[player_id]->rotate;
 
-        if (customFrame) {
+        if (flip) {
+            customFrame = custom.frame[12];                 /* 2644: bypasses the fo+frame index entirely */
+            rotate_sprite(bmp, customFrame, (int)ply[player_id]->x, (int)ply[player_id]->y,
+                           ply[player_id]->angle);            /* draw.inl:345, offset 6639..6852;
+                                                                 x/y args not fully traced -- the 200-byte
+                                                                 inline body wasn't walked past its w/h loads */
+        }
+        else {
+            customFrame = custom.frame[fo + ply[player_id]->frame];
             ox = -(customFrame->w / 2);
-            oy = -(customFrame->h / 2);
-            if (ply[player_id]->sx == 0) {                  /* ? fldl 0x10(%esi)/fldz/fucompp guards this whole adjustment */
-                oy = (int)ply[player_id]->y + oy;            /* ? fistpl-truncated y folded into the centering offset */
-                ox = (int)ply[player_id]->x + ox;            /* ? fistpl-truncated x folded into the centering offset */
+            if (ply[player_id]->sx == 0) {                  /* 2686: fldl 0x10(%edx)/fldz/fucompp guards the draw */
+                oy = (int)ply[player_id]->y + oy;            /* 2706..2755: fistpl-truncated y added onto the running oy */
+                ox = (int)ply[player_id]->x + ox;            /* 2757..2783: fistpl-truncated x added onto ox */
+                draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2786..2824 */
             }
+            /* ? ply[player_id]->sx != 0.0 (jne to offset 7917) leaves this region entirely --
+             * not reconstructed here, out of scope for D2 (historical lines end at 2651). */
         }
     }
 
@@ -258,7 +271,13 @@ void draw_frame(BITMAP *bmp)
 
     /* lines 2698..2699: cmp/idiv fragments (offset 2970..3063) that sit between
      * the D1/D2 loop tail above and line 2705's code below; they could not be
-     * isolated as standalone D3 statements from this evidence alone. (?) */
+     * isolated as standalone D3 statements from this evidence alone. (?)
+     * Checked: offset 2970 is "cmp $0x1f0,%esi; je ..." and 2982..3063 computes
+     * (map.offset / edi) via idiv, multiplies by the fp constant 1.476 (fmul),
+     * truncates back to int (fistpl), adds it to %esi and indexes data[] off the
+     * result (mov 0x640(%eax),%eax) -- a map.offset-driven floor/background-tile
+     * lookup, i.e. the same parallax/floor-tile family as the D1/D2 unrolled loop
+     * noted above, not a D3 statement. Still left to D1/D2's owner. */
 
     draw_sprite(bmp, data[16].dat, 22, 100);
     if (ply[player_id]->in_combo) {
@@ -349,34 +368,47 @@ void draw_frame(BITMAP *bmp)
         myPos = rec_pos;
         len = demo->size;
         ox = 0x27b - vcr->w;
-        oy = 0x1db - vcr->h;
-        draw_sprite(bmp, vcr, ox, oy); /* ? line 2778: no main.c row in the line table for this call; it is fully absorbed by draw.inl:238 between the 2777 and 2779 rows */
+        y = 0x1db - vcr->h; /* DWARF: `y`'s slot (reg edi) is live 4279..4341, exactly this
+                              * assignment through the dead-check below; the D1-owned `x`
+                              * local is NOT live over the matching esi computation here
+                              * (its ranges stop at 2234), so that esi temp stays `ox`. */
+        draw_sprite(bmp, vcr, ox, y); /* offsets 4282..4315, draw.inl:238 -- the only main.c:2778
+                                        * candidate in this range; args are the ox/y just set. */
         if (!ply[player_id]->dead) {
+            /* `y` stays live (edi) through 7594..7837 for these three: is_left/is_fire/is_right
+             * each build `y + 5` directly in a register (ecx) while the x-argument is spilled
+             * through the `cx` stack slot (-0x178) only as a call-argument temporary. */
             if (is_left(&ctrl))
-                draw_sprite(bmp, data[128].dat, ox + 0x61, oy + 5);
+                draw_sprite(bmp, data[128].dat, ox + 0x61, y + 5);
             if (is_fire(&ctrl))
-                draw_sprite(bmp, data[130].dat, ox + 0x6b, oy + 5);
+                draw_sprite(bmp, data[130].dat, ox + 0x6b, y + 5);
             if (is_right(&ctrl))
-                draw_sprite(bmp, data[129].dat, ox + 0x75, oy + 5);
+                draw_sprite(bmp, data[129].dat, ox + 0x75, y + 5);
         }
-        cy = oy + 0xa;
-        cx = ox + 0xa;
-        set_clip_rect(bmp, cx, 0, 0x26f, 0x1df);
+        /* Stack-slot evidence (DW_OP_breg5): cx = -0x178(ebp), cy = -0x174(ebp).
+         * offset 4338 "add $0xa,%edi; mov %edi,-0x178(%ebp)" stores y+0xa into cx (edi holds y).
+         * offset 4347 "lea 0xa(%esi),%edi; mov %edi,-0x174(%ebp)" stores ox+0xa into cy (esi holds ox),
+         * and that same edi is the set_clip_rect x1 argument, i.e. cy, not cx. */
+        cx = y + 0xa;
+        cy = ox + 0xa;
+        set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);
         if (!demo->comment[0])
             sprintf(scrollerText, "%s%s%s", "", " - ", demo->name);
         else
             sprintf(scrollerText, "%s%s%s", demo->comment, " - ", demo->name);
+        /* offset 4479 "mov -0x178(%ebp),%edi; add $0x4,%edi" reloads cx (not cy) for the
+         * y-coordinate of every textout_ex below; the x-coordinate keeps using ox. */
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,
-            cy + 4, makecol(150, 150, 160), -1);
+            cx + 4, makecol(150, 150, 160), -1);
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xd - scroll_count / 2,
-            cy + 4, makecol(200, 200, 210), -1);
+            cx + 4, makecol(200, 200, 210), -1);
         if (demo->comment[0]) {
             textout_ex(bmp, data[53].dat, " - ",
                 ox + 0xc - scroll_count / 2 + text_length(data[53].dat, demo->name),
-                cy + 4, makecol(200, 200, 210), -1);
+                cx + 4, makecol(200, 200, 210), -1);
             textout_ex(bmp, data[53].dat, demo->comment,
                 ox - scroll_count / 2 + 0x1e + text_length(data[53].dat, demo->name),
-                cy + 4, makecol(200, 200, 210), -1);
+                cx + 4, makecol(200, 200, 210), -1);
         }
         set_clip_rect(bmp, 0, 0, 0x27f, 0x1df);
         if (demo->comment[0]) {
@@ -389,9 +421,14 @@ void draw_frame(BITMAP *bmp)
                     scroll_count = -250;
             }
         }
-        rectfill(bmp, cx, cy + 0x1e,
-            cx + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
-            cy + 0x1d, makecol(50, 200, 50));
+        /* rectfill is inlined (draw.inl:112, offsets 4801..4895) with no visible mnemonics
+         * through the available tools, so its argument order is inferred, not disassembled:
+         * cx is the value carrying the y+0xa quantity throughout this scope (used as the
+         * y-coordinate for every textout_ex above) and cy carries the ox+0xa quantity (used
+         * as set_clip_rect's x1), so the bar rect keeps that same x=cy / y=cx pairing. (?) */
+        rectfill(bmp, cy, cx + 0x1e,
+            cy + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
+            cx + 0x1d, makecol(50, 200, 50));
     }
 
     if (debug && key[KEY_F2]) {
