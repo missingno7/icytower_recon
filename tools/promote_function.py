@@ -98,17 +98,7 @@ def promote(target,name,claim='FUNCTION_MATCH'):
             source=report['build']['config']['source']
             old=read_json(ROOT/ledger[source]['verified_report'])
             no_regressions(old,report)
-            print(run([sys.executable,'tools/test_grinder.py']),end='')
-            print(run([sys.executable,'tools/test_control_transfers.py']),end='')
-            print(run([sys.executable,'tools/test_scheduling_diagnostics.py']),end='')
-            print(run([sys.executable,'tools/test_literal_diagnostics.py']),end='')
-            print(run([sys.executable,'tools/test_reference_diagnostics.py']),end='')
-            print(run([sys.executable,'tools/test_atomic_writes.py']),end='')
-            print(run([sys.executable,'tools/test_data_owners.py']),end='')
-            print(run([sys.executable,'tools/test_dwarf_locations.py']),end='')
-            print(run([sys.executable,'tools/test_compiler_context.py']),end='')
-            print(run([sys.executable,'tools/test_branch_diagnostics.py']),end='')
-            print(run([sys.executable,'tools/test_data_tasks.py']),end='')
+            print(run([sys.executable,'tools/acceptance_tests.py','function']),end='')
             source_changed=report['build']['local_inputs']!=old['build']['local_inputs']
             link=None
             if source_changed:

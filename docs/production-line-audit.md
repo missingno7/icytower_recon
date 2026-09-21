@@ -421,3 +421,22 @@ source snapshot/RTL report. It does not justify a new source repair rule or a
 context-dependency claim for change_profile. Maintained source was unchanged.
 Ten context tests and 53 related diagnostic tests passed. Full experiment receipts
 are in `docs/attempts/compiler-context/game-main/change_profile.json`.
+
+
+## Acceptance test process overhead
+
+Function promotion previously launched 11 test processes and interface promotion
+launched 21, repeatedly parsing the same DWARF/type graph. Each group now runs in
+one fresh interpreter with exactly its prior module inventory. No pass is cached
+across promotions. The runner rejects empty modules, load failures, incomplete
+execution and selected test-file changes; it clears stale success receipts before
+preflight and buffers output from successful test fixtures. Compilation, strict
+comparison, scope enforcement, link regression checks and global audit remain
+separate and unchanged.
+
+The 196 interface tests took 16.3 seconds separately and approximately 5 seconds
+batched in a local comparison. The 109 function tests also passed, plus five runner
+negative controls. Real getFloorData re-certification and is_down declaration
+acceptance passed through the new runner and full promotion gates. Detailed module
+counts, identities, timings and attempt links are in
+`docs/attempts/acceptance-test-batching.json`.

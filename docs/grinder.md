@@ -332,3 +332,13 @@ grinding but does not prove the cause is source, padding or branch layout. A
 zero-change trial excludes only that experiment at the recorded input snapshot.
 Unresolvable baseline bytes never count as a confirmed current baseline merely
 because both saved and fresh resolution are unavailable.
+
+
+Acceptance test groups run through `tools/acceptance_tests.py` in one fresh Python
+process per promotion, retaining the existing function/interface test inventories.
+This shares DWARF/type caches only within that run; it does not reuse a previous
+pass. The receipt in `build/acceptance/tests/<group>.json` records module identities,
+counts, skips, failures and elapsed time. Failed/empty imports, incomplete test
+execution or changed selected test files reject acceptance. A prior receipt is
+removed before preflight so an interrupted/failed run cannot leave stale success.
+Fresh compilation, scope checks, link checks and global audit remain separate.

@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "is_down",
-  "source": "src/control.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
   "historical": [
     {
       "cu": "src/control.c",
@@ -20,55 +16,5 @@
       "die": 18319
     }
   ],
-  "type_layout_issues": [
-    {
-      "position": "parameter 1",
-      "historical_type": "Tcontrol",
-      "candidate_type": "/*???*/",
-      "header": "include/recovered/Tcontrol.h",
-      "status": "UNAVAILABLE",
-      "reason": "Candidate named type layout is missing or ambiguous",
-      "cu": "src/profile.c",
-      "file": "src/profile.c",
-      "line": 823
-    }
-  ],
-  "changes": [
-    {
-      "start": 32,
-      "end": 32,
-      "before": "",
-      "after": "extern int is_down(Tcontrol*);\n",
-      "reason": "Introduce generated historical type visibility and caller prototype",
-      "file": "src/profile.c",
-      "line": 823
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check is_down",
-  "begin_command": "python tools/interface_task.py begin is_down",
-  "apply_command": "python tools/interface_task.py apply is_down",
-  "promotion_command": "python tools/interface_task.py promote is_down",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
-  "priority": 247,
-  "sources": [
-    "src/profile.c"
-  ],
-  "source_identities": {
-    "src/profile.c": {
-      "size": 30782,
-      "sha256": "979a3ba097cf293c13a2453ce56e2aa372997750d2d0768759a79a3fb3f8b1d0"
-    }
-  },
-  "affected_targets": [
-    "game-profile"
-  ],
-  "required_generated_headers": {
-    "include/recovered/Tcontrol.h": {
-      "size": 1318,
-      "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
-    }
-  },
-  "expected_prototype": "extern int is_down(Tcontrol*);",
-  "typed_caller_repair": true
+  "changes": []
 }
