@@ -71,7 +71,17 @@ def layout_checks(declaration,original,report):
                 if not member: return None
                 return {'offset':member['offset'],'size':member['layout'].get('size'),'type':member['layout'].get('type'),
                         'qualifiers':member['layout'].get('qualifiers',[]),'bitfield':member['bitfield']}
-            diffs.append({'member':name,'historical':concise(old),'candidate':concise(new)})
+            difference={'member':name,'historical':concise(old),'candidate':concise(new)}
+            if old and new:
+                from pointee_diagnostics import pointer_names,correspondence
+                names=pointer_names(new['layout'],old['layout'])
+                if names and names[1] in g.game_types:
+                    candidates=types.get(names[0],[])
+                    historical=[layout(g,d['type_ref']) for d in g.game_types[names[1]]]
+                    if len(candidates)==1 and historical and all(shape_key(h)==shape_key(historical[0]) for h in historical):
+                        difference['pointee_evidence']={'candidate_type':names[0],'historical_type':names[1],
+                            **correspondence(candidates[0]['layout'],historical[0])}
+            diffs.append(difference)
         item.update(member_difference_count=len(diffs),first_member_differences=diffs[:6],reason='Complete aggregate layout/type differs despite any matching declaration spelling')
         result.append(item)
     return result

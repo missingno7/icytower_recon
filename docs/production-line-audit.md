@@ -910,3 +910,21 @@ shared type-identity investigation. All 20 layout-protected bodies stay protecte
 The 258-test interface suite, 144-test function suite and global audit pass; raw
 function/workflow proofs are unchanged. See
 docs/attempts/supervisor-queue-validation.json.
+
+
+## Nested pointee correspondence in interface blockers
+
+Aggregate interface conflicts now include bounded field correspondence for uniquely
+compiled, simple named pointees against unambiguous historical game types. Matching
+offsets and complete field shapes expose renamed fields; unmatched candidate
+members remain explicit. Unknown extents, overlaps, bitfields, pointer qualifiers
+and ambiguous types do not produce correspondence. This is diagnostic evidence,
+not alias identity, layout acceptance or permission to remove filler.
+
+The real load_replay card now shows Treplay_data.type at offset 0 corresponding
+to Trecord.key_flags, value at offset 4 corresponding to cycle_count, and the
+extra three-byte reserved field. The repair stays SUPERVISOR because typed
+use-site migration and contribution preservation are not yet proven. This removes
+the need to manually traverse child type DIEs when planning that shared repair.
+The 261-test interface suite passes; function/workflow proofs stay unchanged.
+See docs/attempts/pointee-correspondence-validation.json.
