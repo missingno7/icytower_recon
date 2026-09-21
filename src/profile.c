@@ -183,10 +183,10 @@ char *profile_data_page_advanced(Tprofile_advanced *p)
                     p->ccc[i - 1]);
     if (p->ccc[0] > 0)
         sprintf(data, "%s\n", data);
-    for (i = 1; i < 6; i++)
-        if (p->ccc[i - 1] > 0 && p->cccNum[i - 1] > 0)
-            sprintf(data, "%sAverage CC %d:       %7d\n", data, i,
-                    p->cccTotal[i - 1] / p->cccNum[i - 1]);
+    for (i = 0; i < 5; i++)
+        if (p->ccc[i] > 0 && p->cccNum[i] > 0)
+            sprintf(data, "%sAverage CC %d:       %7d\n", data, i + 1,
+                    p->cccTotal[i] / p->cccNum[i]);
     if (p->cccTotal[0] > 0)
         sprintf(data, "%s\n", data);
     rows = 0;

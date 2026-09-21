@@ -139,15 +139,15 @@ void fadeOut(int speed)
 
     bmp=create_bitmap(SCREEN_W,SCREEN_H);
     blit(screen,bmp,0,0,0,0,SCREEN_W,SCREEN_H);
-    for (a=0;a<256;a+=speed) {
+    for (a=255;a>0;a-=speed) {
         cycle_count=0;
         draw_sprite(swap_screen,bmp,0,0);
-        set_trans_blender(0,0,0,a);
+        set_trans_blender(0,0,0,255-a);
         drawing_mode(DRAW_MODE_TRANS,0,0,0);
         rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
         solid_mode();
         blit_to_screen(swap_screen);
-        while (!cycle_count) rest(2);
+        while (cycle_count<=0) rest(2);
     }
     destroy_bitmap(bmp);
     rectfill(screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
