@@ -796,42 +796,6 @@
       "size": 0
     },
     {
-      "function": "init_control",
-      "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin init_control",
-      "verification_command": "python tools/interface_task.py check init_control",
-      "promotion_command": "python tools/interface_task.py promote init_control",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/init_control.json",
-      "size": 0
-    },
-    {
-      "function": "is_any",
-      "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin is_any",
-      "verification_command": "python tools/interface_task.py check is_any",
-      "promotion_command": "python tools/interface_task.py promote is_any",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/is_any.json",
-      "size": 0
-    },
-    {
       "function": "is_custom_replay",
       "source": "src/main.c",
       "sources": null,
@@ -852,17 +816,19 @@
     {
       "function": "is_down",
       "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
+      "sources": [
+        "src/profile.c"
+      ],
+      "difficulty": "CHEAP",
+      "priority": 247,
+      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
       "begin_command": "python tools/interface_task.py begin is_down",
       "verification_command": "python tools/interface_task.py check is_down",
       "promotion_command": "python tools/interface_task.py promote is_down",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
       "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+      "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/is_down.json",
       "size": 0
@@ -870,17 +836,19 @@
     {
       "function": "is_fire",
       "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
+      "sources": [
+        "src/profile.c"
+      ],
+      "difficulty": "CHEAP",
+      "priority": 247,
+      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
       "begin_command": "python tools/interface_task.py begin is_fire",
       "verification_command": "python tools/interface_task.py check is_fire",
       "promotion_command": "python tools/interface_task.py promote is_fire",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
       "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+      "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/is_fire.json",
       "size": 0
@@ -888,17 +856,19 @@
     {
       "function": "is_up",
       "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
+      "sources": [
+        "src/profile.c"
+      ],
+      "difficulty": "CHEAP",
+      "priority": 247,
+      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
       "begin_command": "python tools/interface_task.py begin is_up",
       "verification_command": "python tools/interface_task.py check is_up",
       "promotion_command": "python tools/interface_task.py promote is_up",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
       "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+      "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/is_up.json",
       "size": 0
@@ -2695,7 +2665,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 657,
+          "line": 659,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -3204,7 +3174,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 656,
+          "line": 658,
           "kind": "NC",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -4187,7 +4157,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 418,
+          "line": 420,
           "kind": "NF",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -5337,7 +5307,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 387,
+          "line": 389,
           "kind": "NF",
           "name": "delete_profile",
           "return_type": "void",
@@ -6468,7 +6438,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 295,
+          "line": 297,
           "kind": "NF",
           "name": "draw_buffer",
           "return_type": "int",
@@ -7083,7 +7053,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 241,
+          "line": 243,
           "kind": "NF",
           "name": "draw_profile_selector",
           "return_type": "void",
@@ -7143,7 +7113,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 241
+          "line": 243
         },
         {
           "position": "parameter 3",
@@ -7154,7 +7124,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 241
+          "line": 243
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -9111,7 +9081,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 83,
+          "line": 85,
           "kind": "NF",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -9289,7 +9259,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 83
+          "line": 85
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -9996,7 +9966,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 360,
+          "line": 362,
           "kind": "NC",
           "name": "get_controls",
           "return_type": "void*",
@@ -10028,7 +9998,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 360
+          "line": 362
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -10811,7 +10781,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 358,
+          "line": 360,
           "kind": "NC",
           "name": "get_profile_dir_for_profile",
           "return_type": "int",
@@ -10970,7 +10940,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 73,
+          "line": 75,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -11148,7 +11118,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 73
+          "line": 75
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -11171,7 +11141,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 60,
+          "line": 62,
           "kind": "NF",
           "name": "get_rank_id",
           "return_type": "int",
@@ -11349,7 +11319,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 60
+          "line": 62
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -11677,7 +11647,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 781,
+          "line": 783,
           "kind": "NC",
           "name": "get_string",
           "return_type": "int",
@@ -12687,7 +12657,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 23,
+          "line": 25,
           "kind": "NF",
           "name": "hash2",
           "return_type": "unsigned int",
@@ -13110,46 +13080,34 @@
         },
         {
           "file": "src/profile.c",
-          "line": 415,
+          "line": 417,
           "kind": "NC",
           "name": "init_control",
           "return_type": "void",
           "parameter_types": [
-            "void*"
+            "Tcontrol*"
           ],
-          "declaration": "extern void init_control (void *);",
+          "declaration": "extern void init_control (Tcontrol *);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "void*"
+            "Tcontrol*"
           ],
           "cu": "src/profile.c",
           "game_type_layouts": [
             {
               "position": "parameter 1",
               "historical_type": "Tcontrol",
-              "candidate_type": "void",
+              "candidate_type": "Tcontrol",
               "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "void",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 415
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -13792,46 +13750,34 @@
         },
         {
           "file": "src/profile.c",
-          "line": 677,
-          "kind": "IC",
+          "line": 2,
+          "kind": "NC",
           "name": "is_any",
           "return_type": "int",
           "parameter_types": [
-            "/*???*/"
+            "Tcontrol*"
           ],
-          "declaration": "extern int is_any (/* ??? */);",
+          "declaration": "extern int is_any (Tcontrol *);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "/*???*/"
+            "Tcontrol*"
           ],
           "cu": "src/profile.c",
           "game_type_layouts": [
             {
               "position": "parameter 1",
               "historical_type": "Tcontrol",
-              "candidate_type": "/*???*/",
+              "candidate_type": "Tcontrol",
               "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 677
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -14186,7 +14132,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 821,
+          "line": 823,
           "kind": "IC",
           "name": "is_down",
           "return_type": "int",
@@ -14222,10 +14168,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 821
+          "line": 823
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -14568,7 +14514,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 733,
+          "line": 735,
           "kind": "IC",
           "name": "is_fire",
           "return_type": "int",
@@ -14604,10 +14550,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 733
+          "line": 735
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -15404,7 +15350,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 823,
+          "line": 825,
           "kind": "IC",
           "name": "is_up",
           "return_type": "int",
@@ -15440,10 +15386,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 823
+          "line": 825
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -16230,7 +16176,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 361,
+          "line": 363,
           "kind": "NC",
           "name": "load_control",
           "return_type": "void",
@@ -16268,7 +16214,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 361
+          "line": 363
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -17338,7 +17284,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 363,
+          "line": 365,
           "kind": "NF",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -17604,7 +17550,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 363
+          "line": 365
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -18212,7 +18158,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 412,
+          "line": 414,
           "kind": "NC",
           "name": "log2file",
           "return_type": "void",
@@ -18610,7 +18556,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 776,
+          "line": 778,
           "kind": "NC",
           "name": "my_alert",
           "return_type": "int",
@@ -19125,7 +19071,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 780,
+          "line": 782,
           "kind": "NC",
           "name": "play_menu_move",
           "return_type": "void",
@@ -19196,7 +19142,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 779,
+          "line": 781,
           "kind": "NC",
           "name": "play_menu_select",
           "return_type": "void",
@@ -19438,7 +19384,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 678,
+          "line": 680,
           "kind": "IC",
           "name": "poll_control",
           "return_type": "int",
@@ -19474,7 +19420,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 678
+          "line": 680
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -19497,7 +19443,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 188,
+          "line": 190,
           "kind": "NF",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -19675,7 +19621,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 188
+          "line": 190
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -19698,7 +19644,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 133,
+          "line": 135,
           "kind": "NF",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -19876,7 +19822,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 133
+          "line": 135
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -19899,7 +19845,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 104,
+          "line": 106,
           "kind": "NF",
           "name": "profile_data_page_extra",
           "return_type": "char*",
@@ -19946,7 +19892,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 512,
+          "line": 514,
           "kind": "NF",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -20126,7 +20072,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 512
+          "line": 514
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -20601,7 +20547,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 777,
+          "line": 779,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -20637,7 +20583,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 777
+          "line": 779
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -20870,7 +20816,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 778,
+          "line": 780,
           "kind": "NC",
           "name": "replaceBadCharacters",
           "return_type": "void",
@@ -22367,7 +22313,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 601,
+          "line": 603,
           "kind": "IC",
           "name": "save_control",
           "return_type": "int",
@@ -22403,7 +22349,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 601
+          "line": 603
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -22981,7 +22927,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 416,
+          "line": 418,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -23006,7 +22952,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 567,
+          "line": 569,
           "kind": "NF",
           "name": "save_profile",
           "return_type": "int",
@@ -23740,7 +23686,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 786,
+          "line": 788,
           "kind": "NF",
           "name": "select_profile",
           "return_type": "Tprofile_create*",
@@ -23979,7 +23925,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 786
+          "line": 788
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -24285,7 +24231,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 322,
+          "line": 324,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -24465,7 +24411,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 322
+          "line": 324
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -25902,7 +25848,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 659,
+          "line": 661,
           "kind": "NF",
           "name": "view_profile",
           "return_type": "void",
@@ -25949,7 +25895,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 659
+          "line": 661
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -26786,7 +26732,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 657,
+          "line": 659,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -27477,7 +27423,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 418,
+          "line": 420,
           "kind": "NF",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -28629,7 +28575,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 295,
+          "line": 297,
           "kind": "NF",
           "name": "draw_buffer",
           "return_type": "int",
@@ -29206,7 +29152,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 241,
+          "line": 243,
           "kind": "NF",
           "name": "draw_profile_selector",
           "return_type": "void",
@@ -29266,7 +29212,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 241
+          "line": 243
         },
         {
           "position": "parameter 3",
@@ -29277,7 +29223,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 241
+          "line": 243
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30062,7 +30008,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 83,
+          "line": 85,
           "kind": "NF",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -30240,7 +30186,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 83
+          "line": 85
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30304,7 +30250,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 360,
+          "line": 362,
           "kind": "NC",
           "name": "get_controls",
           "return_type": "void*",
@@ -30336,7 +30282,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 360
+          "line": 362
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30596,7 +30542,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 358,
+          "line": 360,
           "kind": "NC",
           "name": "get_profile_dir_for_profile",
           "return_type": "int",
@@ -30638,7 +30584,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 73,
+          "line": 75,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -30816,7 +30762,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 73
+          "line": 75
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30839,7 +30785,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 60,
+          "line": 62,
           "kind": "NF",
           "name": "get_rank_id",
           "return_type": "int",
@@ -31017,7 +30963,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 60
+          "line": 62
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -31098,7 +31044,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 781,
+          "line": 783,
           "kind": "NC",
           "name": "get_string",
           "return_type": "int",
@@ -32139,426 +32085,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "init_control",
-      "historical": [
-        {
-          "cu": "src/control.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 18002
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "include/control.h",
-          "line": 13,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/control.c",
-          "line": 20,
-          "kind": "NF",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *c);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 13,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE",
-              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 13,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 13,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 13,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern void init_control (Tcontrol *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/replay.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 415,
-          "kind": "NC",
-          "name": "init_control",
-          "return_type": "void",
-          "parameter_types": [
-            "void*"
-          ],
-          "declaration": "extern void init_control (void *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "void",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "void",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 415
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "is_any",
-      "historical": [
-        {
-          "cu": "src/control.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 18598
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "include/control.h",
-          "line": 25,
-          "kind": "NC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/control.c",
-          "line": 80,
-          "kind": "NF",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *c);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 25,
-          "kind": "NC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE",
-              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 25,
-          "kind": "NC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 25,
-          "kind": "NC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 25,
-          "kind": "NC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "declaration": "extern int is_any (Tcontrol *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tcontrol*"
-          ],
-          "cu": "src/replay.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 677,
-          "kind": "IC",
-          "name": "is_any",
-          "return_type": "int",
-          "parameter_types": [
-            "/*???*/"
-          ],
-          "declaration": "extern int is_any (/* ??? */);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "/*???*/"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "/*???*/",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 677
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "is_custom_replay",
       "historical": [
         {
@@ -32910,7 +32436,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 821,
+          "line": 823,
           "kind": "IC",
           "name": "is_down",
           "return_type": "int",
@@ -32946,10 +32472,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 821
+          "line": 823
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -33120,7 +32646,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 733,
+          "line": 735,
           "kind": "IC",
           "name": "is_fire",
           "return_type": "int",
@@ -33156,10 +32682,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 733
+          "line": 735
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -33330,7 +32856,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 823,
+          "line": 825,
           "kind": "IC",
           "name": "is_up",
           "return_type": "int",
@@ -33366,10 +32892,10 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 823
+          "line": 825
         }
       ],
-      "difficulty": "SUPERVISOR",
+      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -33553,7 +33079,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 361,
+          "line": 363,
           "kind": "NC",
           "name": "load_control",
           "return_type": "void",
@@ -33591,7 +33117,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 361
+          "line": 363
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -33938,7 +33464,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 363,
+          "line": 365,
           "kind": "NF",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -34204,7 +33730,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 363
+          "line": 365
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -34585,7 +34111,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 412,
+          "line": 414,
           "kind": "NC",
           "name": "log2file",
           "return_type": "void",
@@ -34850,7 +34376,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 776,
+          "line": 778,
           "kind": "NC",
           "name": "my_alert",
           "return_type": "int",
@@ -35096,7 +34622,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 678,
+          "line": 680,
           "kind": "IC",
           "name": "poll_control",
           "return_type": "int",
@@ -35132,7 +34658,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 678
+          "line": 680
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -35155,7 +34681,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 188,
+          "line": 190,
           "kind": "NF",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -35333,7 +34859,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 188
+          "line": 190
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -35356,7 +34882,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 133,
+          "line": 135,
           "kind": "NF",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -35534,7 +35060,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 133
+          "line": 135
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -35558,7 +35084,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 512,
+          "line": 514,
           "kind": "NF",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -35738,7 +35264,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 512
+          "line": 514
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -35917,7 +35443,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 777,
+          "line": 779,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -35953,7 +35479,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 777
+          "line": 779
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -36891,7 +36417,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 601,
+          "line": 603,
           "kind": "IC",
           "name": "save_control",
           "return_type": "int",
@@ -36927,7 +36453,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 601
+          "line": 603
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -37274,7 +36800,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 416,
+          "line": 418,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -37299,7 +36825,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 567,
+          "line": 569,
           "kind": "NF",
           "name": "save_profile",
           "return_type": "int",
@@ -37849,7 +37375,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 786,
+          "line": 788,
           "kind": "NF",
           "name": "select_profile",
           "return_type": "Tprofile_create*",
@@ -38088,7 +37614,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 786
+          "line": 788
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -38112,7 +37638,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 322,
+          "line": 324,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -38292,7 +37818,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 322
+          "line": 324
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -38738,7 +38264,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 659,
+          "line": 661,
           "kind": "NF",
           "name": "view_profile",
           "return_type": "void",
@@ -38785,7 +38311,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 659
+          "line": 661
         }
       ],
       "difficulty": "SUPERVISOR",

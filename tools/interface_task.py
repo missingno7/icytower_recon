@@ -183,6 +183,10 @@ def verify_interface(session,acceptance=False):
             for decl in declarations(report['interfaces_aux']):
                 if decl['name']==session['function'] and decl['file'].startswith(('src/','include/')):
                     observed.append(decl)
+                    if session['plan'].get('typed_caller_repair'):
+                        from type_aliases import layout_checks
+                        if any(x['status']!='AGREE' for x in layout_checks(decl,session['plan']['historical'][0],report)):
+                            raise CandidateRejected('Typed caller interface lacks complete historical layout agreement')
         if not observed or any(signature(d)!=expected for d in observed):
             raise CandidateRejected('Compiler declarations still disagree with the DWARF interface')
     validate_interface_scope(session,applied=True)
@@ -226,6 +230,8 @@ def promote(name):
             run([sys.executable,'tools/test_atomic_writes.py'])
             run([sys.executable,'tools/test_data_owners.py'])
             run([sys.executable,'tools/test_interface_tasks.py'])
+            run([sys.executable,'tools/test_typed_interface_tasks.py'])
+            run([sys.executable,'tools/test_interface_type_probe.py'])
             run([sys.executable,'tools/test_dwarf_locations.py'])
             run([sys.executable,'tools/test_compiler_context.py'])
             run([sys.executable,'tools/test_branch_diagnostics.py'])

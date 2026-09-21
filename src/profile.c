@@ -1,3 +1,5 @@
+#include "recovered/Tcontrol.h"
+extern int is_any(Tcontrol*);
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
  * Current recovery status: src/recovery.json and docs/current/.
@@ -412,7 +414,7 @@ extern int exists(char *file);
 extern void log2file(char *format, ...);
 extern long time(long *t);
 extern Tprofile_tm *localtime(long *t);
-extern void init_control(void *control);
+extern void init_control(Tcontrol*);
 extern int save_profile(Tprofile_create *p);
 
 Tprofile_create *create_profile(char *handle, int overwrite)

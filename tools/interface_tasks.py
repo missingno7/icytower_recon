@@ -1,7 +1,7 @@
 """Mechanical declaration work items from historical DWARF and compiler source locations.
 
-Only adding evidenced char-pointee const, completing empty prototypes, and adding
-missing builtin-only prototypes are eligible. Bodies and type layouts are untouched.
+Eligible work includes evidenced qualifiers, empty/builtin prototypes, and bounded
+caller-only canonical pointer interfaces. Bodies and existing type layouts are untouched.
 """
 import re
 from pathlib import Path
@@ -140,6 +140,9 @@ def plan_interface(row, ledger):
                     expected_prototype=prototype(expected,name),reason='Unique DWARF signature and exact compiler locations; body edits prohibited.')
     except ValueError as exc:
         card.update(reason=str(exc),priority=-20)
+        from typed_interface_tasks import plan as typed_plan
+        try: card.update(typed_plan(row,ledger))
+        except ValueError: pass
     blocked=ROOT/'docs/current/interface-blocks.json'
     if blocked.exists() and name in read_json(blocked):
         card.update(difficulty='SUPERVISOR',priority=-100,supervisor_block=read_json(blocked)[name])

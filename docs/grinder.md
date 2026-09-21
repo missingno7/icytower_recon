@@ -302,3 +302,14 @@ layouts are supplemented; existing or ambiguous primary definitions take
 precedence. Cards label supplemental layouts `EMISSION_PRESERVING_DEBUG_PROBE`.
 The primary historical flags, function proof, locals, globals and source-edit
 permissions remain unchanged. Missing or conflicting evidence still blocks work.
+
+
+Typed caller interfaces can also be mechanical: a unique historical signature
+may replace a CU-local void-pointer placeholder or implicit/empty caller prototype
+with a single pointer to a generated historical type. The plan supplies canonical
+header visibility before the declaration. Definitions, return-type changes,
+variadic/nondefault calling conventions, shared-header edits, existing type
+conflicts and unsupported pointer forms stay with the supervisor. FAST/ACCEPTANCE
+require every maintained declaration to agree, complete historical aggregate
+layout checks, and the existing whole-CU contribution-preservation gate. A generated
+recipe is permission for a bounded experiment, not proof that it will pass.

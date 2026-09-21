@@ -362,3 +362,24 @@ layout conflicts remain blocked. All function statuses and workflows are unchang
 The full 249-test suite passed, including probe input/flag/code/symbol/relocation
 rejection, serialization and primary-type precedence. See
 `docs/attempts/interface-type-probe-validation.json`.
+
+
+## Typed caller declaration prerequisites
+
+The interface planner previously treated void-pointer and implicit caller
+declarations as missing type evidence, then required that evidence before allowing
+the declaration repair that would introduce it. A bounded typed-caller recipe now
+uses the unique historical signature and generated header for single aggregate
+pointers. It refuses definition edits, return changes, variadic/nondefault ABIs,
+shared declarations, incompatible existing types and unsupported pointer forms.
+Acceptance additionally requires complete historical layout agreement in every
+maintained declaration, plus existing scope and whole-CU preservation checks.
+
+The real init_control placeholder and is_any implicit call passed FAST and strict
+promotion with no body or emitted-contribution changes. The first is_any trial
+exposed a prototype-before-header ordering bug; that compile failure was archived,
+the original source restored, and a regression test added before the successful
+retry. Three further typed caller tasks remain generated and CHEAP at this
+checkpoint. The full 257-test suite passed. Evidence and task links are in
+`docs/attempts/typed-caller-validation.json`; complete attempts are in
+`docs/attempts/interfaces/`.
