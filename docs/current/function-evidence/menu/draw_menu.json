@@ -2142,7 +2142,7 @@
     "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 15,
+    "priority_adjustment": 0,
     "note": "Historical emission-order frontier: every earlier function already matches in order, so this body is compiled in its historical context."
   },
   "known_rules": [
@@ -2178,13 +2178,13 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": -35,
+  "difficulty": "SUPERVISOR",
+  "priority": -95,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
+  "routing_reason": "Recorded supervisor block: Made real progress but did not reach FUNCTION_MATCH within 3 attempts. Baseline candidate (956 B) had a genuine bug: local DATAFILE *assets in the m->flags&16 block was CANDIDATE_ONLY_DEBUG_DECLARATION (frame_layout.local_inventory) -- no historical DWARF counterpart existed for it, and its presence caused STACK_FRAME_LAYOUT DIFFER (candidate sub esp,0x15c vs historical sub esp,0x16c, first mismatch at offset 8). Attempt 1: removed the unevidenced local and inlined (DATAFILE*)mp->data+mp->fo directly into the three draw_sprite calls -- this made the prologue's stack allocation match exactly (sub /usr/bin/bashx16c,%esp on both sides) and advanced the difference_class from STACK_FRAME_LAYOUT to REGISTER_OR_INSTRUCTION_SELECTION, first difference moving from offset 8 to offset 16: historically mp (0x10(%ebp)) is kept in callee-saved %edi for the whole function (alongside bmp=%esi, m=%ebx), but the candidate demotes mp to %edx and only loads m into %ebx, reloading mp from the stack later. Attempt 2: rephrased the inlined expression as ((DATAFILE*)mp->data)[mp->fo+N] instead of ((DATAFILE*)mp->data+mp->fo)[N] -- byte-identical output, no effect. Attempt 3: swapped the h=mp->font_height-12 / stepIn=dx statement order -- byte-identical output, no effect. The remaining mismatch is a global register-allocation choice (which of bmp/m/mp gets a callee-saved register) that this session found no further DWARF-evidenced or source-legal lever to influence; routing to supervisor. Candidate remains 896 B against the 1118 B historical body.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -2206,7 +2206,21 @@
     },
     "limit": "Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision."
   },
-  "supervisor_block": null,
+  "supervisor_block": {
+    "state": "BLOCKED_SUPERVISOR",
+    "reason": "Made real progress but did not reach FUNCTION_MATCH within 3 attempts. Baseline candidate (956 B) had a genuine bug: local DATAFILE *assets in the m->flags&16 block was CANDIDATE_ONLY_DEBUG_DECLARATION (frame_layout.local_inventory) -- no historical DWARF counterpart existed for it, and its presence caused STACK_FRAME_LAYOUT DIFFER (candidate sub esp,0x15c vs historical sub esp,0x16c, first mismatch at offset 8). Attempt 1: removed the unevidenced local and inlined (DATAFILE*)mp->data+mp->fo directly into the three draw_sprite calls -- this made the prologue's stack allocation match exactly (sub /usr/bin/bashx16c,%esp on both sides) and advanced the difference_class from STACK_FRAME_LAYOUT to REGISTER_OR_INSTRUCTION_SELECTION, first difference moving from offset 8 to offset 16: historically mp (0x10(%ebp)) is kept in callee-saved %edi for the whole function (alongside bmp=%esi, m=%ebx), but the candidate demotes mp to %edx and only loads m into %ebx, reloading mp from the stack later. Attempt 2: rephrased the inlined expression as ((DATAFILE*)mp->data)[mp->fo+N] instead of ((DATAFILE*)mp->data+mp->fo)[N] -- byte-identical output, no effect. Attempt 3: swapped the h=mp->font_height-12 / stepIn=dx statement order -- byte-identical output, no effect. The remaining mismatch is a global register-allocation choice (which of bmp/m/mp gets a callee-saved register) that this session found no further DWARF-evidenced or source-legal lever to influence; routing to supervisor. Candidate remains 896 B against the 1118 B historical body.",
+    "first_difference": {
+      "offset": 16,
+      "original_va": 4290188,
+      "candidate_byte": 93,
+      "original_byte": 125
+    },
+    "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+    "source_identity": {
+      "size": 16596,
+      "sha256": "b12835524bd52fb0b060e17c5d2ad1e84c993aa117f31c08526e91e9c783d8a1"
+    }
+  },
   "evidence_report": "docs/current/reports/game-menu.json",
   "verification_command": "python tools/check_function.py game-menu draw_menu",
   "begin_command": "python tools/grinder_task.py begin game-menu draw_menu",

@@ -69,7 +69,9 @@ def callees_from_dump(dump_text, section='Optimized callgraph:'):
         m = re.match(r'^([A-Za-z_]\w*)/(\d+)\((-?\d+)\):(.*)$', line)
         if m: cur = m.group(1); meta[cur] = (int(m.group(3)), m.group(4)); out[cur] = []; continue
         if cur and line.strip().startswith('calls:'):
-            out[cur] = list(reversed(re.findall(r'([A-Za-z_]\w*)/\d+ \(', line)))
+            # `name/uid` optionally followed by annotations; edges with zero frequency (after a noreturn
+            # call such as exit) carry no `(N per call)` annotation, so the annotation must be optional.
+            out[cur] = list(reversed(re.findall(r'(?<![\w/])([A-Za-z_]\w*)/\d+(?=\s|$)', line.split('calls:', 1)[1])))
     return out, meta
 
 

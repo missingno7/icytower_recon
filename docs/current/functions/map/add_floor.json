@@ -1161,7 +1161,7 @@
     "cu_same_predecessor_count": 5,
     "cu_function_count": 5,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 15,
+    "priority_adjustment": 0,
     "note": "Historical emission-order frontier: every earlier function already matches in order, so this body is compiled in its historical context."
   },
   "known_rules": [
@@ -1274,13 +1274,13 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 96,
+  "difficulty": "SUPERVISOR",
+  "priority": -95,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+  "routing_reason": "Recorded supervisor block: Body already at the historical 608-byte size; sole remaining mismatch is REGISTER_OR_INSTRUCTION_SELECTION at offset 297 (0x416905): candidate loads get_demo()->floor_shrink into %edi where the original uses %esi (mov 0x8c(%eax),%esi/edi then test/je). Source already matches docs/map-experiment.md's prior fixes (unconditional rand() retained in width, float-limit compared before int conversion, lexical int max_w restored to its DWARF-scoped inner block, default-and-refine width-5/4/3-2 ladder order). docs/attempts/game-map/add_floor.jsonl shows 9 prior FAST attempts landing on this identical offset/byte pair, and a -fno-reorder-blocks compiler-flag probe was already tried and rejected (flags are disallowed anyway). No remaining DWARF-evidenced local-declaration or expression-order change was found in this session that plausibly retargets GCC's register allocator for this single flag load without inventing unevidenced locals or reordering evidenced statements; routing to supervisor rather than repeating known-negative experiments.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1302,7 +1302,21 @@
     },
     "limit": "Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision."
   },
-  "supervisor_block": null,
+  "supervisor_block": {
+    "state": "BLOCKED_SUPERVISOR",
+    "reason": "Body already at the historical 608-byte size; sole remaining mismatch is REGISTER_OR_INSTRUCTION_SELECTION at offset 297 (0x416905): candidate loads get_demo()->floor_shrink into %edi where the original uses %esi (mov 0x8c(%eax),%esi/edi then test/je). Source already matches docs/map-experiment.md's prior fixes (unconditional rand() retained in width, float-limit compared before int conversion, lexical int max_w restored to its DWARF-scoped inner block, default-and-refine width-5/4/3-2 ladder order). docs/attempts/game-map/add_floor.jsonl shows 9 prior FAST attempts landing on this identical offset/byte pair, and a -fno-reorder-blocks compiler-flag probe was already tried and rejected (flags are disallowed anyway). No remaining DWARF-evidenced local-declaration or expression-order change was found in this session that plausibly retargets GCC's register allocator for this single flag load without inventing unevidenced locals or reordering evidenced statements; routing to supervisor rather than repeating known-negative experiments.",
+    "first_difference": {
+      "offset": 297,
+      "original_va": 4286725,
+      "candidate_byte": 184,
+      "original_byte": 176
+    },
+    "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+    "source_identity": {
+      "size": 3049,
+      "sha256": "247f243c3f6c5a7bc94eb1af8ec46c7750d893ccc40c3d4b363e8246c601a75a"
+    }
+  },
   "evidence_report": "docs/current/reports/game-map.json",
   "verification_command": "python tools/check_function.py game-map add_floor",
   "begin_command": "python tools/grinder_task.py begin game-map add_floor",

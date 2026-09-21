@@ -75,8 +75,10 @@ def prototype(signature):
 def declaration_edits(skeleton, decl, nl):
     """Evidenced top-level declaration edits on the skeleton (never inside a definition island):
     `remove_top_level`: names whose hand-written top-level declaration is deleted (an `extern ...;`
-    prototype, a `typedef struct {...} NAME;`, or a `#define NAME` line); `includes_after`: {header: [names]}
-    inserts `#include <name>` lines directly after `#include <header>`.  Evidence is recorded by the caller."""
+    prototype, a `typedef struct {...} NAME;`, or a `#define NAME` line); `add_top_level`: [{name,
+    declaration, after}] inserts a declaration directly after the declaration of an existing name
+    (its historical DWARF neighbour); `includes_after`: {header: [names]} inserts `#include <name>`
+    lines directly after `#include <header>`.  Evidence is recorded by the caller."""
     from source_scope import sanitized
     removed = []
     for name in decl.get('remove_top_level', []):
@@ -97,6 +99,13 @@ def declaration_edits(skeleton, decl, nl):
         if not found: raise ValueError('No removable top-level declaration for ' + name)
         removed.append({'name': name, 'text': skeleton[found[0]:found[1]]})
         skeleton = skeleton[:found[0]] + skeleton[found[1]:]
+    for item in decl.get('add_top_level', []):
+        anchor = item['after']; name = item['name']
+        m = re.search(r'(?m)^[^\n]*\b' + re.escape(anchor) + r'\b[^;\n]*;[ \t]*\r?\n', skeleton)
+        if not m: raise ValueError('Declaration anchor not found: ' + anchor)
+        if re.search(r'(?m)^[A-Za-z_][^;()\n]*\b' + re.escape(name) + r'\b[^;()\n]*;', skeleton): raise ValueError('Already declared: ' + name)
+        skeleton = skeleton[:m.end()] + item['declaration'] + nl + skeleton[m.end():]
+        removed.append({'name': name, 'added': item['declaration'], 'after': anchor})
     for header, names in (decl.get('includes_after') or {}).items():
         anchor = re.search(r'(?m)^[ \t]*#[ \t]*include[ \t]*<' + re.escape(header) + r'>[^\n]*\n', skeleton)
         if not anchor: raise ValueError('Include anchor not found: ' + header)
@@ -276,8 +285,10 @@ def focus_report(report, callees, focus):
         f = next((x for x in report['functions'] if x['name'] == n), None)
         if not f: continue
         h = sorted(set(hist_calls.get(n, []))); c = sorted(set(callees.get(n, [])))
+        key = lambda x: re.sub(r'^__builtin_', '', x).lstrip('_') if x != '_mangled_main' else x   # census `_errno` == cgraph `errno`
+        hk = {key(x) for x in h}; ck = {key(x) for x in c}
         out[n] = {'status': f['status'], 'candidate_size': f.get('candidate_size'), 'historical_size': f['original_size'],
-                  'historical_callees': h, 'current_callees': c, 'missing_edges': sorted(set(h) - set(c)), 'extra_edges': sorted(set(c) - set(h)),
+                  'historical_callees': h, 'current_callees': c, 'missing_edges': sorted(x for x in h if key(x) not in ck), 'extra_edges': sorted(x for x in c if key(x) not in hk),
                   'historical_position': hist.index(n), 'candidate_position': cand.index(n),
                   'limit': 'Historical callees are the direct calls visible in the original bytes (inlined builtins invisible); compiled callees come from the cgraph dump.'}
     return out

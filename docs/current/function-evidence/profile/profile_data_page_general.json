@@ -1941,7 +1941,7 @@
     "cu_same_predecessor_count": 14,
     "cu_function_count": 17,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 5,
+    "priority_adjustment": 0,
     "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [
@@ -2048,13 +2048,13 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 75,
+  "difficulty": "SUPERVISOR",
+  "priority": -95,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900",
+  "routing_reason": "Recorded supervisor block: Body is 1082 bytes vs historical 1091 (9 bytes short), SOURCE_CONTROL_FLOW_SHAPE. First difference at offset 264/266 (0x419432): original 'je 419a68 <+0x3c0>' targets a different relative offset than candidate 'je <+0x3dc>' for the first seconds==1?\"\":\"s\" ternary selector inside the elapsed-time formatting (~8 near-identical singular/plural \"\"/\"s\" selector block pairs feeding the nested seconds/minutes/hours/days sprintf calls). docs/attempts/game-profile/profile_data_page_general.jsonl already records 18 prior BEGIN/FAST attempts converging on this exact same offset and byte pair across earlier sessions (docs/profile-experiment.md notes it as a persistent arithmetic/local-storage-driven DIFFER). No DWARF-evidenced local is available to hoist the inline ternaries into named temporaries (locals list has only data/seconds/minutes/hours/days/timeSpent/buf/len/i, no suffix/temp pointer), and this session found no further legal source-level lever (all locals, comparison forms >1 vs ==1, and statement order already match the oracle per prior sessions' notes) distinct from what was already exhausted; routing to supervisor for compiler-context/block-placement investigation rather than repeating known-negative FAST attempts.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -2076,7 +2076,21 @@
     },
     "limit": "Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision."
   },
-  "supervisor_block": null,
+  "supervisor_block": {
+    "state": "BLOCKED_SUPERVISOR",
+    "reason": "Body is 1082 bytes vs historical 1091 (9 bytes short), SOURCE_CONTROL_FLOW_SHAPE. First difference at offset 264/266 (0x419432): original 'je 419a68 <+0x3c0>' targets a different relative offset than candidate 'je <+0x3dc>' for the first seconds==1?\"\":\"s\" ternary selector inside the elapsed-time formatting (~8 near-identical singular/plural \"\"/\"s\" selector block pairs feeding the nested seconds/minutes/hours/days sprintf calls). docs/attempts/game-profile/profile_data_page_general.jsonl already records 18 prior BEGIN/FAST attempts converging on this exact same offset and byte pair across earlier sessions (docs/profile-experiment.md notes it as a persistent arithmetic/local-storage-driven DIFFER). No DWARF-evidenced local is available to hoist the inline ternaries into named temporaries (locals list has only data/seconds/minutes/hours/days/timeSpent/buf/len/i, no suffix/temp pointer), and this session found no further legal source-level lever (all locals, comparison forms >1 vs ==1, and statement order already match the oracle per prior sessions' notes) distinct from what was already exhausted; routing to supervisor for compiler-context/block-placement investigation rather than repeating known-negative FAST attempts.",
+    "first_difference": {
+      "offset": 266,
+      "original_va": 4298674,
+      "candidate_byte": 206,
+      "original_byte": 178
+    },
+    "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+    "source_identity": {
+      "size": 29777,
+      "sha256": "d3f960c3d89b42b289957bb8941f59143fc5dc4f906afe66521f14dc308091b1"
+    }
+  },
   "evidence_report": "docs/current/reports/game-profile.json",
   "verification_command": "python tools/check_function.py game-profile profile_data_page_general",
   "begin_command": "python tools/grinder_task.py begin game-profile profile_data_page_general",
