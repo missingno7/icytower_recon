@@ -1003,3 +1003,21 @@ requiring a whole-CU report. The 149-test function suite passes, including byte
 decoding despite misleading assembly labels and invalid/external target handling.
 All raw function and workflow proof states remain unchanged. Evidence is retained
 in docs/attempts/branch-context-validation.json.
+
+
+## Retained truth-test experiment
+
+The reusable supervisor command `python tools/predicate_probe.py game-replay
+my_strcmp "a->directory"` replaces exactly one simple unnegated scalar/member
+condition with equality to one in an isolated CU. Ambiguous, negated or complex
+expressions fail. An unchanged scratch baseline must preserve raw non-debug
+contributions; the experiment retains complete source, compiler/input identities,
+raw differences and original-oracle diagnostics. Production source is untouched.
+
+The real equality-to-one trial changes emitted comparison code but remains DIFFER
+at 123 versus 128 bytes, with the first mismatch still at offset 21. It therefore
+does not solve the branch-layout problem. Function cards retain this negative
+result and mark it historical after source/tool/compiler/oracle changes, avoiding
+repeat rediscovery. No new recipe admission or exact claim was introduced. The
+152-test function suite passes; all raw function/workflow proof states are unchanged.
+Evidence: docs/attempts/predicate-probes/game-replay/my_strcmp.json.
