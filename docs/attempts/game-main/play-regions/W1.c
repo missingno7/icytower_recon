@@ -83,25 +83,21 @@ int play(void)
         }
     }
     log2file(" setting up play data");                 /* line 3485 */
-    *(int *)0x4dd244 = 0;    /* line 3486; fall_count (named via census evidence, not declared in main.c) */
-    *(int *)0x4dd248 = 0;    /* line 3487; clock_angle (named via census evidence, not declared in main.c) */
-    *(int *)0x4f8e18 = 0;         /* line 3488; UNRESOLVED: unnamed int global (also read/compared at
-                                    * line 3595 against 100); not present in play.json referenced_globals */
+    fall_count = 0;                                     /* line 3486 */
+    clock_angle = 0;                                    /* line 3487 */
+    map.offset = 0;                                     /* line 3488 */
     fast_forward = 0;                                   /* line 3490 */
     fast_fast_forward = 0;                               /* line 3491 */
     update_frame();                                      /* line 3493 */
     if (!itrcheck) {                                     /* line 3494 */
         draw_frame(swap_screen);                         /* line 3495 */
         fadeIn(swap_screen, 16);                         /* line 3497 */
-        play_sound(*(SAMPLE **)0x4fac08, 0, 0);          /* line 3498; UNRESOLVED: unnamed SAMPLE*
-                                                            * global argument */
+        play_sound(custom.yo, 0, 0);                     /* line 3498 */
         startGameMusic();                                /* line 3499 */
     }
     if (!itrcheck && bg_beat) {                          /* line 3502-3503 (compiled as its own re-test
                                                             * of itrcheck, redundant with the block above) */
-        *(int *)0x4bc174 = play_sample(bg_beat, 0, 128, 1000, 1); /* line 3504; checkMusicVoiceID, named
-                                                            * via play-census.json evidence but not
-                                                            * declared in src/main.c */
+        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1); /* line 3504 */
     }
     cycle_count = 0;                                     /* line 3510 */
     log2file(" play started");                           /* line 3512 */
@@ -140,22 +136,22 @@ int play(void)
         cycle_count = 0;                                 /* line 3540 */
         logic_count++;                                   /* line 3542 */
         step_count++;                                    /* line 3543 */
-        (*(int *)0x4dd244)++;                             /* line 3544; fall_count, see line 3486 note */
+        fall_count++;                                     /* line 3544 */
         time_cheat_count++;                               /* line 3545 */
         musicCounter++;                                   /* line 3546 */
         if (!itrcheck) {                                  /* line 3549 */
             if (hasFocus != lastFocus) {                  /* line 3550-3551 */
                 if (!hasFocus) {
                     /* line 3562-3567: losing focus, stop the background track */
-                    if (*(int *)0x4bc174 >= 0) {
-                        voice_stop(*(int *)0x4bc174);     /* checkMusicVoiceID, see line 3504 note */
+                    if (checkMusicVoiceID >= 0) {
+                        voice_stop(checkMusicVoiceID);
                     }
-                    *(int *)0x4bc174 = -1;
+                    checkMusicVoiceID = -1;
                     stopGameMusic();
                 } else {
                     /* line 3552-3559: gaining focus, restart the background track */
                     if (bg_beat) {
-                        *(int *)0x4bc174 = play_sample(bg_beat, 0, 128, 1000, 1);
+                        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1);
                     }
                     startGameMusic();
                     totMusics = 0;
@@ -167,8 +163,8 @@ int play(void)
         }
         if (!itrcheck) {                                  /* line 3574 (compiled as its own re-test of
                                                              * itrcheck, redundant with the block above) */
-            if (*(int *)0x4bc174 >= 0) {                  /* line 3574 */
-                int pos = voice_get_position(*(int *)0x4bc174); /* line 3575; "pos" is a block-scoped
+            if (checkMusicVoiceID >= 0) {                 /* line 3574 */
+                int pos = voice_get_position(checkMusicVoiceID); /* line 3575; "pos" is a block-scoped
                                                              * temp with no DWARF location at this PC --
                                                              * introduced here only to hold the single
                                                              * call's result for reuse, matching the
@@ -186,7 +182,7 @@ int play(void)
                 lastMusicPos = pos;                       /* line 3585 (tail) */
             }
         }
-        if (recording && *(int *)0x4f8e18 > 100 && !ply[player_id]->dead) { /* line 3595-3597 */
+        if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595-3597 */
             if (time_cheat_count == 1000) {
                 /* lines 3604-3661: periodic clock()/QueryPerformanceCounter()/time() cross-check,
                  * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
@@ -226,23 +222,22 @@ int play(void)
             }
         }
         if (debug) {                                      /* line 3681 */
-            /* lines 3682-3691: ten combo-length reward tiers; the flag bytes at 0x5069a3..0x5069ac
-             * are an unresolved 10-entry array (no name in play-census.json). */
-            if (*(char *)0x5069a4) { if (allow_smpl) start_reward(5); }
-            if (*(char *)0x5069a5) { if (allow_smpl) start_reward(7); }
-            if (*(char *)0x5069a6) { if (allow_smpl) start_reward(15); }
-            if (*(char *)0x5069a7) { if (allow_smpl) start_reward(25); }
-            if (*(char *)0x5069a8) { if (allow_smpl) start_reward(35); }
-            if (*(char *)0x5069a9) { if (allow_smpl) start_reward(50); }
-            if (*(char *)0x5069aa) { if (allow_smpl) start_reward(70); }
-            if (*(char *)0x5069ab) { if (allow_smpl) start_reward(100); }
-            if (*(char *)0x5069ac) { if (allow_smpl) start_reward(140); }
-            if (*(char *)0x5069a3) { if (allow_smpl) start_reward(200); }
+            /* lines 3682-3691: ten combo-length reward tiers, keyed to the number-row keys */
+            if (key[KEY_1]) { if (allow_smpl) start_reward(5); }
+            if (key[KEY_2]) { if (allow_smpl) start_reward(7); }
+            if (key[KEY_3]) { if (allow_smpl) start_reward(15); }
+            if (key[KEY_4]) { if (allow_smpl) start_reward(25); }
+            if (key[KEY_5]) { if (allow_smpl) start_reward(35); }
+            if (key[KEY_6]) { if (allow_smpl) start_reward(50); }
+            if (key[KEY_7]) { if (allow_smpl) start_reward(70); }
+            if (key[KEY_8]) { if (allow_smpl) start_reward(100); }
+            if (key[KEY_9]) { if (allow_smpl) start_reward(140); }
+            if (key[KEY_0]) { if (allow_smpl) start_reward(200); }
             /* line 3692 */
-            allow_smpl = !(*(char *)0x5069a4 || *(char *)0x5069a5 || *(char *)0x5069a6 ||
-                           *(char *)0x5069a7 || *(char *)0x5069a8 || *(char *)0x5069a9 ||
-                           *(char *)0x5069aa || *(char *)0x5069ab || *(char *)0x5069ac ||
-                           *(char *)0x5069a3);
+            allow_smpl = !(key[KEY_1] || key[KEY_2] || key[KEY_3] ||
+                           key[KEY_4] || key[KEY_5] || key[KEY_6] ||
+                           key[KEY_7] || key[KEY_8] || key[KEY_9] ||
+                           key[KEY_0]);
         }
         midX = (int)ply[player_id]->x;                    /* line 3698 */
         midY = (int)ply[player_id]->y;                    /* line 3699 */

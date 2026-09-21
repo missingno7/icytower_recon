@@ -101,7 +101,17 @@ def declaration_edits(skeleton, decl, nl):
         skeleton = skeleton[:found[0]] + skeleton[found[1]:]
     for item in decl.get('add_top_level', []):
         anchor = item['after']; name = item['name']
-        m = re.search(r'(?m)^[^\n]*\b' + re.escape(anchor) + r'\b[^;\n]*;[ \t]*\r?\n', skeleton)
+        m = re.search(r'(?m)^[A-Za-z_][^;()\n]*\b' + re.escape(anchor) + r'\b', skeleton)
+        if m:   # end of that declaration: the first semicolon outside braces, plus its line break
+            depth = 0; k = m.end()
+            while k < len(skeleton):
+                c = skeleton[k]
+                if c == '{': depth += 1
+                elif c == '}': depth -= 1
+                elif c == ';' and depth == 0: break
+                k += 1
+            nl_at = skeleton.find(chr(10), k)
+            m = type('M', (), {'end': staticmethod(lambda e=(len(skeleton) if nl_at < 0 else nl_at + 1): e)})
         if not m: raise ValueError('Declaration anchor not found: ' + anchor)
         if re.search(r'(?m)^[A-Za-z_][^;()\n]*\b' + re.escape(name) + r'\b[^;()\n]*;', skeleton): raise ValueError('Already declared: ' + name)
         skeleton = skeleton[:m.end()] + item['declaration'] + nl + skeleton[m.end():]

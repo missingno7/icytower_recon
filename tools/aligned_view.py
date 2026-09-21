@@ -5,16 +5,18 @@
     python tools/aligned_view.py orig <target> <function> [lo] [hi]      # original instructions only
 
 Reads the latest owning-CU check (build/fast/<target>/comparison.json, written by check_function.py) or,
-when absent, the ledger's verified report.  Masking hides relocation fields so only real register, operand
+when absent, the ledger's verified report; `--report PATH` reads another comparison, such as an overlay
+result at build/tu-context/<target>/<label>/comparison.json.  Masking hides relocation fields so only real register, operand
 and control-flow shape differences remain; a masked-equal line can still differ in bytes.
 """
 import sys, re, difflib, itertools
+from pathlib import Path
 from common import ROOT, read_json
 from recovery_pipeline import original_slice
 
 
-def load(target, fn):
-    fast = ROOT / 'build/fast' / target / 'comparison.json'
+def load(target, fn, report=None):
+    fast = Path(report) if report else ROOT / 'build/fast' / target / 'comparison.json'
     rep = read_json(fast) if fast.exists() else None
     if rep is None or not any(x['name'] == fn for x in rep['functions']):
         ledger = read_json(ROOT / 'src/recovery.json')
@@ -34,8 +36,8 @@ def norm(a):
     return re.sub(r'\s+', ' ', a).strip()
 
 
-def diff(target, fn, ctx=3):
-    f, O, C = load(target, fn)
+def diff(target, fn, ctx=3, report=None):
+    f, O, C = load(target, fn, report)
     on = [norm(a) for _, a in O]; cn = [norm(a) for _, a in C]
     sm = difflib.SequenceMatcher(None, on, cn, autojunk=False)
     print(fn, 'orig', f['original_size'], 'cand', f.get('candidate_size'), 'instr', len(O), len(C), 'status', f['status'])
@@ -48,8 +50,8 @@ def diff(target, fn, ctx=3):
         for k in range(i2, min(len(O), i2 + ctx)): print('    %5d %s' % O[k])
 
 
-def sbs(target, fn, lo=0, hi=10 ** 9, original_only=False):
-    f, O, C = load(target, fn)
+def sbs(target, fn, lo=0, hi=10 ** 9, original_only=False, report=None):
+    f, O, C = load(target, fn, report)
     oi = [x for x in O if lo <= x[0] <= hi]; ci = [x for x in C if lo <= x[0] <= hi]
     if original_only:
         for a in oi: print('%6d  %s' % a)
@@ -58,8 +60,11 @@ def sbs(target, fn, lo=0, hi=10 ** 9, original_only=False):
 
 
 if __name__ == '__main__':
-    mode, target, fn = sys.argv[1:4]; rest = [int(x, 0) for x in sys.argv[4:]]
-    if mode == 'diff': diff(target, fn, *(rest[:1] or [3]))
-    elif mode == 'sbs': sbs(target, fn, *rest[:2])
-    elif mode == 'orig': sbs(target, fn, *rest[:2], original_only=True)
+    args = sys.argv[1:]; report = None
+    if '--report' in args:
+        i = args.index('--report'); report = args[i + 1]; del args[i:i + 2]
+    mode, target, fn = args[:3]; rest = [int(x, 0) for x in args[3:]]
+    if mode == 'diff': diff(target, fn, *(rest[:1] or [3]), report=report)
+    elif mode == 'sbs': sbs(target, fn, *rest[:2], report=report)
+    elif mode == 'orig': sbs(target, fn, *rest[:2], original_only=True, report=report)
     else: raise SystemExit(__doc__)

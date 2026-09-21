@@ -5,7 +5,7 @@
   "label": "collisions",
   "edits": {
     "focus": [
-      "handle_player_collision_original"
+      "handle_player_collision_combo"
     ],
     "declarations": {},
     "order": [
@@ -425,8 +425,8 @@
       "handle_player_collision_original": {
         "path": "docs/attempts/game-main/bodies/handle_player_collision_original.c",
         "identity": {
-          "size": 1126,
-          "sha256": "9ea0d6e730c286963bfa0598281de9f31b486dfc12f0226f715bed3febcfa0ee"
+          "size": 1140,
+          "sha256": "04917661b78bfbbb07b2be8f430c70fa432c3b74c61e9e1487d6a60111a054aa"
         }
       },
       "handle_player_collision_old": {
@@ -474,24 +474,31 @@
   "flags": [
     "-O2"
   ],
-  "overlay_identity": "e5dd81015b9419e772e4925b91980bcdbd778a3f5b3431f01f56aa5e26de29ee",
+  "overlay_identity": "2792279cbb57d29bea7989fc8532b3b18887d266c31632554e722d6d0862c170",
   "focus": {
-    "handle_player_collision_original": {
+    "handle_player_collision_combo": {
       "status": "DIFFER",
-      "candidate_size": 466,
-      "historical_size": 456,
+      "candidate_size": 989,
+      "historical_size": 1390,
       "historical_callees": [
+        "getFloorData",
         "is_solid",
+        "line_intersect",
+        "makecol",
         "play_sound"
       ],
       "current_callees": [
+        "getFloorData",
         "is_solid",
+        "line_intersect",
         "play_sound"
       ],
-      "missing_edges": [],
+      "missing_edges": [
+        "makecol"
+      ],
       "extra_edges": [],
-      "historical_position": 35,
-      "candidate_position": 34,
+      "historical_position": 37,
+      "candidate_position": 36,
       "inlined_into_this_caller": [],
       "limit": "Historical callees are the direct calls visible in the original bytes (inlined builtins invisible); current callees are the source-level edges before inlining. A callee listed in inlined_into_this_caller is called in the source but inlined here, so it is absent from the emitted call graph; history did not inline it."
     }
@@ -1175,9 +1182,9 @@
       "candidate_predecessor_exact": true,
       "definition_position_historical": 59,
       "historical_line": 3292,
-      "candidate_size": 466,
+      "candidate_size": 449,
       "historical_size": 456,
-      "body_completeness": 1.022,
+      "body_completeness": 0.985,
       "peephole_scratch_finds": null,
       "cursor_dependent": false,
       "historical_prefix_exact_and_in_order": false
@@ -2320,7 +2327,7 @@
     "total": 82
   },
   "longest_exact_historical_prefix": 17,
-  "at_historical_offset": 13,
+  "at_historical_offset": 14,
   "gains": [],
   "losses": [
     "check_beta_tester",
@@ -2367,13 +2374,7 @@
     "testWindowResolution",
     "uninit_game"
   ],
-  "size_changes": {
-    "handle_player_collision_original": [
-      449,
-      466,
-      456
-    ]
-  },
+  "size_changes": {},
   "new_implicit_declarations": [],
   "statuses": {
     "get_version_str": "FUNCTION_MATCH",
