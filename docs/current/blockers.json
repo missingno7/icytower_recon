@@ -1,19 +1,19 @@
 {
   "workflow_states": {
     "FUNCTION_MATCH": 165,
-    "SOURCE_DIFFER": 60,
+    "SOURCE_DIFFER": 59,
+    "CODEGEN_SIMILAR": 6,
     "BODY_MATCH_LAYOUT_BLOCKED": 22,
-    "CODEGEN_SIMILAR": 5,
     "MISSING": 1
   },
   "difference_classes": {
     "EXACT": 165,
     "SOURCE_CONTROL_FLOW_SHAPE": 10,
-    "STACK_FRAME_LAYOUT": 18,
+    "RELOCATION_OR_LITERAL_LAYOUT": 6,
     "UNKNOWN_SUPERVISOR": 11,
+    "STACK_FRAME_LAYOUT": 17,
     "SAME_CU_CALL_LAYOUT": 22,
     "REGISTER_OR_INSTRUCTION_SELECTION": 14,
-    "RELOCATION_OR_LITERAL_LAYOUT": 5,
     "LITERAL_CONTENT_DIFFERENCE": 3,
     "INSTRUCTION_ORDER": 1,
     "COMPILER_CONTEXT_DEPENDENCY": 2,
@@ -418,6 +418,31 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 203,
       "candidate_card": "docs/current/functions/main/take_screenshot.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/fld_adspot.c",
+      "target": "game-fld-adspot",
+      "function": "fldads_threadmain",
+      "status": "DIFFER",
+      "state": "CODEGEN_SIMILAR",
+      "priority": 39,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+      "first_difference": {
+        "offset": 46,
+        "original_va": 4210754,
+        "candidate_byte": 175,
+        "original_byte": 201
+      },
+      "verification_command": "python tools/check_function.py game-fld-adspot fldads_threadmain",
+      "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_threadmain",
+      "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_threadmain",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
+      "size": 223,
+      "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -873,15 +898,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/fldads_update_cache.json",
       "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/fld_adspot.c",
-          "function": "fldads_threadmain",
-          "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
-          "planned_in_caller_cu": true
-        }
-      ],
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -902,15 +920,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/HTTPGet.json",
       "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/fld_adspot.c",
-          "function": "fldads_threadmain",
-          "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
-          "planned_in_caller_cu": false
-        }
-      ],
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -953,15 +964,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/destroyHTTPResponse.json",
       "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/fld_adspot.c",
-          "function": "fldads_threadmain",
-          "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
-          "planned_in_caller_cu": false
-        }
-      ],
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -1213,41 +1217,6 @@
       "size": 0,
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "profile_data_page_general",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin profile_data_page_general",
-      "verification_command": "python tools/interface_task.py check profile_data_page_general",
-      "promotion_command": "python tools/interface_task.py promote profile_data_page_general",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "profile_data_page_general",
-          "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -1607,64 +1576,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/fld_adspot.c",
-      "target": "game-fld-adspot",
-      "function": "fldads_threadmain",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 6,
-        "original_va": 4210714,
-        "candidate_byte": 68,
-        "original_byte": 84
-      },
-      "verification_command": "python tools/check_function.py game-fld-adspot fldads_threadmain",
-      "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_threadmain",
-      "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_threadmain",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: HTTPGet, destroyHTTPResponse, fldads_update_cache, log2file",
-      "size": 223,
-      "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "HTTPGet",
-          "candidate_card": "docs/current/interfaces/HTTPGet.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "destroyHTTPResponse",
-          "candidate_card": "docs/current/interfaces/destroyHTTPResponse.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "fldads_update_cache",
-          "candidate_card": "docs/current/interfaces/fldads_update_cache.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "log2file",
-          "candidate_card": "docs/current/interfaces/log2file.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "create_replay",
@@ -1792,7 +1703,7 @@
       "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
       "promotion_command": "python tools/promote_function.py game-profile create_profile",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_profile_dir_for_profile, log2file",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_profile_dir_for_profile",
       "size": 823,
       "candidate_card": "docs/current/functions/profile/create_profile.json",
       "task_kind": "FUNCTION_BODY",
@@ -1803,14 +1714,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "log2file",
-          "candidate_card": "docs/current/interfaces/log2file.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -1834,7 +1737,7 @@
       "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
       "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: log2file",
+      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
       "size": 923,
       "candidate_card": "docs/current/functions/httpget/extractHTTPResponse.json",
       "task_kind": "FUNCTION_BODY",
@@ -1842,48 +1745,6 @@
         {
           "function": "extractHTTPResponse",
           "candidate_card": "docs/current/interfaces/extractHTTPResponse.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "log2file",
-          "candidate_card": "docs/current/interfaces/log2file.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "profile_data_page_general",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4298416,
-        "candidate_byte": 204,
-        "original_byte": 172
-      },
-      "verification_command": "python tools/check_function.py game-profile profile_data_page_general",
-      "begin_command": "python tools/grinder_task.py begin game-profile profile_data_page_general",
-      "promotion_command": "python tools/promote_function.py game-profile profile_data_page_general",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 1091,
-      "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "profile_data_page_general",
-          "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
@@ -2710,14 +2571,6 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "profile_data_page_general",
-          "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "set_next_rank_message",
           "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
           "difficulty": "SUPERVISOR",
@@ -3019,30 +2872,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_httpget_HTTPResponse",
-      "source": "src/httpget.c",
-      "sources": [
-        "src/httpget.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_httpget_HTTPResponse",
-      "verification_command": "python tools/interface_task.py check view_httpget_HTTPResponse",
-      "promotion_command": "python tools/interface_task.py promote view_httpget_HTTPResponse",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_httpget_HTTPResponse.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "handle_player_collision_vector_2",
       "source": "src/main.c",
       "sources": [
@@ -3080,51 +2909,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "log2file",
-      "source": "src/main.c",
-      "sources": [
-        "src/fld_adspot.c",
-        "src/httpget.c",
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin log2file",
-      "verification_command": "python tools/interface_task.py check log2file",
-      "promotion_command": "python tools/interface_task.py promote log2file",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/log2file.json",
-      "size": 0,
-      "prerequisite_for_count": 3,
-      "prerequisite_for": [
-        {
-          "source": "src/fld_adspot.c",
-          "function": "fldads_threadmain",
-          "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/httpget.c",
-          "function": "extractHTTPResponse",
-          "candidate_card": "docs/current/functions/httpget/extractHTTPResponse.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "create_profile",
-          "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "task_kind": "STATIC_SCOPE",
       "function": "scope_main_face",
       "target_function": "main_menu_callback",
@@ -3144,30 +2928,6 @@
       "promotion_command": "python tools/interface_task.py promote scope_main_face",
       "size": 0,
       "candidate_card": "docs/current/static-scope-tasks/scope_main_face.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_profile_Tprofile_general",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_general",
-      "verification_command": "python tools/interface_task.py check view_profile_Tprofile_general",
-      "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_general",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_profile_Tprofile_general.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,

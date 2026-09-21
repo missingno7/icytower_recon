@@ -185,6 +185,42 @@ def plan_interface(row, ledger, source_texts=None):
     return card
 
 
+def interface_emission_effect(before, after):
+    """Acceptance predicate for a declaration repair with a unique historical signature.
+
+    EMISSION_PRESERVED when every contribution is unchanged (after the candidate projection).
+    Otherwise the repair may change code only in functions that were not exact, and each
+    changed function must move toward history: reach its historical size, come closer to it,
+    or (at equal sizes) differ in fewer bytes. Non-code sections, non-text relocations, symbols
+    outside .text, common allocations and proven data owners must be unchanged. Exact
+    functions are additionally protected by the promotion regression check. None of this is
+    original-byte evidence; it only decides whether a historically certain declaration may land.
+    """
+    old=contribution_fingerprint(before); new=contribution_fingerprint(after)
+    if old==new: return 'EMISSION_PRESERVED',[]
+    def noncode(fp):
+        return {'sections':[r for r in fp['sections'] if r[0]!='.text'],'relocations':[r for r in fp['relocations'] if r[0]!='.text'],
+                'defined':[r for r in fp['defined'] if r[1]!='.text'],'common':fp['common']}
+    if noncode(old)!=noncode(new): raise ValueError('Declaration repair changed non-code contributions or their relocations')
+    def owners(report): return {(tuple(o['scope']),o['name'],o['original_va'],o['size']) for o in report.get('object_ownership',{}).get('accepted',[])}
+    if owners(before)-owners(after): raise ValueError('Declaration repair regressed a previously proven data owner')
+    current={r['name']:r for r in after['functions']}; changed=[]
+    for row in before['functions']:
+        new_row=current.get(row['name'])
+        if new_row is None: raise ValueError('Declaration repair removed a function: '+row['name'])
+        code=lambda r: ''.join(i['bytes'] for i in r.get('instructions',[]))
+        if code(row)==code(new_row) and row['status']==new_row['status']: continue
+        if row['status']=='FUNCTION_MATCH': raise ValueError('Declaration repair changed an exact function: '+row['name'])
+        historical=row['original_size']; before_size=row.get('candidate_size') or 0; after_size=new_row.get('candidate_size') or 0
+        toward=(after_size==historical and before_size!=historical) or abs(after_size-historical)<abs(before_size-historical) \
+               or (after_size==before_size and len(new_row.get('difference_offsets',[]))<len(row.get('difference_offsets',[]))) or new_row['status']=='FUNCTION_MATCH'
+        if not toward: raise ValueError('Declaration repair changed '+row['name']+' away from history ('+str(before_size)+' -> '+str(after_size)+' bytes, historical '+str(historical)+')')
+        changed.append({'function':row['name'],'status':[row['status'],new_row['status']],'size':[before_size,after_size,historical],
+                        'differing_bytes':[len(row.get('difference_offsets',[])),len(new_row.get('difference_offsets',[]))]})
+    if not changed: raise ValueError('Declaration repair changed .text bytes outside any function')
+    return 'HISTORICAL_DECLARATION_EMISSION_CHANGED',changed
+
+
 def contribution_fingerprint(report):
     """All allocated contributions, symbols and non-debug relocations, independent of COFF indices."""
     sections={s['index']:s['name'] for s in report['object_sections']}

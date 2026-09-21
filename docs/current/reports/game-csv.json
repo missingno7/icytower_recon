@@ -4,8 +4,131 @@
   "candidate_text_logical_size": 680,
   "candidate_text_raw_size": 680,
   "candidate_zero_clear_projection": {
-    "sha256": "99c88ed1deeb516ef8728d22720876c3fbeb7d899c5be8eca8b01432df0b07ca",
+    "sha256": "4f41becf880c5d552c5615b73e6b632f101466286f1ef9d7e0d684d27280dba2",
     "blocks": [
+      {
+        "start": 217,
+        "end": 227,
+        "original_bytes": "895c24048914248955e4",
+        "canonical_bytes": "8914248955e4895c2404",
+        "instructions": [
+          {
+            "address": 217,
+            "bytes": "895c2404",
+            "mnemonic": "mov",
+            "assembly": "mov    %ebx,0x4(%esp)"
+          },
+          {
+            "address": 221,
+            "bytes": "891424",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,(%esp)"
+          },
+          {
+            "address": 224,
+            "bytes": "8955e4",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,-0x1c(%ebp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 267,
+        "end": 277,
+        "original_bytes": "897c24048914248955e4",
+        "canonical_bytes": "8914248955e4897c2404",
+        "instructions": [
+          {
+            "address": 267,
+            "bytes": "897c2404",
+            "mnemonic": "mov",
+            "assembly": "mov    %edi,0x4(%esp)"
+          },
+          {
+            "address": 271,
+            "bytes": "891424",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,(%esp)"
+          },
+          {
+            "address": 274,
+            "bytes": "8955e4",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,-0x1c(%ebp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 377,
+        "end": 383,
+        "original_bytes": "8b75088b550c",
+        "canonical_bytes": "8b550c8b7508",
+        "instructions": [
+          {
+            "address": 377,
+            "bytes": "8b7508",
+            "mnemonic": "mov",
+            "assembly": "mov    0x8(%ebp),%esi"
+          },
+          {
+            "address": 380,
+            "bytes": "8b550c",
+            "mnemonic": "mov",
+            "assembly": "mov    0xc(%ebp),%edx"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 404,
+        "end": 414,
+        "original_bytes": "c70424180000008955e4",
+        "canonical_bytes": "8955e4c7042418000000",
+        "instructions": [
+          {
+            "address": 404,
+            "bytes": "c7042418000000",
+            "mnemonic": "movl",
+            "assembly": "movl   $0x18,(%esp)"
+          },
+          {
+            "address": 411,
+            "bytes": "8955e4",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,-0x1c(%ebp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 434,
+        "end": 441,
+        "original_bytes": "8b55e489c789d1",
+        "canonical_bytes": "89c78b55e489d1",
+        "instructions": [
+          {
+            "address": 434,
+            "bytes": "8b55e4",
+            "mnemonic": "mov",
+            "assembly": "mov    -0x1c(%ebp),%edx"
+          },
+          {
+            "address": 437,
+            "bytes": "89c7",
+            "mnemonic": "mov",
+            "assembly": "mov    %eax,%edi"
+          },
+          {
+            "address": 439,
+            "bytes": "89d1",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,%ecx"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
       {
         "start": 549,
         "end": 553,
@@ -24,7 +147,56 @@
             "mnemonic": "xor",
             "assembly": "xor    %eax,%eax"
           }
-        ]
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 563,
+        "end": 570,
+        "original_bytes": "89442404891424",
+        "canonical_bytes": "89142489442404",
+        "instructions": [
+          {
+            "address": 563,
+            "bytes": "89442404",
+            "mnemonic": "mov",
+            "assembly": "mov    %eax,0x4(%esp)"
+          },
+          {
+            "address": 567,
+            "bytes": "891424",
+            "mnemonic": "mov",
+            "assembly": "mov    %edx,(%esp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 577,
+        "end": 597,
+        "original_bytes": "8974240cc744240800040000c744240401000000",
+        "canonical_bytes": "8974240cc744240401000000c744240800040000",
+        "instructions": [
+          {
+            "address": 577,
+            "bytes": "8974240c",
+            "mnemonic": "mov",
+            "assembly": "mov    %esi,0xc(%esp)"
+          },
+          {
+            "address": 581,
+            "bytes": "c744240800040000",
+            "mnemonic": "movl",
+            "assembly": "movl   $0x400,0x8(%esp)"
+          },
+          {
+            "address": 589,
+            "bytes": "c744240401000000",
+            "mnemonic": "movl",
+            "assembly": "movl   $0x1,0x4(%esp)"
+          }
+        ],
+        "kind": "dependency_schedule"
       },
       {
         "start": 37,
@@ -153,7 +325,7 @@
         "kind": "compare_operand_order"
       }
     ],
-    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
+    "scope": "Only candidate scheduling preservation: dependency-respecting reorderings of straight-line register/immediate/stack-slot moves, and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
   },
   "literal_anchor_evidence": [],
   "functions": [
@@ -3551,8 +3723,8 @@
       "sha256": "aa92b816663b14e59e076abb3ee7f57f8baa404bb3d47b98e1dd10a434c494ae"
     },
     "tools/instructions.py": {
-      "size": 10018,
-      "sha256": "9709aa16b9159295aa6d5fd6f1eb6c4a894b8a29da9cf2203a868987544de6c7"
+      "size": 14266,
+      "sha256": "0fd92b1292c6aed9152a3a04bdc574880459ad84b9d154e443f89033f40a1bd7"
     },
     "tools/build.py": {
       "size": 10104,
@@ -3661,8 +3833,8 @@
       "sha256": "4819ae389f9f88f7bc747fa10fd5747300a3f3451acb128bc84214abb874ac9b"
     },
     "tools/interface_tasks.py": {
-      "size": 13978,
-      "sha256": "05d196f9303aa213f05df1958fa52ce9418319bde10d82d926a8275ae7b77820"
+      "size": 17138,
+      "sha256": "71b854f08364dadcc7162273a1391f587486132e71177f33a31d850cc02c32f4"
     },
     "tools/card_view.py": {
       "size": 5396,

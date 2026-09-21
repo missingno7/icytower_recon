@@ -49,9 +49,14 @@ def probe(target,task):
         report=compare(folder/'unit.o',reference['historical_cu'],ROOT/'assets/icytower15.exe',OBJDUMP);reports[label]=report
         equal=report_fingerprint(report)==report_fingerprint(reference)
         if label=='baseline' and not equal:raise ValueError('Overlay baseline changes raw contributions')
+        interface_effect=None
+        if plan.get('task_kind')=='INTERFACE':
+            from interface_tasks import interface_emission_effect
+            try: effect,changed=interface_emission_effect(reference,report); interface_effect={'effect':effect,'functions':changed}
+            except ValueError as exc: interface_effect={'effect':'REJECTED','error':str(exc)}
         result['variants'].append({'variant':label,'assertions_enabled':not no_assertions,'canonical_recipe_applied':canonical,
             'command':[str(a) for a in args],'object':identity(folder/'unit.o'),'raw_baseline_equal':equal,
-            'function_matches':report['function_matches'],'contribution_diagnostics':contribution_compare(reference,report)})
+            'function_matches':report['function_matches'],'contribution_diagnostics':contribution_compare(reference,report),'interface_emission':interface_effect})
         print(label,'raw baseline equal:',equal,flush=True)
     if len(reports)==4:
         result['paired_effects']={

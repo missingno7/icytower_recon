@@ -381,7 +381,7 @@ typedef struct Tprofile_tm {
     int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;
 } Tprofile_tm;
 
-extern void log2file(char *format, ...);
+extern void log2file(const char *format, ...);
 extern long time(long *t);
 extern void init_control(Tcontrol*);
 extern int save_profile(Tprofile_create *p);
@@ -470,15 +470,8 @@ Tprofile_create *create_profile(char *handle, int overwrite)
     return p;
 }
 
-typedef struct Tprofile_general {
-    unsigned char before_games_played[0x2c];
-    int games_played;
-    int custom_games_played;
-    int games_quit;
-    int seconds_spent_playing;
-    unsigned char before_creation_date[0x530 - 0x3c];
-    char creationDate[16];
-} Tprofile_general;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_general;
 
 char *profile_data_page_general(Tprofile_general *p, char *filler)
 {

@@ -159,7 +159,7 @@ def apply(name):
 
 def verify_interface(session,acceptance=False):
     validate_interface_scope(session,applied=True)
-    ledger=read_json(ROOT/'src/recovery.json'); reports={}; scheduling=[]; order_effects=[]; local_effect=None
+    ledger=read_json(ROOT/'src/recovery.json'); reports={}; scheduling=[]; emission_changes=[]; order_effects=[]; local_effect=None
     verify_inputs('tdm-2'); check_fixture()
     for target in session['plan']['affected_targets']:
         report=fresh_verify(target,dest=ROOT/('build/acceptance/interfaces' if acceptance else 'build/fast/interfaces')/session['function']/target,locked=True)
@@ -206,6 +206,10 @@ def verify_interface(session,acceptance=False):
         elif session['plan']['task_kind']=='LOCAL_DECLARATION':
             from local_declarations import verify_local,emission_effect
             candidate_check(verify_local,report,session['plan']); local_effect=candidate_check(emission_effect,old,report,session['plan'])
+        elif session['plan']['task_kind']=='INTERFACE':
+            from interface_tasks import interface_emission_effect
+            effect,changed=candidate_check(interface_emission_effect,old,report)
+            if changed: emission_changes.append({'target':target,'effect':effect,'functions':changed})
         elif contribution_fingerprint(old)!=contribution_fingerprint(report):
             raise CandidateRejected('Interface repair changed emitted code/data/BSS/symbol/relocation contribution: '+target)
         old_text=next(s['sha256'] for s in old['object_sections'] if s['name']=='.text')
@@ -263,7 +267,7 @@ def verify_interface(session,acceptance=False):
             raise CandidateRejected('Compiler declarations still disagree with the DWARF interface')
     validate_interface_scope(session,applied=True)
     for report in reports.values(): validate_report(report)
-    result={'state':state,'function':session['function'],'expected':expected,
+    result={'state':state,'function':session['function'],'expected':expected,'emission_changes':emission_changes,
             'declarations':observed,'affected_targets':session['plan']['affected_targets'],
             'allocated_layout_and_data_unchanged':session['plan']['task_kind'] not in ('SOURCE_ORDER','DATA_POINTER','GLOBAL_TYPE') and local_effect!='EXACT_FUNCTION',
             'local_declaration_effect':local_effect,

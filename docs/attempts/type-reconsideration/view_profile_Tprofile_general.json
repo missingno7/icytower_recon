@@ -1,0 +1,33 @@
+{
+  "task": "view_profile_Tprofile_general",
+  "prior_block": {
+    "reason": "Unrecognized candidate initializer permutation in select_profile at offsets 164..209; strict contribution gate rejected it. Focused evidence: docs/attempts/type-view-contribution-diagnostic.json. Needs supervisor scheduling analysis; do not retry unchanged.",
+    "changes": [
+      {
+        "file": "src/profile.c",
+        "start": 14853,
+        "end": 15134,
+        "before": "typedef struct Tprofile_general {\n    unsigned char before_games_played[0x2c];\n    int games_played;\n    int custom_games_played;\n    int games_quit;\n    int seconds_spent_playing;\n    unsigned char before_creation_date[0x530 - 0x3c];\n    char creationDate[16];\n} Tprofile_general;",
+        "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_general;",
+        "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "path": "docs/attempts/type-context-probes/game-profile/view_profile_Tprofile_general.json",
+      "identity": {
+        "size": 129627,
+        "sha256": "2891d37490eb85f1b8c981a39a79161dd2bcbf5cc31e19b41a2bc64977e0a532"
+      }
+    }
+  ],
+  "state": "REOPENED_FOR_VERIFIED_EXPERIMENT",
+  "source_inputs": {
+    "src/profile.c": {
+      "size": 28787,
+      "sha256": "df319daa43c876dea5819314b90bad731c1e4d078ffdbfeb98babbb3f4a9bc05"
+    }
+  },
+  "limit": "Only the historical block is retired. No source or proof status changed; ordinary FAST and atomic promotion remain mandatory."
+}

@@ -10,6 +10,25 @@ from source_scope import function_span
 from instructions import zero_clear_projection
 
 
+REGS=['eax','ecx','edx','ebx','esp','ebp','esi','edi']
+
+
+def asm_of(code):
+    """AT&T text for the small fixture encodings used by the projection tests."""
+    b=bytes.fromhex(code)
+    if b[0]==0x31 and len(b)==2: return 'xor    %%%s,%%%s'%(REGS[(b[1]>>3)&7],REGS[b[1]&7])
+    if 0xb8<=b[0]<=0xbf: return 'mov    $0x%x,%%%s'%(int.from_bytes(b[1:5],'little'),REGS[b[0]-0xb8])
+    if b[0]==0xc7 and b[1]==0x85: return 'movl   $0x%x,%s(%%ebp)'%(int.from_bytes(b[6:10],'little'),hex(int.from_bytes(b[2:6],'little',signed=True)))
+    if b[0]==0xc7 and b[1]==0x45: return 'movl   $0x%x,%s(%%ebp)'%(int.from_bytes(b[3:7],'little'),hex(int.from_bytes(b[2:3],'little',signed=True)))
+    if b[0]==0xc6 and b[1]==0x45: return 'movb   $0x%x,%s(%%ebp)'%(b[3],hex(int.from_bytes(b[2:3],'little',signed=True)))
+    if b[:2]==b'\x66\xc7' and b[2]==0x45: return 'movw   $0x%x,%s(%%ebp)'%(int.from_bytes(b[4:6],'little'),hex(int.from_bytes(b[3:4],'little',signed=True)))
+    if b[0]==0x89 and b[1]==0x85: return 'mov    %%eax,%s(%%ebp)'%hex(int.from_bytes(b[2:6],'little',signed=True))
+    if b[0]==0xe8: return 'call   0'
+    if b[0]==0x74: return 'je     0'
+    if b[0]==0x90: return 'nop'
+    return 'unknown'
+
+
 class InterfaceTests(unittest.TestCase):
     def plan(self,text,expected,actual,kind='NF',line=1,cu=False):
         with tempfile.TemporaryDirectory() as tmp:
@@ -134,11 +153,33 @@ class InterfaceTests(unittest.TestCase):
         debug['sha256']='debug may change'; debug['raw_size']+=1
         self.assertEqual(base,contribution_fingerprint(changed))
 
+    def test_declaration_repair_may_change_only_nonexact_functions_toward_history(self):
+        from interface_tasks import interface_emission_effect
+        base=read_json(ROOT/'docs/current/reports/game-fld-adspot.json')
+        self.assertEqual(interface_emission_effect(base,base),('EMISSION_PRESERVED',[]))
+        def variant(name,size=None,section_change=False):
+            after=copy.deepcopy(base); row=next(r for r in after['functions'] if r['name']==name)
+            row['instructions']=row.get('instructions',[])[:-1]
+            if size is not None: row['candidate_size']=size
+            text=next(s for s in after['object_sections'] if s['name']=='.text'); text['sha256']='changed'
+            after['candidate_zero_clear_projection']=dict(after['candidate_zero_clear_projection'],sha256='changed')
+            if section_change:
+                data=next(s for s in after['object_sections'] if s['name']!='.text' and not s['name'].startswith('.debug')); data['sha256']='changed'
+            return after
+        target=next(r for r in base['functions'] if r['status']!='FUNCTION_MATCH'); exact=next(r for r in base['functions'] if r['status']=='FUNCTION_MATCH')
+        hist=target['original_size']
+        effect,changed=interface_emission_effect(base,variant(target['name'],size=hist))
+        self.assertEqual(effect,'HISTORICAL_DECLARATION_EMISSION_CHANGED'); self.assertEqual(changed[0]['function'],target['name'])
+        away=hist+50 if target['candidate_size']<=hist else target['candidate_size']+50
+        with self.assertRaises(ValueError): interface_emission_effect(base,variant(target['name'],size=away))
+        with self.assertRaises(ValueError): interface_emission_effect(base,variant(exact['name'],size=exact['original_size']))
+        with self.assertRaises(ValueError): interface_emission_effect(base,variant(target['name'],size=hist,section_change=True))
+
     def test_independent_register_clear_projection(self):
         def project(codes,**kwargs):
             raw=b''.join(bytes.fromhex(c) for c in codes); rows=[]; off=0
             for code in codes:
-                rows.append({'address':off,'bytes':code,'mnemonic':'xor','assembly':'xor registers'})
+                rows.append({'address':off,'bytes':code,'mnemonic':asm_of(code).split()[0],'assembly':asm_of(code)})
                 off+=len(bytes.fromhex(code))
             return zero_clear_projection(raw,rows,**kwargs)
         base=project(['31f6','31db'])
@@ -154,7 +195,7 @@ class InterfaceTests(unittest.TestCase):
         def project(codes,**kwargs):
             raw=b''.join(bytes.fromhex(c) for c in codes); rows=[]; off=0
             for code in codes:
-                rows.append({'address':off,'bytes':code,'mnemonic':'mov','assembly':'mov immediate'}); off+=len(bytes.fromhex(code))
+                rows.append({'address':off,'bytes':code,'mnemonic':asm_of(code).split()[0],'assembly':asm_of(code)}); off+=len(bytes.fromhex(code))
             return zero_clear_projection(raw,rows,**kwargs)
         ebx='bbf4010000'; slot128='c785d8feffffe8030000'; slot130='c785d0feffff00000000'; slot138='c785c8feffff00000000'
         # The real select_profile permutation: one constant store moved ahead of a register load and other stores.
@@ -165,9 +206,10 @@ class InterfaceTests(unittest.TestCase):
                     (['bc01000000',ebx],[ebx,'bc01000000']),(['bd01000000',ebx],[ebx,'bd01000000']),
                     (['c645f000',slot128.replace('d8feffff','f0ffffff')],[slot128.replace('d8feffff','f0ffffff'),'c645f000'])):
             self.assertNotEqual(project(a)['sha256'],project(b)['sha256'],(a,b))
-        # A register clear may join the run; a non-immediate store, a call or a flag reader may not.
+        # A register clear may join the run and an independent register store reorders with it; a call or a jump may not.
         self.assertEqual(project(['31db',slot128])['sha256'],project([slot128,'31db'])['sha256'])
-        for other in ('8985ccfeffff','e800000000','7402'):
+        self.assertEqual(project([ebx,'8985ccfeffff',slot128])['sha256'],project([slot128,'8985ccfeffff',ebx])['sha256'])
+        for other in ('e800000000','7402'):
             rows=[ebx,other,slot128]; swapped=[slot128,other,ebx]
             self.assertNotEqual(project(rows)['sha256'],project(swapped)['sha256'])
         # Entry targets and relocation fields inside the run block it.
@@ -185,6 +227,29 @@ class InterfaceTests(unittest.TestCase):
             self.assertTrue(re.search(pattern,table),table)
         for register in ('jmp    *%eax','jmp    *0x10(%eax)','call   *%edx'):
             self.assertFalse(re.search(pattern,register),register)
+
+    def test_dependency_schedule_respects_data_flow(self):
+        def project(codes,asms,**kwargs):
+            raw=b''.join(bytes.fromhex(c) for c in codes); rows=[]; off=0
+            for code,a in zip(codes,asms):
+                rows.append({'address':off,'bytes':code,'mnemonic':a.split()[0],'assembly':a}); off+=len(bytes.fromhex(code))
+            return zero_clear_projection(raw,rows,**kwargs)
+        lea=('8d85e8f7ffff','lea    -0x818(%ebp),%eax'); st=('8985b4f7ffff','mov    %eax,-0x84c(%ebp)')
+        clr=('31db','xor    %ebx,%ebx'); imm=('c785d8f7ffff00000000','movl   $0x0,-0x828(%ebp)'); cx=('66b90004','mov    $0x400,%cx')
+        a=project(*zip(clr,imm,cx,lea,st)); b=project(*zip(cx,lea,st,clr,imm))
+        self.assertEqual(a['sha256'],b['sha256']); self.assertEqual(a['blocks'][0]['kind'],'dependency_schedule')
+        # The lea must stay before the store that reads eax: an order violating that is a different program.
+        c=project(*zip(st,lea,clr,imm,cx))
+        self.assertNotEqual(a['sha256'],c['sha256'])
+        # A store into a slot that a later load reads keeps its order (RAW through memory).
+        load=('8b85b4f7ffff','mov    -0x84c(%ebp),%eax')
+        d1=project(*zip(st,load,clr)); d2=project(*zip(load,st,clr))
+        self.assertNotEqual(d1['sha256'],d2['sha256'])
+        # Overlapping slots of different widths are dependent; an instruction with an unknown base breaks the run.
+        e1=project(*zip(imm,('c685d9f7ffff01','movb   $0x1,-0x827(%ebp)'))); e2=project(*zip(('c685d9f7ffff01','movb   $0x1,-0x827(%ebp)'),imm))
+        self.assertNotEqual(e1['sha256'],e2['sha256'])
+        f1=project(*zip(clr,('8b00','mov    (%eax),%eax'),imm)); f2=project(*zip(imm,('8b00','mov    (%eax),%eax'),clr))
+        self.assertNotEqual(f1['sha256'],f2['sha256'])
 
     def test_operand_swapped_compare_jump_pairs_canonicalize_only_when_flags_die(self):
         def project(codes,mnems,**kwargs):

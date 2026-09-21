@@ -1,3 +1,4 @@
+extern void log2file(const char*, ...);
 /* Partial historical fld_adspot.c recovery. */
 #include <string.h>
 #include <stdlib.h>

@@ -4,9 +4,70 @@
   "candidate_text_logical_size": 235,
   "candidate_text_raw_size": 236,
   "candidate_zero_clear_projection": {
-    "sha256": "d086bf05de807ec6856846835f0a56e45a05f4b83e5be3367ee2d7180300085c",
-    "blocks": [],
-    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
+    "sha256": "494a23e799f01de2cba4d6db38a68388863995c2233038dcfb54c70c59fede6b",
+    "blocks": [
+      {
+        "start": 85,
+        "end": 99,
+        "original_bytes": "8b45088944240889742404891c24",
+        "canonical_bytes": "891c24897424048b450889442408",
+        "instructions": [
+          {
+            "address": 85,
+            "bytes": "8b4508",
+            "mnemonic": "mov",
+            "assembly": "mov    0x8(%ebp),%eax"
+          },
+          {
+            "address": 88,
+            "bytes": "89442408",
+            "mnemonic": "mov",
+            "assembly": "mov    %eax,0x8(%esp)"
+          },
+          {
+            "address": 92,
+            "bytes": "89742404",
+            "mnemonic": "mov",
+            "assembly": "mov    %esi,0x4(%esp)"
+          },
+          {
+            "address": 96,
+            "bytes": "891c24",
+            "mnemonic": "mov",
+            "assembly": "mov    %ebx,(%esp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      },
+      {
+        "start": 108,
+        "end": 123,
+        "original_bytes": "c74424080000000089442404891c24",
+        "canonical_bytes": "891c2489442404c744240800000000",
+        "instructions": [
+          {
+            "address": 108,
+            "bytes": "c744240800000000",
+            "mnemonic": "movl",
+            "assembly": "movl   $0x0,0x8(%esp)"
+          },
+          {
+            "address": 116,
+            "bytes": "89442404",
+            "mnemonic": "mov",
+            "assembly": "mov    %eax,0x4(%esp)"
+          },
+          {
+            "address": 120,
+            "bytes": "891c24",
+            "mnemonic": "mov",
+            "assembly": "mov    %ebx,(%esp)"
+          }
+        ],
+        "kind": "dependency_schedule"
+      }
+    ],
+    "scope": "Only candidate scheduling preservation: dependency-respecting reorderings of straight-line register/immediate/stack-slot moves, and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
   },
   "literal_anchor_evidence": [],
   "functions": [
@@ -2416,8 +2477,8 @@
       "sha256": "aa92b816663b14e59e076abb3ee7f57f8baa404bb3d47b98e1dd10a434c494ae"
     },
     "tools/instructions.py": {
-      "size": 10018,
-      "sha256": "9709aa16b9159295aa6d5fd6f1eb6c4a894b8a29da9cf2203a868987544de6c7"
+      "size": 14266,
+      "sha256": "0fd92b1292c6aed9152a3a04bdc574880459ad84b9d154e443f89033f40a1bd7"
     },
     "tools/build.py": {
       "size": 10104,
@@ -2526,8 +2587,8 @@
       "sha256": "4819ae389f9f88f7bc747fa10fd5747300a3f3451acb128bc84214abb874ac9b"
     },
     "tools/interface_tasks.py": {
-      "size": 13978,
-      "sha256": "05d196f9303aa213f05df1958fa52ce9418319bde10d82d926a8275ae7b77820"
+      "size": 17138,
+      "sha256": "71b854f08364dadcc7162273a1391f587486132e71177f33a31d850cc02c32f4"
     },
     "tools/card_view.py": {
       "size": 5396,

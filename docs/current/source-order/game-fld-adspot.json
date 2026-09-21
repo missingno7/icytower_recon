@@ -15,64 +15,64 @@
   "changes": [
     {
       "file": "src/fld_adspot.c",
-      "start": 819,
-      "end": 1168,
+      "start": 859,
+      "end": 1208,
       "before": "void fldads_destroy_cache(void)\n{\n    if (gpAdCache) {\n        int i;\n        for (i = 0; i < giAdCacheSize; i++) {\n            free(gpAdCache[i].pLocalImagePath);\n            free(gpAdCache[i].pRemoteImageURL);\n            free(gpAdCache[i].pVisitURL);\n        }\n        free(gpAdCache);\n        gpAdCache = NULL;\n        giAdCacheSize = 0;\n    }\n}",
       "after": "const char *get_url_filename(const char *pURL)\n{\n    char *p;\n    p = pURL + strlen(pURL) - 1;\n    while (*(p - 1) != '/') {\n        p--;\n    }\n    return p;\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 1423,
-      "end": 1866,
+      "start": 1463,
+      "end": 1906,
       "before": "void fldads_dump_local_cache(void)\n{\n    FILE *fp = fopen(fldads_get_local_cache_name(\"ads.csv\"), \"wb\");\n    if (fp) {\n        int i;\n        pthread_mutex_lock(&gFLDADMutex);\n        for (i = 0; i < giAdCacheSize; i++) {\n            fprintf(fp, \"%s,%s,%.1f\\n\", gpAdCache[i].pRemoteImageURL,\n                    gpAdCache[i].pVisitURL, gpAdCache[i].fFrequency);\n        }\n        pthread_mutex_unlock(&gFLDADMutex);\n        fclose(fp);\n    }\n}",
       "after": "const char *fldads_get_local_filename_from_url(const char *pRemoteName)\n{\n    return fldads_get_local_cache_name(get_url_filename(pRemoteName));\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 1868,
-      "end": 2027,
+      "start": 1908,
+      "end": 2067,
       "before": "const char *get_url_filename(const char *pURL)\n{\n    char *p;\n    p = pURL + strlen(pURL) - 1;\n    while (*(p - 1) != '/') {\n        p--;\n    }\n    return p;\n}",
       "after": "void fldads_destroy_cache(void)\n{\n    if (gpAdCache) {\n        int i;\n        for (i = 0; i < giAdCacheSize; i++) {\n            free(gpAdCache[i].pLocalImagePath);\n            free(gpAdCache[i].pRemoteImageURL);\n            free(gpAdCache[i].pVisitURL);\n        }\n        free(gpAdCache);\n        gpAdCache = NULL;\n        giAdCacheSize = 0;\n    }\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 2029,
-      "end": 2175,
+      "start": 2069,
+      "end": 2215,
       "before": "const char *fldads_get_local_filename_from_url(const char *pRemoteName)\n{\n    return fldads_get_local_cache_name(get_url_filename(pRemoteName));\n}",
       "after": "void fldads_update_local_adimg(const char *pRemoteName)\n{\n    char *localFilename = fldads_get_local_filename_from_url(pRemoteName);\n    struct stat localStat;\n    HTTPResponse *pResponse;\n\n    if (!stat(localFilename, &localStat)) {\n        time_t lastModified;\n        HTTPResponse *pHead = HTTPHead(pRemoteName);\n        if (pHead && pHead->iStatusCode == 200) {\n            lastModified = httpGetLastModified(pHead);\n            if (lastModified && localStat.st_mtime >= lastModified) {\n                log2file(\"Local file %s is newer (%d) than server (%d), using local\",\n                         localFilename, localStat.st_mtime, lastModified);\n                return;\n            }\n        }\n    }\n\n    pResponse = HTTPGet(pRemoteName);\n    log2file(\"Downloading %s -> %s\", pRemoteName, localFilename);\n    if (pResponse && pResponse->iStatusCode == 200) {\n        FILE *fp = fopen(localFilename, \"wb\");\n        if (fp) {\n            fwrite(pResponse->pPayload, 1, pResponse->iPayloadSize, fp);\n            fclose(fp);\n        }\n    }\n    destroyHTTPResponse(pResponse);\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 3557,
-      "end": 4637,
+      "start": 3597,
+      "end": 4677,
       "before": "void fldads_update_local_adimg(const char *pRemoteName)\n{\n    char *localFilename = fldads_get_local_filename_from_url(pRemoteName);\n    struct stat localStat;\n    HTTPResponse *pResponse;\n\n    if (!stat(localFilename, &localStat)) {\n        time_t lastModified;\n        HTTPResponse *pHead = HTTPHead(pRemoteName);\n        if (pHead && pHead->iStatusCode == 200) {\n            lastModified = httpGetLastModified(pHead);\n            if (lastModified && localStat.st_mtime >= lastModified) {\n                log2file(\"Local file %s is newer (%d) than server (%d), using local\",\n                         localFilename, localStat.st_mtime, lastModified);\n                return;\n            }\n        }\n    }\n\n    pResponse = HTTPGet(pRemoteName);\n    log2file(\"Downloading %s -> %s\", pRemoteName, localFilename);\n    if (pResponse && pResponse->iStatusCode == 200) {\n        FILE *fp = fopen(localFilename, \"wb\");\n        if (fp) {\n            fwrite(pResponse->pPayload, 1, pResponse->iPayloadSize, fp);\n            fclose(fp);\n        }\n    }\n    destroyHTTPResponse(pResponse);\n}",
       "after": "void fldads_dump_local_cache(void)\n{\n    FILE *fp = fopen(fldads_get_local_cache_name(\"ads.csv\"), \"wb\");\n    if (fp) {\n        int i;\n        pthread_mutex_lock(&gFLDADMutex);\n        for (i = 0; i < giAdCacheSize; i++) {\n            fprintf(fp, \"%s,%s,%.1f\\n\", gpAdCache[i].pRemoteImageURL,\n                    gpAdCache[i].pVisitURL, gpAdCache[i].fFrequency);\n        }\n        pthread_mutex_unlock(&gFLDADMutex);\n        fclose(fp);\n    }\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 5045,
-      "end": 5138,
+      "start": 5085,
+      "end": 5178,
       "before": "void fldads_start(void)\n{\n    pthread_create(&gFLDADThread, NULL, fldads_threadmain, NULL);\n}",
       "after": "const FLDAdSpot *fldads_get_random_ad(void)\n{\n    FLDAdSpot *pAd = NULL;\n\n    pthread_mutex_lock(&gFLDADMutex);\n    if (giAdCacheSize > 0) {\n        float fCumulativeProbability = 0.0f;\n        int i;\n        for (i = 0; i < giAdCacheSize; i++) {\n            fCumulativeProbability += gpAdCache[i].fFrequency;\n        }\n        {\n            float f = ((float)rand() / RAND_MAX) * fCumulativeProbability;\n            int iChoice;\n            iChoice = 0;\n            while (iChoice < giAdCacheSize && f >= 0.0f) {\n                pAd = &gpAdCache[iChoice++];\n                f -= pAd->fFrequency;\n            }\n        }\n    }\n    pthread_mutex_unlock(&gFLDADMutex);\n    return pAd;\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 5140,
-      "end": 5824,
+      "start": 5180,
+      "end": 5864,
       "before": "const FLDAdSpot *fldads_get_random_ad(void)\n{\n    FLDAdSpot *pAd = NULL;\n\n    pthread_mutex_lock(&gFLDADMutex);\n    if (giAdCacheSize > 0) {\n        float fCumulativeProbability = 0.0f;\n        int i;\n        for (i = 0; i < giAdCacheSize; i++) {\n            fCumulativeProbability += gpAdCache[i].fFrequency;\n        }\n        {\n            float f = ((float)rand() / RAND_MAX) * fCumulativeProbability;\n            int iChoice;\n            iChoice = 0;\n            while (iChoice < giAdCacheSize && f >= 0.0f) {\n                pAd = &gpAdCache[iChoice++];\n                f -= pAd->fFrequency;\n            }\n        }\n    }\n    pthread_mutex_unlock(&gFLDADMutex);\n    return pAd;\n}",
       "after": "void *fldads_threadmain(void *data)\n{\n    int shouldDownloadAds;\n    struct stat statCsv;\n\n    fldads_load_local_cache();\n    shouldDownloadAds = stat(fldads_get_local_cache_name(\"ads.csv\"), &statCsv);\n    if (!shouldDownloadAds && statCsv.st_mtime + 259200 < time(NULL)) {\n        shouldDownloadAds = 1;\n    }\n    if (shouldDownloadAds) {\n        HTTPResponse *pResponse;\n        log2file(\"Downloading ad listing\");\n        pResponse = HTTPGet(\"http://www.icytower.com/icytower_pc.csv\");\n        if (pResponse && pResponse->iStatusCode == 200 && pResponse->pPayload) {\n            fldads_update_cache(pResponse->pPayload, pResponse->iPayloadSize);\n        } else {\n            log2file(\"Could not fetch ad listing from http://www.icytower.com/icytower_pc.csv (%d), skipping ad update\",\n                     pResponse ? pResponse->iStatusCode : 0);\n        }\n        destroyHTTPResponse(pResponse);\n    } else {\n        log2file(\"Cached ads are up to date\");\n    }\n    log2file(\"There are %d available ad spots.\", giAdCacheSize);\n    return NULL;\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
     },
     {
       "file": "src/fld_adspot.c",
-      "start": 5826,
-      "end": 6874,
+      "start": 5866,
+      "end": 6914,
       "before": "void *fldads_threadmain(void *data)\n{\n    int shouldDownloadAds;\n    struct stat statCsv;\n\n    fldads_load_local_cache();\n    shouldDownloadAds = stat(fldads_get_local_cache_name(\"ads.csv\"), &statCsv);\n    if (!shouldDownloadAds && statCsv.st_mtime + 259200 < time(NULL)) {\n        shouldDownloadAds = 1;\n    }\n    if (shouldDownloadAds) {\n        HTTPResponse *pResponse;\n        log2file(\"Downloading ad listing\");\n        pResponse = HTTPGet(\"http://www.icytower.com/icytower_pc.csv\");\n        if (pResponse && pResponse->iStatusCode == 200 && pResponse->pPayload) {\n            fldads_update_cache(pResponse->pPayload, pResponse->iPayloadSize);\n        } else {\n            log2file(\"Could not fetch ad listing from http://www.icytower.com/icytower_pc.csv (%d), skipping ad update\",\n                     pResponse ? pResponse->iStatusCode : 0);\n        }\n        destroyHTTPResponse(pResponse);\n    } else {\n        log2file(\"Cached ads are up to date\");\n    }\n    log2file(\"There are %d available ad spots.\", giAdCacheSize);\n    return NULL;\n}",
       "after": "void fldads_start(void)\n{\n    pthread_create(&gFLDADThread, NULL, fldads_threadmain, NULL);\n}",
       "reason": "Move the complete unchanged definition to its original DWARF source-order slot"
@@ -80,8 +80,8 @@
   ],
   "source_identities": {
     "src/fld_adspot.c": {
-      "size": 6875,
-      "sha256": "5b41ac3fa66a2e4e25eba850ffaf26e27b1a9f169cf2c501db3926c671d9ce89"
+      "size": 6915,
+      "sha256": "63cae566d113744f2149bcfdbf710bd8b06456042dc3e1166929cb5eae25fb56"
     }
   },
   "body_edit_allowed": false,

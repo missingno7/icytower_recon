@@ -126,6 +126,93 @@ def compare_jump(raw, rows, index, targets_by_address):
     return off,end,canonical+jnew
 
 
+REG32={'eax':0,'ecx':1,'edx':2,'ebx':3,'esp':4,'ebp':5,'esi':6,'edi':7}
+SUBREG={'al':'eax','ax':'eax','cl':'ecx','cx':'ecx','dl':'edx','dx':'edx','bl':'ebx','bx':'ebx','si':'esi','di':'edi','ah':'eax','ch':'ecx','dh':'edx','bh':'ebx'}
+MEM_RE=re.compile(r'^(-?0x[0-9a-f]+|-?\d+)?\(%(ebp|esp)\)$')
+WIDTH={'movl':4,'movw':2,'movb':1,'mov':None,'lea':4,'xor':4}
+
+
+def operand(text):
+    """Classify one AT&T operand: ('reg',name) | ('imm',) | ('mem',base,disp) | None."""
+    text=text.strip()
+    if text.startswith('$'): return ('imm',)
+    if text.startswith('%'):
+        name=text[1:]
+        if name in REG32: return ('reg',name)
+        if name in SUBREG: return ('reg',SUBREG[name])
+        return None
+    m=MEM_RE.match(text)
+    if m: return ('mem',m[2],int(m[1] or '0',16) if (m[1] or '0').lstrip('-').startswith('0x') else int(m[1] or '0'))
+    return None
+
+
+def resources(row):
+    """(reads, writes, flags_written) for an allowed straight-line instruction, or None.
+
+    Allowed: mov/movl/movw/movb between registers, immediates and EBP/ESP-relative slots;
+    lea of an EBP/ESP-relative address into a register; xor r,r register clears. Memory
+    resources are ('mem',base,start,end) byte ranges; registers are their 32-bit parent.
+    """
+    mnem=row['mnemonic']
+    if mnem not in WIDTH: return None
+    body=row['assembly'][len(mnem):].strip()
+    parts=[x for x in re.split(r',(?![^(]*\))',body)] if body else []
+    if len(parts)!=2: return None
+    src,dst=operand(parts[0]),operand(parts[1])
+    if src is None or dst is None or dst[0]=='imm': return None
+    reads=set(); writes=set(); flags=False
+    def mem(op,width):
+        if width is None: return None
+        return ('mem',op[1],op[2],op[2]+width)
+    if mnem=='xor':
+        if src[0]!='reg' or dst[0]!='reg' or src[1]!=dst[1] or src[1] in ('esp','ebp'): return None
+        # Every register clear leaves identical flags, so clears never need mutual ordering.
+        return {('reg',src[1])},{('reg',src[1])},False
+    if mnem=='lea':
+        if src[0]!='mem' or dst[0]!='reg' or dst[1] in ('esp','ebp'): return None
+        return {('reg',src[1])},{('reg',dst[1])},False
+    width=WIDTH[mnem]
+    if width is None:  # plain mov: width from a register operand
+        sub=[x.strip()[1:] for x in parts if x.strip().startswith('%')]
+        if not sub: return None
+        name=sub[0]; width=4 if name in REG32 else 2 if name in ('ax','cx','dx','bx','si','di') else 1
+    if src[0]=='mem':
+        m=mem(src,width); reads|={m,('reg',src[1])}
+    elif src[0]=='reg': reads.add(('reg',src[1]))
+    if dst[0]=='mem':
+        m=mem(dst,width); writes.add(m); reads.add(('reg',dst[1]))
+    elif dst[0]=='reg':
+        if dst[1] in ('esp','ebp'): return None
+        writes.add(('reg',dst[1]))
+    if src[0]=='mem' and dst[0]=='mem': return None
+    return reads,writes,flags
+
+
+def conflicts(a,b):
+    """True when resource sets of two instructions force their relative order."""
+    def overlap(x,y):
+        if x==y: return True
+        if x[0]=='mem' and y[0]=='mem': return x[1]==y[1] and x[2]<y[3] and y[2]<x[3]
+        return False
+    ra,wa,fa=a; rb,wb,fb=b
+    if fa and fb: return True
+    return any(overlap(x,y) for x in wa for y in rb|wb) or any(overlap(x,y) for x in ra for y in wb)
+
+
+def canonical_schedule(items):
+    """Deterministic topological order: among ready instructions choose the smallest byte string."""
+    n=len(items); before={i:set() for i in range(n)}
+    for i in range(n):
+        for j in range(i+1,n):
+            if conflicts(items[i][1],items[j][1]): before[j].add(i)
+    done=set(); order=[]
+    while len(order)<n:
+        ready=[i for i in range(n) if i not in done and before[i]<=done]
+        pick=min(ready,key=lambda i:(bytes.fromhex(items[i][0]['bytes']),i))
+        order.append(pick); done.add(pick)
+    return [items[i][0] for i in order]
+
+
 def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
     """Candidate-to-candidate scheduling evidence, NEVER original matching.
 
@@ -143,22 +230,27 @@ def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
             m=re.match(r'\S+\s+([0-9a-f]+)(?:\s|$)',row['assembly'])
             if m: targets.add(int(m[1],16))
     canonical=bytearray(raw); blocks=[]; pos=0
+    def admissible(row):
+        code=bytes.fromhex(row['bytes']); off=row['address']
+        if any(a<=off<b for a,b in forbidden_ranges) or raw[off:off+len(code)]!=code: return None
+        if any(off<t<off+len(code) for t in targets): return None  # relocation field or entry inside the instruction
+        return resources(row)
     while pos<len(rows):
-        first=independent_write(raw,rows[pos],forbidden_ranges)
+        first=admissible(rows[pos])
         if first is None: pos+=1; continue
         run_=[(rows[pos],first)]; pos+=1
         while pos<len(rows):
-            nxt=independent_write(raw,rows[pos],forbidden_ranges); prev=run_[-1][0]
+            nxt=admissible(rows[pos]); prev=run_[-1][0]
             if nxt is None or rows[pos]['address']!=prev['address']+len(bytes.fromhex(prev['bytes'])): break
             run_.append((rows[pos],nxt)); pos+=1
         start=run_[0][0]['address']; last=run_[-1][0]; end=last['address']+len(bytes.fromhex(last['bytes']))
         if len(run_)<2 or any(start<t<end for t in targets): continue
-        if not _disjoint([d for _,(d,_) in run_]): continue
-        codes=[bytes.fromhex(i['bytes']) for i,_ in run_]
-        if len(set(codes))!=len(codes): continue
-        canonical[start:end]=b''.join(sorted(codes))
+        ordered=canonical_schedule(run_)
+        code=b''.join(bytes.fromhex(i['bytes']) for i in ordered)
+        if code==raw[start:end]: continue
+        canonical[start:end]=code
         blocks.append({'start':start,'end':end,'original_bytes':raw[start:end].hex(),
-                       'canonical_bytes':bytes(canonical[start:end]).hex(),'instructions':[i for i,_ in run_]})
+                       'canonical_bytes':code.hex(),'instructions':[i for i,_ in run_],'kind':'dependency_schedule'})
     # Operand-swapped compares with inverted ordering conditions whose flags die at the jump.
     by_address={row['address']:row for row in rows}
     for index,row in enumerate(rows):
@@ -178,4 +270,4 @@ def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
                            'kind':'compare_operand_order'})
             canonical[start:end]=code
     return {'sha256':sha(canonical),'blocks':blocks,
-            'scope':'Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence.'}
+            'scope':'Only candidate scheduling preservation: dependency-respecting reorderings of straight-line register/immediate/stack-slot moves, and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence.'}

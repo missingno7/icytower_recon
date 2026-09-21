@@ -536,3 +536,13 @@ fresh 25-CU verification; a literal inside an exact body is not edited through t
 Evidence is retained under `docs/attempts/pool-literals/`. The verifier also resolves a
 non-unique literal between two agreeing unique anchors when its bytes recur at the derived
 address (`read-only pool run` resolution); this never consults the tested operand.
+
+An INTERFACE repair whose historical signature is unique may change emitted code in
+functions that are not exact, but only toward history: each changed function must reach
+its historical size, move closer to it, or differ in fewer bytes at equal size; non-code
+sections, non-text relocations, symbols outside .text, common allocations and proven data
+owners must be unchanged, and exact functions remain protected by the regression check.
+The receipt records `emission_changes` with state HISTORICAL_DECLARATION_EMISSION_CHANGED.
+Type and view tasks keep the strict unchanged-emission gate. The preservation projection
+now canonicalizes any dependency-respecting reordering of straight-line register,
+immediate and EBP/ESP-slot moves (including lea) and operand-swapped compare/jump pairs.

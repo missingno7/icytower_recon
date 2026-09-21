@@ -10,19 +10,13 @@
 
 #include "recovered/HTTPHeader.h"
 
-typedef struct HTTPResponse {
-    int iStatusCode;
-    unsigned int iNumHeaders;
-    HTTPHeader *pHeaders;
-    unsigned char *pPayload;
-    unsigned int iPayloadSize;
-} HTTPResponse;
+#include "recovered/HTTPResponse.h"
 
 HTTPResponse *HTTPRequest(const char *pURL, const char *pMethod);
 int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,
                                 const char *pMethod);
-void log2file(char *fmt, ...);
+void log2file(const char *fmt, ...);
 char *strptime(const char *s, const char *format, struct tm *tm);
 time_t timegm(struct tm *tm);
 

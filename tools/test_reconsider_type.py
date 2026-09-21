@@ -22,6 +22,11 @@ class ReconsiderTests(unittest.TestCase):
         require_preservation(good,'cu','type')
         bad=copy.deepcopy(good); bad['variants'][1]['contribution_diagnostics']['preservation_fingerprint_equal']=False
         with self.assertRaises(ValueError):require_preservation(bad,'cu','type')
+        # An interface recipe may reopen when the declaration emission policy accepts the canonical variant.
+        ok=copy.deepcopy(good); ok['variants'][1]['contribution_diagnostics']['preservation_fingerprint_equal']=False; ok['variants'][1]['interface_emission']={'effect':'HISTORICAL_DECLARATION_EMISSION_CHANGED','functions':[]}
+        require_preservation(ok,'cu','type')
+        ok['variants'][1]['interface_emission']={'effect':'REJECTED','error':'away'}
+        with self.assertRaises(ValueError):require_preservation(ok,'cu','type')
         # The overlay baseline itself must reproduce raw contributions; a projected match is not enough there.
         bad=copy.deepcopy(good); bad['variants'][0]['raw_baseline_equal']=False; bad['variants'][0]['contribution_diagnostics']={'preservation_fingerprint_equal':True}
         with self.assertRaises(ValueError):require_preservation(bad,'cu','type')

@@ -1299,3 +1299,22 @@ Definition placeholders (`void *fp` for PACKFILE, `void *bmp` for BITMAP) are re
 place by the typed recipe, and a library-typed prototype is inserted after the last include
 that precedes the first definition. Seven interface tasks became mechanical, including
 get_string, a prerequisite of four bodies.
+
+
+## Dependency-aware preservation and the declaration emission policy
+
+Three shapes of the same declaration-context effect had accumulated: reordered independent
+writes, operand-swapped compares, and a lea/store pair moved across independent writes in
+extractHTTPResponse. The candidate preservation projection now computes exact register,
+stack-slot and flag dependencies over straight-line runs of the allowed instruction forms
+and canonicalizes every dependency-respecting order to one deterministic schedule; a loop
+head that jumps to a compare no longer blocks its pair. This reopened the httpget
+HTTPResponse view and the Tprofile_general view, both of which promoted.
+
+Declaration repairs with a unique historical signature no longer require unchanged emission
+in non-exact functions: log2file's prototype was rejected for months because it changed
+fldads_threadmain from 204 to its historical 223 bytes. Such changes are now accepted when
+every changed function moves toward history and nothing outside code changes; exact functions
+stay protected. log2file promoted and removed four caller prerequisites; the vector_2
+prototype still waits because play (a 623-byte stub of a 17420-byte function) changes
+neutrally under it.

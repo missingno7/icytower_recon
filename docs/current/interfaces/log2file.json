@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "log2file",
-  "source": "src/main.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -20,98 +16,5 @@
       "die": 127883
     }
   ],
-  "type_layout_issues": [],
-  "changes": [
-    {
-      "start": 0,
-      "end": 0,
-      "before": "",
-      "after": "extern void log2file(const char*, ...);\n",
-      "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
-      "file": "src/fld_adspot.c",
-      "line": 99
-    },
-    {
-      "start": 834,
-      "end": 848,
-      "before": "char *fmt, ...",
-      "after": "const char *fmt, ...",
-      "reason": "Use the DWARF parameter qualifiers/prototype",
-      "file": "src/httpget.c",
-      "line": 25
-    },
-    {
-      "start": 11722,
-      "end": 11739,
-      "before": "char *format, ...",
-      "after": "const char *format, ...",
-      "reason": "Use the DWARF parameter qualifiers/prototype",
-      "file": "src/profile.c",
-      "line": 384
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check log2file",
-  "begin_command": "python tools/interface_task.py begin log2file",
-  "apply_command": "python tools/interface_task.py apply log2file",
-  "promotion_command": "python tools/interface_task.py promote log2file",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "sources": [
-    "src/fld_adspot.c",
-    "src/httpget.c",
-    "src/profile.c"
-  ],
-  "source_identities": {
-    "src/fld_adspot.c": {
-      "size": 6875,
-      "sha256": "5b41ac3fa66a2e4e25eba850ffaf26e27b1a9f169cf2c501db3926c671d9ce89"
-    },
-    "src/httpget.c": {
-      "size": 8333,
-      "sha256": "fe88c88e3dc547fc60101244f44f75abe09c0b17752381806647632bcb3a4836"
-    },
-    "src/profile.c": {
-      "size": 28787,
-      "sha256": "df319daa43c876dea5819314b90bad731c1e4d078ffdbfeb98babbb3f4a9bc05"
-    }
-  },
-  "affected_targets": [
-    "game-fld-adspot",
-    "game-httpget",
-    "game-profile"
-  ],
-  "priority": -100,
-  "expected_prototype": "extern void log2file(const char*, ...);",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-  "supervisor_block": {
-    "reason": "check failed: Focused contribution evidence: build/fast/interfaces/log2file/game-fld-adspot/contribution-difference.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-fld-adspot",
-    "changes": [
-      {
-        "start": 0,
-        "end": 0,
-        "before": "",
-        "after": "extern void log2file(const char*, ...);\n",
-        "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
-        "file": "src/fld_adspot.c",
-        "line": 104
-      },
-      {
-        "start": 879,
-        "end": 893,
-        "before": "char *fmt, ...",
-        "after": "const char *fmt, ...",
-        "reason": "Use the DWARF parameter qualifiers/prototype",
-        "file": "src/httpget.c",
-        "line": 28
-      },
-      {
-        "start": 12792,
-        "end": 12809,
-        "before": "char *format, ...",
-        "after": "const char *format, ...",
-        "reason": "Use the DWARF parameter qualifiers/prototype",
-        "file": "src/profile.c",
-        "line": 416
-      }
-    ]
-  }
+  "changes": []
 }

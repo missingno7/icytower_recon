@@ -142,8 +142,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 484,
-    "body_end_line": 534,
+    "body_start_line": 477,
+    "body_end_line": 527,
     "body_sha256": "860720f9c5a698bd342fedaf356b56b96e94254723ad24ae3f61a732ec0c8229"
   },
   "reference_diagnostics": [],
@@ -239,7 +239,7 @@
         "original_bytes": 80,
         "candidate_bytes": 100,
         "candidate_minus_original": 20,
-        "candidate_source_line": 491
+        "candidate_source_line": 484
       }
     ],
     "local_inventory": {
@@ -259,12 +259,12 @@
           ],
           "candidate": [
             {
-              "die": 9577,
+              "die": 9478,
               "type": "char [100]",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 100,
               "location": "3 byte block: 91 fc 7e \t(DW_OP_fbreg: -132)",
-              "declaration_line": 491
+              "declaration_line": 484
             }
           ]
         },
@@ -283,12 +283,12 @@
           ],
           "candidate": [
             {
-              "die": 9472,
+              "die": 9373,
               "type": "char *",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": null,
-              "declaration_line": 485
+              "declaration_line": 478
             }
           ]
         },
@@ -307,12 +307,12 @@
           ],
           "candidate": [
             {
-              "die": 9538,
+              "die": 9439,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": "0x5ef (location list)",
-              "declaration_line": 489
+              "declaration_line": 482
             }
           ]
         },
@@ -331,12 +331,12 @@
           ],
           "candidate": [
             {
-              "die": 9520,
+              "die": 9421,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": "0x5a5 (location list)",
-              "declaration_line": 488
+              "declaration_line": 481
             }
           ]
         },
@@ -355,12 +355,12 @@
           ],
           "candidate": [
             {
-              "die": 9605,
+              "die": 9506,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": "0x618 (location list)",
-              "declaration_line": 493
+              "declaration_line": 486
             }
           ]
         },
@@ -379,12 +379,12 @@
           ],
           "candidate": [
             {
-              "die": 9593,
+              "die": 9494,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": null,
-              "declaration_line": 492
+              "declaration_line": 485
             }
           ]
         },
@@ -403,12 +403,12 @@
           ],
           "candidate": [
             {
-              "die": 9500,
+              "die": 9401,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": "0x592 (location list)",
-              "declaration_line": 487
+              "declaration_line": 480
             }
           ]
         },
@@ -427,12 +427,12 @@
           ],
           "candidate": [
             {
-              "die": 9484,
+              "die": 9385,
               "type": "int",
-              "scope": 9387,
+              "scope": 9288,
               "byte_size": 4,
               "location": null,
-              "declaration_line": 486
+              "declaration_line": 479
             }
           ]
         }
@@ -585,7 +585,7 @@
         "original_type": "char [80]",
         "candidate_type": "char [100]",
         "original_die": 198505,
-        "candidate_die": 9577,
+        "candidate_die": 9478,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -1678,7 +1678,7 @@
     "cu_same_predecessor_count": 8,
     "cu_function_count": 17,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 0,
+    "priority_adjustment": 5,
     "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [
@@ -1714,13 +1714,13 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "difficulty": "MEDIUM",
+  "priority": 75,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1765,121 +1765,8 @@
     }
   ],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "profile_data_page_general",
-      "source": "src/profile.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "profile_data_page_general",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "char*",
-          "parameter_types": [
-            "Tprofile*",
-            "char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 198319
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_general",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1344,
-          "member_difference_count": 28,
-          "first_member_differences": [
-            {
-              "member": "before_creation_date",
-              "historical": null,
-              "candidate": {
-                "offset": 60,
-                "size": 1268,
-                "type": "unsigned char [1268]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_games_played",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_score",
-              "historical": {
-                "offset": 84,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 483
-        }
-      ],
-      "candidate_signatures": [
-        "('char*', ['Tprofile_general*', 'char*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/profile_data_page_general.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/profile/profile_data_page_general.json",
   "evidence_counts": {

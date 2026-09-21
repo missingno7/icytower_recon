@@ -22,7 +22,9 @@ def require_preservation(result,target,task):
         if len(rows)!=1:raise ValueError('Raw contribution preservation unproven: '+target+':'+label)
         row=rows[0]
         if label=='baseline' and row.get('raw_baseline_equal') is not True:raise ValueError('Raw contribution preservation unproven: '+target+':'+label)
-        preserved=row.get('raw_baseline_equal') is True or (row.get('contribution_diagnostics') or {}).get('preservation_fingerprint_equal') is True
+        accepted_effects=('EMISSION_PRESERVED','HISTORICAL_DECLARATION_EMISSION_CHANGED')
+        preserved=(row.get('raw_baseline_equal') is True or (row.get('contribution_diagnostics') or {}).get('preservation_fingerprint_equal') is True
+                   or (row.get('interface_emission') or {}).get('effect') in accepted_effects)
         if label=='canonical' and not preserved:raise ValueError('Contribution preservation unproven: '+target+':'+label)
 
 
