@@ -1,5 +1,8 @@
+#include "recovered/Tcontrol.h"
+#include <stdio.h>
 #include <allegro.h>
 #include "recovered/Tcontrol.h"
+extern void save_control(Tcontrol*, FILE*);
 extern void poll_control(Tcontrol*, int);
 extern int is_up(Tcontrol*);
 extern int is_fire(Tcontrol*);
@@ -331,7 +334,7 @@ typedef Tprofile Tprofile_load;
 extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
                                        const char *profile);
 extern Tcontrol *get_controls(void);
-extern void load_control(void *control, void *fp);
+extern void load_control(Tcontrol*, FILE*);
 
 Tprofile_load *load_profile(char *handle)
 {

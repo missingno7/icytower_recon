@@ -1,3 +1,4 @@
+#include "recovered/Tcontrol.h"
 #include "recovered/Thisc_table.h"
 extern void destroy_hisc_table(Thisc_table*);
 extern void update_frame(void);
@@ -980,7 +981,7 @@ void blit_to_screen(BITMAP *bmp)
 /* Partial source recovery of main.c:3405, 0x411a00..0x415e0c.  This retains
  * the oracle's real game-state ownership and phase order while the remaining
  * results/replay branches are being recovered instruction by instruction. */
-extern void handle_player_input(void *control);
+extern void handle_player_input(Tcontrol*);
 extern void update_player(Tplayer *p);
 extern int jump_player(Tplayer *p, int force);
 extern void play_jump_sound(Tplayer *p);
@@ -2304,7 +2305,7 @@ void handle_player_collision_combo(int lastX, int lastY)
 
 /* Partial recovery of main.c, 0x40b3e4..0x40b6bc.  This is the oracle's
  * normal-control path; replay control recording remains to be restored. */
-void handle_player_input(void *control)
+void handle_player_input(Tcontrol *control)
 {
     Tcontrol *input = (Tcontrol *)control;
     Tplayer *p;

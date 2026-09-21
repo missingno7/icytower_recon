@@ -81,9 +81,10 @@ def plan(row,ledger,source_texts=None):
             continue
         if declaration['kind'] not in ('IC','NC','OC','NF'): raise ValueError('Unsupported declaration kind for a typed repair')
         return_repair=None
-        if declaration['kind']=='NF' and declaration['return_type']!=expected['return_type']:
+        declared_return=declaration.get('canonical_return_type',declaration['return_type'])
+        if declaration['kind']=='NF' and declared_return!=expected['return_type']:
             raise ValueError('Typed repair cannot change a definition return type')
-        if declaration['return_type']!=expected['return_type']:
+        if declared_return!=expected['return_type']:
             if declaration['kind']=='IC':
                 # An implicit call declares int; the prototype may restore void or a game pointer only
                 # when every spelled call discards its value, so no int-typed use is reinterpreted.
@@ -173,8 +174,9 @@ def plan(row,ledger,source_texts=None):
         if prefix: edits.append({'start':insertion,'end':insertion,'before':'','after':prefix,'reason':'Introduce generated historical type visibility and caller prototype'})
         for edit in edits:
             edit.update(file=file,line=declaration['line']);key=(file,edit['start'],edit['end'])
-            if key in patches and patches[key]!=edit: raise ValueError('Conflicting typed declaration edits')
-            patches[key]=edit
+            same=lambda a,b:{k:v for k,v in a.items() if k!='line'}=={k:v for k,v in b.items() if k!='line'}
+            if key in patches and not same(patches[key],edit): raise ValueError('Conflicting typed declaration edits')
+            patches.setdefault(key,edit)
     if not patches: raise ValueError('No bounded typed caller edits')
     changes=sorted(patches.values(),key=lambda e:(e['file'],e['start']));sources=sorted(texts)
     for source in sources: patch_text(texts[source],[e for e in changes if e['file']==source])

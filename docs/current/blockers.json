@@ -787,50 +787,6 @@
       "prerequisite_tasks": []
     },
     {
-      "function": "load_control",
-      "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin load_control",
-      "verification_command": "python tools/interface_task.py check load_control",
-      "promotion_command": "python tools/interface_task.py promote load_control",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/load_control.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "save_control",
-      "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin save_control",
-      "verification_command": "python tools/interface_task.py check save_control",
-      "promotion_command": "python tools/interface_task.py promote save_control",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_control.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "get_profile_dir_for_profile",
       "source": "src/directories.c",
       "sources": null,
@@ -1017,41 +973,6 @@
       "size": 0,
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "handle_player_input",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin handle_player_input",
-      "verification_command": "python tools/interface_task.py check handle_player_input",
-      "promotion_command": "python tools/interface_task.py promote handle_player_input",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/handle_player_input.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "handle_player_input",
-          "candidate_card": "docs/current/functions/main/handle_player_input.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/main.c",
-          "function": "play",
-          "candidate_card": "docs/current/functions/main/play.json",
-          "planned_in_caller_cu": true
-        }
-      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -1681,6 +1602,31 @@
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
       "size": 651,
       "candidate_card": "docs/current/functions/player/update_player.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "handle_player_input",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 3,
+        "original_va": 4240359,
+        "candidate_byte": 86,
+        "original_byte": 87
+      },
+      "verification_command": "python tools/check_function.py game-main handle_player_input",
+      "begin_command": "python tools/grinder_task.py begin game-main handle_player_input",
+      "promotion_command": "python tools/promote_function.py game-main handle_player_input",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 728,
+      "candidate_card": "docs/current/functions/main/handle_player_input.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -2405,40 +2351,6 @@
     {
       "source": "src/main.c",
       "target": "game-main",
-      "function": "handle_player_input",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 3,
-        "original_va": 4240359,
-        "candidate_byte": 86,
-        "original_byte": 87
-      },
-      "verification_command": "python tools/check_function.py game-main handle_player_input",
-      "begin_command": "python tools/grinder_task.py begin game-main handle_player_input",
-      "promotion_command": "python tools/promote_function.py game-main handle_player_input",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 728,
-      "candidate_card": "docs/current/functions/main/handle_player_input.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "handle_player_input",
-          "candidate_card": "docs/current/interfaces/handle_player_input.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
       "function": "handle_player_collision_vector_2",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
@@ -3010,14 +2922,6 @@
         {
           "function": "handle_player_collision_vector_2",
           "candidate_card": "docs/current/interfaces/handle_player_collision_vector_2.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "handle_player_input",
-          "candidate_card": "docs/current/interfaces/handle_player_input.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,

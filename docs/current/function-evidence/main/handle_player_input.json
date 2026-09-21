@@ -205,8 +205,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2308,
-    "body_end_line": 2336,
+    "body_start_line": 2309,
+    "body_end_line": 2337,
     "body_sha256": "c3aae98c9c9583e39d9cf06ca83990f0aa33c36063046bbd3837ef2e4c653d4d"
   },
   "reference_diagnostics": [],
@@ -301,8 +301,8 @@
               "type": "Tcontrol *",
               "scope": 24787,
               "byte_size": 4,
-              "location": "0x1d9a (location list)",
-              "declaration_line": 2309
+              "location": null,
+              "declaration_line": 2310
             }
           ]
         },
@@ -312,12 +312,12 @@
           "original": [],
           "candidate": [
             {
-              "die": 24867,
+              "die": 24863,
               "type": "Tplayer *",
               "scope": 24787,
               "byte_size": 4,
-              "location": "0x1dce (location list)",
-              "declaration_line": 2310
+              "location": "0x1dde (location list)",
+              "declaration_line": 2311
             }
           ]
         },
@@ -921,7 +921,7 @@
           {
             "die": 24829,
             "name": "control",
-            "type": "void *",
+            "type": "Tcontrol *",
             "base_type": null,
             "base_encoding": null,
             "location": {
@@ -939,21 +939,7 @@
         "bytes": "85db",
         "mnemonic": "test",
         "assembly": "test   %ebx,%ebx",
-        "dwarf_variables": [
-          {
-            "die": 24849,
-            "name": "input",
-            "type": "Tcontrol *",
-            "base_type": null,
-            "base_encoding": null,
-            "location": {
-              "kind": "register",
-              "register": "ebx"
-            },
-            "expression_hex": "53",
-            "relation": "register is used"
-          }
-        ]
+        "dwarf_variables": []
       }
     ]
   },
@@ -1903,7 +1889,7 @@
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": -30,
+  "priority": -25,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
@@ -2051,59 +2037,7 @@
   ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "handle_player_input",
-      "source": "src/main.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "handle_player_input",
-      "historical": [
-        {
-          "cu": "src/main.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 124525
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "void",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 983
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "void",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 2307
-        }
-      ],
-      "candidate_signatures": [
-        "('void', ['void*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/handle_player_input.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }
