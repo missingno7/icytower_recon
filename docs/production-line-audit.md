@@ -698,3 +698,27 @@ acceptance tests, the ordinary link check and global audit. Every function and
 workflow proof remains unchanged. add_floor returns from SUPERVISOR to MEDIUM;
 the separate main.c Treplay.data mismatch remains visible as a remote conflict.
 See docs/attempts/return-view-validation.json and the archived task history.
+
+
+## Queue prerequisite links and retained failure details
+
+The queue now links editable unresolved bodies to their scoped, blocking own or
+called-function interface tasks. Links use complete function evidence, not the
+bounded card display. Protected bodies and remote-only conflicts create no edge.
+CHEAP repairs receive four priority points per dependent body whose caller CU is
+in the repair plan, capped at twenty. Difficulty and admission checks are unchanged;
+a link never promises that all blockers will be cleared. The complete graph is in
+docs/current/task-dependencies.json and bounded reverse links appear in the queue.
+
+The first real ranked task, log2file, was rejected because its prototype repair
+changed fldads_threadmain emission (204 to 223 bytes). The worker restored source
+and routed it to SUPERVISOR, preserving all exact proofs. Detailed contribution
+diagnostics now go to content-addressed docs/attempts/interface-diagnostics paths;
+FAST and promotion histories link these durable files. A cleanup regression test
+verifies both earlier and later diagnostic versions survive removal of build/.
+
+The next ranked task, handle_player_collision_combo, passed the unattended worker
+and strict promotion, including 234 interface acceptance tests, ordinary link
+check and global audit. No function or workflow proof changed. Both runs and the
+retained rejected-task diagnostic are indexed by
+`docs/attempts/queue-dependency-validation.json`.

@@ -7,7 +7,7 @@
   "difference_class": "INTERFACE_DECLARATION",
   "status": "INTERFACE_CONFLICT",
   "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
+  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -79,7 +79,39 @@
     "game-httpget",
     "game-profile"
   ],
-  "priority": 251,
+  "priority": -100,
   "expected_prototype": "extern void log2file(const char*, ...);",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
+  "supervisor_block": {
+    "reason": "check failed: Focused contribution evidence: build/fast/interfaces/log2file/game-fld-adspot/contribution-difference.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-fld-adspot",
+    "changes": [
+      {
+        "start": 0,
+        "end": 0,
+        "before": "",
+        "after": "extern void log2file(const char*, ...);\n",
+        "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
+        "file": "src/fld_adspot.c",
+        "line": 104
+      },
+      {
+        "start": 879,
+        "end": 893,
+        "before": "char *fmt, ...",
+        "after": "const char *fmt, ...",
+        "reason": "Use the DWARF parameter qualifiers/prototype",
+        "file": "src/httpget.c",
+        "line": 28
+      },
+      {
+        "start": 12792,
+        "end": 12809,
+        "before": "char *format, ...",
+        "after": "const char *format, ...",
+        "reason": "Use the DWARF parameter qualifiers/prototype",
+        "file": "src/profile.c",
+        "line": 416
+      }
+    ]
+  }
 }

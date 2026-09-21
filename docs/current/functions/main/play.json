@@ -1560,8 +1560,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1460,
-    "body_end_line": 1505,
+    "body_start_line": 1461,
+    "body_end_line": 1506,
     "body_sha256": "35c010069b10e51f91501a7407ef82c2928435ccd2a754a632c186fa29d0bfad"
   },
   "reference_diagnostics": [],
@@ -4007,43 +4007,6 @@
         "call_offset_count": 1
       },
       {
-        "function": "handle_player_collision_combo",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          231
-        ],
-        "candidate_card": "docs/current/interfaces/handle_player_collision_combo.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          },
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "int",
-              "int"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "int",
-              "int"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
         "function": "save_profile",
         "source": "src/main.c",
         "blocking": true,
@@ -4301,10 +4264,48 @@
         ],
         "layout_issues": [],
         "call_offset_count": 1
+      },
+      {
+        "function": "log2file",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          16
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
       }
     ],
     "blocking_functions": [
-      "handle_player_collision_combo",
       "handle_player_collision_old",
       "handle_player_collision_original",
       "handle_player_collision_vector",
@@ -4314,7 +4315,7 @@
       "update_frame"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
-    "omitted_observations": 3
+    "omitted_observations": 2
   },
   "storage_declarations": [
     {
@@ -4870,7 +4871,7 @@
     "frame_local_declarations": 101,
     "relocation_mismatches": 31,
     "direct_transfer_mismatches": 12,
-    "callee_interface_observations": 11,
+    "callee_interface_observations": 10,
     "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

@@ -25,7 +25,7 @@ from codegen_guidance import select_rules
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/queue_dependencies.py','tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -438,7 +438,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
 
 def publish_cards(ledger,check=False):
     emit=check_json if check else write_json
-    queue=[]; statuses={}; classes={}; reference_index=[]
+    queue=[]; statuses={}; classes={}; reference_index=[]; body_cards={}
     interface_index={}
     path=CURRENT/'interface-conflicts.json'
     if path.exists():
@@ -452,6 +452,7 @@ def publish_cards(ledger,check=False):
         for row in report['functions']:
             card=card_for(target,report,row,ledger,interface_index)
             path=CURRENT/'functions'/Path(source).stem/(row['name']+'.json')
+            body_cards[path.relative_to(ROOT).as_posix()]=card
             emit(ROOT/detail_path(card),card)
             emit(path,compact_card(card))
             for observation in card.get('reference_diagnostics',[]):
@@ -472,6 +473,9 @@ def publish_cards(ledger,check=False):
     queue.extend(read_json(CURRENT/'static-scope-tasks.json').get('tasks',[]))
     queue.extend(read_json(CURRENT/'global-type-tasks.json').get('tasks',[]))
     for task in queue: task.setdefault('task_kind','FUNCTION_BODY')
+    from queue_dependencies import annotate
+    dependencies=annotate(queue,body_cards)
+    emit(CURRENT/'task-dependencies.json',dependencies)
     queue.sort(key=lambda x:(-x['priority'],x['size'],x['source'],x['function']))
     emit(CURRENT/'grinder-queue.json',{'authority':'src/recovery.json','default_difficulty':'CHEAP','tasks':queue})
     emit(CURRENT/'blockers.json',{'workflow_states':statuses,'difference_classes':classes,'tasks':[r for r in queue if r['difficulty']=='SUPERVISOR'],

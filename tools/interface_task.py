@@ -3,7 +3,7 @@ import argparse
 import json
 import sys
 from task_outcomes import CandidateRejected, CANDIDATE_REJECTED_EXIT, candidate_check
-from common import ROOT, read_json, write_json, identity, run
+from common import ROOT, read_json, write_json, identity, run, sha, write_bytes_if_changed
 from build import verify_inputs
 from recovery_pipeline import CURRENT, fresh_verify, validate_report, check_fixture
 from refresh_recovery import validate_ledger
@@ -58,6 +58,13 @@ def validate_baseline_sources(session,ledger):
                 evidence[path]=value
     for path,text in session['sources'].items():
         if evidence.get(path)!=text_identity(text): raise ValueError('Saved task source does not match baseline receipt: '+path)
+
+
+def archive_diagnostic(path, task, target):
+    data=path.read_bytes()
+    destination=ROOT/'docs/attempts/interface-diagnostics'/task/(target+'-'+sha(data)+'.json')
+    write_bytes_if_changed(destination,data)
+    return destination.relative_to(ROOT).as_posix()
 
 
 def history(session,outcome,details):
@@ -127,7 +134,7 @@ def verify_interface(session,acceptance=False):
         from contribution_diagnostics import compare as contribution_changes
         detail=ROOT/('build/acceptance/interfaces' if acceptance else 'build/fast/interfaces')/session['function']/target/'contribution-difference.json'
         write_json(detail,contribution_changes(old,report))
-        session.setdefault('verification_diagnostics',[]).append(detail.relative_to(ROOT).as_posix())
+        session.setdefault('verification_diagnostics',[]).append(archive_diagnostic(detail,session['function'],target))
 
         if session['plan']['task_kind']=='GLOBAL_TYPE':
             from global_type_tasks import verify as verify_global

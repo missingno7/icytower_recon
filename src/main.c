@@ -1,3 +1,4 @@
+extern void handle_player_collision_combo(int, int);
 #include "recovered/Tmenu_char_selection.h"
 /* Partial historical main.c recovery. Other original entities remain absent. */
 #include <stdio.h>

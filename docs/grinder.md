@@ -432,3 +432,10 @@ declarations and layout issues. Complete that prerequisite before body grinding.
 Remote-only conflicts do not block a locally proven interface, and unknown
 indirect targets are not guessed. Compact cards show up to eight observations;
 complete target evidence retains all of them.
+
+Queue rows include direct interface prerequisites and the bodies depending on a
+repair. CHEAP repairs planned in the affected caller CU receive a capped priority
+bonus. This does not lower body difficulty or promise that the repair removes all
+blockers. Follow the refreshed queue after promotion. The complete edge list is
+in `docs/current/task-dependencies.json`; bounded queue entries record omitted
+counts. Remote-only conflicts and protected bodies do not create these edges.

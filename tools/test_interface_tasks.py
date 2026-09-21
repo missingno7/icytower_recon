@@ -19,6 +19,22 @@ class InterfaceTests(unittest.TestCase):
             with patch('interface_tasks.ROOT',root),patch('interface_tasks.affected_targets',return_value=['game-a']):
                 return plan_interface(row,{})
 
+    def test_focused_diagnostic_survives_build_cleanup_without_overwrite(self):
+        import interface_task
+        import shutil
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);detail=root/'build/difference.json';detail.parent.mkdir()
+            with patch.object(interface_task,'ROOT',root):
+                detail.write_bytes(b'{"first_difference": 17}\n')
+                first=interface_task.archive_diagnostic(detail,'repair','game-a')
+                self.assertEqual(first,interface_task.archive_diagnostic(detail,'repair','game-a'))
+                detail.write_bytes(b'{"first_difference": 23}\n')
+                second=interface_task.archive_diagnostic(detail,'repair','game-a')
+            shutil.rmtree(root/'build')
+            self.assertNotEqual(first,second)
+            self.assertEqual((root/first).read_bytes(),b'{"first_difference": 17}\n')
+            self.assertEqual((root/second).read_bytes(),b'{"first_difference": 23}\n')
+
     def test_const_parameter_changes_only_declaration(self):
         text='int f(char *s) { return *s; }\r\n'
         plan=self.plan(text,('int',['const char*']),('int',['char*']))
