@@ -155,8 +155,9 @@ class InterfaceTests(unittest.TestCase):
 
     def test_declaration_repair_may_change_only_nonexact_functions_toward_history(self):
         from interface_tasks import interface_emission_effect
-        base=read_json(ROOT/'docs/current/reports/game-fld-adspot.json')
+        base=copy.deepcopy(read_json(ROOT/'docs/current/reports/game-fld-adspot.json'))
         self.assertEqual(interface_emission_effect(base,base),('EMISSION_PRESERVED',[]))
+        first=next(r for r in base['functions'] if r['status']!='FUNCTION_MATCH'); first['candidate_size']=first['original_size']+10  # start away from history
         def variant(name,size=None,section_change=False):
             after=copy.deepcopy(base); row=next(r for r in after['functions'] if r['name']==name)
             row['instructions']=row.get('instructions',[])[:-1]
