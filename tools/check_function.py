@@ -8,7 +8,7 @@ from card_view import compact_card
 
 
 def diagnostic(card):
-    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','compiler_trials','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
+    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','ownership_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','compiler_trials','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
     return {k:card[k] for k in keys}
 
 
@@ -121,6 +121,8 @@ def main():
                 print('  local debug inventory: %d paired; %d original-only; %d candidate-only; %d ambiguous names (not stack accounting)'%tuple(counts[k] for k in ('UNIQUE_NAME_PAIR','ORIGINAL_ONLY_DEBUG_DECLARATION','CANDIDATE_ONLY_DEBUG_DECLARATION','AMBIGUOUS_NAME')))
             for local in frame['local_width_differences']:
                 print('  local width %s: original %d; candidate %d'%(local['variable'],local['original_bytes'],local['candidate_bytes']))
+        for owner in card.get('ownership_prerequisites',[])[:3]:
+            print('  ownership prerequisite +%#x %s: %s'%(owner['function_offset'],owner['symbol'],owner['reason']))
         if card.get('compiler_trials'):
             trials=card['compiler_trials']
             print('Compiler trial memory:',trials['state'],';',trials['evidence'])

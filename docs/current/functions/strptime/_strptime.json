@@ -1856,10 +1856,10 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": 0,
+  "priority": -15,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: calls_resolved, indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
+  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1887,6 +1887,15 @@
   "begin_command": "python tools/grinder_task.py begin game-strptime _strptime",
   "promotion_command": "python tools/promote_function.py game-strptime _strptime",
   "storage_declarations": [],
+  "ownership_prerequisites": [
+    {
+      "function_offset": 875,
+      "symbol": "__imp__tzname",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "missing or ambiguous symbol",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    }
+  ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
   "interface_scope": [],
@@ -1897,6 +1906,7 @@
     "frame_local_declarations": 7,
     "relocation_mismatches": 28,
     "direct_transfer_mismatches": 5,
+    "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 5,
     "literal_dependencies": 0,

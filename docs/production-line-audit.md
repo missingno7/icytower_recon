@@ -641,3 +641,21 @@ and flags remain unchanged. Two separate stopGameMusic peer probes
 (stopMenuMusic and play_sound) changed no target bytes and remain negative
 trial memory. Thirteen compiler-context tests passed, including both declaration
 orders and target-omission rejection.
+
+
+## Data-owner prerequisites for generic body tasks
+
+The base task heuristic checked unresolved calls but omitted unresolved data
+relocations. This left log2file and four other functions ranked MEDIUM despite
+unknown bindings that prevent strict body-only completion. Cards now expose
+`ownership_prerequisites`; missing non-call resolved values route to SUPERVISOR.
+Known generated source recipes retain the existing narrowly scoped operand
+exception, but cannot cover unrelated bindings. Resolved zero values and known
+but different references are not mislabeled as missing owners.
+
+Real generation moves draw_reward, draw_progress_bar, log2file, jump_player and
+get_replay_property from MEDIUM to SUPERVISOR. Ledger function and workflow proof
+states are unchanged. The function acceptance suite passes 123 tests. Live
+log2file admission is rejected even when MEDIUM work is explicitly requested,
+before creating a session. See
+`docs/attempts/ownership-prerequisite-validation.json`.

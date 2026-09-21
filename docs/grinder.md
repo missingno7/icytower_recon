@@ -415,3 +415,11 @@ evidence path; archived rows include the JSONL line number. The top-level state
 only describes the latest probe. At most three distinct trials are shown, with
 omission counts and an archive link for the rest. Do not treat archived no-change
 results as proof about a changed source/toolchain baseline.
+
+
+`ownership_prerequisites` lists independently unresolved data/literal relocations
+that a body task cannot currently close. These tasks route to SUPERVISOR even
+when the instruction mismatch is small. Resolve the owner evidence first. An
+existing generated literal/symbolic recipe may cover its own operand; unrelated
+missing bindings still block. Missing ownership is not proof of a correct body
+or a layout-only state.

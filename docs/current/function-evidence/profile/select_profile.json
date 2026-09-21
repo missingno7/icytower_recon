@@ -6020,7 +6020,7 @@
   "priority": -30,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -6048,6 +6048,22 @@
   "begin_command": "python tools/grinder_task.py begin game-profile select_profile",
   "promotion_command": "python tools/promote_function.py game-profile select_profile",
   "storage_declarations": [],
+  "ownership_prerequisites": [
+    {
+      "function_offset": 694,
+      "symbol": ".rdata",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    },
+    {
+      "function_offset": 1151,
+      "symbol": ".rdata",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    }
+  ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
   "interface_scope": [

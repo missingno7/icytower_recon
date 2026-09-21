@@ -1011,11 +1011,11 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 85,
+  "difficulty": "SUPERVISOR",
+  "priority": -20,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: no_indirect_flow",
+  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1070,6 +1070,15 @@
       "candidate_card": "docs/current/storage/game-main/138117.json"
     }
   ],
+  "ownership_prerequisites": [
+    {
+      "function_offset": 58,
+      "symbol": ".rdata",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    }
+  ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
   "interface_scope": [
@@ -1110,6 +1119,7 @@
   "evidence_counts": {
     "relocation_mismatches": 2,
     "direct_transfer_mismatches": 0,
+    "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,
     "literal_dependencies": 1,

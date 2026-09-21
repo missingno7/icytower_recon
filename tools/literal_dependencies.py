@@ -74,16 +74,31 @@ def publish_function(report,name,root,directory,emit):
     return for_function(selected,name)
 
 
-def pattern_prerequisites(row,patterns):
-    """Name unresolved relocations which the generated source recipe does not fix."""
-    if not patterns: return []
+def recipe_offsets(row,patterns):
+    """Operands addressed by an existing generated recipe, not arbitrary edits."""
     ids={p['id'] for p in patterns}; covered=set()
     if ids & {'repair_literal_content','repair_symbolic_assignment'}:
         covered.update(d['function_offset'] for d in row.get('literal_diagnostics',[]) if d['classification']=='LITERAL_CONTENT_DIFFERENCE' and d.get('kind')=='C_STRING')
     if 'repair_symbolic_assignment' in ids:
         covered.update(d['function_offset'] for d in row.get('reference_diagnostics',[]) if d['classification']=='SYMBOLIC_REFERENCE_DIFFERENCE' and d['prerequisite']=='SOURCE_REFERENCE_REPAIR')
+    return covered
+
+
+def pattern_prerequisites(row,patterns):
+    """Name unresolved relocations which the generated source recipe does not fix."""
+    if not patterns: return []
+    covered=recipe_offsets(row,patterns)
     observations={d['function_offset']:d['classification'] for d in row.get('literal_diagnostics',[])}
     return [{'function_offset':r['function_offset'],'symbol':r['symbol'],
              'reason':observations.get(r['function_offset'],r.get('resolution','Unresolved relocation')),
              'limit':'The generated source recipe does not repair this independent binding; owner/interface evidence is still required.'}
             for r in row.get('relocations',[]) if not r.get('equal') and r['function_offset'] not in covered]
+
+
+def ownership_prerequisites(row,patterns):
+    """Missing independent non-call bindings block body-only task completion."""
+    covered=recipe_offsets(row,patterns)
+    return [{'function_offset':r['function_offset'],'symbol':r.get('symbol'),
+             'state':'UNRESOLVED_RELOCATION_OWNER','reason':r.get('resolution','No independent data binding'),
+             'limit':'Resolve ownership or a verified source recipe first; this does not prove a layout-only body match.'}
+            for r in row.get('relocations',[]) if r.get('type')!=20 and r.get('resolved_value') is None and r['function_offset'] not in covered]

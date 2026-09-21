@@ -66,6 +66,24 @@ class LiteralDependencyTests(unittest.TestCase):
         self.assertEqual(emitted[0][0],Path('root/build/fast/target/literals/4.json'))
         self.assertTrue(groups(report)[0]['candidate_card'].startswith('docs/current/'))
 
+    def test_unknown_data_owners_block_even_without_source_recipe(self):
+        from literal_dependencies import ownership_prerequisites
+        row={'relocations':[{'type':6,'function_offset':1,'symbol':'.rdata','resolved_value':None},
+                            {'type':6,'function_offset':5,'symbol':'zero','resolved_value':0},
+                            {'type':6,'function_offset':9,'symbol':'different','resolved_value':123,'equal':False},
+                            {'type':20,'function_offset':13,'symbol':'call','resolved_value':None}]}
+        self.assertEqual([p['function_offset'] for p in ownership_prerequisites(row,[])],[1])
+
+    def test_only_generated_recipe_offsets_waive_owner_prerequisite(self):
+        from literal_dependencies import ownership_prerequisites
+        row={'relocations':[{'type':6,'function_offset':1,'symbol':'.rdata','resolved_value':None},
+                            {'type':6,'function_offset':9,'symbol':'.rdata','resolved_value':None}],
+             'literal_diagnostics':[{'function_offset':1,'classification':'LITERAL_CONTENT_DIFFERENCE','kind':'C_STRING'},
+                                    {'function_offset':9,'classification':'CONTENT_EQUAL_OWNER_UNPROVEN'}]}
+        self.assertEqual(len(ownership_prerequisites(row,[])),2)
+        self.assertEqual(len(ownership_prerequisites(row,[{'id':'unrelated'}])),2)
+        self.assertEqual([p['function_offset'] for p in ownership_prerequisites(row,[{'id':'repair_literal_content'}])],[9])
+
     def test_generated_literal_repair_does_not_hide_unproved_owner(self):
         row={'relocations':[{'function_offset':1,'symbol':'.rdata','equal':False},{'function_offset':9,'symbol':'.rdata','equal':False}],
              'literal_diagnostics':[{'function_offset':1,'classification':'LITERAL_CONTENT_DIFFERENCE','kind':'C_STRING'},

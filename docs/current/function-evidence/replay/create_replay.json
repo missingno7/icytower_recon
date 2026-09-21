@@ -1039,7 +1039,7 @@
   "priority": -25,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.",
+  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1077,6 +1077,22 @@
       "original_type": "const char [6]",
       "candidate_type": null,
       "candidate_card": "docs/current/storage/game-replay/224757.json"
+    }
+  ],
+  "ownership_prerequisites": [
+    {
+      "function_offset": 44,
+      "symbol": ".data",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    },
+    {
+      "function_offset": 52,
+      "symbol": ".data",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
     }
   ],
   "local_declaration_tasks": [],

@@ -29,6 +29,9 @@ def compact_card(full,details=None):
     for key in ('relocation_mismatches','direct_transfer_mismatches'):
         rows=card[key]; card['evidence_counts'][key]=len(rows)
         if len(rows)>8: card[key]=sorted(rows,key=lambda r:abs(r['function_offset']-offset))[:8]
+    if 'ownership_prerequisites' in card:
+        card['evidence_counts']['ownership_prerequisites']=len(card['ownership_prerequisites'])
+        card['ownership_prerequisites']=sorted(card['ownership_prerequisites'],key=lambda r:abs(r['function_offset']-offset))[:8]
     if 'reference_diagnostics' in card:
         card['evidence_counts']['reference_diagnostics']=len(card['reference_diagnostics'])
         card['reference_diagnostics']=sorted(card['reference_diagnostics'],key=lambda r:abs(r['function_offset']-offset))[:8]

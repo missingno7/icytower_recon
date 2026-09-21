@@ -397,11 +397,15 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     if not supervisor and wf['body_edit_allowed'] and local_interface_conflicts:
         difficulty='SUPERVISOR'; priority=-30
         routing_reason='This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.'
-    from literal_dependencies import pattern_prerequisites
+    from literal_dependencies import pattern_prerequisites,ownership_prerequisites
     source_pattern_prerequisites=pattern_prerequisites(row,ev['source_patterns'])
     if not supervisor and source_pattern_prerequisites:
         difficulty='SUPERVISOR'; priority=-25
         routing_reason='Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.'
+    owner_prerequisites=ownership_prerequisites(row,ev['source_patterns'])
+    if not supervisor and wf['body_edit_allowed'] and owner_prerequisites:
+        difficulty='SUPERVISOR'; priority=min(priority,-25)
+        routing_reason='Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.'
     position=next(i for i,x in enumerate(report['functions']) if x['name']==row['name'])
     adjacent={x['name'] for x in report['functions'][max(0,position-1):position+2]}
     related=adjacent|{t['target_function'] for t in row.get('direct_transfers',[])}|{x['name'] for x in report['functions'] if any(t['target_function']==row['name'] for t in x.get('direct_transfers',[]))}
@@ -421,7 +425,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'verification_command':'python tools/check_function.py '+target+' '+row['name'],
             'begin_command':'python tools/grinder_task.py begin '+target+' '+row['name'],
             'promotion_command':'python tools/promote_function.py '+target+' '+row['name']+(' --claim BODY_MATCH_LAYOUT_BLOCKED' if wf['state']=='BODY_MATCH_LAYOUT_BLOCKED' else ''),
-            'storage_declarations':storage,
+            'storage_declarations':storage,'ownership_prerequisites':owner_prerequisites,
             'local_declaration_tasks':[{k:t[k] for k in ('function','status','state','difficulty','candidate_card')} for t in local_tasks],
             'source_pattern_prerequisites':source_pattern_prerequisites,'interface_scope':interface_scope,'interface_conflicts':[{'function':c['function'],'historical':c['historical'],'type_layout_issues':c.get('type_layout_issues',[]),'candidate_signatures':sorted({str((d['return_type'],d['parameter_types'])) for d in c['candidate_declarations']}),'candidate_card':'docs/current/interfaces/'+c['function']+'.json'} for c in interface_conflicts],
             'edit_scope':'Function body only; use supervisor for prototypes/data/headers or missing implementations.'}
