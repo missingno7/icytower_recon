@@ -444,3 +444,9 @@ A TYPE_VIEW card with `repair_mode: POINTER_MEMBER_ONLY` preserves the local str
 and repairs one DWARF-evidenced `void *` member. Use its generated commands; success
 is `DWARF_MEMBER_MATCH`, not whole-struct canonicalization or a function match.
 The same unchanged-emission and complete-layout acceptance checks apply.
+
+For supervisor investigation of an interface/branch interaction, use e.g.
+`python tools/compound_probe.py game-fld-adspot fldads_threadmain --interface log2file --invert-if shouldDownloadAds`.
+This runs only isolated diagnostic variants. Read the card's `compound_trials`
+first to avoid repeating a current negative experiment. Its results never bypass
+body/interface admission or qualify as promotion input.

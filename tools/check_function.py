@@ -8,7 +8,7 @@ from card_view import compact_card
 
 
 def diagnostic(card):
-    keys=('function','source','status','state','interface_scope','callee_interface_scope','source_pattern_prerequisites','ownership_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','compiler_trials','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
+    keys=('function','source','status','state','interface_scope','callee_interface_scope','source_pattern_prerequisites','ownership_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','compiler_trials','compound_trials','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
     return {k:card[k] for k in keys}
 
 
@@ -90,6 +90,8 @@ def main():
             print('  relocation +%#x %s: %s; independently resolved target %s'%(r['function_offset'],r['symbol'],r['resolution'],r.get('target_va')))
             context=r.get('comparison_context',{})
             print('    comparison:',context.get('state','UNINTERPRETED'),';',context.get('reason','Original byte window has not been interpreted.'))
+        if card.get('compound_trials'):
+            trial=card['compound_trials'];print('Compound experiment:',trial['baseline_state'],trial['outcome'],';',trial['evidence'])
         for reference in card.get('reference_diagnostics',[])[:4]:
             print('  reference +%#x: %s -> %s; %s'%(reference['function_offset'],reference['candidate_reference']['expression'],reference['expected_reference']['expression'],reference['prerequisite']))
         for pool in card.get('literal_dependencies',[])[:4]:

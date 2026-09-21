@@ -810,3 +810,24 @@ member offset/signedness changes and an omitted generated-header scope all fail.
 The accepted real Treplay.data repair passes the stricter check against its current
 verified CU report. The interface suite passes 248 tests; function and workflow
 proofs are unchanged. See `docs/attempts/member-pointee-validation.json`.
+
+
+## Bounded compound experiments for prerequisite interactions
+
+A supervisor can use compound_probe.py to test one existing compiler/DWARF
+interface recipe together with inversion of one explicit scalar if/else in an
+isolated CU copy. It compiles three fixed variants: unchanged baseline, interface
+only and the combined edit. The scratch baseline must preserve raw non-debug
+sections, symbols and relocations. Source, probe, verifier, fixture and locked
+compiler inputs are checked; production files and the ledger are never edited.
+Ambiguous conditions, unbraced alternatives, labels and preprocessor blocks are
+excluded. Compile failures are retained and do not become comparison results.
+
+The real fldads_threadmain/log2file trial disproved the simple coupled repair:
+baseline is 204 bytes, the interface-only variant is 223 bytes with matching body
+shape, and interface plus branch inversion returns to 204 bytes. All remain DIFFER.
+The function card and FAST JSON retain a compact three-variant summary linked to
+the full source-bound experiment, marking changed inputs as historical. This does
+not alter admission, matching or literal-owner proof. All recovery proofs are
+unchanged and the 138-test function suite passes. See
+`docs/attempts/compound-probe-validation.json`.
