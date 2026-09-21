@@ -52,6 +52,53 @@
     "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
   },
   "localized_guards": null,
+  "branch_context": {
+    "original": {
+      "branch_count": 0,
+      "nearest_branches": [],
+      "omitted_branches": 0
+    },
+    "candidate": {
+      "branch_count": 1,
+      "nearest_branches": [
+        {
+          "offset": 217,
+          "instruction": "jne    b7 <_reset_player+0xb7>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 183,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 214,
+            "assembly": "cmp    $0x5,%edx",
+            "bytes": "83fa05"
+          },
+          "target_window": [
+            {
+              "offset": 183,
+              "assembly": "movl   $0x0,0x78(%eax,%edx,4)",
+              "bytes": "c744907800000000"
+            },
+            {
+              "offset": 191,
+              "assembly": "movl   $0x0,0x8c(%eax,%edx,4)",
+              "bytes": "c784908c00000000000000"
+            },
+            {
+              "offset": 202,
+              "assembly": "movl   $0x0,0xa0(%eax,%edx,4)",
+              "bytes": "c78490a000000000000000"
+            }
+          ],
+          "fallthrough_offset": 219
+        }
+      ],
+      "omitted_branches": 0
+    },
+    "selection_offset": 6,
+    "limit": "Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred."
+  },
   "compiler": "tdm-2",
   "compiler_flags": [
     "-O2"

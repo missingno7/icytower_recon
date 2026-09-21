@@ -148,6 +148,86 @@
     "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
   },
   "localized_guards": null,
+  "branch_context": {
+    "original": {
+      "branch_count": 1,
+      "nearest_branches": [
+        {
+          "offset": 40,
+          "instruction": "jne    418a2c <_generate_profile_checksum+0x18>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 24,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 35,
+            "assembly": "cmp    $0x154,%eax",
+            "bytes": "3d54010000"
+          },
+          "target_window": [
+            {
+              "offset": 24,
+              "assembly": "inc    %eax",
+              "bytes": "40"
+            },
+            {
+              "offset": 25,
+              "assembly": "mov    (%ebx,%ecx,4),%ecx",
+              "bytes": "8b0c8b"
+            },
+            {
+              "offset": 28,
+              "assembly": "imul   %eax,%ecx",
+              "bytes": "0fafc8"
+            }
+          ],
+          "fallthrough_offset": 42
+        }
+      ],
+      "omitted_branches": 0
+    },
+    "candidate": {
+      "branch_count": 1,
+      "nearest_branches": [
+        {
+          "offset": 38,
+          "instruction": "jne    100 <_generate_profile_checksum+0x18>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 24,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 33,
+            "assembly": "cmp    $0x154,%eax",
+            "bytes": "3d54010000"
+          },
+          "target_window": [
+            {
+              "offset": 24,
+              "assembly": "mov    (%ebx,%eax,4),%ecx",
+              "bytes": "8b0c83"
+            },
+            {
+              "offset": 27,
+              "assembly": "inc    %eax",
+              "bytes": "40"
+            },
+            {
+              "offset": 28,
+              "assembly": "imul   %eax,%ecx",
+              "bytes": "0fafc8"
+            }
+          ],
+          "fallthrough_offset": 40
+        }
+      ],
+      "omitted_branches": 0
+    },
+    "selection_offset": 19,
+    "limit": "Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred."
+  },
   "compiler": "tdm-2",
   "compiler_flags": [
     "-O2"

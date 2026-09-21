@@ -48,3 +48,24 @@ class GuardTests(unittest.TestCase):
 
 
 if __name__=='__main__': unittest.main()
+
+
+class BranchContextTests(unittest.TestCase):
+    def test_targets_are_decoded_from_bytes_independently(self):
+        from branch_diagnostics import branch_context
+        row,old=fixture();row['va']=100;row['first_difference']={'offset':2}
+        row['instructions'][1]['assembly']='jne 999 <misleading>'
+        result=branch_context(row,old)
+        for side in ('original','candidate'):
+            branch=result[side]['nearest_branches'][0]
+            self.assertEqual(branch['target_offset'],4)
+            self.assertEqual(branch['target_window'][0]['assembly'],'ret')
+            self.assertEqual(branch['fallthrough_offset'],4)
+        self.assertEqual(row['status'],'DIFFER')
+
+    def test_non_boundary_and_external_targets_have_no_invented_window(self):
+        from branch_diagnostics import branch_context
+        for raw,state in [('75ff','NON_BOUNDARY_INTERNAL'),('757f','OUTSIDE_FUNCTION')]:
+            row,old=fixture();row['va']=100;row['instructions'][1]['bytes']=raw
+            branch=branch_context(row,old)['candidate']['nearest_branches'][0]
+            self.assertEqual(branch['target_state'],state);self.assertEqual(branch['target_window'],[])

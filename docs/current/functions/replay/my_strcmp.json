@@ -156,6 +156,198 @@
     "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
   },
   "localized_guards": null,
+  "branch_context": {
+    "original": {
+      "branch_count": 6,
+      "nearest_branches": [
+        {
+          "offset": 20,
+          "instruction": "jne    41e730 <_my_strcmp+0x70>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 112,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 17,
+            "assembly": "cmp    0x4(%ebx),%al",
+            "bytes": "3a4304"
+          },
+          "target_window": [
+            {
+              "offset": 112,
+              "assembly": "dec    %al",
+              "bytes": "fec8"
+            },
+            {
+              "offset": 114,
+              "assembly": "jne    41e724 <_my_strcmp+0x64>",
+              "bytes": "75f0"
+            },
+            {
+              "offset": 116,
+              "assembly": "mov    $0xffffffff,%eax",
+              "bytes": "b8ffffffff"
+            }
+          ],
+          "fallthrough_offset": 22
+        },
+        {
+          "offset": 24,
+          "instruction": "je     41e6f0 <_my_strcmp+0x30>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "zero/equal",
+          "target_offset": 48,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 22,
+            "assembly": "test   %al,%al",
+            "bytes": "84c0"
+          },
+          "target_window": [
+            {
+              "offset": 48,
+              "assembly": "mov    0x4bdd60,%eax",
+              "bytes": "a160dd4b00"
+            },
+            {
+              "offset": 53,
+              "assembly": "lea    -0x2(%eax),%ecx",
+              "bytes": "8d48fe"
+            },
+            {
+              "offset": 56,
+              "assembly": "cmp    $0x2,%ecx",
+              "bytes": "83f902"
+            }
+          ],
+          "fallthrough_offset": 26
+        },
+        {
+          "offset": 42,
+          "instruction": "jmp    4b2dd8 <_stricmp>",
+          "encoding_bytes": 5,
+          "kind": "jmp",
+          "condition": "jmp",
+          "target_offset": 608024,
+          "target_state": "OUTSIDE_FUNCTION",
+          "preceding_instruction": {
+            "offset": 41,
+            "assembly": "leave",
+            "bytes": "c9"
+          },
+          "target_window": [],
+          "fallthrough_offset": null
+        }
+      ],
+      "omitted_branches": 3
+    },
+    "candidate": {
+      "branch_count": 7,
+      "nearest_branches": [
+        {
+          "offset": 20,
+          "instruction": "jne    b10 <_my_strcmp+0x3c>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 60,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 17,
+            "assembly": "cmp    0x4(%ebx),%al",
+            "bytes": "3a4304"
+          },
+          "target_window": [
+            {
+              "offset": 60,
+              "assembly": "test   %al,%al",
+              "bytes": "84c0"
+            },
+            {
+              "offset": 62,
+              "assembly": "jne    b48 <_my_strcmp+0x74>",
+              "bytes": "7534"
+            },
+            {
+              "offset": 64,
+              "assembly": "mov    $0x1,%eax",
+              "bytes": "b801000000"
+            }
+          ],
+          "fallthrough_offset": 22
+        },
+        {
+          "offset": 24,
+          "instruction": "jne    afb <_my_strcmp+0x27>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 39,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 22,
+            "assembly": "test   %al,%al",
+            "bytes": "84c0"
+          },
+          "target_window": [
+            {
+              "offset": 39,
+              "assembly": "mov    (%ebx),%eax",
+              "bytes": "8b03"
+            },
+            {
+              "offset": 41,
+              "assembly": "mov    %eax,0xc(%ebp)",
+              "bytes": "89450c"
+            },
+            {
+              "offset": 44,
+              "assembly": "mov    (%edx),%eax",
+              "bytes": "8b02"
+            }
+          ],
+          "fallthrough_offset": 26
+        },
+        {
+          "offset": 37,
+          "instruction": "jbe    b20 <_my_strcmp+0x4c>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "unsigned below or equal",
+          "target_offset": 76,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 34,
+            "assembly": "cmp    $0x2,%ecx",
+            "bytes": "83f902"
+          },
+          "target_window": [
+            {
+              "offset": 76,
+              "assembly": "mov    %eax,0x4(%esp)",
+              "bytes": "89442404"
+            },
+            {
+              "offset": 80,
+              "assembly": "mov    (%edx),%eax",
+              "bytes": "8b02"
+            },
+            {
+              "offset": 82,
+              "assembly": "mov    %eax,(%esp)",
+              "bytes": "890424"
+            }
+          ],
+          "fallthrough_offset": 39
+        }
+      ],
+      "omitted_branches": 4
+    },
+    "selection_offset": 21,
+    "limit": "Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred."
+  },
   "compiler": "tdm-2",
   "compiler_flags": [
     "-O2"

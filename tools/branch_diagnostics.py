@@ -41,3 +41,31 @@ def localized_guards(row,original):
     return {'confidence':'DECODED_LOCAL_GUARD_DIFFERENCES','guards':guards,
             'all_other_resolved_bytes_equal':True,'indirect_calls_unchanged':True,
             'limit':'A work-routing diagnostic, not body equality. The different guard conditions still require source repair and fresh strict acceptance.'}
+
+
+def branch_context(row,original):
+    """Independent decoded neighborhoods; never pair blocks by matching offsets."""
+    from control_transfers import relative
+    offset=(row.get('first_difference') or {}).get('offset',0)
+    def side(instructions,base,size):
+        by_address={i['address']:n for n,i in enumerate(instructions)};branches=[]
+        for index,instruction in enumerate(instructions):
+            decoded=relative(instruction)
+            if not decoded or decoded['kind']=='call':continue
+            at=instruction['address']-base;target=decoded['target'];target_index=by_address.get(target)
+            internal=base<=target<base+size
+            state='INSTRUCTION_BOUNDARY' if internal and target_index is not None else 'NON_BOUNDARY_INTERNAL' if internal else 'OUTSIDE_FUNCTION'
+            def concise(i):return {'offset':i['address']-base,'assembly':i['assembly'],'bytes':i['bytes']}
+            branches.append({'offset':at,'instruction':instruction['assembly'],'encoding_bytes':decoded['length'],
+                'kind':decoded['kind'],'condition':CONDITIONS.get(instruction['mnemonic'],instruction['mnemonic']),
+                'target_offset':target-base,'target_state':state,
+                'preceding_instruction':concise(instructions[index-1]) if index else None,
+                'target_window':[concise(i) for i in instructions[target_index:target_index+3]] if state=='INSTRUCTION_BOUNDARY' else [],
+                'fallthrough_offset':at+decoded['length'] if decoded['kind']=='conditional' else None})
+        return {'branch_count':len(branches),'nearest_branches':sorted(branches,key=lambda b:(abs(b['offset']-offset),b['offset']))[:3],
+                'omitted_branches':max(0,len(branches)-3)}
+    if row.get('status')=='FUNCTION_MATCH' or not original or not row.get('instructions'):return None
+    return {'original':side(original,row['va'],row['original_size']),
+            'candidate':side(row['instructions'],row['candidate_offset'],row['candidate_size']),
+            'selection_offset':offset,
+            'limit':'Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred.'}

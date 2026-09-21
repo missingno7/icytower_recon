@@ -16,7 +16,7 @@ from classify_diff import workflow
 from card_view import compact_card, detail_path
 from dwarf_locations import candidate_debug, annotate
 from compiler_context import load_context,load_trials
-from branch_diagnostics import localized_guards
+from branch_diagnostics import localized_guards,branch_context
 from data_diagnostics import capture_snapshot,diagnose
 from relocation_diagnostics import mismatch_views
 from instruction_alignment import analyze as instruction_alignment
@@ -152,7 +152,7 @@ def evidence_for_function(unit,f,row,candidate=None):
     row['frame_layout']=stack_analysis(row,original,parameters+locals_,context.get('candidate',{}).get('variables',[]))
     return {'prototype':prototype,'return_type':ret,'parameters':parameters,'locals':locals_,
             'lexical_blocks':lexical,'variadic':variadic,'calling_convention':d['resolved'].get('DW_AT_calling_convention','not recorded (i386 C default candidate)') if d else None,
-            'source_scope':scope,'reference_diagnostics':row.get('reference_diagnostics',[]),'literal_diagnostics':row.get('literal_diagnostics',[]),'tail_jump_layout':row.get('tail_jump_layout'),'instruction_order':row['instruction_order'],'source_patterns':patterns,'frame_layout':row['frame_layout'],'signedness':signedness,'location_context':context,'localized_guards':row['localized_guards']},original
+            'source_scope':scope,'reference_diagnostics':row.get('reference_diagnostics',[]),'literal_diagnostics':row.get('literal_diagnostics',[]),'tail_jump_layout':row.get('tail_jump_layout'),'instruction_order':row['instruction_order'],'source_patterns':patterns,'frame_layout':row['frame_layout'],'signedness':signedness,'location_context':context,'localized_guards':row['localized_guards'],'branch_context':branch_context(row,original)},original
 
 
 def fresh_verify(target, dest=None, locked=False):

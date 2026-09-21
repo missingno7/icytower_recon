@@ -986,3 +986,20 @@ proof unchanged. No session remains open. The replay-type lesson enabled routine
 follow-up work rather than another per-caller type investigation. Complete evidence
 is indexed in docs/attempts/pointee-handoff-validation.json. This does not complete
 the outstanding cheap function-body handover requirement.
+
+
+## Decoded branch destination context
+
+Unresolved function cards now include the three direct branches nearest the first
+mismatch on each side, with byte-decoded destinations, encoding lengths, conditions,
+preceding instructions, fallthrough offsets and small target windows. Outside
+function and non-instruction-boundary targets are explicit. Original and candidate
+windows are independent: matching offsets do not establish corresponding blocks,
+and no CFG-equivalence or source-cause proof is inferred. The existing strict
+localized-guard recipe remains unchanged.
+
+The real my_strcmp card exposes the differing first branch destinations without
+requiring a whole-CU report. The 149-test function suite passes, including byte
+decoding despite misleading assembly labels and invalid/external target handling.
+All raw function and workflow proof states remain unchanged. Evidence is retained
+in docs/attempts/branch-context-validation.json.

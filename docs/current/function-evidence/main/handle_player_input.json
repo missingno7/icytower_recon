@@ -461,6 +461,214 @@
     "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
   },
   "localized_guards": null,
+  "branch_context": {
+    "original": {
+      "branch_count": 30,
+      "nearest_branches": [
+        {
+          "offset": 14,
+          "instruction": "je     40b4b7 <_handle_player_input+0xd3>",
+          "encoding_bytes": 6,
+          "kind": "conditional",
+          "condition": "zero/equal",
+          "target_offset": 211,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 12,
+            "assembly": "test   %ebx,%ebx",
+            "bytes": "85db"
+          },
+          "target_window": [
+            {
+              "offset": 211,
+              "assembly": "add    $0x2c,%esp",
+              "bytes": "83c42c"
+            },
+            {
+              "offset": 214,
+              "assembly": "pop    %ebx",
+              "bytes": "5b"
+            },
+            {
+              "offset": 215,
+              "assembly": "pop    %esi",
+              "bytes": "5e"
+            }
+          ],
+          "fallthrough_offset": 20
+        },
+        {
+          "offset": 28,
+          "instruction": "jne    40b59c <_handle_player_input+0x1b8>",
+          "encoding_bytes": 6,
+          "kind": "conditional",
+          "condition": "nonzero/not equal",
+          "target_offset": 440,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 26,
+            "assembly": "test   %edi,%edi",
+            "bytes": "85ff"
+          },
+          "target_window": [
+            {
+              "offset": 440,
+              "assembly": "movl   $0x0,0x4(%esp)",
+              "bytes": "c744240400000000"
+            },
+            {
+              "offset": 448,
+              "assembly": "mov    %ebx,(%esp)",
+              "bytes": "891c24"
+            },
+            {
+              "offset": 451,
+              "assembly": "call   401958 <_poll_control>",
+              "bytes": "e8ac63ffff"
+            }
+          ],
+          "fallthrough_offset": 34
+        },
+        {
+          "offset": 42,
+          "instruction": "js     40b4d9 <_handle_player_input+0xf5>",
+          "encoding_bytes": 6,
+          "kind": "conditional",
+          "condition": "negative sign",
+          "target_offset": 245,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 41,
+            "assembly": "dec    %edx",
+            "bytes": "4a"
+          },
+          "target_window": [
+            {
+              "offset": 245,
+              "assembly": "inc    %eax",
+              "bytes": "40"
+            },
+            {
+              "offset": 246,
+              "assembly": "mov    %eax,0x4fec58",
+              "bytes": "a358ec4f00"
+            },
+            {
+              "offset": 251,
+              "assembly": "mov    %ebx,(%esp)",
+              "bytes": "891c24"
+            }
+          ],
+          "fallthrough_offset": 48
+        }
+      ],
+      "omitted_branches": 27
+    },
+    "candidate": {
+      "branch_count": 12,
+      "nearest_branches": [
+        {
+          "offset": 13,
+          "instruction": "je     3d09 <_handle_player_input+0x51>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "zero/equal",
+          "target_offset": 81,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 11,
+            "assembly": "test   %ebx,%ebx",
+            "bytes": "85db"
+          },
+          "target_window": [
+            {
+              "offset": 81,
+              "assembly": "add    $0x10,%esp",
+              "bytes": "83c410"
+            },
+            {
+              "offset": 84,
+              "assembly": "pop    %ebx",
+              "bytes": "5b"
+            },
+            {
+              "offset": 85,
+              "assembly": "pop    %esi",
+              "bytes": "5e"
+            }
+          ],
+          "fallthrough_offset": 15
+        },
+        {
+          "offset": 37,
+          "instruction": "je     3d2c <_handle_player_input+0x74>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "zero/equal",
+          "target_offset": 116,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 35,
+            "assembly": "test   %eax,%eax",
+            "bytes": "85c0"
+          },
+          "target_window": [
+            {
+              "offset": 116,
+              "assembly": "mov    %ebx,(%esp)",
+              "bytes": "891c24"
+            },
+            {
+              "offset": 119,
+              "assembly": "call   3d34 <_handle_player_input+0x7c>",
+              "bytes": "e800000000"
+            },
+            {
+              "offset": 124,
+              "assembly": "test   %eax,%eax",
+              "bytes": "85c0"
+            }
+          ],
+          "fallthrough_offset": 39
+        },
+        {
+          "offset": 51,
+          "instruction": "je     3d20 <_handle_player_input+0x68>",
+          "encoding_bytes": 2,
+          "kind": "conditional",
+          "condition": "zero/equal",
+          "target_offset": 104,
+          "target_state": "INSTRUCTION_BOUNDARY",
+          "preceding_instruction": {
+            "offset": 48,
+            "assembly": "test   $0x45,%ah",
+            "bytes": "f6c445"
+          },
+          "target_window": [
+            {
+              "offset": 104,
+              "assembly": "fmull  0x13d8",
+              "bytes": "dc0dd8130000"
+            },
+            {
+              "offset": 110,
+              "assembly": "fstl   0x10(%esi)",
+              "bytes": "dd5610"
+            },
+            {
+              "offset": 113,
+              "assembly": "jmp    3ced <_handle_player_input+0x35>",
+              "bytes": "ebc2"
+            }
+          ],
+          "fallthrough_offset": 53
+        }
+      ],
+      "omitted_branches": 9
+    },
+    "selection_offset": 3,
+    "limit": "Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred."
+  },
   "compiler": "tdm-2",
   "compiler_flags": [
     "-O2"
