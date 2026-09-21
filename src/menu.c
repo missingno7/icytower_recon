@@ -1,3 +1,4 @@
+extern int my_alert(char*, char*, int, int);
 /* Historical CU: menu.c; current status: src/recovery.json.
  * Historical function: update_game_menu @ 0x00417adc, 583 bytes
  */
@@ -573,7 +574,7 @@ int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp,
                 char buf[256];
 
                 sprintf(buf, "unknown return value: %d", menu_return);
-                my_alert("handle_menu", buf, NULL, "OK", NULL, 0, 0);
+                my_alert("handle_menu", buf, 0, 0);
                 break;
             }
             }

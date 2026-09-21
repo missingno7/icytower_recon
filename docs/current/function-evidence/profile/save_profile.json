@@ -7,10 +7,10 @@
   "historical_va": "0x41a3b8",
   "historical_size": 1073,
   "status": "DIFFER",
-  "state": "SOURCE_DIFFER",
-  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-  "body_edit_allowed": true,
-  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
+  "state": "CODEGEN_SIMILAR",
+  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "int save_profile(Tprofile *p);",
   "return_type": "int",
   "parameters": [
@@ -417,13 +417,13 @@
   "source_scope": {
     "body_start_line": 548,
     "body_end_line": 610,
-    "body_sha256": "e07387ff357ec22fa00749af59867ee68dde21e4ced04e9a215aa299ba7500d8"
+    "body_sha256": "c11c80e25b88c581923d3eb768c4b5a5f1d6fd44206ece119054015f83f81a1e"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [
     {
       "function_offset": 290,
-      "candidate_addend": 594,
+      "candidate_addend": 597,
       "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
       "content_equal": true,
       "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
@@ -433,9 +433,9 @@
       "original_hex": "",
       "candidate_instruction": {
         "address": 5093,
-        "bytes": "b952020000",
+        "bytes": "b955020000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x252,%ecx"
+        "assembly": "mov    $0x255,%ecx"
       },
       "original_instruction": {
         "address": 4302041,
@@ -457,7 +457,7 @@
     },
     {
       "function_offset": 304,
-      "candidate_addend": 594,
+      "candidate_addend": 597,
       "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
       "content_equal": true,
       "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
@@ -467,9 +467,9 @@
       "original_hex": "",
       "candidate_instruction": {
         "address": 5107,
-        "bytes": "be52020000",
+        "bytes": "be55020000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x252,%esi"
+        "assembly": "mov    $0x255,%esi"
       },
       "original_instruction": {
         "address": 4302055,
@@ -488,191 +488,11 @@
       "candidate_text": "",
       "original_text": "",
       "candidate_source_lines": []
-    },
-    {
-      "function_offset": 635,
-      "candidate_addend": 1228,
-      "classification": "LITERAL_CONTENT_DIFFERENCE",
-      "content_equal": false,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
-      "kind": "C_STRING",
-      "historical_operand_va": 5076540,
-      "candidate_hex": "50726f66696c65206e616d653a202020202020202020202025730a",
-      "original_hex": "50726f66696c65206e616d653a2020202020202020202025730a",
-      "candidate_instruction": {
-        "address": 5435,
-        "bytes": "c7442404cc040000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4cc,0x4(%esp)"
-      },
-      "original_instruction": {
-        "address": 4302383,
-        "bytes": "c74424043c764d00",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4d763c,0x4(%esp)"
-      },
-      "placement_evidence": {
-        "resolved_target": null,
-        "resolution": "section base not independently established",
-        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
-        "locations": [],
-        "occurrence_count": 0,
-        "occurrence_count_lower_bound": 0,
-        "locations_truncated": false,
-        "state": "CONTENT_NOT_FOUND"
-      },
-      "candidate_text": "Profile name:           %s\n",
-      "original_text": "Profile name:          %s\n",
-      "candidate_source_lines": []
-    },
-    {
-      "function_offset": 655,
-      "candidate_addend": 1256,
-      "classification": "LITERAL_CONTENT_DIFFERENCE",
-      "content_equal": false,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
-      "kind": "C_STRING",
-      "historical_operand_va": 5076567,
-      "candidate_hex": "4c61737420757064617465643a202020202020202020202025730a",
-      "original_hex": "4c61737420757064617465643a2020202020202020202025730a",
-      "candidate_instruction": {
-        "address": 5455,
-        "bytes": "c7442404e8040000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4e8,0x4(%esp)"
-      },
-      "original_instruction": {
-        "address": 4302403,
-        "bytes": "c744240457764d00",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4d7657,0x4(%esp)"
-      },
-      "placement_evidence": {
-        "resolved_target": null,
-        "resolution": "section base not independently established",
-        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
-        "locations": [],
-        "occurrence_count": 0,
-        "occurrence_count_lower_bound": 0,
-        "locations_truncated": false,
-        "state": "CONTENT_NOT_FOUND"
-      },
-      "candidate_text": "Last updated:           %s\n",
-      "original_text": "Last updated:          %s\n",
-      "candidate_source_lines": []
-    },
-    {
-      "function_offset": 747,
-      "candidate_addend": 1284,
-      "classification": "LITERAL_CONTENT_DIFFERENCE",
-      "content_equal": false,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
-      "kind": "C_STRING",
-      "historical_operand_va": 5076594,
-      "candidate_hex": "52616e6b3a2020202020202020202020202020202020202025730a",
-      "original_hex": "52616e6b3a20202020202020202020202020202020202025730a",
-      "candidate_instruction": {
-        "address": 5547,
-        "bytes": "c744240404050000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x504,0x4(%esp)"
-      },
-      "original_instruction": {
-        "address": 4302495,
-        "bytes": "c744240472764d00",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4d7672,0x4(%esp)"
-      },
-      "placement_evidence": {
-        "resolved_target": null,
-        "resolution": "section base not independently established",
-        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
-        "locations": [],
-        "occurrence_count": 0,
-        "occurrence_count_lower_bound": 0,
-        "locations_truncated": false,
-        "state": "CONTENT_NOT_FOUND"
-      },
-      "candidate_text": "Rank:                   %s\n",
-      "original_text": "Rank:                  %s\n",
-      "candidate_source_lines": []
-    },
-    {
-      "function_offset": 763,
-      "candidate_addend": 1312,
-      "classification": "LITERAL_CONTENT_DIFFERENCE",
-      "content_equal": false,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
-      "kind": "C_STRING",
-      "historical_operand_va": 5076621,
-      "candidate_hex": "2020202020202020",
-      "original_hex": "20202020202020",
-      "candidate_instruction": {
-        "address": 5563,
-        "bytes": "c744240420050000",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x520,0x4(%esp)"
-      },
-      "original_instruction": {
-        "address": 4302511,
-        "bytes": "c74424048d764d00",
-        "mnemonic": "movl",
-        "assembly": "movl   $0x4d768d,0x4(%esp)"
-      },
-      "placement_evidence": {
-        "resolved_target": null,
-        "resolution": "section base not independently established",
-        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
-        "locations": [],
-        "occurrence_count": 0,
-        "occurrence_count_lower_bound": 0,
-        "locations_truncated": false,
-        "state": "CONTENT_NOT_FOUND"
-      },
-      "candidate_text": "        ",
-      "original_text": "       ",
-      "candidate_source_lines": []
     }
   ],
   "tail_jump_layout": null,
   "instruction_order": null,
-  "source_patterns": [
-    {
-      "id": "repair_literal_content",
-      "changes": [
-        {
-          "start": 18265,
-          "end": 18295,
-          "before": "\"Profile name:           %s\\n\"",
-          "after": "\"Profile name:          %s\\n\"",
-          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
-        },
-        {
-          "start": 18325,
-          "end": 18355,
-          "before": "\"Last updated:           %s\\n\"",
-          "after": "\"Last updated:          %s\\n\"",
-          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
-        },
-        {
-          "start": 18387,
-          "end": 18417,
-          "before": "\"Rank:                   %s\\n\"",
-          "after": "\"Rank:                  %s\\n\"",
-          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
-        },
-        {
-          "start": 18518,
-          "end": 18528,
-          "before": "\"        \"",
-          "after": "\"       \"",
-          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
-        }
-      ],
-      "reason": "Aligned instructions expose different string payloads; this is a source experiment, not ownership or equality proof.",
-      "application_command": "python tools/apply_pattern.py game-profile save_profile repair_literal_content"
-    }
-  ],
+  "source_patterns": [],
   "frame_layout": null,
   "signedness": {
     "variables": [
@@ -990,8 +810,8 @@
           "target_window": [
             {
               "offset": 968,
-              "assembly": "mov    $0x40e,%ecx",
-              "bytes": "b90e040000"
+              "assembly": "mov    $0x3f9,%ecx",
+              "bytes": "b9f9030000"
             },
             {
               "offset": 973,
@@ -1022,8 +842,8 @@
           "target_window": [
             {
               "offset": 956,
-              "assembly": "mov    $0x40e,%esi",
-              "bytes": "be0e040000"
+              "assembly": "mov    $0x3f9,%esi",
+              "bytes": "bef9030000"
             },
             {
               "offset": 961,
@@ -1064,8 +884,8 @@
             },
             {
               "offset": 1056,
-              "assembly": "movl   $0x420,(%esp)",
-              "bytes": "c7042420040000"
+              "assembly": "movl   $0x40c,(%esp)",
+              "bytes": "c704240c040000"
             }
           ],
           "fallthrough_offset": 404
@@ -1087,14 +907,14 @@
     "candidate_byte": 218,
     "original_byte": 244
   },
-  "mismatch_count": 16,
+  "mismatch_count": 4,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
   "instruction_alignment": {
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 239,
     "candidate_instruction_count": 239,
-    "changed_group_count": 6,
-    "shown_group_count": 3,
+    "changed_group_count": 2,
+    "shown_group_count": 2,
     "hunks": [
       {
         "kind": "replace",
@@ -1119,9 +939,9 @@
           "instructions": [
             {
               "address": 5093,
-              "bytes": "b952020000",
+              "bytes": "b955020000",
               "mnemonic": "mov",
-              "assembly": "mov    $0x252,%ecx"
+              "assembly": "mov    $0x255,%ecx"
             }
           ],
           "omitted_instructions": 0
@@ -1150,40 +970,9 @@
           "instructions": [
             {
               "address": 5107,
-              "bytes": "be52020000",
+              "bytes": "be55020000",
               "mnemonic": "mov",
-              "assembly": "mov    $0x252,%esi"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "replace",
-        "original": {
-          "instruction_start": 133,
-          "instruction_end": 134,
-          "function_offset": 631,
-          "instructions": [
-            {
-              "address": 4302383,
-              "bytes": "c74424043c764d00",
-              "mnemonic": "movl",
-              "assembly": "movl   $0x4d763c,0x4(%esp)"
-            }
-          ],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 133,
-          "instruction_end": 134,
-          "function_offset": 631,
-          "instructions": [
-            {
-              "address": 5435,
-              "bytes": "c7442404cc040000",
-              "mnemonic": "movl",
-              "assembly": "movl   $0x4cc,0x4(%esp)"
+              "assembly": "mov    $0x255,%esi"
             }
           ],
           "omitted_instructions": 0
@@ -1374,9 +1163,9 @@
       },
       {
         "address": 5093,
-        "bytes": "b952020000",
+        "bytes": "b955020000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x252,%ecx",
+        "assembly": "mov    $0x255,%ecx",
         "dwarf_variables": []
       },
       {
@@ -1409,9 +1198,9 @@
       },
       {
         "address": 5107,
-        "bytes": "be52020000",
+        "bytes": "be55020000",
         "mnemonic": "mov",
-        "assembly": "mov    $0x252,%esi",
+        "assembly": "mov    $0x255,%esi",
         "dwarf_variables": []
       },
       {
@@ -1690,7 +1479,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d756b",
-      "candidate_addend": 1020,
+      "candidate_addend": 999,
       "dwarf_type": null,
       "references": [
         119
@@ -1700,7 +1489,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1716,7 +1505,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d7574",
-      "candidate_addend": 1029,
+      "candidate_addend": 1008,
       "dwarf_type": null,
       "references": [
         226
@@ -1726,7 +1515,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1742,7 +1531,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d73da",
-      "candidate_addend": 594,
+      "candidate_addend": 597,
       "dwarf_type": null,
       "references": [
         290,
@@ -1753,7 +1542,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1769,7 +1558,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d757f",
-      "candidate_addend": 1040,
+      "candidate_addend": 1019,
       "dwarf_type": null,
       "references": [
         349
@@ -1779,7 +1568,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1795,7 +1584,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d758c",
-      "candidate_addend": 1053,
+      "candidate_addend": 1032,
       "dwarf_type": null,
       "references": [
         376
@@ -1805,7 +1594,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1821,7 +1610,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d75b0",
-      "candidate_addend": 1088,
+      "candidate_addend": 1068,
       "dwarf_type": null,
       "references": [
         513
@@ -1831,7 +1620,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1847,7 +1636,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d75bf",
-      "candidate_addend": 1103,
+      "candidate_addend": 1083,
       "dwarf_type": null,
       "references": [
         529
@@ -1857,7 +1646,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1873,7 +1662,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d75f2",
-      "candidate_addend": 1154,
+      "candidate_addend": 1134,
       "dwarf_type": null,
       "references": [
         580
@@ -1883,7 +1672,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1899,7 +1688,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d760c",
-      "candidate_addend": 1180,
+      "candidate_addend": 1160,
       "dwarf_type": null,
       "references": [
         612
@@ -1909,7 +1698,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -1924,25 +1713,25 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\profile.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 1228,
+      "historical_address": "0x4d763c",
+      "candidate_addend": 1208,
       "dwarf_type": null,
       "references": [
         635
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
           "detail_report": "docs/current/reports/game-profile.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": []
     },
     {
@@ -1950,25 +1739,25 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\profile.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 1256,
+      "historical_address": "0x4d7657",
+      "candidate_addend": 1235,
       "dwarf_type": null,
       "references": [
         655
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
           "detail_report": "docs/current/reports/game-profile.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": []
     },
     {
@@ -2206,7 +1995,7 @@
               "section_offset": 32,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1753,
+              "addend": 1729,
               "target_va": 5077189,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2215,7 +2004,7 @@
               "section_offset": 36,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1761,
+              "addend": 1737,
               "target_va": 5077197,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2224,7 +2013,7 @@
               "section_offset": 40,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1763,
+              "addend": 1739,
               "target_va": 5077199,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2233,7 +2022,7 @@
               "section_offset": 44,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1765,
+              "addend": 1741,
               "target_va": 5077201,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2242,7 +2031,7 @@
               "section_offset": 48,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1767,
+              "addend": 1743,
               "target_va": 5077203,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2251,7 +2040,7 @@
               "section_offset": 52,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1769,
+              "addend": 1745,
               "target_va": 5077205,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2260,7 +2049,7 @@
               "section_offset": 56,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1771,
+              "addend": 1747,
               "target_va": 5077207,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2269,7 +2058,7 @@
               "section_offset": 60,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1773,
+              "addend": 1749,
               "target_va": 5077209,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2278,7 +2067,7 @@
               "section_offset": 64,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1775,
+              "addend": 1751,
               "target_va": 5077211,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2287,7 +2076,7 @@
               "section_offset": 68,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1778,
+              "addend": 1754,
               "target_va": 5077214,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2296,7 +2085,7 @@
               "section_offset": 72,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1782,
+              "addend": 1758,
               "target_va": 5077218,
               "resolution": "unique read-only initializer literal or table content"
             },
@@ -2305,7 +2094,7 @@
               "section_offset": 76,
               "type": 6,
               "symbol": ".rdata",
-              "addend": 1787,
+              "addend": 1763,
               "target_va": 5077223,
               "resolution": "unique read-only initializer literal or table content"
             }
@@ -2335,25 +2124,25 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\profile.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 1284,
+      "historical_address": "0x4d7672",
+      "candidate_addend": 1262,
       "dwarf_type": null,
       "references": [
         747
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
           "detail_report": "docs/current/reports/game-profile.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": []
     },
     {
@@ -2361,25 +2150,25 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\profile.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 1312,
+      "historical_address": "0x4d768d",
+      "candidate_addend": 1289,
       "dwarf_type": null,
       "references": [
         763
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
           "detail_report": "docs/current/reports/game-profile.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": []
     },
     {
@@ -2388,7 +2177,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d757d",
-      "candidate_addend": 1038,
+      "candidate_addend": 1017,
       "dwarf_type": null,
       "references": [
         957,
@@ -2399,7 +2188,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -2415,7 +2204,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d75c4",
-      "candidate_addend": 1108,
+      "candidate_addend": 1088,
       "dwarf_type": null,
       "references": [
         1032
@@ -2425,7 +2214,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -2441,7 +2230,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d7590",
-      "candidate_addend": 1056,
+      "candidate_addend": 1036,
       "dwarf_type": null,
       "references": [
         1059
@@ -2451,7 +2240,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 1880,
+          "logical_size": 1856,
           "content_equal": false,
           "unresolved_initializer_relocations": 0,
           "independent_section_bases": [],
@@ -2465,8 +2254,8 @@
   "literal_dependencies": [
     {
       "candidate_section": ".rdata",
-      "candidate_addend": 594,
-      "candidate_card": "docs/current/literals/game-profile/252.json",
+      "candidate_addend": 597,
+      "candidate_card": "docs/current/literals/game-profile/255.json",
       "placement_confidence": "UNPROVEN",
       "multiple_historical_addresses": false,
       "function_offsets": [
@@ -2482,66 +2271,6 @@
       ],
       "historical_address_count": 1,
       "unaligned_reference_count": 11,
-      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
-    },
-    {
-      "candidate_section": ".rdata",
-      "candidate_addend": 1228,
-      "candidate_card": "docs/current/literals/game-profile/4cc.json",
-      "placement_confidence": "UNPROVEN",
-      "multiple_historical_addresses": false,
-      "function_offsets": [
-        635
-      ],
-      "peer_function_count": 0,
-      "peer_functions": [],
-      "historical_address_count": 1,
-      "unaligned_reference_count": 0,
-      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
-    },
-    {
-      "candidate_section": ".rdata",
-      "candidate_addend": 1256,
-      "candidate_card": "docs/current/literals/game-profile/4e8.json",
-      "placement_confidence": "UNPROVEN",
-      "multiple_historical_addresses": false,
-      "function_offsets": [
-        655
-      ],
-      "peer_function_count": 0,
-      "peer_functions": [],
-      "historical_address_count": 1,
-      "unaligned_reference_count": 0,
-      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
-    },
-    {
-      "candidate_section": ".rdata",
-      "candidate_addend": 1284,
-      "candidate_card": "docs/current/literals/game-profile/504.json",
-      "placement_confidence": "UNPROVEN",
-      "multiple_historical_addresses": false,
-      "function_offsets": [
-        747
-      ],
-      "peer_function_count": 0,
-      "peer_functions": [],
-      "historical_address_count": 1,
-      "unaligned_reference_count": 0,
-      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
-    },
-    {
-      "candidate_section": ".rdata",
-      "candidate_addend": 1312,
-      "candidate_card": "docs/current/literals/game-profile/520.json",
-      "placement_confidence": "UNPROVEN",
-      "multiple_historical_addresses": false,
-      "function_offsets": [
-        763
-      ],
-      "peer_function_count": 0,
-      "peer_functions": [],
-      "historical_address_count": 1,
-      "unaligned_reference_count": 0,
       "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
     }
   ],
@@ -3078,7 +2807,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 290,
-      "addend": 594,
+      "addend": 597,
       "target_va": 5075930,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5075930,
@@ -3091,9 +2820,9 @@
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
           "address": 5093,
-          "bytes": "b952020000",
+          "bytes": "b955020000",
           "mnemonic": "mov",
-          "assembly": "mov    $0x252,%ecx"
+          "assembly": "mov    $0x255,%ecx"
         },
         "original_instruction_at_offset": {
           "address": 4302041,
@@ -3112,7 +2841,7 @@
       "symbol": ".rdata",
       "type": 6,
       "function_offset": 304,
-      "addend": 594,
+      "addend": 597,
       "target_va": 5075930,
       "resolution": "unique read-only literal or table content",
       "resolved_value": 5075930,
@@ -3125,9 +2854,9 @@
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
           "address": 5107,
-          "bytes": "be52020000",
+          "bytes": "be55020000",
           "mnemonic": "mov",
-          "assembly": "mov    $0x252,%esi"
+          "assembly": "mov    $0x255,%esi"
         },
         "original_instruction_at_offset": {
           "address": 4302055,
@@ -3137,142 +2866,6 @@
         },
         "operand_kind": "IMMEDIATE_OR_LITERAL",
         "original_operand_value": 5075444
-      }
-    },
-    {
-      "section": 1,
-      "offset": 5439,
-      "symbol_index": 32,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 635,
-      "addend": 1228,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5076540,
-      "equal": false,
-      "comparison_context": {
-        "state": "ALIGNED_OPERAND",
-        "original_value_is_operand": true,
-        "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 5435,
-          "bytes": "c7442404cc040000",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4cc,0x4(%esp)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4302383,
-          "bytes": "c74424043c764d00",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4d763c,0x4(%esp)"
-        },
-        "operand_kind": "IMMEDIATE_OR_LITERAL",
-        "original_operand_value": 5076540
-      }
-    },
-    {
-      "section": 1,
-      "offset": 5459,
-      "symbol_index": 32,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 655,
-      "addend": 1256,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5076567,
-      "equal": false,
-      "comparison_context": {
-        "state": "ALIGNED_OPERAND",
-        "original_value_is_operand": true,
-        "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 5455,
-          "bytes": "c7442404e8040000",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4e8,0x4(%esp)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4302403,
-          "bytes": "c744240457764d00",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4d7657,0x4(%esp)"
-        },
-        "operand_kind": "IMMEDIATE_OR_LITERAL",
-        "original_operand_value": 5076567
-      }
-    },
-    {
-      "section": 1,
-      "offset": 5551,
-      "symbol_index": 32,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 747,
-      "addend": 1284,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5076594,
-      "equal": false,
-      "comparison_context": {
-        "state": "ALIGNED_OPERAND",
-        "original_value_is_operand": true,
-        "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 5547,
-          "bytes": "c744240404050000",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x504,0x4(%esp)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4302495,
-          "bytes": "c744240472764d00",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4d7672,0x4(%esp)"
-        },
-        "operand_kind": "IMMEDIATE_OR_LITERAL",
-        "original_operand_value": 5076594
-      }
-    },
-    {
-      "section": 1,
-      "offset": 5567,
-      "symbol_index": 32,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 763,
-      "addend": 1312,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5076621,
-      "equal": false,
-      "comparison_context": {
-        "state": "ALIGNED_OPERAND",
-        "original_value_is_operand": true,
-        "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 5563,
-          "bytes": "c744240420050000",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x520,0x4(%esp)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4302511,
-          "bytes": "c74424048d764d00",
-          "mnemonic": "movl",
-          "assembly": "movl   $0x4d768d,0x4(%esp)"
-        },
-        "operand_kind": "IMMEDIATE_OR_LITERAL",
-        "original_operand_value": 5076621
       }
     }
   ],
@@ -3457,30 +3050,30 @@
       "required_evidence": "literal_diagnostics",
       "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED",
       "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
         "observed_features": [],
         "evidence_field": "literal_diagnostics",
-        "priority_bonus_eligible": true,
+        "priority_bonus_eligible": false,
         "compiler_scope_matches": true,
         "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": 10,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.",
+  "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
-      "body_edit_allowed": true,
+      "body_edit_allowed": false,
       "known_difference_class": true,
       "source_body_located": true,
       "calls_resolved": true,
       "indirect_flow_within_medium_limit": true,
-      "same_size_and_at_most_12_differing_bytes": false,
+      "same_size_and_at_most_12_differing_bytes": true,
       "no_indirect_flow": true,
       "historical_size_at_most_900": false,
       "cheap_difference_class": false
@@ -3488,7 +3081,7 @@
     "observed": {
       "historical_size": 1073,
       "candidate_size": 1073,
-      "differing_bytes": 16,
+      "differing_bytes": 4,
       "unresolved_calls": 0,
       "indirect_transfers": 0
     },
@@ -3709,20 +3302,7 @@
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
-  "source_pattern_prerequisites": [
-    {
-      "function_offset": 290,
-      "symbol": ".rdata",
-      "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
-      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
-    },
-    {
-      "function_offset": 304,
-      "symbol": ".rdata",
-      "reason": "CONTENT_EQUAL_OWNER_UNPROVEN",
-      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
-    }
-  ],
+  "source_pattern_prerequisites": [],
   "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."

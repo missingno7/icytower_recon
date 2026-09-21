@@ -458,26 +458,6 @@
       "size": 0
     },
     {
-      "function": "my_alert",
-      "source": "src/main.c",
-      "sources": [
-        "src/menu.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -25,
-      "reason": "Caller argument counts must be reviewed before installing the historical prototype: src/menu.c:576",
-      "begin_command": "python tools/interface_task.py begin my_alert",
-      "verification_command": "python tools/interface_task.py check my_alert",
-      "promotion_command": "python tools/interface_task.py promote my_alert",
-      "state": "CALLSITE_REPAIR_REQUIRED",
-      "status": "CALLSITE_ARITY_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/my_alert.json",
-      "size": 0
-    },
-    {
       "function": "profile_data_page_general",
       "source": "src/profile.c",
       "sources": null,
@@ -1827,7 +1807,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 285,
+          "line": 286,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -1900,7 +1880,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 299,
+          "line": 300,
           "kind": "NC",
           "name": "build_menu_string",
           "return_type": "void",
@@ -1927,7 +1907,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 349,
+          "line": 350,
           "kind": "NF",
           "name": "build_menu_string",
           "return_type": "void",
@@ -2103,7 +2083,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 288,
+          "line": 289,
           "kind": "NC",
           "name": "change_profile",
           "return_type": "void",
@@ -2174,7 +2154,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 284,
+          "line": 285,
           "kind": "NC",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -5132,7 +5112,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 280,
+          "line": 281,
           "kind": "NC",
           "name": "draw_menu",
           "return_type": "void",
@@ -5174,7 +5154,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 304,
+          "line": 305,
           "kind": "NF",
           "name": "draw_menu",
           "return_type": "void",
@@ -9213,7 +9193,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 31,
+          "line": 32,
           "kind": "NF",
           "name": "get_selection_value",
           "return_type": "int",
@@ -9284,7 +9264,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 22,
+          "line": 23,
           "kind": "NF",
           "name": "get_slider_value",
           "return_type": "int",
@@ -9696,7 +9676,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 436,
+          "line": 437,
           "kind": "NF",
           "name": "handle_menu",
           "return_type": "int",
@@ -12877,7 +12857,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 40,
+          "line": 41,
           "kind": "NF",
           "name": "key_to_str",
           "return_type": "void",
@@ -12896,7 +12876,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 279,
+          "line": 280,
           "kind": "NC",
           "name": "key_to_str",
           "return_type": "void",
@@ -12953,7 +12933,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 286,
+          "line": 287,
           "kind": "NC",
           "name": "line_alert",
           "return_type": "void",
@@ -15293,17 +15273,23 @@
         },
         {
           "file": "src/menu.c",
-          "line": 576,
-          "kind": "IC",
+          "line": 1,
+          "kind": "NC",
           "name": "my_alert",
           "return_type": "int",
           "parameter_types": [
-            "/*???*/"
+            "char*",
+            "char*",
+            "int",
+            "int"
           ],
-          "declaration": "extern int my_alert (/* ??? */);",
+          "declaration": "extern int my_alert (char *, char *, int, int);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "/*???*/"
+            "char*",
+            "char*",
+            "int",
+            "int"
           ],
           "cu": "src/menu.c",
           "game_type_layouts": []
@@ -15355,9 +15341,9 @@
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -15822,7 +15808,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 282,
+          "line": 283,
           "kind": "NC",
           "name": "play_menu_move",
           "return_type": "void",
@@ -15893,7 +15879,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 283,
+          "line": 284,
           "kind": "NC",
           "name": "play_menu_select",
           "return_type": "void",
@@ -17598,7 +17584,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 262,
+          "line": 263,
           "kind": "NF",
           "name": "reset_menu",
           "return_type": "void",
@@ -19732,7 +19718,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 33,
+          "line": 34,
           "kind": "NF",
           "name": "set_selection_value",
           "return_type": "int",
@@ -19781,7 +19767,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 24,
+          "line": 25,
           "kind": "NF",
           "name": "set_slider_value",
           "return_type": "int",
@@ -20662,7 +20648,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 385,
+          "line": 386,
           "kind": "NF",
           "name": "update_game_menu",
           "return_type": "int",
@@ -20933,7 +20919,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 287,
+          "line": 288,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -20995,7 +20981,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/menu.c",
           "file": "src/menu.c",
-          "line": 287
+          "line": 288
         },
         {
           "position": "parameter 1",
@@ -21595,7 +21581,7 @@
         },
         {
           "file": "src/menu.c",
-          "line": 285,
+          "line": 286,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -24528,116 +24514,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "my_alert",
-      "historical": [
-        {
-          "cu": "src/main.c",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 127134
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 408,
-          "kind": "NF",
-          "name": "my_alert",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "declaration": "extern int my_alert (char *func, char *txt, int choice, int enter_hint);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/menu.c",
-          "line": 576,
-          "kind": "IC",
-          "name": "my_alert",
-          "return_type": "int",
-          "parameter_types": [
-            "/*???*/"
-          ],
-          "declaration": "extern int my_alert (/* ??? */);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "/*???*/"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/replay.c",
-          "line": 112,
-          "kind": "NC",
-          "name": "my_alert",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "declaration": "extern int my_alert (char *, char *, int, int);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "cu": "src/replay.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/profile.c",
-          "line": 752,
-          "kind": "NC",
-          "name": "my_alert",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "declaration": "extern int my_alert (char *, char *, int, int);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "char*",
-            "int",
-            "int"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "profile_data_page_general",
       "historical": [
         {
@@ -25748,7 +25624,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 385,
+          "line": 386,
           "kind": "NF",
           "name": "update_game_menu",
           "return_type": "int",
@@ -25820,7 +25696,7 @@
       "candidate_declarations": [
         {
           "file": "src/menu.c",
-          "line": 287,
+          "line": 288,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -25882,7 +25758,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/menu.c",
           "file": "src/menu.c",
-          "line": 287
+          "line": 288
         },
         {
           "position": "parameter 1",

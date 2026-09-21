@@ -84,7 +84,7 @@ char *getGameDataXML(Tgame_data *gd)
     strcat(jumpTag,"    </jumps>\n");
     sprintf(keysTag,"  <keys>\n    <left>%d</left>\n    <right>%d</right>\n    <jump>%d</jump>\n  </keys>\n",gd->left,gd->right,gd->jump);
     sprintf(sdTag,"  <sd>\n");
-    for (i=0;i<gd->replay->tc_posts;i++) sprintf(sdTag,"%s      <entry clk=\"%2.2f\" qpc=\"%2.2f\" tme=\"%2.2f\" dns=\"%2.2f\" flr=\"%d\" />\n",sdTag,gd->replay->tc_c_data[i],gd->replay->tc_q_data[i],gd->replay->tc_t_data[i],gd->replay->tc_s_data[i],(int)gd->replay->tc_f_data[i]);
+    for (i=0;i<gd->replay->tc_posts;i++) sprintf(sdTag,"%s    <entry clk=\"%2.2f\" qpc=\"%2.2f\" tme=\"%2.2f\" dns=\"%2.2f\" flr=\"%d\" />\n",sdTag,gd->replay->tc_c_data[i],gd->replay->tc_q_data[i],gd->replay->tc_t_data[i],gd->replay->tc_s_data[i],(int)gd->replay->tc_f_data[i]);
     strcat(sdTag,"  </sd>\n");
     sprintf(xmlStr,"<itrcheck_results file_status=\"ok\" header=\"%c%c%c%c%c%c\" date=\"%s\">\n",gd->replay->header[0],gd->replay->header[1],gd->replay->header[2],gd->replay->header[3],gd->replay->header[4],gd->replay->header[5],gd->replay->date);
     if (cmdline.tiny) {

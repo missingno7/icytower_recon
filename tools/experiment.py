@@ -310,7 +310,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     # A read-only literal pool whose complete contribution differs can still have its base
     # established when several distinct literals each locate uniquely in the original .rdata
     # by content alone and every such anchor implies the same base. Operands are never used.
-    literal_anchor_evidence=[]
+    literal_anchor_evidence=[]; pool_anchors={}
     for section in obj.sections:
         if section['name']!='.rdata' or section_bases.get(section['index']): continue
         content=obj.section_bytes(section); anchors={}
@@ -323,12 +323,33 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             if located is None: continue
             anchors.setdefault(located-addend,set()).add(addend)
         record={'section':section['name'],'candidate_bases':{str(k):sorted(v) for k,v in anchors.items()},'established':None,
-                'limit':'Unique candidate literal content located in original read-only data; the tested operands are never consulted. A base is used only when at least two distinct literals agree and none disagrees.'}
+                'limit':'Unique candidate literal content located in original read-only data; the tested operands are never consulted. A base is used only when at least two distinct literals agree and none disagrees. Piecewise runs resolve a non-unique literal only between two unique anchors that agree and only when the candidate bytes recur at the derived address.'}
         if len(anchors)==1:
             base,addends=next(iter(anchors.items()))
             if len(addends)>=2:
                 section_bases.setdefault(section['index'],set()).add(base); record['established']=base
+        pool_anchors[section['index']]=sorted((a,b) for b,addends in anchors.items() for a in addends)
+        record['anchor_count']=len(pool_anchors[section['index']])
         literal_anchor_evidence.append(record)
+    def anchored_literal_target(sym,addend,instruction):
+        """Resolve a non-unique read-only literal from the pool run that encloses it.
+
+        The nearest unique anchors below and above the addend must imply the same base, and the
+        candidate literal bytes must recur at base+addend in the original. Both facts come from
+        candidate pool content and original read-only data only; the tested operand is unused.
+        """
+        if sym['name']!='.rdata' or sym['section']<=0: return None
+        anchors=pool_anchors.get(sym['section'])
+        if not anchors: return None
+        below=[x for x in anchors if x[0]<addend]; above=[x for x in anchors if x[0]>addend]
+        if not below or not above: return None
+        (a0,b0),(a1,b1)=below[-1],above[0]
+        if b0!=b1: return None
+        section=sections_by_index.get(sym['section'])
+        payload=candidate_literal(obj.section_bytes(section),addend,instruction) if section else None
+        if payload is None or len(payload)<2: return None
+        if exe.at_va(b0+addend,len(payload))!=payload: return None
+        return b0+addend
     rows=[]
     candidate_by_start={d['low_pc']:d for d in candidates.values()}
     for f in original:
@@ -352,6 +373,9 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
             literal=unique_literal_target(sym,addend,bytes(code[max(0,p-2):p]))
             if target is None and literal is not None:
                 target,reason=literal,'unique read-only literal or table content'
+            if target is None:
+                anchored=anchored_literal_target(sym,addend,bytes(code[max(0,p-2):p]))
+                if anchored is not None: target,reason=anchored,'read-only pool run between agreeing unique anchors with recurring literal bytes'
             expected=None
             if r['type']==6 and target is not None: expected=target&0xffffffff
             elif r['type']==20 and target is not None: expected=(target-f['va']-p-4)&0xffffffff

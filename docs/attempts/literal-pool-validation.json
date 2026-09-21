@@ -1,0 +1,34 @@
+{
+  "scope": "Supervisor checkpoint evidence for the literal-pool intervention.",
+  "census": "111 unresolved .rdata text relocations in non-exact functions: 63 movl immediate strings, 24 flds, 16 mov immediate, 2 fmull, 2 fmuls, 1 fldl, 3 tables; 0 uniquely locatable by content or 12-byte neighbourhood; 50 ambiguous floats/strings; string payloads absent from the original are content differences",
+  "menu_call_fix": {
+    "file": "src/menu.c",
+    "before": "my_alert(\"handle_menu\", buf, NULL, \"OK\", NULL, 0, 0);",
+    "after": "my_alert(\"handle_menu\", buf, 0, 0);",
+    "evidence": "original handle_menu pushes 0x4d6ea1 ('handle_menu'), buf, 0, 0 before call _my_alert; the candidate 'OK' literal has no counterpart in the historical pool"
+  },
+  "pool_repairs_applied": {
+    "src/profile.c": 8,
+    "src/game_data.c": 1,
+    "src/main.c": 1
+  },
+  "pool_repair_reverted": {
+    "src/options.c": "it15 -> it14 URL inside exact reset_options; protected body, awaits explicit channel"
+  },
+  "pool_clusters": {
+    "game-profile": "13 -> 9",
+    "game-game-data": "5 -> 3",
+    "game-menu": "2 -> 1 (base established)",
+    "game-options": "whole pool content_equal only with the reverted URL repair"
+  },
+  "function_statuses": {
+    "FUNCTION_MATCH": 187,
+    "DIFFER": 63,
+    "CODEGEN_SIMILAR": 2,
+    "MISSING": 1
+  },
+  "promotions": [
+    "my_alert (INTERFACE) via mechanical_grinder run 20260921T113538469139Z"
+  ],
+  "select_profile_evidence": "'SELECT PROFILE' and '(current)' locate at 0x4d6ce5/0x4d6cf5, outside profile.c's pool region; the historical select_profile does not carry these literals"
+}

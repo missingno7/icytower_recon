@@ -2705,7 +2705,7 @@ int init_game(int argc, char **argv)
             log2file(" sfx15.dat loaded");
         else {
             log2file(" could not load data/sfx15.dat");
-            log2file(" no sound");
+            log2file("no sound");
         }
         packfile_password(NULL);
         if (sfx) {

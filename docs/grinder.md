@@ -519,3 +519,17 @@ regression, and only while the source and compiled object identities still match
 trial. Every promotion invalidates the remaining trials; rerun the probe to regenerate
 them. The whole-file historical reorder stays a supervisor task while neighbors differ,
 because each function's bytes depend on the functions compiled before it.
+
+
+## Read-only literal pools
+
+`python tools/pool_literals.py <target>...` is a supervisor diagnosis. Uniquely located
+candidate literals give the pool base for the run around them; a candidate string whose
+historical counterpart at that address differs is proposed as a repair only when the
+following literals re-synchronize under the implied length delta (or the next unique
+anchor confirms it), the historical text starts at a literal boundary and the texts are
+similar. Proposals with a unique source token are applied by the supervisor and checked by
+fresh 25-CU verification; a literal inside an exact body is not edited through this path.
+Evidence is retained under `docs/attempts/pool-literals/`. The verifier also resolves a
+non-unique literal between two agreeing unique anchors when its bytes recur at the derived
+address (`read-only pool run` resolution); this never consults the tested operand.

@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "my_alert",
-  "source": "src/main.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
-  "status": "CALLSITE_ARITY_CONFLICT",
-  "state": "CALLSITE_REPAIR_REQUIRED",
-  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -23,61 +19,5 @@
       "die": 127134
     }
   ],
-  "type_layout_issues": [],
-  "changes": [
-    {
-      "start": 0,
-      "end": 0,
-      "before": "",
-      "after": "extern int my_alert(char*, char*, int, int);\n",
-      "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
-      "file": "src/menu.c",
-      "line": 576
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check my_alert",
-  "begin_command": "python tools/interface_task.py begin my_alert",
-  "apply_command": "python tools/interface_task.py apply my_alert",
-  "promotion_command": "python tools/interface_task.py promote my_alert",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "sources": [
-    "src/menu.c"
-  ],
-  "source_identities": {
-    "src/menu.c": {
-      "size": 15740,
-      "sha256": "207533cdb083162b4b872281bebce941366afb408b413ce5c17cf87346a22f63"
-    }
-  },
-  "affected_targets": [
-    "game-menu"
-  ],
-  "priority": -25,
-  "expected_prototype": "extern int my_alert(char*, char*, int, int);",
-  "reason": "Caller argument counts must be reviewed before installing the historical prototype: src/menu.c:576",
-  "callsite_arity_conflicts": [
-    {
-      "caller": "handle_menu",
-      "line": 576,
-      "callee": "my_alert",
-      "observed_argument_groups": 7,
-      "historical_fixed_parameters": 4,
-      "historical_variadic": false,
-      "arguments": [
-        "\"handle_menu\"",
-        "buf",
-        "NULL",
-        "\"OK\"",
-        "NULL",
-        "0",
-        "0"
-      ],
-      "omitted_arguments": 0,
-      "state": "SOURCE_ARGUMENT_COUNT_CONFLICT",
-      "limit": "Source spelling before macro expansion; review macros and caller semantics. This blocks a mechanical prototype edit, never proves argument types or authorizes removing arguments.",
-      "source": "src/menu.c"
-    }
-  ],
-  "callsite_arity_conflict_count": 1,
-  "omitted_callsite_arity_conflicts": 0
+  "changes": []
 }

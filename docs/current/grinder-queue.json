@@ -589,7 +589,7 @@
       "first_difference": {
         "offset": 68,
         "original_va": 4302896,
-        "candidate_byte": 132,
+        "candidate_byte": 108,
         "original_byte": 149
       },
       "verification_command": "python tools/check_function.py game-profile load_profile",
@@ -918,6 +918,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "save_profile",
+      "status": "DIFFER",
+      "state": "CODEGEN_SIMILAR",
+      "priority": 10,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+      "first_difference": {
+        "offset": 290,
+        "original_va": 4302042,
+        "candidate_byte": 218,
+        "original_byte": 244
+      },
+      "verification_command": "python tools/check_function.py game-profile save_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile save_profile",
+      "promotion_command": "python tools/promote_function.py game-profile save_profile",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class",
+      "size": 1073,
+      "candidate_card": "docs/current/functions/profile/save_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "fadeIn",
@@ -1026,15 +1051,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/save_control.json",
       "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -1055,18 +1073,12 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
       "size": 0,
-      "prerequisite_for_count": 2,
+      "prerequisite_for_count": 1,
       "prerequisite_for": [
         {
           "source": "src/profile.c",
           "function": "create_profile",
           "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
           "planned_in_caller_cu": false
         }
       ],
@@ -1825,18 +1837,12 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
       "size": 0,
-      "prerequisite_for_count": 3,
+      "prerequisite_for_count": 2,
       "prerequisite_for": [
         {
           "source": "src/profile.c",
           "function": "profile_data_page_general",
           "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
           "planned_in_caller_cu": true
         },
         {
@@ -2170,37 +2176,6 @@
       "candidate_card": "docs/current/type-views/view_loadpng_MEMORY_READER_STATE.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "my_alert",
-      "source": "src/main.c",
-      "sources": [
-        "src/menu.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -25,
-      "reason": "Caller argument counts must be reviewed before installing the historical prototype: src/menu.c:576",
-      "begin_command": "python tools/interface_task.py begin my_alert",
-      "verification_command": "python tools/interface_task.py check my_alert",
-      "promotion_command": "python tools/interface_task.py promote my_alert",
-      "state": "CALLSITE_REPAIR_REQUIRED",
-      "status": "CALLSITE_ARITY_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/my_alert.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/menu.c",
-          "function": "handle_menu",
-          "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": true
-        }
-      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -2555,70 +2530,12 @@
     {
       "source": "src/profile.c",
       "target": "game-profile",
-      "function": "save_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-      "first_difference": {
-        "offset": 290,
-        "original_va": 4302042,
-        "candidate_byte": 218,
-        "original_byte": 244
-      },
-      "verification_command": "python tools/check_function.py game-profile save_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile save_profile",
-      "promotion_command": "python tools/promote_function.py game-profile save_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Known source recipe leaves independent relocation/owner prerequisites unresolved; do not run a knowingly incomplete automatic body repair.",
-      "size": 1073,
-      "candidate_card": "docs/current/functions/profile/save_profile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "get_profile_dir_for_profile",
-          "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "log2file",
-          "candidate_card": "docs/current/interfaces/log2file.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "profile_data_page_general",
-          "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "save_control",
-          "candidate_card": "docs/current/interfaces/save_control.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
       "function": "profile_data_page_general",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
       "priority": -25,
       "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "difference_class": "STACK_FRAME_LAYOUT",
       "first_difference": {
         "offset": 8,
         "original_va": 4298416,
@@ -2629,7 +2546,7 @@
       "begin_command": "python tools/grinder_task.py begin game-profile profile_data_page_general",
       "promotion_command": "python tools/promote_function.py game-profile profile_data_page_general",
       "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
       "size": 1091,
       "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
       "task_kind": "FUNCTION_BODY",
@@ -3449,19 +3366,11 @@
       "begin_command": "python tools/grinder_task.py begin game-menu handle_menu",
       "promotion_command": "python tools/promote_function.py game-menu handle_menu",
       "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu, view_profile",
       "size": 1120,
       "candidate_card": "docs/current/functions/menu/handle_menu.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "my_alert",
-          "candidate_card": "docs/current/interfaces/my_alert.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "update_game_menu",
           "candidate_card": "docs/current/interfaces/update_game_menu.json",
@@ -4046,7 +3955,7 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/log2file.json",
       "size": 0,
-      "prerequisite_for_count": 4,
+      "prerequisite_for_count": 3,
       "prerequisite_for": [
         {
           "source": "src/fld_adspot.c",
@@ -4064,12 +3973,6 @@
           "source": "src/profile.c",
           "function": "create_profile",
           "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
           "planned_in_caller_cu": true
         }
       ],

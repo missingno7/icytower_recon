@@ -503,7 +503,7 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
 
     data = malloc(2048);
     data[0] = 0;
-    sprintf(data, "%sCreated:     %s%s\n", data, filler, p->creationDate);
+    sprintf(data, "%sCreated:        %s%s\n", data, filler, p->creationDate);
     sprintf(data, "%s\n", data);
     seconds = p->seconds_spent_playing % 60;
     minutes = p->seconds_spent_playing / 60;
@@ -535,7 +535,7 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     buf[0] = 0;
     for (i = 10; i >= len; i--)
         strcat(buf, " ");
-    sprintf(data, "%sGames played:    %s%d     %s  Custom games played:  %5d\n",
+    sprintf(data, "%sGames played:   %s%d     %s  Custom games played:  %5d\n",
             data, filler, p->games_played, buf, p->custom_games_played);
     sprintf(data, "%sGames quit:     %s%d\n", data, filler, p->games_quit);
     sprintf(data, "%s\n", data);
@@ -589,10 +589,10 @@ int save_profile(Tprofile_create *p)
     }
     fwrite("ICY TOWER 1.4 PROFILE\n", 1, 22, fp);
     fwrite("**********************************************\n", 1, 47, fp);
-    fprintf(fp, "Profile name:           %s\n", p->handle);
-    fprintf(fp, "Last updated:           %s\n", p->saveDate);
-    fprintf(fp, "Rank:                   %s\n", get_rank((Tprofile_rank *)p));
-    data_general = profile_data_page_general((Tprofile_general *)p, "        ");
+    fprintf(fp, "Profile name:          %s\n", p->handle);
+    fprintf(fp, "Last updated:          %s\n", p->saveDate);
+    fprintf(fp, "Rank:                  %s\n", get_rank((Tprofile_rank *)p));
+    data_general = profile_data_page_general((Tprofile_general *)p, "       ");
     data_basic = profile_data_page_basic((Tprofile_basic *)p);
     data_advanced = profile_data_page_advanced((Tprofile_advanced *)p);
     data_extra = profile_data_page_extra((Tprofile_extra *)p);
@@ -668,7 +668,7 @@ void view_profile(void *profile)
     data_general = profile_data_page_general((Tprofile_general *)profile,
                                              "");
     sprintf(data_general,
-            "%s--------------------------------------------------------------------------\n\n",
+            "%s-------------------------------------------------------------\n\n",
             data_general);
     data_basic = profile_data_page_basic((Tprofile_basic *)profile);
     data_advanced = profile_data_page_advanced((Tprofile_advanced *)profile);
@@ -681,7 +681,7 @@ void view_profile(void *profile)
     if (y2 < y1)
         y2 = y1;
     draw_buffer(bmp,
-                "--------------------------------------------------------------------------\n\n",
+                "-------------------------------------------------------------\n\n",
                 85, y2);
 
     rank = get_rank_id((Tprofile_rank *)profile);

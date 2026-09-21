@@ -1237,3 +1237,24 @@ none disagrees. main.c's pool order still disagrees, so no base was adopted ther
 trial content check at anchored addresses was removed because it turned a known data
 difference (the it15 URL in options.c) into a false function regression; string content
 stays a separate data proof.
+
+
+## Literal pools converge with the code
+
+A census of the 111 unresolved read-only relocations in non-exact functions showed the
+verifier is not width-blind: every case is a repeated float whose pool neighbourhood
+differs, a string whose text differs from history, or a switch table. menu.c's pool was
+in historical order except one extra "OK" literal, which came from a seven-argument
+`alert`-shaped call to the four-parameter my_alert in handle_menu; the original passes
+four arguments (0, 0). Correcting that call let 25 unique anchors agree and established
+menu.c's pool base, and the my_alert prototype then promoted mechanically.
+
+Pool-aligned diagnosis (tools/pool_literals.py) reads the historical text of a
+mismatching string from the run's base without any code alignment and proposes a repair
+only when the following literals re-synchronize. Eight spacing repairs in profile.c,
+game_data.c and main.c were confirmed and applied; save_profile became a same-shape body
+and profile.c's pool clusters fell from 13 to 9. The options.c URL literal (it15 versus
+it14) is confirmed but sits inside the exact reset_options body, so it awaits an
+explicit protected-body literal channel. Remaining profile clusters are an extra
+pluralization literal and "SELECT PROFILE"/"(current)" strings that the original keeps
+in another CU's region, which is body-level evidence for select_profile.
