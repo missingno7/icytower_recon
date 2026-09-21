@@ -1,20 +1,20 @@
 {
   "workflow_states": {
     "FUNCTION_MATCH": 169,
-    "SOURCE_DIFFER": 53,
-    "CODEGEN_SIMILAR": 8,
+    "SOURCE_DIFFER": 52,
+    "CODEGEN_SIMILAR": 9,
     "BODY_MATCH_LAYOUT_BLOCKED": 22,
     "MISSING": 1
   },
   "difference_classes": {
     "EXACT": 169,
     "SOURCE_CONTROL_FLOW_SHAPE": 9,
-    "RELOCATION_OR_LITERAL_LAYOUT": 7,
+    "RELOCATION_OR_LITERAL_LAYOUT": 8,
     "STACK_FRAME_LAYOUT": 17,
     "SAME_CU_CALL_LAYOUT": 22,
     "REGISTER_OR_INSTRUCTION_SELECTION": 14,
     "COMMON_BSS_LAYOUT": 1,
-    "UNKNOWN_SUPERVISOR": 8,
+    "UNKNOWN_SUPERVISOR": 7,
     "LITERAL_CONTENT_DIFFERENCE": 2,
     "INSTRUCTION_ORDER": 1,
     "COMPILER_CONTEXT_DEPENDENCY": 2,
@@ -532,6 +532,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "show_instructions",
+      "status": "DIFFER",
+      "state": "CODEGEN_SIMILAR",
+      "priority": 34,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+      "first_difference": {
+        "offset": 56,
+        "original_va": 4244384,
+        "candidate_byte": 140,
+        "original_byte": 148
+      },
+      "verification_command": "python tools/check_function.py game-main show_instructions",
+      "begin_command": "python tools/grinder_task.py begin game-main show_instructions",
+      "promotion_command": "python tools/promote_function.py game-main show_instructions",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
+      "size": 370,
+      "candidate_card": "docs/current/functions/main/show_instructions.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/menu.c",
       "target": "game-menu",
       "function": "build_menu_string",
@@ -568,31 +593,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 388,
       "candidate_card": "docs/current/functions/main/testWindowResolution.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "show_instructions",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 24,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 3,
-        "original_va": 4244331,
-        "candidate_byte": 131,
-        "original_byte": 83
-      },
-      "verification_command": "python tools/check_function.py game-main show_instructions",
-      "begin_command": "python tools/grinder_task.py begin game-main show_instructions",
-      "promotion_command": "python tools/promote_function.py game-main show_instructions",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
-      "size": 370,
-      "candidate_card": "docs/current/functions/main/show_instructions.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },

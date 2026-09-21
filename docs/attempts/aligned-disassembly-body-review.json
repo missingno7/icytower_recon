@@ -2,20 +2,141 @@
  "scope": "Supervisor review of near-miss DIFFER bodies using an aligned original/candidate disassembly (masked relocations). Source variants were compiled with the locked command via check_function; original operands were comparison evidence only. Retained results below; positive results were re-verified by refresh_recovery --verify-all.",
  "date": "2026-09-21",
  "positive": [
-  {"function": "getGameDataXML", "target": "game-game-data", "result": "FUNCTION_MATCH 1855", "changes": ["actual <js> loop prints gd->jc[i-1] (original operand 0x28(%ebx,%esi,4) = gd->jc)", "misses counted incrementally: five if(...) misses++ plus per-i ccc/jc increments (original setne then inc per compare)", "result strcats split into separate literal calls ('  <results>\\n' 13 bytes, '    <claimed_results>\\n' 23 bytes, etc.; inline rep movsb lengths)", "branch written as if (!cmdline.tiny) { ... } else { ... } (register allocation of xmlStr in the tail)"]},
-  {"function": "generate_profile_checksum", "target": "game-profile", "result": "FUNCTION_MATCH 112", "changes": ["for (i = 0; i < sizeof(Tprofile) / 4; i++) cs += pos[i] * (i + 1); unsigned bound keeps two induction variables (ecx index, eax multiplier) as in the original"]},
-  {"function": "start_reward", "target": "game-main", "result": "476 -> 472 (historical size), remaining: itrcheck/options.flash register choice (emission-order class)", "changes": ["stars[p].sy negated: original computes sign - quotient (edx = (x>>31) - (hi>>5)) i.e. -(x/100)"]},
-  {"function": "draw_progress_bar", "target": "game-main", "result": "482 -> 486 CODEGEN_SIMILAR (only static 'value' .bss placement unresolved)", "changes": ["first drawing call is rect (GFX_VTABLE offset 0xbc), not rectfill (0x3c)"]},
-  {"function": "get_replay_property", "target": "game-replay", "result": "1143 -> 1147 CODEGEN_SIMILAR (pool layout only)", "changes": ["property dispatch as switch (compare order 3,4,2)", "legacy header check is '0','0','1' (cmpw $0x3130 at header[4]) returning -1001", "memcmp against the 'ITR140' literal (6-byte string content at the original operand)"]}
+  {
+   "function": "getGameDataXML",
+   "target": "game-game-data",
+   "result": "FUNCTION_MATCH 1855",
+   "changes": [
+    "actual <js> loop prints gd->jc[i-1] (original operand 0x28(%ebx,%esi,4) = gd->jc)",
+    "misses counted incrementally: five if(...) misses++ plus per-i ccc/jc increments (original setne then inc per compare)",
+    "result strcats split into separate literal calls ('  <results>\\n' 13 bytes, '    <claimed_results>\\n' 23 bytes, etc.; inline rep movsb lengths)",
+    "branch written as if (!cmdline.tiny) { ... } else { ... } (register allocation of xmlStr in the tail)"
+   ]
+  },
+  {
+   "function": "generate_profile_checksum",
+   "target": "game-profile",
+   "result": "FUNCTION_MATCH 112",
+   "changes": [
+    "for (i = 0; i < sizeof(Tprofile) / 4; i++) cs += pos[i] * (i + 1); unsigned bound keeps two induction variables (ecx index, eax multiplier) as in the original"
+   ]
+  },
+  {
+   "function": "start_reward",
+   "target": "game-main",
+   "result": "476 -> 472 (historical size), remaining: itrcheck/options.flash register choice (emission-order class)",
+   "changes": [
+    "stars[p].sy negated: original computes sign - quotient (edx = (x>>31) - (hi>>5)) i.e. -(x/100)"
+   ]
+  },
+  {
+   "function": "draw_progress_bar",
+   "target": "game-main",
+   "result": "482 -> 486 CODEGEN_SIMILAR (only static 'value' .bss placement unresolved)",
+   "changes": [
+    "first drawing call is rect (GFX_VTABLE offset 0xbc), not rectfill (0x3c)"
+   ]
+  },
+  {
+   "function": "get_replay_property",
+   "target": "game-replay",
+   "result": "1143 -> 1147 CODEGEN_SIMILAR (pool layout only)",
+   "changes": [
+    "property dispatch as switch (compare order 3,4,2)",
+    "legacy header check is '0','0','1' (cmpw $0x3130 at header[4]) returning -1001",
+    "memcmp against the 'ITR140' literal (6-byte string content at the original operand)"
+   ]
+  },
+  {
+   "function": "reset_player",
+   "target": "game-player",
+   "result": "FUNCTION_MATCH 296",
+   "changes": [
+    "three separate descending loops (for i=4..0) over ccc, jc, jcTop; fully unrolled by GCC in that order",
+    "allegro.h included (historical CU typedefs BITMAP/RGB/fixed)"
+   ]
+  },
+  {
+   "function": "jump_player",
+   "target": "game-player",
+   "result": "FUNCTION_MATCH 198 after CU verification",
+   "changes": [
+    "p->sy = MIN(-ABS(p->sx * 2), -max_speed[collision_type]) with Allegro macros (recomputation pattern), p->max_s = p->sx, rotate on sy < -22"
+   ]
+  },
+  {
+   "function": "update_player",
+   "target": "game-player",
+   "result": "398 -> 647 of 651; only the status==2 epilogue copy differs (a switch on status gives 651 with a 2-byte padding difference)",
+   "changes": [
+    "MID(-100, sy, max_speed[ct]) and MID(-ms, sx, ms) clamps",
+    "x bounds 85..555 as two separate ifs (FRE folds the second check after x=555), bounce = +-20 when ABS(sx) > 4",
+    "sy += 0.8 + gravity_modifier[get_demo()->gravity]; status 1 -> 2 when sy > 0"
+   ]
+  },
+  {
+   "function": "show_instructions",
+   "target": "game-main",
+   "result": "350 -> 370 CODEGEN_SIMILAR (.bss/.data placement only)",
+   "changes": [
+    "done = is_fire(&ctrl) != 0; if (key[KEY_ESC] || key[KEY_ENTER]) done = 1; while (!cycle_count) rest(2);"
+   ]
+  },
+  {
+   "function": "load_character",
+   "target": "game-main",
+   "result": "315 -> 330 (historical size); remaining esi/ebx/edi role swap (register class)",
+   "changes": [
+    "failure branch first: if (!bmp) { num_chars--; *allegro_errno = 0; return 0; } then strcpy/count++"
+   ]
+  }
  ],
  "negative": [
-  {"function": "draw_buffer", "target": "game-profile", "observation": "Original loads buffer[1] before inc %ebx; candidate increments first. Variants tried without effect: c = *++buffer; buffer++; c=*buffer; while(*buffer); while((c=*buffer)); for(...; c=*buffer) with buffer++ in body; while((c=*buffer++)) (175 bytes, worse)."},
-  {"function": "add_itr_file", "target": "game-replay", "observation": "Original places the FA_DIREC directory block out of line and the replay path inline after 'jne done'. Variants: if/else either order, early returns, (attrib & FA_DIREC) == FA_DIREC, == 0 forms. Results 353/364 bytes; every variant keeps the directory block inline. Layout decided by branch prediction, not source order."},
-  {"function": "handle_player_collision_original", "target": "game-main", "observation": "Original stores edge via shared 'mov %eax,0x58' tail for 1 and 2, immediate 0 for edge=0; candidate if-converts solid1==solid2 into setne. Variants: chain without returns, != order, solid1&&solid2 first, solid1==solid2 first, hoisted rotate=0. None matched (449/489/493/434)."},
-  {"function": "calc_replay_checksum", "target": "game-replay", "observation": "Original keeps (blc*17 + 17) un-distributed and adds the doubled group after the gravity term; candidate distributes *2 (constant 34). Variants: separate sum *= 2 / <<= 1 / += sum, constant placement, statement reordering, sum=0 init, unsigned cast. All 671..679 bytes, none exact."},
-  {"function": "update_game_menu", "target": "game-menu", "observation": "Candidate duplicates the is_down(ctrl) block after pos=num_posts (bb-reorder copy) and materializes return_value=0 differently; original does not copy. Not resolved by body edits tried so far."},
-  {"function": "load_character_bmp", "target": "game-custom", "observation": "Only difference is the position of the first fopen-failure log2file block (original mid-function after the fclose/else block; candidate near the end) plus one nop. Cold-block ordering; no source form found yet."},
-  {"function": "my_strcmp", "target": "game-replay", "observation": "Original: directory==1 -> -1 (dec %al), sort block out of line via je, stricmp tail inline. Variants with ==1, nested/flat range, switch, early 'if (a->directory) return stricmp' all keep the stricmp tail out of line (122..128 bytes)."}
+  {
+   "function": "draw_buffer",
+   "target": "game-profile",
+   "observation": "Original loads buffer[1] before inc %ebx; candidate increments first. Variants tried without effect: c = *++buffer; buffer++; c=*buffer; while(*buffer); while((c=*buffer)); for(...; c=*buffer) with buffer++ in body; while((c=*buffer++)) (175 bytes, worse)."
+  },
+  {
+   "function": "add_itr_file",
+   "target": "game-replay",
+   "observation": "Original places the FA_DIREC directory block out of line and the replay path inline after 'jne done'. Variants: if/else either order, early returns, (attrib & FA_DIREC) == FA_DIREC, == 0 forms. Results 353/364 bytes; every variant keeps the directory block inline. Layout decided by branch prediction, not source order."
+  },
+  {
+   "function": "handle_player_collision_original",
+   "target": "game-main",
+   "observation": "Original stores edge via shared 'mov %eax,0x58' tail for 1 and 2, immediate 0 for edge=0; candidate if-converts solid1==solid2 into setne. Variants: chain without returns, != order, solid1&&solid2 first, solid1==solid2 first, hoisted rotate=0. None matched (449/489/493/434)."
+  },
+  {
+   "function": "calc_replay_checksum",
+   "target": "game-replay",
+   "observation": "Original keeps (blc*17 + 17) un-distributed and adds the doubled group after the gravity term; candidate distributes *2 (constant 34). Variants: separate sum *= 2 / <<= 1 / += sum, constant placement, statement reordering, sum=0 init, unsigned cast. All 671..679 bytes, none exact."
+  },
+  {
+   "function": "update_game_menu",
+   "target": "game-menu",
+   "observation": "Candidate duplicates the is_down(ctrl) block after pos=num_posts (bb-reorder copy) and materializes return_value=0 differently; original does not copy. Not resolved by body edits tried so far."
+  },
+  {
+   "function": "load_character_bmp",
+   "target": "game-custom",
+   "observation": "Only difference is the position of the first fopen-failure log2file block (original mid-function after the fclose/else block; candidate near the end) plus one nop. Cold-block ordering; no source form found yet."
+  },
+  {
+   "function": "my_strcmp",
+   "target": "game-replay",
+   "observation": "Original: directory==1 -> -1 (dec %al), sort block out of line via je, stricmp tail inline. Variants with ==1, nested/flat range, switch, early 'if (a->directory) return stricmp' all keep the stricmp tail out of line (122..128 bytes)."
+  },
+  {
+   "function": "show_credits",
+   "target": "game-main",
+   "observation": "Original does not copy the outer loop header (jmp to a single condition after vol -= vol_step); candidate copies it and sinks vol -= vol_step below the copied condition. Variants (for(;;) breaks, closeButton in condition, <150, vol first, do-while, split conditions) gave 624..654, none 634."
+  },
+  {
+   "function": "extractHTTPResponse",
+   "target": "game-httpget",
+   "observation": "Original extractLine expansion never stores '\n' or '\r', stores *pOutBuffer=0 on the CRLF break, and folds the entry test to iDataLeft>0. Rewrites of the inline helper (nl-first, do-while guard, > form, separate increment) gave 895..1007 bytes; frame 0x84c vs 0x85c unresolved."
+  }
  ],
  "limit": "Diagnostic notes for the supervisor. Nothing here is proof; every positive result was accepted only through the ordinary fresh verification and regression check."
 }

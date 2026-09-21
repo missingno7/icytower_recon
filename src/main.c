@@ -167,10 +167,10 @@ void show_instructions(void)
         cycle_count=0;
         checkMenuFocus();
         poll_control(&ctrl,0);
-        done=is_fire(&ctrl);
-        if (key[KEY_ESC])
+        done=is_fire(&ctrl)!=0;
+        if (key[KEY_ESC] || key[KEY_ENTER])
             done=1;
-        if (!cycle_count)
+        while (!cycle_count)
             rest(2);
     }
     fadeOut(16);
@@ -1775,15 +1775,13 @@ int load_character(const char *filename, int attrib, void *param)
                 &characters[count].uses_datafile, characters[count].pal);
             log2file(" %s (%s): %s", name, filename,
                 characters[count].bmp ? "ok" : "error");
-            if (characters[count].bmp) {
-                strcpy(characters[count].name, name);
-                count++;
-                return 0;
-            }
-            else {
+            if (!characters[count].bmp) {
                 num_chars--;
                 *allegro_errno = 0;
+                return 0;
             }
+            strcpy(characters[count].name, name);
+            count++;
         }
     }
     return 0;
