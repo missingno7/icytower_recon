@@ -1,3 +1,8 @@
+extern void update_frame(void);
+extern void save_config(void);
+extern void handle_player_collision_vector(int, int);
+extern void handle_player_collision_original(int, int);
+extern void handle_player_collision_old(int, int);
 extern void handle_player_collision_combo(int, int);
 #include "recovered/Tmenu_char_selection.h"
 /* Partial historical main.c recovery. Other original entities remain absent. */
@@ -690,7 +695,7 @@ void take_screenshot(BITMAP *bmp)
 }
 
 #ifndef ICYTOWER_SYNTHETIC_LINK
-void open_web_browser(char *pURL)
+void open_web_browser(const char *pURL)
 {
     char cmd[256];
     sprintf(cmd, "url.dll, FileProtocolHandler %s", pURL);

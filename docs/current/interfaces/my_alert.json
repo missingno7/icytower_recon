@@ -4,10 +4,10 @@
   "function": "my_alert",
   "source": "src/main.c",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
+  "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
+  "status": "CALLSITE_ARITY_CONFLICT",
+  "state": "CALLSITE_REPAIR_REQUIRED",
+  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -52,7 +52,32 @@
   "affected_targets": [
     "game-menu"
   ],
-  "priority": 257,
+  "priority": -25,
   "expected_prototype": "extern int my_alert(char*, char*, int, int);",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+  "reason": "Caller argument counts must be reviewed before installing the historical prototype: src/menu.c:596",
+  "callsite_arity_conflicts": [
+    {
+      "caller": "handle_menu",
+      "line": 596,
+      "callee": "my_alert",
+      "observed_argument_groups": 7,
+      "historical_fixed_parameters": 4,
+      "historical_variadic": false,
+      "arguments": [
+        "\"handle_menu\"",
+        "buf",
+        "NULL",
+        "\"OK\"",
+        "NULL",
+        "0",
+        "0"
+      ],
+      "omitted_arguments": 0,
+      "state": "SOURCE_ARGUMENT_COUNT_CONFLICT",
+      "limit": "Source spelling before macro expansion; review macros and caller semantics. This blocks a mechanical prototype edit, never proves argument types or authorizes removing arguments.",
+      "source": "src/menu.c"
+    }
+  ],
+  "callsite_arity_conflict_count": 1,
+  "omitted_callsite_arity_conflicts": 0
 }

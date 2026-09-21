@@ -7,7 +7,7 @@
   "difference_class": "INTERFACE_DECLARATION",
   "status": "INTERFACE_CONFLICT",
   "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
+  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/main.c",
@@ -30,7 +30,7 @@
       "after": "extern void handle_player_collision_vector_2(int, int);\n",
       "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
       "file": "src/main.c",
-      "line": 1490
+      "line": 1495
     }
   ],
   "verification_command": "python tools/interface_task.py check handle_player_collision_vector_2",
@@ -43,14 +43,189 @@
   ],
   "source_identities": {
     "src/main.c": {
-      "size": 91899,
-      "sha256": "bfee55b67a5970d181de67cdd0a87650a22c07a9cf10d0f9ed3e6d646b634dd6"
+      "size": 92129,
+      "sha256": "22f58a5a9078d4d6b8190070de943d6af18f315e79a9ed6f94f0da5f2c5670a1"
     }
   },
   "affected_targets": [
     "game-main"
   ],
-  "priority": 257,
+  "priority": -100,
   "expected_prototype": "extern void handle_player_collision_vector_2(int, int);",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
+  "supervisor_block": {
+    "reason": "check failed: Focused contribution evidence: docs/attempts/interface-diagnostics/handle_player_collision_vector_2/game-main-f11d69baa0a3b6d11f9b2b2790d7e478bdea0a555cbe677fee577c3a0587c55b.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-main",
+    "changes": [
+      {
+        "start": 0,
+        "end": 0,
+        "before": "",
+        "after": "extern void handle_player_collision_vector_2(int, int);\n",
+        "reason": "Replace implicit int/unprototyped call with the complete DWARF interface",
+        "file": "src/main.c",
+        "line": 1493
+      }
+    ],
+    "failure_context": {
+      "outcome": "FAST_FAILED",
+      "error": "Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-main",
+      "evidence": [
+        {
+          "path": "docs/attempts/interface-diagnostics/handle_player_collision_vector_2/game-main-f11d69baa0a3b6d11f9b2b2790d7e478bdea0a555cbe677fee577c3a0587c55b.json",
+          "identity": {
+            "size": 8240,
+            "sha256": "f11d69baa0a3b6d11f9b2b2790d7e478bdea0a555cbe677fee577c3a0587c55b"
+          },
+          "changed_function_count": 1,
+          "changed_functions": [
+            {
+              "function": "play",
+              "source_body_unchanged": true,
+              "size_before": 624,
+              "size_after": 624,
+              "original_comparison": {
+                "before": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "UNKNOWN_SUPERVISOR",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 17420,
+                  "candidate_size": 624,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 3,
+                    "original_va": 4266499,
+                    "candidate_byte": 86,
+                    "original_byte": 87
+                  },
+                  "relocation_mismatch_count": 31,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 11,
+                      "symbol": ".rdata",
+                      "resolved_value": null,
+                      "original_value": 1421708544,
+                      "resolution": "section base not independently established"
+                    },
+                    {
+                      "function_offset": 34,
+                      "symbol": "_closeButtonClicked",
+                      "resolved_value": 5100132,
+                      "original_value": 2240413695,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 48,
+                      "symbol": "_cycle_count",
+                      "resolved_value": 5269816,
+                      "original_value": 4089940233,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 67,
+                      "symbol": "_ctrl",
+                      "resolved_value": 5243080,
+                      "original_value": 4134831559,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 72,
+                      "symbol": "_poll_control",
+                      "resolved_value": 4294901516,
+                      "original_value": 255,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 79,
+                      "symbol": "_ctrl",
+                      "resolved_value": 5243080,
+                      "original_value": 4294964848,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 25,
+                  "direct_transfer_mismatch_count": 12,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                },
+                "after": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "UNKNOWN_SUPERVISOR",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 17420,
+                  "candidate_size": 624,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 3,
+                    "original_va": 4266499,
+                    "candidate_byte": 86,
+                    "original_byte": 87
+                  },
+                  "relocation_mismatch_count": 31,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 11,
+                      "symbol": ".rdata",
+                      "resolved_value": null,
+                      "original_value": 1421708544,
+                      "resolution": "section base not independently established"
+                    },
+                    {
+                      "function_offset": 34,
+                      "symbol": "_closeButtonClicked",
+                      "resolved_value": 5100132,
+                      "original_value": 2240413695,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 48,
+                      "symbol": "_cycle_count",
+                      "resolved_value": 5269816,
+                      "original_value": 4089940233,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 67,
+                      "symbol": "_ctrl",
+                      "resolved_value": 5243080,
+                      "original_value": 4134831559,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 72,
+                      "symbol": "_poll_control",
+                      "resolved_value": 4294901516,
+                      "original_value": 255,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 79,
+                      "symbol": "_ctrl",
+                      "resolved_value": 5243080,
+                      "original_value": 4294964848,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 25,
+                  "direct_transfer_mismatch_count": 12,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                }
+              }
+            }
+          ],
+          "omitted_changed_functions": 0
+        }
+      ],
+      "omitted_evidence": 0,
+      "limit": "Historical rejected attempt for this source plan; not current proof or permission to edit bodies."
+    }
+  }
 }

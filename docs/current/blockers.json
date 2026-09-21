@@ -2616,19 +2616,11 @@
       "begin_command": "python tools/grinder_task.py begin game-main change_profile",
       "promotion_command": "python tools/promote_function.py game-main change_profile",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: save_config, save_profile, select_profile",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: save_profile, select_profile",
       "size": 188,
       "candidate_card": "docs/current/functions/main/change_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "save_config",
-          "candidate_card": "docs/current/interfaces/save_config.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "save_profile",
           "candidate_card": "docs/current/interfaces/save_profile.json",
@@ -2995,6 +2987,37 @@
       "candidate_card": "docs/current/type-views/view_loadpng_MEMORY_READER_STATE.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
+      "omitted_dependents": 0,
+      "dependency_priority_bonus": 0
+    },
+    {
+      "function": "my_alert",
+      "source": "src/main.c",
+      "sources": [
+        "src/menu.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -25,
+      "reason": "Caller argument counts must be reviewed before installing the historical prototype: src/menu.c:596",
+      "begin_command": "python tools/interface_task.py begin my_alert",
+      "verification_command": "python tools/interface_task.py check my_alert",
+      "promotion_command": "python tools/interface_task.py promote my_alert",
+      "state": "CALLSITE_REPAIR_REQUIRED",
+      "status": "CALLSITE_ARITY_CONFLICT",
+      "body_edit_allowed": false,
+      "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
+      "task_kind": "INTERFACE",
+      "candidate_card": "docs/current/interfaces/my_alert.json",
+      "size": 0,
+      "prerequisite_for_count": 1,
+      "prerequisite_for": [
+        {
+          "source": "src/menu.c",
+          "function": "handle_menu",
+          "candidate_card": "docs/current/functions/menu/handle_menu.json",
+          "planned_in_caller_cu": true
+        }
+      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -3497,40 +3520,6 @@
           "function": "log2file",
           "candidate_card": "docs/current/interfaces/log2file.json",
           "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "handle_player_collision_vector",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 6,
-        "original_va": 4230414,
-        "candidate_byte": 131,
-        "original_byte": 129
-      },
-      "verification_command": "python tools/check_function.py game-main handle_player_collision_vector",
-      "begin_command": "python tools/grinder_task.py begin game-main handle_player_collision_vector",
-      "promotion_command": "python tools/promote_function.py game-main handle_player_collision_vector",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 1071,
-      "candidate_card": "docs/current/functions/main/handle_player_collision_vector.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "handle_player_collision_vector",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_vector.json",
-          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4337,40 +4326,6 @@
       ]
     },
     {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "handle_player_collision_original",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 205,
-        "original_va": 4226781,
-        "candidate_byte": 20,
-        "original_byte": 4
-      },
-      "verification_command": "python tools/check_function.py game-main handle_player_collision_original",
-      "begin_command": "python tools/grinder_task.py begin game-main handle_player_collision_original",
-      "promotion_command": "python tools/promote_function.py game-main handle_player_collision_original",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 456,
-      "candidate_card": "docs/current/functions/main/handle_player_collision_original.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "handle_player_collision_original",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_original.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/menu.c",
       "target": "game-menu",
       "function": "update_game_menu",
@@ -4483,40 +4438,6 @@
     {
       "source": "src/main.c",
       "target": "game-main",
-      "function": "handle_player_collision_old",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4227040,
-        "candidate_byte": 76,
-        "original_byte": 60
-      },
-      "verification_command": "python tools/check_function.py game-main handle_player_collision_old",
-      "begin_command": "python tools/grinder_task.py begin game-main handle_player_collision_old",
-      "promotion_command": "python tools/promote_function.py game-main handle_player_collision_old",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 894,
-      "candidate_card": "docs/current/functions/main/handle_player_collision_old.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "handle_player_collision_old",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_old.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
       "function": "handle_player_collision_vector_2",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
@@ -4541,7 +4462,7 @@
         {
           "function": "handle_player_collision_vector_2",
           "candidate_card": "docs/current/interfaces/handle_player_collision_vector_2.json",
-          "difficulty": "CHEAP",
+          "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4583,7 +4504,7 @@
         {
           "function": "my_alert",
           "candidate_card": "docs/current/interfaces/my_alert.json",
-          "difficulty": "CHEAP",
+          "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -5393,6 +5314,43 @@
       "dependency_priority_bonus": 0
     },
     {
+      "function": "handle_player_collision_vector_2",
+      "source": "src/main.c",
+      "sources": [
+        "src/main.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -100,
+      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
+      "begin_command": "python tools/interface_task.py begin handle_player_collision_vector_2",
+      "verification_command": "python tools/interface_task.py check handle_player_collision_vector_2",
+      "promotion_command": "python tools/interface_task.py promote handle_player_collision_vector_2",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
+      "body_edit_allowed": false,
+      "difference_class": "INTERFACE_DECLARATION",
+      "task_kind": "INTERFACE",
+      "candidate_card": "docs/current/interfaces/handle_player_collision_vector_2.json",
+      "size": 0,
+      "prerequisite_for_count": 2,
+      "prerequisite_for": [
+        {
+          "source": "src/main.c",
+          "function": "handle_player_collision_vector_2",
+          "candidate_card": "docs/current/functions/main/handle_player_collision_vector_2.json",
+          "planned_in_caller_cu": true
+        },
+        {
+          "source": "src/main.c",
+          "function": "play",
+          "candidate_card": "docs/current/functions/main/play.json",
+          "planned_in_caller_cu": true
+        }
+      ],
+      "omitted_dependents": 0,
+      "dependency_priority_bonus": 0
+    },
+    {
       "function": "log2file",
       "source": "src/main.c",
       "sources": [
@@ -5539,16 +5497,7 @@
       "size": 3741,
       "candidate_card": "docs/current/functions/main/main_menu_callback.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "open_web_browser",
-          "candidate_card": "docs/current/interfaces/open_web_browser.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "source": "src/main.c",
@@ -5575,33 +5524,9 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "handle_player_collision_old",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_old.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "handle_player_collision_original",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_original.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "handle_player_collision_vector",
-          "candidate_card": "docs/current/interfaces/handle_player_collision_vector.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "handle_player_collision_vector_2",
           "candidate_card": "docs/current/interfaces/handle_player_collision_vector_2.json",
-          "difficulty": "CHEAP",
+          "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -5620,14 +5545,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "update_frame",
-          "candidate_card": "docs/current/interfaces/update_frame.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]

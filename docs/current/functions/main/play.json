@@ -1560,8 +1560,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1462,
-    "body_end_line": 1507,
+    "body_start_line": 1467,
+    "body_end_line": 1512,
     "body_sha256": "35c010069b10e51f91501a7407ef82c2928435ccd2a754a632c186fa29d0bfad"
   },
   "reference_diagnostics": [],
@@ -3925,37 +3925,6 @@
   "callee_interface_scope": {
     "observations": [
       {
-        "function": "update_frame",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          21
-        ],
-        "candidate_card": "docs/current/interfaces/update_frame.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          },
-          {
-            "return_type": "void",
-            "parameter_types": [],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": []
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
         "function": "handle_player_input",
         "source": "src/main.c",
         "blocking": true,
@@ -4119,117 +4088,6 @@
         "call_offset_count": 1
       },
       {
-        "function": "handle_player_collision_original",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          466
-        ],
-        "candidate_card": "docs/current/interfaces/handle_player_collision_original.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          },
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "int",
-              "int"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "int",
-              "int"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
-        "function": "handle_player_collision_old",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          513
-        ],
-        "candidate_card": "docs/current/interfaces/handle_player_collision_old.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          },
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "int",
-              "int"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "int",
-              "int"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
-        "function": "handle_player_collision_vector",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          560
-        ],
-        "candidate_card": "docs/current/interfaces/handle_player_collision_vector.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          },
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "int",
-              "int"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "int",
-              "int"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
         "function": "handle_player_collision_vector_2",
         "source": "src/main.c",
         "blocking": true,
@@ -4304,19 +4162,78 @@
         ],
         "layout_issues": [],
         "call_offset_count": 1
+      },
+      {
+        "function": "poll_control",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          72,
+          386
+        ],
+        "candidate_card": "docs/current/interfaces/poll_control.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tcontrol*",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tcontrol*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 2
+      },
+      {
+        "function": "blit_to_screen",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          257
+        ],
+        "candidate_card": "docs/current/interfaces/blit_to_screen.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
       }
     ],
     "blocking_functions": [
-      "handle_player_collision_old",
-      "handle_player_collision_original",
-      "handle_player_collision_vector",
       "handle_player_collision_vector_2",
       "handle_player_input",
-      "save_profile",
-      "update_frame"
+      "save_profile"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
-    "omitted_observations": 2
+    "omitted_observations": 0
   },
   "storage_declarations": [
     {
@@ -4872,7 +4789,7 @@
     "frame_local_declarations": 101,
     "relocation_mismatches": 31,
     "direct_transfer_mismatches": 12,
-    "callee_interface_observations": 10,
+    "callee_interface_observations": 6,
     "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

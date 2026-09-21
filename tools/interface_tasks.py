@@ -153,6 +153,20 @@ def plan_interface(row, ledger, source_texts=None):
         from typed_interface_tasks import plan as typed_plan
         try: card.update(typed_plan(row,ledger,source_texts))
         except ValueError: pass
+    if card.get('difficulty')=='CHEAP':
+        from call_arity import conflicts as arity_conflicts
+        edited=set(card.get('sources',[]))
+        owners=sorted({d.get('cu') or d['file'] for d in row['candidate_declarations'] if d['file'] in edited})
+        observations=[]
+        for owner in owners:
+            if owner.startswith('src/') and owner.endswith('.c'):
+                observations.extend(dict(r,source=owner) for r in arity_conflicts(source_text(owner,source_texts),name,old[0]))
+        if observations:
+            card.update(difficulty='SUPERVISOR',priority=-25,state='CALLSITE_REPAIR_REQUIRED',
+                status='CALLSITE_ARITY_CONFLICT',difference_class='SOURCE_CALL_ARGUMENT_COUNT',
+                callsite_arity_conflicts=observations[:8],callsite_arity_conflict_count=len(observations),
+                omitted_callsite_arity_conflicts=max(0,len(observations)-8),
+                reason='Caller argument counts must be reviewed before installing the historical prototype: '+', '.join(r['source']+':'+str(r['line']) for r in observations[:3]))
     blocked=ROOT/'docs/current/interface-blocks.json'
     if blocked.exists() and name in read_json(blocked):
         card.update(difficulty='SUPERVISOR',priority=-100,supervisor_block=read_json(blocked)[name])

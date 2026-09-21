@@ -831,3 +831,26 @@ the full source-bound experiment, marking changed inputs as historical. This doe
 not alter admission, matching or literal-owner proof. All recovery proofs are
 unchanged and the 138-test function suite passes. See
 `docs/attempts/compound-probe-validation.json`.
+
+
+## Call arity admission and unattended batch validation
+
+Two real worker batches promoted six declaration repairs: collision old, original
+and vector variants, open_web_browser, save_config and update_frame. The vector_2
+repair changed emitted contributions; FAST rejected it, restored the source and
+recorded a supervisor block. The first batch stopped safely when installing the
+my_alert prototype exposed a seven-argument call against four historical parameters.
+
+Mechanical interface planning now inspects source-spelled direct calls in affected
+compiled CUs before admission. Incompatible argument counts become bounded
+CALLSITE_REPAIR_REQUIRED supervisor cards, including caller, line, arguments and
+historical count. The scan handles nested expressions and masked literals/comments;
+it is deliberately not macro expansion or compiler type proof. It never authorizes
+removing arguments. Real my_alert admission now fails before creating a session,
+and the resumed worker skipped it and completed three further repairs.
+
+The 252-test interface suite and global audit pass. All raw function and workflow
+proof states are unchanged. Durable run histories, admission rejection and queue
+counts are indexed in docs/attempts/call-arity-batch-validation.json. Full cheap-body
+handover remains unfinished; ordinary link acceptance also still recompiles every
+recovered CU after each promotion and needs verified reuse for unaffected objects.

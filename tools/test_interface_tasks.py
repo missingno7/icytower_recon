@@ -54,6 +54,13 @@ class InterfaceTests(unittest.TestCase):
             self.assertEqual((root/first).read_bytes(),b'{"first_difference": 17}\n')
             self.assertEqual((root/second).read_bytes(),b'{"first_difference": 23}\n')
 
+    def test_implicit_prototype_with_incompatible_call_arity_is_not_cheap(self):
+        card=self.plan('void caller(){ f(1,2); }',('int',['int']),('int',['/*???*/']),kind='IC')
+        self.assertEqual(card['difficulty'],'SUPERVISOR')
+        self.assertEqual(card['state'],'CALLSITE_REPAIR_REQUIRED')
+        self.assertEqual(card['callsite_arity_conflicts'][0]['caller'],'caller')
+        self.assertEqual(card['callsite_arity_conflicts'][0]['observed_argument_groups'],2)
+
     def test_const_parameter_changes_only_declaration(self):
         text='int f(char *s) { return *s; }\r\n'
         plan=self.plan(text,('int',['const char*']),('int',['char*']))
