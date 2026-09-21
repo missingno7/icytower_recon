@@ -322,3 +322,13 @@ Resolved relocation values and decoded transfer destinations supply comparison
 keys; unresolved fields stay distinct. Repeated sequences can align ambiguously,
 and a zero-group result is not equality or semantic proof. Use the strict FAST
 status and ownership diagnostics for acceptance, never sequence alignment.
+
+
+Compiler trial memory appears as `compiler_trials`, including negative results.
+Read its freshness state before repeating an omission/type/flag probe. A peer-only
+trial can change instruction bytes or the function extent; both are recorded, even
+when resolved-byte comparison is unavailable. That observation restricts body
+grinding but does not prove the cause is source, padding or branch layout. A
+zero-change trial excludes only that experiment at the recorded input snapshot.
+Unresolvable baseline bytes never count as a confirmed current baseline merely
+because both saved and fresh resolution are unavailable.

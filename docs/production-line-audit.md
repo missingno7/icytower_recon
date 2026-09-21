@@ -401,3 +401,23 @@ stopGameMusic reduces 16 offsets to two groups. create_profile and add_floor als
 retain focused examples. The generated queue, all function statuses and workflows
 remain identical. Sixty diagnostic tests, fresh rejecting FAST and global audit
 passed. See `docs/attempts/instruction-alignment-validation.json`.
+
+
+## Compiler-context extent and negative-trial memory
+
+The context probe previously compared only equal-length resolved byte streams. A
+peer-only change to the target function extent could disappear from dependency
+routing. The shared comparison now records size deltas independently of byte
+availability, counts inserted/deleted bytes when comparable, and caps displayed
+offsets. Extent-only observations retain an explicit limit: they do not determine
+whether source, padding or branch layout caused the change. Unresolved baseline
+bytes cannot confirm freshness through a None-equals-None comparison.
+
+Cards and FAST also expose up to three recent compiler trials, including negative
+results and baseline freshness. An isolated change_profile experiment omitted
+stopGameMusic only in a scratch source copy. It retained the 196-byte target and
+all resolved bytes; the negative result is visible without reading the full
+source snapshot/RTL report. It does not justify a new source repair rule or a
+context-dependency claim for change_profile. Maintained source was unchanged.
+Ten context tests and 53 related diagnostic tests passed. Full experiment receipts
+are in `docs/attempts/compiler-context/game-main/change_profile.json`.

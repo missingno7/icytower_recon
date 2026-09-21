@@ -9,7 +9,7 @@ from experiment import compare
 from recovery_pipeline import fresh_verify,OBJDUMP
 from source_scope import function_span,body_hash
 from type_graph import graph
-from compiler_context import resolved_candidate
+from compiler_context import resolved_candidate,variant_difference
 
 
 def scoped_dump(text,name):
@@ -81,10 +81,11 @@ def probe(target,name,omit,local_types=(),extra_flags=()):
     for path,expected in build['local_inputs'].items():
         if identity(ROOT/path)!=expected: raise ValueError('Maintained source changed during compiler probe')
     if identity(source)!=before: raise ValueError('Probe modified maintained source')
-    baseline=result['variants'][0].get('resolved_code')
+    baseline=result['variants'][0]
     for variant in result['variants']:
-        current=variant.get('resolved_code')
-        variant['context_changed_offsets']=[n for n,(a,b) in enumerate(zip(bytes.fromhex(baseline),bytes.fromhex(current))) if a!=b] if baseline and current and len(baseline)==len(current) else None
+        difference=variant_difference(baseline,variant)
+        variant['context_difference']=difference
+        variant['context_changed_offsets']=difference['first_changed_offsets']
     path=ROOT/'docs/attempts/compiler-context'/target/(name+'.json')
     if path.exists():
         archive=path.with_suffix('.jsonl')
@@ -92,7 +93,9 @@ def probe(target,name,omit,local_types=(),extra_flags=()):
     result['source_snapshot']=text
     write_json(path,result)
     for variant in result['variants']:
-        print(variant['variant'],'size',variant['candidate_size'],'original-difference offsets',variant['difference_offsets'])
+        difference=variant['context_difference']
+        print(variant['variant'],'size',variant['candidate_size'],'original mismatch bytes',len(variant['difference_offsets']),'first offsets',variant['difference_offsets'][:8],
+              'context size delta',difference['size_delta'],'changed resolved bytes',difference['changed_byte_count'])
     print('Diagnostic context evidence:',path.relative_to(ROOT).as_posix())
     return result
 

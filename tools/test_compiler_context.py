@@ -61,6 +61,64 @@ class CompilerContextTests(unittest.TestCase):
         row.update(status='FUNCTION_MATCH',relocation_resolved_equal=True,instruction_boundaries_verified=True)
         self.assertEqual(workflow(row)['state'],'FUNCTION_MATCH')
 
+    def test_extent_changes_include_inserted_or_removed_bytes(self):
+        a={'candidate_size':2,'resolved_code':'90c3'}
+        b={'candidate_size':3,'resolved_code':'9090c3'}
+        d=context.variant_difference(a,b)
+        self.assertTrue(d['extent_changed']);self.assertEqual(d['size_delta'],1)
+        self.assertEqual(d['first_changed_offsets'],[1,2]);self.assertEqual(d['changed_byte_count'],2)
+        self.assertEqual(context.variant_difference(b,a)['size_delta'],-1)
+        self.assertEqual(context.variant_difference(a,a)['changed_byte_count'],0)
+
+    def test_unresolved_bytes_do_not_hide_observed_extent_changes(self):
+        record={'target_body_sha256':'body','variants':[
+            {'variant':'baseline','candidate_size':2,'resolved_code':None},
+            {'variant':'omit-peer','target_body_sha256':'body','candidate_size':3,'resolved_code':None}]}
+        changes=context.dependencies(record)
+        self.assertEqual(len(changes),1)
+        self.assertIsNone(changes[0][1]['changed_byte_count'])
+        self.assertFalse(changes[0][1]['resolved_bytes_comparable'])
+        record['variants'][1]['target_body_sha256']='edited'
+        self.assertEqual(context.dependencies(record),[])
+
+    def test_extent_only_history_blocks_editing_without_exact_claim(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'docs/attempts/compiler-context/game-a/f.json';path.parent.mkdir(parents=True)
+            record={'probe_tool':{},'source_inputs':{},'toolchain_lock':{},'target_body_sha256':'body','variants':[
+                {'variant':'baseline','candidate_size':5,'resolved_code':'e878563412'},
+                {'variant':'omit-peer','target_body_sha256':'body','candidate_size':6,'resolved_code':'e87856341290'}]}
+            path.write_text(json.dumps(record))
+            with patch.object(context,'ROOT',root),patch.object(context,'identity',return_value={}):
+                found=context.load_context('game-a','f',self.row(),{})
+            self.assertEqual(found['dependencies'][0]['context_difference']['size_delta'],1)
+            state=workflow({'status':'DIFFER','compiler_context':found})
+            self.assertEqual(state['state'],'SOURCE_DIFFER');self.assertFalse(state['body_edit_allowed'])
+
+    def test_context_delta_is_bounded_and_checks_recorded_sizes(self):
+        a={'candidate_size':100,'resolved_code':'00'*100};b={'candidate_size':100,'resolved_code':'01'*100}
+        result=context.variant_difference(a,b)
+        self.assertEqual(result['changed_byte_count'],100);self.assertEqual(len(result['first_changed_offsets']),16)
+        b['candidate_size']=101
+        self.assertFalse(context.variant_difference(a,b)['resolved_bytes_comparable'])
+
+    def test_negative_trial_memory_is_visible_and_unresolved_baseline_not_current(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'docs/attempts/compiler-context/game-a/f.json';path.parent.mkdir(parents=True)
+            record={'probe_tool':{},'source_inputs':{},'toolchain_lock':{},'target_body_sha256':'body','variants':[
+                {'variant':'baseline','candidate_size':5,'resolved_code':'e878563412'},
+                {'variant':'omit-peer','target_body_sha256':'body','candidate_size':5,'resolved_code':'e878563412'}]}
+            path.write_text(json.dumps(record))
+            with patch.object(context,'ROOT',root),patch.object(context,'identity',return_value={}):
+                self.assertIsNone(context.load_context('game-a','f',self.row(),{}))
+                trials=context.load_trials('game-a','f',self.row(),{})
+                self.assertEqual(trials['state'],'CURRENT_BASELINE')
+                self.assertEqual(trials['trials'][0]['difference']['changed_byte_count'],0)
+                record['variants'][0]['resolved_code']=None;record['variants'][1].update(resolved_code=None,candidate_size=6)
+                path.write_text(json.dumps(record))
+                row=self.row();row['relocations'][0]['resolved_value']=None
+                self.assertEqual(context.load_context('game-a','f',row,{})['state'],'CONTEXT_EVIDENCE_NEEDS_REFRESH')
+                self.assertEqual(context.load_trials('game-a','f',row,{})['state'],'BASELINE_REQUIRES_REVIEW')
+
     def test_rtl_excerpt_is_only_requested_function(self):
         text='preamble\n;; Function first (first)\nfirst body\n;; Function second (second)\nsecond body\n'
         excerpt=scoped_dump(text,'first')

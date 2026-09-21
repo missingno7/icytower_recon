@@ -1014,12 +1014,82 @@
           118,
           121
         ],
+        "context_difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 4,
+          "first_changed_offsets": [
+            13,
+            15,
+            118,
+            121
+          ],
+          "limit": "Peer-only compiler-context observation, not original body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
         "target_body_unchanged": true
       }
     ],
     "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
     "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
     "verification_command": "python tools/compiler_probe.py game-scroller draw_scroller --omit-earlier restart_scroller"
+  },
+  "compiler_trials": {
+    "state": "BASELINE_REQUIRES_REVIEW",
+    "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
+    "trial_count": 3,
+    "trials": [
+      {
+        "variant": "omit-init_scroller",
+        "target_body_unchanged": true,
+        "difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 0,
+          "first_changed_offsets": [],
+          "limit": "Peer-only compiler-context observation, not original body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        }
+      },
+      {
+        "variant": "flag-fno-unit-at-a-time",
+        "target_body_unchanged": true,
+        "difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 4,
+          "first_changed_offsets": [
+            13,
+            15,
+            118,
+            121
+          ],
+          "limit": "Peer-only compiler-context observation, not original body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        }
+      },
+      {
+        "variant": "flag-fno-schedule-insns2",
+        "target_body_unchanged": true,
+        "difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 0,
+          "first_changed_offsets": [],
+          "limit": "Peer-only compiler-context observation, not original body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        }
+      }
+    ],
+    "limit": "Diagnostic trial memory only. A no-change result applies to this input snapshot and experiment, not every possible compiler context; stale or unresolvable baselines are explicit. No original-match or edit-permission claim."
   },
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
   "supervisor_block": null,

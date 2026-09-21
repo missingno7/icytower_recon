@@ -15,7 +15,7 @@ from audit_signedness import analyze
 from classify_diff import workflow
 from card_view import compact_card, detail_path
 from dwarf_locations import candidate_debug, annotate
-from compiler_context import load_context
+from compiler_context import load_context,load_trials
 from branch_diagnostics import localized_guards
 from data_diagnostics import capture_snapshot,diagnose
 from relocation_diagnostics import mismatch_views
@@ -404,7 +404,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'relocation_mismatches':mismatch_views(row,old),
             'direct_transfer_mismatches':[t for t in row.get('direct_transfers',[]) if not t['equal'] or not t.get('layout_operand_equal',True)],
             'unresolved_call_symbols':unresolved,'exact_adjacent_functions':exact_neighbors,'neighbor_layout':neighbors,'known_rules':relevant,'difficulty':difficulty,'priority':priority,
-            'compiler_context':row.get('compiler_context'),'routing_reason':routing_reason,'supervisor_block':supervisor,'evidence_report':'docs/current/reports/'+target+'.json',
+            'compiler_context':row.get('compiler_context'),'compiler_trials':load_trials(target,row['name'],row,report['build']['local_inputs']),'routing_reason':routing_reason,'supervisor_block':supervisor,'evidence_report':'docs/current/reports/'+target+'.json',
             'verification_command':'python tools/check_function.py '+target+' '+row['name'],
             'begin_command':'python tools/grinder_task.py begin '+target+' '+row['name'],
             'promotion_command':'python tools/promote_function.py '+target+' '+row['name']+(' --claim BODY_MATCH_LAYOUT_BLOCKED' if wf['state']=='BODY_MATCH_LAYOUT_BLOCKED' else ''),

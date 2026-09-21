@@ -8,7 +8,7 @@ from card_view import compact_card
 
 
 def diagnostic(card):
-    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
+    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','compiler_trials','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
     return {k:card[k] for k in keys}
 
 
@@ -117,6 +117,11 @@ def main():
             print('  stack allocation: original %d; candidate %d; source cause not proven'%(frame['original']['reserved_bytes'],frame['candidate']['reserved_bytes']))
             for local in frame['local_width_differences']:
                 print('  local width %s: original %d; candidate %d'%(local['variable'],local['original_bytes'],local['candidate_bytes']))
+        if card.get('compiler_trials'):
+            trials=card['compiler_trials']
+            print('Compiler trial memory:',trials['state'],';',trials['evidence'])
+            for trial in trials['trials']:
+                print('  %s: size delta %s; changed resolved bytes %s'%(trial['variant'],trial['difference']['size_delta'],trial['difference']['changed_byte_count']))
         if card.get('compiler_context'):
             print('Compiler context:',card['compiler_context']['state'],';',card['compiler_context']['evidence'])
         if card.get('localized_guards'):
