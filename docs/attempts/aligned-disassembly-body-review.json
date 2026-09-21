@@ -89,6 +89,81 @@
    "changes": [
     "failure branch first: if (!bmp) { num_chars--; *allegro_errno = 0; return 0; } then strcpy/count++"
    ]
+  },
+  {
+   "function": "fadeOut",
+   "target": "game-main",
+   "result": "FUNCTION_MATCH 609",
+   "changes": [
+    "for (a=255;a>0;a-=speed) with set_trans_blender(0,0,0,255-a) and while (cycle_count<=0) rest(2), same shape as the exact fadeIn"
+   ]
+  },
+  {
+   "function": "set_next_rank_message",
+   "target": "game-profile",
+   "result": "FUNCTION_MATCH 431",
+   "changes": [
+    "each message condition is (next > field || field == 0) && next"
+   ]
+  },
+  {
+   "function": "profile_data_page_advanced",
+   "target": "game-profile",
+   "result": "320 -> 332 (historical size), register choice remains",
+   "changes": [
+    "average-CC loop zero-based (i 0..4, prints i+1)"
+   ]
+  },
+  {
+   "function": "profile_data_page_general",
+   "target": "game-profile",
+   "result": "1058 -> 1082 of 1091, cold-block order remains",
+   "changes": [
+    "seconds/minutes/hours/days computed directly from the total (t%60, (t/60)%60, (t/3600)%24, t/86400)",
+    "trailing plural units use x > 1 ? \"s\" : \"\" while the leading unit uses x == 1 ? \"\" : \"s\"",
+    "buf is char[80] (DWARF)"
+   ]
+  },
+  {
+   "function": "get_string",
+   "target": "game-main",
+   "result": "716 -> 790 (historical size), wait-loop layout remains",
+   "changes": [
+    "declarations with initializers: block = create_bitmap(...); letters[] = \"ABC...xyz 0123456789.!_\" (67 bytes); i = strlen(string)",
+    "waits for KEY_ENTER/KEY_SPACE release",
+    "switch on c>>8: ESC returns -1; TAB/UP/DOWN return -2; ENTER returns 0; BACKSPACE i-- clamped at 0; default rejects a leading KEY_SPACE",
+    "cycle wait at the end of the loop body"
+   ]
+  },
+  {
+   "function": "draw_profile_selector",
+   "target": "game-profile",
+   "result": "1130 -> 1242 of 1268",
+   "changes": [
+    "double view_percentage = max_posts/numProfiles clamped to 1.0; double view_offset = (1-vp)*328/(numProfiles-max_posts)*offset",
+    "two rect outlines (x+5 and x+255) instead of one rectfill; scrollbar rectfill from y+32+view_offset to y+vp*328+view_offset"
+   ]
+  },
+  {
+   "function": "handle_menu",
+   "target": "game-menu",
+   "result": "1006 -> 1066 of 1120; register roles (mp in edi) remain",
+   "changes": [
+    "update_game_menu always called with handle_keys ? ctrl : 0",
+    "key gate is is_any(ctrl) || is_any(&mp->ctrl) || key[KEY_ESC]",
+    "switch covers case 0 and returns menu_return per case; case 114 remaps KEY_ESC; Tmenu_char_selection casts, int *box, void *data, char buf[128] inside default",
+    "cycle wait skipped while KEY_TAB and KEY_LSHIFT are held"
+   ]
+  },
+  {
+   "function": "DWARF local extents",
+   "target": "several",
+   "result": "applied",
+   "changes": [
+    "view_profile totalNextRankMessage[1024]",
+    "replay_selector fname[512]",
+    "force_create_profile: int y, int res, char buf[129]"
+   ]
   }
  ],
  "negative": [
