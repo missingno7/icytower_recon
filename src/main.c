@@ -1813,7 +1813,7 @@ void checkMenuFocus(void)
     lastFocus=hasFocus;
 }
 
-int check_dir(char *filename, int attrib, void *param)
+int check_dir(const char *filename, int attrib, void *param)
 {
     char name[1024];
     char *n=get_filename(filename);

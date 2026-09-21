@@ -357,3 +357,11 @@ HISTORICAL_EXAMPLE_ONLY. Current hints require observed function features or
 diagnostics and a matching recorded compiler scope. Only current hints affect
 queue priority. Neither label proves a source cause, permits a body edit, or
 changes acceptance; follow the task scope and verifier evidence.
+
+
+Batch stage logs and summaries live beside the event history under
+`docs/attempts/<mechanical|pattern>-runs/<run-id>/`. The event `log` paths
+point to complete stdout, stderr and return codes, including rejected attempts.
+They survive build cleanup; commit this run directory with its history and the
+accepted source/proof changes. For older build-only runs, preserve available
+outputs with an archive manifest instead of rewriting the historical events.

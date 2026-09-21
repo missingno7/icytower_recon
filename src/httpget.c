@@ -21,8 +21,8 @@ typedef struct HTTPResponse {
     unsigned int iPayloadSize;
 } HTTPResponse;
 
-HTTPResponse *HTTPRequest(char *pURL, char *pMethod);
-int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort);
+HTTPResponse *HTTPRequest(const char *pURL, const char *pMethod);
+int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile,
                                 const char *pMethod);
 void log2file(char *fmt, ...);
@@ -190,7 +190,7 @@ HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathT
     return NULL;
 }
 
-int SplitURL(char *pURL, char **ppHost, char **ppPath, int *piPort)
+int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort)
 {
     char *p;
 
@@ -232,7 +232,7 @@ HTTPResponse *HTTPHead(char *pURL)
 }
 
 /* The parser's historical call ABI passes its two arguments in EAX and EDX. */
-HTTPResponse *HTTPRequest(char *pURL, char *pMethod)
+HTTPResponse *HTTPRequest(const char *pURL, const char *pMethod)
 {
     char *pHost;
     char *pPath;

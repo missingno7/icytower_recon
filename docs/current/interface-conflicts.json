@@ -38,46 +38,6 @@
       "size": 0
     },
     {
-      "function": "HTTPRequest",
-      "source": "src/httpget.c",
-      "sources": [
-        "src/httpget.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin HTTPRequest",
-      "verification_command": "python tools/interface_task.py check HTTPRequest",
-      "promotion_command": "python tools/interface_task.py promote HTTPRequest",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/HTTPRequest.json",
-      "size": 0
-    },
-    {
-      "function": "SplitURL",
-      "source": "src/httpget.c",
-      "sources": [
-        "src/httpget.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin SplitURL",
-      "verification_command": "python tools/interface_task.py check SplitURL",
-      "promotion_command": "python tools/interface_task.py promote SplitURL",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/SplitURL.json",
-      "size": 0
-    },
-    {
       "function": "blit_to_screen",
       "source": "src/main.c",
       "sources": null,
@@ -129,26 +89,6 @@
       "difference_class": "TYPE_LAYOUT_CONFLICT",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/calc_replay_checksum_131.json",
-      "size": 0
-    },
-    {
-      "function": "check_dir",
-      "source": "src/main.c",
-      "sources": [
-        "src/main.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin check_dir",
-      "verification_command": "python tools/interface_task.py check check_dir",
-      "promotion_command": "python tools/interface_task.py promote check_dir",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/check_dir.json",
       "size": 0
     },
     {
@@ -619,26 +559,6 @@
       "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/get_string.json",
-      "size": 0
-    },
-    {
-      "function": "get_url_filename",
-      "source": "src/fld_adspot.c",
-      "sources": [
-        "src/fld_adspot.c"
-      ],
-      "difficulty": "CHEAP",
-      "priority": 257,
-      "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited.",
-      "begin_command": "python tools/interface_task.py begin get_url_filename",
-      "verification_command": "python tools/interface_task.py check get_url_filename",
-      "promotion_command": "python tools/interface_task.py promote get_url_filename",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/get_url_filename.json",
       "size": 0
     },
     {
@@ -1925,14 +1845,14 @@
           "name": "HTTPRequest",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*",
-            "char*"
+            "const char*",
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPRequest (char *, char *);",
+          "declaration": "extern HTTPResponse *HTTPRequest (const char *, const char *);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*",
-            "char*"
+            "const char*",
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -1952,14 +1872,14 @@
           "name": "HTTPRequest",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*",
-            "char*"
+            "const char*",
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPRequest (char *pURL, char *pMethod);",
+          "declaration": "extern HTTPResponse *HTTPRequest (const char *pURL, const char *pMethod);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*",
-            "char*"
+            "const char*",
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -1973,9 +1893,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -2003,15 +1923,15 @@
           "name": "SplitURL",
           "return_type": "int",
           "parameter_types": [
-            "char*",
+            "const char*",
             "char**",
             "char**",
             "int*"
           ],
-          "declaration": "extern int SplitURL (char *, char **, char **, int *);",
+          "declaration": "extern int SplitURL (const char *, char **, char **, int *);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "char*",
+            "const char*",
             "char**",
             "char**",
             "int*"
@@ -2026,15 +1946,15 @@
           "name": "SplitURL",
           "return_type": "int",
           "parameter_types": [
-            "char*",
+            "const char*",
             "char**",
             "char**",
             "int*"
           ],
-          "declaration": "extern int SplitURL (char *pURL, char **ppHost, char **ppPath, int *piPort);",
+          "declaration": "extern int SplitURL (const char *pURL, char **ppHost, char **ppPath, int *piPort);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "char*",
+            "const char*",
             "char**",
             "char**",
             "int*"
@@ -2043,9 +1963,9 @@
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -3424,14 +3344,14 @@
           "name": "check_dir",
           "return_type": "int",
           "parameter_types": [
-            "char*",
+            "const char*",
             "int",
             "void*"
           ],
-          "declaration": "extern int check_dir (char *filename, int attrib, void *param);",
+          "declaration": "extern int check_dir (const char *filename, int attrib, void *param);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "char*",
+            "const char*",
             "int",
             "void*"
           ],
@@ -3439,9 +3359,9 @@
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -11743,22 +11663,22 @@
           "line": 79,
           "kind": "NF",
           "name": "get_url_filename",
-          "return_type": "char*",
+          "return_type": "const char*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern char *get_url_filename (char *pURL);",
-          "canonical_return_type": "char*",
+          "declaration": "extern const char *get_url_filename (const char *pURL);",
+          "canonical_return_type": "const char*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": []
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "CHEAP",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -26421,152 +26341,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "HTTPRequest",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "const char*",
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 80610
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/httpget.c",
-          "line": 24,
-          "kind": "NC",
-          "name": "HTTPRequest",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*",
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPRequest (char *, char *);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*",
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 235,
-          "kind": "NF",
-          "name": "HTTPRequest",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*",
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPRequest (char *pURL, char *pMethod);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*",
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "SplitURL",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "int",
-          "parameter_types": [
-            "const char*",
-            "char**",
-            "char**",
-            "int*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 79557
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/httpget.c",
-          "line": 25,
-          "kind": "NC",
-          "name": "SplitURL",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char**",
-            "char**",
-            "int*"
-          ],
-          "declaration": "extern int SplitURL (char *, char **, char **, int *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "char**",
-            "char**",
-            "int*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": []
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 193,
-          "kind": "NF",
-          "name": "SplitURL",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "char**",
-            "char**",
-            "int*"
-          ],
-          "declaration": "extern int SplitURL (char *pURL, char **ppHost, char **ppPath, int *piPort);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "char**",
-            "char**",
-            "int*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "blit_to_screen",
       "historical": [
         {
@@ -26974,50 +26748,6 @@
         }
       ],
       "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "check_dir",
-      "historical": [
-        {
-          "cu": "src/main.c",
-          "return_type": "int",
-          "parameter_types": [
-            "const char*",
-            "int",
-            "void*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 129608
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 1816,
-          "kind": "NF",
-          "name": "check_dir",
-          "return_type": "int",
-          "parameter_types": [
-            "char*",
-            "int",
-            "void*"
-          ],
-          "declaration": "extern int check_dir (char *filename, int attrib, void *param);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char*",
-            "int",
-            "void*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -31015,44 +30745,6 @@
       "status": "CONFLICT",
       "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "get_url_filename",
-      "historical": [
-        {
-          "cu": "src/fld_adspot.c",
-          "return_type": "const char*",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 47576
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 79,
-          "kind": "NF",
-          "name": "get_url_filename",
-          "return_type": "char*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern char *get_url_filename (char *pURL);",
-          "canonical_return_type": "char*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "CHEAP",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {

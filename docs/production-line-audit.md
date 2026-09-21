@@ -471,3 +471,23 @@ difficulty or body-edit permission. stopGameMusic loses six unsupported hints;
 add_floor and change_profile retain only relevant current symptoms, with past
 examples distinguished. Seven selector controls and 53 related diagnostic tests
 passed. See `docs/attempts/codegen-guidance-validation.json`.
+
+
+## Durable unattended-run diagnostics
+
+The mechanical and pattern workers previously retained event histories under
+`docs/attempts` but wrote their complete stage output and summary under ignored
+`build/`. Build cleanup could therefore remove the exact failure evidence a later
+grinder needed. Both workers now write logs and summaries into a run directory
+beside the durable history. Tests exercise success and rejected-stage output for
+both workers, remove the build tree, and verify full diagnostics and outcomes.
+The existing failure-routing and scope gates are unchanged.
+
+A real unattended three-task batch promoted get_url_filename, HTTPRequest and
+SplitURL through the strict interface gate without intervention. Its pre-fix
+outputs were archived byte-for-byte with an explicit manifest, preserving the
+original event history. Each promotion passed 201 interface tests and global
+audit; this is interface recovery, not a new function-byte match claim.
+
+A fourth real task, check_dir, promoted using the new durable log path. All 16
+worker tests passed. See `docs/attempts/durable-worker-validation.json`.

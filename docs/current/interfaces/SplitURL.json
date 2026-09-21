@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "SplitURL",
-  "source": "src/httpget.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
   "historical": [
     {
       "cu": "src/httpget.c",
@@ -23,45 +19,5 @@
       "die": 79557
     }
   ],
-  "type_layout_issues": [],
-  "changes": [
-    {
-      "start": 650,
-      "end": 703,
-      "before": "char *pURL, char **ppHost, char **ppPath, int *piPort",
-      "after": "const char *pURL, char **ppHost, char **ppPath, int *piPort",
-      "reason": "Use the DWARF parameter qualifiers/prototype",
-      "file": "src/httpget.c",
-      "line": 25
-    },
-    {
-      "start": 6434,
-      "end": 6487,
-      "before": "char *pURL, char **ppHost, char **ppPath, int *piPort",
-      "after": "const char *pURL, char **ppHost, char **ppPath, int *piPort",
-      "reason": "Use the DWARF parameter qualifiers/prototype",
-      "file": "src/httpget.c",
-      "line": 193
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check SplitURL",
-  "begin_command": "python tools/interface_task.py begin SplitURL",
-  "apply_command": "python tools/interface_task.py apply SplitURL",
-  "promotion_command": "python tools/interface_task.py promote SplitURL",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "sources": [
-    "src/httpget.c"
-  ],
-  "source_identities": {
-    "src/httpget.c": {
-      "size": 8342,
-      "sha256": "5b8e55a60bf90cd59e1defe5be1532ce4c7b6387785274add0f9fde72eb40c4f"
-    }
-  },
-  "affected_targets": [
-    "game-httpget"
-  ],
-  "priority": 257,
-  "expected_prototype": "extern int SplitURL(const char*, char**, char**, int*);",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+  "changes": []
 }

@@ -76,7 +76,7 @@ void fldads_dump_local_cache(void)
     }
 }
 
-char *get_url_filename(char *pURL)
+const char *get_url_filename(const char *pURL)
 {
     char *p;
     p = pURL + strlen(pURL) - 1;

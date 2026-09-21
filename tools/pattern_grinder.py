@@ -49,7 +49,7 @@ def run_batch(limit):
     if limit<1: raise ValueError('Task limit must be positive')
     if SESSION.exists() or busy(): raise ValueError('Finish or recover the active task first')
     run_id=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
-    folder=ROOT/'build/pattern-runs'/run_id; folder.mkdir(parents=True)
+    folder=ROOT/'docs/attempts/pattern-runs'/run_id; folder.mkdir(parents=True)
     history=ROOT/'docs/attempts/pattern-runs'/(run_id+'.jsonl'); history.parent.mkdir(parents=True,exist_ok=True)
     load=lambda path:read_json(ROOT/path)
     attempted=set(); outcomes=[]; sequence=0

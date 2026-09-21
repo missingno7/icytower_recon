@@ -51,7 +51,7 @@ def busy():
 def run_batch(limit):
     if limit<1: raise ValueError('Task limit must be positive')
     if SESSION.exists() or busy(): raise ValueError('Finish or recover the existing task/transaction first')
-    run_id=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'); folder=ROOT/'build/mechanical-runs'/run_id; folder.mkdir(parents=True)
+    run_id=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'); folder=ROOT/'docs/attempts/mechanical-runs'/run_id; folder.mkdir(parents=True)
     history=ROOT/'docs/attempts/mechanical-runs'/(run_id+'.jsonl'); history.parent.mkdir(parents=True,exist_ok=True)
     sequence=0; outcomes=[]; attempted=set()
     def record(row):
