@@ -22,6 +22,11 @@ class PointeeMigrationTests(unittest.TestCase):
     def test_unknown_root_and_other_alias_uses_rejected(self):
         with self.assertRaisesRegex(ValueError,'compiled parent'):self.run_plan(self.source().replace('r->','other->'))
         with self.assertRaisesRegex(ValueError,'outside supported'):self.run_plan(self.source()+' View other;')
+    def test_member_chain_suffix_cannot_borrow_local_variable_type(self):
+        for root in ('holder.r','holder->r','holder[0].r','(*holder).r'):
+            with self.assertRaisesRegex(ValueError,'Member-chain root'):
+                self.run_plan(self.source().replace('r->data',root+'->data'))
+
     def test_unsupported_member_expression_rejected(self):
         with self.assertRaisesRegex(ValueError,'Unsupported renamed'):self.run_plan(self.source().replace('r->data[0].old','r->data[0+1].old'))
 

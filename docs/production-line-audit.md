@@ -1057,3 +1057,17 @@ grinder block command recorded BLOCKED_SUPERVISOR with the exact mismatch and
 evidence links. Source was restored unchanged and the task session closed. The
 155-test function suite passes. Future work must explain compiler/block ordering
 before admitting another body recipe; cheap workers automatically skip this task.
+
+
+## Pointee access root admission
+
+The member-access recipe now rejects a root embedded in another member chain.
+Previously the suffix r in holder.r->data[i].field could borrow the DWARF type of
+a separate local r. The same ambiguity applies to holder->r, holder[0].r and
+(*holder).r. All four are rejected before source edits. Standalone local roots
+continue to require unique compiled function-scope type evidence.
+
+All 268 interface tests pass. Replaying the archived real pre-migration replay
+source and compiled type evidence yields exactly the prior 12-edit recipe; this
+replay is diagnostic, not new acceptance proof. Evidence is indexed in
+docs/attempts/pointee-root-scope-validation.json.

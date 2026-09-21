@@ -54,6 +54,7 @@ def plan(report,text,parent,member):
         for access in re.finditer(r'(?:->|\.)\s*('+re.escape(old)+r')\b',clean):
             prefix=re.search(r'\b(\w+)\s*->\s*'+re.escape(member)+r'\s*\[\s*(?:\w+|[0-9]+)\s*\]\s*\.\s*$',clean[:access.start(1)])
             if not prefix:raise ValueError('Unsupported renamed member access')
+            if re.search(r'(?:\.|->)\s*$',clean[:prefix.start()]):raise ValueError('Member-chain root is not the compiled local variable')
             owners=[f for f in definitions if f['body_start']<access.start()<f['end']]
             if len(owners)!=1:raise ValueError('Unique function owner required')
             variables=report['candidate_debug']['functions'].get(owners[0]['name'],{}).get('variables',[])
