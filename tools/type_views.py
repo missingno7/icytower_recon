@@ -123,9 +123,18 @@ def plan(source,report,match,observations,ledger,texts):
                     member_correspondence=[{'candidate_member':m['name'],'candidate_offset':m['offset'],'candidate_type':m['layout'].get('type'),
                                             'historical_field_at_offset':locate(expected,m['offset'],canonical) if m['offset'] is not None else None} for m in candidate.get('members',[])])
         clean=sanitized(texts[source]); outside=clean[:match.start()]+' '*(match.end()-match.start())+clean[match.end():]
-        # Do not replace a view with external or shadowed uses that the owning CU cannot check.
-        if any(re.search(r'\b'+re.escape(alias)+r'\b',sanitized(text)) for path,text in texts.items() if path!=source):
-            raise ValueError('View has uses outside its owning source')
+        # Identical typedef spelling in an unrelated CU is not shared type identity.
+        # Included maintained files can still contain uses outside this edit span.
+        dependencies=report['build'].get('local_inputs')
+        if dependencies is None or source not in dependencies:
+            raise ValueError('Compiled dependency evidence is unavailable')
+        maintained=[path for path in dependencies if path.startswith(('src/','include/')) and path.endswith(('.c','.h'))]
+        if any(path not in texts for path in maintained):
+            raise ValueError('Compiled maintained input is unavailable for scope inspection')
+        card['type_scope']={'basis':'GCC_DEPFILE','maintained_input_count':len(maintained),
+            'limit':'Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked.'}
+        if any(re.search(r'\b'+re.escape(alias)+r'\b',sanitized(texts[path])) for path in maintained if path!=source):
+            raise ValueError('View has uses in another compiled input of its owning CU')
         if match[1] and re.search(r'\bstruct\s+'+re.escape(match[1])+r'\b',outside): raise ValueError('Struct tag has separate users')
         if alias!=canonical and re.search(r'\btypedef\b[^;]*\b'+re.escape(canonical)+r'\s*;',outside): raise ValueError('Canonical type is already locally defined')
         for use in re.finditer(r'\b'+re.escape(alias)+r'\b',outside):
@@ -136,6 +145,16 @@ def plan(source,report,match,observations,ledger,texts):
         retained,ignored=compatible_members(candidate,expected,outside)
         targets=affected_targets(ledger,[source])
         if targets!=[report['build']['target']]: raise ValueError('View requires broader dependency closure')
+        # A canonical parent can include child declarations that still exist locally.
+        from type_tasks import generated_dependencies
+        required=generated_dependencies(canonical,ROOT)
+        conflicts=[{'type':declaration[3],'source':path,'header':'include/recovered/'+declaration[3]+'.h'}
+                   for path in maintained if not path.startswith('include/recovered/')
+                   for declaration in STRUCT.finditer(sanitized(texts[path])) if declaration[3] in required]
+        card['canonical_dependencies']=conflicts
+        if conflicts:
+            card['state']='WAITING_FOR_CANONICAL_DEPENDENCY'
+            raise ValueError('Canonicalize included types first to avoid duplicate typedefs in this CU: '+', '.join(sorted({r['type'] for r in conflicts})))
         newline='\r\n' if '\r\n' in texts[source] else '\n'
         after='#include "recovered/'+canonical+'.h"'
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
@@ -153,7 +172,7 @@ def plan(source,report,match,observations,ledger,texts):
 
 
 def plans(ledger):
-    texts={p.relative_to(ROOT).as_posix():p.read_bytes().decode('cp1252') for folder in ('src','include') for p in (ROOT/folder).glob('*.[ch]')}
+    texts={p.relative_to(ROOT).as_posix():p.read_bytes().decode('cp1252') for folder in ('src','include') for p in (ROOT/folder).rglob('*.[ch]')}
     units={u['source']:u for u in read_json(ROOT/'src/units.json')}; cards=[]
     for source,entry in ledger.items():
         report=read_json(ROOT/entry['verified_report'])

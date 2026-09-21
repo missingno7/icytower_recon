@@ -28,7 +28,7 @@
   "difficulty": "SUPERVISOR",
   "priority": -25,
   "changes": [],
-  "state": "TYPE_VIEW_REPAIR",
+  "state": "WAITING_FOR_CANONICAL_DEPENDENCY",
   "status": "PARTIAL_STRUCT_VIEW",
   "difference_class": "CANONICAL_TYPE_VIEW",
   "body_edit_allowed": false,
@@ -342,5 +342,17 @@
       }
     }
   ],
-  "reason": "View has uses outside its owning source"
+  "type_scope": {
+    "basis": "GCC_DEPFILE",
+    "maintained_input_count": 22,
+    "limit": "Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked."
+  },
+  "canonical_dependencies": [
+    {
+      "type": "Treplay",
+      "source": "src/main.c",
+      "header": "include/recovered/Treplay.h"
+    }
+  ],
+  "reason": "Canonicalize included types first to avoid duplicate typedefs in this CU: Treplay"
 }

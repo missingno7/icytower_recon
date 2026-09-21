@@ -40,7 +40,7 @@
   "difficulty": "SUPERVISOR",
   "priority": -25,
   "changes": [],
-  "state": "TYPE_VIEW_REPAIR",
+  "state": "WAITING_FOR_CANONICAL_DEPENDENCY",
   "status": "PARTIAL_STRUCT_VIEW",
   "difference_class": "CANONICAL_TYPE_VIEW",
   "body_edit_allowed": false,
@@ -229,7 +229,24 @@
       }
     }
   ],
-  "reason": "View has uses outside its owning source",
+  "type_scope": {
+    "basis": "GCC_DEPFILE",
+    "maintained_input_count": 1,
+    "limit": "Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked."
+  },
+  "canonical_dependencies": [
+    {
+      "type": "Tgd_combo",
+      "source": "src/game_data.c",
+      "header": "include/recovered/Tgd_combo.h"
+    },
+    {
+      "type": "Tgd_jump_sequence",
+      "source": "src/game_data.c",
+      "header": "include/recovered/Tgd_jump_sequence.h"
+    }
+  ],
+  "reason": "Canonicalize included types first to avoid duplicate typedefs in this CU: Tgd_combo, Tgd_jump_sequence",
   "detailed_evidence": "docs/current/type-view-evidence/view_game_data_Tgame_data.json",
   "observation_count": 5
 }

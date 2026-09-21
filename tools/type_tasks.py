@@ -8,6 +8,15 @@ from interface_tasks import affected_targets
 def tokens(text): return re.findall(r'\w+|[^\s]',text)
 
 
+def generated_dependencies(name, root, seen=None):
+    seen=set() if seen is None else seen
+    if name in seen: return set()
+    seen.add(name); header=root/'include/recovered'/(name+'.h')
+    if not header.exists(): return set()
+    direct=set(re.findall(r'^#include "([A-Za-z_]\w*)\.h"',header.read_text(),re.M))
+    return direct|set().union(*(generated_dependencies(d,root,seen) for d in direct))
+
+
 def plans(ledger):
     files=[*sorted((ROOT/'src').glob('*.c')),*sorted((ROOT/'include').glob('*.h'))]
     texts={p:p.read_bytes().decode('cp1252') for p in files}; cards=[]
@@ -48,15 +57,8 @@ def plans(ledger):
         cards.append(card)
     # Generated aggregate headers include their by-value type dependencies.
     # Replacing a parent first can redeclare a still-local child typedef.
-    def dependencies(name,seen=None):
-        seen=set() if seen is None else seen
-        if name in seen: return set()
-        seen.add(name); header=ROOT/'include/recovered'/(name+'.h')
-        if not header.exists(): return set()
-        direct=set(re.findall(r'^#include "([A-Za-z_]\w*)\.h"',header.read_text(),re.M))
-        return direct|set().union(*(dependencies(d,seen) for d in direct))
     for card in cards:
-        required=dependencies(card['function'])
+        required=generated_dependencies(card['function'],ROOT)
         prerequisites=[{'function':other['function'],'candidate_card':'docs/current/types/'+other['function']+'.json',
                         'affected_targets':sorted(set(card['affected_targets'])&set(other['affected_targets']))}
                        for other in cards if other['function'] in required and set(card['affected_targets'])&set(other['affected_targets'])]

@@ -52,14 +52,15 @@ class ViewTests(unittest.TestCase):
         a={'kind':'base_type','size':4,'type':'int','encoding':'signed'}
         self.assertNotEqual(shape_key(a),shape_key(dict(a,qualifiers=['volatile'])))
 
-    def fixture_plan(self,extra='',other='',roots=('Tprofile',),tag=True):
+    def fixture_plan(self,extra='',other='',roots=('Tprofile',),tag=True,included=False,child=False):
         import type_views
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
-            (root/'include/recovered/Tprofile.h').write_text('header')
+            (root/'include/recovered/Tprofile.h').write_text('#include "Child.h"' if child else 'header')
+            if child: (root/'include/recovered/Child.h').write_text('typedef struct { int x; } Child;')
             source='src/example.c'; text='typedef struct '+('View ' if tag else '')+'{ unsigned char before_total_jumps[216]; int total_jumps; } View;\r\nint f(View *p) { return p->total_jumps; }\r\n'+extra
             (root/source).write_bytes(text.encode())
-            report={'build':{'target':'game-example'},'candidate_debug':{'typedefs':[{'name':'View','layout':self.candidate()}]}}
+            report={'build':{'target':'game-example','local_inputs':dict([(source,{})]+([('src/other.c',{})] if included else []))},'candidate_debug':{'typedefs':[{'name':'View','layout':self.candidate()}]}}
             observations=[{'historical_type':r} for r in roots]
             with patch.object(type_views,'ROOT',root),patch.object(type_views,'affected_targets',return_value=['game-example']):
                 return plan(source,report,STRUCT.search(text),observations,{},dict([(source,text),('src/other.c',other)])),text
@@ -71,11 +72,31 @@ class ViewTests(unittest.TestCase):
         self.assertNotIn('int f',p['changes'][0]['before'])
         self.assertEqual(p['canonical'],'Tprofile')
 
-    def test_by_value_sizeof_tag_and_external_users_require_supervisor(self):
-        for extra,other in [('View x;',''),('int n=sizeof(View);',''),('struct View *x;',''),('', 'View *other;')]:
+    def test_by_value_sizeof_and_tag_users_require_supervisor(self):
+        for extra,other in [('View x;',''),('int n=sizeof(View);',''),('struct View *x;','')]:
             p,_=self.fixture_plan(extra,other)
             self.assertEqual(p['difficulty'],'SUPERVISOR',p)
             self.assertEqual(p['changes'],[])
+
+    def test_other_cu_spelling_is_not_external_type_identity(self):
+        p,_=self.fixture_plan(other='typedef struct { int unrelated; } View; View *other;')
+        self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+        self.assertEqual(p['type_scope']['basis'],'GCC_DEPFILE')
+
+    def test_included_source_uses_still_require_supervisor(self):
+        p,_=self.fixture_plan(other='View *other;',included=True)
+        self.assertEqual(p['difficulty'],'SUPERVISOR')
+        self.assertIn('another compiled input',p['reason'])
+        self.assertEqual(p['changes'],[])
+
+    def test_generated_parent_waits_for_local_child_declaration(self):
+        p,_=self.fixture_plan(extra='typedef struct { int x; } Child;',child=True)
+        self.assertEqual(p['difficulty'],'SUPERVISOR')
+        self.assertEqual(p['state'],'WAITING_FOR_CANONICAL_DEPENDENCY')
+        self.assertEqual(p['canonical_dependencies'][0]['type'],'Child')
+        self.assertEqual(p['changes'],[])
+        p,_=self.fixture_plan(other='typedef struct { int x; } Child;',child=True)
+        self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
 
     def test_conflicting_historical_correspondence_is_blocked(self):
         p,_=self.fixture_plan(roots=('Tprofile','Tcontrol'))

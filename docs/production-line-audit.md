@@ -760,3 +760,22 @@ and workflow proofs are unchanged. The 135-test function acceptance suite passes
 and real FAST prints the two currently aligned conflicts. The previously rejected
 223-byte candidate has its remaining literal observations captured separately in
 `docs/attempts/literal-placement-validation.json` as historical diagnostics.
+
+
+## Type-view scope follows compilation dependencies
+
+Partial-view planning no longer treats identical typedef spelling in an unrelated
+CU as shared type identity. It inspects the owning CU's actual GCC depfile inputs,
+including nested maintained headers, and still rejects included external uses,
+unknown input text, incompatible members and non-pointer/size-dependent uses.
+This replaces several false global-name blockers with the actual DWARF member
+conflicts: HTTPResponse.iNumHeaders, Tprofile.header, Treplay.data and Tmenu_params.font.
+
+The newly exposed main.c Tgame_data view cannot yet become a CHEAP task: generated
+Tgame_data imports Treplay while main.c still defines an incompatible Treplay.
+Canonical-header dependency traversal is shared with exact type canonicalization,
+and partial-view cards now identify local child declarations before admitting the
+parent repair. An isolated locked-compiler build reproduces the Treplay conflict;
+real task admission refuses the parent without creating a session. The 245-test
+interface suite passes and all recovery proofs remain unchanged. Evidence is in
+`docs/attempts/type-view-scope-validation.json` and its linked compiler probe.
