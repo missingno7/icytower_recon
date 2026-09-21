@@ -119,6 +119,19 @@ class CompilerContextTests(unittest.TestCase):
                 self.assertEqual(context.load_context('game-a','f',row,{})['state'],'CONTEXT_EVIDENCE_NEEDS_REFRESH')
                 self.assertEqual(context.load_trials('game-a','f',row,{})['state'],'BASELINE_REQUIRES_REVIEW')
 
+    def test_exact_flag_trial_is_diagnostic_and_not_peer_dependency(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'docs/attempts/compiler-context/game-a/f.json';path.parent.mkdir(parents=True)
+            record={'probe_tool':{},'source_inputs':{},'toolchain_lock':{},'target_body_sha256':'body','variants':[
+                {'variant':'baseline','candidate_size':5,'resolved_code':'e878563412'},
+                {'variant':'flag-fno-unit-at-a-time','target_body_sha256':'body','candidate_size':5,'resolved_code':'9090909090',
+                 'comparison_verdict':'FUNCTION_MATCH','difference_offsets':[]}]}
+            path.write_text(json.dumps(record))
+            with patch.object(context,'ROOT',root),patch.object(context,'identity',return_value={}):
+                self.assertIsNone(context.load_context('game-a','f',self.row(),{}))
+                trial=context.load_trials('game-a','f',self.row(),{})['trials'][0]
+            self.assertEqual(trial['diagnostic_original_comparison'],{'verdict':'FUNCTION_MATCH','mismatch_count':0,'acceptance_input':False})
+
     def test_rtl_excerpt_is_only_requested_function(self):
         text='preamble\n;; Function first (first)\nfirst body\n;; Function second (second)\nsecond body\n'
         excerpt=scoped_dump(text,'first')

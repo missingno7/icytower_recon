@@ -565,3 +565,27 @@ function states. The final gate passed 208 interface tests and global audit. A
 read-only replay of the original stars.h confirms that the new planner waits for
 Tstar before offering Tstar_field. See
 `docs/attempts/canonical-type-order-validation.json`.
+
+
+## Integrated validation and whole-unit compiler lead
+
+The complete infrastructure suite at b842272 passed 295 tests, including real
+compiler, upstream build and static link checks. The recorded readiness snapshot
+still has 69 unresolved bodies (18 MEDIUM, 51 SUPERVISOR), separate from 25 CHEAP
+mechanical tasks and 20 protected layout tasks. This does not establish the full
+handover objective. See `docs/attempts/integrated-production-line-validation.json`.
+
+An isolated stopGameMusic probe compared three compiler switches. Disabling
+scheduling made no change; disabling peephole2 reduced the mismatch; disabling
+whole-unit compilation produced FUNCTION_MATCH in the diagnostic object. Normal
+production source/flags remain unchanged and the ledger still reports DIFFER.
+Trial cards now expose original comparison verdicts and mismatch counts, marked
+`acceptance_input: false`. Eleven compiler-context tests passed, including a
+control proving that an exact flag trial does not become a peer-layout dependency
+or acceptance input. Full evidence is retained in
+`docs/attempts/compiler-context/game-main/stopGameMusic.json`.
+
+The whole-unit-disabled diagnostic also reduces the CU function-match count
+from 50 to 42. Its target match is therefore not a viable global flag fix.
+The peephole-disabled trial reduces that count to 27; scheduling-disabled stays
+at 50. These counts are retained in the full probe evidence.

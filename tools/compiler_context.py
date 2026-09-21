@@ -39,7 +39,7 @@ def variant_difference(baseline, variant):
             'extent_changed':sizes and a_size!=b_size,'resolved_bytes_comparable':comparable,
             'changed_byte_count':len(offsets) if offsets is not None else None,
             'first_changed_offsets':offsets[:16] if offsets is not None else None,
-            'limit':'Peer-only compiler-context observation, not original body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause.'}
+            'limit':'Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause.'}
 
 
 def dependencies(record):
@@ -87,7 +87,8 @@ def load_trials(target,name,row,source_inputs):
              and record.get('target_body_sha256')==row.get('source_body_sha256')
              and baseline.get('resolved_code') is not None and baseline.get('resolved_code')==resolved_candidate(row))
     trials=[{'variant':v['variant'],'target_body_unchanged':v.get('target_body_sha256')==record.get('target_body_sha256'),
-             'difference':variant_difference(baseline,v)} for v in record['variants'] if v['variant']!='baseline']
+             'difference':variant_difference(baseline,v),
+             'diagnostic_original_comparison':{'verdict':v.get('comparison_verdict'),'mismatch_count':len(v['difference_offsets']) if 'difference_offsets' in v else None,'acceptance_input':False}} for v in record['variants'] if v['variant']!='baseline']
     return {'state':'CURRENT_BASELINE' if current else 'BASELINE_REQUIRES_REVIEW','evidence':path.relative_to(ROOT).as_posix(),
             'trial_count':len(trials),'trials':trials[:3],
             'limit':'Diagnostic trial memory only. A no-change result applies to this input snapshot and experiment, not every possible compiler context; stale or unresolvable baselines are explicit. No original-match or edit-permission claim.'}

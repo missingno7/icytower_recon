@@ -393,3 +393,9 @@ header includes another type still declared locally in an affected CU. Complete
 the linked prerequisite task first. Queue refresh removes the dependency once
 its duplicate declaration is gone; do not try the parent early or merge typedefs
 manually. Transitive dependencies are included.
+
+
+Compiler trial summaries include `diagnostic_original_comparison`. Even when a
+trial reports FUNCTION_MATCH, `acceptance_input` is false: scratch compiler flags
+and objects cannot promote production source. Production status comes from the
+locked normal build. Use trial results to guide a supervisor investigation.
