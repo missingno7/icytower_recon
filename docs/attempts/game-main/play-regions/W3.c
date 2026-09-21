@@ -87,19 +87,19 @@ int play(void)
             }
             if (comboActive) {
                 if (ply[player_id]->y < 900.0 && !game_over) {                  /* 4010 */
-                    play_sound(*(SAMPLE **)0x4dd2c0, 0, 0);                       /* 4012 UNRESOLVED: 0x4dd2c0 */
+                    play_sound(speaker[1], 0, 0);                               /* 4012 */
                     game_over = 2;
                 }
                 aightScore++;                                                   /* 4015 */
                 if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) { /* 4016 */
-                    play_sound(*(SAMPLE **)0x4dd2f8, 1, 0);                      /* 4017 UNRESOLVED: 0x4dd2f8 */
-                    if (*(SAMPLE **)0x4fac00)                                    /* 4018 UNRESOLVED: 0x4fac00 */
-                        stop_sample(*(SAMPLE **)0x4fac00);                       /* 4019 */
+                    play_sound(sounds[6], 1, 0);                                /* 4017 */
+                    if (custom.falling)                                        /* 4018 */
+                        stop_sample(custom.falling);                           /* 4019 */
                 }
                 ply[player_id]->shake = 0x18;                                   /* 4022 */
                 aightScore = 0;
                 if (next_aight > ply[player_id]->level) {                       /* 4027 */
-                    play_sound(*(SAMPLE **)0x4dd2e8, 0, 0);                     /* 4028 UNRESOLVED: 0x4dd2e8 */
+                    play_sound(sounds[2], 0, 0);                                /* 4028 */
                 }
             }
         }
@@ -119,7 +119,7 @@ int play(void)
             ply[player_id]->edge_drawn = 0;
         if (ply[player_id]->edge_drawn != 0) {                                 /* 4043 */
             if (ply[player_id]->edge_drawn == 11 && ply[player_id]->status == 0) /* 4044 */
-                play_sound(*(SAMPLE **)0x4fac04, 1, 1);                        /* UNRESOLVED: 0x4fac04 */
+                play_sound(custom.edge, 1, 1);                                 /* 4044 tail */
             if (ply[player_id]->edge_drawn == 50)                              /* 4045 */
                 ply[player_id]->edge_drawn = 0;                                /* 4046 */
         }
@@ -130,11 +130,11 @@ int play(void)
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
                 playing = 0;
         }
-        if (!itrcheck && *(unsigned char *)0x5069b7) {                         /* 4062 UNRESOLVED: 0x5069b7 */
+        if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int t0, t1;
             t0 = time(NULL);                                                   /* 4063 */
             take_screenshot(swap_screen);                                      /* 4064 */
-            if (*(unsigned char *)0x5069b7) {                                  /* 4065 (see report: odd self-target) */
+            if (key[KEY_F1]) {                                                 /* 4065 (see report: odd self-target) */
                 t1 = time(NULL);                                               /* 4066 */
                 if (t1 - t0 > 0)                                               /* 4067 */
                     startTime += t1 - t0;                                      /* 4068 */
@@ -158,7 +158,7 @@ int play(void)
             playing = 0;
         }
         if (recording) {                                                      /* 4109 */
-            if (*(unsigned char *)0x5069c3) {                                 /* 4110 UNRESOLVED: 0x5069c3 (ESC-pressed flag) */
+            if (key[KEY_ESC]) {                                               /* 4110 */
                 if (ply[player_id]->dead) {                                   /* 4111 */
                     log2file("  player quit after dying");                    /* 4112 */
                     playing = 0;
@@ -181,10 +181,10 @@ int play(void)
                     textout_centre_ex(swap_screen, data[52].dat,
                                        "Press ESC to exit", 320, 240, -1, -1);            /* 4128 */
                     blit_to_screen(swap_screen);                              /* 4129 */
-                    play_sound(*(SAMPLE **)0x4fac0c, 0, 1);                   /* 4130 UNRESOLVED: 0x4fac0c */
+                    play_sound(custom.wazup, 0, 1);                           /* 4130 */
                     poll_control(&ctrl, 0);                                   /* 4132 */
                     while (1) {                                               /* 4133..4144 (see report: simplified) */
-                        while (*(unsigned char *)0x5069c3) {                  /* ESC held */
+                        while (key[KEY_ESC]) {                                /* ESC held */
                             poll_control(&ctrl, 0);
                             rest(2);
                         }
@@ -199,7 +199,7 @@ int play(void)
                         if (keypressed())                                    /* 4138 */
                             break;
                     }
-                    if (*(unsigned char *)0x5069c3) {                         /* 4146 */
+                    if (key[KEY_ESC]) {                                       /* 4146 */
                         log2file("  game quit from esc pause");               /* 4150 */
                         profile->games_quit++;                                /* 4151 */
                         endTime = time(NULL);                                 /* 4152 */
@@ -239,12 +239,12 @@ int play(void)
                 textout_centre_ex(swap_screen, data[52].dat,
                                    "Press any key to resume", 320, 210, -1, -1); /* 4197 */
                 blit_to_screen(swap_screen);                                  /* 4198 */
-                play_sound(*(SAMPLE **)0x4fac0c, 0, 1);                       /* 4199 UNRESOLVED: 0x4fac0c */
+                play_sound(custom.wazup, 0, 1);                               /* 4199 */
                 poll_control(&ctrl, 0);                                       /* 4200 */
                 while (1) {                                                   /* 4201..4209 (see report: simplified) */
                     if (is_any(&ctrl) || is_pause(&ctrl))
                         break;
-                    if (*(unsigned char *)0x5069c3) {                         /* ESC */
+                    if (key[KEY_ESC]) {                                       /* ESC */
                         clear_keybuf();                                       /* 4206 */
                         break;
                     }
@@ -255,7 +255,7 @@ int play(void)
                 }
                 poll_control(&ctrl, 0);                                       /* 4212 */
                 while (is_pause(&ctrl)) {                                     /* 4213 */
-                    if (*(unsigned char *)0x5069c3)
+                    if (key[KEY_ESC])
                         break;
                     poll_control(&ctrl, 0);                                   /* 4214 */
                     rest(2);                                                  /* 4215 */
@@ -280,28 +280,28 @@ int play(void)
                     log2file("  replay ended after death");                   /* 4255 */
                     playing = 0;
                 }
-                if (*(unsigned char *)0x5069c3) {                             /* 4264 */
+                if (key[KEY_ESC]) {                                           /* 4264 */
                     log2file("  quit from replay");                           /* 4265 */
                     quit = 1;
                     playing = 0;
                 }
-                if (*(unsigned char *)0x5069d3) {                             /* 4271 UNRESOLVED: 0x5069d3 (replay-paused) */
+                if (key[KEY_SPACE]) {                                        /* 4271 */
                     if (ply[player_id]->dead == 0) {
                         log2file("  replay paused");                          /* 4272 */
-                        if (*(unsigned char *)0x5069d3)                       /* 4273 */
+                        if (key[KEY_SPACE])                                   /* 4273 */
                             poll_control(&rec_ctrl, 1);
-                        if (!*(unsigned char *)0x5069d3 && !*(unsigned char *)0x5069db &&
-                            !*(unsigned char *)0x5069c3 && !*(unsigned char *)0x5069dc) { /* 4274 */
+                        if (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
+                            !key[KEY_ESC] && !key[KEY_UP]) {                  /* 4274 */
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
-                            if (*(unsigned char *)0x5069b7)                   /* 4276 */
+                            if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */
                         }
                     }
                 } else {
-                    if (*(unsigned char *)0x5069db) {                        /* 4287 UNRESOLVED: 0x5069db (fast-forward) */
+                    if (key[KEY_RIGHT]) {                                    /* 4287 */
                         fast_forward++;                                       /* 4288 */
                         fast_fast_forward = 0;                                /* 4289 */
-                    } else if (*(unsigned char *)0x5069dc) {                 /* 4295 UNRESOLVED: 0x5069dc (fast-fast-forward) */
+                    } else if (key[KEY_UP]) {                                /* 4295 */
                         if (ply[player_id]->dead == 0 &&
                             ply[player_id]->level < demo->floor - 10) {       /* 4296 */
                             fast_fast_forward++;                              /* 4297 */
@@ -340,7 +340,7 @@ int play(void)
                 if (!debug) {                                                 /* 4356 */
                     while (cycle_count == 0)                                  /* 4357 */
                         rest(2);
-                } else if (*(unsigned char *)0x5069c8 && *(unsigned char *)0x5069fb) { /* 4360 UNRESOLVED: 0x5069c8, 0x5069fb */
+                } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
                     while (cycle_count <= 7)                                  /* 4361/4363 */
                         rest(2);
                 }

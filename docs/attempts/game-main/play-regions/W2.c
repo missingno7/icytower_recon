@@ -77,53 +77,53 @@ int play(void)
                         update_particle(&stars[i]);
                 }
             }
-            /* 3717..3732: fall-height "shake" accumulator kept in the UNRESOLVED global
-             * 0x4f8e18; bracket boundaries (160/140/120/100/80/60/40/20/0) and per-bracket
+            /* 3717..3732: fall-height "shake" accumulator kept in map.offset;
+             * bracket boundaries (160/140/120/100/80/60/40/20/0) and per-bracket
              * deltas (1,1,1,1,1,2,2,3) are evidenced by the fucom cascade; the exact
              * >= vs > edges on each threshold are approximate. */
             if (ply[player_id]->y < 160.0) {                            /* 3719 */
                 if (ply[player_id]->y >= 140.0)                         /* 3721 */
-                    *(int *)0x4f8e18 = 1;
+                    map.offset = 1;
                 else if (ply[player_id]->y >= 120.0)                    /* 3722 */
-                    (*(int *)0x4f8e18)++;
+                    map.offset++;
                 else if (ply[player_id]->y >= 100.0)                    /* 3723 */
-                    (*(int *)0x4f8e18)++;
+                    map.offset++;
                 else if (ply[player_id]->y >= 80.0)                     /* 3724 */
-                    (*(int *)0x4f8e18)++;
+                    map.offset++;
                 else if (ply[player_id]->y >= 60.0)                     /* 3725 */
-                    (*(int *)0x4f8e18)++;
+                    map.offset++;
                 else if (ply[player_id]->y >= 40.0)                     /* 3726 */
-                    *(int *)0x4f8e18 += 2;
+                    map.offset += 2;
                 else if (ply[player_id]->y >= 20.0)                     /* 3727 */
-                    *(int *)0x4f8e18 += 2;
+                    map.offset += 2;
                 else                                                    /* 3728 */
-                    *(int *)0x4f8e18 += 3;
-                ply[player_id]->y += *(int *)0x4f8e18;                  /* 3731 */
-                level += *(int *)0x4f8e18;                              /* 3732 */
+                    map.offset += 3;
+                ply[player_id]->y += map.offset;                        /* 3731 */
+                level += map.offset;                                    /* 3732 */
             }
             if (!ply[player_id]->dead)                                  /* 3736 */
                 clock_angle++;
             /* 3738..3758: proceed only once the shake accumulator has built up and the
              * player is alive; otherwise reset clock_angle/fall_count (only while alive). */
-            if (*(int *)0x4f8e18 <= 100 || ply[player_id]->dead) {      /* 3738 */
+            if (map.offset <= 100 || ply[player_id]->dead) {            /* 3738 */
                 if (!ply[player_id]->dead) {                            /* 3757 */
                     clock_angle = 0;                                    /* 3758 */
                     fall_count = 0;
                 }
             } else {
                 if (scroll == -1)                                       /* 3739 */
-                    scroll = start_speeds[demo->start_speed];  /* ? table identity (0x4bc17c) unconfirmed by function_data_refs */
+                    scroll = start_speeds[demo->start_speed];           /* 3740 */
                 if (scroll) {                                            /* 3742 */
-                    *(int *)0x4f8e18 += scroll;                         /* 3751 */
+                    map.offset += scroll;                               /* 3751 */
                     ply[player_id]->y += scroll;                        /* 3753 */
                     level += scroll;                                    /* 3754 */
                 } else if (step_count & 1) {                            /* 3743 */
-                    (*(int *)0x4f8e18)++;                               /* 3744 */
+                    map.offset++;                                       /* 3744 */
                     ply[player_id]->y += 1.0;                           /* 3746 */
                     level++;                                            /* 3747 */
                 }
             }
-            any13 = *(int *)0x4f8e18;                                   /* 3763 */
+            any13 = map.offset;                                         /* 3763 */
             if (hurry_y + 99 <= 578)                                    /* 3765 */
                 hurry_y -= 2;
             if (demo->speed_increase) {                                 /* 3766 */
@@ -135,7 +135,7 @@ int play(void)
                     scroll++;                                           /* 3771 */
                     hurry_y = 477;                                      /* 3772 */
                     play_sound(speaker[0], 0, 0);                       /* 3773 */
-                    play_sound(*(SAMPLE **)0x4dd2f0, 0, 0);  /* 3774; UNRESOLVED: 0x4dd2f0 used as a second SAMPLE* (hurry/landing sound) */
+                    play_sound(sounds[4], 0, 0);                        /* 3774 */
                 }
             }
             if (scroll == 5) {                                          /* 3778 */
@@ -144,7 +144,7 @@ int play(void)
                     clock_angle -= 45;
             }
             /* 3783..3788: a signed-mod-16 cadence check between step_count and the
-             * UNRESOLVED 0x4f8e18 accumulator gates the floor add on the historical
+             * map.offset accumulator gates the floor add on the historical
              * evidence, but every traced predecessor of 3789 converges on the call, so
              * it is written here as effectively unconditional; predicate not fully
              * resolved. */
@@ -262,7 +262,7 @@ int play(void)
             ply[player_id]->biggest_lost_combo = ply[player_id]->acc_level;  /* 3979 */
             ply[player_id]->in_combo = 0;                                /* 3981 */
             ply[player_id]->dead = 1;                                    /* 3982 */
-            play_sound(*(SAMPLE **)0x4fac00, 0, 1);  /* 3983; UNRESOLVED: 0x4fac00 used as a SAMPLE* */
+            play_sound(custom.falling, 0, 1);                            /* 3983 */
             endTime = time(0);                                           /* 3985 */
             for (i = 0; i < 5; i++) {                                    /* 3988..3995 */
                 if (ply[player_id]->jc[i] <= ply[player_id]->jcTop[i])
