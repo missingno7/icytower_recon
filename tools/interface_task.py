@@ -21,7 +21,7 @@ def active(name):
 
 
 def validate_interface_scope(session, applied=None):
-    if session['plan']['task_kind'] not in {'INTERFACE','CANONICAL_TYPE','TYPE_VIEW','SOURCE_ORDER','ARRAY_EXTENT','DATA_POINTER','LOCAL_DECLARATION','STATIC_SCOPE','GLOBAL_TYPE'}:
+    if session['plan']['task_kind'] not in {'INTERFACE','CANONICAL_TYPE','TYPE_VIEW','SOURCE_ORDER','ARRAY_EXTENT','DATA_POINTER','LOCAL_DECLARATION','STATIC_SCOPE','GLOBAL_TYPE','POINTEE_TYPE'}:
         raise ValueError('Unknown mechanical task kind')
     current=snapshot_files(); before=session['files']; sources=session['sources']
     for path in set(current)|set(before):
@@ -44,6 +44,10 @@ def validate_interface_scope(session, applied=None):
         if row is None: raise ValueError('No receipt-derived interface conflict for this task')
         expected=plan_interface(row,ledger,session['sources'])
         if expected!=session['plan']: raise ValueError('Interface plan differs from DWARF/receipt-derived repair')
+    if session['plan']['task_kind']=='POINTEE_TYPE':
+        from pointee_tasks import plans as pointee_plans
+        expected=next((p for p in pointee_plans(ledger,session['sources']) if p['function']==session['function']),None)
+        if expected!=session['plan']: raise ValueError('Pointee plan differs from compiled/DWARF evidence')
     return changed
 
 
@@ -129,6 +133,9 @@ def begin(name):
         if plan is None:
             from global_type_tasks import plans as global_plans
             plan=next((p for p in global_plans(ledger) if p['function']==name),None)
+        if plan is None:
+            from pointee_tasks import plans as pointee_plans
+            plan=next((p for p in pointee_plans(ledger) if p['function']==name),None)
         if plan is None: raise ValueError('No current mechanical task for '+name)
     else: plan=plan_interface(row,ledger)
     if plan['difficulty']!='CHEAP': raise ValueError('Supervisor required: '+plan['reason'])
@@ -224,6 +231,10 @@ def verify_interface(session,acceptance=False):
         expected=session['plan']['original']['type']; state='LOCAL_DECLARATION_MATCH'
     elif session['plan']['task_kind']=='STATIC_SCOPE':
         expected=session['plan']['original']['scope']; state='STATIC_SCOPE_MATCH'
+    elif session['plan']['task_kind']=='POINTEE_TYPE':
+        from pointee_tasks import verify as verify_pointee
+        candidate_check(verify_pointee,reports[session['plan']['source']],session['plan'])
+        expected=session['plan']['canonical']; state='CANONICAL_POINTEE_MATCH'
     elif session['plan']['task_kind']=='TYPE_VIEW':
         from type_views import verify_view
         candidate_check(verify_view,reports[session['plan']['source']],session['plan'])

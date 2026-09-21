@@ -72,8 +72,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 166,
-    "body_end_line": 171,
+    "body_start_line": 163,
+    "body_end_line": 168,
     "body_sha256": "99b8448343dbc7d3e2aa0127cea7f6d49fd70466e2b363ce2c7b847318cc6ebc"
   },
   "reference_diagnostics": [],
@@ -191,7 +191,7 @@
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 11365,
+            "die": 11351,
             "name": "r",
             "type": "Treplay *",
             "base_type": "Treplay",
@@ -399,106 +399,7 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "destroy_replay",
-      "source": "src/replay.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "destroy_replay",
-      "historical": [
-        {
-          "cu": "src/replay.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Treplay*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 222042
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Treplay",
-          "candidate_type": "Treplay",
-          "header": "include/recovered/Treplay.h",
-          "status": "MISMATCH",
-          "historical_size": 2220,
-          "candidate_size": 2220,
-          "member_difference_count": 1,
-          "first_member_differences": [
-            {
-              "member": "data",
-              "historical": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Trecord *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Treplay_data *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "pointee_evidence": {
-                "candidate_type": "Treplay_data",
-                "historical_type": "Trecord",
-                "candidate_size": 8,
-                "historical_size": 8,
-                "state": "FIELD_CORRESPONDENCE_ONLY",
-                "members": [
-                  {
-                    "historical_member": "key_flags",
-                    "candidate_member": "type",
-                    "offset": 0,
-                    "size": 1,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  },
-                  {
-                    "historical_member": "cycle_count",
-                    "candidate_member": "value",
-                    "offset": 4,
-                    "size": 4,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  }
-                ],
-                "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-                "member_count": 2,
-                "omitted_members": 0,
-                "unmatched_candidate_members": [
-                  {
-                    "member": "reserved",
-                    "offset": 1,
-                    "size": 3,
-                    "type": "char [3]"
-                  }
-                ],
-                "unmatched_candidate_count": 1,
-                "omitted_unmatched": 0
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/replay.c",
-          "file": "src/replay.c",
-          "line": 165
-        }
-      ],
-      "candidate_signatures": [
-        "('void', ['Treplay*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/destroy_replay.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

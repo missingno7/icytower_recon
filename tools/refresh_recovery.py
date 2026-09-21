@@ -70,6 +70,8 @@ def publish_status(ledger,check=False):
     publish_scopes(ledger,check)
     from global_type_tasks import publish as publish_globals
     publish_globals(ledger,check)
+    from pointee_tasks import publish as publish_pointees
+    publish_pointees(ledger,check)
     publish_cards(ledger,check)
 
 

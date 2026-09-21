@@ -463,3 +463,9 @@ remaining observations by CU and mismatch class. Counts are not promises of
 unlocked tasks. Read the repair card and retained evidence before experimenting;
 encode the validated lesson, refresh the queue, and return to CHEAP work. The
 layout-protected count is reported separately and does not authorize body edits.
+
+POINTEE_TYPE tasks permit only their generated declaration and compiler-typed
+member-token edits. Use interface_task.py's listed commands; do not rename member
+names globally. Promotion verifies the complete parent and pointee types and
+retains all existing contribution and exact-function gates. CANONICAL_POINTEE_MATCH
+is a type migration result, not FUNCTION_MATCH.

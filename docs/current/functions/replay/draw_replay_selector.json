@@ -373,8 +373,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 195,
-    "body_end_line": 276,
+    "body_start_line": 192,
+    "body_end_line": 273,
     "body_sha256": "67866bfab99848fd8e16423dc122a842b32dec81ea36517ce603262c4c170f94"
   },
   "reference_diagnostics": [],
@@ -692,7 +692,7 @@
         "original_type": "char *",
         "candidate_type": "char [1024]",
         "original_die": 222428,
-        "candidate_die": 12661,
+        "candidate_die": 12647,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       },
@@ -701,7 +701,7 @@
         "original_type": "char [1024]",
         "candidate_type": "char *",
         "original_die": 222943,
-        "candidate_die": 12892,
+        "candidate_die": 12878,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       },
@@ -710,7 +710,7 @@
         "original_type": "double",
         "candidate_type": "float",
         "original_die": 222510,
-        "candidate_die": 12638,
+        "candidate_die": 12624,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       },
@@ -719,7 +719,7 @@
         "original_type": "double",
         "candidate_type": "float",
         "original_die": 222484,
-        "candidate_die": 12611,
+        "candidate_die": 12597,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -968,7 +968,7 @@
         "assembly": "mov    0x8(%ebp),%edi",
         "dwarf_variables": [
           {
-            "die": 12401,
+            "die": 12387,
             "name": "bmp",
             "type": "BITMAP *",
             "base_type": "BITMAP",
@@ -990,7 +990,7 @@
         "assembly": "mov    0x18(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 12473,
+            "die": 12459,
             "name": "offset",
             "type": "int",
             "base_type": "int",
@@ -1804,103 +1804,8 @@
   "begin_command": "python tools/grinder_task.py begin game-replay draw_replay_selector",
   "promotion_command": "python tools/promote_function.py game-replay draw_replay_selector",
   "callee_interface_scope": {
-    "observations": [
-      {
-        "function": "is_custom_replay",
-        "source": "src/replay.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1204
-        ],
-        "candidate_card": "docs/current/interfaces/is_custom_replay.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "Treplay*"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "Treplay*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Treplay",
-            "candidate_type": "Treplay",
-            "header": "include/recovered/Treplay.h",
-            "status": "MISMATCH",
-            "historical_size": 2220,
-            "candidate_size": 2220,
-            "member_difference_count": 1,
-            "first_member_differences": [
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "Trecord *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 2216,
-                  "size": 4,
-                  "type": "Treplay_data *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "pointee_evidence": {
-                  "candidate_type": "Treplay_data",
-                  "historical_type": "Trecord",
-                  "candidate_size": 8,
-                  "historical_size": 8,
-                  "state": "FIELD_CORRESPONDENCE_ONLY",
-                  "members": [
-                    {
-                      "historical_member": "key_flags",
-                      "candidate_member": "type",
-                      "offset": 0,
-                      "size": 1,
-                      "state": "RENAMED_FIELD_SHAPE"
-                    },
-                    {
-                      "historical_member": "cycle_count",
-                      "candidate_member": "value",
-                      "offset": 4,
-                      "size": 4,
-                      "state": "RENAMED_FIELD_SHAPE"
-                    }
-                  ],
-                  "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-                  "member_count": 2,
-                  "omitted_members": 0,
-                  "unmatched_candidate_members": [
-                    {
-                      "member": "reserved",
-                      "offset": 1,
-                      "size": 3,
-                      "type": "char [3]"
-                    }
-                  ],
-                  "unmatched_candidate_count": 1,
-                  "omitted_unmatched": 0
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 1
-      }
-    ],
-    "blocking_functions": [
-      "is_custom_replay"
-    ],
+    "observations": [],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
     "omitted_observations": 0
   },
@@ -2054,75 +1959,6 @@
       ],
       "type_layout_issues": [
         {
-          "position": "parameter 2",
-          "historical_type": "Treplay",
-          "candidate_type": "Treplay",
-          "header": "include/recovered/Treplay.h",
-          "status": "MISMATCH",
-          "historical_size": 2220,
-          "candidate_size": 2220,
-          "member_difference_count": 1,
-          "first_member_differences": [
-            {
-              "member": "data",
-              "historical": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Trecord *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Treplay_data *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "pointee_evidence": {
-                "candidate_type": "Treplay_data",
-                "historical_type": "Trecord",
-                "candidate_size": 8,
-                "historical_size": 8,
-                "state": "FIELD_CORRESPONDENCE_ONLY",
-                "members": [
-                  {
-                    "historical_member": "key_flags",
-                    "candidate_member": "type",
-                    "offset": 0,
-                    "size": 1,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  },
-                  {
-                    "historical_member": "cycle_count",
-                    "candidate_member": "value",
-                    "offset": 4,
-                    "size": 4,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  }
-                ],
-                "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-                "member_count": 2,
-                "omitted_members": 0,
-                "unmatched_candidate_members": [
-                  {
-                    "member": "reserved",
-                    "offset": 1,
-                    "size": 3,
-                    "type": "char [3]"
-                  }
-                ],
-                "unmatched_candidate_count": 1,
-                "omitted_unmatched": 0
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/replay.c",
-          "file": "src/replay.c",
-          "line": 193
-        },
-        {
           "position": "parameter 3",
           "historical_type": "Treplay_post",
           "candidate_type": "Treplay_post",
@@ -2147,7 +1983,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/replay.c",
           "file": "src/replay.c",
-          "line": 193
+          "line": 190
         }
       ],
       "candidate_signatures": [
@@ -2161,7 +1997,7 @@
   "evidence_counts": {
     "relocation_mismatches": 60,
     "direct_transfer_mismatches": 0,
-    "callee_interface_observations": 1,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 12,
     "reference_diagnostics": 0,
     "literal_diagnostics": 12,

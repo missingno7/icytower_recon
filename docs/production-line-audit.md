@@ -952,3 +952,24 @@ docs/attempts/pointee-probes, indexed by pointee-migration-validation.json.
 The next step is bounded migration admission plus fresh compiled canonical type
 verification through the existing atomic gate. This diagnostic probe is not that
 gate and cannot promote a result.
+
+
+## Atomic canonical pointee migration
+
+POINTEE_TYPE tasks now turn the bounded scratch recipe into a generated mechanical
+task. Admission and every scope check regenerate the plan from the verified
+baseline receipt and saved original source. Exact and layout-protected function
+bodies are excluded from token edits. Apply accepts only the complete generated
+edit spans; arbitrary body work is prohibited. FAST and ACCEPTANCE require fresh
+complete compiled parent/pointee layouts, exact generated header identities and
+actual dependencies, existing no-regression guards and the unchanged full
+contribution preservation predicate. The worker recognizes the task kind.
+
+The real pointee_replay_Treplay_data task promoted through this gate after 12
+planned edits, 265 interface tests, ordinary link verification and global audit.
+It uses generated Trecord, keeps a legacy sizeof alias and changes typed member
+accesses to key_flags/cycle_count. It removed 12 recorded caller-interface
+prerequisites in replay.c. Every raw function and workflow proof state is unchanged.
+CANONICAL_POINTEE_MATCH is a separate type-migration result, never a new function
+match. The full attempt and resulting dependency changes are indexed in
+docs/attempts/pointee-promotion-validation.json.

@@ -2032,29 +2032,39 @@
         "call_offset_count": 1
       },
       {
-        "function": "destroy_replay",
+        "function": "my_alert",
         "source": "src/main.c",
         "blocking": false,
         "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
         "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
         "call_offsets": [
-          1598
+          1677,
+          1946,
+          2043,
+          2089,
+          2132
         ],
-        "candidate_card": "docs/current/interfaces/destroy_replay.json",
+        "candidate_card": "docs/current/interfaces/my_alert.json",
         "local_declarations": [
           {
-            "return_type": "void",
+            "return_type": "int",
             "parameter_types": [
-              "Treplay*"
+              "char*",
+              "char*",
+              "int",
+              "int"
             ],
-            "canonical_return_type": "void",
+            "canonical_return_type": "int",
             "canonical_parameter_types": [
-              "Treplay*"
+              "char*",
+              "char*",
+              "int",
+              "int"
             ]
           }
         ],
         "layout_issues": [],
-        "call_offset_count": 1
+        "call_offset_count": 5
       }
     ],
     "blocking_functions": [
@@ -2065,7 +2075,7 @@
       "save_replay"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
-    "omitted_observations": 2
+    "omitted_observations": 0
   },
   "storage_declarations": [
     {
@@ -2196,7 +2206,7 @@
   "evidence_counts": {
     "relocation_mismatches": 77,
     "direct_transfer_mismatches": 21,
-    "callee_interface_observations": 10,
+    "callee_interface_observations": 8,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 20,

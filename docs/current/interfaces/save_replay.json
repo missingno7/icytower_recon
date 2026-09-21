@@ -4,10 +4,10 @@
   "function": "save_replay",
   "source": "src/replay.c",
   "body_edit_allowed": false,
-  "difference_class": "TYPE_LAYOUT_CONFLICT",
-  "status": "TYPE_LAYOUT_CONFLICT",
-  "state": "TYPE_LAYOUT_BLOCKED",
-  "difficulty": "SUPERVISOR",
+  "difference_class": "INTERFACE_DECLARATION",
+  "status": "INTERFACE_CONFLICT",
+  "state": "INTERFACE_REPAIR",
+  "difficulty": "CHEAP",
   "historical": [
     {
       "cu": "src/replay.c",
@@ -24,83 +24,51 @@
       "die": 224031
     }
   ],
-  "type_layout_issues": [
+  "type_layout_issues": [],
+  "changes": [
     {
-      "position": "parameter 3",
-      "historical_type": "Treplay",
-      "candidate_type": "Treplay",
-      "header": "include/recovered/Treplay.h",
-      "status": "MISMATCH",
-      "historical_size": 2220,
-      "candidate_size": 2220,
-      "member_difference_count": 1,
-      "first_member_differences": [
-        {
-          "member": "data",
-          "historical": {
-            "offset": 2216,
-            "size": 4,
-            "type": "Trecord *",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": {
-            "offset": 2216,
-            "size": 4,
-            "type": "Treplay_data *",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "pointee_evidence": {
-            "candidate_type": "Treplay_data",
-            "historical_type": "Trecord",
-            "candidate_size": 8,
-            "historical_size": 8,
-            "state": "FIELD_CORRESPONDENCE_ONLY",
-            "members": [
-              {
-                "historical_member": "key_flags",
-                "candidate_member": "type",
-                "offset": 0,
-                "size": 1,
-                "state": "RENAMED_FIELD_SHAPE"
-              },
-              {
-                "historical_member": "cycle_count",
-                "candidate_member": "value",
-                "offset": 4,
-                "size": 4,
-                "state": "RENAMED_FIELD_SHAPE"
-              }
-            ],
-            "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-            "member_count": 2,
-            "omitted_members": 0,
-            "unmatched_candidate_members": [
-              {
-                "member": "reserved",
-                "offset": 1,
-                "size": 3,
-                "type": "char [3]"
-              }
-            ],
-            "unmatched_candidate_count": 1,
-            "omitted_unmatched": 0
-          }
-        }
-      ],
-      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-      "cu": "src/replay.c",
+      "start": 16789,
+      "end": 16875,
+      "before": "char *path, char *file, Treplay *r, int size,\n                       int make_new_date",
+      "after": "const char *path, const char *file, Treplay *r, int size,\n                       int make_new_date",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
+      "file": "src/main.c",
+      "line": 571
+    },
+    {
+      "start": 20212,
+      "end": 20275,
+      "before": "char *path, char *file, Treplay *r, int size, int make_new_date",
+      "after": "const char *path, const char *file, Treplay *r, int size, int make_new_date",
+      "reason": "Use the DWARF parameter qualifiers/prototype",
       "file": "src/replay.c",
-      "line": 632
+      "line": 629
     }
   ],
-  "changes": [],
   "verification_command": "python tools/interface_task.py check save_replay",
   "begin_command": "python tools/interface_task.py begin save_replay",
   "apply_command": "python tools/interface_task.py apply save_replay",
   "promotion_command": "python tools/interface_task.py promote save_replay",
   "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Repair or establish the named aggregate layouts before editing this interface",
-  "priority": -20
+  "sources": [
+    "src/main.c",
+    "src/replay.c"
+  ],
+  "source_identities": {
+    "src/main.c": {
+      "size": 91976,
+      "sha256": "0aa13bf582b6fbd3bd3709501c11be5e9e229684bad3b51486282b5b55026fc0"
+    },
+    "src/replay.c": {
+      "size": 24353,
+      "sha256": "a04cb074cd4658a7602ebdc8631b51e4368820780595a264f9db7cc770a3d78f"
+    }
+  },
+  "affected_targets": [
+    "game-main",
+    "game-replay"
+  ],
+  "priority": 254,
+  "expected_prototype": "extern int save_replay(const char*, const char*, Treplay*, int, int);",
+  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
 }

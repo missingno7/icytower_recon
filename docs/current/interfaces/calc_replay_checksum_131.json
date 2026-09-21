@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "calc_replay_checksum_131",
-  "source": "src/replay.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "TYPE_LAYOUT_CONFLICT",
-  "status": "TYPE_LAYOUT_CONFLICT",
-  "state": "TYPE_LAYOUT_BLOCKED",
-  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/replay.c",
@@ -20,83 +16,5 @@
       "die": 221831
     }
   ],
-  "type_layout_issues": [
-    {
-      "position": "parameter 1",
-      "historical_type": "Treplay",
-      "candidate_type": "Treplay",
-      "header": "include/recovered/Treplay.h",
-      "status": "MISMATCH",
-      "historical_size": 2220,
-      "candidate_size": 2220,
-      "member_difference_count": 1,
-      "first_member_differences": [
-        {
-          "member": "data",
-          "historical": {
-            "offset": 2216,
-            "size": 4,
-            "type": "Trecord *",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": {
-            "offset": 2216,
-            "size": 4,
-            "type": "Treplay_data *",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "pointee_evidence": {
-            "candidate_type": "Treplay_data",
-            "historical_type": "Trecord",
-            "candidate_size": 8,
-            "historical_size": 8,
-            "state": "FIELD_CORRESPONDENCE_ONLY",
-            "members": [
-              {
-                "historical_member": "key_flags",
-                "candidate_member": "type",
-                "offset": 0,
-                "size": 1,
-                "state": "RENAMED_FIELD_SHAPE"
-              },
-              {
-                "historical_member": "cycle_count",
-                "candidate_member": "value",
-                "offset": 4,
-                "size": 4,
-                "state": "RENAMED_FIELD_SHAPE"
-              }
-            ],
-            "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-            "member_count": 2,
-            "omitted_members": 0,
-            "unmatched_candidate_members": [
-              {
-                "member": "reserved",
-                "offset": 1,
-                "size": 3,
-                "type": "char [3]"
-              }
-            ],
-            "unmatched_candidate_count": 1,
-            "omitted_unmatched": 0
-          }
-        }
-      ],
-      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-      "cu": "src/replay.c",
-      "file": "src/replay.c",
-      "line": 118
-    }
-  ],
-  "changes": [],
-  "verification_command": "python tools/interface_task.py check calc_replay_checksum_131",
-  "begin_command": "python tools/interface_task.py begin calc_replay_checksum_131",
-  "apply_command": "python tools/interface_task.py apply calc_replay_checksum_131",
-  "promotion_command": "python tools/interface_task.py promote calc_replay_checksum_131",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Repair or establish the named aggregate layouts before editing this interface",
-  "priority": -20
+  "changes": []
 }

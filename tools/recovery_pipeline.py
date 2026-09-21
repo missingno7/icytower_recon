@@ -26,7 +26,7 @@ from compound_context import load as compound_context
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/pointee_diagnostics.py','tools/supervisor_queue.py','tools/call_arity.py','tools/compound_context.py','tools/queue_dependencies.py','tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/pointee_tasks.py','tools/pointee_migration.py','tools/pointee_diagnostics.py','tools/supervisor_queue.py','tools/call_arity.py','tools/compound_context.py','tools/queue_dependencies.py','tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -474,6 +474,7 @@ def publish_cards(ledger,check=False):
     queue.extend(read_json(CURRENT/'data-tasks.json').get('tasks',[]))
     queue.extend(read_json(CURRENT/'static-scope-tasks.json').get('tasks',[]))
     queue.extend(read_json(CURRENT/'global-type-tasks.json').get('tasks',[]))
+    queue.extend(read_json(CURRENT/'pointee-tasks.json').get('tasks',[]))
     for task in queue: task.setdefault('task_kind','FUNCTION_BODY')
     from queue_dependencies import annotate
     dependencies=annotate(queue,body_cards)

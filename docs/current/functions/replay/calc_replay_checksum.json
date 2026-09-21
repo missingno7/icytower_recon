@@ -62,9 +62,9 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 136,
-    "body_end_line": 163,
-    "body_sha256": "fcfdad63740303e57c24d6c0be4dec92458fb89788cb6110cf320fef4c3242b1"
+    "body_start_line": 133,
+    "body_end_line": 160,
+    "body_sha256": "23ed5692aeb917a4a1fdee8343c1cb964864446305d296701cab15bd104eb528"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [],
@@ -381,7 +381,7 @@
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 11177,
+            "die": 11163,
             "name": "r",
             "type": "Treplay *",
             "base_type": "Treplay",
@@ -586,11 +586,11 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": 14,
   "compound_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -627,107 +627,8 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "calc_replay_checksum",
-      "source": "src/replay.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "calc_replay_checksum",
-      "historical": [
-        {
-          "cu": "src/replay.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Treplay*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 221929
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Treplay",
-          "candidate_type": "Treplay",
-          "header": "include/recovered/Treplay.h",
-          "status": "MISMATCH",
-          "historical_size": 2220,
-          "candidate_size": 2220,
-          "member_difference_count": 1,
-          "first_member_differences": [
-            {
-              "member": "data",
-              "historical": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Trecord *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 2216,
-                "size": 4,
-                "type": "Treplay_data *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "pointee_evidence": {
-                "candidate_type": "Treplay_data",
-                "historical_type": "Trecord",
-                "candidate_size": 8,
-                "historical_size": 8,
-                "state": "FIELD_CORRESPONDENCE_ONLY",
-                "members": [
-                  {
-                    "historical_member": "key_flags",
-                    "candidate_member": "type",
-                    "offset": 0,
-                    "size": 1,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  },
-                  {
-                    "historical_member": "cycle_count",
-                    "candidate_member": "value",
-                    "offset": 4,
-                    "size": 4,
-                    "state": "RENAMED_FIELD_SHAPE"
-                  }
-                ],
-                "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
-                "member_count": 2,
-                "omitted_members": 0,
-                "unmatched_candidate_members": [
-                  {
-                    "member": "reserved",
-                    "offset": 1,
-                    "size": 3,
-                    "type": "char [3]"
-                  }
-                ],
-                "unmatched_candidate_count": 1,
-                "omitted_unmatched": 0
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/replay.c",
-          "file": "src/replay.c",
-          "line": 135
-        }
-      ],
-      "candidate_signatures": [
-        "('int', ['Treplay*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/calc_replay_checksum.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/replay/calc_replay_checksum.json",
   "evidence_counts": {

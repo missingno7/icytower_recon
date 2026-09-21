@@ -577,6 +577,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "calc_replay_checksum",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 14,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 19,
+        "original_va": 4307671,
+        "candidate_byte": 5,
+        "original_byte": 4
+      },
+      "verification_command": "python tools/check_function.py game-replay calc_replay_checksum",
+      "begin_command": "python tools/grinder_task.py begin game-replay calc_replay_checksum",
+      "promotion_command": "python tools/promote_function.py game-replay calc_replay_checksum",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
+      "size": 676,
+      "candidate_card": "docs/current/functions/replay/calc_replay_checksum.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "fadeIn",
@@ -1295,7 +1320,8 @@
       "function": "Treplay",
       "source": "src/main.c",
       "sources": [
-        "src/main.c"
+        "src/main.c",
+        "src/replay.c"
       ],
       "difficulty": "SUPERVISOR",
       "priority": -20,
@@ -1496,35 +1522,6 @@
           "function": "play",
           "candidate_card": "docs/current/functions/main/play.json",
           "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "is_custom_replay",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin is_custom_replay",
-      "verification_command": "python tools/interface_task.py check is_custom_replay",
-      "promotion_command": "python tools/interface_task.py promote is_custom_replay",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/is_custom_replay.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "draw_replay_selector",
-          "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
-          "planned_in_caller_cu": false
         }
       ],
       "omitted_dependents": 0,
@@ -2260,158 +2257,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "calc_replay_checksum",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin calc_replay_checksum",
-      "verification_command": "python tools/interface_task.py check calc_replay_checksum",
-      "promotion_command": "python tools/interface_task.py promote calc_replay_checksum",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
-      "size": 0,
-      "prerequisite_for_count": 3,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "calc_replay_checksum",
-          "candidate_card": "docs/current/functions/replay/calc_replay_checksum.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "load_replay",
-          "candidate_card": "docs/current/functions/replay/load_replay.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "save_replay",
-          "candidate_card": "docs/current/functions/replay/save_replay.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "calc_replay_checksum_131",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin calc_replay_checksum_131",
-      "verification_command": "python tools/interface_task.py check calc_replay_checksum_131",
-      "promotion_command": "python tools/interface_task.py promote calc_replay_checksum_131",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/calc_replay_checksum_131.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "calc_replay_checksum_131",
-          "candidate_card": "docs/current/functions/replay/calc_replay_checksum_131.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "create_replay",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin create_replay",
-      "verification_command": "python tools/interface_task.py check create_replay",
-      "promotion_command": "python tools/interface_task.py promote create_replay",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/create_replay.json",
-      "size": 0,
-      "prerequisite_for_count": 3,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "create_replay",
-          "candidate_card": "docs/current/functions/replay/create_replay.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "get_replay_property",
-          "candidate_card": "docs/current/functions/replay/get_replay_property.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "load_replay",
-          "candidate_card": "docs/current/functions/replay/load_replay.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "destroy_replay",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin destroy_replay",
-      "verification_command": "python tools/interface_task.py check destroy_replay",
-      "promotion_command": "python tools/interface_task.py promote destroy_replay",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/destroy_replay.json",
-      "size": 0,
-      "prerequisite_for_count": 3,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "get_replay_property",
-          "candidate_card": "docs/current/functions/replay/get_replay_property.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "load_replay",
-          "candidate_card": "docs/current/functions/replay/load_replay.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "replay_selector",
-          "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "draw_replay_selector",
       "source": "src/replay.c",
       "sources": null,
@@ -2440,123 +2285,6 @@
           "source": "src/replay.c",
           "function": "replay_selector",
           "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "load_replay",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin load_replay",
-      "verification_command": "python tools/interface_task.py check load_replay",
-      "promotion_command": "python tools/interface_task.py promote load_replay",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/load_replay.json",
-      "size": 0,
-      "prerequisite_for_count": 5,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/main.c",
-          "function": "init_game",
-          "candidate_card": "docs/current/functions/main/init_game.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/replay.c",
-          "function": "load_replay",
-          "candidate_card": "docs/current/functions/replay/load_replay.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "replay_selector",
-          "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "save_replay",
-          "candidate_card": "docs/current/functions/replay/save_replay.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "replay_selector",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin replay_selector",
-      "verification_command": "python tools/interface_task.py check replay_selector",
-      "promotion_command": "python tools/interface_task.py promote replay_selector",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/replay_selector.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "replay_selector",
-          "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "save_replay",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin save_replay",
-      "verification_command": "python tools/interface_task.py check save_replay",
-      "promotion_command": "python tools/interface_task.py promote save_replay",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_replay.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/replay.c",
-          "function": "save_replay",
-          "candidate_card": "docs/current/functions/replay/save_replay.json",
           "planned_in_caller_cu": true
         }
       ],
@@ -3271,16 +2999,7 @@
       "size": 254,
       "candidate_card": "docs/current/functions/replay/create_replay.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "create_replay",
-          "candidate_card": "docs/current/interfaces/create_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "source": "src/profile.c",
@@ -3399,40 +3118,6 @@
       "candidate_card": "docs/current/functions/player/update_player.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "calc_replay_checksum",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 19,
-        "original_va": 4307671,
-        "candidate_byte": 5,
-        "original_byte": 4
-      },
-      "verification_command": "python tools/check_function.py game-replay calc_replay_checksum",
-      "begin_command": "python tools/grinder_task.py begin game-replay calc_replay_checksum",
-      "promotion_command": "python tools/promote_function.py game-replay calc_replay_checksum",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 676,
-      "candidate_card": "docs/current/functions/replay/calc_replay_checksum.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "calc_replay_checksum",
-          "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
     },
     {
       "source": "src/profile.c",
@@ -3685,6 +3370,31 @@
       ]
     },
     {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "get_replay_property",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "first_difference": {
+        "offset": 19,
+        "original_va": 4317783,
+        "candidate_byte": 7,
+        "original_byte": 133
+      },
+      "verification_command": "python tools/check_function.py game-replay get_replay_property",
+      "begin_command": "python tools/grinder_task.py begin game-replay get_replay_property",
+      "promotion_command": "python tools/promote_function.py game-replay get_replay_property",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1147,
+      "candidate_card": "docs/current/functions/replay/get_replay_property.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "handle_player_collision_combo",
@@ -3797,14 +3507,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "is_custom_replay",
-          "candidate_card": "docs/current/interfaces/is_custom_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -4560,75 +4262,9 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "calc_replay_checksum",
-          "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "create_replay",
-          "candidate_card": "docs/current/interfaces/create_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "destroy_replay",
-          "candidate_card": "docs/current/interfaces/destroy_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "load_replay",
           "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "get_replay_property",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-      "first_difference": {
-        "offset": 19,
-        "original_va": 4317783,
-        "candidate_byte": 7,
-        "original_byte": 133
-      },
-      "verification_command": "python tools/check_function.py game-replay get_replay_property",
-      "begin_command": "python tools/grinder_task.py begin game-replay get_replay_property",
-      "promotion_command": "python tools/promote_function.py game-replay get_replay_property",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1147,
-      "candidate_card": "docs/current/functions/replay/get_replay_property.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "create_replay",
-          "candidate_card": "docs/current/interfaces/create_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "destroy_replay",
-          "candidate_card": "docs/current/interfaces/destroy_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4660,17 +4296,9 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "calc_replay_checksum",
-          "candidate_card": "docs/current/interfaces/calc_replay_checksum.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "load_replay",
           "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4678,7 +4306,7 @@
         {
           "function": "save_replay",
           "candidate_card": "docs/current/interfaces/save_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4868,17 +4496,17 @@
         {
           "function": "load_replay",
           "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
+          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
           "function": "save_replay",
           "candidate_card": "docs/current/interfaces/save_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
+          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -4908,14 +4536,6 @@
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
         {
-          "function": "destroy_replay",
-          "candidate_card": "docs/current/interfaces/destroy_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "draw_replay_selector",
           "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
           "difficulty": "SUPERVISOR",
@@ -4926,15 +4546,7 @@
         {
           "function": "load_replay",
           "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "replay_selector",
-          "candidate_card": "docs/current/interfaces/replay_selector.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -5074,9 +4686,9 @@
         {
           "function": "load_replay",
           "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "SUPERVISOR",
+          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
+          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
@@ -5270,16 +4882,7 @@
       "size": 177,
       "candidate_card": "docs/current/functions/replay/calc_replay_checksum_131.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "calc_replay_checksum_131",
-          "candidate_card": "docs/current/interfaces/calc_replay_checksum_131.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "task_kind": "SOURCE_ORDER",

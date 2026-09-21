@@ -67,11 +67,8 @@ Treplay_post itr_file_list[1024];
 int num_itr_files;
 static char replay_header[] = "ITR140";
 
-typedef struct Treplay_data {
-    unsigned char type;
-    char reserved[3];
-    int value;
-} Treplay_data;
+#include "recovered/Trecord.h"
+typedef Trecord Treplay_data;
 
 typedef struct Treplay {
     char header[6];
@@ -100,7 +97,7 @@ typedef struct Treplay {
     float tc_t_data[100];
     float tc_s_data[100];
     float tc_f_data[100];
-    Treplay_data *data;
+    Trecord *data;
 } Treplay;
 
 extern void free(void *ptr);
@@ -128,7 +125,7 @@ int calc_replay_checksum_131(Treplay *r)
     for (i = 0; i < 32; i++)
         sum += (r->date[i] + i) * (r->name[i] + i) * (i + 1) * 117;
     for (i = 0; i < r->size; i++)
-        sum += (r->data[i].type * 5 + r->data[i].value * 3) * i;
+        sum += (r->data[i].key_flags * 5 + r->data[i].cycle_count * 3) * i;
     return sum;
 }
 
@@ -157,8 +154,8 @@ int calc_replay_checksum(Treplay *r)
     for (i = 0; i < 42; i++)
         sum += (r->comment[i] + i) * (r->comment[i] + i) * (-3 + i * 3);
     for (i = 0; i < r->size; i++)
-        sum += r->data[i].type * 3 * (i % 193 + 1) +
-               r->data[i].value * 7 * (i % 167 + 1);
+        sum += r->data[i].key_flags * 3 * (i % 193 + 1) +
+               r->data[i].cycle_count * 7 * (i % 167 + 1);
     return hash(sum);
 }
 
@@ -478,8 +475,8 @@ Treplay *create_replay(int size)
         return 0;
     }
     for (i = 0; i < size; i++) {
-        r->data[i].type = 0;
-        r->data[i].value = 0;
+        r->data[i].key_flags = 0;
+        r->data[i].cycle_count = 0;
     }
     return r;
 }
@@ -538,8 +535,8 @@ Treplay *load_replay(char *filename)
         pack_fread(&r->tc_f_data[i], 4, pf);
     }
     for (i = 0; i < r->size; i++) {
-        pack_fread(&r->data[i].value, 4, pf);
-        pack_fread(&r->data[i].type, 1, pf);
+        pack_fread(&r->data[i].cycle_count, 4, pf);
+        pack_fread(&r->data[i].key_flags, 1, pf);
     }
     pack_fclose(pf);
     cs = r->checksum;
@@ -692,8 +689,8 @@ int save_replay(char *path, char *file, Treplay *r, int size, int make_new_date)
         pack_fwrite(&r->tc_f_data[i], 4, pf);
     }
     for (i = 0; i < r->size; i++) {
-        pack_fwrite(&r->data[i].value, 4, pf);
-        pack_fwrite(&r->data[i].type, 1, pf);
+        pack_fwrite(&r->data[i].cycle_count, 4, pf);
+        pack_fwrite(&r->data[i].key_flags, 1, pf);
     }
     pack_fclose(pf);
     return 0;
