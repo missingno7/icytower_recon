@@ -204,7 +204,7 @@ def peephole_finds(dump_dir):
     return out
 
 
-def compile_overlay(target, source, new_text, label, dumps=True, headers=None, cgraph=False):
+def compile_overlay(target, source, new_text, label, dumps=True, headers=None, cgraph=False, extra_flags=()):
     from build import COMPILERS
     ledger = read_json(ROOT / 'src/recovery.json'); ref = read_json(ROOT / ledger[source]['verified_report']); build = ref['build']
     out = OUT / target / label; overlay = out / 'overlay'; (overlay / Path(source).parent).mkdir(parents=True, exist_ok=True)
@@ -217,6 +217,7 @@ def compile_overlay(target, source, new_text, label, dumps=True, headers=None, c
     args[1:1] = ['-I' + str((ROOT / source).parent)]
     args[1:1] = ['-I' + str(overlay / Path(h).parent) for h in (headers or {})]
     args = [a if not (isinstance(a, str) and a.startswith('-I') and not os.path.isabs(a[2:])) else '-I' + str(ROOT / a[2:]) for a in args]
+    args[1:1] = list(extra_flags)   # diagnostic-only flags; never used by evaluate() or by any promotion path
     if dumps: args[1:1] = ['-fdump-ipa-cgraph', '-fdump-rtl-csa', '-fdump-rtl-peephole2']
     elif cgraph: args[1:1] = ['-fdump-ipa-cgraph']
     env = os.environ.copy(); env['PATH'] = str(COMPILERS[build['compiler']] / 'bin') + os.pathsep + env['PATH']

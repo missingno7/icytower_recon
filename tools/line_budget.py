@@ -110,12 +110,13 @@ def region_bytes(out_dir, fn, report, regions):
     return out
 
 
-def budget(target, source, fn, bodies, order='historical', top=40):
+def budget(target, source, fn, bodies, order='historical', top=40, no_inline=False):
     from experiment import compare
     from recovery_pipeline import OBJDUMP
     spec = {'order': order, 'bodies': bodies}
     new, edits, headers = build_text(target, source, spec)
-    out, ref, build, r = compile_overlay(target, source, new, 'line-budget-' + fn, dumps=False, headers=headers, cgraph=False)
+    out, ref, build, r = compile_overlay(target, source, new, 'line-budget-' + fn, dumps=False, headers=headers, cgraph=False,
+                                         extra_flags=('-fno-inline-functions-called-once', '-fno-inline') if no_inline else ())
     if r.returncode:
         raise SystemExit('overlay compile failed:\n' + '\n'.join(l for l in r.stderr.splitlines() if 'error' in l)[:2000])
     report = compare(out / 'unit.o', ref['historical_cu'], ROOT / 'assets/icytower15.exe', OBJDUMP)
@@ -141,10 +142,11 @@ def main():
     ap.add_argument('--body', action='append', default=[], help='name=path retained body (repeatable)')
     ap.add_argument('--top', type=int, default=40, help='show the N largest deficits (0 = every line)')
     ap.add_argument('--lines', help='only lines in this inclusive range, e.g. 3700-3999')
+    ap.add_argument('--no-inline', action='store_true', help='measure with inlining off (diagnostic only): makes a body far smaller than its original comparable with history, which inlined none of these callees')
     ap.add_argument('--regions', nargs='*', help='TAG=LO-HI per region of the retained body, e.g. W1a=3405-3530 W2=3700-3999')
     a = ap.parse_args()
     bodies = dict(b.split('=', 1) for b in a.body)
-    f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order)
+    f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order, no_inline=a.no_inline)
     if a.regions:
         ranges = dict(x.split('=', 1) for x in a.regions)
         print('%s: candidate %s of %s bytes' % (a.function, f.get('candidate_size'), f['original_size']))
