@@ -185,3 +185,35 @@ Historical predecessors under that order rose from 31 to 71 of 82, and `check_be
 `uninit_game` returned on their own.  The remaining work is body reconstruction, not ordering:
 `draw_frame` (literal pool) and the rest of `play` (cursor).  When both reach zero losses, the
 order, the bodies and the declarations land as one transaction.
+
+## 7. Reconstructing a large body against the historical layout (2026-09-22)
+
+Three failure modes cost more time than the reconstruction itself, and all three are now tooled.
+
+**A local read before it is written deletes code.**  `play`'s loop variable was declared and never
+assigned, so GCC treated the read as undefined and removed the whole game loop: the body compiled
+cleanly at 5060 of 17420 bytes with every historical call edge present in the source, and three
+regions measured zero bytes.  Adding the one missing statement took it to 12545.
+`tools/uninitialized_locals.py` reports such locals for a retained body; it also explains empty
+regions in the byte budget, and an unused local occupies no stack, which shows up as a frame that
+is too small.
+
+**Byte counts must be read per region, not per line.**  A reconstruction's line numbers are its
+own, so comparing bytes per line against the historical line table is meaningless.
+`tools/merge_regions.py` records each region's span in the merged body and
+`tools/line_budget.py --regions` charges every instruction, including code inlined into the region,
+to the region it came from.  Its `--no-inline` mode exists only to make a body far smaller than its
+original comparable with a history that inlined none of those callees; it is diagnostic and never
+touches a promotion path.
+
+**The call graph converges before the code does.**  All 59 historical call edges of `play` and all
+of `draw_frame`'s were restored long before either body was the right size, because edges come from
+statements while size comes from their contents.  Edge parity is the signal that the structure is
+right; the byte budget and then the aligned diff are the signals that the statements are.
+
+Both bodies are now within a few percent of their originals (`play` 15229 of 17420, `draw_frame`
+7574 of 8518) and sit at their historical emission positions, so ordinary first-difference grinding
+applies: both stack frames are 16 bytes short, which is the next thing to fix.  Under the historical
+order the unit stands at 54 exact with `draw_progress_bar` and `start_reward` gained and `run_demo`
+and `stopGameMusic` lost, both to the scratch cursor.  The losses move as the bodies grow, so the
+transaction lands when they reach zero, not before.
