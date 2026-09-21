@@ -1,0 +1,5 @@
+{
+ "remove_top_level": ["ShellExecuteA", "WSADATA", "WSAStartup", "MAKEWORD", "LOBYTE", "HIBYTE"],
+ "includes_after": {"allegro.h": ["winalleg.h"]},
+ "evidence": "DWARF of main.c declares LARGE_INTEGER (play local `li`) and calls LoadLibraryA, QueryPerformanceCounter, QueryPerformanceFrequency, ShellExecuteA and WSAStartup; the original call sites use the stdcall symbols (_LoadLibraryA@4). Allegro's documented way to reach the Win32 API is <winalleg.h> after <allegro.h>, which provides these declarations, WSADATA and MAKEWORD/LOBYTE/HIBYTE. The hand-written stdcall prototypes and the WSADATA/MAKEWORD copies in main.c are substitutes for that header; LoadLibraryA was implicitly declared and relied on the linker's stdcall fixup."
+}

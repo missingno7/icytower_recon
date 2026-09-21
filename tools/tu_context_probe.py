@@ -72,9 +72,42 @@ def prototype(signature):
     return sig + ';'
 
 
-def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unlisted='end'):
-    """Build the overlay text: skeleton (all non-island text in its original order), a generated prototype
-    block, then the islands in `order`.  Islands not in `order` are appended in current order (keep_unlisted='end')."""
+def declaration_edits(skeleton, decl, nl):
+    """Evidenced top-level declaration edits on the skeleton (never inside a definition island):
+    `remove_top_level`: names whose hand-written top-level declaration is deleted (an `extern ...;`
+    prototype, a `typedef struct {...} NAME;`, or a `#define NAME` line); `includes_after`: {header: [names]}
+    inserts `#include <name>` lines directly after `#include <header>`.  Evidence is recorded by the caller."""
+    from source_scope import sanitized
+    removed = []
+    for name in decl.get('remove_top_level', []):
+        clean = sanitized(skeleton); found = None
+        m = re.search(r'(?m)^[ \t]*#[ \t]*define[ \t]+' + re.escape(name) + r'\b', clean)
+        if m:   # a #define with its backslash-continued lines
+            end = m.start()
+            while True:
+                nl_at = clean.find('\n', end); end = len(clean) if nl_at < 0 else nl_at + 1
+                if nl_at < 0 or not clean[:nl_at].rstrip('\r').endswith('\\'): break
+            found = (m.start(), end)
+        patterns = [r'(?ms)^[ \t]*typedef[ \t]+struct[^{;]*\{.*?\}[ \t]*' + re.escape(name) + r'[ \t]*;[ \t]*\n?',
+                    r'(?ms)^[ \t]*extern\b[^;{]*?\b' + re.escape(name) + r'[ \t]*\([^;{]*\)[ \t]*;[ \t]*\n?']
+        for pat in patterns:
+            if found: break
+            m = re.search(pat, clean)
+            if m: found = (m.start(), m.end())
+        if not found: raise ValueError('No removable top-level declaration for ' + name)
+        removed.append({'name': name, 'text': skeleton[found[0]:found[1]]})
+        skeleton = skeleton[:found[0]] + skeleton[found[1]:]
+    for header, names in (decl.get('includes_after') or {}).items():
+        anchor = re.search(r'(?m)^[ \t]*#[ \t]*include[ \t]*<' + re.escape(header) + r'>[^\n]*\n', skeleton)
+        if not anchor: raise ValueError('Include anchor not found: ' + header)
+        skeleton = skeleton[:anchor.end()] + ''.join('#include <%s>%s' % (n, nl) for n in names) + skeleton[anchor.end():]
+    return skeleton, removed
+
+
+def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unlisted='end', declarations=None):
+    """Build the overlay text: skeleton (all non-island text in its original order, with evidenced
+    declaration edits), a generated prototype block, then the islands in `order`.  Islands not in `order`
+    are appended in current order (keep_unlisted='end')."""
     bodies = bodies or {}
     isl = islands(text); byname = {i['name']: i for i in isl}
     unknown = [n for n in order if n not in byname]
@@ -85,6 +118,8 @@ def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unliste
         pieces.append(text[pos:i['start']]); pos = i['end']
     pieces.append(text[pos:])
     skeleton = ''.join(pieces)
+    if declarations: skeleton, layout.removed = declaration_edits(skeleton, declarations, nl)
+    else: layout.removed = []
     skeleton = re.sub(r'(?:\r?\n){3,}', nl + nl, skeleton)
     seq = list(order) + ([i['name'] for i in isl if i['name'] not in set(order)] if keep_unlisted == 'end' else [])
     protos = []
@@ -216,6 +251,7 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
             defined = {n for n, (b, flags) in meta.items() if b >= 0 and 'needed' in flags}
             predicted = [n for n in emission_order(defs, callees) if n in defined]
             model_check = {'predicted_equals_object': predicted == object_order(out / 'unit.o', defined), 'predicted': predicted}
+        record['focus'] = focus_report(report, callees, edits.get('focus') or [])
     record.update(compile='OK', context_table=table, emission_model=model_check, matches_before=ref['function_matches'], matches_after=report['function_matches'],
                   emission_order=cand, historical_order=hist, same_historical_predecessor={'before': same_before, 'after': same, 'total': len(hist)},
                   longest_exact_historical_prefix=prefix, at_historical_offset=sum(1 for n in hist if after[n].get('candidate_offset') == before[n].get('candidate_offset')),
@@ -226,6 +262,25 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     write_json(out / 'comparison.json', report)
     write_json(EVIDENCE / target / (label + '.json'), record)
     return record
+
+
+def focus_report(report, callees, focus):
+    """Per focus function: historical direct callees (from the original bytes) versus the compiled call graph,
+    size and emission positions.  Call-graph convergence is the structural goal for large bodies."""
+    from tu_context_model import historical_callees, exe_functions
+    hist_calls = historical_callees(report, exe_functions()) if focus else {}
+    hist = [f['name'] for f in sorted(report['functions'], key=lambda f: f['va'])]
+    cand = [f['name'] for f in sorted(report['functions'], key=lambda f: (f.get('candidate_offset') is None, f.get('candidate_offset') or 0))]
+    out = {}
+    for n in focus:
+        f = next((x for x in report['functions'] if x['name'] == n), None)
+        if not f: continue
+        h = sorted(set(hist_calls.get(n, []))); c = sorted(set(callees.get(n, [])))
+        out[n] = {'status': f['status'], 'candidate_size': f.get('candidate_size'), 'historical_size': f['original_size'],
+                  'historical_callees': h, 'current_callees': c, 'missing_edges': sorted(set(h) - set(c)), 'extra_edges': sorted(set(c) - set(h)),
+                  'historical_position': hist.index(n), 'candidate_position': cand.index(n),
+                  'limit': 'Historical callees are the direct calls visible in the original bytes (inlined builtins invisible); compiled callees come from the cgraph dump.'}
+    return out
 
 
 def build_text(target, source, spec):
@@ -243,11 +298,11 @@ def build_text(target, source, spec):
         if b['name'] != n: raise ValueError('Retained body defines ' + b['name'] + ' not ' + n)
     statics = spec.get('statics') or []
     if statics == 'historical': statics = sorted(historical_static(unit) & set(current))
-    new = layout(text, order, bodies, set(statics), spec.get('prototypes', 'auto'))
+    new = layout(text, order, bodies, set(statics), spec.get('prototypes', 'auto'), declarations=spec.get('declarations'))
     headers = header_edits(unit, source, statics, spec.get('headers') or {})
     full = list(order) + [n for n in current if n not in set(order)]
     cur_static = {i['name'] for i in isl if i.get('signature') and 'static' in i['signature'].split()}
-    edits = {'order': order, 'definition_order_with_static': [(n, (n in cur_static) or (n in set(statics))) for n in full], 'bodies': {n: {'path': spec['bodies'][n], 'identity': bodies[n]['identity']} for n in bodies}, 'statics': list(statics), 'prototypes': spec.get('prototypes', 'auto'),
+    edits = {'focus': spec.get('focus') or [], 'declarations': ({**spec['declarations'], 'removed_text': layout.removed} if spec.get('declarations') else {}), 'order': order, 'definition_order_with_static': [(n, (n in cur_static) or (n in set(statics))) for n in full], 'bodies': {n: {'path': spec['bodies'][n], 'identity': bodies[n]['identity']} for n in bodies}, 'statics': list(statics), 'prototypes': spec.get('prototypes', 'auto'),
              'headers': {h: {'removed_declarations': v['removed'], 'evidence': v['evidence']} for h, v in headers.items()}}
     return new, edits, {h: v['text'] for h, v in headers.items()}
 
@@ -282,16 +337,24 @@ def main():
     ap.add_argument('--no-prototypes', action='store_true')
     ap.add_argument('--no-dumps', action='store_true')
     ap.add_argument('--header', action='append', default=[], help='header=name[,name] declarations to remove with historical static evidence')
+    ap.add_argument('--focus', action='append', default=[], help='function whose historical-versus-compiled callee sets and positions are reported')
+    ap.add_argument('--declarations', help='JSON file: {"remove_top_level": [names], "includes_after": {"allegro.h": ["winalleg.h"]}, "evidence": "..."}')
     a = ap.parse_args()
     order = a.order
     if order not in ('historical', 'current'): order = read_json(Path(order))
     spec = {'order': order, 'bodies': dict(b.split('=', 1) for b in a.body), 'prototypes': 'none' if a.no_prototypes else 'auto'}
     if a.statics: spec['statics'] = 'historical' if a.statics == 'historical' else a.statics.split(',')
     if a.header: spec['headers'] = {h: names.split(',') for h, names in (x.split('=', 1) for x in a.header)}
+    spec['focus'] = a.focus
+    if a.declarations: spec['declarations'] = read_json(Path(a.declarations))
     new, edits, headers = build_text(a.target, a.source, spec)
     rec = evaluate(a.target, a.source, new, a.label, edits, dumps=not a.no_dumps, headers=headers)
     keys = ['compile', 'errors', 'matches_before', 'matches_after', 'same_historical_predecessor', 'longest_exact_historical_prefix', 'at_historical_offset', 'gains', 'losses', 'code_changed_with_unchanged_body', 'new_implicit_declarations', 'whole_text_contribution_equal']
     print(json.dumps({k: rec.get(k) for k in keys if k in rec}, indent=1))
+    for n, fr in (rec.get('focus') or {}).items():
+        print('focus', n, json.dumps({k: fr[k] for k in ('status', 'candidate_size', 'historical_size', 'historical_position', 'candidate_position')}))
+        print('  missing edges (%d):' % len(fr['missing_edges']), ' '.join(fr['missing_edges']))
+        print('  extra edges (%d):' % len(fr['extra_edges']), ' '.join(fr['extra_edges']))
 
 
 if __name__ == '__main__':

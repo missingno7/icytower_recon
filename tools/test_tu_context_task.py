@@ -75,6 +75,19 @@ class GeneratedCards(unittest.TestCase):
         self.assertEqual(plan_order(unit, ledger)['status'], 'DEFINITION_ORDER_AGREES')
 
 
+class DeclarationEdits(unittest.TestCase):
+    def test_removes_only_named_top_level_declarations_and_inserts_includes(self):
+        from tu_context_probe import declaration_edits
+        text = ('#include <allegro.h>\n#include "x.h"\nextern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,\n    const char *op);\n'
+                'typedef struct {\n    unsigned short a;\n    char *b;\n} WSADATA;\nextern int keep(int);\n'
+                '#define MAKEWORD(a,b) ((unsigned short)(((unsigned char)(a)) | \\\n    ((unsigned short)((unsigned char)(b)) << 8)))\n#define LOBYTE(v) ((v) & 0xff)\nint itrcheck;\n')
+        new, removed = declaration_edits(text, {'remove_top_level': ['ShellExecuteA', 'WSADATA', 'MAKEWORD'], 'includes_after': {'allegro.h': ['winalleg.h']}}, '\n')
+        self.assertEqual([r['name'] for r in removed], ['ShellExecuteA', 'WSADATA', 'MAKEWORD'])
+        self.assertEqual(new, '#include <allegro.h>\n#include <winalleg.h>\n#include "x.h"\nextern int keep(int);\n#define LOBYTE(v) ((v) & 0xff)\nint itrcheck;\n')
+        with self.assertRaises(ValueError): declaration_edits(text, {'remove_top_level': ['itrcheck']}, '\n')
+        with self.assertRaises(ValueError): declaration_edits(text, {'includes_after': {'nothere.h': ['a.h']}}, '\n')
+
+
 class IslandKey(unittest.TestCase):
     def test_body_bytes_are_not_normalized(self):
         a = {'text': '/* c */\nint f(void)\n{\n    return 1;\n}\n'}
