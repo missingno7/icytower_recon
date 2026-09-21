@@ -26,9 +26,13 @@ def report(path):
     for m in DECL.finditer(body):
         name = m.group(1)
         after = body[m.end():]
-        writes = [w.start() for w in re.finditer(r'\b' + re.escape(name) + r'\b' + WRITE, after)]
-        writes += [w.start() for w in re.finditer(r'(?:\+\+|--)\s*\b' + re.escape(name) + r'\b', after)]
-        reads = [r.start() for r in re.finditer(r'\b' + re.escape(name) + r'\b', after)]
+        b = r'\b' + re.escape(name) + r'\b'
+        writes = [w.start() for w in re.finditer(b + WRITE, after)]
+        writes += [w.start() for w in re.finditer(r'(?:\+\+|--)\s*' + b, after)]
+        writes += [w.start() for w in re.finditer(r'&\s*' + b, after)]                       # address taken
+        writes += [w.start() for w in re.finditer(b + r'\s*\[[^\]]*\]\s*=(?!=)', after)]      # element store
+        writes += [w.start() for w in re.finditer(r'[(,]\s*' + b + r'\s*[,)]', after)]        # passed to a call, which may fill it
+        reads = [r.start() for r in re.finditer(b, after)]
         if not writes: rows.append((name, 'never written', line_of(body, m.start())))
         elif reads and min(reads) < min(writes): rows.append((name, 'read before first write', line_of(body, m.start())))
     seen = set(); out = []
