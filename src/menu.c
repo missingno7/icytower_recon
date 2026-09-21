@@ -15,15 +15,7 @@
 
 #include "recovered/Tmenu.h"
 
-typedef struct Tmenu_params {
-    FONT *font;
-    int font_height;
-    Tcontrol ctrl;
-    BITMAP *bullet;
-    int pos;
-    DATAFILE *data;
-    int fo;
-} Tmenu_params;
+#include "recovered/Tmenu_params.h"
 
 int stepIn;
 

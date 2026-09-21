@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "task_kind": "SOURCE_ORDER",
+  "function": "move_main_draw_progress_bar",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "target": "game-main",
+  "affected_targets": [
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 290,
+  "changes": [
+    {
+      "start": 48841,
+      "end": 49411,
+      "before": "void draw_progress_bar(void)\n{\n    int size;\n    int ypos;\n    static int value;\n    int maxVal;\n\n    if (itrcheck)\n        return;\n    size=value*4;\n    maxVal=212;\n    if (size>maxVal)\n        size=maxVal;\n    acquire_screen();\n    ypos=400;\n    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));\n    rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));\n    rectfill(screen,0,420,639,430,makecol(255,255,255));\n    textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));\n    release_screen();\n    value++;\n}",
+      "after": "",
+      "reason": "Remove the unchanged definition from its current slot",
+      "file": "src/main.c"
+    },
+    {
+      "start": 18438,
+      "end": 18438,
+      "before": "",
+      "after": "\n\nvoid draw_progress_bar(void)\n{\n    int size;\n    int ypos;\n    static int value;\n    int maxVal;\n\n    if (itrcheck)\n        return;\n    size=value*4;\n    maxVal=212;\n    if (size>maxVal)\n        size=maxVal;\n    acquire_screen();\n    ypos=400;\n    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));\n    rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));\n    rectfill(screen,0,420,639,430,makecol(255,255,255));\n    textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));\n    release_screen();\n    value++;\n}",
+      "reason": "Re-insert the unchanged definition after its historical predecessor",
+      "file": "src/main.c"
+    }
+  ],
+  "source_identities": {
+    "src/main.c": {
+      "size": 91370,
+      "sha256": "7204169833abb91e21c1d4edebe0e392f584ea82e6b1fba15128b807d09ae2ab"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "SOURCE_ORDER_REPAIR",
+  "status": "DEFINITION_ORDER_DIFFERS",
+  "difference_class": "HISTORICAL_DEFINITION_ORDER",
+  "definition_order": [
+    {
+      "function": "load_sound"
+    },
+    {
+      "function": "draw_progress_bar"
+    }
+  ],
+  "current_order": [
+    "line_alert",
+    "fadeIn",
+    "fadeOut",
+    "show_instructions",
+    "my_alert",
+    "show_credits",
+    "get_version_str",
+    "get_demo",
+    "get_controls",
+    "new_rand",
+    "new_srand",
+    "syncProfileFromOptions",
+    "syncOptionsFromProfile",
+    "get_gamepad_value",
+    "load_sound",
+    "take_screenshot",
+    "open_web_browser",
+    "load_new_ad_image",
+    "ok_to_play",
+    "switchedFromProgram",
+    "switchedToProgram",
+    "clickedCloseButton",
+    "testWindowResolution",
+    "is_custom_replay",
+    "new_game",
+    "show_name",
+    "startMenuMusic",
+    "play_sound",
+    "play_menu_select",
+    "play_menu_move",
+    "stopMenuMusic",
+    "stopGameMusic",
+    "startGameMusic",
+    "replaceBadCharacters",
+    "blit_to_screen",
+    "draw_reward",
+    "replay_menu_callback",
+    "main_menu_callback",
+    "do_replay_menu",
+    "draw_results",
+    "force_create_profile",
+    "draw_frame",
+    "play",
+    "get_string",
+    "pwd_garble_string",
+    "line_intersect",
+    "draw_progress_bar",
+    "datafile_callback_slow",
+    "datafile_callback",
+    "color_map_callback",
+    "getSampleFromOggDatafile",
+    "log2file",
+    "end_game",
+    "uninit_game",
+    "save_config",
+    "change_profile",
+    "update_reward",
+    "myDeleteFile",
+    "set_current_avatar",
+    "update_frame",
+    "checkMenuFocus",
+    "check_dir",
+    "for_each_directory",
+    "play_jump_sound",
+    "run_demo",
+    "add_profile",
+    "rebuild_profile_list",
+    "loadScrambled",
+    "check_beta_tester",
+    "check_characters",
+    "load_character",
+    "drawSlot",
+    "start_reward",
+    "handle_player_collision_original",
+    "handle_player_collision_old",
+    "handle_player_collision_vector",
+    "handle_player_collision_vector_2",
+    "handle_player_collision_combo",
+    "handle_player_input",
+    "init_game",
+    "_mangled_main"
+  ],
+  "moved_function": "draw_progress_bar",
+  "historical_predecessor": "load_sound",
+  "trial": {
+    "move": "draw_progress_bar",
+    "after": "load_sound",
+    "compile": "OK",
+    "matches": 51,
+    "gains": [
+      "stopGameMusic"
+    ],
+    "losses": [],
+    "now_historical_size": [],
+    "other_size_changes": [
+      "play"
+    ]
+  },
+  "trial_evidence": "docs/attempts/order-moves/game-main.json",
+  "begin_command": "python tools/interface_task.py begin move_main_draw_progress_bar",
+  "apply_command": "python tools/interface_task.py apply move_main_draw_progress_bar",
+  "verification_command": "python tools/interface_task.py check move_main_draw_progress_bar",
+  "promotion_command": "python tools/interface_task.py promote move_main_draw_progress_bar",
+  "reason": "Retained isolated trial: moving this unchanged definition after its historical predecessor gained stopGameMusic with no exact-function regression. Fresh strict acceptance remains mandatory.",
+  "edit_scope": "Move one complete unchanged definition after its historical predecessor. No body, declaration or flag edits."
+}

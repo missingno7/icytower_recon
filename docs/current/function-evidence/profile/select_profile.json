@@ -6206,6 +6206,21 @@
       "size_delta": 0
     }
   ],
+  "emission_order": {
+    "historical_position": 16,
+    "candidate_position": 16,
+    "historical_predecessor": "create_profile",
+    "candidate_predecessor": "draw_profile_selector",
+    "predecessor_same": false,
+    "predecessor_exact": false,
+    "historical_prefix_exact": false,
+    "frontier": false,
+    "cu_same_predecessor_count": 8,
+    "cu_function_count": 17,
+    "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
+    "priority_adjustment": 0,
+    "note": "Emission-order context differs from history (candidate predecessor draw_profile_selector versus historical create_profile); part of the mismatch may be a neighbor artifact."
+  },
   "known_rules": [
     {
       "id": "pointer-live-range",
@@ -6281,6 +6296,43 @@
         "compiler_scope_matches": true,
         "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
+    },
+    {
+      "id": "emission-order-context",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Same-size body with a different register or clear order; the candidate's emission predecessor differs from the historical predecessor",
+      "known_source_cause": "GCC 4.4.1 emits functions in call-graph order derived from definition order and carries scratch-register and clear-order state between consecutively compiled functions. main.c emission order agreed with history at 33%; restoring historical definition order raised agreement to 90% and flipped play_sound to exact while regressing two neighbors.",
+      "known_fix_pattern": "Recover in historical emission order from the frontier (all earlier functions exact and in order). Move a single unchanged definition after its historical predecessor only when tools/emission_order.py records a gain with no regression; never reorder the whole file while neighbors are still DIFFER.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Context evidence only; strict verification and the source-order gate remain mandatory.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
+      },
+      "example_functions": [
+        "stopGameMusic",
+        "play_sound",
+        "check_beta_tester"
+      ],
+      "evidence": "docs/attempts/order-moves/game-main.json",
+      "confidence": "OBSERVED",
+      "required_features": [
+        "emission_predecessor_differs"
+      ],
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [
+          "emission_predecessor_differs"
+        ],
+        "evidence_field": null,
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",
@@ -6338,32 +6390,6 @@
             "canonical_return_type": "void",
             "canonical_parameter_types": [
               "void*"
-            ]
-          }
-        ],
-        "layout_issues": []
-      },
-      {
-        "function": "create_profile",
-        "source": "src/profile.c",
-        "blocking": false,
-        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
-        "call_offsets": [
-          2393
-        ],
-        "candidate_card": "docs/current/interfaces/create_profile.json",
-        "local_declarations": [
-          {
-            "return_type": "Tprofile_create*",
-            "parameter_types": [
-              "char*",
-              "int"
-            ],
-            "canonical_return_type": "Tprofile*",
-            "canonical_parameter_types": [
-              "char*",
-              "int"
             ]
           }
         ],
@@ -6462,30 +6488,6 @@
               "int",
               "int",
               "int"
-            ]
-          }
-        ],
-        "layout_issues": []
-      },
-      {
-        "function": "load_profile",
-        "source": "src/profile.c",
-        "blocking": false,
-        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
-        "call_offsets": [
-          2472
-        ],
-        "candidate_card": "docs/current/interfaces/load_profile.json",
-        "local_declarations": [
-          {
-            "return_type": "Tprofile_load*",
-            "parameter_types": [
-              "char*"
-            ],
-            "canonical_return_type": "Tprofile*",
-            "canonical_parameter_types": [
-              "char*"
             ]
           }
         ],
@@ -6613,182 +6615,6 @@
         }
       ],
       "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1328,
-          "member_difference_count": 9,
-          "first_member_differences": [
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "creationDate",
-              "historical": {
-                "offset": 1328,
-                "size": 16,
-                "type": "char [16]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "header",
-              "historical": {
-                "offset": 0,
-                "size": 6,
-                "type": "char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 6,
-                "type": "unsigned char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "last_avatar",
-              "historical": {
-                "offset": 1252,
-                "size": 64,
-                "type": "char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "reserved1",
-              "historical": null,
-              "candidate": {
-                "offset": 176,
-                "size": 1068,
-                "type": "unsigned char [1068]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "reserved2",
-              "historical": null,
-              "candidate": {
-                "offset": 1252,
-                "size": 64,
-                "type": "unsigned char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 522
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1328,
-          "member_difference_count": 9,
-          "first_member_differences": [
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "creationDate",
-              "historical": {
-                "offset": 1328,
-                "size": 16,
-                "type": "char [16]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "header",
-              "historical": {
-                "offset": 0,
-                "size": 6,
-                "type": "char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 6,
-                "type": "unsigned char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "last_avatar",
-              "historical": {
-                "offset": 1252,
-                "size": 64,
-                "type": "char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "reserved1",
-              "historical": null,
-              "candidate": {
-                "offset": 176,
-                "size": 1068,
-                "type": "unsigned char [1068]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "reserved2",
-              "historical": null,
-              "candidate": {
-                "offset": 1252,
-                "size": 64,
-                "type": "unsigned char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 522
-        },
         {
           "position": "parameter 2",
           "historical_type": "Tavailable_profile",

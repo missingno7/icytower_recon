@@ -1646,6 +1646,21 @@
       "size_delta": -444
     }
   ],
+  "emission_order": {
+    "historical_position": 15,
+    "candidate_position": 12,
+    "historical_predecessor": "delete_profile",
+    "candidate_predecessor": "save_profile",
+    "predecessor_same": false,
+    "predecessor_exact": false,
+    "historical_prefix_exact": false,
+    "frontier": false,
+    "cu_same_predecessor_count": 8,
+    "cu_function_count": 17,
+    "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
+    "priority_adjustment": 0,
+    "note": "Emission-order context differs from history (candidate predecessor save_profile versus historical delete_profile); part of the mismatch may be a neighbor artifact."
+  },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
   "priority": -25,
@@ -1782,127 +1797,7 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "create_profile",
-      "source": "src/profile.c",
-      "blocking": false,
-      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "create_profile",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "Tprofile*",
-          "parameter_types": [
-            "char*",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 199823
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1328,
-          "member_difference_count": 9,
-          "first_member_differences": [
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "creationDate",
-              "historical": {
-                "offset": 1328,
-                "size": 16,
-                "type": "char [16]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "header",
-              "historical": {
-                "offset": 0,
-                "size": 6,
-                "type": "char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 6,
-                "type": "unsigned char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "last_avatar",
-              "historical": {
-                "offset": 1252,
-                "size": 64,
-                "type": "char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "reserved1",
-              "historical": null,
-              "candidate": {
-                "offset": 176,
-                "size": 1068,
-                "type": "unsigned char [1068]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "reserved2",
-              "historical": null,
-              "candidate": {
-                "offset": 1252,
-                "size": 64,
-                "type": "unsigned char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 526
-        }
-      ],
-      "candidate_signatures": [
-        "('Tprofile*', ['char*', 'int'])",
-        "('Tprofile_create*', ['char*', 'int'])"
-      ],
-      "candidate_card": "docs/current/interfaces/create_profile.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

@@ -203,35 +203,7 @@ void show_instructions(void)
 
 #include "recovered/Toptions.h"
 
-typedef struct Tprofile {
-    unsigned char header[6];
-    char handle[32];
-    int checksum;
-    int games_played;
-    int custom_games_played;
-    int games_quit;
-    int seconds_spent_playing;
-    int total_floors;
-    int total_score;
-    int total_combos;
-    int total_combo_floors;
-    int best_floor;
-    int best_combo;
-    int best_score;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    int cccNum[5];
-    int cccTotal[5];
-    int ccc[5];
-    int jc[5];
-    unsigned char reserved1[0x4dc-176];
-    int flash;
-    int jump_hold;
-    unsigned char reserved2[64];
-    int start_floor;
-    int msc_volume;
-    int snd_volume;
-} Tprofile;
+#include "recovered/Tprofile.h"
 
 #include "recovered/Tavailable_profile.h"
 
@@ -244,15 +216,7 @@ typedef struct Tprofile {
 /* menu.h layout recovered from the main-CU DWARF inventory. */
 #include "recovered/Tmenu.h"
 
-typedef struct Tmenu_params {
-    FONT *font;
-    int font_height;
-    Tcontrol ctrl;
-    BITMAP *bullet;
-    int pos;
-    DATAFILE *data;
-    int fo;
-} Tmenu_params;
+#include "recovered/Tmenu_params.h"
 
 typedef struct FLDAdSpot {
     const char *pRemoteImageURL;
@@ -624,6 +588,29 @@ void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y)
     if (*dest)
         return;
     alert("load_sound(): file not found", fname, NULL, "OK", NULL, 0, 0);
+}
+
+void draw_progress_bar(void)
+{
+    int size;
+    int ypos;
+    static int value;
+    int maxVal;
+
+    if (itrcheck)
+        return;
+    size=value*4;
+    maxVal=212;
+    if (size>maxVal)
+        size=maxVal;
+    acquire_screen();
+    ypos=400;
+    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));
+    rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));
+    rectfill(screen,0,420,639,430,makecol(255,255,255));
+    textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));
+    release_screen();
+    value++;
 }
 
 void take_screenshot(BITMAP *bmp)
@@ -1557,28 +1544,7 @@ int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int d
     return 1;
 }
 
-void draw_progress_bar(void)
-{
-    int size;
-    int ypos;
-    static int value;
-    int maxVal;
 
-    if (itrcheck)
-        return;
-    size=value*4;
-    maxVal=212;
-    if (size>maxVal)
-        size=maxVal;
-    acquire_screen();
-    ypos=400;
-    rectfill(screen,108,ypos,532,ypos+10,makecol(150,150,150));
-    rectfill(screen,320-size,ypos,320+size,ypos+10,makecol(100,100,100));
-    rectfill(screen,0,420,639,430,makecol(255,255,255));
-    textout_centre_ex(screen,font,last_log,320,420,makecol(150,150,150),makecol(255,255,255));
-    release_screen();
-    value++;
-}
 
 void datafile_callback_slow(DATAFILE *d)
 {
@@ -1791,6 +1757,35 @@ int check_dir(const char *filename, int attrib, void *param)
     return 0;
 }
 
+int load_character(const char *filename, int attrib, void *param)
+{
+    static int count;
+    char *name;
+
+    name = get_filename(filename);
+    if ((attrib & FA_DIREC) && *name != '.') {
+        char buf[1024];
+
+        sprintf(buf, "%s/%s.txt", filename, name);
+        if (exists(buf)) {
+            characters[count].bmp = load_character_bmp(name,
+                &characters[count].uses_datafile, characters[count].pal);
+            log2file(" %s (%s): %s", name, filename,
+                characters[count].bmp ? "ok" : "error");
+            if (characters[count].bmp) {
+                strcpy(characters[count].name, name);
+                count++;
+                return 0;
+            }
+            else {
+                num_chars--;
+                *allegro_errno = 0;
+            }
+        }
+    }
+    return 0;
+}
+
 void for_each_directory(const char *basedir,
                         int (*cb)(const char *filename, int attrib, void *param))
 {
@@ -1988,34 +1983,7 @@ int check_characters(void)
     return 1;
 }
 
-int load_character(const char *filename, int attrib, void *param)
-{
-    static int count;
-    char *name;
 
-    name = get_filename(filename);
-    if ((attrib & FA_DIREC) && *name != '.') {
-        char buf[1024];
-
-        sprintf(buf, "%s/%s.txt", filename, name);
-        if (exists(buf)) {
-            characters[count].bmp = load_character_bmp(name,
-                &characters[count].uses_datafile, characters[count].pal);
-            log2file(" %s (%s): %s", name, filename,
-                characters[count].bmp ? "ok" : "error");
-            if (characters[count].bmp) {
-                strcpy(characters[count].name, name);
-                count++;
-                return 0;
-            }
-            else {
-                num_chars--;
-                *allegro_errno = 0;
-            }
-        }
-    }
-    return 0;
-}
 
 void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
 {

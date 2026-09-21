@@ -27,7 +27,7 @@ from predicate_context import load as predicate_context
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/type_trial_context.py','tools/predicate_context.py','tools/pointee_tasks.py','tools/pointee_migration.py','tools/pointee_diagnostics.py','tools/supervisor_queue.py','tools/call_arity.py','tools/compound_context.py','tools/queue_dependencies.py','tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/emission_order.py','tools/type_trial_context.py','tools/predicate_context.py','tools/pointee_tasks.py','tools/pointee_migration.py','tools/pointee_diagnostics.py','tools/supervisor_queue.py','tools/call_arity.py','tools/compound_context.py','tools/queue_dependencies.py','tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -342,7 +342,9 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     calls += [{'symbol':t['target_function'],'function':t['target_function'],'function_offset':t['function_offset'],'target_va':t['target_va'],'verified':t['equal']} for t in row.get('direct_transfers',[])]
     original_calls=[i for i in old if i['mnemonic'].startswith('call') or (i['mnemonic']=='jmp' and '*' in i['assembly'])]
     rules=read_json(ROOT/'docs/codegen-rules.json')['rules']
-    relevant=select_rules(rules,row,ev,wf,old,report['build'])
+    from emission_order import emission_context,priority_adjustment
+    emission=emission_context(report,row['name'])
+    relevant=select_rules(rules,{**row,'emission_order':emission},ev,wf,old,report['build'])
     for pattern in ev['source_patterns']:
         pattern['application_command']='python tools/apply_pattern.py '+target+' '+row['name']+' '+pattern['id']
     from literal_dependencies import groups as literal_groups,for_function as literal_dependencies
@@ -418,6 +420,9 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     related=adjacent|{t['target_function'] for t in row.get('direct_transfers',[])}|{x['name'] for x in report['functions'] if any(t['target_function']==row['name'] for t in x.get('direct_transfers',[]))}
     exact_neighbors=sum(x['status']=='FUNCTION_MATCH' and x['name']!=row['name'] for x in report['functions'] if x['name'] in adjacent)
     priority+=5*exact_neighbors
+    emission_bonus,emission_reason=priority_adjustment(emission)
+    if difficulty!='SUPERVISOR' and wf['state']!='FUNCTION_MATCH': priority+=emission_bonus
+    if emission: emission['priority_adjustment']=emission_bonus if difficulty!='SUPERVISOR' and wf['state']!='FUNCTION_MATCH' else 0; emission['note']=emission_reason
     neighbors=[{'function':x['name'],'status':x['status'],'historical_offset':x['va']-unit['low_pc'],'candidate_offset':x.get('candidate_offset'),'size_delta':x.get('candidate_size',0)-x['original_size']} for x in report['functions'] if x['name']!=row['name'] and x['name'] in related]
     return {'schema':1,'source':unit['source'],'target':target,'historical_cu':unit['historical_path'],'function':row['name'],
             'historical_va':hex(f['va']),'historical_size':f['size'],'status':row['status'],**wf,**ev,
@@ -427,7 +432,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'referenced_globals':data,'literal_dependencies':literal_dependencies(literal_groups(report),row['name']),'calls':calls,'original_calls':original_calls,'indirect_control_flow':indirect,
             'relocation_mismatches':mismatch_views(row,old),
             'direct_transfer_mismatches':[t for t in row.get('direct_transfers',[]) if not t['equal'] or not t.get('layout_operand_equal',True)],
-            'unresolved_call_symbols':unresolved,'exact_adjacent_functions':exact_neighbors,'neighbor_layout':neighbors,'known_rules':relevant,'difficulty':difficulty,'priority':priority,
+            'unresolved_call_symbols':unresolved,'exact_adjacent_functions':exact_neighbors,'neighbor_layout':neighbors,'emission_order':emission,'known_rules':relevant,'difficulty':difficulty,'priority':priority,
             'compound_trials':compound_context(target,row['name'],report['build'],report['fixture'],report['verifier']),
             'predicate_trials':predicate_context(target,row['name'],report['build'],report['fixture'],report['verifier']),'compiler_context':row.get('compiler_context'),'compiler_trials':load_trials(target,row['name'],row,report['build']['local_inputs']),'routing_reason':routing_reason,'routing_evidence':{'base_checks':routing_checks,'observed':{'historical_size':f['size'],'candidate_size':row.get('candidate_size'),'differing_bytes':len(row.get('difference_offsets',[])),'unresolved_calls':unresolved,'indirect_transfers':indirect},'limit':'Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision.'},'supervisor_block':supervisor,'evidence_report':'docs/current/reports/'+target+'.json',
             'verification_command':'python tools/check_function.py '+target+' '+row['name'],

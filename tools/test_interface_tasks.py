@@ -165,6 +165,15 @@ class InterfaceTests(unittest.TestCase):
         self.assertEqual(project(['c645f000','66c745f20100'])['sha256'],project(['66c745f20100','c645f000'])['sha256'])
         self.assertEqual(project(['c745f000000000',slot128])['sha256'],project([slot128,'c745f000000000'])['sha256'])
 
+    def test_indirect_jump_exclusion_distinguishes_tables_from_registers(self):
+        import re,inspect,experiment
+        source=inspect.getsource(experiment.compare)
+        pattern=re.search(r"re\.search\(r'(.*?)',i\['assembly'\]\)",source)[1]
+        for table in ('jmp    *0xe8(,%eax,4)','jmp    *(,%edx,4)'):
+            self.assertTrue(re.search(pattern,table),table)
+        for register in ('jmp    *%eax','jmp    *0x10(%eax)','call   *%edx'):
+            self.assertFalse(re.search(pattern,register),register)
+
     def test_projection_respects_decoding_and_cfg(self):
         raw=bytes.fromhex('31f631dbebfc')
         rows=[{'address':0,'bytes':'31f6','mnemonic':'xor','assembly':'xor %esi,%esi'},

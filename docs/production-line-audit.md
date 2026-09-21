@@ -1201,3 +1201,24 @@ Xiph archives now completes with no unresolved symbols. The executable is not ex
 `--verify-all` publishes the link record. Per the user's direction the priority is now
 matching the remaining 69 game function bodies toward a standalone build; library byte
 reproduction and PE layout are deferred.
+
+
+## Compile-order coupling and probe-driven definition moves
+
+Isolated probes restored main.c's definitions to DWARF line order. Emission-order
+agreement with the original rose from 33% to 90%, play_sound became exact and
+check_beta_tester reached its historical size, but line_alert and uninit_game regressed:
+a function's register choices depend on what the compiler emitted just before it, so a
+whole-file reorder cannot pass the gate while neighbors still differ. The lesson is in
+the codegen rule database with the retained probe records.
+
+Instead of forcing the order, cards now expose emission-order context and the queue
+prefers frontier functions whose historical predecessors already match in order. A
+supervisor probe compiles one single-definition move per out-of-order function; moves
+that gain exact functions without regression become bounded SOURCE_ORDER tasks bound
+to the current source and object identities. The first real trial found three safe moves
+among seventy; the first, moving draw_progress_bar after its historical predecessor,
+promoted through the unchanged gate and made stopGameMusic exact without a body edit
+(185 exact functions). The first worker attempt crashed because the generated plan
+lacked a file key; sources were verified byte-identical to the session snapshot, the
+generator was fixed and tested, and the session closed.

@@ -1916,6 +1916,21 @@
       "size_delta": 0
     }
   ],
+  "emission_order": {
+    "historical_position": 12,
+    "candidate_position": 11,
+    "historical_predecessor": "view_profile",
+    "candidate_predecessor": "view_profile",
+    "predecessor_same": true,
+    "predecessor_exact": false,
+    "historical_prefix_exact": false,
+    "frontier": false,
+    "cu_same_predecessor_count": 8,
+    "cu_function_count": 17,
+    "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
+    "priority_adjustment": 0,
+    "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
+  },
   "known_rules": [
     {
       "id": "aligned-literal-content-difference",
@@ -2235,96 +2250,7 @@
           "die": 199329
         }
       ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 1328,
-          "member_difference_count": 9,
-          "first_member_differences": [
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "creationDate",
-              "historical": {
-                "offset": 1328,
-                "size": 16,
-                "type": "char [16]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "header",
-              "historical": {
-                "offset": 0,
-                "size": 6,
-                "type": "char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 6,
-                "type": "unsigned char [6]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "last_avatar",
-              "historical": {
-                "offset": 1252,
-                "size": 64,
-                "type": "char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "reserved1",
-              "historical": null,
-              "candidate": {
-                "offset": 176,
-                "size": 1068,
-                "type": "unsigned char [1068]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "reserved2",
-              "historical": null,
-              "candidate": {
-                "offset": 1252,
-                "size": 64,
-                "type": "unsigned char [64]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 521
-        }
-      ],
+      "type_layout_issues": [],
       "candidate_signatures": [
         "('int', ['Tprofile_create*'])",
         "('void', ['Tprofile*'])"

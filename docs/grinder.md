@@ -500,3 +500,22 @@ change, `python tools/reconsider_type.py <task>` fresh-probes every affected CU 
 requires raw contribution preservation before atomically reopening the task. It
 retains the old failure and does not promote anything. Resume the ordinary worker
 only after the task is CHEAP again; do not manually erase blocker records.
+
+
+## Historical emission order
+
+Function cards carry `emission_order`: the function's historical and candidate
+predecessors in emission order, whether every earlier historical function already
+matches in order (`frontier`), and a bounded priority adjustment. GCC 4.4.1 carries
+register-choice state between consecutively compiled functions, so a mismatch whose
+predecessor differs from history may be a neighbor artifact and receives a penalty; a
+frontier function receives a bonus. Neither value proves or masks any byte.
+
+`python tools/emission_order.py <target> <source>` compiles one isolated variant per
+out-of-order definition, moving it after its historical predecessor, and retains the
+outcomes in `docs/attempts/order-moves/<target>.json`. `move_<stem>_<function>` SOURCE_ORDER
+tasks are generated only for moves whose retained trial gained exact functions with no
+regression, and only while the source and compiled object identities still match the
+trial. Every promotion invalidates the remaining trials; rerun the probe to regenerate
+them. The whole-file historical reorder stays a supervisor task while neighbors differ,
+because each function's bytes depend on the functions compiled before it.

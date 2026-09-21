@@ -144,32 +144,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/create_profile.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 0,
-      "repair_card": "docs/current/interfaces/create_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/create_profile.json",
-          "source": "src/main.c",
-          "function": "force_create_profile",
-          "candidate_card": "docs/current/functions/main/force_create_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "prerequisite": "docs/current/interfaces/create_profile.json",
-          "source": "src/main.c",
-          "function": "init_game",
-          "candidate_card": "docs/current/functions/main/init_game.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/draw_buffer.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 2,
@@ -326,37 +300,11 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/load_profile.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 0,
-      "repair_card": "docs/current/interfaces/load_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/load_profile.json",
-          "source": "src/main.c",
-          "function": "force_create_profile",
-          "candidate_card": "docs/current/functions/main/force_create_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "prerequisite": "docs/current/interfaces/load_profile.json",
-          "source": "src/main.c",
-          "function": "init_game",
-          "candidate_card": "docs/current/functions/main/init_game.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/save_profile.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 0,
       "repair_card": "docs/current/interfaces/save_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
+      "repair_state": "INTERFACE_REPAIR",
       "examples": [
         {
           "prerequisite": "docs/current/interfaces/save_profile.json",
@@ -371,32 +319,6 @@
           "function": "play",
           "candidate_card": "docs/current/functions/main/play.json",
           "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/select_profile.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 1,
-      "repair_card": "docs/current/interfaces/select_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/select_profile.json",
-          "source": "src/main.c",
-          "function": "change_profile",
-          "candidate_card": "docs/current/functions/main/change_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "prerequisite": "docs/current/interfaces/select_profile.json",
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": true
         }
       ],
       "omitted_examples": 0,
@@ -709,20 +631,31 @@
       "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
     },
     {
+      "kind": "SHARED_INTERFACE_PREREQUISITE",
+      "key": "docs/current/interfaces/select_profile.json",
+      "affected_function_count": 1,
+      "planned_in_caller_count": 1,
+      "repair_card": "docs/current/interfaces/select_profile.json",
+      "repair_state": "TYPE_LAYOUT_BLOCKED",
+      "examples": [
+        {
+          "prerequisite": "docs/current/interfaces/select_profile.json",
+          "source": "src/profile.c",
+          "function": "select_profile",
+          "candidate_card": "docs/current/functions/profile/select_profile.json",
+          "planned_in_caller_cu": true
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
+    },
+    {
       "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-main:REGISTER_OR_INSTRUCTION_SELECTION",
       "target": "game-main",
       "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "affected_function_count": 9,
+      "affected_function_count": 7,
       "examples": [
-        {
-          "source": "src/main.c",
-          "function": "stopGameMusic",
-          "candidate_card": "docs/current/functions/main/stopGameMusic.json",
-          "size": 58,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
-        },
         {
           "source": "src/main.c",
           "function": "log2file",
@@ -754,9 +687,17 @@
           "size": 472,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
+        },
+        {
+          "source": "src/main.c",
+          "function": "draw_reward",
+          "candidate_card": "docs/current/functions/main/draw_reward.json",
+          "size": 581,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
-      "omitted_examples": 4,
+      "omitted_examples": 2,
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     },
     {
@@ -897,11 +838,11 @@
       "examples": [
         {
           "source": "src/main.c",
-          "function": "check_beta_tester",
-          "candidate_card": "docs/current/functions/main/check_beta_tester.json",
-          "size": 254,
+          "function": "draw_progress_bar",
+          "candidate_card": "docs/current/functions/main/draw_progress_bar.json",
+          "size": 486,
           "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         },
         {
           "source": "src/main.c",
@@ -1293,10 +1234,10 @@
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     }
   ],
-  "protected_layout_functions": 20,
+  "protected_layout_functions": 21,
   "protected_layout_by_target": {
     "game-httpget": 1,
-    "game-main": 17,
+    "game-main": 18,
     "game-menu": 1,
     "game-strptime": 1
   },

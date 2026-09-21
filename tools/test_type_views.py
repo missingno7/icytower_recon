@@ -24,6 +24,21 @@ class ViewTests(unittest.TestCase):
         self.assertEqual((retained[0]['offset'],retained[0]['size']),(216,4))
         self.assertEqual(ignored[0]['size'],216)
 
+    def test_unreferenced_byte_array_signedness_is_restored_by_the_canonical_declaration(self):
+        g=graph(); expected=layout(g,g.game_types['Tprofile'][0]['type_ref']); candidate=copy.deepcopy(expected)
+        header=next(m for m in candidate['members'] if m['name']=='header'); header['layout']['element']=dict(header['layout']['element'],type='unsigned char',encoding='8\t(unsigned char)')
+        header['layout']['type']='unsigned char [6]'
+        with self.assertRaises(ValueError): compatible_members(candidate,expected,'')
+        repairs=[]; retained,ignored=compatible_members(candidate,expected,'p->handle;',None,None,repairs)
+        self.assertEqual([r['member'] for r in repairs],['header']); self.assertEqual(ignored,[])
+        for use in ('p->header[0]','memcpy(x.header, y, 6)','header'):
+            with self.assertRaises(ValueError): compatible_members(candidate,expected,use,None,None,[])
+        # Different dimensions or a non-byte element are not signedness spellings.
+        bad=copy.deepcopy(candidate); bad['members'][0]['layout']['dimensions']=[7]
+        with self.assertRaises(ValueError): compatible_members(bad,expected,'',None,None,[])
+        bad=copy.deepcopy(candidate); bad['members'][0]['layout']['element']['type']='short'; bad['members'][0]['layout']['element']['size']=2
+        with self.assertRaises(ValueError): compatible_members(bad,expected,'',None,None,[])
+
     def test_accessed_filler_is_never_discarded(self):
         for source in ('return p->before_total_jumps[1];','offsetof(View, before_total_jumps)'):
             with self.assertRaises(ValueError): compatible_members(self.candidate(),self.expected(),source)

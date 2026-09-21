@@ -6,6 +6,7 @@ No original bytes are used by compilation, only by this verifier.
 """
 import argparse
 import json
+import re
 import struct
 from pathlib import Path
 from common import ROOT, identity, read_json, run, write_json
@@ -42,8 +43,12 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     candidates={d['name']:d for d in dies.values() if d['tag']=='DW_TAG_subprogram' and d['low_pc'] is not None and d['high_pc'] is not None}
     entry_targets={d['low_pc'] for d in candidates.values()}
     forbidden=[]
+    # A switch jump table (`jmp *disp(,%reg,4)`) enumerates its targets through relocations
+    # against .text, which join entry_targets below. Only register-indirect jumps whose
+    # targets cannot be enumerated exclude the whole function from the projection.
     for d in candidates.values():
-        if any(d['low_pc']<=i['address']<d['high_pc'] and i['mnemonic'].startswith('j') and '*' in i['assembly'] for i in decoded):
+        if any(d['low_pc']<=i['address']<d['high_pc'] and i['mnemonic'].startswith('j') and '*' in i['assembly']
+               and not re.search(r'\*(?:0x[0-9a-f]+)?\(,%e[a-z]{2},4\)$',i['assembly']) for i in decoded):
             forbidden.append((d['low_pc'],d['high_pc']))
     for relocation in obj.relocations:
         symbol=obj.by_index[relocation['symbol_index']]

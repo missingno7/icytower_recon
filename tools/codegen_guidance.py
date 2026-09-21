@@ -26,6 +26,7 @@ def features(row,evidence,original):
         'has_compiler_context':bool(row.get('compiler_context')),
         'first_float_width_diff':float_width,
         'has_static_local':any(v.get('address') is not None for v in evidence.get('locals',[])),
+        'emission_predecessor_differs':bool(row.get('emission_order')) and not row['emission_order'].get('predecessor_same',True),
     }
 
 

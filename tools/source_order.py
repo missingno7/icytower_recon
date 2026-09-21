@@ -67,13 +67,15 @@ def plan_order(unit,ledger):
 
 
 def plans(ledger):
-    return [plan_order(unit,ledger) for unit in read_json(ROOT/'src/units.json') if unit['classification'] in ('GAME','AMBIGUOUS')]
+    from emission_order import move_plans
+    units=[u for u in read_json(ROOT/'src/units.json') if u['classification'] in ('GAME','AMBIGUOUS')]
+    return [plan_order(unit,ledger) for unit in units]+[card for unit in units for card in move_plans(unit,ledger)]
 
 
 def publish_orders(ledger,check=False):
     emit=check_json if check else write_json; tasks=[]
     for card in plans(ledger):
-        path=ROOT/'docs/current/source-order'/(card['target']+'.json'); emit(path,card)
+        path=ROOT/'docs/current/source-order'/((card['target']+'-'+card['function'] if card.get('moved_function') else card['target'])+'.json'); emit(path,card)
         if card['state']=='NOT_QUEUED': continue
         tasks.append({k:card[k] for k in ('task_kind','function','source','sources','difficulty','priority','reason','state','status','body_edit_allowed','difference_class','begin_command','verification_command','promotion_command')} | {'size':0,'candidate_card':path.relative_to(ROOT).as_posix()})
     emit(ROOT/'docs/current/source-order-tasks.json',{'authority':'Original DWARF source file and declaration lines; executable addresses never determine source order','tasks':tasks})

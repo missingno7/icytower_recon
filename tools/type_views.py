@@ -24,7 +24,27 @@ def shape_key(node):
     return key
 
 
-def compatible_members(candidate,expected,source,canonical_pointers=(),pointer_repairs=None):
+BYTE_TYPES=('char','signed char','unsigned char')
+
+
+def unreferenced_byte_array_signedness(candidate_member,expected_member,source):
+    """A byte-array member spelled with a different char signedness and never referenced in the CU.
+
+    The canonical declaration restores the historical spelling; because no expression uses
+    the member, only DWARF can change. Fresh emission preservation is still required.
+    """
+    a=candidate_member['layout']; b=expected_member['layout']
+    if a.get('kind')!='array_type' or b.get('kind')!='array_type' or a.get('dimensions')!=b.get('dimensions'): return False
+    ea=a.get('element',{}); eb=b.get('element',{})
+    if ea.get('kind')!='base_type' or eb.get('kind')!='base_type' or ea.get('size')!=1 or eb.get('size')!=1: return False
+    if ea.get('type') not in BYTE_TYPES or eb.get('type') not in BYTE_TYPES or a.get('qualifiers') or b.get('qualifiers'): return False
+    name=candidate_member['name']
+    if re.search(r'(?:->|\.)\s*'+re.escape(name)+r'\b',source): return False
+    expressions=STRUCT.sub(lambda x:' '*len(x[0]),source)
+    return not re.search(r'\b'+re.escape(name)+r'\b',expressions)
+
+
+def compatible_members(candidate,expected,source,canonical_pointers=(),pointer_repairs=None,signedness_repairs=None):
     if candidate['kind']!='structure_type' or expected['kind']!='structure_type': raise ValueError('Only complete struct layouts are eligible')
     if not candidate.get('size') or not expected.get('size'): raise ValueError('Struct size is unknown')
     if candidate.get('qualifiers') or expected.get('qualifiers'): raise ValueError('Qualified aggregate requires supervisor review')
@@ -44,6 +64,10 @@ def compatible_members(candidate,expected,source,canonical_pointers=(),pointer_r
                 placeholder=(pointer_repairs is not None and a['kind']==b['kind']=='pointer_type'
                     and a.get('size')==b.get('size')==4 and not a.get('qualifiers') and not b.get('qualifiers')
                     and re.fullmatch(r'void\s*\*',a.get('type','')) and target and target[1] in canonical_pointers)
+                if not placeholder and signedness_repairs is not None and unreferenced_byte_array_signedness(m,old,source):
+                    signedness_repairs.append({'member':m['name'],'offset':offset,'size':size,'candidate_type':a.get('type'),'historical_type':b.get('type'),
+                        'reason':'Unreferenced byte array spelled with a different char signedness; the canonical declaration restores the historical spelling. Fresh emission preservation remains required.'})
+                    retained.append({'member':m['name'],'offset':offset,'size':size,'type':b.get('type')}); continue
                 if not placeholder: raise ValueError('Member differs in offset/type/qualifiers: '+m['name'])
                 pointer_repairs.append({'member':m['name'],'offset':offset,'size':4,
                     'candidate_type':a['type'],'historical_type':b['type'],
@@ -263,10 +287,12 @@ def plan(source,report,match,observations,ledger,texts):
         candidate,normalized=normalize_alias_pointers(candidate,report)
         complete=shape_key(candidate)==shape_key(expected)
         card.update(view_completeness='COMPLETE_LAYOUT' if complete else 'PARTIAL_LAYOUT',alias_normalized_members=normalized)
-        pointer_repairs=[]
+        pointer_repairs=[]; signedness_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
         library=library_pointees(source,report,g)
-        retained,ignored=compatible_members(candidate,expected,outside,pointees|library,pointer_repairs)
+        retained,ignored=compatible_members(candidate,expected,outside,pointees|library,pointer_repairs,signedness_repairs)
+        card['signedness_repairs']=signedness_repairs
+        if signedness_repairs and pointer_repairs: raise ValueError('Signedness spelling repairs require the whole canonical declaration, not a member-only repair')
         for repair in pointer_repairs:
             target=POINTER.fullmatch(repair['historical_type'])[1]
             repair['pointee_evidence']='GENERATED_HISTORICAL_HEADER' if target in pointees else 'OWNING_CU_LIBRARY_TYPEDEF_LAYOUT'
