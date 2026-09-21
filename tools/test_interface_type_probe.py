@@ -30,6 +30,16 @@ class InterfaceTypeProbeTests(unittest.TestCase):
         self.assertEqual(requested_types(report,{'Treplay','Existing','Unrelated'}, {'Treplay','Existing'}),
                          {'Treplay','LocalReplay','LocalControl'})
 
+    def test_member_pointee_names_follow_pointer_members_only(self):
+        from interface_type_probe import member_pointee_names
+        from type_graph import graph
+        g=graph()
+        names=member_pointee_names(g,{'Tmenu_params'})
+        self.assertTrue({'FONT','BITMAP','DATAFILE'}<=names,names)
+        self.assertNotIn('Tcontrol',names)  # by-value member, not a pointee
+        self.assertEqual(member_pointee_names(g,{'Tcontrol'}),set())
+        self.assertEqual(member_pointee_names(g,{'NoSuchType'}),set())
+
     def test_existing_ambiguous_typedefs_are_not_replaced_by_probe(self):
         from interface_type_probe import requested_types
         report=fixture()

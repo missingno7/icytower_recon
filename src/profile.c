@@ -1,4 +1,5 @@
 #include "recovered/Tcontrol.h"
+extern void poll_control(Tcontrol*, int);
 extern int is_up(Tcontrol*);
 extern int is_fire(Tcontrol*);
 extern int is_down(Tcontrol*);

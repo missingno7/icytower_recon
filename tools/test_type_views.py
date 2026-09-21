@@ -70,27 +70,57 @@ class ViewTests(unittest.TestCase):
         from type_views import member_replacement
         source='typedef struct Replay { int n; /* keep */ void *data; } Replay;'
         repair={'member':'data','historical_type':'Trecord *'}
-        after=member_replacement(source,repair,'\r\n')
+        after=member_replacement(source,[repair],'\r\n',{'Trecord'})
         self.assertEqual(after,'#include "recovered/Trecord.h"\r\n'+source.replace('void *data','Trecord *data'))
         for source in ('typedef struct { int *data; } R;', 'typedef struct { void *data; void *data; } R;'):
-            with self.assertRaises(ValueError):member_replacement(source,repair,'\n')
+            with self.assertRaises(ValueError):member_replacement(source,[repair],'\n',{'Trecord'})
+        # Several placeholders retype in place; library pointees add no generated include.
+        source='typedef struct P { void *font; int h; void *bullet; Tcontrol ctrl; void *data; } P;'
+        repairs=[{'member':'font','historical_type':'FONT *'},{'member':'bullet','historical_type':'BITMAP *'},{'member':'data','historical_type':'Trecord *'}]
+        after=member_replacement(source,repairs,'\n',{'Trecord'})
+        self.assertEqual(after,'#include "recovered/Trecord.h"\ntypedef struct P { FONT *font; int h; BITMAP *bullet; Tcontrol ctrl; Trecord *data; } P;')
+        with self.assertRaises(ValueError):member_replacement(source,repairs+[repairs[0]],'\n',{'Trecord'})
+
+    def test_library_pointee_evidence_requires_owning_cu_and_compiled_layout_equality(self):
+        from type_views import library_pointees
+        from common import ROOT,read_json
+        g=graph(); ledger=read_json(ROOT/'src/recovery.json'); report=read_json(ROOT/ledger['src/menu.c']['verified_report'])
+        proven=library_pointees('src/menu.c',report,g)
+        self.assertIn('BITMAP',proven); self.assertIn('DATAFILE',proven)
+        self.assertFalse(proven&set(g.game_types))
+        bad=copy.deepcopy(report)
+        for t in bad['candidate_debug']['typedefs']:
+            if t['name']=='BITMAP': t['layout']['members'][0]['offset']+=4
+        self.assertNotIn('BITMAP',library_pointees('src/menu.c',bad,g))
+        self.assertEqual(library_pointees('src/missing.c',report,g),set())
+        # A compiled typedef absent from the report is not evidence even when the owning CU declares it.
+        bad=copy.deepcopy(report); bad['candidate_debug']['typedefs']=[t for t in bad['candidate_debug']['typedefs'] if t['name']!='DATAFILE']
+        bad.pop('interface_type_probe',None)
+        self.assertNotIn('DATAFILE',library_pointees('src/menu.c',bad,g))
 
     def test_member_pointee_requires_complete_compiled_layout_and_exact_header_scope(self):
         from type_views import verify_member_pointees
         g=graph();expected=layout(g,g.game_types['Trecord'][0]['type_ref'])
-        plan={'repair_mode':'POINTER_MEMBER_ONLY','pointer_member_repairs':[{'historical_type':'Trecord *'}],
+        plan={'repair_mode':'POINTER_MEMBER_ONLY','source':'src/replay.c','pointer_member_repairs':[{'historical_type':'Trecord *'}],
               'compiled_headers':['include/recovered/Trecord.h']}
         report={'candidate_debug':{'typedefs':[{'name':'Trecord','layout':expected}]}}
         verify_member_pointees(report,plan)
-        for mutation in ('absent','ambiguous','offset','signedness','header','missing_repair'):
+        for mutation in ('absent','ambiguous','offset','signedness','header','missing_repair','unknown_library'):
             bad=copy.deepcopy(report);p=copy.deepcopy(plan)
             if mutation=='absent':bad['candidate_debug']['typedefs']=[]
             elif mutation=='ambiguous':bad['candidate_debug']['typedefs']*=2
             elif mutation=='offset':bad['candidate_debug']['typedefs'][0]['layout']['members'][1]['offset']=0
             elif mutation=='signedness':bad['candidate_debug']['typedefs'][0]['layout']['members'][0]['layout']['type']='signed char'
             elif mutation=='header':p['compiled_headers']=[]
+            elif mutation=='unknown_library':p['pointer_member_repairs'].append({'historical_type':'FONT *'})
             else:p['pointer_member_repairs']=[]
             with self.assertRaises(ValueError,msg=mutation):verify_member_pointees(bad,p)
+        # Library pointees verify against the owning CU's historical typedef and need no generated header.
+        import type_views
+        with patch.object(type_views,'library_pointees',return_value={'FONT','BITMAP'}):
+            verify_member_pointees(report,dict(plan,pointer_member_repairs=[{'historical_type':'Trecord *'},{'historical_type':'FONT *'}]))
+            verify_member_pointees(report,dict(plan,pointer_member_repairs=[{'historical_type':'FONT *'},{'historical_type':'BITMAP *'}],compiled_headers=[]))
+            with self.assertRaises(ValueError):verify_member_pointees(report,dict(plan,pointer_member_repairs=[{'historical_type':'FONT *'}]))
 
     def test_scalar_layout_preserves_qualifiers(self):
         a={'kind':'base_type','size':4,'type':'int','encoding':'signed'}

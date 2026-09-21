@@ -101,12 +101,44 @@ def historical_cu_defines(source,name,g):
     return False
 
 
-def member_replacement(declaration, repair, newline):
-    pointee=POINTER.fullmatch(repair['historical_type'])
-    matches=list(re.finditer(r'\bvoid(?=\s*\*\s*'+re.escape(repair['member'])+r'\s*;)',sanitized(declaration)))
-    if not pointee or len(matches)!=1: raise ValueError('Pointer member source spelling is ambiguous')
-    match=matches[0]
-    return '#include "recovered/'+pointee[1]+'.h"'+newline+declaration[:match.start()]+pointee[1]+declaration[match.end():]
+def member_replacement(declaration, repairs, newline, canonical_pointers=()):
+    """Retype each void-pointer placeholder member in place; include generated headers for game pointees only."""
+    edits=[]
+    for repair in repairs:
+        pointee=POINTER.fullmatch(repair['historical_type'])
+        matches=list(re.finditer(r'\bvoid(?=\s*\*\s*'+re.escape(repair['member'])+r'\s*;)',sanitized(declaration)))
+        if not pointee or len(matches)!=1: raise ValueError('Pointer member source spelling is ambiguous')
+        edits.append((matches[0].start(),matches[0].end(),pointee[1]))
+    if len({e[0] for e in edits})!=len(edits): raise ValueError('Pointer member repairs overlap')
+    text=declaration
+    for start,end,name in sorted(edits,reverse=True): text=text[:start]+name+text[end:]
+    headers=sorted({name for _,_,name in edits if name in canonical_pointers})
+    return ''.join('#include "recovered/'+name+'.h"'+newline for name in headers)+text
+
+
+def library_pointees(source,report,g):
+    """Library typedefs whose complete historical layout in the owning CU equals the compiled CU's typedef.
+
+    Evidence for retyping a void-pointer member placeholder to that library pointer. Game types
+    with generated headers are handled separately; this never merges layouts by name alone.
+    """
+    try: units={u['source']:u for u in read_json(ROOT/'src/units.json')}
+    except (OSError,ValueError): return set()
+    unit=units.get(source)
+    if not unit: return set()
+    compiled=defaultdict(list)
+    for t in interface_typedefs(report): compiled[t['name']].append(t)
+    historical=defaultdict(list)
+    for d in g.dies.values():
+        if d['tag']=='DW_TAG_typedef' and d.get('name') and d.get('cu')==unit['cu_die'] and d['name'] not in g.game_types:
+            historical[d['name']].append(d)
+    proven=set()
+    for name,rows in historical.items():
+        if len(rows)!=1 or len(compiled.get(name,[]))!=1: continue
+        expected=layout(g,rows[0]['type_ref'])
+        if expected['kind']!='structure_type' or not expected.get('size'): continue
+        if shape_key(compiled[name][0]['layout'])==shape_key(expected): proven.add(name)
+    return proven
 
 
 def return_evidence(report, units, g):
@@ -207,15 +239,19 @@ def plan(source,report,match,observations,ledger,texts):
                 raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
         pointer_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
-        retained,ignored=compatible_members(candidate,expected,outside,pointees,pointer_repairs)
+        library=library_pointees(source,report,g)
+        retained,ignored=compatible_members(candidate,expected,outside,pointees|library,pointer_repairs)
+        for repair in pointer_repairs:
+            target=POINTER.fullmatch(repair['historical_type'])[1]
+            repair['pointee_evidence']='GENERATED_HISTORICAL_HEADER' if target in pointees else 'OWNING_CU_LIBRARY_TYPEDEF_LAYOUT'
         targets=affected_targets(ledger,[source])
         if targets!=[report['build']['target']]: raise ValueError('View requires broader dependency closure')
         # A canonical parent can include child declarations that still exist locally.
         from type_tasks import generated_dependencies
-        if pointer_repairs and (len(pointer_repairs)!=1 or ignored or candidate['size']!=expected['size'] or len(candidate['members'])!=len(expected['members'])):
-            raise ValueError('Member-only repair requires one pointer placeholder in an otherwise complete layout')
-        pointee=POINTER.fullmatch(pointer_repairs[0]['historical_type'])[1] if pointer_repairs else None
-        required=({pointee}|generated_dependencies(pointee,ROOT)) if pointee else generated_dependencies(canonical,ROOT)
+        if pointer_repairs and (ignored or candidate['size']!=expected['size'] or len(candidate['members'])!=len(expected['members'])):
+            raise ValueError('Member-only repair requires pointer placeholders in an otherwise complete layout')
+        game_pointees=sorted({POINTER.fullmatch(r['historical_type'])[1] for r in pointer_repairs}&pointees)
+        required=set().union(*({n}|generated_dependencies(n,ROOT) for n in game_pointees)) if pointer_repairs else generated_dependencies(canonical,ROOT)
         conflicts=[{'type':declaration[3],'source':path,'header':'include/recovered/'+declaration[3]+'.h'}
                    for path in maintained if not path.startswith('include/recovered/')
                    for declaration in STRUCT.finditer(sanitized(texts[path])) if declaration[3] in required]
@@ -247,12 +283,11 @@ def plan(source,report,match,observations,ledger,texts):
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
         if pointer_repairs and forward_repairs: raise ValueError('Member-only repair cannot be combined with a forward-declaration repair')
         if pointer_repairs:
-            repair=pointer_repairs[0]
             original=texts[source][match.start():match.end()]
-            after=member_replacement(original,repair,newline)
-            name='member_'+Path(source).stem+'_'+alias+'_'+repair['member']
+            after=member_replacement(original,pointer_repairs,newline,pointees)
+            name='member_'+Path(source).stem+'_'+alias+'_'+'_'.join(r['member'] for r in pointer_repairs)
             card.update(function=name,repair_mode='POINTER_MEMBER_ONLY',
-                compiled_headers=['include/recovered/'+pointee+'.h'],
+                compiled_headers=['include/recovered/'+n+'.h' for n in game_pointees],
                 begin_command='python tools/interface_task.py begin '+name,
                 apply_command='python tools/interface_task.py apply '+name,
                 verification_command='python tools/interface_task.py check '+name,
@@ -308,19 +343,25 @@ def exact_duplicate_tokens(match,card,tokens):
 def verify_member_pointees(report, plan):
     if plan.get('repair_mode')!='POINTER_MEMBER_ONLY': return
     repairs=plan.get('pointer_member_repairs',[])
-    if len(repairs)!=1: raise ValueError('Member repair must identify one historical pointee')
-    pointer=POINTER.fullmatch(repairs[0].get('historical_type',''))
-    if not pointer: raise ValueError('Member repair has an unsupported pointer type')
-    name=pointer[1];g=graph()
-    if name not in g.game_types: raise ValueError('Member pointee lacks historical type evidence')
-    expected=[layout(g,d['type_ref']) for d in g.game_types[name]]
-    if len({json.dumps(shape_key(node),sort_keys=True) for node in expected})!=1:
-        raise ValueError('Historical member pointee layouts conflict')
-    candidates=[t for t in interface_typedefs(report) if t['name']==name]
-    if len(candidates)!=1 or shape_key(candidates[0]['layout'])!=shape_key(expected[0]):
-        raise ValueError('Compiled member pointee lacks the complete historical layout: '+name)
-    if plan.get('compiled_headers')!=['include/recovered/'+name+'.h']:
-        raise ValueError('Member repair compiled-header scope differs from its historical pointee')
+    if not repairs: raise ValueError('Member repair must identify at least one historical pointee')
+    g=graph(); game=[]
+    library=library_pointees(plan['source'],report,g)
+    for repair in repairs:
+        pointer=POINTER.fullmatch(repair.get('historical_type',''))
+        if not pointer: raise ValueError('Member repair has an unsupported pointer type')
+        name=pointer[1]
+        if name in g.game_types:
+            expected=[layout(g,d['type_ref']) for d in g.game_types[name]]
+            if len({json.dumps(shape_key(node),sort_keys=True) for node in expected})!=1:
+                raise ValueError('Historical member pointee layouts conflict')
+            candidates=[t for t in interface_typedefs(report) if t['name']==name]
+            if len(candidates)!=1 or shape_key(candidates[0]['layout'])!=shape_key(expected[0]):
+                raise ValueError('Compiled member pointee lacks the complete historical layout: '+name)
+            game.append(name)
+        elif name not in library:
+            raise ValueError('Compiled library pointee lacks the owning CU historical layout: '+name)
+    if plan.get('compiled_headers')!=['include/recovered/'+name+'.h' for name in sorted(set(game))]:
+        raise ValueError('Member repair compiled-header scope differs from its historical pointees')
 
 
 def verify_view(report,plan):

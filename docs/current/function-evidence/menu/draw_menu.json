@@ -642,9 +642,9 @@
           "original": [],
           "candidate": [
             {
-              "die": 8365,
+              "die": 8389,
               "type": "DATAFILE *",
-              "scope": 8356,
+              "scope": 8380,
               "byte_size": 4,
               "location": "0x712 (location list)",
               "declaration_line": 339
@@ -666,9 +666,9 @@
           ],
           "candidate": [
             {
-              "die": 8509,
+              "die": 8533,
               "type": "BITMAP *",
-              "scope": 8504,
+              "scope": 8528,
               "byte_size": 4,
               "location": "0x746 (location list)",
               "declaration_line": 347
@@ -690,9 +690,9 @@
           ],
           "candidate": [
             {
-              "die": 8253,
+              "die": 8277,
               "type": "int",
-              "scope": 8104,
+              "scope": 8128,
               "byte_size": 4,
               "location": "3 byte block: 75 bc 7d \t(DW_OP_breg5 (ebp): -324)",
               "declaration_line": 316
@@ -714,9 +714,9 @@
           ],
           "candidate": [
             {
-              "die": 8295,
+              "die": 8319,
               "type": "char [32]",
-              "scope": 8282,
+              "scope": 8306,
               "byte_size": 32,
               "location": "2 byte block: 91 40 \t(DW_OP_fbreg: -64)",
               "declaration_line": 328
@@ -738,9 +738,9 @@
           ],
           "candidate": [
             {
-              "die": 8225,
+              "die": 8249,
               "type": "int",
-              "scope": 8104,
+              "scope": 8128,
               "byte_size": 4,
               "location": null,
               "declaration_line": 314
@@ -762,9 +762,9 @@
           ],
           "candidate": [
             {
-              "die": 8237,
+              "die": 8261,
               "type": "char [256]",
-              "scope": 8104,
+              "scope": 8128,
               "byte_size": 256,
               "location": "3 byte block: 91 c0 7d \t(DW_OP_fbreg: -320)",
               "declaration_line": 315
@@ -786,9 +786,9 @@
           ],
           "candidate": [
             {
-              "die": 8272,
+              "die": 8296,
               "type": "int",
-              "scope": 8267,
+              "scope": 8291,
               "byte_size": 4,
               "location": null,
               "declaration_line": 322
@@ -1518,7 +1518,7 @@
         "assembly": "mov    0x8(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 8136,
+            "die": 8160,
             "name": "bmp",
             "type": "BITMAP *",
             "base_type": "BITMAP",
@@ -1540,7 +1540,7 @@
         "assembly": "mov    0xc(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 8152,
+            "die": 8176,
             "name": "m",
             "type": "Tmenu *",
             "base_type": null,
@@ -1562,7 +1562,7 @@
         "assembly": "mov    0x1c(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 8210,
+            "die": 8234,
             "name": "dx",
             "type": "int",
             "base_type": "int",
@@ -2159,13 +2159,13 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "difficulty": "MEDIUM",
+  "priority": -50,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -2219,9 +2219,9 @@
     {
       "function": "draw_menu",
       "source": "src/menu.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
+      "blocking": false,
+      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
     }
   ],
   "interface_conflicts": [
@@ -2310,141 +2310,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 538
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 288
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 312
+          "line": 539
         }
       ],
       "candidate_signatures": [

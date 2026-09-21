@@ -6,7 +6,13 @@
   "recurring_blocker": {
     "symptom": "Non-pointer or size-dependent view use requires supervisor review",
     "root_cause": "The planner treated every view as partial. A candidate typedef whose shape_key equals the historical layout is a pure renaming, so by-value locals, struct copies, array members and sizeof cannot change layout; only partial views with removed filler need that restriction.",
-    "blocked_before": ["view_hisc_Thisc_post", "view_game_data_Tgd_combo", "view_game_data_Tgd_jump_sequence", "view_loadpng_MEMORY_READER_STATE", "view_replay_Treplay_post"],
+    "blocked_before": [
+      "view_hisc_Thisc_post",
+      "view_game_data_Tgd_combo",
+      "view_game_data_Tgd_jump_sequence",
+      "view_loadpng_MEMORY_READER_STATE",
+      "view_replay_Treplay_post"
+    ],
     "cascade_before": "view_hisc_Thisc_post alone kept Thisc_table mismatched in src/hisc.c, which blocked ten hisc interface tasks and view_scores."
   },
   "tests": {
@@ -18,7 +24,12 @@
       "test_exact_token_duplicates_defer_to_canonical_type_task",
       "test_forward_declared_dependency_blocks_without_waiting_state",
       "test_forward_declaration_repair_requires_historical_cu_definition",
-      "test_historical_cu_definition_evidence_uses_owning_cu_dwarf"
+      "test_historical_cu_definition_evidence_uses_owning_cu_dwarf",
+      "test_implicit_call_to_void_or_typed_return_requires_discarded_values",
+      "test_void_pointer_return_placeholder_becomes_historical_pointer",
+      "test_multi_level_pointer_placeholders_follow_depth",
+      "test_library_pointee_evidence_requires_owning_cu_and_compiled_layout_equality",
+      "test_member_pointee_names_follow_pointer_members_only"
     ],
     "result": "28 type-view tests, 33 interface/typed-interface/reconsideration tests pass; global audit passes; refresh_recovery.py --check passes."
   },
@@ -46,6 +57,24 @@
         "view_httpget_HTTPResponse": "FAST_FAILED -> BLOCKED_SUPERVISOR: extractHTTPResponse emitted 45 changed bytes with unchanged body source; evidence docs/attempts/interface-diagnostics/view_httpget_HTTPResponse/",
         "view_options_Toptions": "PROMOTED"
       }
+    },
+    {
+      "history": "docs/attempts/mechanical-runs/20260921T091423253620Z.jsonl",
+      "worker": "Sonnet subagent running mechanical_grinder.py --limit 8 after the typed-caller recipe extension",
+      "outcomes": {
+        "get_controls": "FAST_FAILED -> BLOCKED_SUPERVISOR: select_profile 2626 bytes unchanged size, 18 bytes permuted at 164-186 (independent constant stores reordered), same effect as view_profile_Tprofile_control",
+        "poll_control": "PROMOTED (implicit call, historical void return, values discarded)",
+        "make_hisc_table": "PROMOTED (void* return placeholder -> Thisc_table*)",
+        "view_scores": "PROMOTED (void** -> Thisc_table**)",
+        "destroy_hisc_table": "PROMOTED (implicit call prototype)"
+      }
+    },
+    {
+      "history": "docs/attempts/mechanical-runs/20260921T092619596734Z.jsonl",
+      "worker": "Sonnet subagent running mechanical_grinder.py --limit 8 after member-repair extension and fresh 25-CU verification",
+      "outcomes": {
+        "member_menu_Tmenu_params_font_bullet_data": "PROMOTED (FONT*/BITMAP*/DATAFILE* from owning-CU library typedef layouts)"
+      }
     }
   ],
   "queue_effect": {
@@ -65,5 +94,10 @@
     "destroy_hisc_table": "implicit call in src/main.c:1678 without a prototype",
     "view_scores": "Thisc_table** double-pointer parameter is an unsupported pointer form for the recipe"
   },
-  "limits": "Complete-view admission is a declaration-only relaxation; every promotion still passed the unchanged raw-contribution gate, fresh complete layout check, acceptance suites, ordinary link check and global audit. Vendored upstream CUs (loadpng, savepng, regpng, strptime, timecompat) keep their upstream declaration text. AMBIGUOUS CUs (csv, httpget) remain game-owned per the brief."
+  "limits": "Complete-view admission is a declaration-only relaxation; every promotion still passed the unchanged raw-contribution gate, fresh complete layout check, acceptance suites, ordinary link check and global audit. Vendored upstream CUs (loadpng, savepng, regpng, strptime, timecompat) keep their upstream declaration text. AMBIGUOUS CUs (csv, httpget) remain game-owned per the brief.",
+  "recipe_extensions": {
+    "typed_interface_tasks.py": "void* return placeholder, multi-level pointer placeholders, implicit call with discarded values",
+    "type_views.py": "multi-member POINTER_MEMBER_ONLY repairs; library_pointees evidence from owning-CU historical typedef equal to compiled typedef",
+    "interface_type_probe.py": "member_pointee_names adds pointer-member pointee typedefs of spelled game types to the probe request"
+  }
 }

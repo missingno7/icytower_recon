@@ -2,9 +2,47 @@
   "schema": 1,
   "task_kind": "CANONICAL_TYPE",
   "function": "Tmenu_params",
-  "state": "NOT_QUEUED",
-  "status": "NO_MECHANICAL_DUPLICATE_TASK",
+  "source": "src/menu.c",
+  "sources": [
+    "src/menu.c"
+  ],
+  "changes": [
+    {
+      "file": "src/menu.c",
+      "start": 409,
+      "end": 575,
+      "before": "typedef struct Tmenu_params {\n    FONT *font;\n    int font_height;\n    Tcontrol ctrl;\n    BITMAP *bullet;\n    int pos;\n    DATAFILE *data;\n    int fo;\n} Tmenu_params;",
+      "after": "#include \"recovered/Tmenu_params.h\"",
+      "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+    }
+  ],
+  "header": "include/recovered/Tmenu_params.h",
+  "header_identity": {
+    "size": 1177,
+    "sha256": "c948f615fda45c47c10930d85c24126a8b3c058aed0c71207fb3408ac66d3964"
+  },
+  "source_identities": {
+    "src/menu.c": {
+      "size": 15871,
+      "sha256": "3e3b29c01c12a741125f15bf52bbb6c105dcaaa5345fa3d2e570530f518f38c9"
+    }
+  },
+  "expected_declaration": "typedef struct {\n    FONT *font;\n    int font_height;\n    Tcontrol ctrl;\n    BITMAP *bullet;\n    int pos;\n    DATAFILE *data;\n    int fo;\n} Tmenu_params;",
+  "affected_targets": [
+    "game-menu"
+  ],
+  "difficulty": "SUPERVISOR",
+  "priority": -20,
+  "state": "CANONICAL_TYPE_REPAIR",
+  "status": "DUPLICATE_TYPE",
+  "difference_class": "CANONICAL_TYPE_DECLARATION",
   "body_edit_allowed": false,
-  "changes": [],
-  "header": "include/recovered/Tmenu_params.h"
+  "reason": "Tagged struct is used outside the replaceable declarations",
+  "begin_command": "python tools/interface_task.py begin Tmenu_params",
+  "apply_command": "python tools/interface_task.py apply Tmenu_params",
+  "verification_command": "python tools/interface_task.py check Tmenu_params",
+  "promotion_command": "python tools/interface_task.py promote Tmenu_params",
+  "edit_scope": "Generated typedef replacement only. Preserve all function bodies, exact statuses and allocated contributions using the interface gate.",
+  "canonical_dependencies": [],
+  "compiler_trials": []
 }

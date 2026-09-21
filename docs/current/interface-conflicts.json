@@ -128,24 +128,6 @@
       "size": 0
     },
     {
-      "function": "destroy_hisc_table",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin destroy_hisc_table",
-      "verification_command": "python tools/interface_task.py check destroy_hisc_table",
-      "promotion_command": "python tools/interface_task.py promote destroy_hisc_table",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/destroy_hisc_table.json",
-      "size": 0
-    },
-    {
       "function": "drawSlot",
       "source": "src/main.c",
       "sources": null,
@@ -310,17 +292,19 @@
     {
       "function": "get_controls",
       "source": "src/main.c",
-      "sources": null,
+      "sources": [
+        "src/profile.c"
+      ],
       "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
+      "priority": -100,
+      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
       "begin_command": "python tools/interface_task.py begin get_controls",
       "verification_command": "python tools/interface_task.py check get_controls",
       "promotion_command": "python tools/interface_task.py promote get_controls",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
       "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
+      "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/get_controls.json",
       "size": 0
@@ -566,24 +550,6 @@
       "size": 0
     },
     {
-      "function": "make_hisc_table",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin make_hisc_table",
-      "verification_command": "python tools/interface_task.py check make_hisc_table",
-      "promotion_command": "python tools/interface_task.py promote make_hisc_table",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/make_hisc_table.json",
-      "size": 0
-    },
-    {
       "function": "my_alert",
       "source": "src/main.c",
       "sources": [
@@ -601,24 +567,6 @@
       "difference_class": "SOURCE_CALL_ARGUMENT_COUNT",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/my_alert.json",
-      "size": 0
-    },
-    {
-      "function": "poll_control",
-      "source": "src/control.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin poll_control",
-      "verification_command": "python tools/interface_task.py check poll_control",
-      "promotion_command": "python tools/interface_task.py promote poll_control",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/poll_control.json",
       "size": 0
     },
     {
@@ -807,14 +755,14 @@
       "sources": null,
       "difficulty": "SUPERVISOR",
       "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
+      "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
       "begin_command": "python tools/interface_task.py begin update_game_menu",
       "verification_command": "python tools/interface_task.py check update_game_menu",
       "promotion_command": "python tools/interface_task.py promote update_game_menu",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
       "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
+      "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/update_game_menu.json",
       "size": 0
@@ -835,24 +783,6 @@
       "difference_class": "TYPE_LAYOUT_INCOMPLETE",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/view_profile.json",
-      "size": 0
-    },
-    {
-      "function": "view_scores",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin view_scores",
-      "verification_command": "python tools/interface_task.py check view_scores",
-      "promotion_command": "python tools/interface_task.py promote view_scores",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/view_scores.json",
       "size": 0
     }
   ],
@@ -1502,7 +1432,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 2974,
+          "line": 2975,
           "kind": "NF",
           "name": "WinMain",
           "return_type": "int",
@@ -1547,7 +1477,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 2815,
+          "line": 2816,
           "kind": "NF",
           "name": "_mangled_main",
           "return_type": "int",
@@ -1932,7 +1862,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1852,
+          "line": 1853,
           "kind": "NF",
           "name": "add_profile",
           "return_type": "int",
@@ -1991,7 +1921,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 139,
+          "line": 140,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -2008,7 +1938,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 957,
+          "line": 958,
           "kind": "NF",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -2059,7 +1989,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 639,
+          "line": 640,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -2173,7 +2103,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 544,
+          "line": 545,
           "kind": "NC",
           "name": "calc_replay_checksum",
           "return_type": "int",
@@ -2288,7 +2218,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1706,
+          "line": 1707,
           "kind": "NF",
           "name": "change_profile",
           "return_type": "void",
@@ -2346,7 +2276,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 140,
+          "line": 141,
           "kind": "NC",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -2359,7 +2289,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1775,
+          "line": 1776,
           "kind": "NF",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -2398,7 +2328,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 638,
+          "line": 639,
           "kind": "NC",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -2430,7 +2360,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1934,
+          "line": 1935,
           "kind": "NF",
           "name": "check_beta_tester",
           "return_type": "int",
@@ -2462,7 +2392,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1964,
+          "line": 1965,
           "kind": "NF",
           "name": "check_characters",
           "return_type": "int",
@@ -2683,7 +2613,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1788,
+          "line": 1789,
           "kind": "NF",
           "name": "check_dir",
           "return_type": "int",
@@ -2795,7 +2725,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 703,
+          "line": 704,
           "kind": "NF",
           "name": "clickedCloseButton",
           "return_type": "void",
@@ -2829,7 +2759,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1604,
+          "line": 1605,
           "kind": "NF",
           "name": "color_map_callback",
           "return_type": "void",
@@ -2886,7 +2816,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 751,
+          "line": 752,
           "kind": "NC",
           "name": "create_game_data",
           "return_type": "Tgame_data*",
@@ -3060,7 +2990,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 751
+          "line": 752
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -3276,7 +3206,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 533,
+          "line": 534,
           "kind": "NC",
           "name": "create_profile",
           "return_type": "Tprofile*",
@@ -3381,7 +3311,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 400,
+          "line": 401,
           "kind": "NF",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -3495,7 +3425,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 533
+          "line": 534
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -3518,7 +3448,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 753,
+          "line": 754,
           "kind": "NC",
           "name": "create_replay",
           "return_type": "Treplay*",
@@ -4342,7 +4272,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1599,
+          "line": 1600,
           "kind": "NF",
           "name": "datafile_callback",
           "return_type": "void",
@@ -4380,7 +4310,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1590,
+          "line": 1591,
           "kind": "NF",
           "name": "datafile_callback_slow",
           "return_type": "void",
@@ -4418,7 +4348,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 369,
+          "line": 370,
           "kind": "NF",
           "name": "delete_profile",
           "return_type": "void",
@@ -4908,7 +4838,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 750,
+          "line": 751,
           "kind": "NC",
           "name": "destroy_game_data",
           "return_type": "void",
@@ -5097,7 +5027,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 750
+          "line": 751
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -5145,46 +5075,34 @@
         },
         {
           "file": "src/main.c",
-          "line": 1678,
-          "kind": "IC",
+          "line": 2,
+          "kind": "NC",
           "name": "destroy_hisc_table",
-          "return_type": "int",
+          "return_type": "void",
           "parameter_types": [
-            "/*???*/"
+            "Thisc_table*"
           ],
-          "declaration": "extern int destroy_hisc_table (/* ??? */);",
-          "canonical_return_type": "int",
+          "declaration": "extern void destroy_hisc_table (Thisc_table *);",
+          "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "/*???*/"
+            "Thisc_table*"
           ],
           "cu": "src/main.c",
           "game_type_layouts": [
             {
               "position": "parameter 1",
               "historical_type": "Thisc_table",
-              "candidate_type": "/*???*/",
+              "candidate_type": "Thisc_table",
               "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Thisc_table",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 1678
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -5204,7 +5122,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 541,
+          "line": 542,
           "kind": "NC",
           "name": "destroy_replay",
           "return_type": "void",
@@ -5273,7 +5191,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1157,
+          "line": 1158,
           "kind": "NF",
           "name": "do_replay_menu",
           "return_type": "int",
@@ -5312,7 +5230,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1202,
+          "line": 1203,
           "kind": "IC",
           "name": "drawSlot",
           "return_type": "int",
@@ -5329,7 +5247,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2027,
+          "line": 2028,
           "kind": "NF",
           "name": "drawSlot",
           "return_type": "void",
@@ -5380,7 +5298,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 277,
+          "line": 278,
           "kind": "NF",
           "name": "draw_buffer",
           "return_type": "int",
@@ -5424,7 +5342,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1385,
+          "line": 1386,
           "kind": "NF",
           "name": "draw_frame",
           "return_type": "void",
@@ -5467,7 +5385,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 538,
+          "line": 539,
           "kind": "NC",
           "name": "draw_menu",
           "return_type": "void",
@@ -5602,64 +5520,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -5701,64 +5562,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         }
@@ -5830,141 +5634,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 538
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 288
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 312
+          "line": 539
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -5995,7 +5665,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 223,
+          "line": 224,
           "kind": "NF",
           "name": "draw_profile_selector",
           "return_type": "void",
@@ -6055,7 +5725,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 223
+          "line": 224
         },
         {
           "position": "parameter 3",
@@ -6066,7 +5736,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 223
+          "line": 224
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -6087,7 +5757,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1567,
+          "line": 1568,
           "kind": "NF",
           "name": "draw_progress_bar",
           "return_type": "void",
@@ -6245,7 +5915,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1292,
+          "line": 1293,
           "kind": "NF",
           "name": "draw_results",
           "return_type": "void",
@@ -6293,7 +5963,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 998,
+          "line": 999,
           "kind": "NF",
           "name": "draw_reward",
           "return_type": "void",
@@ -6618,7 +6288,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1635,
+          "line": 1636,
           "kind": "NF",
           "name": "end_game",
           "return_type": "void",
@@ -6754,7 +6424,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 145,
+          "line": 146,
           "kind": "NF",
           "name": "fadeIn",
           "return_type": "void",
@@ -6794,7 +6464,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 164,
+          "line": 165,
           "kind": "NF",
           "name": "fadeOut",
           "return_type": "void",
@@ -7046,7 +6716,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 267,
+          "line": 268,
           "kind": "NC",
           "name": "fldads_get_random_ad",
           "return_type": "const FLDAdSpot*",
@@ -7190,7 +6860,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 267
+          "line": 268
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -7302,7 +6972,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 549,
+          "line": 550,
           "kind": "NC",
           "name": "fldads_start",
           "return_type": "void",
@@ -7526,7 +7196,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1801,
+          "line": 1802,
           "kind": "NF",
           "name": "for_each_directory",
           "return_type": "void",
@@ -7564,7 +7234,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1329,
+          "line": 1330,
           "kind": "NF",
           "name": "force_create_profile",
           "return_type": "void",
@@ -7853,7 +7523,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 85,
+          "line": 86,
           "kind": "NF",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -8108,7 +7778,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1610,
+          "line": 1611,
           "kind": "NF",
           "name": "getSampleFromOggDatafile",
           "return_type": "SAMPLE*",
@@ -8562,7 +8232,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 566,
+          "line": 567,
           "kind": "NF",
           "name": "get_controls",
           "return_type": "Tcontrol*",
@@ -8583,7 +8253,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 342,
+          "line": 343,
           "kind": "NC",
           "name": "get_controls",
           "return_type": "void*",
@@ -8615,7 +8285,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 342
+          "line": 343
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -8753,7 +8423,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 561,
+          "line": 562,
           "kind": "NF",
           "name": "get_demo",
           "return_type": "Treplay*",
@@ -8965,7 +8635,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 610,
+          "line": 611,
           "kind": "NF",
           "name": "get_gamepad_value",
           "return_type": "int",
@@ -9330,7 +9000,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 340,
+          "line": 341,
           "kind": "NC",
           "name": "get_profile_dir_for_profile",
           "return_type": "int",
@@ -9489,7 +9159,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 78,
+          "line": 79,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -9667,7 +9337,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 78
+          "line": 79
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -9690,7 +9360,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 65,
+          "line": 66,
           "kind": "NF",
           "name": "get_rank_id",
           "return_type": "int",
@@ -9868,7 +9538,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 65
+          "line": 66
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -9951,7 +9621,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 537,
+          "line": 538,
           "kind": "NC",
           "name": "get_selection_value",
           "return_type": "int",
@@ -10022,7 +9692,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 536,
+          "line": 537,
           "kind": "NC",
           "name": "get_slider_value",
           "return_type": "int",
@@ -10146,7 +9816,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1210,
+          "line": 1211,
           "kind": "IC",
           "name": "get_string",
           "return_type": "int",
@@ -10163,7 +9833,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1481,
+          "line": 1482,
           "kind": "NF",
           "name": "get_string",
           "return_type": "int",
@@ -10196,7 +9866,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 763,
+          "line": 764,
           "kind": "NC",
           "name": "get_string",
           "return_type": "int",
@@ -10365,7 +10035,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 556,
+          "line": 557,
           "kind": "NF",
           "name": "get_version_str",
           "return_type": "char*",
@@ -10406,7 +10076,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 534,
+          "line": 535,
           "kind": "NC",
           "name": "handle_menu",
           "return_type": "int",
@@ -10556,64 +10226,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             },
             {
               "position": "parameter 3",
@@ -10692,74 +10305,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 534
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 444
+          "line": 535
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -10783,7 +10329,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 7,
+          "line": 8,
           "kind": "NC",
           "name": "handle_player_collision_combo",
           "return_type": "void",
@@ -10802,7 +10348,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2289,
+          "line": 2290,
           "kind": "NF",
           "name": "handle_player_collision_combo",
           "return_type": "void",
@@ -10843,7 +10389,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 6,
+          "line": 7,
           "kind": "NC",
           "name": "handle_player_collision_old",
           "return_type": "void",
@@ -10862,7 +10408,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2111,
+          "line": 2112,
           "kind": "NF",
           "name": "handle_player_collision_old",
           "return_type": "void",
@@ -10903,7 +10449,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 5,
+          "line": 6,
           "kind": "NC",
           "name": "handle_player_collision_original",
           "return_type": "void",
@@ -10922,7 +10468,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2066,
+          "line": 2067,
           "kind": "NF",
           "name": "handle_player_collision_original",
           "return_type": "void",
@@ -10963,7 +10509,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 4,
+          "line": 5,
           "kind": "NC",
           "name": "handle_player_collision_vector",
           "return_type": "void",
@@ -10982,7 +10528,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2186,
+          "line": 2187,
           "kind": "NF",
           "name": "handle_player_collision_vector",
           "return_type": "void",
@@ -11023,7 +10569,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1460,
+          "line": 1461,
           "kind": "IC",
           "name": "handle_player_collision_vector_2",
           "return_type": "int",
@@ -11040,7 +10586,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2235,
+          "line": 2236,
           "kind": "NF",
           "name": "handle_player_collision_vector_2",
           "return_type": "void",
@@ -11080,7 +10626,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 990,
+          "line": 991,
           "kind": "NC",
           "name": "handle_player_input",
           "return_type": "void",
@@ -11106,7 +10652,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2358,
+          "line": 2359,
           "kind": "NF",
           "name": "handle_player_input",
           "return_type": "void",
@@ -11142,7 +10688,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 990
+          "line": 991
         },
         {
           "position": "parameter 1",
@@ -11153,7 +10699,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 2358
+          "line": 2359
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -11214,7 +10760,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 28,
+          "line": 29,
           "kind": "NF",
           "name": "hash2",
           "return_type": "unsigned int",
@@ -11637,7 +11183,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 397,
+          "line": 398,
           "kind": "NC",
           "name": "init_control",
           "return_type": "void",
@@ -11795,7 +11341,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 2392,
+          "line": 2393,
           "kind": "NF",
           "name": "init_game",
           "return_type": "int",
@@ -12307,7 +11853,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 5,
+          "line": 6,
           "kind": "NC",
           "name": "is_any",
           "return_type": "int",
@@ -12354,7 +11900,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 744,
+          "line": 745,
           "kind": "NF",
           "name": "is_custom_replay",
           "return_type": "int",
@@ -12576,7 +12122,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 4,
+          "line": 5,
           "kind": "NC",
           "name": "is_down",
           "return_type": "int",
@@ -12946,7 +12492,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 3,
+          "line": 4,
           "kind": "NC",
           "name": "is_fire",
           "return_type": "int",
@@ -13770,7 +13316,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 2,
+          "line": 3,
           "kind": "NC",
           "name": "is_up",
           "return_type": "int",
@@ -13818,7 +13364,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 992,
+          "line": 993,
           "kind": "NC",
           "name": "jump_player",
           "return_type": "int",
@@ -13953,7 +13499,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 118,
+          "line": 119,
           "kind": "NF",
           "name": "line_alert",
           "return_type": "void",
@@ -14017,7 +13563,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1552,
+          "line": 1553,
           "kind": "NF",
           "name": "line_intersect",
           "return_type": "int",
@@ -14231,7 +13777,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1893,
+          "line": 1894,
           "kind": "NF",
           "name": "loadScrambled",
           "return_type": "BITMAP*",
@@ -14271,7 +13817,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 553,
+          "line": 554,
           "kind": "NC",
           "name": "load_character",
           "return_type": "int",
@@ -14292,7 +13838,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1998,
+          "line": 1999,
           "kind": "NF",
           "name": "load_character",
           "return_type": "int",
@@ -14584,7 +14130,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 343,
+          "line": 344,
           "kind": "NC",
           "name": "load_control",
           "return_type": "void",
@@ -14622,7 +14168,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 343
+          "line": 344
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -14906,7 +14452,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 526,
+          "line": 527,
           "kind": "NC",
           "name": "load_hisc_table",
           "return_type": "int",
@@ -14944,7 +14490,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 526
+          "line": 527
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -15093,7 +14639,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 673,
+          "line": 674,
           "kind": "NF",
           "name": "load_new_ad_image",
           "return_type": "void",
@@ -15128,7 +14674,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 522,
+          "line": 523,
           "kind": "NC",
           "name": "load_options",
           "return_type": "void",
@@ -15533,7 +15079,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 532,
+          "line": 533,
           "kind": "NC",
           "name": "load_profile",
           "return_type": "Tprofile*",
@@ -15636,7 +15182,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 345,
+          "line": 346,
           "kind": "NF",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -15820,7 +15366,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 532
+          "line": 533
         },
         {
           "position": "return",
@@ -15902,7 +15448,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 345
+          "line": 346
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -15925,7 +15471,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 542,
+          "line": 543,
           "kind": "NC",
           "name": "load_replay",
           "return_type": "Treplay*",
@@ -16024,7 +15570,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 626,
+          "line": 627,
           "kind": "NF",
           "name": "load_sound",
           "return_type": "void",
@@ -16303,7 +15849,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1615,
+          "line": 1616,
           "kind": "NF",
           "name": "log2file",
           "return_type": "void",
@@ -16341,7 +15887,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 394,
+          "line": 395,
           "kind": "NC",
           "name": "log2file",
           "return_type": "void",
@@ -16398,7 +15944,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1046,
+          "line": 1047,
           "kind": "NF",
           "name": "main_menu_callback",
           "return_type": "void",
@@ -16457,15 +16003,15 @@
         },
         {
           "file": "src/main.c",
-          "line": 524,
+          "line": 525,
           "kind": "NC",
           "name": "make_hisc_table",
-          "return_type": "void*",
+          "return_type": "Thisc_table*",
           "parameter_types": [
             "char*"
           ],
-          "declaration": "extern void *make_hisc_table (char *);",
-          "canonical_return_type": "void*",
+          "declaration": "extern Thisc_table *make_hisc_table (char *);",
+          "canonical_return_type": "Thisc_table*",
           "canonical_parameter_types": [
             "char*"
           ],
@@ -16474,29 +16020,17 @@
             {
               "position": "return",
               "historical_type": "Thisc_table",
-              "candidate_type": "void",
+              "candidate_type": "Thisc_table",
               "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "Thisc_table",
-          "candidate_type": "void",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 524
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -16577,7 +16111,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1736,
+          "line": 1737,
           "kind": "NF",
           "name": "myDeleteFile",
           "return_type": "void",
@@ -16620,7 +16154,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 451,
+          "line": 452,
           "kind": "NF",
           "name": "my_alert",
           "return_type": "int",
@@ -16683,7 +16217,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 758,
+          "line": 759,
           "kind": "NC",
           "name": "my_alert",
           "return_type": "int",
@@ -16785,7 +16319,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 551,
+          "line": 552,
           "kind": "NC",
           "name": "new_game",
           "return_type": "int",
@@ -16798,7 +16332,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 758,
+          "line": 759,
           "kind": "NF",
           "name": "new_game",
           "return_type": "int",
@@ -16856,7 +16390,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 571,
+          "line": 572,
           "kind": "NF",
           "name": "new_rand",
           "return_type": "int",
@@ -16937,7 +16471,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 580,
+          "line": 581,
           "kind": "NF",
           "name": "new_srand",
           "return_type": "void",
@@ -16973,7 +16507,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 688,
+          "line": 689,
           "kind": "NF",
           "name": "ok_to_play",
           "return_type": "int",
@@ -17007,7 +16541,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 663,
+          "line": 664,
           "kind": "NF",
           "name": "open_web_browser",
           "return_type": "void",
@@ -17043,7 +16577,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 552,
+          "line": 553,
           "kind": "NC",
           "name": "play",
           "return_type": "int",
@@ -17056,7 +16590,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1431,
+          "line": 1432,
           "kind": "NF",
           "name": "play",
           "return_type": "int",
@@ -17090,7 +16624,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 993,
+          "line": 994,
           "kind": "NC",
           "name": "play_jump_sound",
           "return_type": "void",
@@ -17115,7 +16649,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1811,
+          "line": 1812,
           "kind": "NF",
           "name": "play_jump_sound",
           "return_type": "void",
@@ -17159,7 +16693,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 901,
+          "line": 902,
           "kind": "NF",
           "name": "play_menu_move",
           "return_type": "void",
@@ -17198,7 +16732,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 762,
+          "line": 763,
           "kind": "NC",
           "name": "play_menu_move",
           "return_type": "void",
@@ -17230,7 +16764,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 896,
+          "line": 897,
           "kind": "NF",
           "name": "play_menu_select",
           "return_type": "void",
@@ -17269,7 +16803,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 761,
+          "line": 762,
           "kind": "NC",
           "name": "play_menu_select",
           "return_type": "void",
@@ -17305,7 +16839,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 875,
+          "line": 876,
           "kind": "NF",
           "name": "play_sound",
           "return_type": "void",
@@ -17511,46 +17045,36 @@
         },
         {
           "file": "src/profile.c",
-          "line": 660,
-          "kind": "IC",
+          "line": 2,
+          "kind": "NC",
           "name": "poll_control",
-          "return_type": "int",
+          "return_type": "void",
           "parameter_types": [
-            "/*???*/"
+            "Tcontrol*",
+            "int"
           ],
-          "declaration": "extern int poll_control (/* ??? */);",
-          "canonical_return_type": "int",
+          "declaration": "extern void poll_control (Tcontrol *, int);",
+          "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "/*???*/"
+            "Tcontrol*",
+            "int"
           ],
           "cu": "src/profile.c",
           "game_type_layouts": [
             {
               "position": "parameter 1",
               "historical_type": "Tcontrol",
-              "candidate_type": "/*???*/",
+              "candidate_type": "Tcontrol",
               "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 660
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -17570,7 +17094,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 170,
+          "line": 171,
           "kind": "NF",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -17616,7 +17140,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 121,
+          "line": 122,
           "kind": "NF",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -17662,7 +17186,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 106,
+          "line": 107,
           "kind": "NF",
           "name": "profile_data_page_extra",
           "return_type": "char*",
@@ -17709,7 +17233,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 494,
+          "line": 495,
           "kind": "NF",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -17889,7 +17413,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 494
+          "line": 495
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -17913,7 +17437,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1542,
+          "line": 1543,
           "kind": "NF",
           "name": "pwd_garble_string",
           "return_type": "void",
@@ -18257,7 +17781,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 531,
+          "line": 532,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -18282,7 +17806,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1873,
+          "line": 1874,
           "kind": "NF",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -18307,7 +17831,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 759,
+          "line": 760,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -18343,7 +17867,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 759
+          "line": 760
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -18557,7 +18081,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 942,
+          "line": 943,
           "kind": "NF",
           "name": "replaceBadCharacters",
           "return_type": "void",
@@ -18576,7 +18100,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 760,
+          "line": 761,
           "kind": "NC",
           "name": "replaceBadCharacters",
           "return_type": "void",
@@ -18614,7 +18138,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1020,
+          "line": 1021,
           "kind": "NF",
           "name": "replay_menu_callback",
           "return_type": "void",
@@ -18649,7 +18173,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 543,
+          "line": 544,
           "kind": "NC",
           "name": "replay_selector",
           "return_type": "Treplay*",
@@ -18772,7 +18296,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 525,
+          "line": 526,
           "kind": "NC",
           "name": "reset_hisc_table",
           "return_type": "void",
@@ -18923,7 +18447,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 540,
+          "line": 541,
           "kind": "NC",
           "name": "reset_menu",
           "return_type": "void",
@@ -19046,64 +18570,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         }
@@ -19175,74 +18642,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 540
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 270
+          "line": 541
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -19265,7 +18665,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 523,
+          "line": 524,
           "kind": "NC",
           "name": "reset_options",
           "return_type": "void",
@@ -19457,7 +18857,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 752,
+          "line": 753,
           "kind": "NC",
           "name": "reset_player",
           "return_type": "void",
@@ -19624,7 +19024,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 550,
+          "line": 551,
           "kind": "NC",
           "name": "run_demo",
           "return_type": "void",
@@ -19641,7 +19041,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1823,
+          "line": 1824,
           "kind": "NF",
           "name": "run_demo",
           "return_type": "void",
@@ -19677,7 +19077,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 3,
+          "line": 4,
           "kind": "NC",
           "name": "save_config",
           "return_type": "void",
@@ -19690,7 +19090,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1687,
+          "line": 1688,
           "kind": "NF",
           "name": "save_config",
           "return_type": "void",
@@ -19888,7 +19288,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 583,
+          "line": 584,
           "kind": "IC",
           "name": "save_control",
           "return_type": "int",
@@ -19924,7 +19324,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 583
+          "line": 584
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -20078,7 +19478,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 527,
+          "line": 528,
           "kind": "NC",
           "name": "save_hisc_table",
           "return_type": "void",
@@ -20116,7 +19516,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 527
+          "line": 528
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -20140,7 +19540,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 521,
+          "line": 522,
           "kind": "NC",
           "name": "save_options",
           "return_type": "void",
@@ -20343,7 +19743,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 528,
+          "line": 529,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "void",
@@ -20446,7 +19846,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 398,
+          "line": 399,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -20471,7 +19871,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 549,
+          "line": 550,
           "kind": "NF",
           "name": "save_profile",
           "return_type": "int",
@@ -20583,7 +19983,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 528
+          "line": 529
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -20610,7 +20010,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 545,
+          "line": 546,
           "kind": "NC",
           "name": "save_replay",
           "return_type": "int",
@@ -20884,7 +20284,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 529,
+          "line": 530,
           "kind": "NC",
           "name": "select_profile",
           "return_type": "Tprofile*",
@@ -21092,7 +20492,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 768,
+          "line": 769,
           "kind": "NF",
           "name": "select_profile",
           "return_type": "Tprofile_create*",
@@ -21232,7 +20632,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 529
+          "line": 530
         },
         {
           "position": "parameter 1",
@@ -21320,7 +20720,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 529
+          "line": 530
         },
         {
           "position": "parameter 2",
@@ -21331,7 +20731,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 768
+          "line": 769
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -21589,7 +20989,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 585,
+          "line": 586,
           "kind": "NC",
           "name": "set_current_avatar",
           "return_type": "void",
@@ -21602,7 +21002,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1743,
+          "line": 1744,
           "kind": "NF",
           "name": "set_current_avatar",
           "return_type": "void",
@@ -21637,7 +21037,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 304,
+          "line": 305,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -21817,7 +21217,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 304
+          "line": 305
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -21991,7 +21391,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 487,
+          "line": 488,
           "kind": "NF",
           "name": "show_credits",
           "return_type": "void",
@@ -22023,7 +21423,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 185,
+          "line": 186,
           "kind": "NF",
           "name": "show_instructions",
           "return_type": "void",
@@ -22059,7 +21459,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 862,
+          "line": 863,
           "kind": "NF",
           "name": "show_name",
           "return_type": "int",
@@ -22143,7 +21543,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 922,
+          "line": 923,
           "kind": "NF",
           "name": "startGameMusic",
           "return_type": "void",
@@ -22175,7 +21575,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 868,
+          "line": 869,
           "kind": "NF",
           "name": "startMenuMusic",
           "return_type": "void",
@@ -22209,7 +21609,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 2035,
+          "line": 2036,
           "kind": "NF",
           "name": "start_reward",
           "return_type": "int",
@@ -22245,7 +21645,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 912,
+          "line": 913,
           "kind": "NF",
           "name": "stopGameMusic",
           "return_type": "void",
@@ -22277,7 +21677,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 906,
+          "line": 907,
           "kind": "NF",
           "name": "stopMenuMusic",
           "return_type": "void",
@@ -22395,7 +21795,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 693,
+          "line": 694,
           "kind": "NF",
           "name": "switchedFromProgram",
           "return_type": "void",
@@ -22427,7 +21827,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 698,
+          "line": 699,
           "kind": "NF",
           "name": "switchedToProgram",
           "return_type": "void",
@@ -22459,7 +21859,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 595,
+          "line": 596,
           "kind": "NF",
           "name": "syncOptionsFromProfile",
           "return_type": "void",
@@ -22491,7 +21891,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 587,
+          "line": 588,
           "kind": "NF",
           "name": "syncProfileFromOptions",
           "return_type": "void",
@@ -22525,7 +21925,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 636,
+          "line": 637,
           "kind": "NF",
           "name": "take_screenshot",
           "return_type": "void",
@@ -22561,7 +21961,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 708,
+          "line": 709,
           "kind": "NF",
           "name": "testWindowResolution",
           "return_type": "void",
@@ -22648,7 +22048,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1641,
+          "line": 1642,
           "kind": "NF",
           "name": "uninit_game",
           "return_type": "void",
@@ -22718,7 +22118,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 2,
+          "line": 3,
           "kind": "NC",
           "name": "update_frame",
           "return_type": "void",
@@ -22731,7 +22131,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1755,
+          "line": 1756,
           "kind": "NF",
           "name": "update_frame",
           "return_type": "void",
@@ -22809,64 +22209,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             },
             {
               "position": "parameter 4",
@@ -22879,75 +22222,7 @@
         }
       ],
       "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 393
-        }
-      ],
+      "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
@@ -23064,7 +22339,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 991,
+          "line": 992,
           "kind": "NC",
           "name": "update_player",
           "return_type": "void",
@@ -23133,7 +22408,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1727,
+          "line": 1728,
           "kind": "NF",
           "name": "update_reward",
           "return_type": "void",
@@ -23193,7 +22468,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 641,
+          "line": 642,
           "kind": "NF",
           "name": "view_profile",
           "return_type": "void",
@@ -23240,7 +22515,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 641
+          "line": 642
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -23291,18 +22566,18 @@
         },
         {
           "file": "src/main.c",
-          "line": 554,
+          "line": 555,
           "kind": "NC",
           "name": "view_scores",
           "return_type": "void",
           "parameter_types": [
-            "void**",
+            "Thisc_table**",
             "char**"
           ],
-          "declaration": "extern void view_scores (void **, char **);",
+          "declaration": "extern void view_scores (Thisc_table **, char **);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "void**",
+            "Thisc_table**",
             "char**"
           ],
           "cu": "src/main.c",
@@ -23310,29 +22585,17 @@
             {
               "position": "parameter 1",
               "historical_type": "Thisc_table",
-              "candidate_type": "void",
+              "candidate_type": "Thisc_table",
               "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE",
+              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Thisc_table",
-          "candidate_type": "void",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 554
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -23807,7 +23070,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 139,
+          "line": 140,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -23824,7 +23087,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 957,
+          "line": 958,
           "kind": "NF",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -23875,7 +23138,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 639,
+          "line": 640,
           "kind": "NC",
           "name": "blit_to_screen",
           "return_type": "void",
@@ -23932,7 +23195,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 751,
+          "line": 752,
           "kind": "NC",
           "name": "create_game_data",
           "return_type": "Tgame_data*",
@@ -24106,7 +23369,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 751
+          "line": 752
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -24130,7 +23393,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 533,
+          "line": 534,
           "kind": "NC",
           "name": "create_profile",
           "return_type": "Tprofile*",
@@ -24235,7 +23498,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 400,
+          "line": 401,
           "kind": "NF",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -24349,7 +23612,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 533
+          "line": 534
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -24594,7 +23857,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 750,
+          "line": 751,
           "kind": "NC",
           "name": "destroy_game_data",
           "return_type": "void",
@@ -24783,91 +24046,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 750
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "destroy_hisc_table",
-      "historical": [
-        {
-          "cu": "src/hisc.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Thisc_table*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 70743
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/hisc.c",
-          "line": 42,
-          "kind": "NF",
-          "name": "destroy_hisc_table",
-          "return_type": "void",
-          "parameter_types": [
-            "Thisc_table*"
-          ],
-          "declaration": "extern void destroy_hisc_table (Thisc_table *table);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Thisc_table*"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Thisc_table",
-              "candidate_type": "Thisc_table",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1678,
-          "kind": "IC",
-          "name": "destroy_hisc_table",
-          "return_type": "int",
-          "parameter_types": [
-            "/*???*/"
-          ],
-          "declaration": "extern int destroy_hisc_table (/* ??? */);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "/*???*/"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Thisc_table",
-              "candidate_type": "/*???*/",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Thisc_table",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 1678
+          "line": 751
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -24895,7 +24074,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1202,
+          "line": 1203,
           "kind": "IC",
           "name": "drawSlot",
           "return_type": "int",
@@ -24912,7 +24091,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2027,
+          "line": 2028,
           "kind": "NF",
           "name": "drawSlot",
           "return_type": "void",
@@ -24963,7 +24142,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 277,
+          "line": 278,
           "kind": "NF",
           "name": "draw_buffer",
           "return_type": "int",
@@ -25012,7 +24191,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 538,
+          "line": 539,
           "kind": "NC",
           "name": "draw_menu",
           "return_type": "void",
@@ -25147,64 +24326,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -25246,64 +24368,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         }
@@ -25375,141 +24440,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 538
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 288
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 312
+          "line": 539
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -25540,7 +24471,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 223,
+          "line": 224,
           "kind": "NF",
           "name": "draw_profile_selector",
           "return_type": "void",
@@ -25600,7 +24531,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 223
+          "line": 224
         },
         {
           "position": "parameter 3",
@@ -25611,7 +24542,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 223
+          "line": 224
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -25879,7 +24810,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 267,
+          "line": 268,
           "kind": "NC",
           "name": "fldads_get_random_ad",
           "return_type": "const FLDAdSpot*",
@@ -26023,7 +24954,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 267
+          "line": 268
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -26107,7 +25038,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 566,
+          "line": 567,
           "kind": "NF",
           "name": "get_controls",
           "return_type": "Tcontrol*",
@@ -26128,7 +25059,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 342,
+          "line": 343,
           "kind": "NC",
           "name": "get_controls",
           "return_type": "void*",
@@ -26160,7 +25091,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 342
+          "line": 343
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -26290,7 +25221,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 340,
+          "line": 341,
           "kind": "NC",
           "name": "get_profile_dir_for_profile",
           "return_type": "int",
@@ -26332,7 +25263,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 78,
+          "line": 79,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -26510,7 +25441,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 78
+          "line": 79
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -26533,7 +25464,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 65,
+          "line": 66,
           "kind": "NF",
           "name": "get_rank_id",
           "return_type": "int",
@@ -26711,7 +25642,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 65
+          "line": 66
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -26742,7 +25673,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1210,
+          "line": 1211,
           "kind": "IC",
           "name": "get_string",
           "return_type": "int",
@@ -26759,7 +25690,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1481,
+          "line": 1482,
           "kind": "NF",
           "name": "get_string",
           "return_type": "int",
@@ -26792,7 +25723,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 763,
+          "line": 764,
           "kind": "NC",
           "name": "get_string",
           "return_type": "int",
@@ -26853,7 +25784,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 534,
+          "line": 535,
           "kind": "NC",
           "name": "handle_menu",
           "return_type": "int",
@@ -27003,64 +25934,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             },
             {
               "position": "parameter 3",
@@ -27139,74 +26013,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 534
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 444
+          "line": 535
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -27230,7 +26037,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 1460,
+          "line": 1461,
           "kind": "IC",
           "name": "handle_player_collision_vector_2",
           "return_type": "int",
@@ -27247,7 +26054,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2235,
+          "line": 2236,
           "kind": "NF",
           "name": "handle_player_collision_vector_2",
           "return_type": "void",
@@ -27287,7 +26094,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 990,
+          "line": 991,
           "kind": "NC",
           "name": "handle_player_input",
           "return_type": "void",
@@ -27313,7 +26120,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 2358,
+          "line": 2359,
           "kind": "NF",
           "name": "handle_player_input",
           "return_type": "void",
@@ -27349,7 +26156,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 990
+          "line": 991
         },
         {
           "position": "parameter 1",
@@ -27360,7 +26167,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 2358
+          "line": 2359
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -27743,7 +26550,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 343,
+          "line": 344,
           "kind": "NC",
           "name": "load_control",
           "return_type": "void",
@@ -27781,7 +26588,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 343
+          "line": 344
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -27832,7 +26639,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 526,
+          "line": 527,
           "kind": "NC",
           "name": "load_hisc_table",
           "return_type": "int",
@@ -27870,7 +26677,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 526
+          "line": 527
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -27894,7 +26701,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 522,
+          "line": 523,
           "kind": "NC",
           "name": "load_options",
           "return_type": "void",
@@ -27969,7 +26776,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 532,
+          "line": 533,
           "kind": "NC",
           "name": "load_profile",
           "return_type": "Tprofile*",
@@ -28072,7 +26879,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 345,
+          "line": 346,
           "kind": "NF",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -28256,7 +27063,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 532
+          "line": 533
         },
         {
           "position": "return",
@@ -28338,7 +27145,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 345
+          "line": 346
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -28416,7 +27223,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1615,
+          "line": 1616,
           "kind": "NF",
           "name": "log2file",
           "return_type": "void",
@@ -28454,7 +27261,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 394,
+          "line": 395,
           "kind": "NC",
           "name": "log2file",
           "return_type": "void",
@@ -28497,90 +27304,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "make_hisc_table",
-      "historical": [
-        {
-          "cu": "src/hisc.c",
-          "return_type": "Thisc_table*",
-          "parameter_types": [
-            "char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 70798
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/hisc.c",
-          "line": 27,
-          "kind": "NF",
-          "name": "make_hisc_table",
-          "return_type": "Thisc_table*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern Thisc_table *make_hisc_table (char *name);",
-          "canonical_return_type": "Thisc_table*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Thisc_table",
-              "candidate_type": "Thisc_table",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 524,
-          "kind": "NC",
-          "name": "make_hisc_table",
-          "return_type": "void*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern void *make_hisc_table (char *);",
-          "canonical_return_type": "void*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Thisc_table",
-              "candidate_type": "void",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "Thisc_table",
-          "candidate_type": "void",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 524
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "my_alert",
       "historical": [
         {
@@ -28600,7 +27323,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 451,
+          "line": 452,
           "kind": "NF",
           "name": "my_alert",
           "return_type": "int",
@@ -28663,7 +27386,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 758,
+          "line": 759,
           "kind": "NC",
           "name": "my_alert",
           "return_type": "int",
@@ -28691,229 +27414,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "poll_control",
-      "historical": [
-        {
-          "cu": "src/control.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 18769
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "include/control.h",
-          "line": 16,
-          "kind": "NC",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/control.c",
-          "line": 40,
-          "kind": "NF",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *c, int joystick_only);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/control.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 16,
-          "kind": "NC",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE",
-              "evidence_source": "EMISSION_PRESERVING_DEBUG_PROBE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 16,
-          "kind": "NC",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 16,
-          "kind": "NC",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "include/control.h",
-          "line": 16,
-          "kind": "NC",
-          "name": "poll_control",
-          "return_type": "void",
-          "parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "declaration": "extern void poll_control (Tcontrol *, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Tcontrol*",
-            "int"
-          ],
-          "cu": "src/replay.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 660,
-          "kind": "IC",
-          "name": "poll_control",
-          "return_type": "int",
-          "parameter_types": [
-            "/*???*/"
-          ],
-          "declaration": "extern int poll_control (/* ??? */);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "/*???*/"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tcontrol",
-              "candidate_type": "/*???*/",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tcontrol",
-          "candidate_type": "/*???*/",
-          "header": "include/recovered/Tcontrol.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 660
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "profile_data_page_general",
       "historical": [
         {
@@ -28931,7 +27431,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 494,
+          "line": 495,
           "kind": "NF",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -29111,7 +27611,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 494
+          "line": 495
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -29134,7 +27634,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 531,
+          "line": 532,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -29159,7 +27659,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 1873,
+          "line": 1874,
           "kind": "NF",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -29184,7 +27684,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 759,
+          "line": 760,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
@@ -29220,7 +27720,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 759
+          "line": 760
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -29245,7 +27745,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 540,
+          "line": 541,
           "kind": "NC",
           "name": "reset_menu",
           "return_type": "void",
@@ -29368,64 +27868,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         }
@@ -29497,74 +27940,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 540
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 270
+          "line": 541
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -29751,7 +28127,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 583,
+          "line": 584,
           "kind": "IC",
           "name": "save_control",
           "return_type": "int",
@@ -29787,7 +28163,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 583
+          "line": 584
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -29838,7 +28214,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 527,
+          "line": 528,
           "kind": "NC",
           "name": "save_hisc_table",
           "return_type": "void",
@@ -29876,7 +28252,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 527
+          "line": 528
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -29900,7 +28276,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 521,
+          "line": 522,
           "kind": "NC",
           "name": "save_options",
           "return_type": "void",
@@ -29975,7 +28351,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 528,
+          "line": 529,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "void",
@@ -30078,7 +28454,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 398,
+          "line": 399,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -30103,7 +28479,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 549,
+          "line": 550,
           "kind": "NF",
           "name": "save_profile",
           "return_type": "int",
@@ -30215,7 +28591,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 528
+          "line": 529
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30241,7 +28617,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 529,
+          "line": 530,
           "kind": "NC",
           "name": "select_profile",
           "return_type": "Tprofile*",
@@ -30449,7 +28825,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 768,
+          "line": 769,
           "kind": "NF",
           "name": "select_profile",
           "return_type": "Tprofile_create*",
@@ -30589,7 +28965,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 529
+          "line": 530
         },
         {
           "position": "parameter 1",
@@ -30677,7 +29053,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 529
+          "line": 530
         },
         {
           "position": "parameter 2",
@@ -30688,7 +29064,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 768
+          "line": 769
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30712,7 +29088,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 304,
+          "line": 305,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -30892,7 +29268,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 304
+          "line": 305
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -30917,7 +29293,7 @@
       "candidate_declarations": [
         {
           "file": "src/main.c",
-          "line": 862,
+          "line": 863,
           "kind": "NF",
           "name": "show_name",
           "return_type": "int",
@@ -31001,64 +29377,7 @@
               "historical_type": "Tmenu_params",
               "candidate_type": "Tmenu_params",
               "header": "include/recovered/Tmenu_params.h",
-              "status": "MISMATCH",
-              "historical_size": 60,
-              "candidate_size": 60,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "bullet",
-                  "historical": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "BITMAP *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 44,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "data",
-                  "historical": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "DATAFILE *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 52,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "font",
-                  "historical": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "FONT *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 0,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             },
             {
               "position": "parameter 4",
@@ -31071,75 +29390,7 @@
         }
       ],
       "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 393
-        }
-      ],
+      "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
@@ -31186,7 +29437,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 641,
+          "line": 642,
           "kind": "NF",
           "name": "view_profile",
           "return_type": "void",
@@ -31233,96 +29484,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 641
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "view_scores",
-      "historical": [
-        {
-          "cu": "src/hisc.c",
-          "return_type": "void",
-          "parameter_types": [
-            "Thisc_table**",
-            "char**"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 69282
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/hisc.c",
-          "line": 166,
-          "kind": "NF",
-          "name": "view_scores",
-          "return_type": "void",
-          "parameter_types": [
-            "Thisc_table**",
-            "char**"
-          ],
-          "declaration": "extern void view_scores (Thisc_table **tables, char **names);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "Thisc_table**",
-            "char**"
-          ],
-          "cu": "src/hisc.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Thisc_table",
-              "candidate_type": "Thisc_table",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 554,
-          "kind": "NC",
-          "name": "view_scores",
-          "return_type": "void",
-          "parameter_types": [
-            "void**",
-            "char**"
-          ],
-          "declaration": "extern void view_scores (void **, char **);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void**",
-            "char**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Thisc_table",
-              "candidate_type": "void",
-              "header": "include/recovered/Thisc_table.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Thisc_table",
-          "candidate_type": "void",
-          "header": "include/recovered/Thisc_table.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 554
+          "line": 642
         }
       ],
       "difficulty": "SUPERVISOR",

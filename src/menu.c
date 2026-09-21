@@ -16,12 +16,12 @@
 #include "recovered/Tmenu.h"
 
 typedef struct Tmenu_params {
-    void *font;
+    FONT *font;
     int font_height;
     Tcontrol ctrl;
-    void *bullet;
+    BITMAP *bullet;
     int pos;
-    void *data;
+    DATAFILE *data;
     int fo;
 } Tmenu_params;
 

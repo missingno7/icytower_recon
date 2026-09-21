@@ -1,4 +1,5 @@
 #include "recovered/Thisc_table.h"
+extern void destroy_hisc_table(Thisc_table*);
 extern void update_frame(void);
 extern void save_config(void);
 extern void handle_player_collision_vector(int, int);
@@ -521,7 +522,7 @@ void show_credits(void)
 extern void save_options(Toptions *o, PACKFILE *fp);
 extern void load_options(Toptions *o, PACKFILE *fp);
 extern void reset_options(Toptions *o);
-extern void *make_hisc_table(char *name);
+extern Thisc_table *make_hisc_table(char*);
 extern void reset_hisc_table(Thisc_table*, char*, int, int);
 extern int load_hisc_table(void *table, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
@@ -551,7 +552,7 @@ extern void run_demo(char *file_name);
 extern int new_game(void);
 extern int play(void);
 extern int load_character(const char *filename, int attrib, void *param);
-extern void view_scores(void **tables, char **names);
+extern void view_scores(Thisc_table**, char**);
 
 char *get_version_str(void)
 {

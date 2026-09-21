@@ -46,14 +46,44 @@ class TypedCallerTests(unittest.TestCase):
 
     def test_definitions_and_return_changes_are_not_supported(self):
         with self.assertRaises(ValueError):self.run_plan('void f(void *p) {}\n',kind='NF')
-        with self.assertRaises(ValueError):self.run_plan(kind='IC',actual_return='int')
+        # A named non-placeholder return is never reinterpreted.
+        with self.assertRaises(ValueError):self.run_plan('extern int f(void *p);\n',actual_return='int')
+        with self.assertRaises(ValueError):self.run_plan('extern int f(void *p);\n',expected_return='Tcontrol*',actual_return='int')
+
+    def test_implicit_call_to_void_or_typed_return_requires_discarded_values(self):
+        text='void caller(void *x) { f(x); if (x) f(x); else f(x); while (x) { f(x); } }\n'
+        result,new=self.run_plan(text,kind='IC',expected_return='void',actual_return='int',params=['/*???*/'])
+        self.assertTrue(new.startswith('#include "recovered/Tcontrol.h"\nextern void f(Tcontrol*);\n'))
+        result,new=self.run_plan(text,kind='IC',expected_return='Tcontrol*',actual_return='int',params=['/*???*/'])
+        self.assertIn('extern Tcontrol* f(Tcontrol*);',new)
+        for used in ('int caller(void *x) { return f(x); }\n','void caller(void *x) { int y = f(x); }\n',
+                     'void caller(void *x) { (void)f(x); }\n','void caller(void *x) { g(f(x)); }\n','void caller(void *x) { x = (void*)f(x); }\n'):
+            with self.assertRaises(ValueError):self.run_plan(used,kind='IC',expected_return='void',actual_return='int',params=['/*???*/'])
+        # Implicit int to a builtin non-void return is still not a typed repair.
+        with self.assertRaises(ValueError):self.run_plan(text,kind='IC',expected_return='long',actual_return='int',params=['/*???*/'])
+
+    def test_void_pointer_return_placeholder_becomes_historical_pointer(self):
+        result,new=self.run_plan('extern void *f(void *p);\n',expected_return='Tcontrol*',actual_return='void*')
+        self.assertEqual(new,'#include "recovered/Tcontrol.h"\nextern Tcontrol *f(Tcontrol*);\n')
+        result,new=self.run_plan('extern void * f(char *name);\n',expected_return='Tcontrol*',actual_return='void*',params=['char*'],
+                                 mutate=lambda r:r['historical'][0].update(parameter_types=['char*']))
+        self.assertEqual(new,'#include "recovered/Tcontrol.h"\nextern Tcontrol * f(char*);\n')
+        # Depth must agree and the placeholder must be spelled void.
+        with self.assertRaises(ValueError):self.run_plan('extern void **f(void *p);\n',expected_return='Tcontrol*',actual_return='void**')
+        with self.assertRaises(ValueError):self.run_plan('extern char *f(void *p);\n',expected_return='Tcontrol*',actual_return='char*')
+
+    def test_multi_level_pointer_placeholders_follow_depth(self):
+        result,new=self.run_plan('extern void f(void **p);\n',params=['void**'],mutate=lambda r:r['historical'][0].update(parameter_types=['Tcontrol**']))
+        self.assertEqual(new,'#include "recovered/Tcontrol.h"\nextern void f(Tcontrol**);\n')
+        with self.assertRaises(ValueError):self.run_plan('extern void f(void *p);\n',params=['void*'],mutate=lambda r:r['historical'][0].update(parameter_types=['Tcontrol**']))
 
     def test_existing_name_or_layout_conflict_requires_supervisor(self):
         with self.assertRaises(ValueError):self.run_plan(collision=True)
         with self.assertRaises(ValueError):self.run_plan(mutate=lambda r:r['type_layout_issues'][0].update(status='MISMATCH'))
 
     def test_other_pointer_topologies_and_nondefault_abi_are_rejected(self):
-        for change in (lambda r:r['historical'][0].update(parameter_types=['Tcontrol**']),
+        for change in (lambda r:r['historical'][0].update(parameter_types=['Tcontrol']),
+                       lambda r:r['historical'][0].update(parameter_types=['Tcontrol (*)[3]']),
                        lambda r:r['historical'][0].update(calling_convention='stdcall'),
                        lambda r:r['historical'][0].update(variadic=True),
                        lambda r:r['candidate_declarations'][0].update(file='include/shared.h')):

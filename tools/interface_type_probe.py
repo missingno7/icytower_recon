@@ -59,13 +59,36 @@ def requested_types(report, source_names, historical_names):
     return names-present
 
 
+def member_pointee_names(g, type_names):
+    """Typedef names of pointer members inside the named historical game aggregates.
+
+    A source that spells a historical aggregate with void-pointer member placeholders
+    does not use the pointee type, so optimized DWARF omits it. Requesting the name only
+    selects probe output; it never establishes correspondence or replaces primary types.
+    """
+    names=set()
+    for type_name in type_names:
+        for d in g.game_types.get(type_name,[]):
+            struct=g.dies.get(d.get('type_ref'))
+            if not struct or struct['tag']!='DW_TAG_structure_type': continue
+            for member in g.children.get(struct['offset'],[]):
+                if member['tag']!='DW_TAG_member': continue
+                pointer=g.dies.get(member.get('type_ref'))
+                if not pointer or pointer['tag']!='DW_TAG_pointer_type': continue
+                target=g.dies.get(pointer.get('type_ref'))
+                if target and target['tag']=='DW_TAG_typedef' and target.get('name'): names.add(target['name'])
+    return names
+
+
 def supplement(report,dest,objdump):
     from type_graph import graph
-    names=set()
+    g=graph(); names=set()
     for source in report['build']['local_inputs']:
         if source.startswith(('src/','include/')):
             names.update(re.findall(r'\b[A-Za-z_]\w*\b',(ROOT/source).read_bytes().decode('cp1252')))
-    missing=requested_types(report,names,graph().game_types)
+    missing=requested_types(report,names,g.game_types)
+    present={t['name'] for t in report['candidate_debug']['typedefs']}
+    missing|=member_pointee_names(g,names&set(g.game_types))-present
     if not missing: return
     build=report['build'];extra=build['config'].get('flags',[])
     flags=build['flags'][:-len(extra)] if extra else build['flags']

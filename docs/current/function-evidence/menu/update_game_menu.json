@@ -581,7 +581,7 @@
         "original_type": "void **",
         "candidate_type": "int *",
         "original_die": 159521,
-        "candidate_die": 8718,
+        "candidate_die": 8736,
         "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
         "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
       }
@@ -1038,7 +1038,7 @@
         "assembly": "mov    0x14(%ebp),%ecx",
         "dwarf_variables": [
           {
-            "die": 8673,
+            "die": 8691,
             "name": "ctrl",
             "type": "Tcontrol *",
             "base_type": null,
@@ -1074,7 +1074,7 @@
         "assembly": "mov    0x14(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 8673,
+            "die": 8691,
             "name": "ctrl",
             "type": "Tcontrol *",
             "base_type": null,
@@ -1930,7 +1930,7 @@
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_menu",
+  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1962,9 +1962,9 @@
       {
         "function": "draw_menu",
         "source": "src/menu.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
         "call_offsets": [
           92
         ],
@@ -2011,141 +2011,10 @@
             ]
           }
         ],
-        "layout_issues": [
-          {
-            "position": "parameter 3",
-            "historical_type": "Tmenu_params",
-            "candidate_type": "Tmenu_params",
-            "header": "include/recovered/Tmenu_params.h",
-            "status": "MISMATCH",
-            "historical_size": 60,
-            "candidate_size": 60,
-            "member_difference_count": 3,
-            "first_member_differences": [
-              {
-                "member": "bullet",
-                "historical": {
-                  "offset": 44,
-                  "size": 4,
-                  "type": "BITMAP *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 44,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 52,
-                  "size": 4,
-                  "type": "DATAFILE *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 52,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "font",
-                "historical": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "FONT *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          },
-          {
-            "position": "parameter 3",
-            "historical_type": "Tmenu_params",
-            "candidate_type": "Tmenu_params",
-            "header": "include/recovered/Tmenu_params.h",
-            "status": "MISMATCH",
-            "historical_size": 60,
-            "candidate_size": 60,
-            "member_difference_count": 3,
-            "first_member_differences": [
-              {
-                "member": "bullet",
-                "historical": {
-                  "offset": 44,
-                  "size": 4,
-                  "type": "BITMAP *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 44,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "data",
-                "historical": {
-                  "offset": 52,
-                  "size": 4,
-                  "type": "DATAFILE *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 52,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "font",
-                "historical": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "FONT *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "void *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ]
+        "layout_issues": []
       }
     ],
-    "blocking_functions": [
-      "draw_menu"
-    ],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
   },
   "storage_declarations": [
@@ -2196,75 +2065,7 @@
           "die": 159395
         }
       ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 3",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/menu.c",
-          "file": "src/menu.c",
-          "line": 393
-        }
-      ],
+      "type_layout_issues": [],
       "candidate_signatures": [
         "('int', ['void*', 'Tmenu*', 'Tmenu_params*', 'Tcontrol*', 'int', 'int', 'int*'])"
       ],

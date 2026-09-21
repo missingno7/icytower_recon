@@ -1154,3 +1154,22 @@ retained evidence. Aggregate-layout interface blockers fell from 40 to 33; funct
 statuses are unchanged. Remaining hisc callers need return-type, definition, implicit-call
 or double-pointer repairs outside the typed-caller recipe. See
 docs/attempts/complete-view-validation.json.
+
+
+## Caller placeholders and library-typed members
+
+The typed caller recipe refused every return-type change and every non-single pointer.
+Five hisc/control callers were therefore blocked by `void *` returns, `void **` parameters
+and implicit calls whose historical return is void. The recipe now restores those forms
+when the declaration is a CU-local placeholder and, for implicit calls, when every spelled
+call discards its value; definitions and named types remain supervisor work. An unattended
+batch promoted poll_control, make_hisc_table, view_scores and destroy_hisc_table.
+get_controls was rejected: retyping the profile.c return permuted independent constant
+stores in select_profile, the same effect recorded for the Tprofile_control view.
+
+Same-name aggregate mismatches were dominated by `void *` members standing in for library
+pointers. Member-only repairs now accept several placeholders and use the owning CU's own
+historical library typedef layout, reproduced by the compiled CU, as pointee evidence; the
+debug-retention probe requests those pointee names. The menu.c Tmenu_params repair
+promoted through the unchanged gates. Function statuses are unchanged. See
+docs/attempts/complete-view-validation.json for the run indexes.

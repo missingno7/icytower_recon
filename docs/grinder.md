@@ -453,9 +453,19 @@ include edit. Vendored upstream CUs are never canonicalization targets. None of 
 the unchanged-emission or complete-layout acceptance checks.
 
 A TYPE_VIEW card with `repair_mode: POINTER_MEMBER_ONLY` preserves the local struct
-and repairs one DWARF-evidenced `void *` member. Use its generated commands; success
+and repairs the DWARF-evidenced `void *` members in place. Each repair records its
+`pointee_evidence`: a generated historical header for a game type, or the owning CU's own
+historical library typedef layout (for example FONT, BITMAP, DATAFILE) that the compiled
+CU reproduces exactly. The debug-retention probe now also requests those member pointee
+names so an unused library type has layout evidence. Use its generated commands; success
 is `DWARF_MEMBER_MATCH`, not whole-struct canonicalization or a function match.
 The same unchanged-emission and complete-layout acceptance checks apply.
+
+Typed caller repairs additionally cover a `void *` return placeholder becoming the
+historical single game pointer, multi-level pointer placeholders (`void **` to `T **`),
+and an implicit call whose historical return is void or a game pointer when every
+spelled call discards its value. Definitions, named non-placeholder types and used
+implicit results still route to the supervisor.
 
 For supervisor investigation of an interface/branch interaction, use e.g.
 `python tools/compound_probe.py game-fld-adspot fldads_threadmain --interface log2file --invert-if shouldDownloadAds`.
