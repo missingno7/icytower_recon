@@ -1,0 +1,12 @@
+{
+ "add_top_level": [
+  {"name": "qualify_hisc_table", "declaration": "extern int qualify_hisc_table(Thisc_table*, int);", "after": "save_hisc_table", "evidence": "DWARF hisc.c:43 int qualify_hisc_table(Thisc_table*, int); placed with the other hisc_table interfaces already declared in main.c"},
+  {"name": "sort_hisc_table", "declaration": "extern void sort_hisc_table(Thisc_table*);", "after": "qualify_hisc_table", "evidence": "DWARF hisc.c:54 void sort_hisc_table(Thisc_table*)"},
+  {"name": "enter_hisc_table", "declaration": "extern void enter_hisc_table(Thisc_table*, int, char*);", "after": "sort_hisc_table", "evidence": "DWARF hisc.c:70 void enter_hisc_table(Thisc_table*, int, char*)"},
+  {"name": "get_rank_id", "declaration": "extern int get_rank_id(Tprofile *profile);", "after": "save_profile", "evidence": "DWARF profile.c:160 int get_rank_id(Tprofile*); placed with the other profile.c interfaces"},
+  {"name": "getGameDataXML", "declaration": "extern char *getGameDataXML(Tgame_data *gd);", "after": "create_game_data", "evidence": "DWARF game_data.c:51 char *getGameDataXML(Tgame_data*); placed with the other game_data.c interfaces"},
+  {"name": "add_jump_sequence", "declaration": "extern void add_jump_sequence(Tgame_data *gd, Tgd_jump_sequence *js);", "after": "getGameDataXML", "evidence": "DWARF game_data.c:182 void add_jump_sequence(Tgame_data*, Tgd_jump_sequence*)"},
+  {"name": "add_combo", "declaration": "extern void add_combo(Tgame_data *gd, Tgd_combo *c);", "after": "add_jump_sequence", "evidence": "DWARF game_data.c:193 void add_combo(Tgame_data*, Tgd_combo*)"}
+ ],
+ "evidence": "Seven cross-CU interfaces the historical play() calls but the reconstructed main.c never declared, so every call site would be an implicit declaration. Signatures come from the unique DWARF subprogram of the defining CU (docs/current/interfaces/<name>.json); each is placed next to the interfaces of the same CU already declared in main.c."
+}

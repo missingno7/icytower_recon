@@ -1,0 +1,517 @@
+{
+  "task": "callee_prototypes",
+  "verdict": "ACCEPTABLE",
+  "matches_before": 54,
+  "matches_after": 54,
+  "same_historical_predecessor": 30,
+  "losses": [],
+  "gains": [],
+  "exact_before": 54,
+  "exact_after": 54,
+  "limit": "Whole-unit final-state check on the applied transaction; not a promotion and not a function proof.",
+  "plan_edits": {
+    "focus": [],
+    "declarations": {
+      "add_top_level": [
+        {
+          "name": "qualify_hisc_table",
+          "declaration": "extern int qualify_hisc_table(Thisc_table*, int);",
+          "after": "save_hisc_table",
+          "evidence": "DWARF hisc.c:43 int qualify_hisc_table(Thisc_table*, int); placed with the other hisc_table interfaces already declared in main.c"
+        },
+        {
+          "name": "sort_hisc_table",
+          "declaration": "extern void sort_hisc_table(Thisc_table*);",
+          "after": "qualify_hisc_table",
+          "evidence": "DWARF hisc.c:54 void sort_hisc_table(Thisc_table*)"
+        },
+        {
+          "name": "enter_hisc_table",
+          "declaration": "extern void enter_hisc_table(Thisc_table*, int, char*);",
+          "after": "sort_hisc_table",
+          "evidence": "DWARF hisc.c:70 void enter_hisc_table(Thisc_table*, int, char*)"
+        },
+        {
+          "name": "get_rank_id",
+          "declaration": "extern int get_rank_id(Tprofile *profile);",
+          "after": "save_profile",
+          "evidence": "DWARF profile.c:160 int get_rank_id(Tprofile*); placed with the other profile.c interfaces"
+        },
+        {
+          "name": "getGameDataXML",
+          "declaration": "extern char *getGameDataXML(Tgame_data *gd);",
+          "after": "create_game_data",
+          "evidence": "DWARF game_data.c:51 char *getGameDataXML(Tgame_data*); placed with the other game_data.c interfaces"
+        },
+        {
+          "name": "add_jump_sequence",
+          "declaration": "extern void add_jump_sequence(Tgame_data *gd, Tgd_jump_sequence *js);",
+          "after": "getGameDataXML",
+          "evidence": "DWARF game_data.c:182 void add_jump_sequence(Tgame_data*, Tgd_jump_sequence*)"
+        },
+        {
+          "name": "add_combo",
+          "declaration": "extern void add_combo(Tgame_data *gd, Tgd_combo *c);",
+          "after": "add_jump_sequence",
+          "evidence": "DWARF game_data.c:193 void add_combo(Tgame_data*, Tgd_combo*)"
+        }
+      ],
+      "evidence": "Seven cross-CU interfaces the historical play() calls but the reconstructed main.c never declared, so every call site would be an implicit declaration. Signatures come from the unique DWARF subprogram of the defining CU (docs/current/interfaces/<name>.json); each is placed next to the interfaces of the same CU already declared in main.c.",
+      "removed_text": [
+        {
+          "name": "qualify_hisc_table",
+          "added": "extern int qualify_hisc_table(Thisc_table*, int);",
+          "after": "save_hisc_table"
+        },
+        {
+          "name": "sort_hisc_table",
+          "added": "extern void sort_hisc_table(Thisc_table*);",
+          "after": "qualify_hisc_table"
+        },
+        {
+          "name": "enter_hisc_table",
+          "added": "extern void enter_hisc_table(Thisc_table*, int, char*);",
+          "after": "sort_hisc_table"
+        },
+        {
+          "name": "get_rank_id",
+          "added": "extern int get_rank_id(Tprofile *profile);",
+          "after": "save_profile"
+        },
+        {
+          "name": "getGameDataXML",
+          "added": "extern char *getGameDataXML(Tgame_data *gd);",
+          "after": "create_game_data"
+        },
+        {
+          "name": "add_jump_sequence",
+          "added": "extern void add_jump_sequence(Tgame_data *gd, Tgd_jump_sequence *js);",
+          "after": "getGameDataXML"
+        },
+        {
+          "name": "add_combo",
+          "added": "extern void add_combo(Tgame_data *gd, Tgd_combo *c);",
+          "after": "add_jump_sequence"
+        }
+      ]
+    },
+    "order": [
+      "line_alert",
+      "fadeIn",
+      "fadeOut",
+      "show_instructions",
+      "my_alert",
+      "show_credits",
+      "get_version_str",
+      "get_demo",
+      "get_controls",
+      "new_rand",
+      "new_srand",
+      "syncProfileFromOptions",
+      "syncOptionsFromProfile",
+      "get_gamepad_value",
+      "load_sound",
+      "draw_progress_bar",
+      "take_screenshot",
+      "open_web_browser",
+      "load_new_ad_image",
+      "ok_to_play",
+      "switchedFromProgram",
+      "switchedToProgram",
+      "clickedCloseButton",
+      "testWindowResolution",
+      "is_custom_replay",
+      "new_game",
+      "show_name",
+      "play_sound",
+      "play_jump_sound",
+      "handle_player_input",
+      "play_menu_move",
+      "play_menu_select",
+      "drawSlot",
+      "stopGameMusic",
+      "replaceBadCharacters",
+      "blit_to_screen",
+      "draw_reward",
+      "replay_menu_callback",
+      "main_menu_callback",
+      "do_replay_menu",
+      "draw_results",
+      "force_create_profile",
+      "startMenuMusic",
+      "stopMenuMusic",
+      "checkMenuFocus",
+      "_mangled_main",
+      "draw_frame",
+      "play",
+      "get_string",
+      "pwd_garble_string",
+      "line_intersect",
+      "datafile_callback_slow",
+      "datafile_callback",
+      "color_map_callback",
+      "getSampleFromOggDatafile",
+      "log2file",
+      "end_game",
+      "uninit_game",
+      "save_config",
+      "change_profile",
+      "update_reward",
+      "myDeleteFile",
+      "set_current_avatar",
+      "update_frame",
+      "check_dir",
+      "load_character",
+      "for_each_directory",
+      "run_demo",
+      "add_profile",
+      "rebuild_profile_list",
+      "loadScrambled",
+      "check_beta_tester",
+      "check_characters",
+      "startGameMusic",
+      "start_reward",
+      "handle_player_collision_original",
+      "handle_player_collision_old",
+      "handle_player_collision_vector",
+      "handle_player_collision_vector_2",
+      "handle_player_collision_combo",
+      "init_game",
+      "WinMain"
+    ],
+    "definition_order_with_static": [
+      [
+        "line_alert",
+        false
+      ],
+      [
+        "fadeIn",
+        false
+      ],
+      [
+        "fadeOut",
+        false
+      ],
+      [
+        "show_instructions",
+        false
+      ],
+      [
+        "my_alert",
+        false
+      ],
+      [
+        "show_credits",
+        false
+      ],
+      [
+        "get_version_str",
+        false
+      ],
+      [
+        "get_demo",
+        false
+      ],
+      [
+        "get_controls",
+        false
+      ],
+      [
+        "new_rand",
+        false
+      ],
+      [
+        "new_srand",
+        false
+      ],
+      [
+        "syncProfileFromOptions",
+        false
+      ],
+      [
+        "syncOptionsFromProfile",
+        false
+      ],
+      [
+        "get_gamepad_value",
+        false
+      ],
+      [
+        "load_sound",
+        false
+      ],
+      [
+        "draw_progress_bar",
+        false
+      ],
+      [
+        "take_screenshot",
+        false
+      ],
+      [
+        "open_web_browser",
+        false
+      ],
+      [
+        "load_new_ad_image",
+        false
+      ],
+      [
+        "ok_to_play",
+        false
+      ],
+      [
+        "switchedFromProgram",
+        false
+      ],
+      [
+        "switchedToProgram",
+        false
+      ],
+      [
+        "clickedCloseButton",
+        false
+      ],
+      [
+        "testWindowResolution",
+        false
+      ],
+      [
+        "is_custom_replay",
+        false
+      ],
+      [
+        "new_game",
+        false
+      ],
+      [
+        "show_name",
+        false
+      ],
+      [
+        "play_sound",
+        false
+      ],
+      [
+        "play_jump_sound",
+        false
+      ],
+      [
+        "handle_player_input",
+        false
+      ],
+      [
+        "play_menu_move",
+        false
+      ],
+      [
+        "play_menu_select",
+        false
+      ],
+      [
+        "drawSlot",
+        false
+      ],
+      [
+        "stopGameMusic",
+        false
+      ],
+      [
+        "replaceBadCharacters",
+        false
+      ],
+      [
+        "blit_to_screen",
+        false
+      ],
+      [
+        "draw_reward",
+        false
+      ],
+      [
+        "replay_menu_callback",
+        false
+      ],
+      [
+        "main_menu_callback",
+        false
+      ],
+      [
+        "do_replay_menu",
+        false
+      ],
+      [
+        "draw_results",
+        false
+      ],
+      [
+        "force_create_profile",
+        false
+      ],
+      [
+        "startMenuMusic",
+        false
+      ],
+      [
+        "stopMenuMusic",
+        false
+      ],
+      [
+        "checkMenuFocus",
+        false
+      ],
+      [
+        "_mangled_main",
+        false
+      ],
+      [
+        "draw_frame",
+        false
+      ],
+      [
+        "play",
+        false
+      ],
+      [
+        "get_string",
+        false
+      ],
+      [
+        "pwd_garble_string",
+        false
+      ],
+      [
+        "line_intersect",
+        false
+      ],
+      [
+        "datafile_callback_slow",
+        false
+      ],
+      [
+        "datafile_callback",
+        false
+      ],
+      [
+        "color_map_callback",
+        false
+      ],
+      [
+        "getSampleFromOggDatafile",
+        false
+      ],
+      [
+        "log2file",
+        false
+      ],
+      [
+        "end_game",
+        false
+      ],
+      [
+        "uninit_game",
+        false
+      ],
+      [
+        "save_config",
+        false
+      ],
+      [
+        "change_profile",
+        false
+      ],
+      [
+        "update_reward",
+        false
+      ],
+      [
+        "myDeleteFile",
+        false
+      ],
+      [
+        "set_current_avatar",
+        false
+      ],
+      [
+        "update_frame",
+        false
+      ],
+      [
+        "check_dir",
+        false
+      ],
+      [
+        "load_character",
+        false
+      ],
+      [
+        "for_each_directory",
+        false
+      ],
+      [
+        "run_demo",
+        false
+      ],
+      [
+        "add_profile",
+        false
+      ],
+      [
+        "rebuild_profile_list",
+        false
+      ],
+      [
+        "loadScrambled",
+        false
+      ],
+      [
+        "check_beta_tester",
+        false
+      ],
+      [
+        "check_characters",
+        false
+      ],
+      [
+        "startGameMusic",
+        false
+      ],
+      [
+        "start_reward",
+        false
+      ],
+      [
+        "handle_player_collision_original",
+        false
+      ],
+      [
+        "handle_player_collision_old",
+        false
+      ],
+      [
+        "handle_player_collision_vector",
+        false
+      ],
+      [
+        "handle_player_collision_vector_2",
+        false
+      ],
+      [
+        "handle_player_collision_combo",
+        false
+      ],
+      [
+        "init_game",
+        false
+      ],
+      [
+        "WinMain",
+        false
+      ]
+    ],
+    "bodies": {},
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  }
+}

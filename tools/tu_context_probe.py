@@ -194,7 +194,7 @@ def peephole_finds(dump_dir):
     return out
 
 
-def compile_overlay(target, source, new_text, label, dumps=True, headers=None):
+def compile_overlay(target, source, new_text, label, dumps=True, headers=None, cgraph=False):
     from build import COMPILERS
     ledger = read_json(ROOT / 'src/recovery.json'); ref = read_json(ROOT / ledger[source]['verified_report']); build = ref['build']
     out = OUT / target / label; overlay = out / 'overlay'; (overlay / Path(source).parent).mkdir(parents=True, exist_ok=True)
@@ -208,6 +208,7 @@ def compile_overlay(target, source, new_text, label, dumps=True, headers=None):
     args[1:1] = ['-I' + str(overlay / Path(h).parent) for h in (headers or {})]
     args = [a if not (isinstance(a, str) and a.startswith('-I') and not os.path.isabs(a[2:])) else '-I' + str(ROOT / a[2:]) for a in args]
     if dumps: args[1:1] = ['-fdump-ipa-cgraph', '-fdump-rtl-csa', '-fdump-rtl-peephole2']
+    elif cgraph: args[1:1] = ['-fdump-ipa-cgraph']
     env = os.environ.copy(); env['PATH'] = str(COMPILERS[build['compiler']] / 'bin') + os.pathsep + env['PATH']
     r = subprocess.run([str(x) for x in args], cwd=out, env=env, capture_output=True, text=True)
     return out, ref, build, r
@@ -217,7 +218,7 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     from experiment import compare
     from recovery_pipeline import OBJDUMP
     from interfaces import declarations
-    out, ref, build, r = compile_overlay(target, source, new_text, label, dumps, headers)
+    out, ref, build, r = compile_overlay(target, source, new_text, label, dumps, headers, cgraph=bool(edits.get('focus')))
     record = {'scope': 'Atomic translation-unit context experiment on an isolated overlay; diagnostic only, never a function proof or a production edit.',
               'target': target, 'source': source, 'label': label, 'edits': edits,
               'source_identity': identity(ROOT / source), 'object_identity': build['object'], 'compiler': build['compiler'], 'flags': build['flags'],
@@ -260,7 +261,11 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
             defined = {n for n, (b, flags) in meta.items() if b >= 0 and 'needed' in flags}
             predicted = [n for n in emission_order(defs, callees) if n in defined]
             model_check = {'predicted_equals_object': predicted == object_order(out / 'unit.o', defined), 'predicted': predicted}
-        record['focus'] = focus_report(report, callees, edits.get('focus') or [])
+        if edits.get('focus'):
+            # Source-level edges come from the pre-inlining section: a call GCC inlined into its caller
+            # disappears from the optimized call graph without disappearing from the source.
+            initial, _ = callees_from_dump((out / dump_file).read_text(encoding='utf-8', errors='replace'), 'Initial callgraph:')
+            record['focus'] = focus_report(report, initial, callees, edits['focus'])
     record.update(compile='OK', context_table=table, emission_model=model_check, matches_before=ref['function_matches'], matches_after=report['function_matches'],
                   emission_order=cand, historical_order=hist, same_historical_predecessor={'before': same_before, 'after': same, 'total': len(hist)},
                   longest_exact_historical_prefix=prefix, at_historical_offset=sum(1 for n in hist if after[n].get('candidate_offset') == before[n].get('candidate_offset')),
@@ -273,7 +278,7 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     return record
 
 
-def focus_report(report, callees, focus):
+def focus_report(report, callees, optimized, focus):
     """Per focus function: historical direct callees (from the original bytes) versus the compiled call graph,
     size and emission positions.  Call-graph convergence is the structural goal for large bodies."""
     from tu_context_model import historical_callees, exe_functions
@@ -285,12 +290,13 @@ def focus_report(report, callees, focus):
         f = next((x for x in report['functions'] if x['name'] == n), None)
         if not f: continue
         h = sorted(set(hist_calls.get(n, []))); c = sorted(set(callees.get(n, [])))
+        inlined = sorted(set(c) - set(optimized.get(n, [])))
         key = lambda x: re.sub(r'^__builtin_', '', x).lstrip('_') if x != '_mangled_main' else x   # census `_errno` == cgraph `errno`
         hk = {key(x) for x in h}; ck = {key(x) for x in c}
         out[n] = {'status': f['status'], 'candidate_size': f.get('candidate_size'), 'historical_size': f['original_size'],
                   'historical_callees': h, 'current_callees': c, 'missing_edges': sorted(x for x in h if key(x) not in ck), 'extra_edges': sorted(x for x in c if key(x) not in hk),
-                  'historical_position': hist.index(n), 'candidate_position': cand.index(n),
-                  'limit': 'Historical callees are the direct calls visible in the original bytes (inlined builtins invisible); compiled callees come from the cgraph dump.'}
+                  'historical_position': hist.index(n), 'candidate_position': cand.index(n), 'inlined_into_this_caller': inlined,
+                  'limit': 'Historical callees are the direct calls visible in the original bytes (inlined builtins invisible); current callees are the source-level edges before inlining. A callee listed in inlined_into_this_caller is called in the source but inlined here, so it is absent from the emitted call graph; history did not inline it.'}
     return out
 
 
@@ -366,6 +372,7 @@ def main():
         print('focus', n, json.dumps({k: fr[k] for k in ('status', 'candidate_size', 'historical_size', 'historical_position', 'candidate_position')}))
         print('  missing edges (%d):' % len(fr['missing_edges']), ' '.join(fr['missing_edges']))
         print('  extra edges (%d):' % len(fr['extra_edges']), ' '.join(fr['extra_edges']))
+        if fr.get('inlined_into_this_caller'): print('  inlined here (%d):' % len(fr['inlined_into_this_caller']), ' '.join(fr['inlined_into_this_caller']))
 
 
 if __name__ == '__main__':
