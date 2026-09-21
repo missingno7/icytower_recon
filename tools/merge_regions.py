@@ -55,25 +55,29 @@ def merge(base_path, region_paths):
             base_chunks[tag] = base_chunks.get(tag, [])
         for tag in tags:
             if [l for l in bodies.get(tag, []) if l.strip()] != [l for l in base_chunks[tag] if l.strip()]: claim(tag, bodies[tag], p)
-    out = []; pos = 0; used = []
+    out = []; pos = 0; used = []; spans = {}
     positions = [(k, MARKER.match(l).group(1)) for k, l in enumerate(base) if MARKER.match(l)]
     for n, (k, tag) in enumerate(positions):
         end = positions[n + 1][0] if n + 1 < len(positions) else len(base)
         out.extend(base[pos:k])
+        first = len(out) + 1                      # 1-based line number in the merged file
         if tag in filled: out.extend(filled[tag][0]); used.append(tag)
         else: out.extend(base[k:end])
+        spans[tag] = [first, len(out)]
         pos = end
     out.extend(base[pos:])
-    return chr(10).join(out), used
+    return chr(10).join(out), used, spans
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('base'); ap.add_argument('regions', nargs='+'); ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    text, used = merge(a.base, a.regions)
+    text, used, spans = merge(a.base, a.regions)
     Path(a.out).write_text(text, encoding='utf-8', newline='')
-    print('merged regions', ' '.join(used), '->', a.out, len(text.split(chr(10))), 'lines')
+    import json
+    Path(a.out + '.regions.json').write_text(json.dumps(spans, indent=1), encoding='utf-8')
+    print('merged regions', ' '.join(used), '->', a.out, len(text.split(chr(10))), 'lines; spans in', a.out + '.regions.json')
 
 
 if __name__ == '__main__':

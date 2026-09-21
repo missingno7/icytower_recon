@@ -44,43 +44,26 @@ void draw_frame(BITMAP *bmp)
         if (row > last_stripe_y) {                      /* 2510 */
             last_stripe_y++;                             /* 2511 */
 
-            /* UNRESOLVED: bg_stripe_ids (0x4dd19c, historical int[5], DWARF die 136836,
-             * F:/projects/icytower/trunk/source/main.c:109) has no declaration reachable from
-             * src/main.c or include/*.h yet -- unlike the six globals and seven prototypes this
-             * region was told are now available, this array was never added. The historical
-             * statements here are:
-             *   bg_stripe_ids[4] = bg_stripe_ids[3];                          2514
-             *   bg_stripe_ids[3] = bg_stripe_ids[2];
-             *   bg_stripe_ids[2] = bg_stripe_ids[1];
-             *   bg_stripe_ids[1] = bg_stripe_ids[0];
-             *   if (new_rand() % 100 > 0x28)             2517
-             *       bg_stripe_ids[0] = 0;                2523
-             *   else {
-             *       bg_stripe_ids[0] = new_rand() % max_bg_id;                2521
-             *       if (bg_stripe_ids[0] == bg_stripe_ids[1] ||               2522
-             *           bg_stripe_ids[0] == bg_stripe_ids[2])
-             *           bg_stripe_ids[0] = 0;                                 2523
-             *   }
-             * Both new_rand() calls are preserved below (bare, side-effect only) so the call
-             * edge is not silently dropped; the array reads/writes cannot be expressed without
-             * inventing the global, which is prohibited. */
+            bg_stripe_ids[4] = bg_stripe_ids[3];         /* 2514 */
+            bg_stripe_ids[3] = bg_stripe_ids[2];
+            bg_stripe_ids[2] = bg_stripe_ids[1];
+            bg_stripe_ids[1] = bg_stripe_ids[0];
+
             if (new_rand() % 100 > 0x28) {               /* 2517 */
-                /* UNRESOLVED: bg_stripe_ids[0] = 0; */
+                bg_stripe_ids[0] = 0;                     /* 2523 */
             } else {
-                new_rand();                               /* 2521 */
-                /* UNRESOLVED: bg_stripe_ids[0] = new_rand() % max_bg_id; dup-check vs
-                 * bg_stripe_ids[1]/[2], else re-zero (2522/2523). */
+                bg_stripe_ids[0] = new_rand() % max_bg_id; /* 2521 */
+                if (bg_stripe_ids[0] == bg_stripe_ids[1] || /* 2522 */
+                    bg_stripe_ids[0] == bg_stripe_ids[2])
+                    bg_stripe_ids[0] = 0;                  /* 2523 */
             }
         }
 
-        /* 2529/2530: draw the four parallax background stripes.
-         * UNRESOLVED: stripe = data[bg_stripe_ids[i + 1] + 1].dat; (BITMAP*, DATAFILE.dat is the
-         * first field so the *16 index scale needs no field offset) and
-         *   blit(stripe, bmp, 0, 0, i * 0x80, so + (map.offset >> 1), stripe->w, stripe->h);
-         * blocked on the same missing bg_stripe_ids global; the blit() call historically present
-         * here (draw.inl-adjacent call to _blit) cannot be written without it. */
-        for (i = 0; i != 4; i++) {
-            /* UNRESOLVED: see above. */
+        for (i = 0; i != 4; i++) {                        /* 2529 */
+            BITMAP *stripe = data[bg_stripe_ids[i + 1] + 1].dat; /* 2530 */
+            blit(stripe, bmp, 0, 0, 0x25,
+                 i * 0x80 + (map.offset % 0x100) / 2,
+                 stripe->w, stripe->h);
         }
     }
 

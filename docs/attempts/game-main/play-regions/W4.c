@@ -78,6 +78,7 @@ int play(void)
             profile->seconds_spent_playing += diff;
     } else {
         gameData->score = ply[player_id]->level * 10 + ply[player_id]->score;
+        gameData->floor = ply[player_id]->level;
         gameData->combo = ply[player_id]->best_combo;
         gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
         gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
@@ -92,9 +93,7 @@ int play(void)
             int k;
 
             for (k = 0; k < 7; k++)
-                keys_pressed[k] = time_cheat_count; /* ? the fill value traces to
-                                                       * time_cheat_count's fixed stack slot;
-                                                       * a plain 0-fill was expected -- see report */
+                keys_pressed[k] = time_cheat_count;
             if (demo->size > 0) {
                 for (k = 0; k < 7; k++)
                     last_keys[k] = 0;
@@ -108,9 +107,9 @@ int play(void)
                     }
                 }
             }
-            gameData->left = keys_pressed[0];
-            gameData->right = keys_pressed[1];
-            gameData->jump = keys_pressed[2];
+            gameData->jump = keys_pressed[0];
+            gameData->left = keys_pressed[1];
+            gameData->right = keys_pressed[2];
         }
         if (itrcheck) {
             char *xmlStr = getGameDataXML(gameData);
@@ -130,9 +129,7 @@ int play(void)
             demo->score = ply[player_id]->level * 10 + ply[player_id]->score;
             demo->floor = ply[player_id]->level;
             demo->combo = ply[player_id]->best_combo;
-            demo->rejump = 0; /* UNRESOLVED: 0x4fe530 used as demo->rejump source, unnamed in
-                                * evidence (thematically resembles global `rejump` at 0x4fdcd8,
-                                * but that DWARF address does not match -- see report) */
+            demo->rejump = options.jump_hold;
             demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
             demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
             for (i = 0; i < 5; i++)
@@ -293,13 +290,11 @@ int play(void)
             if (gotHigh) {
                 if (!is_playing_custom_game) {
                     log2file(" player qualified for highscore");
-                    play_sound(NULL, 0, 0); /* UNRESOLVED: 0x4dd2fc used as SAMPLE*, unnamed
-                                              * in evidence -- see report */
+                    play_sound(sounds[7], 0, 0);
                 }
             } else {
                 log2file(" player did not qualify for highscore");
-                play_sound(NULL, 0, 0); /* UNRESOLVED: 0x4dd2c0 used as SAMPLE*, unnamed
-                                          * in evidence -- see report */
+                play_sound(speaker[1], 0, 0);
             }
 
             if (debug) {

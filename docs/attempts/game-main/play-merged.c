@@ -448,37 +448,34 @@ int play(void)
 
         add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
         {
-            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it;
-             * comboActive: synthetic gate reconstructing the tail-merged machine code. See report. */
+            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it.
+             * Both arms fall through unconditionally into the y<900 combo body below (traced
+             * from the tail-duplicated machine code at offsets 2266..2304 / 5797..5848: the
+             * no_combo_top_floor update is the only part actually gated). See report. */
             int aightScore;
-            int comboActive = 0;
 
             if (numComboJumps) {                                               /* 4003 */
                 lastJumpLength = 0;
-                aightScore = 1;
-                comboActive = 1;
-            } else if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) { /* 4003/4004 */
-                ply[player_id]->no_combo_top_floor = ply[player_id]->level;
+            } else {
+                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003/4004 */
+                    ply[player_id]->no_combo_top_floor = ply[player_id]->level;
                 lastJumpLength = 0;
-                aightScore = 1;
-                comboActive = 1;
             }
-            if (comboActive) {
-                if (ply[player_id]->y < 900.0 && !game_over) {                  /* 4010 */
-                    play_sound(speaker[1], 0, 0);                               /* 4012 */
-                    game_over = 2;
-                }
-                aightScore++;                                                   /* 4015 */
-                if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) { /* 4016 */
-                    play_sound(sounds[6], 1, 0);                                /* 4017 */
-                    if (custom.falling)                                        /* 4018 */
-                        stop_sample(custom.falling);                           /* 4019 */
-                }
-                ply[player_id]->shake = 0x18;                                   /* 4022 */
-                aightScore = 0;
-                if (next_aight > ply[player_id]->level) {                       /* 4027 */
-                    play_sound(sounds[2], 0, 0);                                /* 4028 */
-                }
+            aightScore = 1;
+            if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
+                play_sound(speaker[1], 0, 0);                                   /* 4012 */
+                game_over = 2;
+            }
+            aightScore++;                                                       /* 4015 */
+            if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
+                play_sound(sounds[6], 1, 0);                                    /* 4017 */
+                if (custom.falling)                                            /* 4018 */
+                    stop_sample(custom.falling);                               /* 4019 */
+            }
+            ply[player_id]->shake = 0x18;                                       /* 4022 */
+            aightScore = 0;
+            if (next_aight > ply[player_id]->level) {                           /* 4027 */
+                play_sound(sounds[2], 0, 0);                                    /* 4028 */
             }
         }
         if (!options.flash) {                                                  /* 4029 */
@@ -501,12 +498,14 @@ int play(void)
             if (ply[player_id]->edge_drawn == 50)                              /* 4045 */
                 ply[player_id]->edge_drawn = 0;                                /* 4046 */
         }
-        if (debug && ply[player_id]->dead > 99) {                              /* 4049/4050 */
+        if (!debug) {                                                          /* 4049 */
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
                 playing = 0;
-        } else if (!debug) {
-            if (recording && ply[player_id]->dead > 100)                       /* 4056 */
-                playing = 0;
+        } else if (ply[player_id]->dead <= 99) {                               /* 4050 */
+            playing = 0;   /* ? traced exactly (jle 4050 target is the shared
+                             * esi=0 tail also reached by the recording check above,
+                             * offsets 2860..2904); which local esi holds here is
+                             * not otherwise confirmed. See report. */
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int t0, t1;
@@ -735,6 +734,7 @@ int play(void)
             profile->seconds_spent_playing += diff;
     } else {
         gameData->score = ply[player_id]->level * 10 + ply[player_id]->score;
+        gameData->floor = ply[player_id]->level;
         gameData->combo = ply[player_id]->best_combo;
         gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
         gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
@@ -749,9 +749,7 @@ int play(void)
             int k;
 
             for (k = 0; k < 7; k++)
-                keys_pressed[k] = time_cheat_count; /* ? the fill value traces to
-                                                       * time_cheat_count's fixed stack slot;
-                                                       * a plain 0-fill was expected -- see report */
+                keys_pressed[k] = time_cheat_count;
             if (demo->size > 0) {
                 for (k = 0; k < 7; k++)
                     last_keys[k] = 0;
@@ -765,9 +763,9 @@ int play(void)
                     }
                 }
             }
-            gameData->left = keys_pressed[0];
-            gameData->right = keys_pressed[1];
-            gameData->jump = keys_pressed[2];
+            gameData->jump = keys_pressed[0];
+            gameData->left = keys_pressed[1];
+            gameData->right = keys_pressed[2];
         }
         if (itrcheck) {
             char *xmlStr = getGameDataXML(gameData);
@@ -787,9 +785,7 @@ int play(void)
             demo->score = ply[player_id]->level * 10 + ply[player_id]->score;
             demo->floor = ply[player_id]->level;
             demo->combo = ply[player_id]->best_combo;
-            demo->rejump = 0; /* UNRESOLVED: 0x4fe530 used as demo->rejump source, unnamed in
-                                * evidence (thematically resembles global `rejump` at 0x4fdcd8,
-                                * but that DWARF address does not match -- see report) */
+            demo->rejump = options.jump_hold;
             demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
             demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
             for (i = 0; i < 5; i++)
@@ -950,13 +946,11 @@ int play(void)
             if (gotHigh) {
                 if (!is_playing_custom_game) {
                     log2file(" player qualified for highscore");
-                    play_sound(NULL, 0, 0); /* UNRESOLVED: 0x4dd2fc used as SAMPLE*, unnamed
-                                              * in evidence -- see report */
+                    play_sound(sounds[7], 0, 0);
                 }
             } else {
                 log2file(" player did not qualify for highscore");
-                play_sound(NULL, 0, 0); /* UNRESOLVED: 0x4dd2c0 used as SAMPLE*, unnamed
-                                          * in evidence -- see report */
+                play_sound(speaker[1], 0, 0);
             }
 
             if (debug) {
@@ -1009,28 +1003,28 @@ int play(void)
                 draw_frame(swap_screen);                                             /* 4703 */
                 draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
                              qualifyValue,
-                             *(int *)0x4dd188 ? 0 : recording);   /* is_playing_custom_game, undeclared in TU; 4704 */
-                if (isGuest && gotHigh && !*(int *)0x4dd188 && !recording) {    /* is_playing_custom_game; 4705 */
+                             is_playing_custom_game ? 0 : recording);            /* 4704 */
+                if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
                     textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);          /* 4706 */
                 }
                 scrollerY++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
                 if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {     /* 4710 */
-                    play_sound(*(SAMPLE **)0x4dd2f8, 0, 1);      /* UNRESOLVED SAMPLE* global 0x4dd2f8; 4711 */
-                    if (*(SAMPLE **)0x4fac00)                                         /* 4712 */
-                        stop_sample(*(SAMPLE **)0x4fac00);        /* UNRESOLVED SAMPLE* global 0x4fac00 */
+                    play_sound(sounds[6], 0, 1);                                      /* 4711 */
+                    if (custom.falling)                                               /* 4712 */
+                        stop_sample(custom.falling);
                     ply[player_id]->shake = 24;                                       /* 4714 */
                 }
                 if (ply[player_id]->shake) {                                          /* 4716 */
-                    blit(swap_screen, *(BITMAP **)0x4dda8c, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);   /* UNRESOLVED BITMAP* global 0x4dda8c; 4718 */
+                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);                             /* 4718 */
                     ply[player_id]->shake--;                                          /* 4720 */
                 }
                 blit_to_screen(swap_screen);                                          /* 4722 */
-                if (*(char *)0x5069b7) {                        /* UNRESOLVED flag (key[KEY_PRTSCR]-style); 4725 */
+                if (key[KEY_F1]) {                                                    /* 4725 */
                     take_screenshot(swap_screen);                                     /* 4726 */
                 }
-                if (*(char *)0x5069c8 && *(char *)0x5069fb) {    /* UNRESOLVED flags; 4729..4731 */
+                if (key[KEY_TAB] && key[KEY_LSHIFT]) {                                /* 4729..4731 */
                     rest(2);                                                          /* 4734 */
                     if (cycle_count == 0)
                         continue;
@@ -1044,7 +1038,7 @@ int play(void)
             /* summary scroller message: custom/guest/personal-record tip (4742..4775). */
             if (!recording) {
                 summary_scroller_message[0] = 0;                                      /* 4743 */
-                if ((*(int *)0x4dd188)) {
+                if (is_playing_custom_game) {
                     memcpy(summary_scroller_message,
                            "Custom mode is crazy fun but does not add to your profile. "
                            "Play Classic Mode to compete in the highscore lists and "
@@ -1055,9 +1049,7 @@ int play(void)
                     char *tip = "You're playing in guest mode. Start a profile and "
                                 "record your progress!";
                     if (!isGuest)
-                        tip = *(char **)(0x4bc0c0 + (new_rand() % 45) * 4);
-                        /* UNRESOLVED: 0x4bc0c0 is DWARF global "hints" (main.c:142,
-                         * char*[45]), not declared in this TU; 4770 */
+                        tip = hints[new_rand() % 45];                                   /* 4770 */
                     strcpy(summary_scroller_message, tip);                              /* 4775 */
                 }
             }
@@ -1077,14 +1069,14 @@ int play(void)
                 cycle_count = 0;                                                       /* 4797 */
                 step_count++;                                                          /* 4798 */
                 update_frame();                                                        /* 4800 */
-                if (*(char *)0x5069b7)                  /* UNRESOLVED flag; 4802 */
+                if (key[KEY_F1])                                                       /* 4802 */
                     take_screenshot(swap_screen);                                      /* 4803 */
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
                 draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
-                             qualifyValue, (*(int *)0x4dd188) ? 0 : recording);     /* 4810 */
-                if (isGuest && gotHigh && !(*(int *)0x4dd188) && !recording) {      /* 4811 */
+                             qualifyValue, is_playing_custom_game ? 0 : recording); /* 4810 */
+                if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);            /* 4812 */
                     if (pos >= 1)                                                       /* 4814 */
@@ -1108,7 +1100,7 @@ int play(void)
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     textout_ex(swap_screen, data[52].dat, "rank up!",
-                               rank_y + 0x46, 20, -1, -1);                               /* 4822 */
+                               20, rank_y + 0x46, -1, -1);                               /* 4822 */
                     rank_y = rank_y + (int)((320 - rank_y) * 0.1);                       /* 4823 */
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
@@ -1128,20 +1120,20 @@ int play(void)
                 alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* ? decay approximation, 4838 */
 
                 if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {         /* 4844 */
-                    play_sound(*(SAMPLE **)0x4dd2f8, 0, 1);       /* UNRESOLVED SAMPLE* global; 4845 */
-                    if (*(SAMPLE **)0x4fac00)                                             /* 4846 */
-                        stop_sample(*(SAMPLE **)0x4fac00);
+                    play_sound(sounds[6], 0, 1);                                          /* 4845 */
+                    if (custom.falling)                                                   /* 4846 */
+                        stop_sample(custom.falling);
                     ply[player_id]->shake = 24;                                           /* 4850 */
                     scrollerY = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
-                    blit(swap_screen, *(BITMAP **)0x4dda8c, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);        /* UNRESOLVED BITMAP* global; 4855 */
+                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);                                 /* 4855 */
                     ply[player_id]->shake--;                                              /* 4857 */
                 }
                 blit_to_screen(swap_screen);                                              /* 4860 */
 
-                if (isGuest && gotHigh && !(*(int *)0x4dd188) && !recording) {         /* 4863 */
+                if (isGuest && gotHigh && !is_playing_custom_game && !recording) {     /* 4863 */
                     poll_control(&ctrl, 0);                                                /* 4864 */
                     if (is_right(&ctrl)) {                                                 /* 4884 */
                         pos++;                                                             /* 4885 */
@@ -1161,7 +1153,7 @@ int play(void)
                                 pos--;                       /* ? mirrors 4899's esi<=1 special case */
                         }
                     }
-                    if (!is_any(&ctrl) && !*(char *)0x5069d5 && *(char *)0x5069c7) {        /* 4913 */
+                    if (!is_any(&ctrl) && !key[KEY_DEL] && key[KEY_BACKSPACE]) {            /* 4913 */
                         if (pos <= 2)
                             buf[pos * 2] = letters[pos];                                    /* 4915 */
                     }
@@ -1169,7 +1161,7 @@ int play(void)
                     poll_control(&ctrl, 0);                                                 /* 4920 */
                     if (skip_keys != 20)                                                    /* 4923 */
                         skip_keys--;
-                    if (isGuest && gotHigh && !(*(int *)0x4dd188)) {                    /* 4921 */
+                    if (isGuest && gotHigh && !is_playing_custom_game) {                /* 4921 */
                         if (keypressed()) {                                                 /* 4922 */
                             if (skip_keys != 20) {
                                 k = readkey() & 0xff;                                        /* 4866 */
@@ -1184,7 +1176,7 @@ int play(void)
                         }
                     }
                 }
-                if (*(char *)0x5069c8 && *(char *)0x5069fb) {   /* UNRESOLVED flags; 4929..4931 */
+                if (key[KEY_TAB] && key[KEY_LSHIFT]) {           /* 4929..4931 */
                     rest(2);                                                                 /* 4932 */
                     if (cycle_count == 0)
                         continue;
@@ -1193,7 +1185,7 @@ int play(void)
 
             /* highscore entry: commit the typed initials into every qualified table
              * (4940..4951). */
-            if (!(*(int *)0x4dd188) && recording) {                                     /* 4940 */
+            if (!is_playing_custom_game && recording) {                                  /* 4940 */
                 guestName[0] = buf[0];                                                       /* 4941 */
                 guestName[1] = buf[2];
                 guestName[2] = buf[4];
@@ -1213,14 +1205,14 @@ int play(void)
             }
 
             /* post-game "new start floor unlocked" message (4963..4987). */
-            if (recording && !debug && !(*(int *)0x4dd188)) {                            /* 4963 */
+            if (recording && !debug && !is_playing_custom_game) {                        /* 4963 */
                 int f = ply[player_id]->level / 100;                                          /* 4964 */
                 if (f > oldUnlockedFloors && f <= 9) {                                        /* 4966 */
                     fadeOut(16);                                                              /* 4968 */
                     blit(data[126].dat, swap_screen, 0, 0, 0, 0, 640, 480);                   /* 4971 */
                     set_trans_blender(0, 0, 0, 158);                                          /* 4974 */
                     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                                   /* 4975 */
-                    if (gfx_driver)    /* ? unresolved global 0x4dda84, assumed gfx_driver */  /* 4976 */
+                    if (gfx_driver)                                                            /* 4976 */
                         rectfill(swap_screen, 0, 0, gfx_driver->w, gfx_driver->h,
                                  makecol(0, 0, 0));
                     solid_mode();                                                             /* 4977 */
@@ -1233,7 +1225,7 @@ int play(void)
                     textout_centre_ex(swap_screen, data[54].dat,
                                        "(Get it in the options menu)",
                                        320, 0x1b8, -1, -1);                                    /* 4983 */
-                    play_sound(*(SAMPLE **)0x4dd2e8, 0, 0);   /* UNRESOLVED SAMPLE* global; 4984 */
+                    play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
                 }
             }
@@ -1248,18 +1240,18 @@ int play(void)
         play_again = 0;                                                                        /* 5002 */
         if (recording) {                                                                        /* 5002 */
             if (debug) {                                                                        /* 5002 */
-                play_sound(*(SAMPLE **)0x4dd2c4, 0, 0);      /* UNRESOLVED SAMPLE* global; 5011 */
+                play_sound(speaker[2], 0, 0);                 /* 5011 */
             } else {
                 in_replay_menu = 1;                                                              /* 5003 */
                 play_again = do_replay_menu();                                                   /* 5004 */
                 in_replay_menu = 0;                                                              /* 5005 */
                 if (recording)                                                                   /* 5011 */
-                    play_sound(*(SAMPLE **)0x4dd2c4, 0, 0);
+                    play_sound(speaker[2], 0, 0);
             }
             stopGameMusic();                                                                     /* 5013 */
             if (gameMusicVoiceID >= 0)                                                            /* 5014 */
                 voice_stop(gameMusicVoiceID);                                                     /* 5015 */
-            clear_bitmap(*(BITMAP **)0x4dda8c);      /* UNRESOLVED BITMAP* global 0x4dda8c; inlined */
+            clear_bitmap(screen);                                                                 /* inlined */
         }
     }
 

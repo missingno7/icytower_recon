@@ -70,37 +70,34 @@ int play(void)
         /* REGION W3: lines 4000..4369 (combo sounds, quit/pause screens, screenshots, frame draw and pacing) */
         add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
         {
-            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it;
-             * comboActive: synthetic gate reconstructing the tail-merged machine code. See report. */
+            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it.
+             * Both arms fall through unconditionally into the y<900 combo body below (traced
+             * from the tail-duplicated machine code at offsets 2266..2304 / 5797..5848: the
+             * no_combo_top_floor update is the only part actually gated). See report. */
             int aightScore;
-            int comboActive = 0;
 
             if (numComboJumps) {                                               /* 4003 */
                 lastJumpLength = 0;
-                aightScore = 1;
-                comboActive = 1;
-            } else if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) { /* 4003/4004 */
-                ply[player_id]->no_combo_top_floor = ply[player_id]->level;
+            } else {
+                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003/4004 */
+                    ply[player_id]->no_combo_top_floor = ply[player_id]->level;
                 lastJumpLength = 0;
-                aightScore = 1;
-                comboActive = 1;
             }
-            if (comboActive) {
-                if (ply[player_id]->y < 900.0 && !game_over) {                  /* 4010 */
-                    play_sound(speaker[1], 0, 0);                               /* 4012 */
-                    game_over = 2;
-                }
-                aightScore++;                                                   /* 4015 */
-                if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) { /* 4016 */
-                    play_sound(sounds[6], 1, 0);                                /* 4017 */
-                    if (custom.falling)                                        /* 4018 */
-                        stop_sample(custom.falling);                           /* 4019 */
-                }
-                ply[player_id]->shake = 0x18;                                   /* 4022 */
-                aightScore = 0;
-                if (next_aight > ply[player_id]->level) {                       /* 4027 */
-                    play_sound(sounds[2], 0, 0);                                /* 4028 */
-                }
+            aightScore = 1;
+            if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
+                play_sound(speaker[1], 0, 0);                                   /* 4012 */
+                game_over = 2;
+            }
+            aightScore++;                                                       /* 4015 */
+            if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
+                play_sound(sounds[6], 1, 0);                                    /* 4017 */
+                if (custom.falling)                                            /* 4018 */
+                    stop_sample(custom.falling);                               /* 4019 */
+            }
+            ply[player_id]->shake = 0x18;                                       /* 4022 */
+            aightScore = 0;
+            if (next_aight > ply[player_id]->level) {                           /* 4027 */
+                play_sound(sounds[2], 0, 0);                                    /* 4028 */
             }
         }
         if (!options.flash) {                                                  /* 4029 */
@@ -123,12 +120,14 @@ int play(void)
             if (ply[player_id]->edge_drawn == 50)                              /* 4045 */
                 ply[player_id]->edge_drawn = 0;                                /* 4046 */
         }
-        if (debug && ply[player_id]->dead > 99) {                              /* 4049/4050 */
+        if (!debug) {                                                          /* 4049 */
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
                 playing = 0;
-        } else if (!debug) {
-            if (recording && ply[player_id]->dead > 100)                       /* 4056 */
-                playing = 0;
+        } else if (ply[player_id]->dead <= 99) {                               /* 4050 */
+            playing = 0;   /* ? traced exactly (jle 4050 target is the shared
+                             * esi=0 tail also reached by the recording check above,
+                             * offsets 2860..2904); which local esi holds here is
+                             * not otherwise confirmed. See report. */
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int t0, t1;
