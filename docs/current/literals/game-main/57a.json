@@ -1,0 +1,94 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 1402,
+  "candidate_card": "docs/current/literals/game-main/57a.json",
+  "source_identity": {
+    "size": 90556,
+    "sha256": "1da94b471cf9b7a84482b02c4a9e6d387621e7f75c99ce18ffb4ad177e7dfc2a"
+  },
+  "consumers": [
+    {
+      "function": "init_game",
+      "function_offset": 32,
+      "historical_operand_va": 5067210,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5067211,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2368,
+          "text": "    log2file(\"INIT GAME\");"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "init_game"
+  ],
+  "historical_observed_addresses": [
+    5067210
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "494e49542047414d45",
+      "bytes": 10
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 32,
+      "candidate_addend": 1402,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5067210,
+      "candidate_hex": "494e49542047414d45",
+      "original_hex": "0a494e49542047414d45",
+      "candidate_instruction": {
+        "address": 20789,
+        "bytes": "c704247a050000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x57a,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4253689,
+        "bytes": "c70424ca514d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d51ca,(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5067211,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5067211
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": "INIT GAME",
+      "original_text": "\nINIT GAME",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2368,
+          "text": "    log2file(\"INIT GAME\");"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}

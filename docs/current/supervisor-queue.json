@@ -83,32 +83,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/set_next_rank_message.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/set_next_rank_message.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/set_next_rank_message.json",
-          "source": "src/profile.c",
-          "function": "set_next_rank_message",
-          "candidate_card": "docs/current/functions/profile/set_next_rank_message.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/set_next_rank_message.json",
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/update_game_menu.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 2,
@@ -236,20 +210,31 @@
       "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
     },
     {
+      "kind": "SHARED_INTERFACE_PREREQUISITE",
+      "key": "docs/current/interfaces/set_next_rank_message.json",
+      "affected_function_count": 1,
+      "planned_in_caller_count": 1,
+      "repair_card": "docs/current/interfaces/set_next_rank_message.json",
+      "repair_state": "TYPE_LAYOUT_BLOCKED",
+      "examples": [
+        {
+          "prerequisite": "docs/current/interfaces/set_next_rank_message.json",
+          "source": "src/profile.c",
+          "function": "view_profile",
+          "candidate_card": "docs/current/functions/profile/view_profile.json",
+          "planned_in_caller_cu": true
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
+    },
+    {
       "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-main:STACK_FRAME_LAYOUT",
       "target": "game-main",
       "difference_class": "STACK_FRAME_LAYOUT",
-      "affected_function_count": 8,
+      "affected_function_count": 7,
       "examples": [
-        {
-          "source": "src/main.c",
-          "function": "get_string",
-          "candidate_card": "docs/current/functions/main/get_string.json",
-          "size": 790,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, cheap_difference_class"
-        },
         {
           "source": "src/main.c",
           "function": "handle_player_collision_old",
@@ -281,9 +266,17 @@
           "size": 1538,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class"
+        },
+        {
+          "source": "src/main.c",
+          "function": "_mangled_main",
+          "candidate_card": "docs/current/functions/main/_mangled_main.json",
+          "size": 1938,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
-      "omitted_examples": 3,
+      "omitted_examples": 2,
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     },
     {
@@ -382,6 +375,41 @@
     },
     {
       "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-main:SOURCE_CONTROL_FLOW_SHAPE",
+      "target": "game-main",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "affected_function_count": 3,
+      "examples": [
+        {
+          "source": "src/main.c",
+          "function": "change_profile",
+          "candidate_card": "docs/current/functions/main/change_profile.json",
+          "size": 188,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
+        },
+        {
+          "source": "src/main.c",
+          "function": "get_string",
+          "candidate_card": "docs/current/functions/main/get_string.json",
+          "size": 790,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+        },
+        {
+          "source": "src/main.c",
+          "function": "do_replay_menu",
+          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
+          "size": 2661,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-main:UNKNOWN_SUPERVISOR",
       "target": "game-main",
       "difference_class": "UNKNOWN_SUPERVISOR",
@@ -452,33 +480,6 @@
     },
     {
       "kind": "CU_SYMPTOM_INVESTIGATION",
-      "key": "game-main:SOURCE_CONTROL_FLOW_SHAPE",
-      "target": "game-main",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "affected_function_count": 2,
-      "examples": [
-        {
-          "source": "src/main.c",
-          "function": "change_profile",
-          "candidate_card": "docs/current/functions/main/change_profile.json",
-          "size": 188,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
-        },
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "size": 2661,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900"
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
-    },
-    {
-      "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-profile:RELOCATION_OR_LITERAL_LAYOUT",
       "target": "game-profile",
       "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
@@ -499,6 +500,33 @@
           "size": 1073,
           "body_edit_allowed": false,
           "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-profile:SOURCE_CONTROL_FLOW_SHAPE",
+      "target": "game-profile",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "affected_function_count": 2,
+      "examples": [
+        {
+          "source": "src/profile.c",
+          "function": "draw_buffer",
+          "candidate_card": "docs/current/functions/profile/draw_buffer.json",
+          "size": 185,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
+        },
+        {
+          "source": "src/profile.c",
+          "function": "profile_data_page_general",
+          "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
+          "size": 1091,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900"
         }
       ],
       "omitted_examples": 0,
@@ -689,44 +717,6 @@
           "size": 651,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
-    },
-    {
-      "kind": "CU_SYMPTOM_INVESTIGATION",
-      "key": "game-profile:SOURCE_CONTROL_FLOW_SHAPE",
-      "target": "game-profile",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "affected_function_count": 1,
-      "examples": [
-        {
-          "source": "src/profile.c",
-          "function": "draw_buffer",
-          "candidate_card": "docs/current/functions/profile/draw_buffer.json",
-          "size": 185,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
-    },
-    {
-      "kind": "CU_SYMPTOM_INVESTIGATION",
-      "key": "game-profile:STACK_FRAME_LAYOUT",
-      "target": "game-profile",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "affected_function_count": 1,
-      "examples": [
-        {
-          "source": "src/profile.c",
-          "function": "profile_data_page_general",
-          "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
-          "size": 1091,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class"
         }
       ],
       "omitted_examples": 0,

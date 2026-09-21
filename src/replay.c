@@ -262,7 +262,7 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
     int ok_to_rename = 0;
     int pageY = 500;
     int targetY = 0;
-    char fname[1024];
+    char fname[512];
 
     if (!bg)
         return NULL;

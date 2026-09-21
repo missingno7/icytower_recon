@@ -205,18 +205,18 @@
       "state": "SOURCE_DIFFER",
       "priority": 75,
       "difficulty": "MEDIUM",
-      "difference_class": "STACK_FRAME_LAYOUT",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
       "first_difference": {
-        "offset": 8,
-        "original_va": 4298416,
-        "candidate_byte": 204,
-        "original_byte": 172
+        "offset": 266,
+        "original_va": 4298674,
+        "candidate_byte": 206,
+        "original_byte": 178
       },
       "verification_command": "python tools/check_function.py game-profile profile_data_page_general",
       "begin_command": "python tools/grinder_task.py begin game-profile profile_data_page_general",
       "promotion_command": "python tools/promote_function.py game-profile profile_data_page_general",
       "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class",
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900",
       "size": 1091,
       "candidate_card": "docs/current/functions/profile/profile_data_page_general.json",
       "task_kind": "FUNCTION_BODY",
@@ -464,31 +464,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 157,
       "candidate_card": "docs/current/functions/main/syncOptionsFromProfile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "get_string",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 46,
-      "difficulty": "MEDIUM",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4242508,
-        "candidate_byte": 156,
-        "original_byte": 188
-      },
-      "verification_command": "python tools/check_function.py game-main get_string",
-      "begin_command": "python tools/grinder_task.py begin game-main get_string",
-      "promotion_command": "python tools/promote_function.py game-main get_string",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, cheap_difference_class",
-      "size": 790,
-      "candidate_card": "docs/current/functions/main/get_string.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1558,14 +1533,8 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
       "size": 0,
-      "prerequisite_for_count": 2,
+      "prerequisite_for_count": 1,
       "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "set_next_rank_message",
-          "candidate_card": "docs/current/functions/profile/set_next_rank_message.json",
-          "planned_in_caller_cu": true
-        },
         {
           "source": "src/profile.c",
           "function": "view_profile",
@@ -1693,6 +1662,31 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, no_indirect_flow, cheap_difference_class",
       "size": 486,
       "candidate_card": "docs/current/functions/main/draw_progress_bar.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "get_string",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 91,
+        "original_va": 4242591,
+        "candidate_byte": 114,
+        "original_byte": 155
+      },
+      "verification_command": "python tools/check_function.py game-main get_string",
+      "begin_command": "python tools/grinder_task.py begin game-main get_string",
+      "promotion_command": "python tools/promote_function.py game-main get_string",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 790,
+      "candidate_card": "docs/current/functions/main/get_string.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1868,40 +1862,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "set_next_rank_message",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 10,
-        "original_va": 4295470,
-        "candidate_byte": 77,
-        "original_byte": 117
-      },
-      "verification_command": "python tools/check_function.py game-profile set_next_rank_message",
-      "begin_command": "python tools/grinder_task.py begin game-profile set_next_rank_message",
-      "promotion_command": "python tools/promote_function.py game-profile set_next_rank_message",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 431,
-      "candidate_card": "docs/current/functions/profile/set_next_rank_message.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "set_next_rank_message",
-          "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "handle_player_input",
@@ -2045,6 +2005,40 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "draw_profile_selector",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 8,
+        "original_va": 4295900,
+        "candidate_byte": 156,
+        "original_byte": 188
+      },
+      "verification_command": "python tools/check_function.py game-profile draw_profile_selector",
+      "begin_command": "python tools/grinder_task.py begin game-profile draw_profile_selector",
+      "promotion_command": "python tools/promote_function.py game-profile draw_profile_selector",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1268,
+      "candidate_card": "docs/current/functions/profile/draw_profile_selector.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": [
+        {
+          "function": "draw_profile_selector",
+          "candidate_card": "docs/current/interfaces/draw_profile_selector.json",
+          "difficulty": "SUPERVISOR",
+          "state": "LOCAL_INTERFACE_CONFLICT",
+          "planned_in_caller_cu": true,
+          "limit": "Must reverify the caller after repair; other blockers may remain."
+        }
+      ]
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "handle_player_collision_combo",
@@ -2102,32 +2096,6 @@
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
-    },
-    {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_main_get_string_letters",
-      "target_function": "get_string",
-      "source": "src/main.c",
-      "sources": [
-        "src/main.c"
-      ],
-      "target": "game-main",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Inferred array extent may reflect initializer content; do not pad it with a declaration edit",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_main_get_string_letters",
-      "verification_command": "python tools/interface_task.py check decl_main_get_string_letters",
-      "promotion_command": "python tools/interface_task.py promote decl_main_get_string_letters",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_main_get_string_letters.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
     },
     {
       "task_kind": "SOURCE_ORDER",
@@ -2304,110 +2272,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_profile_draw_profile_selector_view_offset",
-      "target_function": "draw_profile_selector",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "target": "game-profile",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Storage width, pointer topology or array extent changes need supervisor source review",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_profile_draw_profile_selector_view_offset",
-      "verification_command": "python tools/interface_task.py check decl_profile_draw_profile_selector_view_offset",
-      "promotion_command": "python tools/interface_task.py promote decl_profile_draw_profile_selector_view_offset",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_profile_draw_profile_selector_view_offset.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_profile_draw_profile_selector_view_percentage",
-      "target_function": "draw_profile_selector",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "target": "game-profile",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Storage width, pointer topology or array extent changes need supervisor source review",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_profile_draw_profile_selector_view_percentage",
-      "verification_command": "python tools/interface_task.py check decl_profile_draw_profile_selector_view_percentage",
-      "promotion_command": "python tools/interface_task.py promote decl_profile_draw_profile_selector_view_percentage",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_profile_draw_profile_selector_view_percentage.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_profile_profile_data_page_general_buf",
-      "target_function": "profile_data_page_general",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "target": "game-profile",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Storage width, pointer topology or array extent changes need supervisor source review",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_profile_profile_data_page_general_buf",
-      "verification_command": "python tools/interface_task.py check decl_profile_profile_data_page_general_buf",
-      "promotion_command": "python tools/interface_task.py promote decl_profile_profile_data_page_general_buf",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_profile_profile_data_page_general_buf.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_profile_view_profile_totalNextRankMessage",
-      "target_function": "view_profile",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "target": "game-profile",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Storage width, pointer topology or array extent changes need supervisor source review",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_profile_view_profile_totalNextRankMessage",
-      "verification_command": "python tools/interface_task.py check decl_profile_view_profile_totalNextRankMessage",
-      "promotion_command": "python tools/interface_task.py promote decl_profile_view_profile_totalNextRankMessage",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_profile_view_profile_totalNextRankMessage.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "task_kind": "SOURCE_ORDER",
       "function": "order_profile",
       "source": "src/profile.c",
@@ -2530,32 +2394,6 @@
       "promotion_command": "python tools/interface_task.py promote decl_replay_draw_replay_selector_view_percentage",
       "size": 0,
       "candidate_card": "docs/current/local-declarations/decl_replay_draw_replay_selector_view_percentage.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "LOCAL_DECLARATION",
-      "function": "decl_replay_replay_selector_fname",
-      "target_function": "replay_selector",
-      "source": "src/replay.c",
-      "sources": [
-        "src/replay.c"
-      ],
-      "target": "game-replay",
-      "difficulty": "SUPERVISOR",
-      "priority": -30,
-      "reason": "Only unique function-scope locals are mechanical; lexical/inlined correspondence needs review",
-      "state": "LOCAL_DECLARATION_REPAIR",
-      "status": "LOCAL_TYPE_DIFFERS",
-      "body_edit_allowed": false,
-      "difference_class": "LOCAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin decl_replay_replay_selector_fname",
-      "verification_command": "python tools/interface_task.py check decl_replay_replay_selector_fname",
-      "promotion_command": "python tools/interface_task.py promote decl_replay_replay_selector_fname",
-      "size": 0,
-      "candidate_card": "docs/current/local-declarations/decl_replay_replay_selector_fname.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,
@@ -2698,51 +2536,17 @@
     {
       "source": "src/profile.c",
       "target": "game-profile",
-      "function": "draw_profile_selector",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 6,
-        "original_va": 4295898,
-        "candidate_byte": 131,
-        "original_byte": 129
-      },
-      "verification_command": "python tools/check_function.py game-profile draw_profile_selector",
-      "begin_command": "python tools/grinder_task.py begin game-profile draw_profile_selector",
-      "promotion_command": "python tools/promote_function.py game-profile draw_profile_selector",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1268,
-      "candidate_card": "docs/current/functions/profile/draw_profile_selector.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_profile_selector",
-          "candidate_card": "docs/current/interfaces/draw_profile_selector.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
       "function": "view_profile",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
       "priority": -30,
       "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
+      "difference_class": "UNKNOWN_SUPERVISOR",
       "first_difference": {
-        "offset": 9,
-        "original_va": 4299509,
-        "candidate_byte": 12,
-        "original_byte": 8
+        "offset": 62,
+        "original_va": 4299562,
+        "candidate_byte": 232,
+        "original_byte": 160
       },
       "verification_command": "python tools/check_function.py game-profile view_profile",
       "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
@@ -2892,7 +2696,7 @@
       "first_difference": {
         "offset": 124,
         "original_va": 4224828,
-        "candidate_byte": 136,
+        "candidate_byte": 56,
         "original_byte": 128
       },
       "verification_command": "python tools/check_function.py game-main draw_results",
@@ -2942,7 +2746,7 @@
       "first_difference": {
         "offset": 8,
         "original_va": 4248668,
-        "candidate_byte": 220,
+        "candidate_byte": 236,
         "original_byte": 252
       },
       "verification_command": "python tools/check_function.py game-main force_create_profile",

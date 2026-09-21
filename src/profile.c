@@ -220,10 +220,8 @@ void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
 {
     int fh;
     int fg;
-    float view_percentage;
-    int height;
-    int scroll_height;
-    int view_offset;
+    double view_percentage;
+    double view_offset;
     int i;
     int profile_index;
     int row_y;
@@ -232,18 +230,17 @@ void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
 
     fh=text_height(font);
     fg=makecol(25,25,25);
-    view_percentage=(float)selection/(float)max_posts;
-    if (view_percentage>1.0f)
-        view_percentage=1.0f;
+    view_percentage=(double)max_posts/numProfiles;
+    if (view_percentage>1.0)
+        view_percentage=1.0;
 
     draw_sprite(bmp,data[86].dat,x-15,y-15);
     set_trans_blender(0,0,0,150);
     drawing_mode(5,0,0,0);
-    rectfill(bmp,x+5,y+30,x+265,y+329,fg);
-    height=y+329-(y+30);
-    scroll_height=(int)(height*0.25f);
-    view_offset=y+32+(int)((height-scroll_height)*view_percentage);
-    rectfill(bmp,x+257,view_offset,x+263,view_offset+scroll_height,fg);
+    rect(bmp,x+5,y+30,x+265,y+329,fg);
+    rect(bmp,x+255,y+30,x+265,y+329,fg);
+    view_offset=(1.0-view_percentage)*328/(numProfiles-max_posts)*offset;
+    rectfill(bmp,x+257,y+32+view_offset,x+263,y+view_percentage*328+view_offset,fg);
     solid_mode();
     textout_ex(bmp,data[51].dat,x+10,y-12,-1,-1,"SELECT PROFILE");
     draw_sprite(bmp,data[73].dat,x+270,y+24);
@@ -313,14 +310,14 @@ void set_next_rank_message(char *buf, Tprofile_rank *p)
     next_combo = rankCombos[next_rank];
     next_nml = rankNMLs[next_rank];
     next_ccc = rankCCCs[next_rank];
-    if (next_floor > p->score && next_floor)
+    if ((next_floor > p->score || p->score == 0) && next_floor)
         sprintf(buf, "%s\n - Get to floor %d!", buf, next_floor);
-    if (next_combo > p->combo && next_combo)
+    if ((next_combo > p->combo || p->combo == 0) && next_combo)
         sprintf(buf, "%s\n - Make a %d floor combo!", buf, next_combo);
-    if (next_ccc > p->no_combo_lost && next_ccc)
+    if ((next_ccc > p->no_combo_lost || p->no_combo_lost == 0) && next_ccc)
         sprintf(buf, "%s\n - Reach floor %d before 1st Hurry Up!", buf,
                 next_ccc);
-    if (next_nml > p->ccc && next_nml)
+    if ((next_nml > p->ccc || p->ccc == 0) && next_nml)
         sprintf(buf, "%s\n - Reach floor %d without combos!", buf,
                 next_nml);
 }
@@ -481,7 +478,7 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     int hours;
     int days;
     char timeSpent[256];
-    char buf[100];
+    char buf[80];
     int len;
     int i;
 
@@ -490,29 +487,27 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     sprintf(data, "%sCreated:        %s%s\n", data, filler, p->creationDate);
     sprintf(data, "%s\n", data);
     seconds = p->seconds_spent_playing % 60;
-    minutes = p->seconds_spent_playing / 60;
-    hours = minutes / 60;
-    minutes %= 60;
-    days = hours / 24;
-    hours %= 24;
+    minutes = (p->seconds_spent_playing / 60) % 60;
+    hours = (p->seconds_spent_playing / 3600) % 24;
+    days = p->seconds_spent_playing / 86400;
     strcpy(timeSpent, "none");
     if (seconds > 0)
         sprintf(timeSpent, "%d second%s", seconds, seconds == 1 ? "" : "s");
     if (minutes > 0)
         sprintf(timeSpent, "%d minute%s, %d second%s", minutes,
                 minutes == 1 ? "" : "s", seconds,
-                seconds == 1 ? "" : "s");
+                seconds > 1 ? "s" : "");
     if (hours > 0)
         sprintf(timeSpent, "%d hour%s, %d minute%s, %d second%s", hours,
                 hours == 1 ? "" : "s", minutes,
-                minutes == 1 ? "" : "s", seconds,
-                seconds == 1 ? "" : "s");
+                minutes > 1 ? "s" : "", seconds,
+                seconds > 1 ? "s" : "");
     if (days > 0)
         sprintf(timeSpent, "%d day%s, %d hour%s, %d minute%s, %d second%s",
                 days, days == 1 ? "" : "s", hours,
-                hours == 1 ? "" : "s", minutes,
-                minutes == 1 ? "" : "s", seconds,
-                seconds == 1 ? "" : "s");
+                hours > 1 ? "s" : "", minutes,
+                minutes > 1 ? "s" : "", seconds,
+                seconds > 1 ? "s" : "");
     sprintf(data, "%sTime played:    %s%s\n", data, filler, timeSpent);
     sprintf(buf, "%d", p->games_played);
     len = strlen(buf);
@@ -620,7 +615,7 @@ void view_profile(void *profile)
     int y1;
     int y2;
     char nextRankMessage[1024];
-    char totalNextRankMessage[2048];
+    char totalNextRankMessage[1024];
     int done;
     int rank;
 

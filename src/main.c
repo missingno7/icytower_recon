@@ -1323,9 +1323,11 @@ void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified,
 void force_create_profile(void)
 {
     BITMAP *bg;
+    int y;
     int ok;
-    char y[128];
     char new_name[32];
+    int res;
+    char buf[129];
 
     bg=create_bitmap(gfx_driver->w,gfx_driver->h);
     blit(screen,bg,0,0,0,0,gfx_driver->w,gfx_driver->h);
@@ -1364,8 +1366,8 @@ void force_create_profile(void)
             my_alert("That profile name is taken.","Ooops!",0,1);
             continue;
         }
-        sprintf(y,"Welcome %s!",profile->handle);
-        my_alert(y,"Your profile has been created!",0,1);
+        sprintf(buf,"Welcome %s!",profile->handle);
+        my_alert(buf,"Your profile has been created!",0,1);
         break;
     }
     destroy_bitmap(bg);
@@ -1475,24 +1477,20 @@ int play(void)
 int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
                int pos_x, int pos_y, int colour, int bg_color)
 {
-    BITMAP *block;
-    char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    int i;
+    BITMAP *block = create_bitmap(w, text_height(f) + 2);
+    char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789.!_";
+    int i = strlen(string);
     int tick;
     int c;
 
-    block = create_bitmap(w, text_height(f) + 2);
     if (!block)
         return -1;
-    i = strlen(string);
     blit(bmp, block, pos_x - 1, pos_y - 1, 0, 0, block->w, block->h);
-    while (key[KEY_LCONTROL] || key[KEY_RCONTROL])
+    while (key[KEY_ENTER] || key[KEY_SPACE])
         ;
     clear_keybuf();
     tick = 0;
     for (;;) {
-        while (!cycle_count)
-            rest(2);
         if (closeButtonClicked) {
             destroy_bitmap(block);
             return 0;
@@ -1512,24 +1510,34 @@ int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
         if (!keypressed())
             continue;
         c = readkey();
-        if ((c >> 8) == KEY_ESC) {
+        switch (c >> 8) {
+        case KEY_ESC:
+            string[i] = 0;
+            destroy_bitmap(block);
+            return -1;
+        case KEY_TAB:
+        case KEY_UP:
+        case KEY_DOWN:
             string[i] = 0;
             destroy_bitmap(block);
             return -2;
-        }
-        if ((c >> 8) == KEY_ENTER) {
+        case KEY_ENTER:
             string[i] = 0;
             destroy_bitmap(block);
             return 0;
+        case KEY_BACKSPACE:
+            i--;
+            if (i < 0)
+                i = 0;
+            break;
+        default:
+            if (i < max_chars - 2 && strchr(letters, c) &&
+                ((c >> 8) != KEY_SPACE || i) &&
+                text_length(f, string) < w - 9)
+                string[i++] = (char)c;
         }
-        if ((c >> 8) == KEY_BACKSPACE) {
-            if (i)
-                i--;
-            continue;
-        }
-        if (i < max_chars - 2 && strchr(letters, c) &&
-            text_length(f, string) < w - 9)
-            string[i++] = (char)c;
+        while (!cycle_count)
+            rest(2);
     }
 }
 
