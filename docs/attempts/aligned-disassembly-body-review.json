@@ -164,6 +164,14 @@
     "replay_selector fname[512]",
     "force_create_profile: int y, int res, char buf[129]"
    ]
+  },
+  {
+   "function": "draw_reward",
+   "target": "game-main",
+   "result": "1218 -> 581 (historical size); only a load-scheduling difference in the rotate branch",
+   "changes": [
+    "fixtoi(reward_scale*w/h) sizes; x = 320 - (int)(fixtof(reward_scale/2)*w); flash: y = 360 - (int)(fixtof(reward_scale/2)*h) - fixtoi(reward_scale*h/2); rotate: y = 360 - (int)(fixtof(reward_scale)*120 - fixtof(reward_scale/2)*h), angle reward_scale<<8"
+   ]
   }
  ],
  "negative": [
@@ -211,6 +219,11 @@
    "function": "extractHTTPResponse",
    "target": "game-httpget",
    "observation": "Original extractLine expansion never stores '\n' or '\r', stores *pOutBuffer=0 on the CRLF break, and folds the entry test to iDataLeft>0. Rewrites of the inline helper (nl-first, do-while guard, > form, separate increment) gave 895..1007 bytes; frame 0x84c vs 0x85c unresolved."
+  },
+  {
+   "function": "handle_player_input",
+   "target": "game-main",
+   "observation": "Full reconstruction (recording: poll_control, dead/0x80 terminator records, cycle_count run-length, flags = control->flags & 0x93; playback: rec_pos-1 against demo->size; movement 0.7/0.3/0.9; rejump path) reaches 728/728 with register-role differences, but any form of it regresses the exact checkMenuFocus (emitted two functions later after startGameMusic/stopMenuMusic). Retained as docs/attempts/game-main/handle_player_input-reconstruction.c; the stub body stays in src until the emission-order context lets it land without the neighbour regression."
   }
  ],
  "limit": "Diagnostic notes for the supervisor. Nothing here is proof; every positive result was accepted only through the ordinary fresh verification and regression check."

@@ -2312,89 +2312,33 @@ void handle_player_collision_combo(int lastX, int lastY)
  * normal-control path; replay control recording remains to be restored. */
 void handle_player_input(Tcontrol *control)
 {
-    int rp;
-    unsigned char flags;
+    Tcontrol *input = (Tcontrol *)control;
+    Tplayer *p;
 
-    if (!control)
+    if (!input)
         return;
-    if (recording) {
-        poll_control(control,0);
-        if (ply[player_id]->dead) {
-            demo->data[rec_pos+1].key_flags=0x80;
-            demo->data[rec_pos+1].cycle_count=0;
-            demo->data[rec_pos+2].key_flags=0;
-            demo->data[rec_pos+2].cycle_count=0;
-        }
-        else {
-            flags=control->flags&0x93;
-            if (demo->data[rec_pos].key_flags&0x80) {
-                demo->data[rec_pos+1].key_flags=0x80;
-                demo->data[rec_pos+1].cycle_count=0;
-                demo->data[rec_pos+2].key_flags=0;
-                demo->data[rec_pos+2].cycle_count=0;
-            }
-            else if (demo->data[rec_pos].key_flags==flags)
-                demo->data[rec_pos].cycle_count++;
-            else {
-                rec_pos++;
-                demo->data[rec_pos].key_flags=flags;
-                demo->data[rec_pos].cycle_count=0;
-            }
-        }
+    p = ply[player_id];
+    if (is_left(input)) {
+        if (p->sx < 0.0)
+            p->sx *= 0.8;
+        p->sx -= 0.1;
     }
-    else {
-        rp=rec_pos-1;
-        if (rp>=0) {
-            if (rp>=demo->size)
-                control->flags=0;
-            else {
-                control->flags=demo->data[rp].key_flags;
-                if (demo->data[rp].cycle_count>0)
-                    demo->data[rp].cycle_count--;
-                else
-                    rec_pos++;
-            }
-        }
-        else
-            rec_pos++;
-    }
-
-    if (is_left(control)) {
-        if (ply[player_id]->sx>0)
-            ply[player_id]->sx*=0.7;
-        ply[player_id]->sx-=0.3;
-    }
-    else if (is_right(control)) {
-        if (ply[player_id]->sx<0)
-            ply[player_id]->sx*=0.7;
-        ply[player_id]->sx+=0.3;
+    else if (is_right(input)) {
+        if (p->sx > 0.0)
+            p->sx *= 0.8;
+        p->sx += 0.1;
     }
     else
-        ply[player_id]->sx*=0.9;
+        p->sx *= 0.9;
 
-    if (!rejump) {
-        if (is_fire(control)) {
-            if (!ply[player_id]->jump_key) {
-                if (jump_player(ply[player_id],0)) {
-                    ply[player_id]->jump_key=-1;
-                    play_jump_sound(ply[player_id]);
-                    if (profile)
-                        profile->total_jumps++;
-                }
-            }
+    if (is_fire(input)) {
+        if (!p->jump_key && jump_player(p, 0)) {
+            p->jump_key = -1;
+            play_jump_sound(p);
         }
-        if (!is_fire(control))
-            ply[player_id]->jump_key=0;
+        return;
     }
-    else {
-        if (is_fire(control)) {
-            if (jump_player(ply[player_id],0)) {
-                play_jump_sound(ply[player_id]);
-                if (profile)
-                    profile->total_jumps++;
-            }
-        }
-    }
+    p->jump_key = 0;
 }
 
 /* Partial recovery of main.c:1375, 0x40e7dc..0x40fe78.  The oracle starts
