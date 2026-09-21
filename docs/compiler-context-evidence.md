@@ -52,7 +52,7 @@ used. A completed order task has the separate HISTORICAL_SOURCE_ORDER claim.
 
 ## Supervisor workflow
 
-Use `python tools/compiler_probe.py <target> <function> --omit-earlier <peer>`
+Use `python tools/compiler_probe.py <target> <function> --omit-peer <peer>`
 only to investigate a bounded hypothesis. At most three peer/type/flag variants
 are accepted per invocation. Each run first reproduces the unmodified CU's raw
 text hash. Target body hashes, source identities and locked toolchain identity are

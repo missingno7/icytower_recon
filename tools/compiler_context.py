@@ -72,7 +72,7 @@ def load_context(target,name,row,source_inputs):
             'dependencies':[{'omitted_function':v['variant'].removeprefix('omit-'),'changed_offsets':difference['first_changed_offsets'] if difference['first_changed_offsets'] is not None else v.get('context_changed_offsets'),'context_difference':difference,
                              'target_body_unchanged':v['target_body_sha256']==record['target_body_sha256']} for v,difference in changes],
             'evidence':(path if record is records[0] else archive).relative_to(ROOT).as_posix(),'reason':'An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.',
-            'verification_command':'python tools/compiler_probe.py '+target+' '+name+' '+' '.join('--omit-earlier '+v['variant'].removeprefix('omit-') for v,difference in changes)}
+            'verification_command':'python tools/compiler_probe.py '+target+' '+name+' '+' '.join('--omit-peer '+v['variant'].removeprefix('omit-') for v,difference in changes)}
 
 
 def load_trials(target,name,row,source_inputs):

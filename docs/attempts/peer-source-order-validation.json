@@ -1,0 +1,52 @@
+{
+  "function": "draw_scroller",
+  "later_source_peer": "restart_scroller",
+  "compiler_context": {
+    "state": "CONFIRMED_CONTEXT_DEPENDENCY",
+    "confidence": "MECHANICALLY_OBSERVED",
+    "dependencies": [
+      {
+        "omitted_function": "restart_scroller",
+        "changed_offsets": [
+          13,
+          15,
+          118,
+          121
+        ],
+        "context_difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 4,
+          "first_changed_offsets": [
+            13,
+            15,
+            118,
+            121
+          ],
+          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
+        "target_body_unchanged": true
+      }
+    ],
+    "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
+    "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+    "verification_command": "python tools/compiler_probe.py game-scroller draw_scroller --omit-peer restart_scroller"
+  },
+  "production_status": "DIFFER",
+  "body_edit_allowed": false,
+  "all_function_statuses_unchanged": true,
+  "tests_passed": 16,
+  "stopGameMusic_negative_probes": [
+    "stopMenuMusic",
+    "play_sound"
+  ],
+  "live_body_admission": {
+    "exit_code": 1,
+    "session_created": false,
+    "reason": "Body is protected: SOURCE_DIFFER; compiler-context sensitivity routes to supervisor."
+  },
+  "global_audit": "PASS"
+}

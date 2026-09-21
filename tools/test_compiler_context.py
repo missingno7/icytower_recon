@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 import compiler_context as context
 from classify_diff import workflow
-from compiler_probe import scoped_dump
+from compiler_probe import scoped_dump,omit_peer
 
 
 class CompilerContextTests(unittest.TestCase):
@@ -154,6 +154,17 @@ class CompilerContextTests(unittest.TestCase):
             self.assertEqual(b['baseline_state'],'BASELINE_REQUIRES_REVIEW');self.assertEqual(b['archive_line'],1)
             self.assertEqual(c['variant'],'flag-c');self.assertTrue(b['evidence'].endswith('.jsonl'))
             self.assertEqual(found['records_considered'],2)
+
+    def test_peer_omission_accepts_later_definition_but_never_target(self):
+        from source_scope import body_hash
+        source='int before(void) { return 1; }\nint target(void) { return 2; }\nint after(void) { return 3; }\n'
+        for peer in ('before','after'):
+            result=omit_peer(source,'target',peer)
+            self.assertEqual(body_hash(result,'target'),body_hash(source,'target'))
+            self.assertIn('int '+peer+'(void) ;',result)
+            self.assertEqual(result.count('\n'),source.count('\n'))
+        with self.assertRaisesRegex(ValueError,'target'):omit_peer(source,'target','target')
+        with self.assertRaises(ValueError):omit_peer(source,'target','missing')
 
     def test_rtl_excerpt_is_only_requested_function(self):
         text='preamble\n;; Function first (first)\nfirst body\n;; Function second (second)\nsecond body\n'

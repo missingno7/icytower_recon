@@ -1056,8 +1056,8 @@
   "difficulty": "SUPERVISOR",
   "priority": 43,
   "compiler_context": {
-    "state": "CONTEXT_EVIDENCE_NEEDS_REFRESH",
-    "confidence": "HISTORICAL_OBSERVATION",
+    "state": "CONFIRMED_CONTEXT_DEPENDENCY",
+    "confidence": "MECHANICALLY_OBSERVED",
     "dependencies": [
       {
         "omitted_function": "restart_scroller",
@@ -1085,41 +1085,19 @@
         "target_body_unchanged": true
       }
     ],
-    "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
+    "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
     "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
-    "verification_command": "python tools/compiler_probe.py game-scroller draw_scroller --omit-earlier restart_scroller"
+    "verification_command": "python tools/compiler_probe.py game-scroller draw_scroller --omit-peer restart_scroller"
   },
   "compiler_trials": {
-    "state": "BASELINE_REQUIRES_REVIEW",
+    "state": "CURRENT_BASELINE",
     "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
     "trial_count": 5,
     "trials": [
       {
-        "variant": "omit-init_scroller",
+        "variant": "omit-restart_scroller",
         "target_body_unchanged": true,
-        "baseline_state": "BASELINE_REQUIRES_REVIEW",
-        "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
-        "archive_line": null,
-        "difference": {
-          "baseline_size": 396,
-          "candidate_size": 396,
-          "size_delta": 0,
-          "extent_changed": false,
-          "resolved_bytes_comparable": true,
-          "changed_byte_count": 0,
-          "first_changed_offsets": [],
-          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
-        },
-        "diagnostic_original_comparison": {
-          "verdict": "DIFFER",
-          "mismatch_count": 6,
-          "acceptance_input": false
-        }
-      },
-      {
-        "variant": "flag-fno-unit-at-a-time",
-        "target_body_unchanged": true,
-        "baseline_state": "BASELINE_REQUIRES_REVIEW",
+        "baseline_state": "CURRENT_BASELINE",
         "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
         "archive_line": null,
         "difference": {
@@ -1144,11 +1122,11 @@
         }
       },
       {
-        "variant": "flag-fno-schedule-insns2",
+        "variant": "omit-init_scroller",
         "target_body_unchanged": true,
         "baseline_state": "BASELINE_REQUIRES_REVIEW",
-        "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.json",
-        "archive_line": null,
+        "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
+        "archive_line": 2,
         "difference": {
           "baseline_size": 396,
           "candidate_size": 396,
@@ -1164,12 +1142,39 @@
           "mismatch_count": 6,
           "acceptance_input": false
         }
+      },
+      {
+        "variant": "flag-fno-unit-at-a-time",
+        "target_body_unchanged": true,
+        "baseline_state": "BASELINE_REQUIRES_REVIEW",
+        "evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
+        "archive_line": 2,
+        "difference": {
+          "baseline_size": 396,
+          "candidate_size": 396,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 4,
+          "first_changed_offsets": [
+            13,
+            15,
+            118,
+            121
+          ],
+          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
+        "diagnostic_original_comparison": {
+          "verdict": "DIFFER",
+          "mismatch_count": 10,
+          "acceptance_input": false
+        }
       }
     ],
     "omitted_trial_count": 2,
-    "records_considered": 2,
+    "records_considered": 3,
     "history_evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller.jsonl",
-    "rtl_evidence": null,
+    "rtl_evidence": "docs/attempts/compiler-context/game-scroller/draw_scroller-rtl.json",
     "limit": "Newest result per experiment name, latest record first; archived trials retain their own baseline freshness and line number. No-change results apply only to the recorded input snapshot. Diagnostic memory grants no original-match or edit permission."
   },
   "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",

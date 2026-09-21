@@ -20,15 +20,22 @@ def scoped_dump(text,name):
     return None
 
 
+def omit_peer(text,target,peer):
+    if peer==target: raise ValueError('Cannot omit the target function')
+    before=body_hash(text,target)
+    a,b=function_span(text,peer)
+    variant=text[:a]+';'+'\n'*text[a:b].count('\n')+text[b:]
+    if body_hash(variant,target)!=before: raise ValueError('Peer omission changed target body')
+    return variant
+
+
 def probe(target,name,omit,local_types=(),extra_flags=()):
     reference=fresh_verify(target,dest=ROOT/'build/compiler-evidence'/target/name/'reference')
     build=reference['build']; source=ROOT/build['config']['source']; before=identity(source)
     text=source.read_bytes().decode('cp1252'); start,_=function_span(text,name)
     variants=[('baseline',text)]
-    for earlier in omit:
-        a,b=function_span(text,earlier)
-        if a>=start: raise ValueError('Only an earlier definition may be omitted in an isolated probe')
-        variants.append(('omit-'+earlier,text[:a]+';'+'\n'*text[a:b].count('\n')+text[b:]))
+    for peer in omit:
+        variants.append(('omit-'+peer,omit_peer(text,name,peer)))
     g=graph()
     original_unit=next(u for u in read_json(ROOT/'src/units.json') if u['source']==build['config']['source'])
     original_function=next(f for f in original_unit['functions'] if f['name']==name)
@@ -112,10 +119,10 @@ def probe(target,name,omit,local_types=(),extra_flags=()):
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('target'); ap.add_argument('function'); ap.add_argument('--omit-earlier',action='append',default=[]); ap.add_argument('--dwarf-local-type',action='append',default=[]); ap.add_argument('--extra-flags',action='append',default=[])
+    ap=argparse.ArgumentParser(); ap.add_argument('target'); ap.add_argument('function'); ap.add_argument('--omit-peer','--omit-earlier',dest='omit_peer',action='append',default=[],help='Omit one other same-CU definition in a scratch copy; source order is unrestricted.'); ap.add_argument('--dwarf-local-type',action='append',default=[]); ap.add_argument('--extra-flags',action='append',default=[])
     a=ap.parse_args()
-    if len(a.omit_earlier)+len(a.dwarf_local_type)+len(a.extra_flags)>3: raise ValueError('At most three bounded context probes')
-    probe(a.target,a.function,a.omit_earlier,a.dwarf_local_type,a.extra_flags)
+    if len(a.omit_peer)+len(a.dwarf_local_type)+len(a.extra_flags)>3: raise ValueError('At most three bounded context probes')
+    probe(a.target,a.function,a.omit_peer,a.dwarf_local_type,a.extra_flags)
 
 
 if __name__=='__main__': main()

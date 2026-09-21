@@ -625,3 +625,19 @@ alongside the fresh whole-unit experiment. Twelve context tests pass, including
 newest-result selection, archived negative retention, stale baseline labels and
 omission counts. Queue content is unchanged. See
 `docs/attempts/compiler-trial-history-validation.json`.
+
+
+## Peer probes independent of source order
+
+The old --omit-earlier restriction prevented refreshing draw_scroller evidence
+after restoring the historical source definition order: restart_scroller is
+now declared later. --omit-peer permits any other definition in the same scratch
+CU; the old option remains an alias. Target omission and missing/ambiguous
+definitions fail, and every generated variant preserves the target body hash.
+
+The real later-peer probe changes four resolved draw_scroller bytes without
+changing its body, renewing the compiler-context protection. Production source
+and flags remain unchanged. Two separate stopGameMusic peer probes
+(stopMenuMusic and play_sound) changed no target bytes and remain negative
+trial memory. Thirteen compiler-context tests passed, including both declaration
+orders and target-omission rejection.
