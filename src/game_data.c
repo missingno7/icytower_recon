@@ -51,7 +51,7 @@ char *getGameDataXML(Tgame_data *gd)
     for (i=1;i<6;i++) if (gd->replay->jc[i-1]>0) sprintf(claimTag,"%s      <js level=\"%d\">%d</js>\n",claimTag,i,gd->replay->jc[i-1]);
     sprintf(actualTag,"      <score>%d</score>\n      <floor>%d</floor>\n      <combo>%d</combo>\n      <no_combo_floor>%d</no_combo_floor>\n      <lost_combo>%d</lost_combo>\n",gd->score,gd->floor,gd->combo,gd->no_combo_top_floor,gd->biggest_lost_combo);
     for (i=1;i<6;i++) if (gd->replay->ccc[i-1]>0) sprintf(actualTag,"%s      <ccc level=\"%d\">%d</ccc>\n",actualTag,i,gd->ccc[i-1]);
-    for (i=1;i<6;i++) if (gd->replay->jc[i-1]>0) sprintf(actualTag,"%s      <js level=\"%d\">%d</js>\n",actualTag,i,gd->replay->jc[i-1]);
+    for (i=1;i<6;i++) if (gd->replay->jc[i-1]>0) sprintf(actualTag,"%s      <js level=\"%d\">%d</js>\n",actualTag,i,gd->jc[i-1]);
     sprintf(comboTag,"    <combos>\n");
     for (i=0;i<gd->comboPosts;i++) sprintf(comboTag,"%s      <combo start=\"%d\" end=\"%d\">%d</combo>\n",comboTag,gd->combos[i].start,gd->combos[i].end,gd->combos[i].length);
     strcat(comboTag,"    </combos>\n");
@@ -63,18 +63,14 @@ char *getGameDataXML(Tgame_data *gd)
     for (i=0;i<gd->replay->tc_posts;i++) sprintf(sdTag,"%s    <entry clk=\"%2.2f\" qpc=\"%2.2f\" tme=\"%2.2f\" dns=\"%2.2f\" flr=\"%d\" />\n",sdTag,gd->replay->tc_c_data[i],gd->replay->tc_q_data[i],gd->replay->tc_t_data[i],gd->replay->tc_s_data[i],(int)gd->replay->tc_f_data[i]);
     strcat(sdTag,"  </sd>\n");
     sprintf(xmlStr,"<itrcheck_results file_status=\"ok\" header=\"%c%c%c%c%c%c\" date=\"%s\">\n",gd->replay->header[0],gd->replay->header[1],gd->replay->header[2],gd->replay->header[3],gd->replay->header[4],gd->replay->header[5],gd->replay->date);
-    if (cmdline.tiny) {
-        int misses;
-
-        misses=gd->score!=gd->replay->score || gd->floor!=gd->replay->floor || gd->combo!=gd->replay->combo || gd->no_combo_top_floor!=gd->replay->no_combo_top_floor || gd->biggest_lost_combo!=gd->replay->biggest_lost_combo;
-        for (i=0;i<5;i++) misses+=gd->ccc[i]!=gd->replay->ccc[i] || gd->jc[i]!=gd->replay->jc[i];
-        sprintf(xmlStr,"%s  <result>%s</result>\n",xmlStr,misses ? "mismatch" : "match");
-    } else {
+    if (!cmdline.tiny) {
         strcat(xmlStr,playerTag);
         strcat(xmlStr,gameTag);
-        strcat(xmlStr,"  <results>\n    <claimed_results>\n");
+        strcat(xmlStr,"  <results>\n");
+        strcat(xmlStr,"    <claimed_results>\n");
         strcat(xmlStr,claimTag);
-        strcat(xmlStr,"    </claimed_results>\n    <actual_results>\n");
+        strcat(xmlStr,"    </claimed_results>\n");
+        strcat(xmlStr,"    <actual_results>\n");
         strcat(xmlStr,actualTag);
         strcat(xmlStr,"    </actual_results>\n");
         if (cmdline.combos) strcat(xmlStr,comboTag);
@@ -82,6 +78,20 @@ char *getGameDataXML(Tgame_data *gd)
         strcat(xmlStr,"  </results>\n");
         if (cmdline.keys) strcat(xmlStr,keysTag);
         if (cmdline.sd) strcat(xmlStr,sdTag);
+    } else {
+        int misses;
+
+        misses=0;
+        if (gd->score!=gd->replay->score) misses++;
+        if (gd->floor!=gd->replay->floor) misses++;
+        if (gd->combo!=gd->replay->combo) misses++;
+        if (gd->no_combo_top_floor!=gd->replay->no_combo_top_floor) misses++;
+        if (gd->biggest_lost_combo!=gd->replay->biggest_lost_combo) misses++;
+        for (i=0;i<5;i++) {
+            if (gd->ccc[i]!=gd->replay->ccc[i]) misses++;
+            if (gd->jc[i]!=gd->replay->jc[i]) misses++;
+        }
+        sprintf(xmlStr,"%s  <result>%s</result>\n",xmlStr,misses ? "mismatch" : "match");
     }
     strcat(xmlStr,"</itrcheck_results>\n");
     return xmlStr;
