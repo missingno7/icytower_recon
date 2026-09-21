@@ -31,6 +31,26 @@ def original_contributions(exe, cu_file, text_va):
              and s['file']==cu_file and s['storage_class']==3 and s['aux_count'] for s in g)]
     return matches[0] if len(matches)==1 else []
 
+# x87 memory operand forms with a disp32 literal: d8/dc are float32/float64 arithmetic
+# (/0 add, /1 mul, /2 com, /3 comp, /4 sub, /5 subr, /6 div, /7 divr); d9 05 flds; dd 05 fldl.
+LITERAL_SIZES={bytes([0xd8,m]):4 for m in (0x05,0x0d,0x15,0x1d,0x25,0x2d,0x35,0x3d)}
+LITERAL_SIZES.update({bytes([0xdc,m]):8 for m in (0x05,0x0d,0x15,0x1d,0x25,0x2d,0x35,0x3d)})
+LITERAL_SIZES.update({b'\xd9\x05':4,b'\xdd\x05':8})
+
+
+def candidate_literal(content,addend,instruction):
+    """Bytes of the anonymous read-only literal a relocation addresses, or None."""
+    if addend<0 or addend>=len(content): return None
+    size=LITERAL_SIZES.get(instruction)
+    if size is not None:
+        return content[addend:addend+size] if addend+size<=len(content) else None
+    end=content.find(b'\0',addend)
+    if end<0 or end-addend>255: return None
+    literal=content[addend:end+1]
+    if not literal or any((c<32 and c not in (9,10,13)) or c>126 for c in literal[:-1]): return None
+    return literal
+
+
 def compare(obj_path,cu_path,exe_path,analysis_objdump):
     obj,exe=Binary(obj_path),Binary(exe_path)
     original=[f for f in read_json(ROOT/'evidence/census/functions.json') if f['compile_unit']==cu_path]
@@ -141,7 +161,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
         derived from that base plus the field's offset; the relocated operand
         remains unused as evidence.
         """
-        sizes={b'\xdd\x05':8,b'\xdc\x0d':8,b'\xd9\x05':4,b'\xd8\x0d':4}
+        sizes=LITERAL_SIZES
         if sym['name']!='.rdata' or sym['section']<=0:
             return None
         section=sections_by_index.get(sym['section'])
@@ -287,6 +307,28 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
                               'coff_contribution':contribution_evidence.get(section['index']),
                               'content_equal':not pending and len(section_bases.get(section['index'],set()))==1
                                   and next(iter(section_bases[section['index']])) in locations})
+    # A read-only literal pool whose complete contribution differs can still have its base
+    # established when several distinct literals each locate uniquely in the original .rdata
+    # by content alone and every such anchor implies the same base. Operands are never used.
+    literal_anchor_evidence=[]
+    for section in obj.sections:
+        if section['name']!='.rdata' or section_bases.get(section['index']): continue
+        content=obj.section_bytes(section); anchors={}
+        for r in obj.relocations:
+            if r['section']!=text['index'] or r['type']!=6: continue
+            sym=obj.by_index[r['symbol_index']]
+            if sym['name']!='.rdata' or sym['section']!=section['index']: continue
+            addend=struct.unpack_from('<I',raw,r['offset'])[0]
+            located=unique_literal_target(sym,addend,bytes(raw[max(0,r['offset']-2):r['offset']]))
+            if located is None: continue
+            anchors.setdefault(located-addend,set()).add(addend)
+        record={'section':section['name'],'candidate_bases':{str(k):sorted(v) for k,v in anchors.items()},'established':None,
+                'limit':'Unique candidate literal content located in original read-only data; the tested operands are never consulted. A base is used only when at least two distinct literals agree and none disagrees.'}
+        if len(anchors)==1:
+            base,addends=next(iter(anchors.items()))
+            if len(addends)>=2:
+                section_bases.setdefault(section['index'],set()).add(base); record['established']=base
+        literal_anchor_evidence.append(record)
     rows=[]
     candidate_by_start={d['low_pc']:d for d in candidates.values()}
     for f in original:
@@ -365,7 +407,7 @@ def compare(obj_path,cu_path,exe_path,analysis_objdump):
     logical_size=struct.unpack_from('<I',bytes.fromhex(sectionsym['aux_hex']))[0]
     whole=layout and logical_size==span and not unresolved and resolved[:span]==exe.at_va(cu['low_pc'],span)
     return {'historical_cu':cu_path,'original_cu_span':span,'candidate_text_logical_size':logical_size,
-            'candidate_text_raw_size':len(raw),'candidate_zero_clear_projection':zero_projection,'functions':rows,'extra_functions':extras,
+            'candidate_text_raw_size':len(raw),'candidate_zero_clear_projection':zero_projection,'literal_anchor_evidence':literal_anchor_evidence,'functions':rows,'extra_functions':extras,
             'functions_total':len(original),'function_matches':sum(r['status']=='FUNCTION_MATCH' for r in rows),
             'masked_matches':sum(r.get('masked_equal',False) for r in rows),
             'whole_text_contribution_equal':whole,'relative_layout_equal':layout,'unresolved_text_relocations':unresolved,

@@ -1222,3 +1222,18 @@ promoted through the unchanged gate and made stopGameMusic exact without a body 
 (185 exact functions). The first worker attempt crashed because the generated plan
 lacked a file key; sources were verified byte-identical to the session snapshot, the
 generator was fixed and tested, and the session closed.
+
+
+## Read-only literal resolution for x87 memory operands
+
+The unique-content literal resolver sized only four x87 load forms, so a `fadds` or
+`fmuls` constant fell through to the C-string path and stayed unresolved even when its
+twelve-byte neighbourhood located uniquely in the original read-only data. The size table
+now covers the d8/dc arithmetic forms and flds/fldl. play_sound became FUNCTION_MATCH with
+its remaining same-CU displacement recorded as BODY_MATCH_LAYOUT_BLOCKED (187 exact).
+Reports also retain `literal_anchor_evidence`: the pool bases implied by every uniquely
+located literal; a base is adopted only when at least two distinct literals agree and
+none disagrees. main.c's pool order still disagrees, so no base was adopted there. A
+trial content check at anchored addresses was removed because it turned a known data
+difference (the it15 URL in options.c) into a false function regression; string content
+stays a separate data proof.
