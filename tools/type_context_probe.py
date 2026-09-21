@@ -17,8 +17,9 @@ VARIANTS=[('baseline',False,False),('baseline-without-assertions',False,True),
 
 def probe(target,task):
     ledger=read_json(ROOT/'src/recovery.json')
-    candidates=[p for p in canonical_plans(ledger)+view_plans(ledger) if p['function']==task]
-    if len(candidates)!=1:raise ValueError('Unique current canonical/type-view recipe required')
+    from reconsider_type import current_plans
+    candidates=[p for p in current_plans(ledger) if p['function']==task and p.get('changes')]
+    if len(candidates)!=1:raise ValueError('Unique current canonical/type-view/interface recipe required')
     plan=candidates[0]
     if target not in plan['affected_targets']:raise ValueError('Target is outside this recipe')
     out=ROOT/'build/type-context-probes'/target/task

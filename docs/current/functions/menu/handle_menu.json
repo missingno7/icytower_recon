@@ -2179,35 +2179,6 @@
         "call_offset_count": 1
       },
       {
-        "function": "reset_menu",
-        "source": "src/menu.c",
-        "blocking": false,
-        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
-        "call_offsets": [
-          51
-        ],
-        "candidate_card": "docs/current/interfaces/reset_menu.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "Tmenu*",
-              "Tmenu_params*",
-              "int"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "Tmenu*",
-              "Tmenu_params*",
-              "int"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
         "function": "blit_to_screen",
         "source": "src/menu.c",
         "blocking": false,
@@ -2226,45 +2197,6 @@
             "canonical_return_type": "void",
             "canonical_parameter_types": [
               "BITMAP*"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
-        "function": "handle_menu",
-        "source": "src/menu.c",
-        "blocking": false,
-        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
-        "call_offsets": [
-          594
-        ],
-        "candidate_card": "docs/current/interfaces/handle_menu.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "BITMAP*",
-              "void(*)(void)",
-              "int",
-              "int",
-              "int"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "BITMAP*",
-              "void(*)(void)",
-              "int",
-              "int",
-              "int"
             ]
           }
         ],
@@ -2328,118 +2260,14 @@
     }
   ],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "handle_menu",
-      "source": "src/menu.c",
-      "blocking": false,
-      "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-      "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "handle_menu",
-      "historical": [
-        {
-          "cu": "src/menu.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "BITMAP*",
-            "void(*)(void)",
-            "int",
-            "int",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 159624
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 2",
-          "historical_type": "Tmenu_params",
-          "candidate_type": "Tmenu_params",
-          "header": "include/recovered/Tmenu_params.h",
-          "status": "MISMATCH",
-          "historical_size": 60,
-          "candidate_size": 60,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "bullet",
-              "historical": {
-                "offset": 44,
-                "size": 4,
-                "type": "BITMAP *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 44,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "data",
-              "historical": {
-                "offset": 52,
-                "size": 4,
-                "type": "DATAFILE *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 52,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "font",
-              "historical": {
-                "offset": 0,
-                "size": 4,
-                "type": "FONT *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 0,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/main.c",
-          "file": "src/main.c",
-          "line": 535
-        }
-      ],
-      "candidate_signatures": [
-        "('int', ['Tmenu*', 'Tmenu_params*', 'Tcontrol*', 'BITMAP*', 'void(*)(void)', 'int', 'int', 'int'])"
-      ],
-      "candidate_card": "docs/current/interfaces/handle_menu.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/menu/handle_menu.json",
   "evidence_counts": {
     "relocation_mismatches": 32,
     "direct_transfer_mismatches": 3,
-    "callee_interface_observations": 6,
+    "callee_interface_observations": 4,
     "ownership_prerequisites": 2,
     "reference_diagnostics": 0,
     "literal_diagnostics": 5,

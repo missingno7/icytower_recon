@@ -1,4 +1,4 @@
-"""Reopen a blocked type experiment only after fresh raw-preserving CU probes."""
+"""Reopen a blocked type or interface experiment only after fresh contribution-preserving CU probes."""
 import argparse
 from common import ROOT,read_json,write_json,identity
 from type_context_probe import probe
@@ -12,11 +12,26 @@ from recovery_pipeline import CURRENT
 
 
 def require_preservation(result,target,task):
+    """The overlay baseline must reproduce raw contributions; the recipe variant must satisfy
+    the same preservation predicate FAST applies (raw equality, or equality after the
+    candidate-only independent-write projection). Nothing here is original matching."""
     if result.get('target')!=target or result.get('task')!=task or result.get('outcome')!='COMPLETE':raise ValueError('Incomplete/wrong type reconsideration probe')
     variants=result.get('variants',[])
     for label in ('baseline','canonical'):
         rows=[v for v in variants if v.get('variant')==label]
-        if len(rows)!=1 or rows[0].get('raw_baseline_equal') is not True:raise ValueError('Raw contribution preservation unproven: '+target+':'+label)
+        if len(rows)!=1:raise ValueError('Raw contribution preservation unproven: '+target+':'+label)
+        row=rows[0]
+        if label=='baseline' and row.get('raw_baseline_equal') is not True:raise ValueError('Raw contribution preservation unproven: '+target+':'+label)
+        preserved=row.get('raw_baseline_equal') is True or (row.get('contribution_diagnostics') or {}).get('preservation_fingerprint_equal') is True
+        if label=='canonical' and not preserved:raise ValueError('Contribution preservation unproven: '+target+':'+label)
+
+
+def current_plans(ledger):
+    """Every bounded mechanical recipe that a recorded block can refer to."""
+    from interfaces import collect_interfaces
+    from interface_tasks import plan_interface
+    _,conflicts=collect_interfaces(ledger)
+    return canonical_plans(ledger)+view_plans(ledger)+[plan_interface(row,ledger) for row in conflicts]
 
 
 def reconsider(name):
@@ -25,8 +40,8 @@ def reconsider(name):
         ledger=read_json(ROOT/'src/recovery.json');validate_ledger(ledger)
         blocks_path=CURRENT/'interface-blocks.json';blocks=read_json(blocks_path)
         if name not in blocks:raise ValueError('No recorded type block')
-        candidates=[p for p in canonical_plans(ledger)+view_plans(ledger) if p['function']==name]
-        if len(candidates)!=1 or not candidates[0]['affected_targets']:raise ValueError('No unique bounded current type recipe')
+        candidates=[p for p in current_plans(ledger) if p['function']==name]
+        if len(candidates)!=1 or not candidates[0].get('affected_targets') or not candidates[0].get('changes'):raise ValueError('No unique bounded current mechanical recipe')
         plan=candidates[0];before=snapshot_files();ledger_id=identity(ROOT/'src/recovery.json');blocks_id=identity(blocks_path)
         probes=[]
         for target in plan['affected_targets']:

@@ -1173,3 +1173,31 @@ historical library typedef layout, reproduced by the compiled CU, as pointee evi
 debug-retention probe requests those pointee names. The menu.c Tmenu_params repair
 promoted through the unchanged gates. Function statuses are unchanged. See
 docs/attempts/complete-view-validation.json for the run indexes.
+
+
+## Independent-write projection, reopened blocks and link closure
+
+Four blocked declaration tasks (get_controls, Tcustom, Tprofile_control, Tprofile_load)
+shared one rejection shape: adjacent constant stores to distinct stack slots and constant
+register loads emitted in a different order, with unchanged bodies and sizes. The
+candidate-only preservation projection, which already canonicalized adjacent independent
+register clears, now covers adjacent runs of immediate writes with pairwise disjoint
+destinations (never ESP/EBP, entry targets or relocation fields). Reconsideration reopens
+a block when the recipe variant satisfies that same acceptance predicate, and it now
+covers interface recipes. Fresh 25-CU verification refreshed every stored projection;
+function statuses are unchanged. A worker batch then promoted all four reopened tasks
+plus the main.c Tmenu_params member repair and two global-object views. The follow-on
+Tmenu_params canonicalization was rejected on handle_menu with a second, undisplayed
+difference window and remains blocked with evidence.
+
+Global-object layout evidence now proposes views for uniquely named file-scope objects,
+which surfaced Tcmdline and Tjump_sequence in main.c.
+
+player.c declared `max_speed` extern although the historical CU defines it and
+`gravity_modifier` as initialized .data at lines 14 and 16. Both definitions were
+restored from DWARF type and verifier bytes; the storage census reports EXACT_OWNER for
+both, and the ordinary recovered-game link of all 25 objects with the built Allegro and
+Xiph archives now completes with no unresolved symbols. The executable is not executed.
+`--verify-all` publishes the link record. Per the user's direction the priority is now
+matching the remaining 69 game function bodies toward a standalone build; library byte
+reproduction and PE layout are deferred.

@@ -36,35 +36,76 @@ def affected_instructions(row):
         i['address']-base,i['address']-base+len(bytes.fromhex(i['bytes']))))]
 
 
+def independent_write(raw, row, forbidden_ranges=()):
+    """Decode one adjacent-run candidate from its verified bytes.
+
+    Returns (destination, flag_writer) or None. Accepted encodings only:
+      31 /r        xor r32,r32 with identical operands (register clear; writes flags)
+      B8+r imm32   mov $imm32,r32
+      C7 45 d8 imm32 / C7 85 d32 imm32   movl $imm32,disp(%ebp)
+      C6 45 d8 imm8  / C6 85 d32 imm8    movb $imm8,disp(%ebp)
+      66 C7 45 d8 imm16 / 66 C7 85 d32 imm16   movw $imm16,disp(%ebp)
+    Every form writes exactly one destination with an immediate, reads only EBP as a
+    base, and (except xor) leaves flags untouched. ESP/EBP are never destinations.
+    """
+    code=bytes.fromhex(row['bytes']); off=row['address']
+    if any(a<=off<b for a,b in forbidden_ranges) or raw[off:off+len(code)]!=code: return None
+    if len(code)==2 and code[0]==0x31 and code[1]>=0xc0 and (code[1]&7)==((code[1]>>3)&7):
+        reg=code[1]&7
+        return (('reg',reg),True) if reg not in (4,5) else None
+    if len(code)==5 and 0xb8<=code[0]<=0xbf:
+        reg=code[0]-0xb8
+        return (('reg',reg),False) if reg not in (4,5) else None
+    body=code[1:] if code[:1]==b'\x66' else code; width=2 if code[:1]==b'\x66' else None
+    if body[:1]==b'\xc7': width=width or 4
+    elif body[:1]==b'\xc6' and width is None: width=1
+    else: return None
+    if len(body)<2: return None
+    if body[1]==0x45 and len(body)==3+width: disp=int.from_bytes(body[2:3],'little',signed=True)
+    elif body[1]==0x85 and len(body)==6+width: disp=int.from_bytes(body[2:6],'little',signed=True)
+    else: return None
+    return (('ebp',disp,width),False)
+
+
+def _disjoint(destinations):
+    regs=[d for d in destinations if d[0]=='reg']; slots=[d for d in destinations if d[0]=='ebp']
+    if len(set(regs))!=len(regs): return False
+    spans=sorted((d[1],d[1]+d[2]) for d in slots)
+    return all(a[1]<=b[0] for a,b in zip(spans,spans[1:]))
+
+
 def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
     """Candidate-to-candidate scheduling evidence, NEVER original matching.
 
-    Canonicalize only adjacent, independent XOR r32,r32 clears, excluding ESP/EBP,
-    internal CFG entry points, relocation targets and functions with indirect jumps.
-    All other bytes, including padding and operands, remain in the fingerprint.
+    Canonicalize only adjacent runs of independent immediate writes: XOR r32,r32
+    clears, mov $imm,r32 and mov $imm,disp(%ebp) stores with pairwise disjoint
+    destinations, excluding ESP/EBP, internal CFG entry points, relocation fields and
+    functions with indirect jumps. Within such a run no instruction reads another's
+    destination and flags depend only on whether any clear is present, so every
+    permutation leaves identical machine state. All other bytes, including padding
+    and operands, remain in the fingerprint.
     """
     targets=set(protected_targets)
     for row in rows:
         if row['mnemonic'].startswith(('j','call','loop')):
             m=re.match(r'\S+\s+([0-9a-f]+)(?:\s|$)',row['assembly'])
             if m: targets.add(int(m[1],16))
-    def clear(row):
-        code=bytes.fromhex(row['bytes']); off=row['address']
-        if any(a<=off<b for a,b in forbidden_ranges): return False
-        return (len(code)==2 and raw[off:off+2]==code and code[0]==0x31 and code[1]>=0xc0
-                and (code[1]&7)==((code[1]>>3)&7) and (code[1]&7) not in (4,5))
     canonical=bytearray(raw); blocks=[]; pos=0
     while pos<len(rows):
-        if not clear(rows[pos]): pos+=1; continue
-        run_=[rows[pos]]; pos+=1
-        while pos<len(rows) and clear(rows[pos]) and rows[pos]['address']==run_[-1]['address']+2:
-            run_.append(rows[pos]); pos+=1
-        start=run_[0]['address']; end=run_[-1]['address']+2
+        first=independent_write(raw,rows[pos],forbidden_ranges)
+        if first is None: pos+=1; continue
+        run_=[(rows[pos],first)]; pos+=1
+        while pos<len(rows):
+            nxt=independent_write(raw,rows[pos],forbidden_ranges); prev=run_[-1][0]
+            if nxt is None or rows[pos]['address']!=prev['address']+len(bytes.fromhex(prev['bytes'])): break
+            run_.append((rows[pos],nxt)); pos+=1
+        start=run_[0][0]['address']; last=run_[-1][0]; end=last['address']+len(bytes.fromhex(last['bytes']))
         if len(run_)<2 or any(start<t<end for t in targets): continue
-        codes=[bytes.fromhex(i['bytes']) for i in run_]
+        if not _disjoint([d for _,(d,_) in run_]): continue
+        codes=[bytes.fromhex(i['bytes']) for i,_ in run_]
         if len(set(codes))!=len(codes): continue
         canonical[start:end]=b''.join(sorted(codes))
         blocks.append({'start':start,'end':end,'original_bytes':raw[start:end].hex(),
-                       'canonical_bytes':bytes(canonical[start:end]).hex(),'instructions':run_})
+                       'canonical_bytes':bytes(canonical[start:end]).hex(),'instructions':[i for i,_ in run_]})
     return {'sha256':sha(canonical),'blocks':blocks,
-            'scope':'Only candidate scheduling preservation; never FUNCTION_MATCH evidence.'}
+            'scope':'Only candidate scheduling preservation of adjacent independent immediate writes; never FUNCTION_MATCH evidence.'}

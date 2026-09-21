@@ -186,9 +186,11 @@ unavailable. External library types retain spelling checks. Inspect
 the reported return/parameter types before changing anything. Nominal aliases can
 need supervisor review; do not mechanically merge them based on spelling alone.
 
-The ordinary link presently has a known `max_speed` frontier. A promotion must
-not add unresolved symbols or regress a previously successful link. The unchanged
-frontier is recorded separately and is never counted as recovered link closure.
+The ordinary recovered-game link closed on 2026-09-21 after player.c regained its
+historical `max_speed` and `gravity_modifier` data objects; `docs/current/link-status.json`
+records the linked result and `--verify-all` refreshes it. A promotion must not add
+unresolved symbols or regress the successful link. The linked executable is never
+executed by the pipeline; a link is not a function, CU or behavioral claim.
 
 ## Mechanical batches and source experiments
 

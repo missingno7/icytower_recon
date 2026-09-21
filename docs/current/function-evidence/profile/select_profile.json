@@ -689,8 +689,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 771,
-    "body_end_line": 929,
+    "body_start_line": 764,
+    "body_end_line": 922,
     "body_sha256": "48a5a5b483479eafb0387a03a44b88d40e7d7644fa1574976893d448e91eb41d"
   },
   "reference_diagnostics": [],
@@ -1627,10 +1627,10 @@
         "assembly": "mov    0x14(%ebp),%edi",
         "dwarf_variables": [
           {
-            "die": 5102,
+            "die": 5021,
             "name": "ctrl",
             "type": "Tprofile_control *",
-            "base_type": "Tprofile_control",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "memory",
@@ -1656,7 +1656,7 @@
         "assembly": "mov    %eax,-0x13c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 5179,
+            "die": 5098,
             "name": "old_font",
             "type": "void *",
             "base_type": null,
@@ -6470,9 +6470,9 @@
       {
         "function": "load_profile",
         "source": "src/profile.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
         "call_offsets": [
           2472
         ],
@@ -6483,93 +6483,13 @@
             "parameter_types": [
               "char*"
             ],
-            "canonical_return_type": "Tprofile_load*",
+            "canonical_return_type": "Tprofile*",
             "canonical_parameter_types": [
               "char*"
             ]
           }
         ],
-        "layout_issues": [
-          {
-            "position": "return",
-            "historical_type": "Tprofile",
-            "candidate_type": "Tprofile_load",
-            "header": "include/recovered/Tprofile.h",
-            "status": "MISMATCH",
-            "historical_size": 1360,
-            "candidate_size": 1360,
-            "member_difference_count": 32,
-            "first_member_differences": [
-              {
-                "member": "before_checksum",
-                "historical": null,
-                "candidate": {
-                  "offset": 0,
-                  "size": 40,
-                  "type": "unsigned char [40]",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "best_combo",
-                "historical": {
-                  "offset": 80,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_floor",
-                "historical": {
-                  "offset": 76,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_replay_names",
-                "historical": {
-                  "offset": 220,
-                  "size": 1024,
-                  "type": "char [32][32]",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "best_score",
-                "historical": {
-                  "offset": 84,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              },
-              {
-                "member": "biggest_lost_combo",
-                "historical": {
-                  "offset": 92,
-                  "size": 4,
-                  "type": "int",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": null
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ]
+        "layout_issues": []
       },
       {
         "function": "my_alert",
@@ -6642,7 +6562,6 @@
       "blit_to_screen",
       "draw_profile_selector",
       "get_string",
-      "load_profile",
       "rebuild_profile_list"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
@@ -6780,7 +6699,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 530
+          "line": 522
         },
         {
           "position": "parameter 1",
@@ -6868,7 +6787,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 530
+          "line": 522
         },
         {
           "position": "parameter 2",
@@ -6879,7 +6798,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 769
+          "line": 762
         }
       ],
       "candidate_signatures": [

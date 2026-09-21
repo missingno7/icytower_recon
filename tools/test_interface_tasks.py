@@ -138,6 +138,33 @@ class InterfaceTests(unittest.TestCase):
         for reg in ('31e4','31ed'):
             self.assertNotEqual(project(['31f6',reg])['sha256'],project([reg,'31f6'])['sha256'])
 
+    def test_independent_immediate_write_projection(self):
+        def project(codes,**kwargs):
+            raw=b''.join(bytes.fromhex(c) for c in codes); rows=[]; off=0
+            for code in codes:
+                rows.append({'address':off,'bytes':code,'mnemonic':'mov','assembly':'mov immediate'}); off+=len(bytes.fromhex(code))
+            return zero_clear_projection(raw,rows,**kwargs)
+        ebx='bbf4010000'; slot128='c785d8feffffe8030000'; slot130='c785d0feffff00000000'; slot138='c785c8feffff00000000'
+        # The real select_profile permutation: one constant store moved ahead of a register load and other stores.
+        self.assertEqual(project([ebx,slot128,slot130,slot138])['sha256'],project([slot138,ebx,slot128,slot130])['sha256'])
+        # Same destination twice, overlapping slots, ESP/EBP destinations and mixed widths on one slot are never canonicalized.
+        for a,b in ((['bb01000000','bb02000000'],['bb02000000','bb01000000']),
+                    ([slot128,'c785dafeffff00000000'],['c785dafeffff00000000',slot128]),
+                    (['bc01000000',ebx],[ebx,'bc01000000']),(['bd01000000',ebx],[ebx,'bd01000000']),
+                    (['c645f000',slot128.replace('d8feffff','f0ffffff')],[slot128.replace('d8feffff','f0ffffff'),'c645f000'])):
+            self.assertNotEqual(project(a)['sha256'],project(b)['sha256'],(a,b))
+        # A register clear may join the run; a non-immediate store, a call or a flag reader may not.
+        self.assertEqual(project(['31db',slot128])['sha256'],project([slot128,'31db'])['sha256'])
+        for other in ('8985ccfeffff','e800000000','7402'):
+            rows=[ebx,other,slot128]; swapped=[slot128,other,ebx]
+            self.assertNotEqual(project(rows)['sha256'],project(swapped)['sha256'])
+        # Entry targets and relocation fields inside the run block it.
+        self.assertNotEqual(project([ebx,slot128],protected_targets=[5])['sha256'],project([slot128,ebx],protected_targets=[5])['sha256'])
+        self.assertNotEqual(project([ebx,slot128],forbidden_ranges=[(0,5)])['sha256'],project([slot128,ebx],forbidden_ranges=[(0,5)])['sha256'])
+        # Byte and word stores to disjoint slots canonicalize; disp8 and disp32 forms both decode.
+        self.assertEqual(project(['c645f000','66c745f20100'])['sha256'],project(['66c745f20100','c645f000'])['sha256'])
+        self.assertEqual(project(['c745f000000000',slot128])['sha256'],project([slot128,'c745f000000000'])['sha256'])
+
     def test_projection_respects_decoding_and_cfg(self):
         raw=bytes.fromhex('31f631dbebfc')
         rows=[{'address':0,'bytes':'31f6','mnemonic':'xor','assembly':'xor %esi,%esi'},

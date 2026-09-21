@@ -1325,123 +1325,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "task_kind": "CANONICAL_TYPE",
-      "function": "Tmenu_params",
-      "source": "src/menu.c",
-      "sources": [
-        "src/menu.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Tagged struct is used outside the replaceable declarations",
-      "state": "CANONICAL_TYPE_REPAIR",
-      "status": "DUPLICATE_TYPE",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin Tmenu_params",
-      "verification_command": "python tools/interface_task.py check Tmenu_params",
-      "promotion_command": "python tools/interface_task.py promote Tmenu_params",
-      "size": 0,
-      "candidate_card": "docs/current/types/Tmenu_params.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "draw_menu",
-      "source": "src/menu.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin draw_menu",
-      "verification_command": "python tools/interface_task.py check draw_menu",
-      "promotion_command": "python tools/interface_task.py promote draw_menu",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/draw_menu.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "handle_menu",
-      "source": "src/menu.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin handle_menu",
-      "verification_command": "python tools/interface_task.py check handle_menu",
-      "promotion_command": "python tools/interface_task.py promote handle_menu",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/handle_menu.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "reset_menu",
-      "source": "src/menu.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin reset_menu",
-      "verification_command": "python tools/interface_task.py check reset_menu",
-      "promotion_command": "python tools/interface_task.py promote reset_menu",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/reset_menu.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "update_game_menu",
       "source": "src/menu.c",
       "sources": null,
@@ -1686,7 +1569,7 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/load_profile.json",
       "size": 0,
-      "prerequisite_for_count": 3,
+      "prerequisite_for_count": 2,
       "prerequisite_for": [
         {
           "source": "src/main.c",
@@ -1699,12 +1582,6 @@
           "function": "init_game",
           "candidate_card": "docs/current/functions/main/init_game.json",
           "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": true
         }
       ],
       "omitted_dependents": 0,
@@ -2082,6 +1959,31 @@
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
       "size": 1855,
       "candidate_card": "docs/current/functions/game_data/getGameDataXML.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "_mangled_main",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 8,
+        "original_va": 4284184,
+        "candidate_byte": 60,
+        "original_byte": 44
+      },
+      "verification_command": "python tools/check_function.py game-main _mangled_main",
+      "begin_command": "python tools/grinder_task.py begin game-main _mangled_main",
+      "promotion_command": "python tools/promote_function.py game-main _mangled_main",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1938,
+      "candidate_card": "docs/current/functions/main/_mangled_main.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -2471,19 +2373,11 @@
       "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
       "promotion_command": "python tools/promote_function.py game-profile create_profile",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_controls, get_profile_dir_for_profile, log2file",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_profile_dir_for_profile, log2file",
       "size": 823,
       "candidate_card": "docs/current/functions/profile/create_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "get_controls",
-          "candidate_card": "docs/current/interfaces/get_controls.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "get_profile_dir_for_profile",
           "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
@@ -2568,14 +2462,6 @@
       "candidate_card": "docs/current/functions/profile/save_profile.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": [
-        {
-          "function": "get_controls",
-          "candidate_card": "docs/current/interfaces/get_controls.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
         {
           "function": "get_profile_dir_for_profile",
           "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
@@ -2743,56 +2629,6 @@
       "candidate_card": "docs/current/functions/main/handle_player_collision_combo.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "_mangled_main",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4284184,
-        "candidate_byte": 60,
-        "original_byte": 44
-      },
-      "verification_command": "python tools/check_function.py game-main _mangled_main",
-      "begin_command": "python tools/grinder_task.py begin game-main _mangled_main",
-      "promotion_command": "python tools/promote_function.py game-main _mangled_main",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1938,
-      "candidate_card": "docs/current/functions/main/_mangled_main.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_menu",
-          "candidate_card": "docs/current/interfaces/draw_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "handle_menu",
-          "candidate_card": "docs/current/interfaces/handle_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "reset_menu",
-          "candidate_card": "docs/current/interfaces/reset_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
     },
     {
       "source": "src/replay.c",
@@ -3605,14 +3441,6 @@
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
-          "function": "get_controls",
-          "candidate_card": "docs/current/interfaces/get_controls.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
           "function": "profile_data_page_general",
           "candidate_card": "docs/current/interfaces/profile_data_page_general.json",
           "difficulty": "SUPERVISOR",
@@ -3657,7 +3485,7 @@
       "begin_command": "python tools/grinder_task.py begin game-main do_replay_menu",
       "promotion_command": "python tools/promote_function.py game-main do_replay_menu",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string, handle_menu",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string",
       "size": 2661,
       "candidate_card": "docs/current/functions/main/do_replay_menu.json",
       "task_kind": "FUNCTION_BODY",
@@ -3676,14 +3504,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "handle_menu",
-          "candidate_card": "docs/current/interfaces/handle_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -3768,14 +3588,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "load_profile",
-          "candidate_card": "docs/current/interfaces/load_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
@@ -4022,30 +3834,6 @@
       "prerequisite_tasks": []
     },
     {
-      "task_kind": "CANONICAL_TYPE",
-      "function": "Tcustom",
-      "source": "include/custom.h",
-      "sources": [
-        "include/custom.h"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
-      "state": "CANONICAL_TYPE_REPAIR",
-      "status": "DUPLICATE_TYPE",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin Tcustom",
-      "verification_command": "python tools/interface_task.py check Tcustom",
-      "promotion_command": "python tools/interface_task.py promote Tcustom",
-      "size": 0,
-      "candidate_card": "docs/current/types/Tcustom.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "task_kind": "SOURCE_ORDER",
       "function": "order_fld_adspot",
       "source": "src/fld_adspot.c",
@@ -4094,45 +3882,27 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "get_controls",
+      "task_kind": "CANONICAL_TYPE",
+      "function": "Tmenu_params",
       "source": "src/main.c",
       "sources": [
-        "src/profile.c"
+        "src/main.c",
+        "src/menu.c"
       ],
       "difficulty": "SUPERVISOR",
       "priority": -100,
-      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
-      "begin_command": "python tools/interface_task.py begin get_controls",
-      "verification_command": "python tools/interface_task.py check get_controls",
-      "promotion_command": "python tools/interface_task.py promote get_controls",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
+      "reason": "Exact duplicate member declarations; replace only the complete typedef with its generated header.",
+      "state": "CANONICAL_TYPE_REPAIR",
+      "status": "DUPLICATE_TYPE",
       "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/get_controls.json",
+      "difference_class": "CANONICAL_TYPE_DECLARATION",
+      "begin_command": "python tools/interface_task.py begin Tmenu_params",
+      "verification_command": "python tools/interface_task.py check Tmenu_params",
+      "promotion_command": "python tools/interface_task.py promote Tmenu_params",
       "size": 0,
-      "prerequisite_for_count": 3,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "create_profile",
-          "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "save_profile",
-          "candidate_card": "docs/current/functions/profile/save_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
+      "candidate_card": "docs/current/types/Tmenu_params.json",
+      "prerequisite_for_count": 0,
+      "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -4251,30 +4021,6 @@
     },
     {
       "task_kind": "TYPE_VIEW",
-      "function": "view_profile_Tprofile_control",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_control",
-      "verification_command": "python tools/interface_task.py check view_profile_Tprofile_control",
-      "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_control",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_profile_Tprofile_control.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "TYPE_VIEW",
       "function": "view_profile_Tprofile_general",
       "source": "src/profile.c",
       "sources": [
@@ -4292,30 +4038,6 @@
       "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_general",
       "size": 0,
       "candidate_card": "docs/current/type-views/view_profile_Tprofile_general.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_profile_Tprofile_load",
-      "source": "src/profile.c",
-      "sources": [
-        "src/profile.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -100,
-      "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_load",
-      "verification_command": "python tools/interface_task.py check view_profile_Tprofile_load",
-      "promotion_command": "python tools/interface_task.py promote view_profile_Tprofile_load",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_profile_Tprofile_load.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,

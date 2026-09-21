@@ -170,7 +170,7 @@ class ViewTests(unittest.TestCase):
         renamed=copy.deepcopy(self.expected()); renamed['members'][2]['name']='other_name'
         p,_=self.fixture_plan('View x;',candidate=renamed)
         self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertEqual(p['view_completeness'],'PARTIAL_LAYOUT')
-        self.assertIn('Non-pointer or size-dependent',p['reason'])
+        self.assertTrue('Non-pointer or size-dependent' in p['reason'] or 'Unmapped or referenced view member' in p['reason'],p['reason'])
         reshaped=copy.deepcopy(self.expected())
         scalar=next(m for m in reshaped['members'] if m['layout']['kind']=='base_type'); scalar['layout']=dict(scalar['layout'],encoding='7\t(unsigned)',type='unsigned int')
         p,_=self.fixture_plan('View x;',candidate=reshaped)
@@ -291,6 +291,21 @@ class ViewTests(unittest.TestCase):
             self.assertFalse(return_evidence({'interfaces_aux':declaration},units,g))
         main=next(u for u in units if u['source']=='src/main.c')
         self.assertFalse(return_evidence(report,[*units,main],g))
+
+    def test_global_object_layout_proposes_view_only_with_unique_typedef(self):
+        from type_views import global_evidence
+        from common import ROOT,read_json
+        g=graph(); ledger=read_json(ROOT/'src/recovery.json'); report=read_json(ROOT/ledger['src/main.c']['verified_report'])
+        unit=next(u for u in read_json(ROOT/'src/units.json') if u['source']=='src/main.c')
+        rows=global_evidence(report,unit,g)
+        menu=[o for o in rows.get('Tmenu_params',[]) if o['variable']=='menu_params']
+        self.assertEqual(len(menu),1); self.assertEqual(menu[0]['historical_type'],'Tmenu_params')
+        # Duplicate names, missing historical objects and ambiguous typedef layouts propose nothing.
+        bad=copy.deepcopy(report); bad['candidate_debug']['globals']=[r for r in bad['candidate_debug']['globals'] if r['name']=='menu_params']*2
+        self.assertNotIn('Tmenu_params',global_evidence(bad,unit,g))
+        self.assertNotIn('Tmenu_params',global_evidence(report,{'globals':[]},g))
+        bad=copy.deepcopy(report); bad['candidate_debug']['typedefs'].append(copy.deepcopy(next(t for t in bad['candidate_debug']['typedefs'] if t['name']=='Tmenu_params'))); bad['candidate_debug']['typedefs'][-1]['name']='Other'
+        self.assertNotIn('Tmenu_params',global_evidence(bad,unit,g))
 
     def test_original_function_variable_correspondence_is_required(self):
         unit=next(u for u in read_json(ROOT/'src/units.json') if u['source']=='src/profile.c')

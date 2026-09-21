@@ -56,13 +56,8 @@ int dropped_file_is_not_a_replay;
 int init_ok;
 char last_log[1024];
 char working_directory[1024];
-typedef struct {
-    int jumps;
-    int combos;
-    int sd;
-    int keys;
-    int tiny;
-} Tcmdline;
+#include "recovered/Tcommandline.h"
+typedef Tcommandline Tcmdline;
 Tcmdline cmdline;
 double seed;
 int hasFocus;
@@ -250,12 +245,12 @@ typedef struct Tprofile {
 #include "recovered/Tmenu.h"
 
 typedef struct Tmenu_params {
-    void *font;
+    FONT *font;
     int font_height;
     Tcontrol ctrl;
-    void *bullet;
+    BITMAP *bullet;
     int pos;
-    void *data;
+    DATAFILE *data;
     int fo;
 } Tmenu_params;
 
@@ -278,11 +273,8 @@ typedef struct Tgame_data {
     Treplay *replay;
 } Tgame_data;
 
-typedef struct Tjump_sequence {
-    int start;
-    int dist;
-    int num;
-} Tjump_sequence;
+#include "recovered/Tgd_jump_sequence.h"
+typedef Tgd_jump_sequence Tjump_sequence;
 
 Toptions options;
 int start_speeds[6] = { 5, 4, 3, 2, 1, 0 };

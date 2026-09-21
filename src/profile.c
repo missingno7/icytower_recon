@@ -332,15 +332,12 @@ void set_next_rank_message(char *buf, Tprofile_rank *p)
                 next_nml);
 }
 
-typedef struct Tprofile_load {
-    unsigned char before_checksum[0x28];
-    int checksum;
-    unsigned char remainder[0x550 - 0x2c];
-} Tprofile_load;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_load;
 
 extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
                                        const char *profile);
-extern void *get_controls(void);
+extern Tcontrol *get_controls(void);
 extern void load_control(void *control, void *fp);
 
 Tprofile_load *load_profile(char *handle)
@@ -746,12 +743,8 @@ void view_profile(void *profile)
     clear_keybuf();
 }
 
-typedef struct Tprofile_control {
-    int use_joy;
-    int key_left, key_right, key_up, key_down;
-    int key_fire, key_enter, key_pause;
-    unsigned char flags;
-} Tprofile_control;
+#include "recovered/Tcontrol.h"
+typedef Tcontrol Tprofile_control;
 extern void blit(void *src, void *dst, int sx, int sy, int dx, int dy,
                  int w, int h);
 extern int readkey(void);

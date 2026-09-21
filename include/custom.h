@@ -1,21 +1,7 @@
 #ifndef ICYTOWER_CUSTOM_H
 #define ICYTOWER_CUSTOM_H
 #include <allegro.h>
-typedef struct {
-    char name[128];
-    BITMAP *frame[15];
-    PALETTE pal;
-    SAMPLE *jump_sound[3];
-    SAMPLE *falling;
-    SAMPLE *edge;
-    SAMPLE *yo;
-    SAMPLE *wazup;
-    SAMPLE *bg_music;
-    MIDI *bg_midi;
-    int uses_datafile;
-    DATAFILE *df;
-    int ok;
-} Tcustom;
+#include "recovered/Tcustom.h"
 extern RGB black, pink;
 void custom_alert(char *txt1, char *txt2);
 char *get_string_data(char *key, char *string);

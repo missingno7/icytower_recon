@@ -15,5 +15,16 @@ class ReconsiderTests(unittest.TestCase):
             else:bad['target']='other'
             with self.assertRaises(ValueError):require_preservation(bad,'cu','type')
 
+    def test_candidate_variant_may_satisfy_the_projection_preservation_predicate(self):
+        good={'target':'cu','task':'type','outcome':'COMPLETE','variants':[
+            {'variant':'baseline','raw_baseline_equal':True},
+            {'variant':'canonical','raw_baseline_equal':False,'contribution_diagnostics':{'preservation_fingerprint_equal':True}}]}
+        require_preservation(good,'cu','type')
+        bad=copy.deepcopy(good); bad['variants'][1]['contribution_diagnostics']['preservation_fingerprint_equal']=False
+        with self.assertRaises(ValueError):require_preservation(bad,'cu','type')
+        # The overlay baseline itself must reproduce raw contributions; a projected match is not enough there.
+        bad=copy.deepcopy(good); bad['variants'][0]['raw_baseline_equal']=False; bad['variants'][0]['contribution_diagnostics']={'preservation_fingerprint_equal':True}
+        with self.assertRaises(ValueError):require_preservation(bad,'cu','type')
+
 
 if __name__=='__main__':unittest.main()

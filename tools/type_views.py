@@ -186,6 +186,40 @@ def evidence(report,unit):
                                    'historical_die':old[name][0]['offset'],'candidate_die':variables[0]['die']})
     for alias, observations in return_evidence(report,read_json(ROOT/'src/units.json'),g).items():
         found[alias].extend(observations)
+    for alias, observations in global_evidence(report,unit,g).items():
+        found[alias].extend(observations)
+    return found
+
+
+def global_evidence(report,unit,g):
+    """Map a uniquely named file-scope object to its historical game type through its compiled layout.
+
+    The candidate global's complete DWARF layout must equal exactly one compiled typedef's layout;
+    that typedef is the alias. By-value objects and single pointers are accepted. This proposes a view
+    only; members, uses and emission are still checked by the planner and the fresh gate.
+    """
+    found=defaultdict(list)
+    candidates=defaultdict(list)
+    for row in report.get('candidate_debug',{}).get('globals',[]) or []: candidates[row.get('name')].append(row)
+    historical=defaultdict(list)
+    for row in unit.get('globals',[]): historical[row.get('name')].append(row)
+    typedefs=[t for t in interface_typedefs(report) if t.get('layout',{}).get('kind')=='structure_type']
+    for name,rows in candidates.items():
+        if not name or len(rows)!=1 or len(historical.get(name,[]))!=1: continue
+        old=historical[name][0]; spelled=g.declaration(old.get('type_ref')) if old.get('type_ref') is not None else ''
+        pointer=POINTER.fullmatch(spelled); base=pointer[1] if pointer else spelled
+        if base not in g.game_types: continue
+        layout_node=rows[0].get('layout') or {}
+        if pointer:
+            if layout_node.get('kind')!='pointer_type': continue
+            key=None
+        else:
+            if layout_node.get('kind')!='structure_type': continue
+            key=json.dumps(shape_key(layout_node),sort_keys=True)
+        aliases=[t['name'] for t in typedefs if key is not None and json.dumps(shape_key(t['layout']),sort_keys=True)==key]
+        if len(set(aliases))!=1: continue
+        found[aliases[0]].append({'variable':name,'scope':'file','historical_type':base,'historical_die':old.get('die'),
+                                  'candidate_die':rows[0].get('die'),'evidence_source':'GLOBAL_OBJECT_LAYOUT_AND_HISTORICAL_DWARF'})
     return found
 
 
@@ -229,14 +263,6 @@ def plan(source,report,match,observations,ledger,texts):
         candidate,normalized=normalize_alias_pointers(candidate,report)
         complete=shape_key(candidate)==shape_key(expected)
         card.update(view_completeness='COMPLETE_LAYOUT' if complete else 'PARTIAL_LAYOUT',alias_normalized_members=normalized)
-        if not complete:
-            # A partial view removes filler, so by-value, array and sizeof uses could change layout.
-            # A complete same-shape view is a pure renaming typedef; every use keeps its type.
-            for use in re.finditer(r'\b'+re.escape(alias)+r'\b',outside):
-                tail=outside[use.end():]; prefix=outside[max(0,use.start()-40):use.start()]
-                if re.match(r'\s*\*',tail): continue
-                if re.search(r'\bsizeof\s*\(\s*$',prefix) and re.match(r'\s*\)',tail) and candidate['size']==expected['size']: continue
-                raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
         pointer_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
         library=library_pointees(source,report,g)
@@ -244,6 +270,16 @@ def plan(source,report,match,observations,ledger,texts):
         for repair in pointer_repairs:
             target=POINTER.fullmatch(repair['historical_type'])[1]
             repair['pointee_evidence']='GENERATED_HISTORICAL_HEADER' if target in pointees else 'OWNING_CU_LIBRARY_TYPEDEF_LAYOUT'
+        member_only=bool(pointer_repairs) and not ignored and candidate['size']==expected['size'] and len(candidate['members'])==len(expected['members'])
+        if not complete and not member_only:
+            # Member-only repairs keep the struct's size and members, so by-value uses stay valid too.
+            # A partial view removes filler, so by-value, array and sizeof uses could change layout.
+            # A complete same-shape view is a pure renaming typedef; every use keeps its type.
+            for use in re.finditer(r'\b'+re.escape(alias)+r'\b',outside):
+                tail=outside[use.end():]; prefix=outside[max(0,use.start()-40):use.start()]
+                if re.match(r'\s*\*',tail): continue
+                if re.search(r'\bsizeof\s*\(\s*$',prefix) and re.match(r'\s*\)',tail) and candidate['size']==expected['size']: continue
+                raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
         targets=affected_targets(ledger,[source])
         if targets!=[report['build']['target']]: raise ValueError('View requires broader dependency closure')
         # A canonical parent can include child declarations that still exist locally.

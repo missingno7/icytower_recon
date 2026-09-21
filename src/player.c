@@ -6,6 +6,11 @@
 
 #include "recovered_types.h"
 
+/* Historical .data objects of this CU (DWARF lines 14 and 16, verifier bytes at
+ * 0x4bdb80 and 0x4bdba8). Indexed by collision_type and the gravity mode. */
+double max_speed[5] = { 12.0, 12.0, 12.2, 12.2, 12.0 };
+double gravity_modifier[3] = { -0.2, 0.0, 0.2 };
+
 /* DWARF names parameter p at original line 18. This body preserves the
  * original reset set; x, y, and angle deliberately remain untouched. */
 void reset_player(Tplayer *p)
@@ -44,7 +49,6 @@ void reset_player(Tplayer *p)
 /* DWARF names the second parameter cheat.  The normal jump preserves the
  * original two-path x87 expression instead of reducing it to fabs(sx). */
 extern int collision_type;
-extern double max_speed[];
 
 int jump_player(Tplayer *p, int cheat)
 {

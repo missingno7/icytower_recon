@@ -95,6 +95,16 @@ def main():
                 no_regressions(read_json(ROOT/prior['verified_report']),report)
             staged.append((target,config,report))
             print(target,report['function_matches'],'/',report['functions_total'],flush=True)
+        link=None
+        if a.verify_all:
+            # Fresh verification also refreshes the ordinary recovered-game link record (never executed).
+            import subprocess,sys
+            subprocess.run([sys.executable,'tools/recovered_game_link.py'],cwd=ROOT,check=False)
+            link_path=ROOT/'build/recovered-game/tdm-2/link.json'
+            if link_path.exists(): link=read_json(link_path)
+            previous=read_json(CURRENT/'link-status.json') if (CURRENT/'link-status.json').exists() else None
+            if link is None or (previous and previous.get('linked') and not link['linked']):
+                raise ValueError('Ordinary source link regressed or produced no record')
         from promote_function import promotion_lock, JOURNAL
         from publication import publication
         with promotion_lock(), publication([ROOT/'src/recovery.json',ROOT/'docs/progress.json',ROOT/'docs/blocker-summary.json',*CURRENT.rglob('*')],CURRENT,JOURNAL,ROOT):
@@ -103,6 +113,7 @@ def main():
                 ledger[config['source']]=entry_from_report(report,path,ledger.get(config['source']))
             validate_ledger(ledger)
             path=ROOT/'src/recovery.pending.json'; write_json(path,ledger); os.replace(path,ROOT/'src/recovery.json')
+            if link is not None: write_json(CURRENT/'link-status.json',link)
             publish_status(ledger)
         print('Published fresh verified state atomically.')
         return
