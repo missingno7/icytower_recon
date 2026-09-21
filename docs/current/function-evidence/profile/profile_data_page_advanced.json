@@ -107,8 +107,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 177,
-    "body_end_line": 206,
+    "body_start_line": 171,
+    "body_end_line": 200,
     "body_sha256": "a8c52ddf4bfd015d37633a1fb60e0d4aa9dee76df3104f7aa5a29d900063cc1b"
   },
   "reference_diagnostics": [],
@@ -684,10 +684,10 @@
         "assembly": "mov    0x88(%ebx),%eax",
         "dwarf_variables": [
           {
-            "die": 3150,
+            "die": 3036,
             "name": "p",
             "type": "Tprofile_advanced *",
-            "base_type": "Tprofile_advanced",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "register",
@@ -705,7 +705,7 @@
         "assembly": "mov    $0x1,%edi",
         "dwarf_variables": [
           {
-            "die": 3175,
+            "die": 3061,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -740,10 +740,10 @@
         "assembly": "mov    0x5c(%ebx,%edi,4),%edx",
         "dwarf_variables": [
           {
-            "die": 3150,
+            "die": 3036,
             "name": "p",
             "type": "Tprofile_advanced *",
-            "base_type": "Tprofile_advanced",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "register",
@@ -753,7 +753,7 @@
             "relation": "register is used"
           },
           {
-            "die": 3175,
+            "die": 3061,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -788,10 +788,10 @@
         "assembly": "mov    0x70(%ebx,%edi,4),%eax",
         "dwarf_variables": [
           {
-            "die": 3150,
+            "die": 3036,
             "name": "p",
             "type": "Tprofile_advanced *",
-            "base_type": "Tprofile_advanced",
+            "base_type": null,
             "base_encoding": null,
             "location": {
               "kind": "register",
@@ -801,7 +801,7 @@
             "relation": "register is used"
           },
           {
-            "die": 3175,
+            "die": 3061,
             "name": "i",
             "type": "int",
             "base_type": "int",
@@ -1035,7 +1035,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 5733,
+          "candidate_die": 5619,
           "candidate_offset": 352,
           "section_index": 2,
           "section": ".data",
@@ -1714,13 +1714,13 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "difficulty": "MEDIUM",
+  "priority": 90,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1756,119 +1756,7 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "profile_data_page_advanced",
-      "source": "src/profile.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "profile_data_page_advanced",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "char*",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 198042
-        }
-      ],
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_advanced",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 216,
-          "member_difference_count": 27,
-          "first_member_differences": [
-            {
-              "member": "before_ccc_num",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 96,
-                "type": "unsigned char [96]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_score",
-              "historical": {
-                "offset": 84,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "biggest_lost_combo",
-              "historical": {
-                "offset": 92,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 176
-        }
-      ],
-      "candidate_signatures": [
-        "('char*', ['Tprofile_advanced*'])"
-      ],
-      "candidate_card": "docs/current/interfaces/profile_data_page_advanced.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations."
 }

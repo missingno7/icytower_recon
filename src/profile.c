@@ -163,14 +163,8 @@ char *profile_data_page_basic(Tprofile_basic *p)
         sprintf(data, "%s\n", data);
     return data;
 }
-typedef struct Tprofile_advanced {
-    unsigned char before_ccc_num[0x60];
-    int cccNum[5];
-    int cccTotal[5];
-    int ccc[5];
-    int jc[5];
-    int rewards[10];
-} Tprofile_advanced;
+#include "recovered/Tprofile.h"
+typedef Tprofile Tprofile_advanced;
 
 
 char *profile_data_page_advanced(Tprofile_advanced *p)

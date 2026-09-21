@@ -1088,3 +1088,29 @@ to the preservation gate was introduced. Detailed changed-function evidence and
 remaining queue availability are indexed in docs/attempts/type-batch-validation.json.
 This validates sustained mechanical work across several task shapes but leaves
 the cheap body-recovery requirement open.
+
+
+## Source-context reconsideration of canonicalization blockers
+
+The type_context_probe supervisor tool compiles four isolated variants: baseline,
+baseline without assertion declarations, canonical recipe, and canonical recipe
+without assertion declarations. It overlays only compiled maintained inputs and
+generated headers; the unchanged overlay must preserve raw non-debug contributions.
+Paired diagnostics distinguish canonicalization from assertion effects. Production
+assertions are never disabled or proposed as an acceptance option.
+
+Fresh current evidence showed the previously rejected advanced-profile recipe now
+preserves all raw contributions after other profile migrations changed declaration
+context. Tcustom also lost its old instruction permutation, but still differs in
+the raw fingerprint; removing assertions changes another function and is not a fix.
+The new reconsider_type command holds the publication lock, checks source/tool
+snapshots, probes every affected CU, requires raw baseline/canonical equality, and
+atomically retires a block only if ordinary planning then yields a CHEAP task.
+The old block and content-identified probe paths are retained. No proof or source
+status is promoted by reconsideration.
+
+The worker then promoted view_profile_Tprofile_advanced through normal fresh type,
+contribution, link, test and audit acceptance. Tcustom remains blocked. All 269
+interface tests pass, including wrong/incomplete/duplicate/non-preserving probe
+rejection. Every function/workflow proof is unchanged. See
+docs/attempts/type-reconsideration-validation.json.

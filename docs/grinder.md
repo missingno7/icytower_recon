@@ -469,3 +469,10 @@ member-token edits. Use interface_task.py's listed commands; do not rename membe
 names globally. Promotion verifies the complete parent and pointee types and
 retains all existing contribution and exact-function gates. CANONICAL_POINTEE_MATCH
 is a type migration result, not FUNCTION_MATCH.
+
+A supervisor may investigate a context-dependent canonical/type-view block with
+`python tools/type_context_probe.py <target> <task>`. After surrounding declarations
+change, `python tools/reconsider_type.py <task>` fresh-probes every affected CU and
+requires raw contribution preservation before atomically reopening the task. It
+retains the old failure and does not promote anything. Resume the ordinary worker
+only after the task is CHEAP again; do not manually erase blocker records.
