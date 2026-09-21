@@ -399,3 +399,11 @@ Compiler trial summaries include `diagnostic_original_comparison`. Even when a
 trial reports FUNCTION_MATCH, `acceptance_input` is false: scratch compiler flags
 and objects cannot promote production source. Production status comes from the
 locked normal build. Use trial results to guide a supervisor investigation.
+
+
+Compiler probes retain numbered RTL pass identities, including repeated names
+such as dce. Trial memory links a compact `*-rtl.json` comparison with at most
+three changed-pass excerpts. Only exact scratch paths and compiler heap
+declaration addresses are normalized. Alias sets, register IDs, labels and
+source lines remain visible. First textual divergence is not necessarily the
+pass causing the machine-code mismatch; missing passes are explicit.

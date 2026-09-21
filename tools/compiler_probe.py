@@ -10,6 +10,7 @@ from recovery_pipeline import fresh_verify,OBJDUMP
 from source_scope import function_span,body_hash
 from type_graph import graph
 from compiler_context import resolved_candidate,variant_difference
+from rtl_evidence import pass_identity,compare_passes
 
 
 def scoped_dump(text,name):
@@ -61,23 +62,27 @@ def probe(target,name,omit,local_types=(),extra_flags=()):
         if label.startswith('flag-'): args.insert(args.index('-c'),'-'+label.removeprefix('flag-'))
         args[1:1]=['-fdump-rtl-all','-I'+str(source.parent)]
         args=[('-I'+str(ROOT/a[2:])) if a.startswith('-I') and not Path(a[2:]).is_absolute() else a for a in args]
+        for stale in out.glob('*r.*'):
+            if stale.is_file(): stale.unlink()
         run(args,cwd=out,toolchain=COMPILERS['tdm-2'])
         report=compare(obj,TARGETS[target]['historical_cu'],ROOT/'assets/icytower15.exe',OBJDUMP)
         function=next(r for r in report['functions'] if r['name']==name)
         if label=='baseline':
             if next(s['sha256'] for s in report['object_sections'] if s['name']=='.text')!=next(s['sha256'] for s in reference['object_sections'] if s['name']=='.text'):
                 raise ValueError('Diagnostic source copy changed baseline text; context experiment refused')
-        dumps={}
-        for dump in out.glob('*r.*'):
+        dumps={}; passes=[]
+        for dump in sorted(out.glob('*r.*'),key=pass_identity):
             scoped=scoped_dump(dump.read_text(errors='replace'),name)
             if scoped:
                 dest=out/'focus'/dump.name; dest.parent.mkdir(exist_ok=True); dest.write_text(scoped,encoding='utf-8')
-                dumps[dump.name.rsplit('.',1)[-1]]=dest.relative_to(ROOT).as_posix()
+                number,phase=pass_identity(dump)
+                dumps[str(number)+':'+phase]=dest.relative_to(ROOT).as_posix()
+                passes.append({'number':number,'phase':phase,'path':dest.relative_to(ROOT).as_posix(),'identity':identity(dest)})
         result['variants'].append({'variant':label,'source':copy.relative_to(ROOT).as_posix(),'source_identity':identity(copy),'target_body_sha256':body_hash(variant,name),
             'command':args,'object':identity(obj),'candidate_size':function.get('candidate_size'),
             'comparison_verdict':function['status'],'all_function_matches':report['function_matches'],'whole_text_contribution_equal':report['whole_text_contribution_equal'],'difference_offsets':function.get('difference_offsets',[]),
             'instructions':function.get('instructions',[]),'candidate_offset':function.get('candidate_offset'),'resolved_code':resolved_candidate(function),
-            'focused_rtl_dumps':dumps})
+            'focused_rtl_dumps':dumps,'focused_rtl_passes':passes})
     for path,expected in build['local_inputs'].items():
         if identity(ROOT/path)!=expected: raise ValueError('Maintained source changed during compiler probe')
     if identity(source)!=before: raise ValueError('Probe modified maintained source')
@@ -86,10 +91,16 @@ def probe(target,name,omit,local_types=(),extra_flags=()):
         difference=variant_difference(baseline,variant)
         variant['context_difference']=difference
         variant['context_changed_offsets']=difference['first_changed_offsets']
+        variant['rtl_comparison']=compare_passes(baseline,variant,ROOT)
     path=ROOT/'docs/attempts/compiler-context'/target/(name+'.json')
     if path.exists():
         archive=path.with_suffix('.jsonl')
         with archive.open('a',encoding='utf-8') as stream: stream.write(json.dumps(read_json(path),separators=(',',':'))+'\n')
+    trace=path.with_name(name+'-rtl.json')
+    result['rtl_tool']=identity(ROOT/'tools/rtl_evidence.py')
+    result['rtl_evidence']=trace.relative_to(ROOT).as_posix()
+    write_json(trace,{'target':target,'function':name,'probe_tool':result['probe_tool'],'rtl_tool':result['rtl_tool'],
+                      'variants':[{'variant':v['variant'],**v['rtl_comparison']} for v in result['variants'] if v['variant']!='baseline']})
     result['source_snapshot']=text
     write_json(path,result)
     for variant in result['variants']:

@@ -90,5 +90,5 @@ def load_trials(target,name,row,source_inputs):
              'difference':variant_difference(baseline,v),
              'diagnostic_original_comparison':{'verdict':v.get('comparison_verdict'),'mismatch_count':len(v['difference_offsets']) if 'difference_offsets' in v else None,'acceptance_input':False}} for v in record['variants'] if v['variant']!='baseline']
     return {'state':'CURRENT_BASELINE' if current else 'BASELINE_REQUIRES_REVIEW','evidence':path.relative_to(ROOT).as_posix(),
-            'trial_count':len(trials),'trials':trials[:3],
+            'trial_count':len(trials),'trials':trials[:3],'rtl_evidence':record.get('rtl_evidence'),
             'limit':'Diagnostic trial memory only. A no-change result applies to this input snapshot and experiment, not every possible compiler context; stale or unresolvable baselines are explicit. No original-match or edit-permission claim.'}

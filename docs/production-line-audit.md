@@ -589,3 +589,22 @@ The whole-unit-disabled diagnostic also reduces the CU function-match count
 from 50 to 42. Its target match is therefore not a viable global flag fix.
 The peephole-disabled trial reduces that count to 27; scheduling-disabled stays
 at 50. These counts are retained in the full probe evidence.
+
+
+## Numbered compiler-pass evidence
+
+Compiler probe indexes used phase names as keys, so the later dce dump silently
+replaced the earlier dce entry. They now retain numbered pass records with file
+identities, clear stale raw dumps before compilation, and preserve repeated
+phase names. Bounded comparisons verify dump identities, report missing passes,
+and normalize only exact scratch paths and compiler heap declaration addresses.
+They never supply function proof or assign a causal compiler pass.
+
+A real stopGameMusic rerun retained 55 passes per variant, including dce 158 and
+186. The 4.8 KB compact trace reports five equal and fifty textually changed
+passes; the first is expand, including label/alias metadata changes. The target
+diagnostic match reproduces with whole-unit compilation disabled, while the
+production baseline remains DIFFER. Three trace tests and eleven compiler-context
+tests passed. The initial probe rejected the hyphenated init-regs name; support
+and a regression case were added before the successful rerun. Trial cards link
+`docs/attempts/compiler-context/game-main/stopGameMusic-rtl.json`.
