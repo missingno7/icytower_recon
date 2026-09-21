@@ -6,11 +6,11 @@ import unittest
 from common import ROOT,identity,write_json
 
 GROUPS={
-    'function':('test_grinder','test_control_transfers','test_scheduling_diagnostics',
+    'function':('test_link_object_cache','test_grinder','test_control_transfers','test_scheduling_diagnostics',
                 'test_literal_diagnostics','test_literal_dependencies','test_queue_dependencies','test_interface_scope','test_reference_diagnostics','test_atomic_writes',
                 'test_data_owners','test_dwarf_locations','test_compound_probe','test_compiler_context',
                 'test_branch_diagnostics','test_data_tasks'),
-    'interface':('test_grinder','test_contribution_diagnostics','test_scheduling_diagnostics','test_control_transfers',
+    'interface':('test_link_object_cache','test_grinder','test_contribution_diagnostics','test_scheduling_diagnostics','test_control_transfers',
                  'test_literal_diagnostics','test_literal_dependencies','test_queue_dependencies','test_interface_scope','test_reference_diagnostics','test_global_type_tasks',
                  'test_atomic_writes','test_data_owners','test_call_arity','test_interface_tasks','test_interface_admission','test_typed_interface_tasks',
                  'test_interface_type_probe','test_dwarf_locations','test_compiler_context',

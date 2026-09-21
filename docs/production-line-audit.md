@@ -854,3 +854,24 @@ proof states are unchanged. Durable run histories, admission rejection and queue
 counts are indexed in docs/attempts/call-arity-batch-validation.json. Full cheap-body
 handover remains unfinished; ordinary link acceptance also still recompiles every
 recovered CU after each promotion and needs verified reuse for unaffected objects.
+
+
+## Verified ordinary-link object reuse
+
+Ordinary recovered-game link acceptance now reuses objects only after fresh GCC
+preprocessing confirms the resolved include closure, preprocessed contents, every
+dependency identity, flags/configuration, compiler locks, build-tool identities and
+environment digest. Object and build-report identities must also match. Locked
+inputs are verified before and after the link; each object's inputs and bytes and
+the library archive inputs are rechecked before publishing the link result. Failed
+runs do not retain an old link.json as their result. This cache is confined to
+ordinary linking: owning-CU FAST and strict function acceptance still compile fresh.
+
+Real validation compiled all 26 objects cold in 10.690 seconds, then reused all
+26 in 3.888 seconds. Tampering with the cached stars object rebuilt only that
+object (4.114 seconds). A historical-compiler fixture detected both changed header
+contents and a newly shadowing header with identical contents. All game links kept
+the max_speed frontier and were never executed. The 255-test interface suite,
+141-test function suite and global audit pass. Evidence is recorded in
+docs/attempts/link-cache-validation.json. These timings are local observations,
+not a universal performance guarantee.

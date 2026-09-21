@@ -450,3 +450,9 @@ For supervisor investigation of an interface/branch interaction, use e.g.
 This runs only isolated diagnostic variants. Read the card's `compound_trials`
 first to avoid repeating a current negative experiment. Its results never bypass
 body/interface admission or qualify as promotion input.
+
+Ordinary link acceptance automatically reuses verified unchanged objects. Fresh
+preprocessing checks include resolution and dependency contents before reuse, and
+inputs are checked again after linking. This does not cache the owning-CU FAST or
+strict function comparison. Link reports expose COMPILED/REUSED per object; neither
+state establishes historical function equality.

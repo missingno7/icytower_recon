@@ -11,7 +11,8 @@ import re
 import subprocess
 
 from common import ROOT, identity, read_json, write_json
-from build import COMPILERS, compile_target, verify_inputs
+from build import COMPILERS, verify_inputs
+from link_object_cache import obtain, verify
 
 
 GAME_TARGETS = [
@@ -43,20 +44,26 @@ def main(compiler='tdm-2'):
         if identity(xdir / name) != archive['identity']:
             raise ValueError('Xiph archive differs from build report: ' + name)
 
+    archive_inputs = {library: identity(library), adir / 'build.json': identity(adir / 'build.json'),
+                      xdir / 'build.json': identity(xdir / 'build.json')}
+    archive_inputs.update({xdir / name: identity(xdir / name) for name in xiph['archives']})
+
     out = ROOT / 'build' / 'recovered-game' / compiler
     out.mkdir(parents=True, exist_ok=True)
     exe = out / 'recovered-game.exe'
     link_map = out / 'recovered-game.map'
+    (out / 'link.json').unlink(missing_ok=True)
     exe.unlink(missing_ok=True)
     link_map.unlink(missing_ok=True)
+    cache_receipts = {}
     objects = []
     object_reports = []
     for target in GAME_TARGETS:
-        obj, build = compile_target(target, dest=out / target, compiler=compiler)
+        obj, build, cache_receipts[target] = obtain(target, out / target, compiler)
         objects.append(obj)
         object_reports.append(build)
-    logg_object, logg_report = compile_target(
-        'allegro-logg', dest=out / 'allegro-logg', compiler=compiler)
+    logg_object, logg_report, cache_receipts['allegro-logg'] = obtain(
+        'allegro-logg', out / 'allegro-logg', compiler)
 
     args = [
         tc / 'bin/gcc.exe', '-O2', '-g', '-mfpmath=387', '-DALLEGRO_STATICLINK',
@@ -71,6 +78,12 @@ def main(compiler='tdm-2'):
     env['PATH'] = str(tc / 'bin') + os.pathsep + env.get('PATH', '')
     result = subprocess.run([str(x) for x in args], cwd=ROOT, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    verify_inputs(compiler)
+    for path, expected in archive_inputs.items():
+        if identity(path) != expected:
+            raise ValueError("Link archive input changed: " + str(path))
+    for target, receipt in cache_receipts.items():
+        verify(target, out / target, receipt, compiler)
     stderr = result.stderr.decode('utf-8', errors='replace')
     output = result.stdout.decode('utf-8', errors='replace')
     record = {
@@ -81,6 +94,7 @@ def main(compiler='tdm-2'):
         'xiph_report': identity(xdir / 'build.json'),
         'logg_object': logg_report,
         'game_objects': object_reports,
+        'object_reuse': {t: r['state'] for t, r in cache_receipts.items()},
         'returncode': result.returncode,
         'linked': result.returncode == 0,
         'executed': False,
