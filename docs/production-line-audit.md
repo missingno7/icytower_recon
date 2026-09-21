@@ -891,3 +891,22 @@ while rebuilding its changed CU. No task session remains open.
 This demonstrates sustained mechanical interface/type work, not sustained cheap
 function-body recovery. See docs/attempts/sustained-mechanical-validation.json and
 the complete run logs it references. The full handover goal remains open.
+
+
+## Recurring supervisor prerequisite ranking
+
+The generated supervisor-queue.json groups complete direct caller prerequisites
+by repair card, deduplicates callers, and reports whether the existing repair is
+planned in each caller CU. CHEAP repairs remain in the grinder queue; protected
+layout bodies are counted separately. Remaining non-cheap body observations are
+grouped by CU and difference class, explicitly as symptoms rather than shared
+causes. Five bounded examples link to original cards and the full dependency graph.
+No admission or proof status changes.
+
+Real evidence ranks load_replay first with five caller prerequisites, three within
+the planned repair scope. Its replay.c return layout differs at Treplay.data
+(Treplay_data pointer versus historical Trecord pointer), identifying a concrete
+shared type-identity investigation. All 20 layout-protected bodies stay protected.
+The 258-test interface suite, 144-test function suite and global audit pass; raw
+function/workflow proofs are unchanged. See
+docs/attempts/supervisor-queue-validation.json.

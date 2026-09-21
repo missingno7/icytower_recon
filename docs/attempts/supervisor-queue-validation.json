@@ -1,0 +1,58 @@
+{
+  "baseline_commit": "5a346fc",
+  "function_and_workflow_proofs_unchanged": true,
+  "top_prerequisite": {
+    "kind": "SHARED_INTERFACE_PREREQUISITE",
+    "key": "docs/current/interfaces/load_replay.json",
+    "affected_function_count": 5,
+    "planned_in_caller_count": 3,
+    "repair_card": "docs/current/interfaces/load_replay.json",
+    "repair_state": "TYPE_LAYOUT_BLOCKED",
+    "examples": [
+      {
+        "prerequisite": "docs/current/interfaces/load_replay.json",
+        "source": "src/main.c",
+        "function": "do_replay_menu",
+        "candidate_card": "docs/current/functions/main/do_replay_menu.json",
+        "planned_in_caller_cu": false
+      },
+      {
+        "prerequisite": "docs/current/interfaces/load_replay.json",
+        "source": "src/main.c",
+        "function": "init_game",
+        "candidate_card": "docs/current/functions/main/init_game.json",
+        "planned_in_caller_cu": false
+      },
+      {
+        "prerequisite": "docs/current/interfaces/load_replay.json",
+        "source": "src/replay.c",
+        "function": "load_replay",
+        "candidate_card": "docs/current/functions/replay/load_replay.json",
+        "planned_in_caller_cu": true
+      },
+      {
+        "prerequisite": "docs/current/interfaces/load_replay.json",
+        "source": "src/replay.c",
+        "function": "replay_selector",
+        "candidate_card": "docs/current/functions/replay/replay_selector.json",
+        "planned_in_caller_cu": true
+      },
+      {
+        "prerequisite": "docs/current/interfaces/load_replay.json",
+        "source": "src/replay.c",
+        "function": "save_replay",
+        "candidate_card": "docs/current/functions/replay/save_replay.json",
+        "planned_in_caller_cu": true
+      }
+    ],
+    "omitted_examples": 0,
+    "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
+  },
+  "protected_layout_functions": 20,
+  "tests": {
+    "interface": 258,
+    "function": 144
+  },
+  "global_audit": "PASS",
+  "next_investigation": "load_replay return Treplay.data has candidate Treplay_data pointer versus historical Trecord pointer in replay.c; establish type identity before considering any repair."
+}

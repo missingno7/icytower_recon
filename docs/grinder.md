@@ -456,3 +456,10 @@ preprocessing checks include resolution and dependency contents before reuse, an
 inputs are checked again after linking. This does not cache the owning-CU FAST or
 strict function comparison. Link reports expose COMPILED/REUSED per object; neither
 state establishes historical function equality.
+
+For supervisor interventions, read docs/current/supervisor-queue.json. It ranks
+shared recorded interface prerequisites by distinct affected callers, then groups
+remaining observations by CU and mismatch class. Counts are not promises of
+unlocked tasks. Read the repair card and retained evidence before experimenting;
+encode the validated lesson, refresh the queue, and return to CHEAP work. The
+layout-protected count is reported separately and does not authorize body edits.
