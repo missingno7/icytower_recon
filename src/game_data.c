@@ -19,13 +19,7 @@ typedef struct {
     int left, right, jump;
 } Tgame_data;
 
-typedef struct {
-    int jumps;
-    int combos;
-    int sd;
-    int keys;
-    int tiny;
-} Tcommandline;
+#include "recovered/Tcommandline.h"
 
 struct Treplay {
     char header[6];

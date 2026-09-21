@@ -256,9 +256,7 @@ typedef struct Tprofile {
     int snd_volume;
 } Tprofile;
 
-typedef struct Tavailable_profile {
-    char handle[32];
-} Tavailable_profile;
+#include "recovered/Tavailable_profile.h"
 
 #include "recovered/Tmenu_slider.h"
 
@@ -299,14 +297,7 @@ typedef struct Tavatar_profile {
     char avatar[1];
 } Tavatar_profile;
 
-typedef struct Tcharacter {
-    char filename[1024];
-    BITMAP *bmp;
-    int ok;
-    char name[128];
-    int uses_datafile;
-    PALETTE pal;
-} Tcharacter;
+#include "recovered/Tcharacter.h"
 
 typedef struct Tgame_data {
     Treplay *replay;
@@ -1833,7 +1824,7 @@ int check_dir(const char *filename, int attrib, void *param)
     return 0;
 }
 
-void for_each_directory(char *basedir,
+void for_each_directory(const char *basedir,
                         int (*cb)(const char *filename, int attrib, void *param))
 {
     char dir_and_wildcard[256];

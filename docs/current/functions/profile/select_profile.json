@@ -283,8 +283,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 792,
-    "body_end_line": 950,
+    "body_start_line": 793,
+    "body_end_line": 951,
     "body_sha256": "48a5a5b483479eafb0387a03a44b88d40e7d7644fa1574976893d448e91eb41d"
   },
   "reference_diagnostics": [],
@@ -764,7 +764,7 @@
         "assembly": "mov    0x14(%ebp),%edi",
         "dwarf_variables": [
           {
-            "die": 5405,
+            "die": 5406,
             "name": "ctrl",
             "type": "Tprofile_control *",
             "base_type": "Tprofile_control",
@@ -793,7 +793,7 @@
         "assembly": "mov    %eax,-0x13c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 5482,
+            "die": 5483,
             "name": "old_font",
             "type": "void *",
             "base_type": null,
@@ -1811,40 +1811,6 @@
         "call_offset_count": 2
       },
       {
-        "function": "is_up",
-        "source": "src/profile.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1519
-        ],
-        "candidate_card": "docs/current/interfaces/is_up.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "/*???*/"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "/*???*/"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Tcontrol",
-            "candidate_type": "/*???*/",
-            "header": "include/recovered/Tcontrol.h",
-            "status": "UNAVAILABLE",
-            "reason": "Candidate named type layout is missing or ambiguous"
-          }
-        ],
-        "call_offset_count": 1
-      },
-      {
         "function": "rebuild_profile_list",
         "source": "src/profile.c",
         "blocking": true,
@@ -2057,19 +2023,45 @@
         ],
         "layout_issues": [],
         "call_offset_count": 4
+      },
+      {
+        "function": "create_profile",
+        "source": "src/profile.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          2393
+        ],
+        "candidate_card": "docs/current/interfaces/create_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "Tprofile_create*",
+            "parameter_types": [
+              "char*",
+              "int"
+            ],
+            "canonical_return_type": "Tprofile*",
+            "canonical_parameter_types": [
+              "char*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
       }
     ],
     "blocking_functions": [
       "blit_to_screen",
       "draw_profile_selector",
       "get_string",
-      "is_up",
       "load_profile",
       "poll_control",
       "rebuild_profile_list"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
-    "omitted_observations": 1
+    "omitted_observations": 0
   },
   "storage_declarations": [],
   "ownership_prerequisites": [
@@ -2204,7 +2196,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 564
+          "line": 555
         },
         {
           "position": "parameter 1",
@@ -2292,7 +2284,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/main.c",
           "file": "src/main.c",
-          "line": 564
+          "line": 555
         },
         {
           "position": "parameter 2",
@@ -2303,7 +2295,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 790
+          "line": 791
         }
       ],
       "candidate_signatures": [
@@ -2318,7 +2310,7 @@
   "evidence_counts": {
     "relocation_mismatches": 91,
     "direct_transfer_mismatches": 5,
-    "callee_interface_observations": 9,
+    "callee_interface_observations": 8,
     "ownership_prerequisites": 2,
     "reference_diagnostics": 0,
     "literal_diagnostics": 13,

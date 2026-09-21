@@ -875,3 +875,19 @@ the max_speed frontier and were never executed. The 255-test interface suite,
 141-test function suite and global audit pass. Evidence is recorded in
 docs/attempts/link-cache-validation.json. These timings are local observations,
 not a universal performance guarantee.
+
+
+## Five consecutive unattended promotions
+
+The guarded worker completed for_each_directory, is_up, Tcommandline,
+Tavailable_profile and Tcharacter consecutively without supervisor edits or
+intervention. The first two repair historical declarations; the last three replace
+exact duplicate structures with generated historical headers and layout assertions.
+Every promotion passed its fresh owning-CU contribution comparison, acceptance
+suite, ordinary link check and global audit. Existing raw function and workflow
+proofs stayed unchanged, and the final promotion reused 25 ordinary-link objects
+while rebuilding its changed CU. No task session remains open.
+
+This demonstrates sustained mechanical interface/type work, not sustained cheap
+function-body recovery. See docs/attempts/sustained-mechanical-validation.json and
+the complete run logs it references. The full handover goal remains open.

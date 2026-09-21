@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "for_each_directory",
-  "source": "src/main.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
   "historical": [
     {
       "cu": "src/main.c",
@@ -21,36 +17,5 @@
       "die": 126679
     }
   ],
-  "type_layout_issues": [],
-  "changes": [
-    {
-      "start": 55149,
-      "end": 55244,
-      "before": "char *basedir,\n                        int (*cb)(const char *filename, int attrib, void *param)",
-      "after": "const char *basedir,\n                        int (*cb)(const char *filename, int attrib, void *param)",
-      "reason": "Use the DWARF parameter qualifiers/prototype",
-      "file": "src/main.c",
-      "line": 1836
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check for_each_directory",
-  "begin_command": "python tools/interface_task.py begin for_each_directory",
-  "apply_command": "python tools/interface_task.py apply for_each_directory",
-  "promotion_command": "python tools/interface_task.py promote for_each_directory",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "sources": [
-    "src/main.c"
-  ],
-  "source_identities": {
-    "src/main.c": {
-      "size": 92129,
-      "sha256": "22f58a5a9078d4d6b8190070de943d6af18f315e79a9ed6f94f0da5f2c5670a1"
-    }
-  },
-  "affected_targets": [
-    "game-main"
-  ],
-  "priority": 257,
-  "expected_prototype": "extern void for_each_directory(const char*, int(*)(const char*,int,void*));",
-  "reason": "Unique DWARF signature and exact compiler locations; body edits prohibited."
+  "changes": []
 }
