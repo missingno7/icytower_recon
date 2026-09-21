@@ -29,10 +29,11 @@ void draw_frame(BITMAP *bmp)
         max_bg_id = 2;
     } else if (ply[player_id]->level <= 0x15e) {        /* 2506 */
         max_bg_id = 3;
-    } else if (ply[player_id]->level >= 0x259) {        /* 2507 */
-        max_bg_id = 5;
     } else {
-        max_bg_id = 4;
+        max_bg_id = (ply[player_id]->level >= 0x259) + 4; /* 2507: branchless in the
+                                                             * historical binary (cmp/setge/
+                                                             * movzbl/add $0x4), not a
+                                                             * separate else-if/else pair */
     }
 
     {

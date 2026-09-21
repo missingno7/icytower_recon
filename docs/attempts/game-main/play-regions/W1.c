@@ -195,27 +195,25 @@ int play(void)
                  * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
                  * below are a best-effort reconstruction (see report); the calls and field targets are
                  * evidenced directly. */
-                double clockSpeed;
-                double qpcSpeed;
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
                 if (clockElapsed > 0) {
-                    clockSpeed = 1.0 / clockElapsed;
+                    totClockTimes = 1.0 / clockElapsed;
                 } else {
-                    clockSpeed = -0.05;                             /* line 3610 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* line 3610 (fallthrough constant) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
                 qpc_freq = li.LowPart;
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
-                qpcSpeed = qpc_freq / (1000.0 * qpc_elapsed);       /* line 3615 */
+                totQPCTimes = qpc_freq / (1000.0 * qpc_elapsed);    /* line 3615 */
                 timeTimeEnd = time(NULL);                           /* line 3623 */
                 timeElapsed = timeTimeEnd - timeTimeStart;          /* line 3638 */
-                demo->tc_c_data[demo->tc_posts] = clockSpeed;       /* line 3636 */
-                demo->tc_q_data[demo->tc_posts] = qpcSpeed;         /* line 3637 */
-                demo->tc_t_data[demo->tc_posts] =
-                    20.0 / (50.0 * timeElapsed);                    /* line 3638 */
+                totTimeTimes = 20.0 / (50.0 * timeElapsed);         /* line 3638 */
+                demo->tc_c_data[demo->tc_posts] = totClockTimes;    /* line 3636 */
+                demo->tc_q_data[demo->tc_posts] = totQPCTimes;      /* line 3637 */
+                demo->tc_t_data[demo->tc_posts] = totTimeTimes;     /* line 3638 (tail) */
                 demo->tc_f_data[demo->tc_posts] = ply[player_id]->level; /* line 3639 */
                 if (totMusics != 0) {                               /* line 3640 */
                     demo->tc_s_data[demo->tc_posts] = 50.0 * accMusics / totMusics; /* line 3641 */

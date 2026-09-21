@@ -92,7 +92,6 @@ int play(void)
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };
             int skip_keys;
             int isGuest;
-            int scrollerY;
             int new_rank_id;
             int rank_bmp_id;
             int rank_y;
@@ -131,7 +130,7 @@ int play(void)
              * highscore chime / fade timer (4695..4737). */
             for (;;) {
                 if (hy < 140.0)                                                     /* 4695 */
-                    scrollerY = 0;  /* offset 11886 stores esi (0 here) while the panel is
+                    falling = 0;  /* offset 11886 stores esi (0 here) while the panel is
                                      * still sliding in, pinning the shake counter until hy
                                      * settles past 140; an earlier pass misread this as a
                                      * store into the rank sprite id, which is not yet set */
@@ -151,8 +150,8 @@ int play(void)
                     textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);          /* 4706 */
                 }
-                scrollerY++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
-                if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {     /* 4710 */
+                falling++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
+                if (falling <= ply[player_id]->level * 5 && falling <= 250) {     /* 4710 */
                     play_sound(sounds[6], 0, 1);                                      /* 4711 */
                     if (custom.falling)                                               /* 4712 */
                         stop_sample(custom.falling);
@@ -172,7 +171,7 @@ int play(void)
                     if (cycle_count == 0)
                         continue;
                 }
-                if (ply[player_id]->shake == 0 && scrollerY > 0)  /* ? approximated loop-exit predicate */
+                if (ply[player_id]->shake == 0 && falling > 0)  /* ? approximated loop-exit predicate */
                     break;
             }
             ply[player_id]->dead = 0;                                                 /* 4737 */
@@ -264,12 +263,12 @@ int play(void)
                 }
                 alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* ? decay approximation, 4838 */
 
-                if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {         /* 4844 */
+                if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */
                     if (custom.falling)                                                   /* 4846 */
                         stop_sample(custom.falling);
                     ply[player_id]->shake = 24;                                           /* 4850 */
-                    scrollerY = 0;
+                    falling = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
                     blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,

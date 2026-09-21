@@ -193,27 +193,25 @@ int play(void)
                  * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
                  * below are a best-effort reconstruction (see report); the calls and field targets are
                  * evidenced directly. */
-                double clockSpeed;
-                double qpcSpeed;
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
                 if (clockElapsed > 0) {
-                    clockSpeed = 1.0 / clockElapsed;
+                    totClockTimes = 1.0 / clockElapsed;
                 } else {
-                    clockSpeed = -0.05;                             /* line 3610 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* line 3610 (fallthrough constant) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
                 qpc_freq = li.LowPart;
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
-                qpcSpeed = qpc_freq / (1000.0 * qpc_elapsed);       /* line 3615 */
+                totQPCTimes = qpc_freq / (1000.0 * qpc_elapsed);    /* line 3615 */
                 timeTimeEnd = time(NULL);                           /* line 3623 */
                 timeElapsed = timeTimeEnd - timeTimeStart;          /* line 3638 */
-                demo->tc_c_data[demo->tc_posts] = clockSpeed;       /* line 3636 */
-                demo->tc_q_data[demo->tc_posts] = qpcSpeed;         /* line 3637 */
-                demo->tc_t_data[demo->tc_posts] =
-                    20.0 / (50.0 * timeElapsed);                    /* line 3638 */
+                totTimeTimes = 20.0 / (50.0 * timeElapsed);         /* line 3638 */
+                demo->tc_c_data[demo->tc_posts] = totClockTimes;    /* line 3636 */
+                demo->tc_q_data[demo->tc_posts] = totQPCTimes;      /* line 3637 */
+                demo->tc_t_data[demo->tc_posts] = totTimeTimes;     /* line 3638 (tail) */
                 demo->tc_f_data[demo->tc_posts] = ply[player_id]->level; /* line 3639 */
                 if (totMusics != 0) {                               /* line 3640 */
                     demo->tc_s_data[demo->tc_posts] = 50.0 * accMusics / totMusics; /* line 3641 */
@@ -1008,7 +1006,6 @@ int play(void)
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };
             int skip_keys;
             int isGuest;
-            int scrollerY;
             int new_rank_id;
             int rank_bmp_id;
             int rank_y;
@@ -1047,7 +1044,7 @@ int play(void)
              * highscore chime / fade timer (4695..4737). */
             for (;;) {
                 if (hy < 140.0)                                                     /* 4695 */
-                    scrollerY = 0;  /* offset 11886 stores esi (0 here) while the panel is
+                    falling = 0;  /* offset 11886 stores esi (0 here) while the panel is
                                      * still sliding in, pinning the shake counter until hy
                                      * settles past 140; an earlier pass misread this as a
                                      * store into the rank sprite id, which is not yet set */
@@ -1067,8 +1064,8 @@ int play(void)
                     textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);          /* 4706 */
                 }
-                scrollerY++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
-                if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {     /* 4710 */
+                falling++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
+                if (falling <= ply[player_id]->level * 5 && falling <= 250) {     /* 4710 */
                     play_sound(sounds[6], 0, 1);                                      /* 4711 */
                     if (custom.falling)                                               /* 4712 */
                         stop_sample(custom.falling);
@@ -1088,7 +1085,7 @@ int play(void)
                     if (cycle_count == 0)
                         continue;
                 }
-                if (ply[player_id]->shake == 0 && scrollerY > 0)  /* ? approximated loop-exit predicate */
+                if (ply[player_id]->shake == 0 && falling > 0)  /* ? approximated loop-exit predicate */
                     break;
             }
             ply[player_id]->dead = 0;                                                 /* 4737 */
@@ -1180,12 +1177,12 @@ int play(void)
                 }
                 alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* ? decay approximation, 4838 */
 
-                if (scrollerY <= ply[player_id]->level * 5 && scrollerY <= 250) {         /* 4844 */
+                if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */
                     if (custom.falling)                                                   /* 4846 */
                         stop_sample(custom.falling);
                     ply[player_id]->shake = 24;                                           /* 4850 */
-                    scrollerY = 0;
+                    falling = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
                     blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
