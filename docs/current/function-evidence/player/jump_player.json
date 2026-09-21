@@ -6,10 +6,10 @@
   "function": "jump_player",
   "historical_va": "0x418678",
   "historical_size": 198,
-  "status": "DIFFER",
-  "state": "SOURCE_DIFFER",
-  "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-  "body_edit_allowed": true,
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
+  "body_edit_allowed": false,
   "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "int jump_player(Tplayer *p, int cheat);",
   "return_type": "int",
@@ -103,27 +103,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 54,
-    "body_end_line": 76,
-    "body_sha256": "2e7f7fe9b53b401ded3027cae39ed21eba6709b287b1e77478437f7932ad43ef"
+    "body_start_line": 58,
+    "body_end_line": 74,
+    "body_sha256": "3426232a30f4ba4da4f8fd9190094eafcc09750c3c6c2989099c16c347435ba0"
   },
   "reference_diagnostics": [],
-  "literal_diagnostics": [
-    {
-      "function_offset": 95,
-      "candidate_addend": 0,
-      "classification": "UNALIGNED_OR_UNTYPED",
-      "content_equal": null,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
-    },
-    {
-      "function_offset": 140,
-      "candidate_addend": 4,
-      "classification": "UNALIGNED_OR_UNTYPED",
-      "content_equal": null,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding."
-    }
-  ],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -194,464 +179,149 @@
     "limit": "DWARF variable types and function instruction counts; variable-to-instruction attribution requires location evidence. Char encoding is available through type DIE."
   },
   "localized_guards": null,
-  "branch_context": {
-    "original": {
-      "branch_count": 8,
-      "nearest_branches": [
-        {
-          "offset": 90,
-          "instruction": "je     418734 <_jump_player+0xbc>",
-          "encoding_bytes": 2,
-          "kind": "conditional",
-          "condition": "zero/equal",
-          "target_offset": 188,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 87,
-            "assembly": "sete   %cl",
-            "bytes": "0f94c1"
-          },
-          "target_window": [
-            {
-              "offset": 188,
-              "assembly": "fld    %st(1)",
-              "bytes": "d9c1"
-            },
-            {
-              "offset": 190,
-              "assembly": "fmuls  0x4d7130",
-              "bytes": "d80d30714d00"
-            },
-            {
-              "offset": 196,
-              "assembly": "jmp    4186d6 <_jump_player+0x5e>",
-              "bytes": "eb98"
-            }
-          ],
-          "fallthrough_offset": 92
-        },
-        {
-          "offset": 117,
-          "instruction": "je     418720 <_jump_player+0xa8>",
-          "encoding_bytes": 2,
-          "kind": "conditional",
-          "condition": "zero/equal",
-          "target_offset": 168,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 114,
-            "assembly": "test   $0x45,%ah",
-            "bytes": "f6c445"
-          },
-          "target_window": [
-            {
-              "offset": 168,
-              "assembly": "fstp   %st(0)",
-              "bytes": "ddd8"
-            },
-            {
-              "offset": 170,
-              "assembly": "test   %cl,%cl",
-              "bytes": "84c9"
-            },
-            {
-              "offset": 172,
-              "assembly": "je     4186f1 <_jump_player+0x79>",
-              "bytes": "74cb"
-            }
-          ],
-          "fallthrough_offset": 119
-        },
-        {
-          "offset": 142,
-          "instruction": "jne    41870f <_jump_player+0x97>",
-          "encoding_bytes": 2,
-          "kind": "conditional",
-          "condition": "nonzero/not equal",
-          "target_offset": 151,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 139,
-            "assembly": "test   $0x45,%ah",
-            "bytes": "f6c445"
-          },
-          "target_window": [
-            {
-              "offset": 151,
-              "assembly": "movl   $0x0,0x54(%edx)",
-              "bytes": "c7425400000000"
-            },
-            {
-              "offset": 158,
-              "assembly": "mov    $0xffffffff,%eax",
-              "bytes": "b8ffffffff"
-            },
-            {
-              "offset": 163,
-              "assembly": "leave",
-              "bytes": "c9"
-            }
-          ],
-          "fallthrough_offset": 144
-        }
-      ],
-      "omitted_branches": 5
-    },
-    "candidate": {
-      "branch_count": 6,
-      "nearest_branches": [
-        {
-          "offset": 87,
-          "instruction": "jne    143 <_jump_player+0x63>",
-          "encoding_bytes": 2,
-          "kind": "conditional",
-          "condition": "nonzero/not equal",
-          "target_offset": 99,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 84,
-            "assembly": "test   $0x5,%ah",
-            "bytes": "f6c405"
-          },
-          "target_window": [
-            {
-              "offset": 99,
-              "assembly": "mov    0x0,%eax",
-              "bytes": "a100000000"
-            },
-            {
-              "offset": 104,
-              "assembly": "fldl   0x0(,%eax,8)",
-              "bytes": "dd04c500000000"
-            },
-            {
-              "offset": 111,
-              "assembly": "fchs",
-              "bytes": "d9e0"
-            }
-          ],
-          "fallthrough_offset": 89
-        },
-        {
-          "offset": 120,
-          "instruction": "je     160 <_jump_player+0x80>",
-          "encoding_bytes": 2,
-          "kind": "conditional",
-          "condition": "zero/equal",
-          "target_offset": 128,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 117,
-            "assembly": "test   $0x45,%ah",
-            "bytes": "f6c445"
-          },
-          "target_window": [
-            {
-              "offset": 128,
-              "assembly": "fstp   %st(0)",
-              "bytes": "ddd8"
-            },
-            {
-              "offset": 130,
-              "assembly": "fstl   0x18(%edx)",
-              "bytes": "dd5218"
-            },
-            {
-              "offset": 133,
-              "assembly": "fxch   %st(1)",
-              "bytes": "d9c9"
-            }
-          ],
-          "fallthrough_offset": 122
-        },
-        {
-          "offset": 124,
-          "instruction": "jmp    162 <_jump_player+0x82>",
-          "encoding_bytes": 2,
-          "kind": "jmp",
-          "condition": "jmp",
-          "target_offset": 130,
-          "target_state": "INSTRUCTION_BOUNDARY",
-          "preceding_instruction": {
-            "offset": 122,
-            "assembly": "fstp   %st(1)",
-            "bytes": "ddd9"
-          },
-          "target_window": [
-            {
-              "offset": 130,
-              "assembly": "fstl   0x18(%edx)",
-              "bytes": "dd5218"
-            },
-            {
-              "offset": 133,
-              "assembly": "fxch   %st(1)",
-              "bytes": "d9c9"
-            },
-            {
-              "offset": 135,
-              "assembly": "fstpl  0x20(%edx)",
-              "bytes": "dd5a20"
-            }
-          ],
-          "fallthrough_offset": null
-        }
-      ],
-      "omitted_branches": 3
-    },
-    "selection_offset": 87,
-    "limit": "Each side is decoded independently. Equal offsets do not identify corresponding blocks; outside-function targets and indirect transfers are not resolved here. No source cause, CFG equivalence or layout proof is inferred."
-  },
+  "branch_context": null,
   "compiler": "tdm-2",
   "compiler_flags": [
     "-O2"
   ],
-  "current_candidate_size": 174,
-  "first_difference": {
-    "offset": 87,
-    "original_va": 4294351,
-    "candidate_byte": 117,
-    "original_byte": 15
-  },
-  "mismatch_count": 85,
-  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
-  "instruction_alignment": {
-    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
-    "original_instruction_count": 72,
-    "candidate_instruction_count": 63,
-    "changed_group_count": 7,
-    "shown_group_count": 3,
-    "hunks": [
-      {
-        "kind": "replace",
-        "original": {
-          "instruction_start": 35,
-          "instruction_end": 37,
-          "function_offset": 87,
-          "instructions": [
-            {
-              "address": 4294351,
-              "bytes": "0f94c1",
-              "mnemonic": "sete",
-              "assembly": "sete   %cl"
-            },
-            {
-              "address": 4294354,
-              "bytes": "7460",
-              "mnemonic": "je",
-              "assembly": "je     418734 <_jump_player+0xbc>"
-            }
-          ],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 35,
-          "instruction_end": 37,
-          "function_offset": 87,
-          "instructions": [
-            {
-              "address": 311,
-              "bytes": "750a",
-              "mnemonic": "jne",
-              "assembly": "jne    143 <_jump_player+0x63>"
-            },
-            {
-              "address": 313,
-              "bytes": "ddd8",
-              "mnemonic": "fstp",
-              "assembly": "fstp   %st(0)"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "insert",
-        "original": {
-          "instruction_start": 38,
-          "instruction_end": 38,
-          "function_offset": 94,
-          "instructions": [],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 38,
-          "instruction_end": 39,
-          "function_offset": 93,
-          "instructions": [
-            {
-              "address": 317,
-              "bytes": "d80d00000000",
-              "mnemonic": "fmuls",
-              "assembly": "fmuls  0x0"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "insert",
-        "original": {
-          "instruction_start": 43,
-          "instruction_end": 43,
-          "function_offset": 112,
-          "instructions": [],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 44,
-          "instruction_end": 46,
-          "function_offset": 117,
-          "instructions": [
-            {
-              "address": 341,
-              "bytes": "f6c445",
-              "mnemonic": "test",
-              "assembly": "test   $0x45,%ah"
-            },
-            {
-              "address": 344,
-              "bytes": "7406",
-              "mnemonic": "je",
-              "assembly": "je     160 <_jump_player+0x80>"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      }
-    ],
-    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
-    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
-  },
+  "current_candidate_size": 198,
+  "first_difference": null,
+  "mismatch_count": 0,
+  "classification_confidence": "MECHANICAL_PROOF",
+  "instruction_alignment": null,
   "disassembly": {
     "original": [
       {
-        "address": 4294342,
-        "bytes": "dde1",
-        "mnemonic": "fucom",
-        "assembly": "fucom  %st(1)",
+        "address": 4294264,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 4294344,
-        "bytes": "dfe0",
-        "mnemonic": "fnstsw",
-        "assembly": "fnstsw %ax",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294346,
-        "bytes": "ddd9",
-        "mnemonic": "fstp",
-        "assembly": "fstp   %st(1)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294348,
-        "bytes": "f6c405",
-        "mnemonic": "test",
-        "assembly": "test   $0x5,%ah",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294351,
-        "bytes": "0f94c1",
-        "mnemonic": "sete",
-        "assembly": "sete   %cl",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294354,
-        "bytes": "7460",
-        "mnemonic": "je",
-        "assembly": "je     418734 <_jump_player+0xbc>",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294356,
-        "bytes": "d9c0",
-        "mnemonic": "fld",
-        "assembly": "fld    %st(0)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 4294358,
-        "bytes": "a140d14d00",
+        "address": 4294265,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    0x4dd140,%eax",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 4294363,
-        "bytes": "dd04c580db4b00",
-        "mnemonic": "fldl",
-        "assembly": "fldl   0x4bdb80(,%eax,8)",
+        "address": 4294267,
+        "bytes": "83ec04",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x4,%esp",
         "dwarf_variables": []
+      },
+      {
+        "address": 4294270,
+        "bytes": "8b5508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%edx",
+        "dwarf_variables": [
+          {
+            "die": 184634,
+            "name": "p",
+            "type": "Tplayer *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 4294273,
+        "bytes": "8b450c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 184647,
+            "name": "cheat",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
       }
     ],
     "candidate": [
       {
-        "address": 302,
-        "bytes": "dde1",
-        "mnemonic": "fucom",
-        "assembly": "fucom  %st(1)",
+        "address": 296,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 304,
-        "bytes": "dfe0",
-        "mnemonic": "fnstsw",
-        "assembly": "fnstsw %ax",
-        "dwarf_variables": []
-      },
-      {
-        "address": 306,
-        "bytes": "ddd9",
-        "mnemonic": "fstp",
-        "assembly": "fstp   %st(1)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 308,
-        "bytes": "f6c405",
-        "mnemonic": "test",
-        "assembly": "test   $0x5,%ah",
-        "dwarf_variables": []
-      },
-      {
-        "address": 311,
-        "bytes": "750a",
-        "mnemonic": "jne",
-        "assembly": "jne    143 <_jump_player+0x63>",
-        "dwarf_variables": []
-      },
-      {
-        "address": 313,
-        "bytes": "ddd8",
-        "mnemonic": "fstp",
-        "assembly": "fstp   %st(0)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 315,
-        "bytes": "d9c0",
-        "mnemonic": "fld",
-        "assembly": "fld    %st(0)",
-        "dwarf_variables": []
-      },
-      {
-        "address": 317,
-        "bytes": "d80d00000000",
-        "mnemonic": "fmuls",
-        "assembly": "fmuls  0x0",
-        "dwarf_variables": []
-      },
-      {
-        "address": 323,
-        "bytes": "a100000000",
+        "address": 297,
+        "bytes": "89e5",
         "mnemonic": "mov",
-        "assembly": "mov    0x0,%eax",
+        "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
+      },
+      {
+        "address": 299,
+        "bytes": "83ec04",
+        "mnemonic": "sub",
+        "assembly": "sub    $0x4,%esp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 302,
+        "bytes": "8b5508",
+        "mnemonic": "mov",
+        "assembly": "mov    0x8(%ebp),%edx",
+        "dwarf_variables": [
+          {
+            "die": 6872,
+            "name": "p",
+            "type": "Tplayer *",
+            "base_type": null,
+            "base_encoding": null,
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 8
+            },
+            "expression_hex": "9100",
+            "relation": "variable storage is addressed"
+          }
+        ]
+      },
+      {
+        "address": 305,
+        "bytes": "8b450c",
+        "mnemonic": "mov",
+        "assembly": "mov    0xc(%ebp),%eax",
+        "dwarf_variables": [
+          {
+            "die": 6885,
+            "name": "cheat",
+            "type": "int",
+            "base_type": "int",
+            "base_encoding": "5\t(signed)",
+            "location": {
+              "kind": "memory",
+              "register": "ebp",
+              "offset": 12
+            },
+            "expression_hex": "9104",
+            "relation": "variable storage is addressed"
+          }
+        ]
       }
     ]
   },
@@ -660,11 +330,41 @@
       "name": "Tplayer",
       "size": 184,
       "header": "include/recovered/Tplayer.h",
-      "members_at_disassembly_offsets": [],
+      "members_at_disassembly_offsets": [
+        {
+          "name": "y",
+          "offset": 8,
+          "type": "double"
+        }
+      ],
       "limit": "Offset association only; register-to-variable binding is not inferred."
     }
   ],
   "original_line_window": [
+    {
+      "context": "player.c",
+      "file": "player.c",
+      "line": 72,
+      "address": 4294264,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "player.c",
+      "file": "player.c",
+      "line": 73,
+      "address": 4294276,
+      "end_sequence": false,
+      "flags": "x"
+    },
+    {
+      "context": "player.c",
+      "file": "player.c",
+      "line": 83,
+      "address": 4294280,
+      "end_sequence": false,
+      "flags": "x"
+    },
     {
       "context": "player.c",
       "file": "player.c",
@@ -702,30 +402,6 @@
       "file": "player.c",
       "line": 85,
       "address": 4294324,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "player.c",
-      "file": "player.c",
-      "line": 86,
-      "address": 4294331,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "player.c",
-      "file": "player.c",
-      "line": 87,
-      "address": 4294390,
-      "end_sequence": false,
-      "flags": "x"
-    },
-    {
-      "context": "player.c",
-      "file": "player.c",
-      "line": 88,
-      "address": 4294393,
       "end_sequence": false,
       "flags": "x"
     }
@@ -798,32 +474,6 @@
       "initializer_blockers": []
     },
     {
-      "symbol": ".rdata",
-      "cu": "F:\\projects\\icytower\\trunk\\source\\player.c",
-      "section": ".rdata",
-      "size": null,
-      "historical_address": null,
-      "candidate_addend": 0,
-      "dwarf_type": null,
-      "references": [
-        95
-      ],
-      "placement_confidence": "section base not independently established",
-      "object_owners": [],
-      "initial_value": null,
-      "coff_contribution_evidence": [
-        {
-          "logical_size": 56,
-          "content_equal": false,
-          "unresolved_initializer_relocations": 0,
-          "independent_section_bases": [],
-          "detail_report": "docs/current/reports/game-player.json#initialized_data_comparison"
-        }
-      ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
-      "initializer_blockers": []
-    },
-    {
       "symbol": ".data",
       "cu": "F:\\projects\\icytower\\trunk\\source\\player.c",
       "section": ".data",
@@ -832,7 +482,7 @@
       "candidate_addend": 0,
       "dwarf_type": null,
       "references": [
-        107
+        102
       ],
       "placement_confidence": "independent DWARF/COFF object owner and complete initializer",
       "object_owners": [
@@ -841,7 +491,7 @@
           "scope": [
             "GLOBAL"
           ],
-          "candidate_die": 7826,
+          "candidate_die": 7750,
           "candidate_offset": 0,
           "section_index": 2,
           "section": ".data",
@@ -878,25 +528,56 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\player.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
+      "historical_address": "0x4d7134",
       "candidate_addend": 4,
       "dwarf_type": null,
       "references": [
-        140
+        131
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 56,
-          "content_equal": false,
+          "logical_size": 48,
+          "content_equal": true,
           "unresolved_initializer_relocations": 0,
-          "independent_section_bases": [],
+          "independent_section_bases": [
+            5075248
+          ],
           "detail_report": "docs/current/reports/game-player.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
+      "initializer_blockers": []
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\player.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d7130",
+      "candidate_addend": 0,
+      "dwarf_type": null,
+      "references": [
+        180,
+        192
+      ],
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "object_owners": [],
+      "initial_value": null,
+      "coff_contribution_evidence": [
+        {
+          "logical_size": 48,
+          "content_equal": true,
+          "unresolved_initializer_relocations": 0,
+          "independent_section_bases": [
+            5075248
+          ],
+          "detail_report": "docs/current/reports/game-player.json#initialized_data_comparison"
+        }
+      ],
+      "blocker": null,
       "initializer_blockers": []
     }
   ],
@@ -904,153 +585,24 @@
   "calls": [],
   "original_calls": [],
   "indirect_control_flow": 0,
-  "relocation_mismatches": [
-    {
-      "section": 1,
-      "offset": 319,
-      "symbol_index": 18,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 95,
-      "addend": 0,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5099840,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 317,
-          "bytes": "d80d00000000",
-          "mnemonic": "fmuls",
-          "assembly": "fmuls  0x0"
-        },
-        "original_instruction_at_offset": {
-          "address": 4294358,
-          "bytes": "a140d14d00",
-          "mnemonic": "mov",
-          "assembly": "mov    0x4dd140,%eax"
-        }
-      }
-    },
-    {
-      "section": 1,
-      "offset": 324,
-      "symbol_index": 32,
-      "symbol": "_collision_type",
-      "type": 6,
-      "function_offset": 100,
-      "addend": 0,
-      "target_va": 5099840,
-      "resolution": "named symbol",
-      "resolved_value": 5099840,
-      "original_value": 3682649348,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 323,
-          "bytes": "a100000000",
-          "mnemonic": "mov",
-          "assembly": "mov    0x0,%eax"
-        },
-        "original_instruction_at_offset": {
-          "address": 4294363,
-          "bytes": "dd04c580db4b00",
-          "mnemonic": "fldl",
-          "assembly": "fldl   0x4bdb80(,%eax,8)"
-        }
-      }
-    },
-    {
-      "section": 1,
-      "offset": 331,
-      "symbol_index": 8,
-      "symbol": ".data",
-      "type": 6,
-      "function_offset": 107,
-      "addend": 0,
-      "target_va": 4971392,
-      "resolution": "independent DWARF/COFF object owner and complete initializer",
-      "resolved_value": 4971392,
-      "original_value": 3756121568,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 328,
-          "bytes": "dd04c500000000",
-          "mnemonic": "fldl",
-          "assembly": "fldl   0x0(,%eax,8)"
-        },
-        "original_instruction_at_offset": {
-          "address": 4294370,
-          "bytes": "d9e0",
-          "mnemonic": "fchs",
-          "assembly": "fchs"
-        }
-      }
-    },
-    {
-      "section": 1,
-      "offset": 364,
-      "symbol_index": 18,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 140,
-      "addend": 4,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 125126084,
-      "equal": false,
-      "comparison_context": {
-        "state": "UNALIGNED_BYTE_WINDOW",
-        "original_value_is_operand": false,
-        "reason": "No matching decoded instruction field at this function offset.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 362,
-          "bytes": "d90504000000",
-          "mnemonic": "flds",
-          "assembly": "flds   0x4"
-        },
-        "original_instruction_at_offset": {
-          "address": 4294403,
-          "bytes": "f6c445",
-          "mnemonic": "test",
-          "assembly": "test   $0x45,%ah"
-        }
-      }
-    }
-  ],
+  "relocation_mismatches": [],
   "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 0,
+  "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "reset_player",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 0,
       "candidate_offset": 0,
-      "size_delta": -75
+      "size_delta": 0
     },
     {
       "function": "update_player",
       "status": "DIFFER",
       "historical_offset": 496,
-      "candidate_offset": 400,
-      "size_delta": -253
+      "candidate_offset": 496,
+      "size_delta": -4
     }
   ],
   "emission_order": {
@@ -1059,111 +611,39 @@
     "historical_predecessor": "reset_player",
     "candidate_predecessor": "reset_player",
     "predecessor_same": true,
-    "predecessor_exact": false,
-    "historical_prefix_exact": false,
+    "predecessor_exact": true,
+    "historical_prefix_exact": true,
     "frontier": false,
     "cu_same_predecessor_count": 3,
     "cu_function_count": 3,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
+    "note": "Historical predecessor is emitted in order and exact."
   },
-  "known_rules": [
-    {
-      "id": "branch-order",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "symptom": "Branch ordering differs",
-      "known_source_cause": "Independent if statements versus else-if changes reachable blocks",
-      "known_fix_pattern": "Preserve DWARF scopes and independent guards; compare one change at a time",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
-        "compiler_ids": [
-          "tdm-2"
-        ],
-        "required_flags": [
-          "-O2"
-        ]
-      },
-      "example_functions": [
-        "update_star_field"
-      ],
-      "evidence": "docs/stars-experiment.md",
-      "confidence": "OBSERVED",
-      "required_features": [
-        "has_multiple_guards"
-      ],
-      "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
-        "observed_features": [
-          "has_multiple_guards"
-        ],
-        "evidence_field": null,
-        "priority_bonus_eligible": true,
-        "compiler_scope_matches": true,
-        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
-      }
-    },
-    {
-      "id": "loop-shape",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "symptom": "Backedge or induction sequence differs",
-      "known_source_cause": "Increment placement changes induction folding",
-      "known_fix_pattern": "Match original load/increment order; record unsuccessful alternatives",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
-        "compiler_ids": [
-          "tdm-2"
-        ],
-        "required_flags": [
-          "-O2"
-        ]
-      },
-      "example_functions": [
-        "generate_profile_checksum",
-        "draw_buffer"
-      ],
-      "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED",
-      "required_features": [
-        "has_loop"
-      ],
-      "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
-        "observed_features": [
-          "has_loop"
-        ],
-        "evidence_field": null,
-        "priority_bonus_eligible": true,
-        "compiler_scope_matches": true,
-        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
-      }
-    }
-  ],
+  "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": 39,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+  "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
-      "body_edit_allowed": true,
+      "body_edit_allowed": false,
       "known_difference_class": true,
       "source_body_located": true,
       "calls_resolved": true,
       "indirect_flow_within_medium_limit": true,
-      "same_size_and_at_most_12_differing_bytes": false,
+      "same_size_and_at_most_12_differing_bytes": true,
       "no_indirect_flow": true,
       "historical_size_at_most_900": true,
-      "cheap_difference_class": true
+      "cheap_difference_class": false
     },
     "observed": {
       "historical_size": 198,
-      "candidate_size": 174,
-      "differing_bytes": 85,
+      "candidate_size": 198,
+      "differing_bytes": 0,
       "unresolved_calls": 0,
       "indirect_transfers": 0
     },
@@ -1180,22 +660,7 @@
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
   },
   "storage_declarations": [],
-  "ownership_prerequisites": [
-    {
-      "function_offset": 95,
-      "symbol": ".rdata",
-      "state": "UNRESOLVED_RELOCATION_OWNER",
-      "reason": "section base not independently established",
-      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
-    },
-    {
-      "function_offset": 140,
-      "symbol": ".rdata",
-      "state": "UNRESOLVED_RELOCATION_OWNER",
-      "reason": "section base not independently established",
-      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
-    }
-  ],
+  "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
   "interface_scope": [],

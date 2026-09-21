@@ -53,31 +53,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/player.c",
-      "target": "game-player",
-      "function": "reset_player",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 96,
-      "difficulty": "MEDIUM",
-      "difference_class": "FLOAT_OR_X87_SHAPE",
-      "first_difference": {
-        "offset": 6,
-        "original_va": 4293974,
-        "candidate_byte": 199,
-        "original_byte": 217
-      },
-      "verification_command": "python tools/check_function.py game-player reset_player",
-      "begin_command": "python tools/grinder_task.py begin game-player reset_player",
-      "promotion_command": "python tools/promote_function.py game-player reset_player",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, cheap_difference_class",
-      "size": 296,
-      "candidate_card": "docs/current/functions/player/reset_player.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/map.c",
       "target": "game-map",
       "function": "add_floor",
@@ -99,6 +74,31 @@
       "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
       "size": 608,
       "candidate_card": "docs/current/functions/map/add_floor.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/player.c",
+      "target": "game-player",
+      "function": "update_player",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 95,
+      "difficulty": "MEDIUM",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 30,
+        "original_va": 4294494,
+        "candidate_byte": 206,
+        "original_byte": 210
+      },
+      "verification_command": "python tools/check_function.py game-player update_player",
+      "begin_command": "python tools/grinder_task.py begin game-player update_player",
+      "promotion_command": "python tools/promote_function.py game-player update_player",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+      "size": 651,
+      "candidate_card": "docs/current/functions/player/update_player.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1823,31 +1823,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "source": "src/player.c",
-      "target": "game-player",
-      "function": "jump_player",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 87,
-        "original_va": 4294351,
-        "candidate_byte": 117,
-        "original_byte": 15
-      },
-      "verification_command": "python tools/check_function.py game-player jump_player",
-      "begin_command": "python tools/grinder_task.py begin game-player jump_player",
-      "promotion_command": "python tools/promote_function.py game-player jump_player",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 198,
-      "candidate_card": "docs/current/functions/player/jump_player.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "create_replay",
@@ -1930,31 +1905,6 @@
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
-    },
-    {
-      "source": "src/player.c",
-      "target": "game-player",
-      "function": "update_player",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 3,
-        "original_va": 4294467,
-        "candidate_byte": 139,
-        "original_byte": 83
-      },
-      "verification_command": "python tools/check_function.py game-player update_player",
-      "begin_command": "python tools/grinder_task.py begin game-player update_player",
-      "promotion_command": "python tools/promote_function.py game-player update_player",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 651,
-      "candidate_card": "docs/current/functions/player/update_player.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
     },
     {
       "source": "src/main.c",

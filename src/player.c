@@ -1,9 +1,10 @@
 /* Historical CU: F:\projects\icytower\trunk\source\player.c
  * Ownership: GAME. Other entities remain unrecovered.
- * UNKNOWN: jump_player @ 0x00418678, 198 bytes
- * UNKNOWN: update_player @ 0x00418740, 651 bytes
+ * jump_player @ 0x00418678, 198 bytes: code equal, literal pool placement pending
+ * update_player @ 0x00418740, 651 bytes: reconstructed from disassembly; 647 bytes, only the status==2 epilogue copy differs
  */
 
+#include <allegro.h>
 #include "recovered_types.h"
 
 /* Historical .data objects of this CU (DWARF lines 14 and 16, verifier bytes at
@@ -39,16 +40,19 @@ void reset_player(Tplayer *p)
     p->best_combo = 0;
     p->no_combo_top_floor = 0;
     p->biggest_lost_combo = 0;
-    for (i = 0; i < 5; i++) {
+    for (i = 4; i >= 0; i--)
         p->ccc[i] = 0;
-        p->jcTop[i] = 0;
+    for (i = 4; i >= 0; i--)
         p->jc[i] = 0;
-    }
+    for (i = 4; i >= 0; i--)
+        p->jcTop[i] = 0;
 }
 
 /* DWARF names the second parameter cheat.  The normal jump preserves the
  * original two-path x87 expression instead of reducing it to fabs(sx). */
 extern int collision_type;
+#include "recovered/Treplay.h"
+extern Treplay *get_demo(void);
 
 int jump_player(Tplayer *p, int cheat)
 {
@@ -61,15 +65,9 @@ int jump_player(Tplayer *p, int cheat)
         return 0;
 
     p->status = 1;
-    {
-        double sx = p->sx;
-        double candidate = (sx + sx >= 0.0) ? sx * -2.0 : sx + sx;
-        double floor_speed = -max_speed[collision_type];
-
-        p->sy = (floor_speed > candidate) ? candidate : floor_speed;
-        p->max_s = sx;
-    }
-    if (p->sy < -22.0)
+    p->sy = MIN(-ABS(p->sx * 2), -max_speed[collision_type]);
+    p->max_s = p->sx;
+    if (p->sy < -22)
         p->rotate = 1;
     p->angle = 0;
     return -1;
@@ -79,36 +77,27 @@ int jump_player(Tplayer *p, int cheat)
  * and state transition order are oracle-backed; mode-table tuning is pending. */
 void update_player(Tplayer *p)
 {
-    double max_speed = 12.0;
-
-    if (p->sy < -100.0)
-        p->sy = -max_speed;
-    else if (p->sy > max_speed)
-        p->sy = max_speed;
-    if (p->sx < -max_speed)
-        p->sx = -max_speed;
-    else if (p->sx > max_speed)
-        p->sx = max_speed;
-
+    p->sy = MID(-100, p->sy, max_speed[collision_type]);
+    p->sx = MID(-max_speed[collision_type], p->sx, max_speed[collision_type]);
     p->x += p->sx;
     p->y += p->sy;
-    if (p->y > 1000.0)
-        p->y = 1000.0;
-    if (p->x < 0.0) {
-        p->x = 0.0;
+    if (p->y > 1000)
+        p->y = 1000;
+    if (p->x > 555) {
+        p->x = 555;
         p->sx *= -0.9;
-        if (p->sx == 4.0)
-            p->edge_drawn = 20;
+        if (ABS(p->sx) > 4)
+            p->bounce = -20;
     }
-    else if (p->x > 555.0) {
-        p->x = 555.0;
+    if (p->x < 85) {
+        p->x = 85;
         p->sx *= -0.9;
-        if (p->sx == -4.0)
-            p->edge_drawn = -20;
+        if (ABS(p->sx) > 4)
+            p->bounce = 20;
     }
     if (p->status) {
-        p->sy += 0.8;
-        if (p->status == 1 && p->sy >= 0.0)
+        p->sy += 0.8 + gravity_modifier[get_demo()->gravity];
+        if (p->status == 1 && p->sy > 0)
             p->status = 2;
     }
 }
