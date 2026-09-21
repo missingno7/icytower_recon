@@ -1,40 +1,83 @@
 {
   "schema": 1,
   "task_kind": "TYPE_VIEW",
-  "function": "view_replay_Treplay",
-  "source": "src/replay.c",
+  "function": "view_main_Treplay",
+  "source": "src/main.c",
   "sources": [
-    "src/replay.c"
+    "src/main.c"
   ],
   "alias": "Treplay",
   "observations": [
     {
-      "function": "calc_replay_checksum_131",
-      "variable": "r",
+      "function": "load_replay",
+      "position": "return",
       "historical_type": "Treplay",
-      "historical_die": 221881,
-      "candidate_die": 11083
+      "historical_die": 223347,
+      "candidate_declaration": {
+        "file": "src/main.c",
+        "line": 570,
+        "kind": "NC",
+        "name": "load_replay",
+        "return_type": "Treplay*",
+        "parameter_types": [
+          "char*"
+        ],
+        "declaration": "extern Treplay *load_replay (char *);"
+      },
+      "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     },
     {
-      "function": "calc_replay_checksum",
-      "variable": "r",
+      "function": "replay_selector",
+      "position": "return",
       "historical_type": "Treplay",
-      "historical_die": 221975,
-      "candidate_die": 11177
+      "historical_die": 223501,
+      "candidate_declaration": {
+        "file": "src/main.c",
+        "line": 571,
+        "kind": "NC",
+        "name": "replay_selector",
+        "return_type": "Treplay*",
+        "parameter_types": [
+          "Tcontrol*",
+          "char*"
+        ],
+        "declaration": "extern Treplay *replay_selector (Tcontrol *, char *);"
+      },
+      "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     },
     {
-      "function": "destroy_replay",
-      "variable": "r",
+      "function": "get_demo",
+      "position": "return",
       "historical_type": "Treplay",
-      "historical_die": 222078,
-      "candidate_die": 11365
+      "historical_die": 117313,
+      "candidate_declaration": {
+        "file": "src/main.c",
+        "line": 589,
+        "kind": "NF",
+        "name": "get_demo",
+        "return_type": "Treplay*",
+        "parameter_types": [],
+        "declaration": "extern Treplay *get_demo (void);"
+      },
+      "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     },
     {
-      "function": "draw_replay_selector",
-      "variable": "rep",
+      "function": "create_replay",
+      "position": "return",
       "historical_type": "Treplay",
-      "historical_die": 222254,
-      "candidate_die": 12416
+      "historical_die": 223247,
+      "candidate_declaration": {
+        "file": "src/main.c",
+        "line": 781,
+        "kind": "NC",
+        "name": "create_replay",
+        "return_type": "Treplay*",
+        "parameter_types": [
+          "int"
+        ],
+        "declaration": "extern Treplay *create_replay (int);"
+      },
+      "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     }
   ],
   "difficulty": "SUPERVISOR",
@@ -45,15 +88,15 @@
   "difference_class": "CANONICAL_TYPE_VIEW",
   "body_edit_allowed": false,
   "source_identities": {
-    "src/replay.c": {
-      "size": 24349,
-      "sha256": "c1954f84f8858b5a37dae4b8811977aa7c78f0273d13f7d2e1e384efcaa7a919"
+    "src/main.c": {
+      "size": 91812,
+      "sha256": "dbdf14efd3d8084518a953dc8e16a6fadc6dd9c6a628db19245262a8dddbc18b"
     }
   },
-  "begin_command": "python tools/interface_task.py begin view_replay_Treplay",
-  "apply_command": "python tools/interface_task.py apply view_replay_Treplay",
-  "verification_command": "python tools/interface_task.py check view_replay_Treplay",
-  "promotion_command": "python tools/interface_task.py promote view_replay_Treplay",
+  "begin_command": "python tools/interface_task.py begin view_main_Treplay",
+  "apply_command": "python tools/interface_task.py apply view_main_Treplay",
+  "verification_command": "python tools/interface_task.py check view_main_Treplay",
+  "promotion_command": "python tools/interface_task.py promote view_main_Treplay",
   "canonical": "Treplay",
   "header": "include/recovered/Treplay.h",
   "header_identity": {
@@ -352,7 +395,7 @@
     {
       "candidate_member": "data",
       "candidate_offset": 2216,
-      "candidate_type": "Treplay_data *",
+      "candidate_type": "void *",
       "historical_field_at_offset": {
         "expression": "Treplay.data",
         "offset": 2216,
@@ -362,6 +405,6 @@
     }
   ],
   "reason": "View has uses outside its owning source",
-  "detailed_evidence": "docs/current/type-view-evidence/view_replay_Treplay.json",
-  "observation_count": 14
+  "detailed_evidence": "docs/current/type-view-evidence/view_main_Treplay.json",
+  "observation_count": 4
 }

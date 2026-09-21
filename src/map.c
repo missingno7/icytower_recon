@@ -1,11 +1,8 @@
 #include "map.h"
 #include <stdlib.h>
 
-typedef struct Tmap_replay {
-    unsigned char reserved[140];
-    int floor_shrink;
-    int floor_size;
-} Tmap_replay;
+#include "recovered/Treplay.h"
+typedef Treplay Tmap_replay;
 
 Tmap_replay *get_demo(void);
 

@@ -82,6 +82,24 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(p['difficulty'],'SUPERVISOR')
         self.assertIn('conflicting',p['reason'])
 
+    def test_return_only_view_uses_explicit_compiled_declaration(self):
+        from type_views import return_evidence
+        g=graph(); units=read_json(ROOT/'src/units.json')
+        report={'interfaces_aux':'/* src/map.c:10:NC */ extern ReplayView *get_demo (void);'}
+        rows=return_evidence(report,units,g)
+        self.assertEqual(rows['ReplayView'][0]['historical_type'],'Treplay')
+        self.assertEqual(rows['ReplayView'][0]['position'],'return')
+        report['candidate_debug']={'functions':{}}
+        self.assertEqual(evidence(report,{'functions':[]})['ReplayView'],rows['ReplayView'])
+        for declaration in (
+            '/* third_party/x.h:1:NC */ extern ReplayView *get_demo (void);',
+            '/* src/map.c:1:IC */ extern ReplayView *get_demo (void);',
+            '/* src/map.c:1:NC */ extern ReplayView **get_demo (void);',
+            '/* src/map.c:1:NC */ extern ReplayView *unknown_function (void);'):
+            self.assertFalse(return_evidence({'interfaces_aux':declaration},units,g))
+        main=next(u for u in units if u['source']=='src/main.c')
+        self.assertFalse(return_evidence(report,[*units,main],g))
+
     def test_original_function_variable_correspondence_is_required(self):
         unit=next(u for u in read_json(ROOT/'src/units.json') if u['source']=='src/profile.c')
         report={'candidate_debug':{'functions':{'profile_data_page_extra':{'variables':[{'name':'p','type':'View *','die':1}]}}}}

@@ -42,14 +42,30 @@ def validate(report):
     if probe['object']!=b['object']: raise ValueError('Interface type probe object identity differs')
 
 
+def requested_types(report, source_names, historical_names):
+    """Request typedef evidence for historical names and compiled interface spellings.
+
+    Spelling only selects probe output; it never establishes type correspondence.
+    Missing or ambiguous typedefs remain missing or ambiguous after compilation.
+    """
+    from interfaces import declarations
+    names=set(source_names) & set(historical_names)
+    keywords=set('void char short int long float double signed unsigned const volatile restrict struct union enum extern static inline __attribute__'.split())
+    for declaration in declarations(report.get('interfaces_aux','')):
+        if not declaration['file'].startswith(('src/','include/')): continue
+        for spelling in [declaration['return_type'],*declaration['parameter_types']]:
+            names.update(set(re.findall(r'\b[A-Za-z_]\w*\b',spelling))-keywords)
+    present={t['name'] for t in report['candidate_debug']['typedefs']}
+    return names-present
+
+
 def supplement(report,dest,objdump):
     from type_graph import graph
     names=set()
     for source in report['build']['local_inputs']:
         if source.startswith(('src/','include/')):
             names.update(re.findall(r'\b[A-Za-z_]\w*\b',(ROOT/source).read_bytes().decode('cp1252')))
-    present={t['name'] for t in report['candidate_debug']['typedefs']}
-    missing=(names & set(graph().game_types))-present
+    missing=requested_types(report,names,graph().game_types)
     if not missing: return
     build=report['build'];extra=build['config'].get('flags',[])
     flags=build['flags'][:-len(extra)] if extra else build['flags']

@@ -20,6 +20,23 @@ def fixture():
 
 
 class InterfaceTypeProbeTests(unittest.TestCase):
+    def test_compiled_local_aliases_are_requested_without_inventing_correspondence(self):
+        from interface_type_probe import requested_types
+        report=fixture()
+        report['interfaces_aux']='\n'.join([
+            '/* src/map.c:12:NC */ extern LocalReplay *get_demo (void);',
+            '/* include/control.h:4:NC */ extern int poll (const LocalControl *);',
+            '/* third_party/sdk.h:8:NC */ extern ExternalType *external (void);'])
+        self.assertEqual(requested_types(report,{'Treplay','Existing','Unrelated'}, {'Treplay','Existing'}),
+                         {'Treplay','LocalReplay','LocalControl'})
+
+    def test_existing_ambiguous_typedefs_are_not_replaced_by_probe(self):
+        from interface_type_probe import requested_types
+        report=fixture()
+        report['candidate_debug']['typedefs'].append({'name':'Existing','layout':{'size':99}})
+        report['interfaces_aux']='/* src/example.c:1:NC */ extern Existing *f (void);'
+        self.assertEqual(requested_types(report,{'Existing'},{'Existing'}),set())
+
     def test_json_receipt_roundtrip(self):
         validate(json.loads(json.dumps(fixture())))
 

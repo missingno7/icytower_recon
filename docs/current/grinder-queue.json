@@ -670,6 +670,30 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
+      "source": "src/map.c",
+      "target": "game-map",
+      "function": "add_floor",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 81,
+      "difficulty": "MEDIUM",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "first_difference": {
+        "offset": 297,
+        "original_va": 4286725,
+        "candidate_byte": 184,
+        "original_byte": 176
+      },
+      "verification_command": "python tools/check_function.py game-map add_floor",
+      "begin_command": "python tools/grinder_task.py begin game-map add_floor",
+      "promotion_command": "python tools/promote_function.py game-map add_floor",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+      "size": 608,
+      "candidate_card": "docs/current/functions/map/add_floor.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "show_credits",
@@ -2761,6 +2785,26 @@
     },
     {
       "task_kind": "TYPE_VIEW",
+      "function": "view_main_Tgame_data",
+      "source": "src/main.c",
+      "sources": [
+        "src/main.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -25,
+      "reason": "View has uses outside its owning source",
+      "state": "TYPE_VIEW_REPAIR",
+      "status": "PARTIAL_STRUCT_VIEW",
+      "body_edit_allowed": false,
+      "difference_class": "CANONICAL_TYPE_VIEW",
+      "begin_command": "python tools/interface_task.py begin view_main_Tgame_data",
+      "verification_command": "python tools/interface_task.py check view_main_Tgame_data",
+      "promotion_command": "python tools/interface_task.py promote view_main_Tgame_data",
+      "size": 0,
+      "candidate_card": "docs/current/type-views/view_main_Tgame_data.json"
+    },
+    {
+      "task_kind": "TYPE_VIEW",
       "function": "view_main_Tprofile",
       "source": "src/main.c",
       "sources": [
@@ -2778,6 +2822,26 @@
       "promotion_command": "python tools/interface_task.py promote view_main_Tprofile",
       "size": 0,
       "candidate_card": "docs/current/type-views/view_main_Tprofile.json"
+    },
+    {
+      "task_kind": "TYPE_VIEW",
+      "function": "view_main_Treplay",
+      "source": "src/main.c",
+      "sources": [
+        "src/main.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -25,
+      "reason": "View has uses outside its owning source",
+      "state": "TYPE_VIEW_REPAIR",
+      "status": "PARTIAL_STRUCT_VIEW",
+      "body_edit_allowed": false,
+      "difference_class": "CANONICAL_TYPE_VIEW",
+      "begin_command": "python tools/interface_task.py begin view_main_Treplay",
+      "verification_command": "python tools/interface_task.py check view_main_Treplay",
+      "promotion_command": "python tools/interface_task.py promote view_main_Treplay",
+      "size": 0,
+      "candidate_card": "docs/current/type-views/view_main_Treplay.json"
     },
     {
       "task_kind": "TYPE_VIEW",
@@ -3041,30 +3105,6 @@
       "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
       "size": 431,
       "candidate_card": "docs/current/functions/profile/set_next_rank_message.json",
-      "task_kind": "FUNCTION_BODY"
-    },
-    {
-      "source": "src/map.c",
-      "target": "game-map",
-      "function": "add_floor",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 297,
-        "original_va": 4286725,
-        "candidate_byte": 184,
-        "original_byte": 176
-      },
-      "verification_command": "python tools/check_function.py game-map add_floor",
-      "begin_command": "python tools/grinder_task.py begin game-map add_floor",
-      "promotion_command": "python tools/promote_function.py game-map add_floor",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_demo",
-      "size": 608,
-      "candidate_card": "docs/current/functions/map/add_floor.json",
       "task_kind": "FUNCTION_BODY"
     },
     {

@@ -14,6 +14,24 @@
       "historical_type": "Tprofile",
       "historical_die": 199726,
       "candidate_die": 4879
+    },
+    {
+      "function": "load_profile",
+      "position": "return",
+      "historical_type": "Tprofile",
+      "historical_die": 199643,
+      "candidate_declaration": {
+        "file": "src/profile.c",
+        "line": 367,
+        "kind": "NF",
+        "name": "load_profile",
+        "return_type": "Tprofile_load*",
+        "parameter_types": [
+          "char*"
+        ],
+        "declaration": "extern Tprofile_load *load_profile (char *handle);"
+      },
+      "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     }
   ],
   "difficulty": "CHEAP",
@@ -25,7 +43,7 @@
       "end": 11370,
       "before": "typedef struct Tprofile_load {\n    unsigned char before_checksum[0x28];\n    int checksum;\n    unsigned char remainder[0x550 - 0x2c];\n} Tprofile_load;",
       "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_load;",
-      "reason": "Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias"
+      "reason": "Unique historical pointer correspondence and compatible member layouts; use the generated struct via a source alias"
     }
   ],
   "state": "TYPE_VIEW_REPAIR",
@@ -113,5 +131,5 @@
   "reason": "Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.",
   "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
   "detailed_evidence": "docs/current/type-view-evidence/view_profile_Tprofile_load.json",
-  "observation_count": 1
+  "observation_count": 2
 }

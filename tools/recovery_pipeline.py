@@ -164,6 +164,7 @@ def fresh_verify(target, dest=None, locked=False):
     report.update(build=build,fixture=identity(ROOT/'assets/icytower15.exe'),analysis_tool=identity(OBJDUMP),
                   verifier=LOADED_VERIFIER_IDENTITY,analysis_identity=LOADED_ANALYSIS_IDENTITY,schema=4)
     report['candidate_debug']=candidate_debug(build,OBJDUMP)
+    report['interfaces_aux']= (out/'interfaces.aux').read_text(errors='replace')
     from interface_type_probe import supplement
     supplement(report,out,OBJDUMP)
     report['data_snapshot']=capture_snapshot(report)
@@ -180,7 +181,6 @@ def fresh_verify(target, dest=None, locked=False):
         row['source_body_sha256']=ev['source_scope']['body_sha256'] if ev['source_scope'] else None
         row['compiler_context']=load_context(report['build']['target'],row['name'],row,report['build']['local_inputs'])
         row['workflow']=workflow(row)
-    report['interfaces_aux']= (out/'interfaces.aux').read_text(errors='replace')
     report['candidate_dwarf_path']=(out/'dwarf.txt').relative_to(ROOT).as_posix()
     if verifier_identity()!=LOADED_VERIFIER_IDENTITY or analysis_identity()!=LOADED_ANALYSIS_IDENTITY: raise ValueError('Tools changed during compilation/comparison')
     write_json(out/'comparison.json',report)

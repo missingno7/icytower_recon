@@ -73,8 +73,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 26,
-    "body_end_line": 87,
+    "body_start_line": 23,
+    "body_end_line": 84,
     "body_sha256": "a3f0f04f98c489e66fbf303b5816e2b12dd9f2b77cce8881d1c14dd49238eb93"
   },
   "reference_diagnostics": [],
@@ -425,7 +425,7 @@
         "assembly": "movl   $0x0,0x2e8(%ebx)",
         "dwarf_variables": [
           {
-            "die": 761,
+            "die": 786,
             "name": "m",
             "type": "Tmap *",
             "base_type": null,
@@ -453,7 +453,7 @@
         "assembly": "mov    %ecx,0x2f4(%ebx)",
         "dwarf_variables": [
           {
-            "die": 761,
+            "die": 786,
             "name": "m",
             "type": "Tmap *",
             "base_type": null,
@@ -502,7 +502,7 @@
         "assembly": "mov    0x2f4(%ebx),%eax",
         "dwarf_variables": [
           {
-            "die": 761,
+            "die": 786,
             "name": "m",
             "type": "Tmap *",
             "base_type": null,
@@ -1051,11 +1051,11 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "difficulty": "MEDIUM",
+  "priority": 81,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_demo",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1087,9 +1087,9 @@
       {
         "function": "get_demo",
         "source": "src/map.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
         "call_offsets": [
           292,
           344
@@ -1099,26 +1099,15 @@
           {
             "return_type": "Tmap_replay*",
             "parameter_types": [],
-            "canonical_return_type": "Tmap_replay*",
+            "canonical_return_type": "Treplay*",
             "canonical_parameter_types": []
           }
         ],
-        "layout_issues": [
-          {
-            "position": "return",
-            "historical_type": "Treplay",
-            "candidate_type": "Tmap_replay",
-            "header": "include/recovered/Treplay.h",
-            "status": "UNAVAILABLE",
-            "reason": "Candidate named type layout is missing or ambiguous"
-          }
-        ],
+        "layout_issues": [],
         "call_offset_count": 2
       }
     ],
-    "blocking_functions": [
-      "get_demo"
-    ],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
     "omitted_observations": 0
   },

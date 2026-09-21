@@ -8,6 +8,7 @@ from type_graph import graph
 from dwarf_layout import layout,locate
 from source_scope import sanitized
 from interface_tasks import affected_targets
+from interface_type_probe import interface_typedefs
 
 STRUCT=re.compile(r'\btypedef\s+struct(?:\s+(\w+))?\s*\{([^{}]*)\}\s*(\w+)\s*;')
 POINTER=re.compile(r'^(\w+)\s*\*$')
@@ -51,6 +52,33 @@ def compatible_members(candidate,expected,source):
     return retained,ignored
 
 
+def return_evidence(report, units, g):
+    """Map explicit compiled pointer returns to uniquely owned historical functions.
+
+    This identifies a proposed view, not a compatible layout or safe migration.
+    The planner and fresh gate must still prove members and unchanged emission.
+    """
+    from interfaces import declarations
+    originals=defaultdict(list); found=defaultdict(list)
+    for unit in units:
+        for function in unit['functions']:
+            d=g.dies.get(function.get('die'))
+            if d: originals[function['name']].append(d)
+    for declaration in declarations(report.get('interfaces_aux','')):
+        if not declaration['file'].startswith(('src/','include/')): continue
+        if 'I' in declaration['kind']: continue
+        old=originals[declaration['name']]
+        if len(old)!=1: continue
+        a=POINTER.fullmatch(declaration['return_type'])
+        b=POINTER.fullmatch(g.declaration(old[0].get('type_ref')))
+        if a and b and b[1] in g.game_types:
+            found[a[1]].append({'function':declaration['name'],'position':'return',
+                'historical_type':b[1],'historical_die':old[0]['offset'],
+                'candidate_declaration':declaration,
+                'evidence_source':'COMPILED_INTERFACE_AND_HISTORICAL_DWARF'})
+    return found
+
+
 def evidence(report,unit):
     g=graph(); found=defaultdict(list)
     for f in unit['functions']:
@@ -67,6 +95,8 @@ def evidence(report,unit):
             if a and b and b[1] in g.game_types:
                 found[a[1]].append({'function':f['name'],'variable':name,'historical_type':b[1],
                                    'historical_die':old[name][0]['offset'],'candidate_die':variables[0]['die']})
+    for alias, observations in return_evidence(report,read_json(ROOT/'src/units.json'),g).items():
+        found[alias].extend(observations)
     return found
 
 
@@ -85,7 +115,7 @@ def plan(source,report,match,observations,ledger,texts):
         if not header.exists(): raise ValueError('Canonical historical header is not generated')
         original=[layout(g,d['type_ref']) for d in g.game_types[canonical]]
         if len({json.dumps(shape_key(s),sort_keys=True) for s in original})!=1: raise ValueError('Historical type layouts conflict')
-        expected=original[0]; typedefs=[t for t in report['candidate_debug']['typedefs'] if t['name']==alias]
+        expected=original[0]; typedefs=[t for t in interface_typedefs(report) if t['name']==alias]
         if len(typedefs)!=1: raise ValueError('Candidate typedef DWARF is absent or ambiguous')
         candidate=typedefs[0]['layout']
         card.update(canonical=canonical,header=header.relative_to(ROOT).as_posix(),header_identity=identity(header),expected_layout=expected,
@@ -113,7 +143,7 @@ def plan(source,report,match,observations,ledger,texts):
                     candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,
                     affected_targets=targets,difficulty='CHEAP',priority=238,
                     changes=[{'file':source,'start':match.start(),'end':match.end(),'before':texts[source][match.start():match.end()],
-                              'after':after,'reason':'Unique original pointer-variable correspondence and compatible member layouts; use the generated struct via a source alias'}],
+                              'after':after,'reason':'Unique historical pointer correspondence and compatible member layouts; use the generated struct via a source alias'}],
                     reason='Canonical alias preserves named member offsets/types; fresh acceptance must preserve every emitted contribution and body.',
                     edit_scope='Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.')
     except ValueError as exc: card['reason']=str(exc)
@@ -142,7 +172,7 @@ def plans(ledger):
 
 
 def verify_view(report,plan):
-    typedefs=[t for t in report['candidate_debug']['typedefs'] if t['name']==plan['alias']]
+    typedefs=[t for t in interface_typedefs(report) if t['name']==plan['alias']]
     if len(typedefs)!=1 or shape_key(typedefs[0]['layout'])!=shape_key(plan['expected_layout']):
         raise ValueError('Canonical alias lacks the complete expected historical layout')
     from generate_types import outputs

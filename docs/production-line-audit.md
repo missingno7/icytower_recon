@@ -678,3 +678,23 @@ workflow proof states remain unchanged. Six interface-scope controls and the
 129-test function acceptance suite pass. A real add_floor admission with MEDIUM
 work enabled was rejected before session creation. See
 `docs/attempts/callee-interface-validation.json`.
+
+
+## Return-only partial type views
+
+The supplemental debug probe previously requested only historical type names,
+and ran before compiler interface declarations were loaded. It now also requests
+missing typedef spellings from maintained compiled interfaces. These names select
+probe evidence only; they do not establish type identity. Primary and ambiguous
+layouts retain precedence, and raw non-debug emission must remain unchanged.
+
+The type-view planner now associates explicit single-pointer returns with unique
+historical function DIEs. Implicit declarations, ambiguous owners and incompatible
+pointer forms are excluded. Existing field, filler, scope and acceptance checks
+still apply. This generated the bounded view_map_Tmap_replay task automatically.
+Its 148-byte partial view became an alias of generated Treplay, preserving both
+used field offsets and all emitted contributions. Strict promotion passed 229
+acceptance tests, the ordinary link check and global audit. Every function and
+workflow proof remains unchanged. add_floor returns from SUPERVISOR to MEDIUM;
+the separate main.c Treplay.data mismatch remains visible as a remote conflict.
+See docs/attempts/return-view-validation.json and the archived task history.
