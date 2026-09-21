@@ -369,7 +369,19 @@ def card_for(target,report,row,ledger=None,interface_index=None):
         interface_conflicts=[r for r in read_json(interface_path)['conflicts'] if r['function']==row['name']]
     from interface_scope import partition as scoped_interfaces
     local_interface_conflicts,interface_scope=scoped_interfaces(interface_conflicts,unit['source'])
-    routing_reason='Conservative size, mismatch, dependency and control-flow ranking.'
+    routing_checks={
+        'body_edit_allowed':bool(wf['body_edit_allowed']),
+        'known_difference_class':wf['difference_class']!='UNKNOWN_SUPERVISOR',
+        'source_body_located':bool(ev['source_scope']),
+        'calls_resolved':not unresolved,
+        'indirect_flow_within_medium_limit':not indirect or f['size']<=1200,
+        'same_size_and_at_most_12_differing_bytes':bool(localized),
+        'no_indirect_flow':not indirect,
+        'historical_size_at_most_900':f['size']<=900,
+        'cheap_difference_class':wf['difference_class'] in ('REGISTER_OR_INSTRUCTION_SELECTION','SIGNEDNESS_OR_PROMOTION','SOURCE_CONTROL_FLOW_SHAPE')}
+    routing_reason='Base eligibility checks not met: '+', '.join(k for k,v in routing_checks.items() if not v) if not all(routing_checks.values()) else 'All base CHEAP eligibility checks met; fresh admission and strict acceptance remain required.'
+    if supervisor: routing_reason='Recorded supervisor block: '+supervisor.get('reason','See supervisor_block evidence.')
+    if wf['state']=='MISSING' and not supervisor: routing_reason='Missing implementation requires supervisor source work; small prototypes are ranked MEDIUM but body-edit admission remains closed.'
     if not supervisor and wf['body_edit_allowed'] and ev.get('localized_guards') and not local_interface_conflicts and ev['source_scope'] and f['size']<=1200:
         difficulty='CHEAP'; priority=180+max(0,30-f['size']//32)
         routing_reason='Only up to four decoded conditional-branch opcodes differ; targets and all other independently resolved bytes agree. Unchanged indirect calls do not obstruct this bounded guard task.'
@@ -405,7 +417,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'relocation_mismatches':mismatch_views(row,old),
             'direct_transfer_mismatches':[t for t in row.get('direct_transfers',[]) if not t['equal'] or not t.get('layout_operand_equal',True)],
             'unresolved_call_symbols':unresolved,'exact_adjacent_functions':exact_neighbors,'neighbor_layout':neighbors,'known_rules':relevant,'difficulty':difficulty,'priority':priority,
-            'compiler_context':row.get('compiler_context'),'compiler_trials':load_trials(target,row['name'],row,report['build']['local_inputs']),'routing_reason':routing_reason,'supervisor_block':supervisor,'evidence_report':'docs/current/reports/'+target+'.json',
+            'compiler_context':row.get('compiler_context'),'compiler_trials':load_trials(target,row['name'],row,report['build']['local_inputs']),'routing_reason':routing_reason,'routing_evidence':{'base_checks':routing_checks,'observed':{'historical_size':f['size'],'candidate_size':row.get('candidate_size'),'differing_bytes':len(row.get('difference_offsets',[])),'unresolved_calls':unresolved,'indirect_transfers':indirect},'limit':'Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision.'},'supervisor_block':supervisor,'evidence_report':'docs/current/reports/'+target+'.json',
             'verification_command':'python tools/check_function.py '+target+' '+row['name'],
             'begin_command':'python tools/grinder_task.py begin '+target+' '+row['name'],
             'promotion_command':'python tools/promote_function.py '+target+' '+row['name']+(' --claim BODY_MATCH_LAYOUT_BLOCKED' if wf['state']=='BODY_MATCH_LAYOUT_BLOCKED' else ''),
@@ -439,7 +451,7 @@ def publish_cards(ledger,check=False):
             statuses[card['state']]=statuses.get(card['state'],0)+1
             classes[card['difference_class']]=classes.get(card['difference_class'],0)+1
             if card['state']!='FUNCTION_MATCH':
-                queue.append({k:card[k] for k in ('source','target','function','status','state','priority','difficulty','difference_class','first_difference','verification_command','begin_command','promotion_command','body_edit_allowed')} | {'size':card['historical_size'],'candidate_card':path.relative_to(ROOT).as_posix()})
+                queue.append({k:card[k] for k in ('source','target','function','status','state','priority','difficulty','difference_class','first_difference','verification_command','begin_command','promotion_command','body_edit_allowed','routing_reason')} | {'size':card['historical_size'],'candidate_card':path.relative_to(ROOT).as_posix()})
     interface_tasks=read_json(CURRENT/'interface-conflicts.json').get('tasks',[])
     queue.extend(interface_tasks)
     queue.extend(read_json(CURRENT/'type-tasks.json').get('tasks',[]))

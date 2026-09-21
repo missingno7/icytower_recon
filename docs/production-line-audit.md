@@ -523,3 +523,17 @@ Tests cover nearest-group ordering, repeated references, unknown positions,
 omission counts and input preservation. All 24 grinder tests and 205 interface
 acceptance tests passed. Queue content and function states are unchanged. See
 `docs/attempts/card-reference-bounds-validation.json`.
+
+
+## Explainable body-task routing
+
+Body queue rows previously omitted routing explanations, and base heuristic
+cards used a generic sentence. They now list the failed base eligibility checks
+and expose the observed size/mismatch/dependency facts. Explicit supervisor
+blocks retain their recorded reason. Existing bounded-recipe and prerequisite
+overrides remain authoritative; this change does not loosen task admission.
+
+Validation compared the entire before/after queue: every decision, priority and
+position is unchanged. Every body-task reason agrees with its card, and every
+recorded supervisor reason is preserved. All 24 grinder tests passed. Examples
+are recorded in `docs/attempts/routing-explanations-validation.json`.

@@ -379,3 +379,10 @@ Compact cards show at most eight grouped calls and globals nearest the first
 mismatch. `evidence_counts` records raw references, total groups and omitted
 groups. Unknown positions sort last. Use `detailed_evidence` for complete lists
 before making changes involving a dependency outside the displayed window.
+
+
+Body-task queue rows include `routing_reason`. Cards add `routing_evidence`
+with observed sizes, mismatch/call counts and the base eligibility checks. These
+explain selection; they do not authorize overriding final difficulty. Bounded
+recipes, interface/owner prerequisites and recorded supervisor blocks take
+precedence. The actual recorded block reason is retained in the queue.

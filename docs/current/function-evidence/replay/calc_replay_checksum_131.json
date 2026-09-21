@@ -707,7 +707,28 @@
   "priority": -95,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",
+  "routing_reason": "Recorded supervisor block: Three bounded probes failed. Swapping the two sum operands repairs the backedge load order but breaks the peeled first iteration at offset 134. Preincrement loop form and assignment-expression form retain the original mismatch at offset 144. Needs supervisor loop-scheduling rule; no exact claim.",
+  "routing_evidence": {
+    "base_checks": {
+      "body_edit_allowed": true,
+      "known_difference_class": true,
+      "source_body_located": true,
+      "calls_resolved": true,
+      "indirect_flow_within_medium_limit": true,
+      "same_size_and_at_most_12_differing_bytes": true,
+      "no_indirect_flow": true,
+      "historical_size_at_most_900": true,
+      "cheap_difference_class": false
+    },
+    "observed": {
+      "historical_size": 177,
+      "candidate_size": 177,
+      "differing_bytes": 6,
+      "unresolved_calls": 0,
+      "indirect_transfers": 0
+    },
+    "limit": "Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision."
+  },
   "supervisor_block": {
     "state": "BLOCKED_SUPERVISOR",
     "reason": "Three bounded probes failed. Swapping the two sum operands repairs the backedge load order but breaks the peeled first iteration at offset 134. Preincrement loop form and assignment-expression form retain the original mismatch at offset 144. Needs supervisor loop-scheduling rule; no exact claim.",
