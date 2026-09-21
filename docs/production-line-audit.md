@@ -928,3 +928,27 @@ use-site migration and contribution preservation are not yet proven. This remove
 the need to manually traverse child type DIEs when planning that shared repair.
 The 261-test interface suite passes; function/workflow proofs stay unchanged.
 See docs/attempts/pointee-correspondence-validation.json.
+
+
+## Isolated typed pointee migration experiment
+
+The supervisor command `python tools/pointee_probe.py game-replay Treplay data`
+now generates a scratch-only recipe from unique compiled and historical types. It
+requires complete field correspondence, unused byte filler, simple parent-pointer
+index accesses, unique compiled function-scope roots, and no unsupported alias
+uses. It replaces the typedef with a generated canonical header and explicit
+legacy alias, updates the parent pointee and renames only the selected accesses.
+The unchanged scratch baseline must preserve the raw non-debug fingerprint.
+Inputs, compiler locks, tools and oracle identities are checked around the run.
+
+The real Treplay_data migration changes no production source. Candidate comparison
+shows no changed functions/sections or preservation metadata, but the raw
+fingerprint correctly retains one generated local-symbol rename from
+_C.146.9670 to _C.146.9673 at rdata offset 800. The existing preservation predicate
+agrees; no new exception or function-match claim was introduced. The 147-test
+function suite passes. Full source-bound evidence and edits are retained under
+docs/attempts/pointee-probes, indexed by pointee-migration-validation.json.
+
+The next step is bounded migration admission plus fresh compiled canonical type
+verification through the existing atomic gate. This diagnostic probe is not that
+gate and cannot promote a result.

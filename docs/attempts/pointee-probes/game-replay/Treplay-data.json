@@ -1,0 +1,726 @@
+{
+  "scope": "Scratch-only experiment; no production edits or promotion proof.",
+  "target": "game-replay",
+  "recipe": {
+    "parent": "Treplay",
+    "member": "data",
+    "pointee": {
+      "candidate_size": 8,
+      "historical_size": 8,
+      "state": "FIELD_CORRESPONDENCE_ONLY",
+      "members": [
+        {
+          "historical_member": "key_flags",
+          "candidate_member": "type",
+          "offset": 0,
+          "size": 1,
+          "state": "RENAMED_FIELD_SHAPE"
+        },
+        {
+          "historical_member": "cycle_count",
+          "candidate_member": "value",
+          "offset": 4,
+          "size": 4,
+          "state": "RENAMED_FIELD_SHAPE"
+        }
+      ],
+      "limit": "Offsets and field shapes are diagnostic correspondence only. Renames, filler removal and aliasing require typed use-site evidence and strict contribution verification.",
+      "member_count": 2,
+      "omitted_members": 0,
+      "unmatched_candidate_members": [
+        {
+          "member": "reserved",
+          "offset": 1,
+          "size": 3,
+          "type": "char [3]"
+        }
+      ],
+      "unmatched_candidate_count": 1,
+      "omitted_unmatched": 0
+    },
+    "changes": [
+      {
+        "start": 2217,
+        "end": 2323,
+        "before": "typedef struct Treplay_data {\n    unsigned char type;\n    char reserved[3];\n    int value;\n} Treplay_data;",
+        "after": "#include \"recovered/Trecord.h\"\ntypedef Trecord Treplay_data;",
+        "reason": "Canonical pointee with explicit legacy sizeof alias"
+      },
+      {
+        "start": 2887,
+        "end": 2899,
+        "before": "Treplay_data",
+        "after": "Trecord",
+        "reason": "Historical parent member pointee"
+      },
+      {
+        "start": 3756,
+        "end": 3760,
+        "before": "type",
+        "after": "key_flags",
+        "reason": "Compiler-typed calc_replay_checksum_131:r->data field correspondence"
+      },
+      {
+        "start": 4819,
+        "end": 4823,
+        "before": "type",
+        "after": "key_flags",
+        "reason": "Compiler-typed calc_replay_checksum:r->data field correspondence"
+      },
+      {
+        "start": 15857,
+        "end": 15861,
+        "before": "type",
+        "after": "key_flags",
+        "reason": "Compiler-typed create_replay:r->data field correspondence"
+      },
+      {
+        "start": 17630,
+        "end": 17634,
+        "before": "type",
+        "after": "key_flags",
+        "reason": "Compiler-typed load_replay:r->data field correspondence"
+      },
+      {
+        "start": 22415,
+        "end": 22419,
+        "before": "type",
+        "after": "key_flags",
+        "reason": "Compiler-typed save_replay:r->data field correspondence"
+      },
+      {
+        "start": 3778,
+        "end": 3783,
+        "before": "value",
+        "after": "cycle_count",
+        "reason": "Compiler-typed calc_replay_checksum_131:r->data field correspondence"
+      },
+      {
+        "start": 4872,
+        "end": 4877,
+        "before": "value",
+        "after": "cycle_count",
+        "reason": "Compiler-typed calc_replay_checksum:r->data field correspondence"
+      },
+      {
+        "start": 15886,
+        "end": 15891,
+        "before": "value",
+        "after": "cycle_count",
+        "reason": "Compiler-typed create_replay:r->data field correspondence"
+      },
+      {
+        "start": 17584,
+        "end": 17589,
+        "before": "value",
+        "after": "cycle_count",
+        "reason": "Compiler-typed load_replay:r->data field correspondence"
+      },
+      {
+        "start": 22368,
+        "end": 22373,
+        "before": "value",
+        "after": "cycle_count",
+        "reason": "Compiler-typed save_replay:r->data field correspondence"
+      }
+    ],
+    "scope": "Scratch experiment only. This recipe does not prove macro semantics, type identity, emission preservation or eligibility for promotion."
+  },
+  "source_inputs": {
+    "src/replay.c": {
+      "size": 24349,
+      "sha256": "c1954f84f8858b5a37dae4b8811977aa7c78f0273d13f7d2e1e384efcaa7a919"
+    },
+    "third_party/allegro-4.4.1/include/allegro.h": {
+      "size": 1989,
+      "sha256": "232c143e8590caa7c3811f05f97683444ef508157db27402822ca633c4bc3161"
+    },
+    "third_party/allegro-4.4.1/include/allegro/base.h": {
+      "size": 2880,
+      "sha256": "e405ea82978472a2908bcdf66d2a6b52a8adc02bb33e84e7be69ec2c600c2694"
+    },
+    "third_party/allegro-4.4.1/include/allegro/internal/alconfig.h": {
+      "size": 13102,
+      "sha256": "0bb707e8e72a4f9eb45ec154d1228c5a8c950d4832c68b520194137f899900bd"
+    },
+    "include/allegro/platform/alplatf.h": {
+      "size": 152,
+      "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
+    },
+    "third_party/allegro-4.4.1/include/allegro/platform/almngw32.h": {
+      "size": 2770,
+      "sha256": "c0e5b684bcaec9a15dc8bab9a2b6c60651edf8d45769f2d281e0383338bbc4f2"
+    },
+    "third_party/allegro-4.4.1/include/allegro/platform/astdint.h": {
+      "size": 1655,
+      "sha256": "40f780bad3b683ed04ccaa76ea72893add2673fe658c31b55362d57e13719631"
+    },
+    "third_party/allegro-4.4.1/include/allegro/system.h": {
+      "size": 9061,
+      "sha256": "52963dc159edb29f15306693700c1160ba71ebdd01214fedcaf09849433f5631"
+    },
+    "third_party/allegro-4.4.1/include/allegro/unicode.h": {
+      "size": 5141,
+      "sha256": "e149508c9db947d856d7303c3009ff6c077364ca572d810f2bb570838cd5b981"
+    },
+    "third_party/allegro-4.4.1/include/allegro/config.h": {
+      "size": 2935,
+      "sha256": "40dd356c8e33539840d7452dab1ec19a99351018c6dda16db183a35e68b200f5"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/system.inl": {
+      "size": 1509,
+      "sha256": "71ca07936a473ac9eb4d049046e56a6523dc84f49a50353901cdc44bbdc68315"
+    },
+    "third_party/allegro-4.4.1/include/allegro/debug.h": {
+      "size": 1391,
+      "sha256": "c8b1dc07dddab88129d78fd077c3136ed503a8981b567e0556d6696f58934392"
+    },
+    "third_party/allegro-4.4.1/include/allegro/mouse.h": {
+      "size": 3859,
+      "sha256": "46230ca91e84369467bd473c0b1d692a6e30cedaa43b21acd2ddc014cf4333d3"
+    },
+    "third_party/allegro-4.4.1/include/allegro/timer.h": {
+      "size": 2717,
+      "sha256": "64e85b1be929d6df22b4eec38c48adb57e964a2dd66e1d163294fac2e46176af"
+    },
+    "third_party/allegro-4.4.1/include/allegro/keyboard.h": {
+      "size": 15693,
+      "sha256": "9669802f50a0d2652f424a9f8f62aa4fdf92f51544e5de3dd58ad5e5521a3aae"
+    },
+    "third_party/allegro-4.4.1/include/allegro/joystick.h": {
+      "size": 3818,
+      "sha256": "6a1952dd6aaecacc5b0476c49bd67920a34f06ddc8daf4b8abaf8470c1604878"
+    },
+    "third_party/allegro-4.4.1/include/allegro/palette.h": {
+      "size": 956,
+      "sha256": "086ccfee527588cfd14465087d2fec0d31eac57879b433dbc006617eebd982d6"
+    },
+    "third_party/allegro-4.4.1/include/allegro/gfx.h": {
+      "size": 22406,
+      "sha256": "dfe8a79c291c7845f54b44b5fd804c56b3fb3c0885690650d207dafb725f440c"
+    },
+    "third_party/allegro-4.4.1/include/allegro/3d.h": {
+      "size": 4157,
+      "sha256": "61cee945a6c5c10ebd41ff9fefc7e43bec41e3df58a6108beb084348b03bbffb"
+    },
+    "third_party/allegro-4.4.1/include/allegro/fixed.h": {
+      "size": 929,
+      "sha256": "37c4ce3d329c0fac0479d1b3f1341370a605ab32e9bc8c3c1f4fe9b59f90d10b"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/gfx.inl": {
+      "size": 5769,
+      "sha256": "f5300f9d1f13fe234fb05d2ae1c47b8901ce0802e73883e7eba3bf0ed7e65316"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/asm.inl": {
+      "size": 1446,
+      "sha256": "47d36afa8564adb209a43019e914d755b7d5e71e1c7ebd1ac3225a14f7b45c5f"
+    },
+    "third_party/allegro-4.4.1/include/allegro/color.h": {
+      "size": 6225,
+      "sha256": "27917fc5f8d47587b60cccdc8a3f10788f31b73175703d74b506163422fef6f6"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/color.inl": {
+      "size": 3405,
+      "sha256": "5c14aefdeadb8eb40f10ca9ff30afa2db47e9de620c973ac78a550c83d95147e"
+    },
+    "third_party/allegro-4.4.1/include/allegro/draw.h": {
+      "size": 5753,
+      "sha256": "b28efb048ef1fec4456073247c44517bb352ab23584cf7e3e8329617bc20f855"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/draw.inl": {
+      "size": 13528,
+      "sha256": "27407d2b96ad598e5c8304dfd8e54a30141888fb1dc3ebdbb4005f95ef5afc2e"
+    },
+    "third_party/allegro-4.4.1/include/allegro/rle.h": {
+      "size": 1326,
+      "sha256": "96b9477d7822dc8f692fe310aee6799bc5391f02d7ef0e79bf93e56da80d3405"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/rle.inl": {
+      "size": 1896,
+      "sha256": "7a7a72a9ed18b77dee1438daf46d3bc7d6eb811a6adabf86698cc029207b9c0f"
+    },
+    "third_party/allegro-4.4.1/include/allegro/compiled.h": {
+      "size": 1797,
+      "sha256": "0e736761172d8448842345e43e888d18e612bb45cbd0b7af206eb4fca5da7ebb"
+    },
+    "third_party/allegro-4.4.1/include/allegro/text.h": {
+      "size": 2320,
+      "sha256": "0eff9429a6e0179e0603a92da1c2449d771930104dc0abab49fe970f206592a4"
+    },
+    "third_party/allegro-4.4.1/include/allegro/font.h": {
+      "size": 2481,
+      "sha256": "8e5575d43d59cd261e74b4a1eba0de5483efd84fee660a2c4e6bf02c642aa7a0"
+    },
+    "third_party/allegro-4.4.1/include/allegro/fli.h": {
+      "size": 1982,
+      "sha256": "3caaf09e4144e9c46852c0cc6ff9257d07a16cbe4add2f812832c9af90e1a3e7"
+    },
+    "third_party/allegro-4.4.1/include/allegro/gui.h": {
+      "size": 10309,
+      "sha256": "b8b401ee0b24c5102b609d00e44b499d5226149b2c531a08e28fb2650b40b2a5"
+    },
+    "third_party/allegro-4.4.1/include/allegro/sound.h": {
+      "size": 1825,
+      "sha256": "fb080ffdc93a06002a396a485b717c895797661206997abbc8b47297f3916161"
+    },
+    "third_party/allegro-4.4.1/include/allegro/digi.h": {
+      "size": 8612,
+      "sha256": "81238c4985c70aab62b3d58f0973296744b79cdc72cb3c1e25e5e41c96269924"
+    },
+    "third_party/allegro-4.4.1/include/allegro/stream.h": {
+      "size": 1695,
+      "sha256": "21ceb6c746850e1b792c3968ac412e0a803079b1d3b7b86f061c26e03a4253a0"
+    },
+    "third_party/allegro-4.4.1/include/allegro/midi.h": {
+      "size": 5110,
+      "sha256": "b57111f8af259f2e65580fc1b3cbcccfe88c141277814d0120e405c2193ec02c"
+    },
+    "third_party/allegro-4.4.1/include/allegro/file.h": {
+      "size": 7751,
+      "sha256": "4cee02ca1e96a128fcf3dcbaa3c021bed6ebbca6afd58b941720871c5d86002f"
+    },
+    "third_party/allegro-4.4.1/include/allegro/lzss.h": {
+      "size": 1382,
+      "sha256": "9a4180f1fa6806088f3d7b2aa4736957ff76402a0a9053d6e72ad3cf4de4e1f1"
+    },
+    "third_party/allegro-4.4.1/include/allegro/datafile.h": {
+      "size": 4966,
+      "sha256": "ec7312c759854a120a13c84cdf8a4e81afc0947d9f1949a9f5536fd30684b352"
+    },
+    "third_party/allegro-4.4.1/include/allegro/fmaths.h": {
+      "size": 1145,
+      "sha256": "b528a3ca2a8e1e47b0f23a366b3a0cc250724b275f93c3842ae090d1f93ee3b7"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/fmaths.inl": {
+      "size": 5060,
+      "sha256": "da28819406d49241293740c55188424d7f42ae0922800dad9be022dbf194c83b"
+    },
+    "third_party/allegro-4.4.1/include/allegro/matrix.h": {
+      "size": 3904,
+      "sha256": "8d819cd3e09a23eaa17e2f7de19db0e8052a7843a6934dce5ce8d40fb96475a0"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/matrix.inl": {
+      "size": 1264,
+      "sha256": "1a5eda549f923d28ea023b67fba9d542a187e34524b0144fbb6b23c7a28bc780"
+    },
+    "third_party/allegro-4.4.1/include/allegro/quat.h": {
+      "size": 1758,
+      "sha256": "d363e9e4be53076ca5e937921040320ecc8b95843a8c5e3663b1cf48fb6c1e56"
+    },
+    "third_party/allegro-4.4.1/include/allegro/3dmaths.h": {
+      "size": 1958,
+      "sha256": "4a4913d70f5be6a5ac2eb95c5a7d927e3804bd2ce5786accd666d0124252c2ab"
+    },
+    "third_party/allegro-4.4.1/include/allegro/inline/3dmaths.inl": {
+      "size": 1639,
+      "sha256": "3cbaea8861d636eb37b7083943f1e74a6e9b3fd7b7261956a20bc50300ca707a"
+    },
+    "third_party/allegro-4.4.1/include/allegro/alcompat.h": {
+      "size": 9097,
+      "sha256": "5c29c7c83e02c5f5d9544ca91301be19379ad2fdd76a6abd8d379629c000bb90"
+    },
+    "third_party/allegro-4.4.1/include/allegro/platform/alwin.h": {
+      "size": 5134,
+      "sha256": "45cb6d16cf8aee4c0f8ce873a0bd082937beec22ef1d7fdd7ad3213366fd82da"
+    },
+    "include/control.h": {
+      "size": 847,
+      "sha256": "581edc737b5a8ce7850b34c5a940f851905fdc3501dc9a6d2323bff52df7af71"
+    },
+    "include/recovered/Tcontrol.h": {
+      "size": 1318,
+      "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
+    },
+    "include/recovered/Tgamepad.h": {
+      "size": 830,
+      "sha256": "711b96c3de3999839758fb4ffb8c518eb1f6ddb3ec98bff20e4e5756dab03898"
+    },
+    "include/recovered/Trecord.h": {
+      "size": 595,
+      "sha256": "ca3ae9ecac44e663a410688a362e4455450e822a23014bc7a3c3fc67994895da"
+    }
+  },
+  "probe_tools": {
+    "tools/pointee_probe.py": {
+      "size": 4135,
+      "sha256": "bc7216ff8a9e236f94efe0540af32f404fdad733e2d3ad84007342ebf3a5e80b"
+    },
+    "tools/pointee_migration.py": {
+      "size": 5372,
+      "sha256": "311be3d48880977bb3c8ace6c4a564e5d47f11ea258867edb16fc25b4b7dc8c7"
+    },
+    "tools/pointee_diagnostics.py": {
+      "size": 2740,
+      "sha256": "5d92922f0201a186e0606f9c428363701144c179fb094b3d94abc503b2740b77"
+    }
+  },
+  "compiler": {
+    "target": "game-replay",
+    "historical_cu": "F:\\projects\\icytower\\trunk\\source\\replay.c",
+    "flags": [
+      "-O2"
+    ],
+    "compiler": "tdm-2",
+    "command": [
+      "D:\\Prog\\icytower_recon\\toolchain\\tdm-gcc-4.4.1-tdm-2\\bin\\gcc.exe",
+      "-O2",
+      "-g",
+      "-mfpmath=387",
+      "-DALLEGRO_STATICLINK",
+      "-Iinclude",
+      "-Ithird_party/allegro-4.4.1/include",
+      "-MMD",
+      "-MF",
+      "D:\\Prog\\icytower_recon\\build\\pointee-probes\\game-replay\\Treplay-data\\reference\\unit.d",
+      "-aux-info",
+      "D:\\Prog\\icytower_recon\\build\\pointee-probes\\game-replay\\Treplay-data\\reference\\interfaces.aux",
+      "-c",
+      "src/replay.c",
+      "-o",
+      "D:\\Prog\\icytower_recon\\build\\pointee-probes\\game-replay\\Treplay-data\\reference\\unit.o"
+    ],
+    "object": {
+      "size": 42612,
+      "sha256": "2d16b3e936bc49cc5b9a7e4e319d3ec76d352cd1eb8156d3fcbf79ed1f66c3aa"
+    },
+    "dependency_file": {
+      "size": 3483,
+      "sha256": "cc26ff6d85c52f1f9048c1fa2f38a4203017f33eded329ff4f95d4bd302c12ae"
+    },
+    "config": {
+      "source": "src/replay.c",
+      "historical_cu": "F:\\projects\\icytower\\trunk\\source\\replay.c",
+      "default": "-O2"
+    },
+    "inputs_verified_around_compile": true,
+    "toolchain_lock": {
+      "size": 1007845,
+      "sha256": "aca6f12f5c611cf6851f83812df6506f227b2f931b9fe7dcb6f2cfa8d0616239"
+    },
+    "local_inputs": {
+      "src/replay.c": {
+        "size": 24349,
+        "sha256": "c1954f84f8858b5a37dae4b8811977aa7c78f0273d13f7d2e1e384efcaa7a919"
+      },
+      "third_party/allegro-4.4.1/include/allegro.h": {
+        "size": 1989,
+        "sha256": "232c143e8590caa7c3811f05f97683444ef508157db27402822ca633c4bc3161"
+      },
+      "third_party/allegro-4.4.1/include/allegro/base.h": {
+        "size": 2880,
+        "sha256": "e405ea82978472a2908bcdf66d2a6b52a8adc02bb33e84e7be69ec2c600c2694"
+      },
+      "third_party/allegro-4.4.1/include/allegro/internal/alconfig.h": {
+        "size": 13102,
+        "sha256": "0bb707e8e72a4f9eb45ec154d1228c5a8c950d4832c68b520194137f899900bd"
+      },
+      "include/allegro/platform/alplatf.h": {
+        "size": 152,
+        "sha256": "ed0f67bbdc507740996f933814e7f8da4378a5fdd9202071c4fe4359b29e64b1"
+      },
+      "third_party/allegro-4.4.1/include/allegro/platform/almngw32.h": {
+        "size": 2770,
+        "sha256": "c0e5b684bcaec9a15dc8bab9a2b6c60651edf8d45769f2d281e0383338bbc4f2"
+      },
+      "third_party/allegro-4.4.1/include/allegro/platform/astdint.h": {
+        "size": 1655,
+        "sha256": "40f780bad3b683ed04ccaa76ea72893add2673fe658c31b55362d57e13719631"
+      },
+      "third_party/allegro-4.4.1/include/allegro/system.h": {
+        "size": 9061,
+        "sha256": "52963dc159edb29f15306693700c1160ba71ebdd01214fedcaf09849433f5631"
+      },
+      "third_party/allegro-4.4.1/include/allegro/unicode.h": {
+        "size": 5141,
+        "sha256": "e149508c9db947d856d7303c3009ff6c077364ca572d810f2bb570838cd5b981"
+      },
+      "third_party/allegro-4.4.1/include/allegro/config.h": {
+        "size": 2935,
+        "sha256": "40dd356c8e33539840d7452dab1ec19a99351018c6dda16db183a35e68b200f5"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/system.inl": {
+        "size": 1509,
+        "sha256": "71ca07936a473ac9eb4d049046e56a6523dc84f49a50353901cdc44bbdc68315"
+      },
+      "third_party/allegro-4.4.1/include/allegro/debug.h": {
+        "size": 1391,
+        "sha256": "c8b1dc07dddab88129d78fd077c3136ed503a8981b567e0556d6696f58934392"
+      },
+      "third_party/allegro-4.4.1/include/allegro/mouse.h": {
+        "size": 3859,
+        "sha256": "46230ca91e84369467bd473c0b1d692a6e30cedaa43b21acd2ddc014cf4333d3"
+      },
+      "third_party/allegro-4.4.1/include/allegro/timer.h": {
+        "size": 2717,
+        "sha256": "64e85b1be929d6df22b4eec38c48adb57e964a2dd66e1d163294fac2e46176af"
+      },
+      "third_party/allegro-4.4.1/include/allegro/keyboard.h": {
+        "size": 15693,
+        "sha256": "9669802f50a0d2652f424a9f8f62aa4fdf92f51544e5de3dd58ad5e5521a3aae"
+      },
+      "third_party/allegro-4.4.1/include/allegro/joystick.h": {
+        "size": 3818,
+        "sha256": "6a1952dd6aaecacc5b0476c49bd67920a34f06ddc8daf4b8abaf8470c1604878"
+      },
+      "third_party/allegro-4.4.1/include/allegro/palette.h": {
+        "size": 956,
+        "sha256": "086ccfee527588cfd14465087d2fec0d31eac57879b433dbc006617eebd982d6"
+      },
+      "third_party/allegro-4.4.1/include/allegro/gfx.h": {
+        "size": 22406,
+        "sha256": "dfe8a79c291c7845f54b44b5fd804c56b3fb3c0885690650d207dafb725f440c"
+      },
+      "third_party/allegro-4.4.1/include/allegro/3d.h": {
+        "size": 4157,
+        "sha256": "61cee945a6c5c10ebd41ff9fefc7e43bec41e3df58a6108beb084348b03bbffb"
+      },
+      "third_party/allegro-4.4.1/include/allegro/fixed.h": {
+        "size": 929,
+        "sha256": "37c4ce3d329c0fac0479d1b3f1341370a605ab32e9bc8c3c1f4fe9b59f90d10b"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/gfx.inl": {
+        "size": 5769,
+        "sha256": "f5300f9d1f13fe234fb05d2ae1c47b8901ce0802e73883e7eba3bf0ed7e65316"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/asm.inl": {
+        "size": 1446,
+        "sha256": "47d36afa8564adb209a43019e914d755b7d5e71e1c7ebd1ac3225a14f7b45c5f"
+      },
+      "third_party/allegro-4.4.1/include/allegro/color.h": {
+        "size": 6225,
+        "sha256": "27917fc5f8d47587b60cccdc8a3f10788f31b73175703d74b506163422fef6f6"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/color.inl": {
+        "size": 3405,
+        "sha256": "5c14aefdeadb8eb40f10ca9ff30afa2db47e9de620c973ac78a550c83d95147e"
+      },
+      "third_party/allegro-4.4.1/include/allegro/draw.h": {
+        "size": 5753,
+        "sha256": "b28efb048ef1fec4456073247c44517bb352ab23584cf7e3e8329617bc20f855"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/draw.inl": {
+        "size": 13528,
+        "sha256": "27407d2b96ad598e5c8304dfd8e54a30141888fb1dc3ebdbb4005f95ef5afc2e"
+      },
+      "third_party/allegro-4.4.1/include/allegro/rle.h": {
+        "size": 1326,
+        "sha256": "96b9477d7822dc8f692fe310aee6799bc5391f02d7ef0e79bf93e56da80d3405"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/rle.inl": {
+        "size": 1896,
+        "sha256": "7a7a72a9ed18b77dee1438daf46d3bc7d6eb811a6adabf86698cc029207b9c0f"
+      },
+      "third_party/allegro-4.4.1/include/allegro/compiled.h": {
+        "size": 1797,
+        "sha256": "0e736761172d8448842345e43e888d18e612bb45cbd0b7af206eb4fca5da7ebb"
+      },
+      "third_party/allegro-4.4.1/include/allegro/text.h": {
+        "size": 2320,
+        "sha256": "0eff9429a6e0179e0603a92da1c2449d771930104dc0abab49fe970f206592a4"
+      },
+      "third_party/allegro-4.4.1/include/allegro/font.h": {
+        "size": 2481,
+        "sha256": "8e5575d43d59cd261e74b4a1eba0de5483efd84fee660a2c4e6bf02c642aa7a0"
+      },
+      "third_party/allegro-4.4.1/include/allegro/fli.h": {
+        "size": 1982,
+        "sha256": "3caaf09e4144e9c46852c0cc6ff9257d07a16cbe4add2f812832c9af90e1a3e7"
+      },
+      "third_party/allegro-4.4.1/include/allegro/gui.h": {
+        "size": 10309,
+        "sha256": "b8b401ee0b24c5102b609d00e44b499d5226149b2c531a08e28fb2650b40b2a5"
+      },
+      "third_party/allegro-4.4.1/include/allegro/sound.h": {
+        "size": 1825,
+        "sha256": "fb080ffdc93a06002a396a485b717c895797661206997abbc8b47297f3916161"
+      },
+      "third_party/allegro-4.4.1/include/allegro/digi.h": {
+        "size": 8612,
+        "sha256": "81238c4985c70aab62b3d58f0973296744b79cdc72cb3c1e25e5e41c96269924"
+      },
+      "third_party/allegro-4.4.1/include/allegro/stream.h": {
+        "size": 1695,
+        "sha256": "21ceb6c746850e1b792c3968ac412e0a803079b1d3b7b86f061c26e03a4253a0"
+      },
+      "third_party/allegro-4.4.1/include/allegro/midi.h": {
+        "size": 5110,
+        "sha256": "b57111f8af259f2e65580fc1b3cbcccfe88c141277814d0120e405c2193ec02c"
+      },
+      "third_party/allegro-4.4.1/include/allegro/file.h": {
+        "size": 7751,
+        "sha256": "4cee02ca1e96a128fcf3dcbaa3c021bed6ebbca6afd58b941720871c5d86002f"
+      },
+      "third_party/allegro-4.4.1/include/allegro/lzss.h": {
+        "size": 1382,
+        "sha256": "9a4180f1fa6806088f3d7b2aa4736957ff76402a0a9053d6e72ad3cf4de4e1f1"
+      },
+      "third_party/allegro-4.4.1/include/allegro/datafile.h": {
+        "size": 4966,
+        "sha256": "ec7312c759854a120a13c84cdf8a4e81afc0947d9f1949a9f5536fd30684b352"
+      },
+      "third_party/allegro-4.4.1/include/allegro/fmaths.h": {
+        "size": 1145,
+        "sha256": "b528a3ca2a8e1e47b0f23a366b3a0cc250724b275f93c3842ae090d1f93ee3b7"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/fmaths.inl": {
+        "size": 5060,
+        "sha256": "da28819406d49241293740c55188424d7f42ae0922800dad9be022dbf194c83b"
+      },
+      "third_party/allegro-4.4.1/include/allegro/matrix.h": {
+        "size": 3904,
+        "sha256": "8d819cd3e09a23eaa17e2f7de19db0e8052a7843a6934dce5ce8d40fb96475a0"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/matrix.inl": {
+        "size": 1264,
+        "sha256": "1a5eda549f923d28ea023b67fba9d542a187e34524b0144fbb6b23c7a28bc780"
+      },
+      "third_party/allegro-4.4.1/include/allegro/quat.h": {
+        "size": 1758,
+        "sha256": "d363e9e4be53076ca5e937921040320ecc8b95843a8c5e3663b1cf48fb6c1e56"
+      },
+      "third_party/allegro-4.4.1/include/allegro/3dmaths.h": {
+        "size": 1958,
+        "sha256": "4a4913d70f5be6a5ac2eb95c5a7d927e3804bd2ce5786accd666d0124252c2ab"
+      },
+      "third_party/allegro-4.4.1/include/allegro/inline/3dmaths.inl": {
+        "size": 1639,
+        "sha256": "3cbaea8861d636eb37b7083943f1e74a6e9b3fd7b7261956a20bc50300ca707a"
+      },
+      "third_party/allegro-4.4.1/include/allegro/alcompat.h": {
+        "size": 9097,
+        "sha256": "5c29c7c83e02c5f5d9544ca91301be19379ad2fdd76a6abd8d379629c000bb90"
+      },
+      "third_party/allegro-4.4.1/include/allegro/platform/alwin.h": {
+        "size": 5134,
+        "sha256": "45cb6d16cf8aee4c0f8ce873a0bd082937beec22ef1d7fdd7ad3213366fd82da"
+      },
+      "include/control.h": {
+        "size": 847,
+        "sha256": "581edc737b5a8ce7850b34c5a940f851905fdc3501dc9a6d2323bff52df7af71"
+      },
+      "include/recovered/Tcontrol.h": {
+        "size": 1318,
+        "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
+      },
+      "include/recovered/Tgamepad.h": {
+        "size": 830,
+        "sha256": "711b96c3de3999839758fb4ffb8c518eb1f6ddb3ec98bff20e4e5756dab03898"
+      }
+    },
+    "candidate_toolchain_lock": {
+      "size": 512134,
+      "sha256": "dfde67e60d23238d9489b5898bd3ebf758d6ebb871721cc16804b49c93bd9b22"
+    }
+  },
+  "fixture": {
+    "size": 3753885,
+    "sha256": "7570c6b0c7cddf6180d7c421bdc7d7bc1486c47a6d62cc6fde90670f62d4388d"
+  },
+  "verifier": {
+    "tools/common.py": {
+      "size": 2123,
+      "sha256": "4f7a75c304cc058548b0390a0ac9725ed3975888e560576a9d2c24e24c426a9a"
+    },
+    "tools/experiment.py": {
+      "size": 24294,
+      "sha256": "4ecb780e2d8596d0803577c26cd4863e3a42ce065a2cdca627da82c965d46a47"
+    },
+    "tools/binary.py": {
+      "size": 9145,
+      "sha256": "6ade423fad67c98b0b50db452d959744fdebdc4651c2e4ed31c4eeb22e5049c6"
+    },
+    "tools/dwarf.py": {
+      "size": 5659,
+      "sha256": "aa92b816663b14e59e076abb3ee7f57f8baa404bb3d47b98e1dd10a434c494ae"
+    },
+    "tools/instructions.py": {
+      "size": 3281,
+      "sha256": "638a3e1b4795d83c23e36bb2203c01b562182fcd097ef13a6b9329e01841f599"
+    },
+    "tools/build.py": {
+      "size": 10104,
+      "sha256": "bc39db1cf4a92bc4096c752f04f18dcfb28af818cb10f01cbb6878c945ca312b"
+    },
+    "tools/data_owners.py": {
+      "size": 7554,
+      "sha256": "3ab00386a221e9be39d313a819b1297f433b9016d50b5f7a27a9068ea4c3c899"
+    },
+    "tools/type_graph.py": {
+      "size": 7581,
+      "sha256": "88880f2a28291350f4c58582e4d69add4b93468d790c57fe1b12b4a00f362961"
+    },
+    "tools/control_transfers.py": {
+      "size": 8002,
+      "sha256": "d5004fb26dd35d30f63b336a5668f1c7da98c4ffb46bd3a483651004324d0f7c"
+    }
+  },
+  "baseline_source": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n#include <time.h>\n#include <allegro.h>\n#include \"control.h\"\n\n/* Historical CU: replay.c; current status: src/recovery.json.\n * Ownership: GAME.\n *\n * Historical function inventory (current status: docs/current/):\n * Historical function: calc_replay_checksum_131 @ 0x0041ba10, 177 bytes\n * Historical function: calc_replay_checksum @ 0x0041bac4, 676 bytes\n * Historical function: update_file_list @ 0x0041bda0, 184 bytes\n * Historical function: draw_replay_selector @ 0x0041be58, 3726 bytes\n * Historical function: create_replay @ 0x0041cce8, 254 bytes\n * Historical function: load_replay @ 0x0041cde8, 1136 bytes\n * Historical function: replay_selector @ 0x0041d258, 2845 bytes\n * Historical function: save_replay @ 0x0041dd78, 1227 bytes\n * Historical function: get_replay_property @ 0x0041e244, 1147 bytes\n * Historical function: my_strcmp @ 0x0041e6c0, 128 bytes\n * Historical function: add_itr_file @ 0x0041e740, 360 bytes\n */\n\nint sort_method;\n\nint get_sort_method(void) { return sort_method; }\n\nvoid set_sort_method(int sm) { sort_method = sm; }\n\nunsigned int hash(unsigned int a)\n{\n    a = (a ^ 0x3dU) ^ (a >> 16);\n    a *= 9U;\n    a ^= a >> 4;\n    a *= 668265261U;\n    a ^= a >> 15;\n    return a;\n}\n\ntypedef struct Treplay_post {\n    char *full_path;\n    char directory;\n    char parent;\n    char reserved[2];\n    int version;\n    int score;\n    int floor;\n    int combo;\n} Treplay_post;\n\nextern int stricmp(const char *a, const char *b);\nextern int get_replay_property(const char *file_name, int property);\nextern int for_each_file_ex(const char *pattern, int in_attrib, int out_attrib,\n                            int (*callback)(const char *, int, void *), void *param);\nextern int add_itr_file(const char *filename, int attrib, void *param);\nextern int my_strcmp(const void *c, const void *d);\nextern void qsort(void *base, size_t count, size_t size,\n                  int (*compare)(const void *, const void *));\nextern char *get_filename(const char *path);\nextern char *get_extension(const char *path);\n#ifndef FA_DIREC\n#define FA_DIREC 0x10\n#endif\n\nTreplay_post itr_file_list[1024];\nint num_itr_files;\nstatic char replay_header[] = \"ITR140\";\n\ntypedef struct Treplay_data {\n    unsigned char type;\n    char reserved[3];\n    int value;\n} Treplay_data;\n\ntypedef struct Treplay {\n    char header[6];\n    int size;\n    char name[32];\n    char date[32];\n    int checksum;\n    int score;\n    int floor;\n    int combo;\n    int no_combo_top_floor;\n    int biggest_lost_combo;\n    int ccc[5];\n    int jc[5];\n    int floor_shrink;\n    int floor_size;\n    int start_speed;\n    int speed_increase;\n    int gravity;\n    int rejump;\n    int random_seed;\n    char comment[42];\n    int tc_posts;\n    float tc_c_data[100];\n    float tc_q_data[100];\n    float tc_t_data[100];\n    float tc_s_data[100];\n    float tc_f_data[100];\n    Treplay_data *data;\n} Treplay;\n\nextern void free(void *ptr);\nextern int memcmp(const void *a, const void *b, size_t size);\nextern void log2file(const char *format, ...);\nextern DATAFILE *data;\nextern int is_custom_replay(Treplay *r);\nextern void blit_to_screen(BITMAP *bmp);\nextern void checkMenuFocus(void);\nextern void play_menu_move(void);\nextern void play_menu_select(void);\nextern int my_alert(char *func, char *txt, int choice, int enter_hint);\nTreplay *load_replay(char *filename);\n\nint calc_replay_checksum_131(Treplay *r)\n{\n    int i;\n    int sum;\n\n    sum = r->random_seed * 17;\n    sum += r->rejump * 26;\n    sum += (r->score + 1) * 7;\n    sum += (r->floor + 1) * 13;\n    sum += (r->combo + 1) * 23;\n    for (i = 0; i < 32; i++)\n        sum += (r->date[i] + i) * (r->name[i] + i) * (i + 1) * 117;\n    for (i = 0; i < r->size; i++)\n        sum += (r->data[i].type * 5 + r->data[i].value * 3) * i;\n    return sum;\n}\n\nint calc_replay_checksum(Treplay *r)\n{\n    int i;\n    unsigned int sum;\n\n    sum = (r->biggest_lost_combo * 17 + r->no_combo_top_floor * 127 + 17) * 2;\n    sum += r->floor_shrink * 102 + r->floor_size * 17 + 3702;\n    sum += r->start_speed * 163 + r->speed_increase * 23;\n    sum += r->gravity * 88 + r->random_seed * 329;\n    sum += r->tc_posts * 127 + r->rejump * 13;\n    sum += r->score * 17 + 17;\n    sum += (r->combo + 1) * 649;\n    sum += (r->floor + 1) * 113;\n    for (i = 0; i < 5; i++)\n        sum += r->ccc[i] * (39 + i * 3) + r->jc[i] * (27 + i * 3);\n    for (i = 0; i < 100; i++) {\n        sum += r->tc_c_data[i] * ((i + 1) % 13);\n        sum += r->tc_q_data[i] * ((i + 6) % 17);\n        sum += r->tc_t_data[i] * ((i + 8) % 23);\n    }\n    for (i = 0; i < 32; i++)\n        sum += (r->date[i] + i) * (r->name[i] + i) * (17 + i * 17);\n    for (i = 0; i < 42; i++)\n        sum += (r->comment[i] + i) * (r->comment[i] + i) * (-3 + i * 3);\n    for (i = 0; i < r->size; i++)\n        sum += r->data[i].type * 3 * (i % 193 + 1) +\n               r->data[i].value * 7 * (i % 167 + 1);\n    return hash(sum);\n}\n\nvoid destroy_replay(Treplay *r)\n{\n    if (r) {\n        if (r->data) free(r->data);\n        free(r);\n    }\n}\n\nvoid update_file_list(char *path)\n{\n    int i;\n    char full_path[1024];\n\n    for (i = 0; i < num_itr_files; i++) {\n        free(itr_file_list[i].full_path);\n        itr_file_list[i].parent = 0;\n        itr_file_list[i].directory = 0;\n    }\n    num_itr_files = 0;\n    sprintf(full_path, \"%s/*\", path);\n    for_each_file_ex(full_path, 0, 0, add_itr_file, 0);\n    qsort(itr_file_list, num_itr_files, sizeof(Treplay_post), my_strcmp);\n}\n\n/* Recovered from replay.c:460, 0x41be58..0x41cce6.  The oracle's inline\n * Allegro drawing expands more heavily than this source form, but all list,\n * detail, clipping, version, and custom-replay presentation paths remain in\n * the owning replay CU. */\nvoid draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,\n                          int selection, int offset, int max_posts, int x, int y)\n{\n    int w = 310;\n    int h = 305;\n    int fh = text_height(font);\n    int i;\n    int fg = makecol(25, 25, 25);\n    int mg = makecol(85, 85, 85);\n    float view_percentage = max_posts ? (float)num_itr_files / max_posts : 1.0f;\n    float view_offset = max_posts ? (float)offset / max_posts : 0.0f;\n    char curr_filename[1024];\n    int show_directory = 0;\n    int selected_version = 0;\n    int isCustom = 0;\n\n    if (view_percentage > 1.0f)\n        view_percentage = 1.0f;\n    if (data && data[86].dat)\n        stretch_sprite(bmp, data[86].dat, x - 15, y - 15, w + 30, h + 30);\n    else\n        rectfill(bmp, x - 15, y - 15, x + w + 15, y + h + 15, mg);\n\n    set_trans_blender(0, 0, 0, 150);\n    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);\n    rect(bmp, x + 5, y + 30, x + w - 5, y + 305, fg);\n    rect(bmp, x + 7, y + 32, x + w - 7, y + 303, fg);\n    solid_mode();\n\n    set_clip_rect(bmp, x + 10, y + 35, x + 185, y + 300);\n    for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {\n        Treplay_post *post = &file_list[i];\n        int row = y + 40 + (i - offset) * fh;\n        char *name = get_filename(post->full_path);\n\n        if (i == selection)\n            rectfill(bmp, x + 10, row - 1, x + 185, row + fh, mg);\n        if (post->directory) {\n            show_directory = 1;\n            textprintf_ex(bmp, font, x + 14, row, fg, -1, \"[%s]\", name);\n        } else {\n            textout_ex(bmp, font, name, x + 14, row, fg, -1);\n        }\n    }\n    set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);\n\n    if (selection >= 0 && selection < num_itr_files)\n        strcpy(curr_filename, get_filename(file_list[selection].full_path));\n    else\n        curr_filename[0] = 0;\n    textprintf_ex(bmp, font, x + 12, y + 14, fg, -1, \"REPLAY SELECTOR: %s\",\n                  curr_filename);\n\n    if (num_itr_files > max_posts && max_posts > 0) {\n        int bar_top = y + 40 + (int)(view_offset * 260.0f);\n        int bar_height = (int)(view_percentage * 260.0f);\n        rectfill(bmp, x + 190, bar_top, x + 196, bar_top + bar_height, fg);\n    }\n\n    if (rep) {\n        isCustom = is_custom_replay(rep);\n        if (selection >= 0 && selection < num_itr_files)\n            selected_version = file_list[selection].version;\n        set_clip_rect(bmp, x + 205, y + 35, x + w, y + 300);\n        textout_ex(bmp, font, rep->name, x + 210, y + 44, fg, -1);\n        textout_right_ex(bmp, font, rep->date, x + w - 8, y + 44, fg, -1);\n        textprintf_ex(bmp, font, x + 210, y + 68, fg, -1, \"Score: %d\", rep->score);\n        textprintf_right_ex(bmp, font, x + w - 8, y + 68, fg, -1,\n                            \"Floor: %d\", rep->floor);\n        textprintf_right_ex(bmp, font, x + w - 8, y + 68 + fh, fg, -1,\n                            \"Combo: %d\", rep->combo);\n        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 2, fg, -1,\n                      \"Version: %d%s\", selected_version, isCustom ? \" custom\" : \"\");\n        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 3, fg, -1,\n                      \"%s\", rep->comment);\n        set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);\n    } else if (show_directory) {\n        textout_ex(bmp, font, \"Select a folder or replay\", x + 210, y + 50,\n                   fg, -1);\n    }\n\n    textout_ex(bmp, font, \"Enter: select   Del: delete   Esc: back\",\n               x + 12, y + h - fh, fg, -1);\n}\n\n/* Recovered from replay.c:701, 0x41d258..0x41dd75.  This keeps the complete\n * selector lifecycle in source: file-list rebuilding, preview ownership,\n * keyboard/controller dispatch, directory/file selection, animated display,\n * and cleanup. */\nTreplay *replay_selector(Tcontrol *ctrl, char *path)\n{\n    FONT *old_font = font;\n    BITMAP *bg = create_bitmap(SCREEN_W, SCREEN_H);\n    Treplay *rep = NULL;\n    int curr_file_id = 0;\n    int done = 0;\n    int ctrl_wait = 1000;\n    int page_size;\n    int offset = 0;\n    int need_to_update = 1;\n    int ok_to_rename = 0;\n    int pageY = 500;\n    int targetY = 0;\n    char fname[1024];\n\n    if (!bg)\n        return NULL;\n    blit(screen, bg, 0, 0, 0, 0, SCREEN_W, SCREEN_H);\n    if (data)\n        font = data[54].dat;\n    page_size = 270 / text_height(font);\n    clear_keybuf();\n\n    while (!done) {\n        int kp = 0;\n\n        if (need_to_update) {\n            if (rep) {\n                destroy_replay(rep);\n                rep = NULL;\n            }\n            if (num_itr_files > 0 && curr_file_id >= 0 &&\n                curr_file_id < num_itr_files && !itr_file_list[curr_file_id].directory)\n                rep = load_replay(itr_file_list[curr_file_id].full_path);\n            need_to_update = 0;\n        }\n\n        poll_control(ctrl, 1);\n        if (is_any(ctrl) && ctrl_wait == 0) {\n            if (is_down(ctrl))\n                simulate_keypress(KEY_DOWN << 8);\n            else if (is_up(ctrl))\n                simulate_keypress(KEY_UP << 8);\n            else if (is_fire(ctrl))\n                simulate_keypress(KEY_ENTER << 8);\n        }\n        if (ctrl_wait > 0)\n            ctrl_wait--;\n\n        if (keypressed())\n            kp = readkey() >> 8;\n        if (kp) {\n            ctrl_wait = 20;\n            switch (kp) {\n            case KEY_UP:\n                if (curr_file_id > 0) {\n                    curr_file_id--;\n                    if (curr_file_id < offset)\n                        offset--;\n                    play_menu_move();\n                    need_to_update = 1;\n                }\n                break;\n            case KEY_DOWN:\n                if (curr_file_id + 1 < num_itr_files) {\n                    curr_file_id++;\n                    if (curr_file_id >= offset + page_size)\n                        offset++;\n                    play_menu_move();\n                    need_to_update = 1;\n                }\n                break;\n            case KEY_ENTER:\n                if (curr_file_id >= 0 && curr_file_id < num_itr_files) {\n                    Treplay_post *post = &itr_file_list[curr_file_id];\n                    if (post->directory) {\n                        strcpy(path, post->full_path);\n                        canonicalize_filename(fname, path, sizeof(fname));\n                        strcpy(path, fname);\n                        update_file_list(path);\n                        curr_file_id = offset = 0;\n                        need_to_update = 1;\n                    } else if (rep) {\n                        play_menu_select();\n                        done = 1;\n                    }\n                }\n                break;\n            case KEY_DEL:\n                if (curr_file_id >= 0 && curr_file_id < num_itr_files &&\n                    !itr_file_list[curr_file_id].directory && rep &&\n                    my_alert(\"Really delete replay?\", \"WARNING: It will be gone forever.\",\n                             1, 0)) {\n                    delete_file(itr_file_list[curr_file_id].full_path);\n                    need_to_update = 1;\n                }\n                break;\n            case KEY_ESC:\n                play_menu_select();\n                destroy_replay(rep);\n                rep = NULL;\n                done = -1;\n                break;\n            case KEY_F1:\n                set_sort_method(1);\n                need_to_update = 1;\n                break;\n            case KEY_F2:\n                set_sort_method(2);\n                need_to_update = 1;\n                break;\n            case KEY_F3:\n                set_sort_method(3);\n                need_to_update = 1;\n                break;\n            case KEY_F4:\n                set_sort_method(4);\n                need_to_update = 1;\n                break;\n            case KEY_F5:\n                install_mouse();\n                file_select_ex(\"Select a new folder and press OK\", path, \"itr\",\n                               sizeof(fname), 400, 400);\n                remove_mouse();\n                replace_filename(fname, path, \"\", sizeof(fname));\n                strcpy(path, fname);\n                update_file_list(path);\n                curr_file_id = offset = 0;\n                need_to_update = 1;\n                ok_to_rename = 1;\n                break;\n            default:\n                break;\n            }\n        }\n\n        if (need_to_update) {\n            update_file_list(path);\n            if (curr_file_id >= num_itr_files)\n                curr_file_id = num_itr_files - 1;\n            if (curr_file_id < 0)\n                curr_file_id = 0;\n            if (offset > curr_file_id)\n                offset = curr_file_id;\n        }\n\n        if (pageY > targetY)\n            pageY -= (pageY - targetY) / 3 + 1;\n        blit(bg, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);\n        set_trans_blender(0, 0, 0, (500 - pageY) / 3);\n        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);\n        rectfill(screen, 0, 0, SCREEN_W, SCREEN_H, makecol(0, 0, 0));\n        solid_mode();\n        draw_replay_selector(screen, rep, itr_file_list, curr_file_id, offset,\n                             page_size, 120, pageY + 120);\n        blit_to_screen(screen);\n        checkMenuFocus();\n        rest(2);\n        (void)ok_to_rename;\n    }\n\n    destroy_bitmap(bg);\n    font = old_font;\n    for (curr_file_id = 0; curr_file_id < num_itr_files; curr_file_id++) {\n        free(itr_file_list[curr_file_id].full_path);\n        itr_file_list[curr_file_id].parent = 0;\n        itr_file_list[curr_file_id].directory = 0;\n    }\n    num_itr_files = 0;\n    return rep;\n}\n\nTreplay *create_replay(int size)\n{\n    Treplay *r;\n    int i;\n\n    r = malloc(sizeof(Treplay));\n    if (!r)\n        return 0;\n    memcpy(r->header, replay_header, 6);\n    r->comment[0] = 0;\n    r->size = size;\n    r->combo = 0;\n    r->floor = 0;\n    r->score = 0;\n    for (i = 0; i < 32; i++)\n        r->name[i] = 0;\n    for (i = 0; i < 32; i++)\n        r->name[i] = 0;\n    strcpy(r->name, \"replay\");\n    strcpy(r->date, \"no date\");\n    r->data = malloc(r->size * sizeof(Treplay_data) + 32);\n    if (!r->data) {\n        free(r);\n        return 0;\n    }\n    for (i = 0; i < size; i++) {\n        r->data[i].type = 0;\n        r->data[i].value = 0;\n    }\n    return r;\n}\n\nTreplay *load_replay(char *filename)\n{\n    void *pf;\n    Treplay r_temp;\n    Treplay *r;\n    int i;\n    int sum;\n    int cs;\n\n    pf = pack_fopen(filename, \"rb\");\n    if (!pf)\n        return 0;\n    pack_fread(r_temp.header, 6, pf);\n    pack_fread(&r_temp.size, 4, pf);\n    pack_fclose(pf);\n    if (memcmp(r_temp.header, \"ITR140\", 6))\n        return 0;\n    r = create_replay(r_temp.size);\n    if (!r)\n        return 0;\n    pf = pack_fopen(filename, \"rb\");\n    if (!pf)\n        goto error;\n    pack_fread(r->header, 6, pf);\n    pack_fread(&r->size, 4, pf);\n    pack_fread(r->name, 32, pf);\n    pack_fread(r->date, 32, pf);\n    pack_fread(&r->score, 4, pf);\n    pack_fread(&r->floor, 4, pf);\n    pack_fread(&r->combo, 4, pf);\n    pack_fread(&r->no_combo_top_floor, 4, pf);\n    pack_fread(&r->biggest_lost_combo, 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fread(&r->ccc[i], 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fread(&r->jc[i], 4, pf);\n    pack_fread(&r->floor_shrink, 4, pf);\n    pack_fread(&r->floor_size, 4, pf);\n    pack_fread(&r->start_speed, 4, pf);\n    pack_fread(&r->speed_increase, 4, pf);\n    pack_fread(&r->gravity, 4, pf);\n    pack_fread(&r->rejump, 4, pf);\n    pack_fread(&r->random_seed, 4, pf);\n    pack_fread(r->comment, 42, pf);\n    pack_fread(&r->checksum, 4, pf);\n    pack_fread(&r->tc_posts, 4, pf);\n    for (i = 0; i < 100; i++) {\n        pack_fread(&r->tc_c_data[i], 4, pf);\n        pack_fread(&r->tc_q_data[i], 4, pf);\n        pack_fread(&r->tc_t_data[i], 4, pf);\n        pack_fread(&r->tc_s_data[i], 4, pf);\n        pack_fread(&r->tc_f_data[i], 4, pf);\n    }\n    for (i = 0; i < r->size; i++) {\n        pack_fread(&r->data[i].value, 4, pf);\n        pack_fread(&r->data[i].type, 1, pf);\n    }\n    pack_fclose(pf);\n    cs = r->checksum;\n    r->checksum = 0;\n    sum = calc_replay_checksum(r);\n    if (cs == sum)\n        return r;\n    log2file(\"Checksum failed for %s: got %d, expected %d\", filename, sum, cs);\nerror:\n    destroy_replay(r);\n    return 0;\n}\n\nint get_replay_property(const char *filename, int property)\n{\n    void *pf;\n    Treplay r_temp;\n    Treplay *r;\n    int i;\n    int retval;\n\n    pf = pack_fopen(filename, \"rb\");\n    if (!pf) {\n        log2file(\"Couldn't open %s\", filename);\n        return 0;\n    }\n    pack_fread(r_temp.header, 6, pf);\n    pack_fread(&r_temp.size, 4, pf);\n    pack_fclose(pf);\n    if (memcmp(r_temp.header, \"ITR\", 3)) {\n        log2file(\"%s has wrong first 3 bytes of header\", filename);\n        return -1000;\n    }\n    if (r_temp.header[3] != '1' || r_temp.header[4] != '4' ||\n        r_temp.header[5] != '0') {\n        log2file(\"%s has wrong header version\", filename);\n        if (r_temp.header[3] == '0' && r_temp.header[4] == '1' &&\n            r_temp.header[5] == '1')\n            return -1001;\n        if (r_temp.header[3] == '1' && r_temp.header[4] == '3' &&\n            r_temp.header[5] == '0')\n            return -1130;\n        return -1000;\n    }\n    r = create_replay(r_temp.size);\n    if (!r) {\n        log2file(\"Couldn't create a replay object\");\n        return -1;\n    }\n    pf = pack_fopen(filename, \"rb\");\n    if (!pf) {\n        log2file(\"Can't open %s\", filename);\n        destroy_replay(r);\n        return -1;\n    }\n    pack_fread(r->header, 6, pf);\n    pack_fread(&r->size, 4, pf);\n    pack_fread(r->name, 32, pf);\n    pack_fread(r->date, 32, pf);\n    pack_fread(&r->score, 4, pf);\n    pack_fread(&r->floor, 4, pf);\n    pack_fread(&r->combo, 4, pf);\n    pack_fread(&r->no_combo_top_floor, 4, pf);\n    pack_fread(&r->biggest_lost_combo, 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fread(&r->ccc[i], 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fread(&r->jc[i], 4, pf);\n    pack_fread(&r->floor_shrink, 4, pf);\n    pack_fread(&r->floor_size, 4, pf);\n    pack_fread(&r->start_speed, 4, pf);\n    pack_fread(&r->speed_increase, 4, pf);\n    pack_fread(&r->gravity, 4, pf);\n    pack_fclose(pf);\n    retval = 0;\n    if (property == 2) {\n        retval = r->score;\n        log2file(\"%s:score=%d\", filename, retval);\n    } else if (property == 3) {\n        retval = r->combo;\n        log2file(\"%s:combo=%d\", filename, retval);\n    } else if (property == 4) {\n        retval = r->floor;\n        log2file(\"%s:floor=%d\", filename, retval);\n    }\n    destroy_replay(r);\n    return retval;\n}\n\nint save_replay(char *path, char *file, Treplay *r, int size, int make_new_date)\n{\n    void *pf;\n    int i;\n    time_t my_time;\n    struct tm *timer;\n    char *months[12] = { \"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\",\n                         \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\" };\n    char filename[2048];\n    int cs;\n\n    sprintf(filename, \"%s%s\", path, file);\n    log2file(\"  saving replay: %s\", filename);\n    if (make_new_date) {\n        my_time = time(0);\n        timer = localtime(&my_time);\n        strcpy(r->date, \"              ICYTOWERISGREAT \");\n        sprintf(r->date, \"%2d %3s %4d\", timer->tm_mday,\n                months[timer->tm_mon], timer->tm_year + 1900);\n    } else {\n        Treplay *tmp;\n\n        tmp = load_replay(filename);\n        if (tmp)\n            strcpy(r->date, tmp->date);\n    }\n    r->size = size;\n    cs = calc_replay_checksum(r);\n    r->checksum = cs;\n    pf = pack_fopen(filename, \"wb\");\n    if (!pf)\n        return -1;\n    pack_fwrite(r->header, 6, pf);\n    pack_fwrite(&r->size, 4, pf);\n    pack_fwrite(r->name, 32, pf);\n    pack_fwrite(r->date, 32, pf);\n    pack_fwrite(&r->score, 4, pf);\n    pack_fwrite(&r->floor, 4, pf);\n    pack_fwrite(&r->combo, 4, pf);\n    pack_fwrite(&r->no_combo_top_floor, 4, pf);\n    pack_fwrite(&r->biggest_lost_combo, 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fwrite(&r->ccc[i], 4, pf);\n    for (i = 0; i < 5; i++)\n        pack_fwrite(&r->jc[i], 4, pf);\n    pack_fwrite(&r->floor_shrink, 4, pf);\n    pack_fwrite(&r->floor_size, 4, pf);\n    pack_fwrite(&r->start_speed, 4, pf);\n    pack_fwrite(&r->speed_increase, 4, pf);\n    pack_fwrite(&r->gravity, 4, pf);\n    pack_fwrite(&r->rejump, 4, pf);\n    pack_fwrite(&r->random_seed, 4, pf);\n    pack_fwrite(r->comment, 42, pf);\n    pack_fwrite(&r->checksum, 4, pf);\n    pack_fwrite(&r->tc_posts, 4, pf);\n    for (i = 0; i < 100; i++) {\n        pack_fwrite(&r->tc_c_data[i], 4, pf);\n        pack_fwrite(&r->tc_q_data[i], 4, pf);\n        pack_fwrite(&r->tc_t_data[i], 4, pf);\n        pack_fwrite(&r->tc_s_data[i], 4, pf);\n        pack_fwrite(&r->tc_f_data[i], 4, pf);\n    }\n    for (i = 0; i < r->size; i++) {\n        pack_fwrite(&r->data[i].value, 4, pf);\n        pack_fwrite(&r->data[i].type, 1, pf);\n    }\n    pack_fclose(pf);\n    return 0;\n}\nint my_strcmp(const void *c, const void *d)\n{\n    Treplay_post *a;\n    Treplay_post *b;\n    int av, bv;\n\n    a = (Treplay_post *)c;\n    b = (Treplay_post *)d;\n    if (a->directory != b->directory) {\n        if (a->directory)\n            return -1;\n        return 1;\n    }\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n}\n\nint add_itr_file(const char *filename, int attrib, void *param)\n{\n    int length;\n    char *name;\n    int res;\n\n    length = strlen(filename) + 10;\n    name = get_filename(filename);\n    if (!stricmp(name, \".\"))\n        goto done;\n    if (!(attrib & FA_DIREC))\n        goto replay_file;\n    goto directory;\nreplay_file:\n    if (stricmp(get_extension(filename), \"itr\"))\n        goto done;\n    itr_file_list[num_itr_files].full_path = malloc(length);\n    res = get_replay_property(filename, 0);\n    if (res < 0)\n        goto bad_replay;\ncopy_replay:\n    strcpy(itr_file_list[num_itr_files].full_path, filename);\n    itr_file_list[num_itr_files].directory = 0;\n    num_itr_files++;\ndone:\n    return 0;\ndirectory:\n    itr_file_list[num_itr_files].full_path = malloc(length);\n    strcpy(itr_file_list[num_itr_files].full_path, filename);\n    itr_file_list[num_itr_files].directory = 1;\n    if (!strncmp(name, \"..\", 3))\n        itr_file_list[num_itr_files].parent = 1;\n    num_itr_files++;\n    goto done;\nbad_replay:\n    if (res == -1 || res == -1000)\n        goto done;\n    itr_file_list[num_itr_files].version = -1000 - res;\n    goto copy_replay;\n}\n",
+  "outcome": "COMPLETE",
+  "variants": [
+    {
+      "variant": "baseline",
+      "object": {
+        "size": 42756,
+        "sha256": "8a90b664c8d7741343a0338eb6c351392944a9114dcfcbb9ea6a817f4ffa568d"
+      },
+      "source_identity": {
+        "size": 24349,
+        "sha256": "c1954f84f8858b5a37dae4b8811977aa7c78f0273d13f7d2e1e384efcaa7a919"
+      },
+      "raw_contributions_equal": true,
+      "raw_fingerprint_delta": {},
+      "function_matches": 5,
+      "contribution_diagnostics": {
+        "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
+        "changed_sections": [],
+        "changed_functions": [],
+        "metadata_changes": [],
+        "preservation_fingerprint_equal": true
+      }
+    },
+    {
+      "variant": "canonical-pointee",
+      "object": {
+        "size": 42712,
+        "sha256": "9d8b881182d4e193037d07345de3fad28e486ab805d007d8253a4d228d94b4fe"
+      },
+      "source_identity": {
+        "size": 24353,
+        "sha256": "a04cb074cd4658a7602ebdc8631b51e4368820780595a264f9db7cc770a3d78f"
+      },
+      "raw_contributions_equal": false,
+      "raw_fingerprint_delta": {
+        "symbols": {
+          "removed": [
+            [
+              "_C.146.9670",
+              ".rdata",
+              800,
+              0,
+              3
+            ]
+          ],
+          "added": [
+            [
+              "_C.146.9673",
+              ".rdata",
+              800,
+              0,
+              3
+            ]
+          ],
+          "before_count": 80,
+          "after_count": 80
+        }
+      },
+      "function_matches": 5,
+      "contribution_diagnostics": {
+        "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
+        "changed_sections": [],
+        "changed_functions": [],
+        "metadata_changes": [],
+        "preservation_fingerprint_equal": true
+      }
+    }
+  ]
+}
