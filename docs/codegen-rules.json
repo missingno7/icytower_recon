@@ -9,13 +9,22 @@
       "known_fix_pattern": "Preserve DWARF scopes and independent guards; compare one change at a time",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "update_star_field"
       ],
       "evidence": "docs/stars-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_multiple_guards"
+      ]
     },
     {
       "id": "pointer-live-range",
@@ -25,13 +34,24 @@
       "known_fix_pattern": "Match evidenced locals and lifetimes; do not add arbitrary volatile",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "generate_profile_checksum"
       ],
       "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_loop",
+        "has_pointer_variable",
+        "has_integer_variable"
+      ]
     },
     {
       "id": "assignment-register",
@@ -41,13 +61,23 @@
       "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "draw_scroller"
       ],
       "evidence": "docs/scroller-experiment.md",
-      "confidence": "HYPOTHESIS"
+      "confidence": "HYPOTHESIS",
+      "required_features": [
+        "same_size",
+        "register_only_shape"
+      ]
     },
     {
       "id": "declaration-scope",
@@ -57,14 +87,23 @@
       "known_fix_pattern": "Use DWARF lexical locals and scope before exploring flags",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "add_floor",
         "profile_data_page_advanced"
       ],
       "evidence": "docs/map-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_locals"
+      ]
     },
     {
       "id": "signed-char",
@@ -74,13 +113,20 @@
       "known_fix_pattern": "Follow base-type encoding and explicit cast chain",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "replaceBadCharacters"
       ],
       "evidence": "docs/main-partial-experiment.md",
-      "confidence": "HYPOTHESIS"
+      "confidence": "HYPOTHESIS",
+      "required_evidence": "signedness"
     },
     {
       "id": "x87-conversion",
@@ -90,13 +136,22 @@
       "known_fix_pattern": "Compare before integer conversion only when evidence requires it",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "add_floor"
       ],
       "evidence": "docs/map-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "first_float_width_diff"
+      ]
     },
     {
       "id": "loop-shape",
@@ -106,14 +161,23 @@
       "known_fix_pattern": "Match original load/increment order; record unsuccessful alternatives",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "generate_profile_checksum",
         "draw_buffer"
       ],
       "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_loop"
+      ]
     },
     {
       "id": "cold-guard",
@@ -123,13 +187,22 @@
       "known_fix_pattern": "Preserve the historical single cold block when corroborated by line/scopes",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "profile_data_page_basic"
       ],
       "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_guarded_return"
+      ]
     },
     {
       "id": "lea-expression",
@@ -139,13 +212,22 @@
       "known_fix_pattern": "Use the recovered right-edge expression as a scoped example",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "getFloorData"
       ],
       "evidence": "docs/map-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "first_instruction_is_lea"
+      ]
     },
     {
       "id": "peeled-loop-load-order",
@@ -154,7 +236,13 @@
       "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
       "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
       "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "calc_replay_checksum_131"
@@ -178,7 +266,8 @@
           137,
           138
         ]
-      }
+      },
+      "historical_only": true
     },
     {
       "id": "declaration-uid-independent-clear-order",
@@ -187,14 +276,21 @@
       "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
       "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
       "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "create_post",
         "line_alert"
       ],
       "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
-      "evidence": "docs/attempts/interfaces/create_post.jsonl"
+      "evidence": "docs/attempts/interfaces/create_post.jsonl",
+      "historical_only": true
     },
     {
       "id": "persistent-peephole-scratch",
@@ -204,14 +300,23 @@
       "known_fix_pattern": "Keep production flags and protected bodies. Supervisor runs compiler_probe.py and compares focused RTL passes. Resolve historical CU context once; do not keep rewriting the target or mask register bytes.",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2",
-        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH."
+        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "HTTPFetchInternal",
         "draw_scroller"
       ],
       "evidence": "docs/compiler-context-evidence.md",
-      "confidence": "MECHANICALLY_OBSERVED"
+      "confidence": "MECHANICALLY_OBSERVED",
+      "required_features": [
+        "has_compiler_context"
+      ]
     },
     {
       "id": "historical-definition-order",
@@ -221,14 +326,19 @@
       "known_fix_pattern": "Use the generated SOURCE_ORDER task only when complete definitions can move safely. Preserve all bodies and exact neighbors; reject new implicit declarations.",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386",
-        "acceptance": "HISTORICAL_SOURCE_ORDER is a separate claim. Layout improvement alone is not FUNCTION_MATCH or CU_MATCH."
+        "acceptance": "HISTORICAL_SOURCE_ORDER is a separate claim. Layout improvement alone is not FUNCTION_MATCH or CU_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "draw_scroller",
         "init_scroller"
       ],
       "evidence": "docs/compiler-context-evidence.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "historical_only": true
     },
     {
       "id": "localized-signed-zero-guard",
@@ -239,7 +349,11 @@
       "known_fix_pattern": "Use the card's original condition and flags producer to inspect only the relevant source guard. Preserve other statements and run FAST; strict promotion still requires every byte.",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386",
-        "acceptance": "Routing evidence only, never an equality mask."
+        "acceptance": "Routing evidence only, never an equality mask.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "fadeIn"
@@ -255,7 +369,11 @@
       "known_fix_pattern": "Check the attached DWARF local-width evidence and calls before experimenting with register temporaries. Preserve x87 and historical flags; never change a frame size or padding to mask a source mismatch.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof."
+        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "main_menu_callback",
@@ -275,14 +393,21 @@
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
         "flags": "Per-CU locked configuration; observations do not establish a universal ordering rule.",
-        "acceptance": "Fresh independent owner proof and identical raw text/allocated contributions; no masked function acceptance."
+        "acceptance": "Fresh independent owner proof and identical raw text/allocated contributions; no masked function acceptance.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "fldads_get_local_cache_name",
         "main_menu_callback"
       ],
       "confidence": "OBSERVED_IN_TWO_FRESH_CU_EXPERIMENTS",
-      "evidence": "docs/storage-scope-evidence.md"
+      "evidence": "docs/storage-scope-evidence.md",
+      "required_features": [
+        "has_static_local"
+      ]
     },
     {
       "id": "decoded-instruction-order-source-experiment",
@@ -292,7 +417,11 @@
       "known_fix_pattern": "Use candidate line mappings and the generated adjacent-assignment experiment when present. Verify the entire function; changes to other windows, operands or peeled iterations still fail acceptance.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle."
+        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "line_alert",
@@ -309,7 +438,11 @@
       "known_fix_pattern": "Do not edit the proven body. Require an exact independently resolved prefix, a unique identical historical callee, and proof that short encoding cannot reach in the long layout. Preserve raw DIFFER and explicit BODY_MATCH_LAYOUT_BLOCKED. Other neighbor or data mismatches still reject the task.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Narrow layout proof only; never FUNCTION_MATCH, OBJECT_MATCH or CU_MATCH."
+        "acceptance": "Narrow layout proof only; never FUNCTION_MATCH, OBJECT_MATCH or CU_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "fldads_get_local_filename_from_url"
@@ -326,7 +459,11 @@
       "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "add_profile",
@@ -345,13 +482,18 @@
       "known_fix_pattern": "Compile an independent declaration witness with the same locked flags and generated header. Verify logical type layout separately; allow only the witnessed target allocation change and preserve all other contributions. Never infer original BSS order from this witness.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "observed_example": "Tmenu_char_selection sizeof 1036, emitted COMMON allocation 1040"
+        "observed_example": "Tmenu_char_selection sizeof 1036, emitted COMMON allocation 1040",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "check_characters",
         "set_current_avatar"
       ],
-      "confidence": "FRESH_LOCKED_COMPILER_DECLARATION_WITNESS"
+      "confidence": "FRESH_LOCKED_COMPILER_DECLARATION_WITNESS",
+      "historical_only": true
     }
   ]
 }

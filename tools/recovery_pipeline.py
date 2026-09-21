@@ -20,11 +20,12 @@ from branch_diagnostics import localized_guards
 from data_diagnostics import capture_snapshot,diagnose
 from relocation_diagnostics import mismatch_views
 from instruction_alignment import analyze as instruction_alignment
+from codegen_guidance import select_rules
 
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/codegen_guidance.py','tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -339,7 +340,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     calls += [{'symbol':t['target_function'],'function_offset':t['function_offset'],'target_va':t['target_va'],'verified':t['equal']} for t in row.get('direct_transfers',[])]
     original_calls=[i for i in old if i['mnemonic'].startswith('call') or (i['mnemonic']=='jmp' and '*' in i['assembly'])]
     rules=read_json(ROOT/'docs/codegen-rules.json')['rules']
-    relevant=[r for r in rules if (r['difference_class']==wf['difference_class'] or row['name'] in r['example_functions']) and (not r.get('required_evidence') or ev.get(r['required_evidence']))]
+    relevant=select_rules(rules,row,ev,wf,old,report['build'])
     for pattern in ev['source_patterns']:
         pattern['application_command']='python tools/apply_pattern.py '+target+' '+row['name']+' '+pattern['id']
     from literal_dependencies import groups as literal_groups,for_function as literal_dependencies
@@ -353,7 +354,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     if wf['body_edit_allowed'] and wf['difference_class']!='UNKNOWN_SUPERVISOR' and ev['source_scope'] and not unresolved and (not indirect or f['size']<=1200):
         difficulty='CHEAP' if localized and not indirect and f['size']<=900 and wf['difference_class'] in ('REGISTER_OR_INSTRUCTION_SELECTION','SIGNEDNESS_OR_PROMOTION','SOURCE_CONTROL_FLOW_SHAPE') else 'MEDIUM'
     if wf['state']=='MISSING': difficulty='MEDIUM' if f['size']<=200 and ev['prototype'] else 'SUPERVISOR'
-    priority=(150 if difficulty=='CHEAP' else 60 if difficulty=='MEDIUM' else 0)+max(0,30-f['size']//32)+10*localized+5*bool(relevant)-5*unresolved-10*indirect
+    priority=(150 if difficulty=='CHEAP' else 60 if difficulty=='MEDIUM' else 0)+max(0,30-f['size']//32)+10*localized+5*any(r['applicability']['priority_bonus_eligible'] for r in relevant)-5*unresolved-10*indirect
     blocked=(CURRENT/'supervisor-blocks.json')
     key=unit['source']+':'+row['name']
     supervisor=read_json(blocked).get(key) if blocked.exists() else None

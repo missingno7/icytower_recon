@@ -459,3 +459,15 @@ source. Cache and session were restored byte-for-byte, then the legitimate repai
 passed FAST and full promotion with preserved contributions. The expanded focused
 suite passed 201 tests, including five admission controls; the global audit passed.
 See `docs/attempts/interface-admission-validation.json`.
+
+
+## Evidence-filtered compiler guidance
+
+Broad difference classes previously attached unrelated compiler advice and gave
+a queue bonus even for historical examples. Rules now require explicit observed
+features or diagnostics and recorded compiler/flag scope. Historical examples
+remain labelled context without a priority bonus. No rule changes proof, task
+difficulty or body-edit permission. stopGameMusic loses six unsupported hints;
+add_floor and change_profile retain only relevant current symptoms, with past
+examples distinguished. Seven selector controls and 53 related diagnostic tests
+passed. See `docs/attempts/codegen-guidance-validation.json`.

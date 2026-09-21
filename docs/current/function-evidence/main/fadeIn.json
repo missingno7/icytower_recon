@@ -634,7 +634,37 @@
       "size_delta": -282
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "localized-signed-zero-guard",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "required_evidence": "localized_guards",
+      "symptom": "Only conditional-branch opcodes differ after TEST/CMP; destinations and every other independently resolved byte agree.",
+      "known_source_cause": "A zero/nonzero guard can differ from an ordered signed comparison. After testing an integer against itself, JG/JLE distinguish positive/nonpositive while JNE/JE distinguish nonzero/zero.",
+      "known_fix_pattern": "Use the card's original condition and flags producer to inspect only the relevant source guard. Preserve other statements and run FAST; strict promotion still requires every byte.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386",
+        "acceptance": "Routing evidence only, never an equality mask.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
+      },
+      "example_functions": [
+        "fadeIn"
+      ],
+      "confidence": "DECODED_LOCAL_DIFFERENCE",
+      "evidence": "docs/attempts/localized-guard-example.json",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
+    }
+  ],
   "difficulty": "SUPERVISOR",
   "priority": -3,
   "compiler_context": null,

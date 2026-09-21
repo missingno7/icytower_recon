@@ -350,3 +350,10 @@ authority for source edits. Before application and verification, the interface
 plan must regenerate identically using saved baseline source whose bytes match
 the ledger receipts. Changing a saved prototype, source snapshot or edit plan
 cannot redefine the task. Unknown mechanical task kinds are rejected.
+
+
+Codegen rules in a card distinguish CURRENT_SYMPTOM_EVIDENCE from
+HISTORICAL_EXAMPLE_ONLY. Current hints require observed function features or
+diagnostics and a matching recorded compiler scope. Only current hints affect
+queue priority. Neither label proves a source cause, permits a body edit, or
+changes acceptance; follow the task scope and verifier evidence.

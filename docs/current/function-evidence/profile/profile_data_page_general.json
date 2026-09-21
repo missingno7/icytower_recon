@@ -2983,7 +2983,11 @@
       "known_fix_pattern": "Check the attached DWARF local-width evidence and calls before experimenting with register temporaries. Preserve x87 and historical flags; never change a frame size or padding to mask a source mismatch.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof."
+        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "main_menu_callback",
@@ -2992,7 +2996,15 @@
       ],
       "required_evidence": "frame_layout",
       "confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
-      "evidence": "docs/stack-frame-evidence.md"
+      "evidence": "docs/stack-frame-evidence.md",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": "frame_layout",
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     },
     {
       "id": "aligned-literal-content-difference",
@@ -3002,7 +3014,11 @@
       "known_fix_pattern": "Use repair_literal_content when the card identifies unique explicit source tokens. It changes only those tokens. Equal content with unknown ownership stays blocked; original operand content is diagnostic evidence, not an independent relocation binding.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication."
+        "acceptance": "Fresh strict comparison, independently resolved relocations, neighbor preservation, ordinary link regression check and atomic publication.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "add_profile",
@@ -3011,7 +3027,15 @@
         "save_profile"
       ],
       "required_evidence": "literal_diagnostics",
-      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED"
+      "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED",
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [],
+        "evidence_field": "literal_diagnostics",
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",

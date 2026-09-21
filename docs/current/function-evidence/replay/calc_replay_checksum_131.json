@@ -632,7 +632,13 @@
       "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
       "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
       "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "calc_replay_checksum_131"
@@ -656,6 +662,15 @@
           137,
           138
         ]
+      },
+      "historical_only": true,
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
     },
     {
@@ -666,14 +681,26 @@
       "known_fix_pattern": "Use candidate line mappings and the generated adjacent-assignment experiment when present. Verify the entire function; changes to other windows, operands or peeled iterations still fail acceptance.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle."
+        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "line_alert",
         "calc_replay_checksum_131"
       ],
       "required_evidence": "instruction_order",
-      "confidence": "DECODED_PERMUTATION_ONLY"
+      "confidence": "DECODED_PERMUTATION_ONLY",
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [],
+        "evidence_field": "instruction_order",
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",

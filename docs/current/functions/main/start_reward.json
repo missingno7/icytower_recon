@@ -795,38 +795,6 @@
   ],
   "known_rules": [
     {
-      "id": "pointer-live-range",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "symptom": "Equivalent pointer/index uses a different register",
-      "known_source_cause": "Pointer and loop index may be folded when their relationship is provable",
-      "known_fix_pattern": "Match evidenced locals and lifetimes; do not add arbitrary volatile",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
-      },
-      "example_functions": [
-        "generate_profile_checksum"
-      ],
-      "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED"
-    },
-    {
-      "id": "assignment-register",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "symptom": "Argument setup differs at equal size",
-      "known_source_cause": "Source expression shape affects result register",
-      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
-      },
-      "example_functions": [
-        "draw_scroller"
-      ],
-      "evidence": "docs/scroller-experiment.md",
-      "confidence": "HYPOTHESIS"
-    },
-    {
       "id": "declaration-scope",
       "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
       "symptom": "Allocation or stack spill differs",
@@ -834,79 +802,33 @@
       "known_fix_pattern": "Use DWARF lexical locals and scope before exploring flags",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "add_floor",
         "profile_data_page_advanced"
       ],
       "evidence": "docs/map-experiment.md",
-      "confidence": "OBSERVED"
-    },
-    {
-      "id": "lea-expression",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "symptom": "LEA versus shift/add differs",
-      "known_source_cause": "Algebraically equivalent edge calculation has different shape",
-      "known_fix_pattern": "Use the recovered right-edge expression as a scoped example",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
-      },
-      "example_functions": [
-        "getFloorData"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_locals"
       ],
-      "evidence": "docs/map-experiment.md",
-      "confidence": "OBSERVED"
-    },
-    {
-      "id": "peeled-loop-load-order",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "symptom": "An equal-size loop differs only in adjacent byte/dword load ordering.",
-      "known_source_cause": "Operand order can affect the peeled first iteration differently from the loop backedge.",
-      "known_fix_pattern": "No proved fix. Do not repeat operand swap, preincrement loop, or expanded sum assignment for the recorded example; route to supervisor scheduling work.",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2, x87"
-      },
-      "example_functions": [
-        "calc_replay_checksum_131"
-      ],
-      "confidence": "OBSERVED_FAILED_PATTERNS",
-      "evidence": "docs/attempts/replay-load-order-confirmation.json",
-      "failed_experiments": "docs/attempts/game-replay/calc_replay_checksum_131.jsonl",
-      "observed_offsets": {
-        "baseline": [
-          144,
-          145,
-          147,
-          148,
-          149,
-          150
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [
+          "has_locals"
         ],
-        "operand_swap": [
-          134,
-          135,
-          136,
-          137,
-          138
-        ]
+        "evidence_field": null,
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
-    },
-    {
-      "id": "declaration-uid-independent-clear-order",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "symptom": "Adding a complete prototype can renumber GCC static symbols and swap adjacent independent register clears in an unrelated unresolved function.",
-      "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
-      "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
-      },
-      "example_functions": [
-        "create_post",
-        "line_alert"
-      ],
-      "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
-      "evidence": "docs/attempts/interfaces/create_post.jsonl"
     }
   ],
   "difficulty": "MEDIUM",

@@ -276,7 +276,37 @@
       "size_delta": 0
     }
   ],
-  "known_rules": [],
+  "known_rules": [
+    {
+      "id": "terminal-same-cu-jump-relaxation",
+      "difference_class": "SAME_CU_CALL_LAYOUT",
+      "symptom": "An unchanged wrapper differs by three bytes because a final same-CU JMP uses short versus near encoding.",
+      "known_source_cause": "Moving complete definitions changes the distance between wrapper and callee; assembler branch relaxation changes final JMP width.",
+      "known_fix_pattern": "Do not edit the proven body. Require an exact independently resolved prefix, a unique identical historical callee, and proof that short encoding cannot reach in the long layout. Preserve raw DIFFER and explicit BODY_MATCH_LAYOUT_BLOCKED. Other neighbor or data mismatches still reject the task.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Narrow layout proof only; never FUNCTION_MATCH, OBJECT_MATCH or CU_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
+      },
+      "example_functions": [
+        "fldads_get_local_filename_from_url"
+      ],
+      "required_evidence": "tail_jump_layout",
+      "confidence": "REAL_REJECTED_SOURCE_ORDER_TRIAL",
+      "evidence": "docs/branch-relaxation-evidence.md",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
+    }
+  ],
   "difficulty": "SUPERVISOR",
   "priority": 50,
   "compiler_context": null,

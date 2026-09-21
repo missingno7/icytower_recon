@@ -656,17 +656,34 @@
       "known_fix_pattern": "Preserve the historical single cold block when corroborated by line/scopes",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "profile_data_page_basic"
       ],
       "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "required_features": [
+        "has_guarded_return"
+      ],
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": 31,
+  "priority": 26,
   "compiler_context": null,
   "compiler_trials": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",

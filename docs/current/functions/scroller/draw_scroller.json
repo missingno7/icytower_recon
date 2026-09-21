@@ -729,13 +729,34 @@
       "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "draw_scroller"
       ],
       "evidence": "docs/scroller-experiment.md",
-      "confidence": "HYPOTHESIS"
+      "confidence": "HYPOTHESIS",
+      "required_features": [
+        "same_size",
+        "register_only_shape"
+      ],
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [
+          "same_size",
+          "register_only_shape"
+        ],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     },
     {
       "id": "persistent-peephole-scratch",
@@ -745,14 +766,33 @@
       "known_fix_pattern": "Keep production flags and protected bodies. Supervisor runs compiler_probe.py and compares focused RTL passes. Resolve historical CU context once; do not keep rewriting the target or mask register bytes.",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2",
-        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH."
+        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "HTTPFetchInternal",
         "draw_scroller"
       ],
       "evidence": "docs/compiler-context-evidence.md",
-      "confidence": "MECHANICALLY_OBSERVED"
+      "confidence": "MECHANICALLY_OBSERVED",
+      "required_features": [
+        "has_compiler_context"
+      ],
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [
+          "has_compiler_context"
+        ],
+        "evidence_field": null,
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     },
     {
       "id": "historical-definition-order",
@@ -762,14 +802,27 @@
       "known_fix_pattern": "Use the generated SOURCE_ORDER task only when complete definitions can move safely. Preserve all bodies and exact neighbors; reject new implicit declarations.",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386",
-        "acceptance": "HISTORICAL_SOURCE_ORDER is a separate claim. Layout improvement alone is not FUNCTION_MATCH or CU_MATCH."
+        "acceptance": "HISTORICAL_SOURCE_ORDER is a separate claim. Layout improvement alone is not FUNCTION_MATCH or CU_MATCH.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "draw_scroller",
         "init_scroller"
       ],
       "evidence": "docs/compiler-context-evidence.md",
-      "confidence": "OBSERVED"
+      "confidence": "OBSERVED",
+      "historical_only": true,
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",

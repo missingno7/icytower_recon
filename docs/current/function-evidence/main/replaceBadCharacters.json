@@ -538,17 +538,32 @@
       "known_fix_pattern": "Follow base-type encoding and explicit cast chain",
       "compiler_scope": {
         "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes."
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "replaceBadCharacters"
       ],
       "evidence": "docs/main-partial-experiment.md",
-      "confidence": "HYPOTHESIS"
+      "confidence": "HYPOTHESIS",
+      "required_evidence": "signedness",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": "signedness",
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": 47,
+  "priority": 42,
   "compiler_context": null,
   "compiler_trials": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",

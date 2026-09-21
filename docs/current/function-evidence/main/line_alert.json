@@ -519,18 +519,62 @@
       "known_source_cause": "Historical GCC declaration UID changes from a prototype-only edit.",
       "known_fix_pattern": "Do not edit the affected function body to undo the change. The interface gate checks decoded independent clears, entry points, all other bytes and allocated contributions. Original matching remains byte-exact.",
       "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2"
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
       },
       "example_functions": [
         "create_post",
         "line_alert"
       ],
       "confidence": "VERIFIED_INTERFACE_PRESERVATION_ONLY",
-      "evidence": "docs/attempts/interfaces/create_post.jsonl"
+      "evidence": "docs/attempts/interfaces/create_post.jsonl",
+      "historical_only": true,
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
+    },
+    {
+      "id": "decoded-instruction-order-source-experiment",
+      "difference_class": "INSTRUCTION_ORDER",
+      "symptom": "A bounded window contains exactly the same decoded MOV or register-clear instructions in a different order.",
+      "known_source_cause": "Adjacent assignment order or expression evaluation may affect instruction scheduling. The permutation alone does not establish the source cause or instruction independence.",
+      "known_fix_pattern": "Use candidate line mappings and the generated adjacent-assignment experiment when present. Verify the entire function; changes to other windows, operands or peeled iterations still fail acceptance.",
+      "compiler_scope": {
+        "compiler": "Locked i386 TDM-GCC 4.4.1",
+        "acceptance": "Diagnostic only; no permutation normalization is admitted by the strict function oracle.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
+      },
+      "example_functions": [
+        "line_alert",
+        "calc_replay_checksum_131"
+      ],
+      "required_evidence": "instruction_order",
+      "confidence": "DECODED_PERMUTATION_ONLY",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": 4,
+  "priority": -1,
   "compiler_context": null,
   "compiler_trials": null,
   "routing_reason": "Conservative size, mismatch, dependency and control-flow ranking.",

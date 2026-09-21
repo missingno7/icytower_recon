@@ -2311,7 +2311,11 @@
       "known_fix_pattern": "Check the attached DWARF local-width evidence and calls before experimenting with register temporaries. Preserve x87 and historical flags; never change a frame size or padding to mask a source mismatch.",
       "compiler_scope": {
         "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof."
+        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": []
       },
       "example_functions": [
         "main_menu_callback",
@@ -2320,7 +2324,15 @@
       ],
       "required_evidence": "frame_layout",
       "confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
-      "evidence": "docs/stack-frame-evidence.md"
+      "evidence": "docs/stack-frame-evidence.md",
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [],
+        "evidence_field": "frame_layout",
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",

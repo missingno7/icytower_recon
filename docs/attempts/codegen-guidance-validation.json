@@ -1,0 +1,91 @@
+{
+  "scope": "Evidence-based hypothesis selection and priority bonus only; no function status, workflow, difficulty or body-edit permission changed.",
+  "tests": {
+    "selector": 7,
+    "related_diagnostics": 53,
+    "passed": true
+  },
+  "examples": [
+    {
+      "function": "stopGameMusic",
+      "rules_before": [
+        "pointer-live-range",
+        "assignment-register",
+        "declaration-scope",
+        "lea-expression",
+        "peeled-loop-load-order",
+        "declaration-uid-independent-clear-order"
+      ],
+      "rules_after": []
+    },
+    {
+      "function": "add_floor",
+      "rules_before": [
+        "pointer-live-range",
+        "assignment-register",
+        "declaration-scope",
+        "x87-conversion",
+        "lea-expression",
+        "peeled-loop-load-order",
+        "declaration-uid-independent-clear-order"
+      ],
+      "rules_after": [
+        {
+          "id": "pointer-live-range",
+          "basis": "CURRENT_SYMPTOM_EVIDENCE"
+        },
+        {
+          "id": "declaration-scope",
+          "basis": "CURRENT_SYMPTOM_EVIDENCE"
+        },
+        {
+          "id": "x87-conversion",
+          "basis": "HISTORICAL_EXAMPLE_ONLY"
+        }
+      ]
+    },
+    {
+      "function": "change_profile",
+      "rules_before": [
+        "branch-order",
+        "loop-shape",
+        "cold-guard"
+      ],
+      "rules_after": [
+        {
+          "id": "branch-order",
+          "basis": "CURRENT_SYMPTOM_EVIDENCE"
+        },
+        {
+          "id": "cold-guard",
+          "basis": "CURRENT_SYMPTOM_EVIDENCE"
+        }
+      ]
+    },
+    {
+      "function": "draw_scroller",
+      "rules_before": [
+        "assignment-register",
+        "persistent-peephole-scratch",
+        "historical-definition-order"
+      ],
+      "rules_after": [
+        {
+          "id": "assignment-register",
+          "basis": "HISTORICAL_EXAMPLE_ONLY"
+        },
+        {
+          "id": "persistent-peephole-scratch",
+          "basis": "CURRENT_SYMPTOM_EVIDENCE"
+        },
+        {
+          "id": "historical-definition-order",
+          "basis": "HISTORICAL_EXAMPLE_ONLY"
+        }
+      ]
+    }
+  ],
+  "compiler_scope": "Current applicability requires the recorded compiler ID and required optimization flags; missing or mismatched scope fails closed.",
+  "global_audit": "PASS",
+  "routing_invariance": "Ledger function states, workflow fields, queue difficulty and body-edit permissions unchanged."
+}
