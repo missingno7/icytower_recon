@@ -1,3 +1,4 @@
+#include "recovered/Thisc_table.h"
 extern void update_frame(void);
 extern void save_config(void);
 extern void handle_player_collision_vector(int, int);
@@ -521,7 +522,7 @@ extern void save_options(Toptions *o, PACKFILE *fp);
 extern void load_options(Toptions *o, PACKFILE *fp);
 extern void reset_options(Toptions *o);
 extern void *make_hisc_table(char *name);
-extern void reset_hisc_table(void *table, char *name, int hi, int lo);
+extern void reset_hisc_table(Thisc_table*, char*, int, int);
 extern int load_hisc_table(void *table, PACKFILE *fp);
 extern void save_hisc_table(void *table, PACKFILE *fp);
 extern void save_profile(Tprofile *profile);

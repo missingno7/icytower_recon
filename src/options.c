@@ -12,15 +12,7 @@ unsigned int hash3(unsigned int a)
     return a;
 }
 
-typedef struct {
-    int flash, checksum, jump_hold, full_screen;
-    int floor_shrink, floor_size, start_speed, speed_increase, gravity;
-    int msc_volume, snd_volume, sort_method;
-    char updateDate[16], posterDate[16], posterUrl[256], posterSrc[256];
-    int posterSize;
-    char lastProfile[32];
-    int timesStarted;
-} Toptions;
+#include "recovered/Toptions.h"
 
 extern char *strcpy(char *dst,const char *src);
 extern int file_size_ex(const char *filename);

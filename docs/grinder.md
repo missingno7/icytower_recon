@@ -440,6 +440,18 @@ blockers. Follow the refreshed queue after promotion. The complete edge list is
 in `docs/current/task-dependencies.json`; bounded queue entries record omitted
 counts. Remote-only conflicts and protected bodies do not create these edges.
 
+TYPE_VIEW cards record `view_completeness`. A `COMPLETE_LAYOUT` view has exactly the
+historical shape (size, member names, offsets, types), so the generated alias is a pure
+renaming and by-value locals, struct copies, array members and sizeof uses are admitted.
+A `PARTIAL_LAYOUT` view removes filler and keeps the pointer-only restriction. Pointer
+members spelled through a proven explicit compiled alias (`alias_normalized_members`) compare
+as their canonical pointee. Same-name declarations defer to CANONICAL_TYPE only when their
+member tokens equal the generated header. A required canonical dependency that is only
+forward-declared locally (`typedef struct T T;`) blocks the view unless the owning CU's own
+historical DWARF defines T completely; then `forward_declaration_repairs` adds one generated
+include edit. Vendored upstream CUs are never canonicalization targets. None of this bypasses
+the unchanged-emission or complete-layout acceptance checks.
+
 A TYPE_VIEW card with `repair_mode: POINTER_MEMBER_ONLY` preserves the local struct
 and repairs one DWARF-evidenced `void *` member. Use its generated commands; success
 is `DWARF_MEMBER_MATCH`, not whole-struct canonicalization or a function match.

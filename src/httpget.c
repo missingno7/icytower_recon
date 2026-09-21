@@ -8,10 +8,7 @@
 #include <string.h>
 #include <time.h>
 
-typedef struct HTTPHeader {
-    char *pHeader;
-    char *pValue;
-} HTTPHeader;
+#include "recovered/HTTPHeader.h"
 
 typedef struct HTTPResponse {
     int iStatusCode;

@@ -9,12 +9,7 @@
 #include "directories.h"
 #include "csv.h"
 
-typedef struct FLDAdSpot {
-    char *pRemoteImageURL;
-    char *pLocalImagePath;
-    char *pVisitURL;
-    float fFrequency;
-} FLDAdSpot;
+#include "recovered/FLDAdSpot.h"
 
 typedef struct HTTPResponse {
     int iStatusCode;

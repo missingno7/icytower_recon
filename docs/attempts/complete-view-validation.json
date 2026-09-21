@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "baseline_commit": "b4a3ca6",
+  "intervention": "Complete same-shape type views admit by-value, array and sizeof uses; explicit compiled aliases normalize pointer members; exact-token duplicates defer to CANONICAL_TYPE by token equality instead of a size heuristic; identified VENDORED CUs are excluded; a required canonical dependency that is forward-declared locally is repaired only when the historical CU's own DWARF defines the complete type.",
+  "scope": "Type-migration results only. No function proof, CU or object equality changed; function statuses stayed FUNCTION_MATCH 184 / DIFFER 66 / CODEGEN_SIMILAR 2 / MISSING 1 before and after.",
+  "recurring_blocker": {
+    "symptom": "Non-pointer or size-dependent view use requires supervisor review",
+    "root_cause": "The planner treated every view as partial. A candidate typedef whose shape_key equals the historical layout is a pure renaming, so by-value locals, struct copies, array members and sizeof cannot change layout; only partial views with removed filler need that restriction.",
+    "blocked_before": ["view_hisc_Thisc_post", "view_game_data_Tgd_combo", "view_game_data_Tgd_jump_sequence", "view_loadpng_MEMORY_READER_STATE", "view_replay_Treplay_post"],
+    "cascade_before": "view_hisc_Thisc_post alone kept Thisc_table mismatched in src/hisc.c, which blocked ten hisc interface tasks and view_scores."
+  },
+  "tests": {
+    "file": "tools/test_type_views.py",
+    "added": [
+      "test_complete_same_shape_view_permits_by_value_array_and_sizeof_uses",
+      "test_complete_size_with_renamed_or_reshaped_member_is_not_complete",
+      "test_pointer_member_through_proven_alias_matches_canonical_pointee",
+      "test_exact_token_duplicates_defer_to_canonical_type_task",
+      "test_forward_declared_dependency_blocks_without_waiting_state",
+      "test_forward_declaration_repair_requires_historical_cu_definition",
+      "test_historical_cu_definition_evidence_uses_owning_cu_dwarf"
+    ],
+    "result": "28 type-view tests, 33 interface/typed-interface/reconsideration tests pass; global audit passes; refresh_recovery.py --check passes."
+  },
+  "runs": [
+    {
+      "history": "docs/attempts/mechanical-runs/20260921T083450098831Z.jsonl",
+      "worker": "Sonnet subagent running mechanical_grinder.py --limit 6",
+      "outcomes": {
+        "view_fld_adspot_FLDAdSpot": "PROMOTED",
+        "view_game_data_Tgd_combo": "PROMOTED",
+        "view_game_data_Tgd_jump_sequence": "PROMOTED",
+        "view_game_data_Tgame_data": "STOPPED_FOR_REVIEW: generated Tgame_data.h includes Treplay.h, conflicting with the local `typedef struct Treplay Treplay;` in src/game_data.c. Source restored by abort; no session left open."
+      },
+      "lesson": "Dependency conflict detection only matched complete `typedef struct {...} Name;` declarations. Opaque forward typedefs of a required canonical type now block the plan, or are repaired when the owning CU's historical DWARF carries the complete definition (Treplay in game_data.c came from replay.h per DW_AT_decl_file)."
+    },
+    {
+      "history": "docs/attempts/mechanical-runs/20260921T084610902920Z.jsonl",
+      "worker": "Sonnet subagent running mechanical_grinder.py --limit 8",
+      "outcomes": {
+        "view_game_data_Tgame_data": "PROMOTED (two generated edits: typedef replacement and forward-declaration include)",
+        "view_hisc_Thisc_post": "PROMOTED (alias typedef Thisc Thisc_post)",
+        "view_hisc_Thisc_table": "PROMOTED (became CHEAP after the alias; posts member normalized through the proven alias)",
+        "reset_hisc_table": "PROMOTED (INTERFACE typed-caller repair in src/main.c, unlocked by the canonical Thisc_table)",
+        "view_httpget_HTTPHeader": "PROMOTED",
+        "view_httpget_HTTPResponse": "FAST_FAILED -> BLOCKED_SUPERVISOR: extractHTTPResponse emitted 45 changed bytes with unchanged body source; evidence docs/attempts/interface-diagnostics/view_httpget_HTTPResponse/",
+        "view_options_Toptions": "PROMOTED"
+      }
+    }
+  ],
+  "queue_effect": {
+    "cheap_before": 0,
+    "cheap_generated_by_intervention": 6,
+    "cheap_after_batches": 0,
+    "type_layout_blocked_interfaces_before": 40,
+    "type_layout_blocked_interfaces_after": 33,
+    "type_view_supervisor_before": 18,
+    "type_view_supervisor_after": 11,
+    "interface_supervisor_before": 52,
+    "interface_supervisor_after": 47
+  },
+  "remaining_hisc_prerequisites": {
+    "make_hisc_table": "src/main.c returns void*; a return-type change is outside the typed-caller recipe",
+    "load_hisc_table / save_hisc_table": "src/main.c void* placeholder plus src/hisc.c definitions spell the PACKFILE parameter as void*; definition edits stay with the supervisor",
+    "destroy_hisc_table": "implicit call in src/main.c:1678 without a prototype",
+    "view_scores": "Thisc_table** double-pointer parameter is an unsupported pointer form for the recipe"
+  },
+  "limits": "Complete-view admission is a declaration-only relaxation; every promotion still passed the unchanged raw-contribution gate, fresh complete layout check, acceptance suites, ordinary link check and global audit. Vendored upstream CUs (loadpng, savepng, regpng, strptime, timecompat) keep their upstream declaration text. AMBIGUOUS CUs (csv, httpget) remain game-owned per the brief."
+}

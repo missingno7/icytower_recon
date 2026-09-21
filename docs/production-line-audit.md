@@ -1130,3 +1130,27 @@ non-preserving both with and without assertion declarations; their blocks remain
 intact. Both cards now expose those current negative results, preventing repeated
 blind retries. The 271-test interface suite passes and all function/workflow proof
 states are unchanged. See docs/attempts/type-trial-card-validation.json.
+
+
+## Complete type views and forward-declared dependencies
+
+Five blocked type views were complete same-shape declarations rejected only because
+their CU used them by value, in arrays or through sizeof. The planner now classifies
+`COMPLETE_LAYOUT` versus `PARTIAL_LAYOUT`; a complete view is a renaming typedef and
+admits those uses, while partial views keep the pointer-only rule. Pointer members are
+compared through proven explicit compiled aliases, same-name declarations defer to the
+canonical-type task only on exact member tokens, and identified vendored CUs keep their
+upstream text. Seven tests cover the positive and negative boundaries.
+
+Two unattended Sonnet-run batches then promoted FLDAdSpot, Tgd_combo, Tgd_jump_sequence,
+Tgame_data, Thisc_post, Thisc_table, HTTPHeader, Toptions and the reset_hisc_table caller
+declaration. The first batch stopped safely when the generated Tgame_data header
+conflicted with a local `typedef struct Treplay Treplay;`; the abort restored source.
+The planner now blocks such forward declarations unless the owning CU's historical DWARF
+defines the type completely, in which case one generated include edit is planned; the
+game_data CU's Treplay came from replay.h and the repaired task then promoted. The
+HTTPResponse view in httpget changed extractHTTPResponse emission and was blocked with
+retained evidence. Aggregate-layout interface blockers fell from 40 to 33; function
+statuses are unchanged. Remaining hisc callers need return-type, definition, implicit-call
+or double-pointer repairs outside the typed-caller recipe. See
+docs/attempts/complete-view-validation.json.

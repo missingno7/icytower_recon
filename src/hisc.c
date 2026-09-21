@@ -7,15 +7,10 @@
  * Historical function: view_scores @ 0x00404c38, 2552 bytes
  */
 
-typedef struct {
-    char name[32];
-    unsigned int value;
-} Thisc_post;
+#include "recovered/Thisc.h"
+typedef Thisc Thisc_post;
 
-typedef struct {
-    char name[32];
-    Thisc_post *posts;
-} Thisc_table;
+#include "recovered/Thisc_table.h"
 
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);

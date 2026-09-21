@@ -4,20 +4,11 @@
  * Partial reconstruction of getGameDataXML @ 0x00404254.
  */
 
-typedef struct { int start, end, length; } Tgd_combo;
-typedef struct { int start, dist, num; } Tgd_jump_sequence;
-typedef struct Treplay Treplay;
+#include "recovered/Tgd_combo.h"
+#include "recovered/Tgd_jump_sequence.h"
+#include "recovered/Treplay.h"
 
-typedef struct {
-    Treplay *replay;
-    int score, floor, combo, no_combo_top_floor, biggest_lost_combo;
-    int ccc[5], jc[5];
-    int comboPosts;
-    Tgd_combo combos[5000];
-    int jumpPosts;
-    Tgd_jump_sequence jumps[5000];
-    int left, right, jump;
-} Tgame_data;
+#include "recovered/Tgame_data.h"
 
 #include "recovered/Tcommandline.h"
 

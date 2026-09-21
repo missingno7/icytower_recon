@@ -96,7 +96,7 @@ class ViewTests(unittest.TestCase):
         a={'kind':'base_type','size':4,'type':'int','encoding':'signed'}
         self.assertNotEqual(shape_key(a),shape_key(dict(a,qualifiers=['volatile'])))
 
-    def fixture_plan(self,extra='',other='',roots=('Tprofile',),tag=True,included=False,child=False):
+    def fixture_plan(self,extra='',other='',roots=('Tprofile',),tag=True,included=False,child=False,candidate=None):
         import type_views
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
@@ -104,7 +104,7 @@ class ViewTests(unittest.TestCase):
             if child: (root/'include/recovered/Child.h').write_text('typedef struct { int x; } Child;')
             source='src/example.c'; text='typedef struct '+('View ' if tag else '')+'{ unsigned char before_total_jumps[216]; int total_jumps; } View;\r\nint f(View *p) { return p->total_jumps; }\r\n'+extra
             (root/source).write_bytes(text.encode())
-            report={'build':{'target':'game-example','local_inputs':dict([(source,{})]+([('src/other.c',{})] if included else []))},'candidate_debug':{'typedefs':[{'name':'View','layout':self.candidate()}]}}
+            report={'build':{'target':'game-example','local_inputs':dict([(source,{})]+([('src/other.c',{})] if included else []))},'candidate_debug':{'typedefs':[{'name':'View','layout':candidate or self.candidate()}]}}
             observations=[{'historical_type':r} for r in roots]
             with patch.object(type_views,'ROOT',root),patch.object(type_views,'affected_targets',return_value=['game-example']):
                 return plan(source,report,STRUCT.search(text),observations,{},dict([(source,text),('src/other.c',other)])),text
@@ -121,6 +121,67 @@ class ViewTests(unittest.TestCase):
             p,_=self.fixture_plan(extra,other)
             self.assertEqual(p['difficulty'],'SUPERVISOR',p)
             self.assertEqual(p['changes'],[])
+
+    def test_complete_same_shape_view_permits_by_value_array_and_sizeof_uses(self):
+        complete=copy.deepcopy(self.expected())
+        for extra in ('View x; View arr[3]; int n=sizeof(View);','View copy(View *p) { View v; v=*p; arr2[0]=v; return v; }'):
+            p,_=self.fixture_plan(extra,candidate=complete)
+            self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+            self.assertEqual(p['view_completeness'],'COMPLETE_LAYOUT')
+            self.assertEqual(p['changes'][0]['after'],'#include "recovered/Tprofile.h"\r\ntypedef Tprofile View;')
+            self.assertEqual(p['removed_fillers'],[])
+        # The same uses stay blocked for a partial view, and a struct tag user still blocks.
+        p,_=self.fixture_plan('View x;')
+        self.assertEqual(p['view_completeness'],'PARTIAL_LAYOUT'); self.assertEqual(p['difficulty'],'SUPERVISOR')
+        p,_=self.fixture_plan('struct View *x;',candidate=complete)
+        self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertEqual(p['changes'],[])
+
+    def test_complete_size_with_renamed_or_reshaped_member_is_not_complete(self):
+        renamed=copy.deepcopy(self.expected()); renamed['members'][2]['name']='other_name'
+        p,_=self.fixture_plan('View x;',candidate=renamed)
+        self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertEqual(p['view_completeness'],'PARTIAL_LAYOUT')
+        self.assertIn('Non-pointer or size-dependent',p['reason'])
+        reshaped=copy.deepcopy(self.expected())
+        scalar=next(m for m in reshaped['members'] if m['layout']['kind']=='base_type'); scalar['layout']=dict(scalar['layout'],encoding='7\t(unsigned)',type='unsigned int')
+        p,_=self.fixture_plan('View x;',candidate=reshaped)
+        self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertEqual(p['changes'],[])
+
+    def test_pointer_member_through_proven_alias_matches_canonical_pointee(self):
+        import type_views,type_aliases
+        from common import identity
+        g=graph(); table=layout(g,g.game_types['Thisc_table'][0]['type_ref']); post=layout(g,g.game_types['Thisc'][0]['type_ref'])
+        candidate=copy.deepcopy(table); posts=next(m for m in candidate['members'] if m['name']=='posts'); posts['layout']['type']='Thisc_post *'
+        text='#include "recovered/Thisc.h"\ntypedef Thisc Thisc_post;\ntypedef struct { char name[32]; Thisc_post *posts; } Thisc_table;\nint f(Thisc_table *t) { return t->posts[0].value; }\n'
+        for proven in (True,False):
+            with tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp); (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
+                (root/'include/recovered/Thisc_table.h').write_text('#include "Thisc.h"\nheader'); (root/'include/recovered/Thisc.h').write_text('canonical')
+                source='src/hisc_like.c'; (root/source).write_bytes(text.encode())
+                report={'build':{'target':'game-example','local_inputs':{source:{},'include/recovered/Thisc.h':identity(root/'include/recovered/Thisc.h')}},
+                        'candidate_debug':{'typedefs':[{'name':'Thisc_table','alias_of':None,'layout':copy.deepcopy(candidate)},
+                            {'name':'Thisc_post','alias_of':'Thisc' if proven else None,'layout':copy.deepcopy(post)},
+                            {'name':'Thisc','alias_of':None,'layout':copy.deepcopy(post)}]}}
+                with patch.object(type_views,'ROOT',root),patch.object(type_aliases,'ROOT',root),patch.object(type_views,'affected_targets',return_value=['game-example']):
+                    p=plan(source,report,list(STRUCT.finditer(text))[0],[{'historical_type':'Thisc_table'}],{},{source:text,'include/recovered/Thisc.h':'canonical'})
+            if proven:
+                self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+                self.assertEqual(p['alias_normalized_members'][0]['member'],'posts')
+                self.assertEqual(p['view_completeness'],'COMPLETE_LAYOUT')
+                self.assertEqual(p['changes'][0]['after'],'#include "recovered/Thisc_table.h"')
+            else:
+                self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertIn('Member differs',p['reason']); self.assertEqual(p['alias_normalized_members'],[])
+
+    def test_exact_token_duplicates_defer_to_canonical_type_task(self):
+        import type_views
+        from type_tasks import tokens
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); (root/'include/recovered').mkdir(parents=True)
+            (root/'include/recovered/Tgd.h').write_text('typedef struct {\n    int start;\n    int end;\n} Tgd;\n')
+            card={'canonical':'Tgd','header':'include/recovered/Tgd.h'}
+            with patch.object(type_views,'ROOT',root):
+                self.assertTrue(type_views.exact_duplicate_tokens(STRUCT.search('typedef struct { int start; int end; } Tgd;'),card,tokens))
+                self.assertFalse(type_views.exact_duplicate_tokens(STRUCT.search('typedef struct { int start, end; } Tgd;'),card,tokens))
+                self.assertFalse(type_views.exact_duplicate_tokens(STRUCT.search('typedef struct { int start; int end; } Tgd;'),{'canonical':'Tgd'},tokens))
 
     def test_other_cu_spelling_is_not_external_type_identity(self):
         p,_=self.fixture_plan(other='typedef struct { int unrelated; } View; View *other;')
@@ -141,6 +202,42 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(p['changes'],[])
         p,_=self.fixture_plan(other='typedef struct { int x; } Child;',child=True)
         self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+
+    def test_forward_declared_dependency_blocks_without_waiting_state(self):
+        for extra in ('typedef struct Child Child;','typedef void Child;'):
+            p,_=self.fixture_plan(extra=extra,child=True)
+            self.assertEqual(p['difficulty'],'SUPERVISOR',p.get('reason'))
+            self.assertNotEqual(p['state'],'WAITING_FOR_CANONICAL_DEPENDENCY')
+            self.assertIn('forward-declared',p['reason']); self.assertEqual(p['changes'],[])
+            self.assertEqual(p['forward_declared_dependencies'][0]['type'],'Child')
+        p,_=self.fixture_plan(extra='struct Child *unrelated_pointer;',child=True)
+        self.assertEqual(p['difficulty'],'CHEAP',p.get('reason')); self.assertEqual(p['forward_declared_dependencies'],[])
+
+    def test_forward_declaration_repair_requires_historical_cu_definition(self):
+        import type_views
+        with patch.object(type_views,'historical_cu_defines',return_value=True):
+            p,text=self.fixture_plan(extra='typedef struct Child Child;\r\nChild *child_pointer;',child=True)
+            self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+            self.assertEqual(len(p['changes']),2)
+            self.assertEqual(p['changes'][1]['before'],'typedef struct Child Child;')
+            self.assertEqual(p['changes'][1]['after'],'#include "recovered/Child.h"')
+            self.assertEqual(p['compiled_headers'],['include/recovered/Tprofile.h','include/recovered/Child.h'])
+            self.assertEqual(p['forward_declaration_repairs'][0]['type'],'Child')
+            # Two forward declarations of the same name are ambiguous.
+            p,_=self.fixture_plan(extra='typedef struct Child Child;\r\ntypedef struct Child Child;',child=True)
+            self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertIn('more than once',p['reason'])
+        with patch.object(type_views,'historical_cu_defines',return_value=False):
+            p,_=self.fixture_plan(extra='typedef struct Child Child;',child=True)
+            self.assertEqual(p['difficulty'],'SUPERVISOR'); self.assertIn('lacks its complete layout',p['reason']); self.assertEqual(p['changes'],[])
+
+    def test_historical_cu_definition_evidence_uses_owning_cu_dwarf(self):
+        from type_views import historical_cu_defines
+        g=graph()
+        self.assertTrue(historical_cu_defines('src/game_data.c','Treplay',g))
+        self.assertTrue(historical_cu_defines('src/replay.c','Treplay',g))
+        self.assertFalse(historical_cu_defines('src/control.c','Treplay',g))
+        self.assertFalse(historical_cu_defines('src/game_data.c','NoSuchType',g))
+        self.assertFalse(historical_cu_defines('src/missing.c','Treplay',g))
 
     def test_conflicting_historical_correspondence_is_blocked(self):
         p,_=self.fixture_plan(roots=('Tprofile','Tcontrol'))

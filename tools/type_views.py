@@ -61,6 +61,46 @@ def compatible_members(candidate,expected,source,canonical_pointers=(),pointer_r
     return retained,ignored
 
 
+def normalize_alias_pointers(candidate,report):
+    """Spell pointer members through proven explicit canonical aliases.
+
+    Only aliases that type_aliases.canonical_aliases proves (compiled generated
+    header, identical complete layout) are rewritten. This is declaration spelling
+    normalization for layout comparison; it never asserts function or CU equality.
+    """
+    try:
+        from type_aliases import canonical_aliases
+        aliases=canonical_aliases(report)
+    except (KeyError,TypeError,ValueError): aliases={}
+    if not aliases or candidate.get('kind')!='structure_type': return candidate,[]
+    node=json.loads(json.dumps(candidate)); normalized=[]
+    for m in node.get('members',[]):
+        a=m['layout']
+        if a.get('kind')!='pointer_type' or a.get('qualifiers'): continue
+        target=POINTER.fullmatch(a.get('type',''))
+        if target and target[1] in aliases:
+            normalized.append({'member':m['name'],'candidate_type':a['type'],'canonical_type':aliases[target[1]]+' *',
+                'reason':'Explicit compiled alias with identical complete layout; spelling normalized for comparison only'})
+            a['type']=aliases[target[1]]+' *'
+    return node,normalized
+
+
+def historical_cu_defines(source,name,g):
+    """True when the historical CU compiled from `source` carries a complete DWARF definition of game type `name`.
+
+    This is declaration evidence for restoring a complete include; it proves nothing about function bytes.
+    """
+    try:
+        units={u['source']:u for u in read_json(ROOT/'src/units.json')}
+    except (OSError,ValueError,KeyError): return False
+    unit=units.get(source)
+    if not unit: return False
+    for d in g.game_types.get(name,[]):
+        target=g.dies.get(d.get('type_ref'))
+        if d.get('cu')==unit['cu_die'] and target and target['tag']=='DW_TAG_structure_type' and g.size(d['type_ref']): return True
+    return False
+
+
 def member_replacement(declaration, repair, newline):
     pointee=POINTER.fullmatch(repair['historical_type'])
     matches=list(re.finditer(r'\bvoid(?=\s*\*\s*'+re.escape(repair['member'])+r'\s*;)',sanitized(declaration)))
@@ -154,11 +194,17 @@ def plan(source,report,match,observations,ledger,texts):
             raise ValueError('View has uses in another compiled input of its owning CU')
         if match[1] and re.search(r'\bstruct\s+'+re.escape(match[1])+r'\b',outside): raise ValueError('Struct tag has separate users')
         if alias!=canonical and re.search(r'\btypedef\b[^;]*\b'+re.escape(canonical)+r'\s*;',outside): raise ValueError('Canonical type is already locally defined')
-        for use in re.finditer(r'\b'+re.escape(alias)+r'\b',outside):
-            tail=outside[use.end():]; prefix=outside[max(0,use.start()-40):use.start()]
-            if re.match(r'\s*\*',tail): continue
-            if re.search(r'\bsizeof\s*\(\s*$',prefix) and re.match(r'\s*\)',tail) and candidate['size']==expected['size']: continue
-            raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
+        candidate,normalized=normalize_alias_pointers(candidate,report)
+        complete=shape_key(candidate)==shape_key(expected)
+        card.update(view_completeness='COMPLETE_LAYOUT' if complete else 'PARTIAL_LAYOUT',alias_normalized_members=normalized)
+        if not complete:
+            # A partial view removes filler, so by-value, array and sizeof uses could change layout.
+            # A complete same-shape view is a pure renaming typedef; every use keeps its type.
+            for use in re.finditer(r'\b'+re.escape(alias)+r'\b',outside):
+                tail=outside[use.end():]; prefix=outside[max(0,use.start()-40):use.start()]
+                if re.match(r'\s*\*',tail): continue
+                if re.search(r'\bsizeof\s*\(\s*$',prefix) and re.match(r'\s*\)',tail) and candidate['size']==expected['size']: continue
+                raise ValueError('Non-pointer or size-dependent view use requires supervisor review')
         pointer_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
         retained,ignored=compatible_members(candidate,expected,outside,pointees,pointer_repairs)
@@ -174,12 +220,32 @@ def plan(source,report,match,observations,ledger,texts):
                    for path in maintained if not path.startswith('include/recovered/')
                    for declaration in STRUCT.finditer(sanitized(texts[path])) if declaration[3] in required]
         card['canonical_dependencies']=conflicts
+        # Any other local typedef of a required name (opaque `typedef struct T T;`, `typedef void T;`)
+        # also conflicts with the generated complete declaration and has no mechanical child task.
+        forward=[{'type':name,'source':path,'declaration':m[0].strip(),'start':m.start(),'end':m.end()}
+                 for path in maintained if not path.startswith('include/recovered/')
+                 for name in sorted(required)
+                 for m in re.finditer(r'\btypedef\b[^;{}]*\b'+re.escape(name)+r'\s*;',STRUCT.sub(lambda x:' '*len(x[0]),sanitized(texts[path])))]
+        card['forward_declared_dependencies']=forward
         if conflicts:
             card['state']='WAITING_FOR_CANONICAL_DEPENDENCY'
             raise ValueError('Canonicalize included types first to avoid duplicate typedefs in this CU: '+', '.join(sorted({r['type'] for r in conflicts})))
+        # A local opaque typedef of a required type conflicts with the generated complete declaration.
+        # It may be replaced by the generated header only when it sits in this source file, is unique,
+        # and the historical CU's own DWARF carries that complete layout (declaration evidence only).
+        forward_repairs=[]
+        for row in forward:
+            if row['source']!=source: raise ValueError('Required canonical type is forward-declared in an included maintained file: '+row['type'])
+            if sum(r['type']==row['type'] for r in forward)!=1: raise ValueError('Required canonical type is forward-declared more than once: '+row['type'])
+            if not historical_cu_defines(source,row['type'],g):
+                raise ValueError('Required canonical type is forward-declared locally and the historical CU lacks its complete layout: '+row['type'])
+            forward_repairs.append(dict(row,header='include/recovered/'+row['type']+'.h',
+                reason='Historical CU DWARF defines this type completely; the generated header restores the complete declaration. Fresh emission preservation remains required.'))
+        card['forward_declaration_repairs']=forward_repairs
         newline='\r\n' if '\r\n' in texts[source] else '\n'
         after='#include "recovered/'+canonical+'.h"'
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
+        if pointer_repairs and forward_repairs: raise ValueError('Member-only repair cannot be combined with a forward-declaration repair')
         if pointer_repairs:
             repair=pointer_repairs[0]
             original=texts[source][match.start():match.end()]
@@ -195,7 +261,10 @@ def plan(source,report,match,observations,ledger,texts):
                     candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,pointer_member_repairs=pointer_repairs,
                     affected_targets=targets,difficulty='CHEAP',priority=238,
                     changes=[{'file':source,'start':match.start(),'end':match.end(),'before':texts[source][match.start():match.end()],
-                              'after':after,'reason':'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}],
+                              'after':after,'reason':'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}]
+                            +[{'file':source,'start':r['start'],'end':r['end'],'before':texts[source][r['start']:r['end']],
+                               'after':'#include "recovered/'+r['type']+'.h"','reason':r['reason']} for r in forward_repairs],
+                    compiled_headers=[header.relative_to(ROOT).as_posix()]+[r['header'] for r in forward_repairs] if forward_repairs else card.get('compiled_headers',[header.relative_to(ROOT).as_posix()]),
                     reason='Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.',
                     edit_scope='Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.')
     except ValueError as exc: card['reason']=str(exc)
@@ -207,20 +276,33 @@ def plan(source,report,match,observations,ledger,texts):
 def plans(ledger):
     texts={p.relative_to(ROOT).as_posix():p.read_bytes().decode('cp1252') for folder in ('src','include') for p in (ROOT/folder).rglob('*.[ch]')}
     units={u['source']:u for u in read_json(ROOT/'src/units.json')}; cards=[]
+    from type_tasks import tokens
     for source,entry in ledger.items():
         report=read_json(ROOT/entry['verified_report'])
         if 'typedefs' not in report['candidate_debug']: raise ValueError('Reanalyze candidate DWARF before planning type views')
         observed=evidence(report,units[source]); clean=sanitized(texts[source]); matches=list(STRUCT.finditer(clean))
+        # Only identified upstream vendored CUs keep their upstream declaration text; AMBIGUOUS CUs stay game-owned per the brief.
+        vendored=str(units[source].get('classification') or units[source].get('ownership') or 'GAME').startswith('VENDORED')
         for match in matches:
             if match[3] not in observed: continue
             if sum(m[3]==match[3] for m in matches)!=1: continue
             if clean[:match.start()].count('{')!=clean[:match.start()].count('}'): continue
             card=plan(source,report,match,observed[match[3]],ledger,texts)
-            # Exact duplicates have a narrower existing CANONICAL_TYPE task.
-            if card['difficulty']=='CHEAP' and card.get('canonical')==match[3] and card.get('candidate_size')==card.get('historical_size') and not card.get('removed_fillers') and not card.get('pointer_member_repairs'):
-                continue
+            # Exact member-token duplicates have the narrower CANONICAL_TYPE task; a same-name
+            # declaration with different spelling but a complete layout stays a TYPE_VIEW.
+            if card.get('canonical')==match[3] and exact_duplicate_tokens(match,card,tokens): continue
+            if vendored and card['difficulty']=='CHEAP':
+                card.update(difficulty='SUPERVISOR',priority=-25,changes=[],
+                    reason='Vendored upstream declarations are not canonicalization targets; keep the upstream source text')
             cards.append(card)
     return cards
+
+
+def exact_duplicate_tokens(match,card,tokens):
+    header=ROOT/card['header'] if card.get('header') else None
+    if not header or not header.exists(): return False
+    expected=re.search(r'typedef struct\s*\{([^{}]*)\}\s*'+re.escape(card['canonical'])+r'\s*;',header.read_text())
+    return bool(expected) and tokens(match[2])==tokens(expected[1])
 
 
 def verify_member_pointees(report, plan):
