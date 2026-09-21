@@ -14,7 +14,7 @@ GROUPS={
                  'test_literal_diagnostics','test_reference_diagnostics','test_global_type_tasks',
                  'test_atomic_writes','test_data_owners','test_interface_tasks','test_interface_admission','test_typed_interface_tasks',
                  'test_interface_type_probe','test_dwarf_locations','test_compiler_context',
-                 'test_branch_diagnostics','test_data_tasks','test_type_views','test_type_headers',
+                 'test_branch_diagnostics','test_data_tasks','test_type_views','test_type_headers','test_type_dependencies',
                  'test_local_declarations','test_stack_diagnostics','test_storage_diagnostics','test_static_scope_tasks')}
 
 

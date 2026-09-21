@@ -386,3 +386,10 @@ with observed sizes, mismatch/call counts and the base eligibility checks. These
 explain selection; they do not authorize overriding final difficulty. Bounded
 recipes, interface/owner prerequisites and recorded supervisor blocks take
 precedence. The actual recorded block reason is retained in the queue.
+
+
+A canonical-type card may be `WAITING_FOR_CANONICAL_DEPENDENCY`: its generated
+header includes another type still declared locally in an affected CU. Complete
+the linked prerequisite task first. Queue refresh removes the dependency once
+its duplicate declaration is gone; do not try the parent early or merge typedefs
+manually. Transitive dependencies are included.

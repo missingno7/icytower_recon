@@ -547,3 +547,21 @@ resolving and fingerprinting dependencies. The regression test invokes the actua
 TDM-2 compiler on headers containing single/double dollars, spaces and hash
 characters and checks the exact returned paths. Existing included-header
 invalidation and unrelated-header preservation controls remain in place.
+
+
+## Canonical type dependency ordering
+
+A real scratch compile demonstrated that replacing Tstar_field before the local
+Tstar typedef causes conflicting declarations: the generated parent header
+includes the canonical child header. Both tasks had previously been CHEAP.
+Canonicalization now follows transitive generated-header includes and waits for
+remaining duplicate-type tasks sharing an affected CU. Disjoint CU declarations
+do not create prerequisites, and refresh automatically releases a parent after
+its child replacement. Two regression tests cover these cases. The complete
+compiler diagnostic is in `docs/attempts/canonical-type-dependency-probe.json`.
+
+Both real replacements passed strict promotion with preserved contributions and
+function states. The final gate passed 208 interface tests and global audit. A
+read-only replay of the original stars.h confirms that the new planner waits for
+Tstar before offering Tstar_field. See
+`docs/attempts/canonical-type-order-validation.json`.

@@ -2,22 +2,9 @@
 #define ICYTOWER_STARS_H
 #include <allegro.h>
 
-typedef struct {
-    double x;
-    double y;
-    int z;
-} Tstar;
+#include "recovered/Tstar.h"
 
-typedef struct {
-    int clear_color;
-    int stars;
-    int width;
-    int height;
-    int depth;
-    int col1;
-    int col_step;
-    Tstar star[1024];
-} Tstar_field;
+#include "recovered/Tstar_field.h"
 
 void init_star_field(Tstar_field *sf, int w, int h, int num, int first_col,
                      int last_col, int dep, int cc);

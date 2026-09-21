@@ -46,6 +46,24 @@ def plans(ledger):
         blocked=ROOT/'docs/current/interface-blocks.json'
         if blocked.exists() and name in read_json(blocked): card.update(difficulty='SUPERVISOR',priority=-100,supervisor_block=read_json(blocked)[name])
         cards.append(card)
+    # Generated aggregate headers include their by-value type dependencies.
+    # Replacing a parent first can redeclare a still-local child typedef.
+    def dependencies(name,seen=None):
+        seen=set() if seen is None else seen
+        if name in seen: return set()
+        seen.add(name); header=ROOT/'include/recovered'/(name+'.h')
+        if not header.exists(): return set()
+        direct=set(re.findall(r'^#include "([A-Za-z_]\w*)\.h"',header.read_text(),re.M))
+        return direct|set().union(*(dependencies(d,seen) for d in direct))
+    for card in cards:
+        required=dependencies(card['function'])
+        prerequisites=[{'function':other['function'],'candidate_card':'docs/current/types/'+other['function']+'.json',
+                        'affected_targets':sorted(set(card['affected_targets'])&set(other['affected_targets']))}
+                       for other in cards if other['function'] in required and set(card['affected_targets'])&set(other['affected_targets'])]
+        card['canonical_dependencies']=prerequisites
+        if prerequisites and not card.get('supervisor_block'):
+            card.update(difficulty='SUPERVISOR',priority=-15,state='WAITING_FOR_CANONICAL_DEPENDENCY',
+                        reason='Canonicalize included types first to avoid duplicate typedefs in affected CUs: '+', '.join(p['function'] for p in prerequisites))
     return cards
 
 
