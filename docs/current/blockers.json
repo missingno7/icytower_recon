@@ -5012,6 +5012,31 @@
       "dependency_priority_bonus": 0
     },
     {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "my_strcmp",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -100,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 21,
+        "original_va": 4318933,
+        "candidate_byte": 38,
+        "original_byte": 90
+      },
+      "verification_command": "python tools/check_function.py game-replay my_strcmp",
+      "begin_command": "python tools/grinder_task.py begin game-replay my_strcmp",
+      "promotion_command": "python tools/promote_function.py game-replay my_strcmp",
+      "body_edit_allowed": true,
+      "routing_reason": "Recorded supervisor block: Bounded predicate experiments retained in docs/attempts/predicate-probes/game-replay/my_strcmp.json and .jsonl: equality-to-one, guard-tail inversion and interval-switch variants remain DIFFER, 123 vs 128 bytes, first mismatch offset 21. Guard inversion and switch alone preserve baseline emission. Stop body guessing; investigate original block ordering/compiler context before granting a new recipe.",
+      "size": 128,
+      "candidate_card": "docs/current/functions/replay/my_strcmp.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "main_menu_callback",

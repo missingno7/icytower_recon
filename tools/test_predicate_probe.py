@@ -29,6 +29,16 @@ class ReturnGuardTests(unittest.TestCase):
             with self.assertRaises(ValueError):invert_return_guard('int f(){'+body+'}','f','a!=b')
 
 
+class IntervalSwitchTests(unittest.TestCase):
+    def test_contiguous_case_group_and_bounded_rejections(self):
+        from predicate_probe import interval_switch
+        text='int f(){if(!a->v && (unsigned int)(mode - 2) <= 2U){return 1;}return 0;}'
+        changed,_=interval_switch(text,'f','mode')
+        self.assertIn('case 2: case 3: case 4: {return 1;}',changed)
+        for bad in [text.replace('2U','99U'),text.replace('return 1;','x++;'),text.replace('return 1;','if(x)return 1;')]:
+            with self.assertRaises(ValueError):interval_switch(bad,'f','mode')
+
+
 class PredicateMemoryTests(unittest.TestCase):
     def test_changed_tool_or_source_marks_trial_historical(self):
         import tempfile,json
@@ -45,6 +55,11 @@ class PredicateMemoryTests(unittest.TestCase):
             path=root/'docs/attempts/predicate-probes/a/f.json';path.parent.mkdir(parents=True);path.write_text(json.dumps(record))
             with patch.object(predicate_context,'ROOT',root):
                 self.assertEqual(predicate_context.load('a','f',build,1,1)['baseline_state'],'CURRENT_INPUTS')
+                archived=dict(record,variants=[{'variant':'older-guard','target_result':{'status':'DIFFER'}}])
+                path.with_suffix('.jsonl').write_text(json.dumps(archived)+'\n')
+                memory=predicate_context.load('a','f',build,1,1)
+                self.assertEqual(memory['prior_trials'][0]['variant'],'older-guard')
+                self.assertEqual(memory['prior_trials'][0]['state'],'HISTORICAL_REQUIRES_REFRESH')
                 (root/paths[0]).write_text('changed')
                 self.assertEqual(predicate_context.load('a','f',build,1,1)['baseline_state'],'HISTORICAL_REQUIRES_REFRESH')
                 (root/paths[0]).write_text('tool');build['local_inputs']={'src/a.c':2}

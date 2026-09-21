@@ -1038,3 +1038,22 @@ alone. All four variants remain DIFFER. The function card retains all four with
 source/tool freshness checks; older trials remain archived. The 154-test function
 suite passes and all function/workflow proof states are unchanged. This rules out
 the simple outer-guard inversion hypothesis without modifying production source.
+
+
+## Interval-switch trial and bounded supervisor escalation
+
+The predicate probe can test one guarded unsigned interval as a bounded switch
+(maximum eight contiguous cases), alone and combined with equality to one. Only a
+unique supported source form with a terminal unconditional return is accepted;
+fallthrough, labels and break/continue/goto inside the arm are rejected. This is
+a compiler experiment, not an equivalence proof (including signed-overflow edge
+cases). It cannot edit production source or promote results.
+
+For my_strcmp the switch alone preserves baseline emission; the combined variant
+remains DIFFER at 123 versus 128 bytes with the first mismatch at offset 21. The
+card now retains distinct archived guard trials as explicitly historical evidence
+as well as the latest switch trials. After these bounded failures, the standard
+grinder block command recorded BLOCKED_SUPERVISOR with the exact mismatch and
+evidence links. Source was restored unchanged and the task session closed. The
+155-test function suite passes. Future work must explain compiler/block ordering
+before admitting another body recipe; cheap workers automatically skip this task.

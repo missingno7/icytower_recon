@@ -46,7 +46,30 @@ def invert_return_guard(text,function,condition):
     return text[:start]+after+text[hi-1:],change
 
 
-def probe(target,function,expression,invert_guard=None):
+def interval_switch(text,function,variable):
+    if not re.fullmatch(r'[A-Za-z_]\w*',variable):raise ValueError('One interval variable required')
+    lo,hi=function_span(text,function);clean=sanitized(text)
+    scalar=r'[A-Za-z_]\w*(?:\s*->\s*[A-Za-z_]\w*)?'
+    pattern=r'\bif\s*\(\s*(!\s*'+scalar+r')\s*&&\s*\(unsigned\s+int\)\s*\(\s*'+re.escape(variable)+r'\s*-\s*(\d+)\s*\)\s*<=\s*(\d+)U\s*\)\s*\{'
+    matches=list(re.finditer(pattern,clean[lo:hi]))
+    if len(matches)!=1:raise ValueError('One guarded unsigned interval required')
+    m=matches[0];lower=int(m[2]);count=int(m[3])+1
+    if not 1<=count<=8 or lower+count>2147483647:raise ValueError('Interval exceeds bounded switch scope')
+    start=lo+m.start();opening=lo+m.end()-1;end=opening+1;depth=1
+    while end<hi and depth:
+        depth+=(clean[end]=='{')-(clean[end]=='}');end+=1
+    body=clean[opening+1:end-1]
+    terminal=re.search(r'\breturn\b[^;{}]*;\s*$',body)
+    if not terminal or body[:terminal.start()].count('{')!=body[:terminal.start()].count('}') or (body[:terminal.start()].rstrip() and body[:terminal.start()].rstrip()[-1] not in ';}'):raise ValueError('Interval arm must end in unconditional return')
+    if re.match(r'\s*else\b',clean[end:hi]):raise ValueError('Existing else unsupported')
+    if re.search(r'\b(?:break|continue|goto|case|default)\b|(?m:^\s*#)|(?:^|[;{}])\s*\w+\s*:',body):raise ValueError('Control transfer or label in interval arm')
+    after='if ('+text[lo+m.start(1):lo+m.end(1)]+') { switch ('+variable+') { '+''.join('case '+str(v)+': ' for v in range(lower,lower+count))+text[opening:end]+' default: break; } }'
+    change={'start':start,'end':end,'before':text[start:end],'after':after}
+    return text[:start]+after+text[end:],change
+
+
+def probe(target,function,expression,invert_guard=None,switch_interval=None):
+    if invert_guard and switch_interval:raise ValueError("Choose one structural trial per run")
     out=ROOT/'build/predicate-probes'/target/function
     reference=fresh_verify(target,dest=out/'reference');build=reference['build']
     source=build['config']['source'];original=(ROOT/source).read_bytes().decode('cp1252')
@@ -56,9 +79,12 @@ def probe(target,function,expression,invert_guard=None):
     if invert_guard:
         for label,text in [('inverted-guard',original),('equal-one-and-inverted-guard',candidate)]:
             changed,edit=invert_return_guard(text,function,invert_guard);variants.append((label,changed));guard_changes.append({'variant':label,'change':edit})
+    if switch_interval:
+        for label,text in [('interval-switch',original),('equal-one-and-interval-switch',candidate)]:
+            changed,edit=interval_switch(text,function,switch_interval);variants.append((label,changed));guard_changes.append({'variant':label,'change':edit})
     inputs=dict(build['local_inputs'])
     tools={p:identity(ROOT/p) for p in ['tools/predicate_probe.py','tools/source_scope.py']}
-    result={'scope':'Scratch-only experiment; no production edits or promotion proof.','target':target,'function':function,'expression':expression,'recipe':recipe,'guard_changes':guard_changes,'invert_guard':invert_guard,
+    result={'scope':'Scratch-only experiment; no production edits or promotion proof.','target':target,'function':function,'expression':expression,'recipe':recipe,'guard_changes':guard_changes,'invert_guard':invert_guard,'switch_interval':switch_interval,
             'source_inputs':inputs,'probe_tools':tools,'compiler':build,'fixture':reference['fixture'],'verifier':reference['verifier'],
             'baseline_source':original,'outcome':'COMPLETE','variants':[]}
     for label,text in variants:
@@ -92,5 +118,5 @@ def probe(target,function,expression,invert_guard=None):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('target');p.add_argument('function');p.add_argument('expression');p.add_argument('--invert-guard');a=p.parse_args()
-    raise SystemExit(0 if probe(a.target,a.function,a.expression,a.invert_guard)['outcome']=='COMPLETE' else 1)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('target');p.add_argument('function');p.add_argument('expression');p.add_argument('--invert-guard');p.add_argument('--switch-interval');a=p.parse_args()
+    raise SystemExit(0 if probe(a.target,a.function,a.expression,a.invert_guard,a.switch_interval)['outcome']=='COMPLETE' else 1)

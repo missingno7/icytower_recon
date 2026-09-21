@@ -1084,13 +1084,55 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 91,
+  "difficulty": "SUPERVISOR",
+  "priority": -100,
   "compound_trials": null,
   "predicate_trials": {
     "baseline_state": "CURRENT_INPUTS",
+    "prior_trials": [
+      {
+        "variant": "inverted-guard",
+        "target_result": {
+          "status": "DIFFER",
+          "candidate_size": 123,
+          "original_size": 128,
+          "first_difference": {
+            "offset": 21,
+            "original_va": 4318933,
+            "candidate_byte": 38,
+            "original_byte": 90
+          },
+          "body_shape_equal": false
+        },
+        "state": "HISTORICAL_REQUIRES_REFRESH",
+        "same_source_inputs": true,
+        "evidence": "docs/attempts/predicate-probes/game-replay/my_strcmp.jsonl",
+        "record_line": 3
+      },
+      {
+        "variant": "equal-one-and-inverted-guard",
+        "target_result": {
+          "status": "DIFFER",
+          "candidate_size": 122,
+          "original_size": 128,
+          "first_difference": {
+            "offset": 21,
+            "original_va": 4318933,
+            "candidate_byte": 38,
+            "original_byte": 90
+          },
+          "body_shape_equal": false
+        },
+        "state": "HISTORICAL_REQUIRES_REFRESH",
+        "same_source_inputs": true,
+        "evidence": "docs/attempts/predicate-probes/game-replay/my_strcmp.jsonl",
+        "record_line": 3
+      }
+    ],
+    "omitted_prior_trials": 0,
+    "switch_interval": "sort_method",
     "expression": "a->directory",
-    "invert_guard": "a->directory != b->directory",
+    "invert_guard": null,
     "outcome": "COMPLETE",
     "evidence": "docs/attempts/predicate-probes/game-replay/my_strcmp.json",
     "variants": [
@@ -1127,7 +1169,7 @@
         "compile_failed": false
       },
       {
-        "variant": "inverted-guard",
+        "variant": "interval-switch",
         "target_result": {
           "status": "DIFFER",
           "candidate_size": 123,
@@ -1143,16 +1185,16 @@
         "compile_failed": false
       },
       {
-        "variant": "equal-one-and-inverted-guard",
+        "variant": "equal-one-and-interval-switch",
         "target_result": {
           "status": "DIFFER",
-          "candidate_size": 122,
+          "candidate_size": 128,
           "original_size": 128,
           "first_difference": {
-            "offset": 21,
-            "original_va": 4318933,
-            "candidate_byte": 38,
-            "original_byte": 90
+            "offset": 24,
+            "original_va": 4318936,
+            "candidate_byte": 117,
+            "original_byte": 116
           },
           "body_shape_equal": false
         },
@@ -1164,7 +1206,7 @@
   },
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+  "routing_reason": "Recorded supervisor block: Bounded predicate experiments retained in docs/attempts/predicate-probes/game-replay/my_strcmp.json and .jsonl: equality-to-one, guard-tail inversion and interval-switch variants remain DIFFER, 123 vs 128 bytes, first mismatch offset 21. Guard inversion and switch alone preserve baseline emission. Stop body guessing; investigate original block ordering/compiler context before granting a new recipe.",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1186,7 +1228,21 @@
     },
     "limit": "Explains the base heuristic only. Recorded blocks, interface/owner prerequisites and proved bounded recipes take precedence; difficulty is the final routing decision."
   },
-  "supervisor_block": null,
+  "supervisor_block": {
+    "state": "BLOCKED_SUPERVISOR",
+    "reason": "Bounded predicate experiments retained in docs/attempts/predicate-probes/game-replay/my_strcmp.json and .jsonl: equality-to-one, guard-tail inversion and interval-switch variants remain DIFFER, 123 vs 128 bytes, first mismatch offset 21. Guard inversion and switch alone preserve baseline emission. Stop body guessing; investigate original block ordering/compiler context before granting a new recipe.",
+    "first_difference": {
+      "offset": 21,
+      "original_va": 4318933,
+      "candidate_byte": 38,
+      "original_byte": 90
+    },
+    "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+    "source_identity": {
+      "size": 24377,
+      "sha256": "dd8b4b2ea21fc48ebe9b05748a1dcc467fc13a8309941cf9104a60ae4d625f14"
+    }
+  },
   "evidence_report": "docs/current/reports/game-replay.json",
   "verification_command": "python tools/check_function.py game-replay my_strcmp",
   "begin_command": "python tools/grinder_task.py begin game-replay my_strcmp",

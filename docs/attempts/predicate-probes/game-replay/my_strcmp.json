@@ -11,25 +11,26 @@
   },
   "guard_changes": [
     {
-      "variant": "inverted-guard",
+      "variant": "interval-switch",
       "change": {
-        "start": 22663,
-        "end": 23229,
-        "before": "if (a->directory != b->directory) {\n        if (a->directory)\n            return -1;\n        return 1;\n    }\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n",
-        "after": "if (!(a->directory != b->directory)) {\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n} else {\n        if (a->directory)\n            return -1;\n        return 1;\n    }"
+        "start": 22929,
+        "end": 23180,
+        "before": "if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }",
+        "after": "if (!a->directory) { switch (sort_method) { case 2: case 3: case 4: {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    } default: break; } }"
       }
     },
     {
-      "variant": "equal-one-and-inverted-guard",
+      "variant": "equal-one-and-interval-switch",
       "change": {
-        "start": 22663,
-        "end": 23236,
-        "before": "if (a->directory != b->directory) {\n        if ((a->directory) == 1)\n            return -1;\n        return 1;\n    }\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n",
-        "after": "if (!(a->directory != b->directory)) {\n    /* The original forms this as an unsigned interval: modes 2 through 4\n     * select a replay property, while every other value sorts by pathname. */\n    if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }\n    return stricmp(a->full_path, b->full_path);\n} else {\n        if ((a->directory) == 1)\n            return -1;\n        return 1;\n    }"
+        "start": 22936,
+        "end": 23187,
+        "before": "if (!a->directory && (unsigned int)(sort_method - 2) <= 2U) {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    }",
+        "after": "if (!a->directory) { switch (sort_method) { case 2: case 3: case 4: {\n        av = get_replay_property(a->full_path, sort_method);\n        bv = get_replay_property(b->full_path, sort_method);\n        if (av > bv)\n            return -1;\n        return 1;\n    } default: break; } }"
       }
     }
   ],
-  "invert_guard": "a->directory != b->directory",
+  "invert_guard": null,
+  "switch_interval": "sort_method",
   "source_inputs": {
     "src/replay.c": {
       "size": 24377,
@@ -246,8 +247,8 @@
   },
   "probe_tools": {
     "tools/predicate_probe.py": {
-      "size": 6942,
-      "sha256": "5db4548c65ce75a8f468c51ef8308827b716f401b88292f0bd9b1388325823fd"
+      "size": 9179,
+      "sha256": "3078cbc8392e067e0b6c6476496aaee7322fdd84a35aa42b1cd6b15ef5d6c34c"
     },
     "tools/source_scope.py": {
       "size": 1351,
@@ -848,14 +849,14 @@
       }
     },
     {
-      "variant": "inverted-guard",
+      "variant": "interval-switch",
       "object": {
-        "size": 42700,
-        "sha256": "a08929202bf15f1b884796b0e6145436239fe94ed1296954cedc8229d583bc76"
+        "size": 42708,
+        "sha256": "3f97e2737c911ed1efd2e72f82e20ec0f13f1ce726d3d53caacabb28a7f87e5a"
       },
       "source_identity": {
-        "size": 24388,
-        "sha256": "123ada3b55054887269625b1d3f2375fd4843e16f343c24893c4496473f1fedf"
+        "size": 24405,
+        "sha256": "8b32c2d88a4af88c3c0d60db7178894065d5bdcfb2573bd69a69a329456092be"
       },
       "raw_contributions_equal": true,
       "raw_fingerprint_delta": {},
@@ -881,19 +882,26 @@
       }
     },
     {
-      "variant": "equal-one-and-inverted-guard",
+      "variant": "equal-one-and-interval-switch",
       "object": {
-        "size": 42728,
-        "sha256": "af1bb3b07c1a2e6f62af3456a0479444e78fadb1b3fa457a5ed51c45c5802a15"
+        "size": 42724,
+        "sha256": "ed83eca2b8e01e9d768040ffd469dc787b773ef7dc44c6d2d715098e77ddb1e5"
       },
       "source_identity": {
-        "size": 24395,
-        "sha256": "de400f92d3fdb4a3f56bd507c3001ee74e5c24bb5f9d1054eea8ff9e4a0272aa"
+        "size": 24412,
+        "sha256": "c20c43341a79dce389a1257a16424e17a23d848c751ebc858259f08322eae2fc"
       },
       "raw_contributions_equal": false,
       "raw_fingerprint_delta": {
         "sections": {
           "removed": [
+            [
+              ".rdata",
+              0,
+              864,
+              1080033344,
+              "f058640038f599e807964af991eeebd9e795c326bc475dc9c77173c2dd3545ce"
+            ],
             [
               ".text",
               0,
@@ -904,33 +912,337 @@
           ],
           "added": [
             [
+              ".rdata",
+              0,
+              864,
+              1080033344,
+              "e8bda78cc7160815b87cce62b66114328b5097e3412fc2bb1d54c3717eac65ea"
+            ],
+            [
               ".text",
               0,
-              9708,
+              9712,
               1613758496,
-              "97f2e8f3c4f6e7b7c3605fbe9a7ac7ec6358df812842d2d96edb19bff816fe55"
+              "b60645d957603cbe1d12ac5fe19195857fe7b74c7e5d6419a1805417b8e25a85"
             ]
           ],
           "before_count": 4,
           "after_count": 4
+        },
+        "symbols": {
+          "removed": [
+            [
+              "_draw_replay_selector",
+              ".text",
+              5272,
+              32,
+              2
+            ],
+            [
+              "_load_replay",
+              ".text",
+              2896,
+              32,
+              2
+            ],
+            [
+              "_replay_selector",
+              ".text",
+              7804,
+              32,
+              2
+            ],
+            [
+              "_save_replay",
+              ".text",
+              4044,
+              32,
+              2
+            ],
+            [
+              "_update_file_list",
+              ".text",
+              7620,
+              32,
+              2
+            ]
+          ],
+          "added": [
+            [
+              "_draw_replay_selector",
+              ".text",
+              5276,
+              32,
+              2
+            ],
+            [
+              "_load_replay",
+              ".text",
+              2900,
+              32,
+              2
+            ],
+            [
+              "_replay_selector",
+              ".text",
+              7808,
+              32,
+              2
+            ],
+            [
+              "_save_replay",
+              ".text",
+              4048,
+              32,
+              2
+            ],
+            [
+              "_update_file_list",
+              ".text",
+              7624,
+              32,
+              2
+            ]
+          ],
+          "before_count": 80,
+          "after_count": 80
+        },
+        "relocations": {
+          "removed": [
+            [
+              ".text",
+              2828,
+              20,
+              [
+                "_stricmp",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2865,
+              6,
+              [
+                "_sort_method",
+                0,
+                16,
+                0,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2912,
+              6,
+              [
+                ".rdata",
+                ".rdata",
+                0,
+                0,
+                3
+              ]
+            ],
+            [
+              ".text",
+              2923,
+              20,
+              [
+                "_pack_fopen",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2970,
+              20,
+              [
+                "_pack_fread",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2996,
+              20,
+              [
+                "_pack_fread",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              3004,
+              20,
+              [
+                "_pack_fclose",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              3009,
+              6,
+              [
+                ".rdata",
+                ".rdata",
+                0,
+                0,
+                3
+              ]
+            ]
+          ],
+          "added": [
+            [
+              ".text",
+              2828,
+              6,
+              [
+                "_sort_method",
+                0,
+                16,
+                0,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2877,
+              20,
+              [
+                "_stricmp",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2916,
+              6,
+              [
+                ".rdata",
+                ".rdata",
+                0,
+                0,
+                3
+              ]
+            ],
+            [
+              ".text",
+              2927,
+              20,
+              [
+                "_pack_fopen",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              2974,
+              20,
+              [
+                "_pack_fread",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              3000,
+              20,
+              [
+                "_pack_fread",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              3008,
+              20,
+              [
+                "_pack_fclose",
+                0,
+                0,
+                32,
+                2
+              ]
+            ],
+            [
+              ".text",
+              3013,
+              6,
+              [
+                ".rdata",
+                ".rdata",
+                0,
+                0,
+                3
+              ]
+            ]
+          ],
+          "before_count": 363,
+          "after_count": 363
         }
       },
       "function_matches": 5,
       "target_result": {
         "status": "DIFFER",
-        "candidate_size": 122,
+        "candidate_size": 128,
         "original_size": 128,
         "first_difference": {
-          "offset": 21,
-          "original_va": 4318933,
-          "candidate_byte": 38,
-          "original_byte": 90
+          "offset": 24,
+          "original_va": 4318936,
+          "candidate_byte": 117,
+          "original_byte": 116
         },
         "body_shape_equal": false
       },
       "contribution_diagnostics": {
         "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
         "changed_sections": [
+          {
+            "section": ".rdata",
+            "before": [
+              {
+                "virtual_size": 0,
+                "raw_size": 864,
+                "characteristics": 1080033344,
+                "sha256": "f058640038f599e807964af991eeebd9e795c326bc475dc9c77173c2dd3545ce"
+              }
+            ],
+            "after": [
+              {
+                "virtual_size": 0,
+                "raw_size": 864,
+                "characteristics": 1080033344,
+                "sha256": "e8bda78cc7160815b87cce62b66114328b5097e3412fc2bb1d54c3717eac65ea"
+              }
+            ]
+          },
           {
             "section": ".text",
             "before": [
@@ -944,14 +1256,422 @@
             "after": [
               {
                 "virtual_size": 0,
-                "raw_size": 9708,
+                "raw_size": 9712,
                 "characteristics": 1613758496,
-                "sha256": "97f2e8f3c4f6e7b7c3605fbe9a7ac7ec6358df812842d2d96edb19bff816fe55"
+                "sha256": "b60645d957603cbe1d12ac5fe19195857fe7b74c7e5d6419a1805417b8e25a85"
               }
             ]
           }
         ],
         "changed_functions": [
+          {
+            "function": "draw_replay_selector",
+            "status_before": "DIFFER",
+            "status_after": "DIFFER",
+            "workflow_before": "SOURCE_DIFFER",
+            "workflow_after": null,
+            "offset_before": 5272,
+            "offset_after": 5276,
+            "size_before": 2347,
+            "size_after": 2347,
+            "emitted_instruction_bytes_equal": true,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "DIFFER",
+                "workflow": {
+                  "state": "SOURCE_DIFFER",
+                  "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+                  "body_edit_allowed": true,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 3726,
+                "candidate_size": 2347,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 12,
+                  "original_va": 4308580,
+                  "candidate_byte": 139,
+                  "original_byte": 161
+                },
+                "relocation_mismatch_count": 60,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 19,
+                    "symbol": "_font",
+                    "resolved_value": 5033108,
+                    "original_value": 3788498980,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 27,
+                    "symbol": "_text_height",
+                    "resolved_value": 254409,
+                    "original_value": 4294966220,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 61,
+                    "symbol": "_makecol",
+                    "resolved_value": 216575,
+                    "original_value": 4294966216,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 95,
+                    "symbol": "_makecol",
+                    "resolved_value": 216541,
+                    "original_value": 4294966208,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 137,
+                    "symbol": "_data",
+                    "resolved_value": 5100092,
+                    "original_value": 3707956185,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 207,
+                    "symbol": "_stretch_sprite",
+                    "resolved_value": 291949,
+                    "original_value": 4220028381,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 54,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "DIFFER",
+                "workflow": null,
+                "historical_size": 3726,
+                "candidate_size": 2347,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 12,
+                  "original_va": 4308580,
+                  "candidate_byte": 139,
+                  "original_byte": 161
+                },
+                "relocation_mismatch_count": 60,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 19,
+                    "symbol": "_font",
+                    "resolved_value": 5033108,
+                    "original_value": 3788498980,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 27,
+                    "symbol": "_text_height",
+                    "resolved_value": 254409,
+                    "original_value": 4294966220,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 61,
+                    "symbol": "_makecol",
+                    "resolved_value": 216575,
+                    "original_value": 4294966216,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 95,
+                    "symbol": "_makecol",
+                    "resolved_value": 216541,
+                    "original_value": 4294966208,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 137,
+                    "symbol": "_data",
+                    "resolved_value": 5100092,
+                    "original_value": 3707956185,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 207,
+                    "symbol": "_stretch_sprite",
+                    "resolved_value": 291949,
+                    "original_value": 4220028381,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 54,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": null,
+            "differing_byte_count": 0,
+            "difference_offsets": [],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 5272,
+                  "bytes": "55",
+                  "mnemonic": "push",
+                  "assembly": "push   %ebp"
+                },
+                {
+                  "address": 5273,
+                  "bytes": "89e5",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %esp,%ebp"
+                },
+                {
+                  "address": 5275,
+                  "bytes": "57",
+                  "mnemonic": "push",
+                  "assembly": "push   %edi"
+                }
+              ],
+              "after": [
+                {
+                  "address": 5276,
+                  "bytes": "55",
+                  "mnemonic": "push",
+                  "assembly": "push   %ebp"
+                },
+                {
+                  "address": 5277,
+                  "bytes": "89e5",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %esp,%ebp"
+                },
+                {
+                  "address": 5279,
+                  "bytes": "57",
+                  "mnemonic": "push",
+                  "assembly": "push   %edi"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          },
+          {
+            "function": "load_replay",
+            "status_before": "DIFFER",
+            "status_after": "DIFFER",
+            "workflow_before": "SOURCE_DIFFER",
+            "workflow_after": null,
+            "offset_before": 2896,
+            "offset_after": 2900,
+            "size_before": 1148,
+            "size_after": 1148,
+            "emitted_instruction_bytes_equal": false,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "DIFFER",
+                "workflow": {
+                  "state": "SOURCE_DIFFER",
+                  "difference_class": "UNKNOWN_SUPERVISOR",
+                  "body_edit_allowed": true,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 1136,
+                "candidate_size": 1148,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 16,
+                  "original_va": 4312568,
+                  "candidate_byte": 7,
+                  "original_byte": 133
+                },
+                "relocation_mismatch_count": 24,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 16,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5077637,
+                    "resolution": "section base not independently established"
+                  },
+                  {
+                    "function_offset": 150,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5077637,
+                    "resolution": "section base not independently established"
+                  },
+                  {
+                    "function_offset": 415,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162341,
+                    "original_value": 2198128259,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 467,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162289,
+                    "original_value": 3782546686,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 509,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162247,
+                    "original_value": 263204,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 535,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162221,
+                    "original_value": 263204,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 18,
+                "direct_transfer_mismatch_count": 2,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "DIFFER",
+                "workflow": null,
+                "historical_size": 1136,
+                "candidate_size": 1148,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 16,
+                  "original_va": 4312568,
+                  "candidate_byte": 7,
+                  "original_byte": 133
+                },
+                "relocation_mismatch_count": 24,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 16,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5077637,
+                    "resolution": "section base not independently established"
+                  },
+                  {
+                    "function_offset": 150,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5077637,
+                    "resolution": "section base not independently established"
+                  },
+                  {
+                    "function_offset": 415,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162341,
+                    "original_value": 2198128259,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 467,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162289,
+                    "original_value": 3782546686,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 509,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162247,
+                    "original_value": 263204,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 535,
+                    "symbol": "_pack_fread",
+                    "resolved_value": 162221,
+                    "original_value": 263204,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 18,
+                "direct_transfer_mismatch_count": 2,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": 136,
+            "differing_byte_count": 3,
+            "difference_offsets": [
+              136,
+              1094,
+              1137
+            ],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 3022,
+                  "bytes": "8b8544f7ffff",
+                  "mnemonic": "mov",
+                  "assembly": "mov    -0x8bc(%ebp),%eax"
+                },
+                {
+                  "address": 3028,
+                  "bytes": "890424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,(%esp)"
+                },
+                {
+                  "address": 3031,
+                  "bytes": "e8e0f7ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   3bc <_create_replay>"
+                },
+                {
+                  "address": 3036,
+                  "bytes": "89c7",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,%edi"
+                },
+                {
+                  "address": 3038,
+                  "bytes": "85c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %eax,%eax"
+                }
+              ],
+              "after": [
+                {
+                  "address": 3026,
+                  "bytes": "8b8544f7ffff",
+                  "mnemonic": "mov",
+                  "assembly": "mov    -0x8bc(%ebp),%eax"
+                },
+                {
+                  "address": 3032,
+                  "bytes": "890424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,(%esp)"
+                },
+                {
+                  "address": 3035,
+                  "bytes": "e8dcf7ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   3bc <_create_replay>"
+                },
+                {
+                  "address": 3040,
+                  "bytes": "89c7",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,%edi"
+                },
+                {
+                  "address": 3042,
+                  "bytes": "85c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %eax,%eax"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          },
           {
             "function": "my_strcmp",
             "status_before": "DIFFER",
@@ -961,7 +1681,7 @@
             "offset_before": 2772,
             "offset_after": 2772,
             "size_before": 123,
-            "size_after": 122,
+            "size_after": 128,
             "emitted_instruction_bytes_equal": false,
             "source_body_unchanged": false,
             "original_comparison": {
@@ -1015,14 +1735,14 @@
                 "status": "DIFFER",
                 "workflow": null,
                 "historical_size": 128,
-                "candidate_size": 122,
+                "candidate_size": 128,
                 "body_shape_equal": false,
                 "relocation_resolved_equal": false,
                 "first_difference": {
-                  "offset": 21,
-                  "original_va": 4318933,
-                  "candidate_byte": 38,
-                  "original_byte": 90
+                  "offset": 24,
+                  "original_va": 4318936,
+                  "candidate_byte": 117,
+                  "original_byte": 116
                 },
                 "relocation_mismatch_count": 3,
                 "relocation_mismatches": [
@@ -1034,17 +1754,17 @@
                     "resolution": "named symbol"
                   },
                   {
-                    "function_offset": 93,
+                    "function_offset": 56,
                     "symbol": "_sort_method",
                     "resolved_value": 4971872,
-                    "original_value": 973078523,
+                    "original_value": 1996683651,
                     "resolution": "named symbol"
                   },
                   {
-                    "function_offset": 56,
+                    "function_offset": 105,
                     "symbol": "_stricmp",
-                    "resolved_value": 607964,
-                    "original_value": 1996683651,
+                    "resolved_value": 607915,
+                    "original_value": 1527825539,
                     "resolution": "named symbol"
                   }
                 ],
@@ -1053,89 +1773,684 @@
                 "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
               }
             },
-            "first_difference": 60,
-            "differing_byte_count": 9,
+            "first_difference": 21,
+            "differing_byte_count": 87,
             "difference_offsets": [
-              60,
-              61,
-              62,
-              63,
-              115,
-              116,
-              120,
-              121,
-              122
+              21,
+              25,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50
             ],
             "disassembly": {
               "before": [
                 {
-                  "address": 2826,
-                  "bytes": "c9",
-                  "mnemonic": "leave",
-                  "assembly": "leave"
+                  "address": 2786,
+                  "bytes": "8a4204",
+                  "mnemonic": "mov",
+                  "assembly": "mov    0x4(%edx),%al"
                 },
                 {
-                  "address": 2827,
-                  "bytes": "e900000000",
-                  "mnemonic": "jmp",
-                  "assembly": "jmp    b10 <_my_strcmp+0x3c>"
+                  "address": 2789,
+                  "bytes": "3a4304",
+                  "mnemonic": "cmp",
+                  "assembly": "cmp    0x4(%ebx),%al"
                 },
                 {
-                  "address": 2832,
+                  "address": 2792,
+                  "bytes": "7526",
+                  "mnemonic": "jne",
+                  "assembly": "jne    b10 <_my_strcmp+0x3c>"
+                },
+                {
+                  "address": 2794,
                   "bytes": "84c0",
                   "mnemonic": "test",
                   "assembly": "test   %al,%al"
                 },
                 {
-                  "address": 2834,
-                  "bytes": "7534",
+                  "address": 2796,
+                  "bytes": "750d",
                   "mnemonic": "jne",
-                  "assembly": "jne    b48 <_my_strcmp+0x74>"
-                },
-                {
-                  "address": 2836,
-                  "bytes": "b801000000",
-                  "mnemonic": "mov",
-                  "assembly": "mov    $0x1,%eax"
+                  "assembly": "jne    afb <_my_strcmp+0x27>"
                 }
               ],
               "after": [
                 {
-                  "address": 2826,
-                  "bytes": "c9",
-                  "mnemonic": "leave",
-                  "assembly": "leave"
-                },
-                {
-                  "address": 2827,
-                  "bytes": "e900000000",
-                  "mnemonic": "jmp",
-                  "assembly": "jmp    b10 <_my_strcmp+0x3c>"
-                },
-                {
-                  "address": 2832,
-                  "bytes": "fec8",
-                  "mnemonic": "dec",
-                  "assembly": "dec    %al"
-                },
-                {
-                  "address": 2834,
-                  "bytes": "7433",
-                  "mnemonic": "je",
-                  "assembly": "je     b47 <_my_strcmp+0x73>"
-                },
-                {
-                  "address": 2836,
-                  "bytes": "b801000000",
+                  "address": 2786,
+                  "bytes": "8a4204",
                   "mnemonic": "mov",
-                  "assembly": "mov    $0x1,%eax"
+                  "assembly": "mov    0x4(%edx),%al"
+                },
+                {
+                  "address": 2789,
+                  "bytes": "3a4304",
+                  "mnemonic": "cmp",
+                  "assembly": "cmp    0x4(%ebx),%al"
+                },
+                {
+                  "address": 2792,
+                  "bytes": "755a",
+                  "mnemonic": "jne",
+                  "assembly": "jne    b44 <_my_strcmp+0x70>"
+                },
+                {
+                  "address": 2794,
+                  "bytes": "84c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %al,%al"
+                },
+                {
+                  "address": 2796,
+                  "bytes": "753e",
+                  "mnemonic": "jne",
+                  "assembly": "jne    b2c <_my_strcmp+0x58>"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          },
+          {
+            "function": "replay_selector",
+            "status_before": "DIFFER",
+            "status_after": "DIFFER",
+            "workflow_before": "SOURCE_DIFFER",
+            "workflow_after": null,
+            "offset_before": 7804,
+            "offset_after": 7808,
+            "size_before": 1902,
+            "size_after": 1902,
+            "emitted_instruction_bytes_equal": false,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "DIFFER",
+                "workflow": {
+                  "state": "SOURCE_DIFFER",
+                  "difference_class": "STACK_FRAME_LAYOUT",
+                  "body_edit_allowed": true,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 2845,
+                "candidate_size": 1902,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 8,
+                  "original_va": 4313696,
+                  "candidate_byte": 92,
+                  "original_byte": 108
+                },
+                "relocation_mismatch_count": 74,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 69,
+                    "symbol": "_gfx_driver",
+                    "resolved_value": 5102212,
+                    "original_value": 2675,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 138,
+                    "symbol": "_screen",
+                    "resolved_value": 5102220,
+                    "original_value": 233342,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 146,
+                    "symbol": "_blit",
+                    "resolved_value": 233334,
+                    "original_value": 1619036928,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 151,
+                    "symbol": "_data",
+                    "resolved_value": 5100092,
+                    "original_value": 2493710336,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 170,
+                    "symbol": "_font",
+                    "resolved_value": 5033108,
+                    "original_value": 2298478593,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 178,
+                    "symbol": "_text_height",
+                    "resolved_value": 249138,
+                    "original_value": 2240412663,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 68,
+                "direct_transfer_mismatch_count": 6,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "DIFFER",
+                "workflow": null,
+                "historical_size": 2845,
+                "candidate_size": 1902,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 8,
+                  "original_va": 4313696,
+                  "candidate_byte": 92,
+                  "original_byte": 108
+                },
+                "relocation_mismatch_count": 74,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 69,
+                    "symbol": "_gfx_driver",
+                    "resolved_value": 5102212,
+                    "original_value": 2675,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 138,
+                    "symbol": "_screen",
+                    "resolved_value": 5102220,
+                    "original_value": 233342,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 146,
+                    "symbol": "_blit",
+                    "resolved_value": 233334,
+                    "original_value": 1619036928,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 151,
+                    "symbol": "_data",
+                    "resolved_value": 5100092,
+                    "original_value": 2493710336,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 170,
+                    "symbol": "_font",
+                    "resolved_value": 5033108,
+                    "original_value": 2298478593,
+                    "resolution": "named symbol"
+                  },
+                  {
+                    "function_offset": 178,
+                    "symbol": "_text_height",
+                    "resolved_value": 249138,
+                    "original_value": 2240412663,
+                    "resolution": "named symbol"
+                  }
+                ],
+                "omitted_relocation_mismatches": 68,
+                "direct_transfer_mismatch_count": 6,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": 286,
+            "differing_byte_count": 2,
+            "difference_offsets": [
+              286,
+              849
+            ],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 8080,
+                  "bytes": "8b85e0fbffff",
+                  "mnemonic": "mov",
+                  "assembly": "mov    -0x420(%ebp),%eax"
+                },
+                {
+                  "address": 8086,
+                  "bytes": "890424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,(%esp)"
+                },
+                {
+                  "address": 8089,
+                  "bytes": "e81ee5ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   4bc <_destroy_replay>"
+                },
+                {
+                  "address": 8094,
+                  "bytes": "a100000000",
+                  "mnemonic": "mov",
+                  "assembly": "mov    0x0,%eax"
+                },
+                {
+                  "address": 8099,
+                  "bytes": "85c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %eax,%eax"
+                }
+              ],
+              "after": [
+                {
+                  "address": 8084,
+                  "bytes": "8b85e0fbffff",
+                  "mnemonic": "mov",
+                  "assembly": "mov    -0x420(%ebp),%eax"
+                },
+                {
+                  "address": 8090,
+                  "bytes": "890424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,(%esp)"
+                },
+                {
+                  "address": 8093,
+                  "bytes": "e81ae5ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   4bc <_destroy_replay>"
+                },
+                {
+                  "address": 8098,
+                  "bytes": "a100000000",
+                  "mnemonic": "mov",
+                  "assembly": "mov    0x0,%eax"
+                },
+                {
+                  "address": 8103,
+                  "bytes": "85c0",
+                  "mnemonic": "test",
+                  "assembly": "test   %eax,%eax"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          },
+          {
+            "function": "save_replay",
+            "status_before": "DIFFER",
+            "status_after": "DIFFER",
+            "workflow_before": "SOURCE_DIFFER",
+            "workflow_after": null,
+            "offset_before": 4044,
+            "offset_after": 4048,
+            "size_before": 1227,
+            "size_after": 1227,
+            "emitted_instruction_bytes_equal": false,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "DIFFER",
+                "workflow": {
+                  "state": "SOURCE_DIFFER",
+                  "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+                  "body_edit_allowed": true,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 1227,
+                "candidate_size": 1227,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 16,
+                  "original_va": 4316552,
+                  "candidate_byte": 32,
+                  "original_byte": 160
+                },
+                "relocation_mismatch_count": 1,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 16,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5078432,
+                    "resolution": "section base not independently established"
+                  }
+                ],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "DIFFER",
+                "workflow": null,
+                "historical_size": 1227,
+                "candidate_size": 1227,
+                "body_shape_equal": false,
+                "relocation_resolved_equal": false,
+                "first_difference": {
+                  "offset": 16,
+                  "original_va": 4316552,
+                  "candidate_byte": 32,
+                  "original_byte": 160
+                },
+                "relocation_mismatch_count": 1,
+                "relocation_mismatches": [
+                  {
+                    "function_offset": 16,
+                    "symbol": ".rdata",
+                    "resolved_value": null,
+                    "original_value": 5078432,
+                    "resolution": "section base not independently established"
+                  }
+                ],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": 196,
+            "differing_byte_count": 1,
+            "difference_offsets": [
+              196
+            ],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 4233,
+                  "bytes": "894208",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,0x8(%edx)"
+                },
+                {
+                  "address": 4236,
+                  "bytes": "891424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %edx,(%esp)"
+                },
+                {
+                  "address": 4239,
+                  "bytes": "e884f0ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   118 <_calc_replay_checksum>"
+                },
+                {
+                  "address": 4244,
+                  "bytes": "8b5510",
+                  "mnemonic": "mov",
+                  "assembly": "mov    0x10(%ebp),%edx"
+                },
+                {
+                  "address": 4247,
+                  "bytes": "89424c",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,0x4c(%edx)"
+                }
+              ],
+              "after": [
+                {
+                  "address": 4237,
+                  "bytes": "894208",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,0x8(%edx)"
+                },
+                {
+                  "address": 4240,
+                  "bytes": "891424",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %edx,(%esp)"
+                },
+                {
+                  "address": 4243,
+                  "bytes": "e880f0ffff",
+                  "mnemonic": "call",
+                  "assembly": "call   118 <_calc_replay_checksum>"
+                },
+                {
+                  "address": 4248,
+                  "bytes": "8b5510",
+                  "mnemonic": "mov",
+                  "assembly": "mov    0x10(%ebp),%edx"
+                },
+                {
+                  "address": 4251,
+                  "bytes": "89424c",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %eax,0x4c(%edx)"
+                }
+              ]
+            },
+            "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
+          },
+          {
+            "function": "update_file_list",
+            "status_before": "FUNCTION_MATCH",
+            "status_after": "FUNCTION_MATCH",
+            "workflow_before": "FUNCTION_MATCH",
+            "workflow_after": null,
+            "offset_before": 7620,
+            "offset_after": 7624,
+            "size_before": 184,
+            "size_after": 184,
+            "emitted_instruction_bytes_equal": true,
+            "source_body_unchanged": false,
+            "original_comparison": {
+              "before": {
+                "status": "FUNCTION_MATCH",
+                "workflow": {
+                  "state": "FUNCTION_MATCH",
+                  "difference_class": "EXACT",
+                  "body_edit_allowed": false,
+                  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                },
+                "historical_size": 184,
+                "candidate_size": 184,
+                "body_shape_equal": true,
+                "relocation_resolved_equal": true,
+                "first_difference": null,
+                "relocation_mismatch_count": 0,
+                "relocation_mismatches": [],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              },
+              "after": {
+                "status": "FUNCTION_MATCH",
+                "workflow": null,
+                "historical_size": 184,
+                "candidate_size": 184,
+                "body_shape_equal": true,
+                "relocation_resolved_equal": true,
+                "first_difference": null,
+                "relocation_mismatch_count": 0,
+                "relocation_mismatches": [],
+                "omitted_relocation_mismatches": 0,
+                "direct_transfer_mismatch_count": 0,
+                "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+              }
+            },
+            "first_difference": null,
+            "differing_byte_count": 0,
+            "difference_offsets": [],
+            "disassembly": {
+              "before": [
+                {
+                  "address": 7620,
+                  "bytes": "55",
+                  "mnemonic": "push",
+                  "assembly": "push   %ebp"
+                },
+                {
+                  "address": 7621,
+                  "bytes": "89e5",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %esp,%ebp"
+                },
+                {
+                  "address": 7623,
+                  "bytes": "56",
+                  "mnemonic": "push",
+                  "assembly": "push   %esi"
+                }
+              ],
+              "after": [
+                {
+                  "address": 7624,
+                  "bytes": "55",
+                  "mnemonic": "push",
+                  "assembly": "push   %ebp"
+                },
+                {
+                  "address": 7625,
+                  "bytes": "89e5",
+                  "mnemonic": "mov",
+                  "assembly": "mov    %esp,%ebp"
+                },
+                {
+                  "address": 7627,
+                  "bytes": "56",
+                  "mnemonic": "push",
+                  "assembly": "push   %esi"
                 }
               ]
             },
             "observation": "CANDIDATE_BYTES_OR_PLACEMENT_CHANGED"
           }
         ],
-        "metadata_changes": [],
+        "metadata_changes": [
+          {
+            "kind": "relocations",
+            "before_only_count": 233,
+            "after_only_count": 233,
+            "before_examples": [
+              [
+                ".text",
+                2828,
+                20,
+                "_stricmp",
+                0,
+                0
+              ],
+              [
+                ".text",
+                2865,
+                6,
+                "_sort_method",
+                0,
+                16
+              ],
+              [
+                ".text",
+                2912,
+                6,
+                ".rdata",
+                ".rdata",
+                0
+              ],
+              [
+                ".text",
+                2923,
+                20,
+                "_pack_fopen",
+                0,
+                0
+              ]
+            ],
+            "after_examples": [
+              [
+                ".text",
+                2828,
+                6,
+                "_sort_method",
+                0,
+                16
+              ],
+              [
+                ".text",
+                2877,
+                20,
+                "_stricmp",
+                0,
+                0
+              ],
+              [
+                ".text",
+                2916,
+                6,
+                ".rdata",
+                ".rdata",
+                0
+              ],
+              [
+                ".text",
+                2927,
+                20,
+                "_pack_fopen",
+                0,
+                0
+              ]
+            ]
+          },
+          {
+            "kind": "defined",
+            "before_only_count": 5,
+            "after_only_count": 5,
+            "before_examples": [
+              [
+                "_draw_replay_selector",
+                ".text",
+                5272,
+                2
+              ],
+              [
+                "_load_replay",
+                ".text",
+                2896,
+                2
+              ],
+              [
+                "_replay_selector",
+                ".text",
+                7804,
+                2
+              ],
+              [
+                "_save_replay",
+                ".text",
+                4044,
+                2
+              ]
+            ],
+            "after_examples": [
+              [
+                "_draw_replay_selector",
+                ".text",
+                5276,
+                2
+              ],
+              [
+                "_load_replay",
+                ".text",
+                2900,
+                2
+              ],
+              [
+                "_replay_selector",
+                ".text",
+                7808,
+                2
+              ],
+              [
+                "_save_replay",
+                ".text",
+                4048,
+                2
+              ]
+            ]
+          }
+        ],
         "preservation_fingerprint_equal": false
       }
     }
