@@ -9,7 +9,7 @@ from recovery_pipeline import CURRENT, fresh_verify, validate_report, check_fixt
 from refresh_recovery import validate_ledger
 from grinder_task import SESSION, snapshot_files
 from interface_tasks import plan_interface, patch_text, signature, contribution_fingerprint
-from interfaces import declarations
+from interfaces import declarations, collect_interfaces
 from source_scope import body_hash
 from promote_function import promotion_lock, no_regressions, commit_reports
 
@@ -21,6 +21,8 @@ def active(name):
 
 
 def validate_interface_scope(session, applied=None):
+    if session['plan']['task_kind'] not in {'INTERFACE','CANONICAL_TYPE','TYPE_VIEW','SOURCE_ORDER','ARRAY_EXTENT','DATA_POINTER','LOCAL_DECLARATION','STATIC_SCOPE','GLOBAL_TYPE'}:
+        raise ValueError('Unknown mechanical task kind')
     current=snapshot_files(); before=session['files']; sources=session['sources']
     for path in set(current)|set(before):
         if path not in sources and current.get(path)!=before.get(path): raise ValueError('Out-of-scope edit: '+path)
@@ -33,7 +35,29 @@ def validate_interface_scope(session, applied=None):
         if applied is False and text!=old: raise ValueError('Task has already changed source')
         changed|=text!=old
     if identity(ROOT/'src/recovery.json')!=session['ledger']: raise ValueError('Ledger changed during task')
+    ledger=read_json(ROOT/'src/recovery.json')
+    validate_ledger(ledger,check_sources=False)
+    validate_baseline_sources(session,ledger)
+    if session['plan']['task_kind']=='INTERFACE':
+        _,conflicts=collect_interfaces(ledger)
+        row=next((r for r in conflicts if r['function']==session['function']),None)
+        if row is None: raise ValueError('No receipt-derived interface conflict for this task')
+        expected=plan_interface(row,ledger,session['sources'])
+        if expected!=session['plan']: raise ValueError('Interface plan differs from DWARF/receipt-derived repair')
     return changed
+
+
+def validate_baseline_sources(session,ledger):
+    from interface_tasks import text_identity
+    evidence={}
+    for entry in ledger.values():
+        report=read_json(ROOT/entry['verified_report'])
+        for path,value in report['build']['local_inputs'].items():
+            if path in session['sources']:
+                if path in evidence and evidence[path]!=value: raise ValueError('Conflicting source receipts: '+path)
+                evidence[path]=value
+    for path,text in session['sources'].items():
+        if evidence.get(path)!=text_identity(text): raise ValueError('Saved task source does not match baseline receipt: '+path)
 
 
 def history(session,outcome,details):
@@ -46,7 +70,7 @@ def history(session,outcome,details):
 def begin(name):
     if SESSION.exists(): raise ValueError('Finish the active task first')
     ledger=read_json(ROOT/'src/recovery.json'); validate_ledger(ledger)
-    conflicts=read_json(CURRENT/'interface-conflicts.json')['conflicts']
+    _,conflicts=collect_interfaces(ledger)
     row=next((r for r in conflicts if r['function']==name),None)
     if row is None:
         from type_tasks import plans

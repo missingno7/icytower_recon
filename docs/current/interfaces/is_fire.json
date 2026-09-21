@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "is_fire",
-  "source": "src/control.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "INTERFACE_DECLARATION",
-  "status": "INTERFACE_CONFLICT",
-  "state": "INTERFACE_REPAIR",
-  "difficulty": "CHEAP",
   "historical": [
     {
       "cu": "src/control.c",
@@ -20,55 +16,5 @@
       "die": 18458
     }
   ],
-  "type_layout_issues": [
-    {
-      "position": "parameter 1",
-      "historical_type": "Tcontrol",
-      "candidate_type": "/*???*/",
-      "header": "include/recovered/Tcontrol.h",
-      "status": "UNAVAILABLE",
-      "reason": "Candidate named type layout is missing or ambiguous",
-      "cu": "src/profile.c",
-      "file": "src/profile.c",
-      "line": 736
-    }
-  ],
-  "changes": [
-    {
-      "start": 32,
-      "end": 32,
-      "before": "",
-      "after": "extern int is_fire(Tcontrol*);\n",
-      "reason": "Introduce generated historical type visibility and caller prototype",
-      "file": "src/profile.c",
-      "line": 736
-    }
-  ],
-  "verification_command": "python tools/interface_task.py check is_fire",
-  "begin_command": "python tools/interface_task.py begin is_fire",
-  "apply_command": "python tools/interface_task.py apply is_fire",
-  "promotion_command": "python tools/interface_task.py promote is_fire",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
-  "priority": 247,
-  "sources": [
-    "src/profile.c"
-  ],
-  "source_identities": {
-    "src/profile.c": {
-      "size": 30813,
-      "sha256": "a20342e9f67232b00414b439ec6adb60ac1f5bb651143a3ecb634b1ae7e14553"
-    }
-  },
-  "affected_targets": [
-    "game-profile"
-  ],
-  "required_generated_headers": {
-    "include/recovered/Tcontrol.h": {
-      "size": 1318,
-      "sha256": "23b4ccbe883aefba41eb49e36a2e8197d8ae01bf7a3ae820e8e53d260fe7dc16"
-    }
-  },
-  "expected_prototype": "extern int is_fire(Tcontrol*);",
-  "typed_caller_repair": true
+  "changes": []
 }

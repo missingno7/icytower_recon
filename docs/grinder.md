@@ -342,3 +342,11 @@ counts, skips, failures and elapsed time. Failed/empty imports, incomplete test
 execution or changed selected test files reject acceptance. A prior receipt is
 removed before preflight so an interrupted/failed run cannot leave stale success.
 Fresh compilation, scope checks, link checks and global audit remain separate.
+
+
+Interface admission rebuilds declarations and historical signatures from verified
+CU receipts and locked DWARF; generated conflict cards are navigation data, not
+authority for source edits. Before application and verification, the interface
+plan must regenerate identically using saved baseline source whose bytes match
+the ledger receipts. Changing a saved prototype, source snapshot or edit plan
+cannot redefine the task. Unknown mechanical task kinds are rejected.

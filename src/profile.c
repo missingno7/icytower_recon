@@ -1,4 +1,5 @@
 #include "recovered/Tcontrol.h"
+extern int is_fire(Tcontrol*);
 extern int is_down(Tcontrol*);
 extern int is_any(Tcontrol*);
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c

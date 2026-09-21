@@ -5,7 +5,7 @@ caller-only canonical pointer interfaces. Bodies and existing type layouts are u
 """
 import re
 from pathlib import Path
-from common import ROOT, identity, read_json
+from common import ROOT, identity, read_json, sha
 from interfaces import normalize, parameter_type, split_params
 from source_scope import sanitized
 
@@ -60,7 +60,17 @@ def affected_targets(ledger, files):
     return sorted(targets)
 
 
-def plan_interface(row, ledger):
+def source_text(file, overrides=None, root=None):
+    if overrides is not None and file in overrides: return overrides[file]
+    return ((root or ROOT)/file).read_bytes().decode('cp1252')
+
+
+def text_identity(text):
+    raw=text.encode('cp1252')
+    return {'size':len(raw),'sha256':sha(raw)}
+
+
+def plan_interface(row, ledger, source_texts=None):
     name=row['function']; old=row['historical']
     card={'schema':1,'task_kind':'INTERFACE','function':name,'source':old[0]['cu'],
           'body_edit_allowed':False,'difference_class':'INTERFACE_DECLARATION','status':'INTERFACE_CONFLICT',
@@ -86,7 +96,7 @@ def plan_interface(row, ledger):
             if actual==desired: continue
             file=declaration['file']
             if not file.startswith(('src/','include/')): raise ValueError('External declaration cannot be changed')
-            text=texts.setdefault(file,(ROOT/file).read_bytes().decode('cp1252'))
+            text=texts.setdefault(file,source_text(file,source_texts))
             if declaration['kind']=='IC':
                 if not builtin_signature(expected): raise ValueError('Implicit prototype needs non-builtin type visibility')
                 newline='\r\n' if '\r\n' in text else '\n'
@@ -135,13 +145,13 @@ def plan_interface(row, ledger):
         files=sorted({p['file'] for p in changes})
         for file in files: patch_text(texts[file],[p for p in changes if p['file']==file])
         targets=affected_targets(ledger,files)
-        card.update(changes=changes,sources=files,source_identities={f:identity(ROOT/f) for f in files},
+        card.update(changes=changes,sources=files,source_identities={f:text_identity(texts[f]) for f in files},
                     affected_targets=targets,difficulty='CHEAP',priority=260-min(len(targets),10)*3,
                     expected_prototype=prototype(expected,name),reason='Unique DWARF signature and exact compiler locations; body edits prohibited.')
     except ValueError as exc:
         card.update(reason=str(exc),priority=-20)
         from typed_interface_tasks import plan as typed_plan
-        try: card.update(typed_plan(row,ledger))
+        try: card.update(typed_plan(row,ledger,source_texts))
         except ValueError: pass
     blocked=ROOT/'docs/current/interface-blocks.json'
     if blocked.exists() and name in read_json(blocked):

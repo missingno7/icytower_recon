@@ -440,3 +440,22 @@ negative controls. Real getFloorData re-certification and is_down declaration
 acceptance passed through the new runner and full promotion gates. Detailed module
 counts, identities, timings and attempt links are in
 `docs/attempts/acceptance-test-batching.json`.
+
+
+## Interface admission authority
+
+Interface admission previously read historical signatures and compiler declaration
+locations from a generated conflict cache. It now recollects them from locked DWARF
+and verified CU receipts. Interface plans regenerate before application and
+verification against saved baseline text bound to receipt hashes; changing session
+metadata cannot redefine the historical interface or permitted edits. Saved source
+text for every mechanical task is checked against baseline receipt identities, and
+unknown task kinds are rejected.
+
+Controlled live edits changed is_fire to a forged void-pointer signature in the
+cache and then in the session plan. Admission ignored the cache and retained the
+historical Tcontrol pointer; applying the altered plan failed before changing
+source. Cache and session were restored byte-for-byte, then the legitimate repair
+passed FAST and full promotion with preserved contributions. The expanded focused
+suite passed 201 tests, including five admission controls; the global audit passed.
+See `docs/attempts/interface-admission-validation.json`.

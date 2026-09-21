@@ -4,8 +4,8 @@ from common import ROOT,read_json,identity
 from source_scope import sanitized
 
 
-def plan(row,ledger):
-    from interface_tasks import signature,BUILTINS,prototype,declaration_site,patch_text,affected_targets
+def plan(row,ledger,source_texts=None):
+    from interface_tasks import signature,BUILTINS,prototype,declaration_site,patch_text,affected_targets,source_text,text_identity
     from interfaces import split_params,parameter_type
     from type_graph import graph
     old=row['historical']
@@ -37,12 +37,12 @@ def plan(row,ledger):
         if not file.startswith('src/') or declaration['cu']!=file: raise ValueError('Typed repair requires a CU-local declaration')
         if declaration['cu'] not in ledger: raise ValueError('Owning CU proof is unavailable')
         report=read_json(ROOT/ledger[declaration['cu']]['verified_report'])
-        text=texts.setdefault(file,(ROOT/file).read_bytes().decode('cp1252'));newline='\r\n' if '\r\n' in text else '\n'
+        text=texts.setdefault(file,source_text(file,source_texts,ROOT));newline='\r\n' if '\r\n' in text else '\n'
         prefix=''
         for type_name,header in sorted(headers.items()):
             if header not in report['build']['local_inputs']:
                 for source in report['build']['local_inputs']:
-                    if source.startswith(('src/','include/')) and re.search(r'\b'+re.escape(type_name)+r'\b',sanitized((ROOT/source).read_bytes().decode('cp1252'))):
+                    if source.startswith(('src/','include/')) and re.search(r'\b'+re.escape(type_name)+r'\b',sanitized(source_text(source,source_texts,ROOT))):
                         raise ValueError('Canonical type name already occurs outside its generated header: '+type_name)
             prefix+='#include "recovered/'+type_name+'.h"'+newline
             proof_headers[header]=identity(ROOT/header)
@@ -74,7 +74,7 @@ def plan(row,ledger):
     changes=sorted(patches.values(),key=lambda e:(e['file'],e['start']));sources=sorted(texts)
     for source in sources: patch_text(texts[source],[e for e in changes if e['file']==source])
     targets=affected_targets(ledger,sources)
-    return {'changes':changes,'sources':sources,'source_identities':{p:identity(ROOT/p) for p in sources},
+    return {'changes':changes,'sources':sources,'source_identities':{p:text_identity(texts[p]) for p in sources},
             'affected_targets':targets,'required_generated_headers':proof_headers,'expected_prototype':prototype(expected,name),
             'difficulty':'CHEAP','priority':250-min(len(targets),10)*3,'state':'INTERFACE_REPAIR','status':'INTERFACE_CONFLICT',
             'difference_class':'INTERFACE_DECLARATION','typed_caller_repair':True,

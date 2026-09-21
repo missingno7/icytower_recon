@@ -43,7 +43,7 @@ def declarations(aux):
                'declaration':line.split('*/',1)[1].split(';',1)[0].strip()+';'}
 
 
-def publish_interfaces(ledger,check=False):
+def collect_interfaces(ledger):
     g=graph(); originals=defaultdict(list); candidate=defaultdict(list)
     for unit in read_json(ROOT/'src/units.json'):
         for f in unit['functions']:
@@ -81,6 +81,11 @@ def publish_interfaces(ledger,check=False):
              'limit':'Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof.'}
         rows.append(row)
         if conflict or incomplete: conflicts.append(row)
+    return rows,conflicts
+
+
+def publish_interfaces(ledger,check=False):
+    rows,conflicts=collect_interfaces(ledger)
     from interface_tasks import plan_interface
     task_cards=[]
     emit=check_json if check else write_json
