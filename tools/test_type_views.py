@@ -75,6 +75,23 @@ class ViewTests(unittest.TestCase):
         for source in ('typedef struct { int *data; } R;', 'typedef struct { void *data; void *data; } R;'):
             with self.assertRaises(ValueError):member_replacement(source,repair,'\n')
 
+    def test_member_pointee_requires_complete_compiled_layout_and_exact_header_scope(self):
+        from type_views import verify_member_pointees
+        g=graph();expected=layout(g,g.game_types['Trecord'][0]['type_ref'])
+        plan={'repair_mode':'POINTER_MEMBER_ONLY','pointer_member_repairs':[{'historical_type':'Trecord *'}],
+              'compiled_headers':['include/recovered/Trecord.h']}
+        report={'candidate_debug':{'typedefs':[{'name':'Trecord','layout':expected}]}}
+        verify_member_pointees(report,plan)
+        for mutation in ('absent','ambiguous','offset','signedness','header','missing_repair'):
+            bad=copy.deepcopy(report);p=copy.deepcopy(plan)
+            if mutation=='absent':bad['candidate_debug']['typedefs']=[]
+            elif mutation=='ambiguous':bad['candidate_debug']['typedefs']*=2
+            elif mutation=='offset':bad['candidate_debug']['typedefs'][0]['layout']['members'][1]['offset']=0
+            elif mutation=='signedness':bad['candidate_debug']['typedefs'][0]['layout']['members'][0]['layout']['type']='signed char'
+            elif mutation=='header':p['compiled_headers']=[]
+            else:p['pointer_member_repairs']=[]
+            with self.assertRaises(ValueError,msg=mutation):verify_member_pointees(bad,p)
+
     def test_scalar_layout_preserves_qualifiers(self):
         a={'kind':'base_type','size':4,'type':'int','encoding':'signed'}
         self.assertNotEqual(shape_key(a),shape_key(dict(a,qualifiers=['volatile'])))

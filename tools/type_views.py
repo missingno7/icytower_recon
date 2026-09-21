@@ -223,7 +223,26 @@ def plans(ledger):
     return cards
 
 
+def verify_member_pointees(report, plan):
+    if plan.get('repair_mode')!='POINTER_MEMBER_ONLY': return
+    repairs=plan.get('pointer_member_repairs',[])
+    if len(repairs)!=1: raise ValueError('Member repair must identify one historical pointee')
+    pointer=POINTER.fullmatch(repairs[0].get('historical_type',''))
+    if not pointer: raise ValueError('Member repair has an unsupported pointer type')
+    name=pointer[1];g=graph()
+    if name not in g.game_types: raise ValueError('Member pointee lacks historical type evidence')
+    expected=[layout(g,d['type_ref']) for d in g.game_types[name]]
+    if len({json.dumps(shape_key(node),sort_keys=True) for node in expected})!=1:
+        raise ValueError('Historical member pointee layouts conflict')
+    candidates=[t for t in interface_typedefs(report) if t['name']==name]
+    if len(candidates)!=1 or shape_key(candidates[0]['layout'])!=shape_key(expected[0]):
+        raise ValueError('Compiled member pointee lacks the complete historical layout: '+name)
+    if plan.get('compiled_headers')!=['include/recovered/'+name+'.h']:
+        raise ValueError('Member repair compiled-header scope differs from its historical pointee')
+
+
 def verify_view(report,plan):
+    verify_member_pointees(report,plan)
     typedefs=[t for t in interface_typedefs(report) if t['name']==plan['alias']]
     if len(typedefs)!=1 or shape_key(typedefs[0]['layout'])!=shape_key(plan['expected_layout']):
         raise ValueError('Canonical alias lacks the complete expected historical layout')

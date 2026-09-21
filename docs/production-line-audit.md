@@ -799,3 +799,14 @@ FAST and strict promotion with 247 tests, ordinary link check and global audit.
 No function or workflow proof changed. Removed caller-interface prerequisites,
 both trials and the retained failure are indexed in
 `docs/attempts/pointer-member-validation.json`.
+
+
+## Complete pointee proof for member repairs
+
+Member-only acceptance additionally checks the unique compiled pointee typedef
+against its complete historical DWARF layout. Header inclusion and pointer spelling
+alone are insufficient. Historical ambiguity, missing or duplicate candidate types,
+member offset/signedness changes and an omitted generated-header scope all fail.
+The accepted real Treplay.data repair passes the stricter check against its current
+verified CU report. The interface suite passes 248 tests; function and workflow
+proofs are unchanged. See `docs/attempts/member-pointee-validation.json`.
