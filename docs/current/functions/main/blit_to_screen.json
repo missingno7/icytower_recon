@@ -878,6 +878,7 @@
   "calls": [
     {
       "symbol": "_blit",
+      "function": "blit",
       "function_offset": 252,
       "target_va": 4547172,
       "verified": false,
@@ -888,6 +889,7 @@
     },
     {
       "symbol": "_stretch_blit",
+      "function": "stretch_blit",
       "function_offset": 421,
       "target_va": 4600568,
       "verified": false,
@@ -1307,6 +1309,12 @@
   "verification_command": "python tools/check_function.py game-main blit_to_screen",
   "begin_command": "python tools/grinder_task.py begin game-main blit_to_screen",
   "promotion_command": "python tools/promote_function.py game-main blit_to_screen",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "blit_mode",
@@ -1460,6 +1468,7 @@
     "frame_local_declarations": 2,
     "relocation_mismatches": 21,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 8,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

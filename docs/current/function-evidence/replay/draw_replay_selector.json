@@ -2456,162 +2456,189 @@
   "calls": [
     {
       "symbol": "_text_height",
+      "function": "text_height",
       "function_offset": 27,
       "target_va": 4563008,
       "verified": false
     },
     {
       "symbol": "_makecol",
+      "function": "makecol",
       "function_offset": 61,
       "target_va": 4525208,
       "verified": false
     },
     {
       "symbol": "_makecol",
+      "function": "makecol",
       "function_offset": 95,
       "target_va": 4525208,
       "verified": false
     },
     {
       "symbol": "_stretch_sprite",
+      "function": "stretch_sprite",
       "function_offset": 207,
       "target_va": 4600728,
       "verified": false
     },
     {
       "symbol": "_set_trans_blender",
+      "function": "set_trans_blender",
       "function_offset": 243,
       "target_va": 4572632,
       "verified": false
     },
     {
       "symbol": "_drawing_mode",
+      "function": "drawing_mode",
       "function_offset": 279,
       "target_va": 4505428,
       "verified": false
     },
     {
       "symbol": "_solid_mode",
+      "function": "solid_mode",
       "function_offset": 443,
       "target_va": 4506248,
       "verified": false
     },
     {
       "symbol": "_set_clip_rect",
+      "function": "set_clip_rect",
       "function_offset": 544,
       "target_va": 4516720,
       "verified": false
     },
     {
       "symbol": "_textprintf_ex",
+      "function": "textprintf_ex",
       "function_offset": 703,
       "target_va": 4563624,
       "verified": false
     },
     {
       "symbol": "_get_filename",
+      "function": "get_filename",
       "function_offset": 761,
       "target_va": 4474156,
       "verified": false
     },
     {
       "symbol": "_textout_ex",
+      "function": "textout_ex",
       "function_offset": 839,
       "target_va": 4562700,
       "verified": false
     },
     {
       "symbol": "_set_clip_rect",
+      "function": "set_clip_rect",
       "function_offset": 893,
       "target_va": 4516720,
       "verified": false
     },
     {
       "symbol": "_textprintf_ex",
+      "function": "textprintf_ex",
       "function_offset": 1007,
       "target_va": 4563624,
       "verified": false
     },
     {
       "symbol": "_is_custom_replay",
+      "function": "is_custom_replay",
       "function_offset": 1204,
       "target_va": 4221756,
       "verified": false
     },
     {
       "symbol": "_set_clip_rect",
+      "function": "set_clip_rect",
       "function_offset": 1294,
       "target_va": 4516720,
       "verified": false
     },
     {
       "symbol": "_textout_ex",
+      "function": "textout_ex",
       "function_offset": 1369,
       "target_va": 4562700,
       "verified": false
     },
     {
       "symbol": "_textout_right_ex",
+      "function": "textout_right_ex",
       "function_offset": 1437,
       "target_va": 4562788,
       "verified": false
     },
     {
       "symbol": "_textprintf_ex",
+      "function": "textprintf_ex",
       "function_offset": 1516,
       "target_va": 4563624,
       "verified": false
     },
     {
       "symbol": "_textprintf_right_ex",
+      "function": "textprintf_right_ex",
       "function_offset": 1583,
       "target_va": 4563408,
       "verified": false
     },
     {
       "symbol": "_textprintf_right_ex",
+      "function": "textprintf_right_ex",
       "function_offset": 1656,
       "target_va": 4563408,
       "verified": false
     },
     {
       "symbol": "_textprintf_ex",
+      "function": "textprintf_ex",
       "function_offset": 1757,
       "target_va": 4563624,
       "verified": false
     },
     {
       "symbol": "_textprintf_ex",
+      "function": "textprintf_ex",
       "function_offset": 1832,
       "target_va": 4563624,
       "verified": false
     },
     {
       "symbol": "_set_clip_rect",
+      "function": "set_clip_rect",
       "function_offset": 1871,
       "target_va": 4516720,
       "verified": false
     },
     {
       "symbol": "_textout_ex",
+      "function": "textout_ex",
       "function_offset": 1940,
       "target_va": 4562700,
       "verified": false
     },
     {
       "symbol": "_textout_ex",
+      "function": "textout_ex",
       "function_offset": 2271,
       "target_va": 4562700,
       "verified": false
     },
     {
       "symbol": "_get_filename",
+      "function": "get_filename",
       "function_offset": 2305,
       "target_va": 4474156,
       "verified": false
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 2323,
       "target_va": 4959560,
       "verified": false
@@ -4988,6 +5015,69 @@
   "verification_command": "python tools/check_function.py game-replay draw_replay_selector",
   "begin_command": "python tools/grinder_task.py begin game-replay draw_replay_selector",
   "promotion_command": "python tools/promote_function.py game-replay draw_replay_selector",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "is_custom_replay",
+        "source": "src/replay.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          1204
+        ],
+        "candidate_card": "docs/current/interfaces/is_custom_replay.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "Treplay*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "Treplay*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Treplay_data *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ]
+      }
+    ],
+    "blocking_functions": [
+      "is_custom_replay"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "num_itr_files",

@@ -272,6 +272,7 @@
   "calls": [
     {
       "symbol": "_play_sample",
+      "function": "play_sample",
       "function_offset": 67,
       "target_va": 4457476,
       "verified": true,
@@ -282,6 +283,7 @@
     },
     {
       "symbol": "_set_volume",
+      "function": "set_volume",
       "function_offset": 102,
       "target_va": 4458896,
       "verified": true,
@@ -292,6 +294,7 @@
     },
     {
       "symbol": "_play_midi",
+      "function": "play_midi",
       "function_offset": 123,
       "target_va": 4470344,
       "verified": true,
@@ -381,6 +384,12 @@
   "verification_command": "python tools/check_function.py game-main startGameMusic",
   "begin_command": "python tools/grinder_task.py begin game-main startGameMusic",
   "promotion_command": "python tools/promote_function.py game-main startGameMusic",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "options",
@@ -432,6 +441,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

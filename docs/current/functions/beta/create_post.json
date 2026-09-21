@@ -239,6 +239,7 @@
   "calls": [
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 16,
       "target_va": 4959504,
       "verified": true,
@@ -249,6 +250,7 @@
     },
     {
       "symbol": "_rand",
+      "function": "rand",
       "function_offset": 36,
       "target_va": 4959512,
       "verified": true,
@@ -378,6 +380,12 @@
   "verification_command": "python tools/check_function.py game-beta create_post",
   "begin_command": "python tools/grinder_task.py begin game-beta create_post",
   "promotion_command": "python tools/promote_function.py game-beta create_post",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -389,6 +397,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

@@ -7,11 +7,11 @@ from common import ROOT,identity,write_json
 
 GROUPS={
     'function':('test_grinder','test_control_transfers','test_scheduling_diagnostics',
-                'test_literal_diagnostics','test_literal_dependencies','test_reference_diagnostics','test_atomic_writes',
+                'test_literal_diagnostics','test_literal_dependencies','test_interface_scope','test_reference_diagnostics','test_atomic_writes',
                 'test_data_owners','test_dwarf_locations','test_compiler_context',
                 'test_branch_diagnostics','test_data_tasks'),
     'interface':('test_grinder','test_scheduling_diagnostics','test_control_transfers',
-                 'test_literal_diagnostics','test_literal_dependencies','test_reference_diagnostics','test_global_type_tasks',
+                 'test_literal_diagnostics','test_literal_dependencies','test_interface_scope','test_reference_diagnostics','test_global_type_tasks',
                  'test_atomic_writes','test_data_owners','test_interface_tasks','test_interface_admission','test_typed_interface_tasks',
                  'test_interface_type_probe','test_dwarf_locations','test_compiler_context',
                  'test_branch_diagnostics','test_data_tasks','test_type_views','test_type_headers','test_type_dependencies',

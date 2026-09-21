@@ -614,6 +614,7 @@
   "calls": [
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 23,
       "target_va": 4959504,
       "verified": true,
@@ -625,6 +626,7 @@
     },
     {
       "symbol": "_free",
+      "function": "free",
       "function_offset": 241,
       "target_va": 4959496,
       "verified": true,
@@ -847,6 +849,12 @@
   "verification_command": "python tools/check_function.py game-replay create_replay",
   "begin_command": "python tools/grinder_task.py begin game-replay create_replay",
   "promotion_command": "python tools/promote_function.py game-replay create_replay",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "REPLAY_HEADER",
@@ -994,6 +1002,7 @@
   "evidence_counts": {
     "relocation_mismatches": 3,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 2,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

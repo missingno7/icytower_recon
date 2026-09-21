@@ -294,12 +294,14 @@
   "calls": [
     {
       "symbol": "_snprintf",
+      "function": "snprintf",
       "function_offset": 36,
       "target_va": 4927056,
       "verified": true
     },
     {
       "symbol": "_file_exists",
+      "function": "file_exists",
       "function_offset": 63,
       "target_va": 4481360,
       "verified": true
@@ -359,6 +361,11 @@
   "verification_command": "python tools/check_function.py game-directories get_character_dir",
   "begin_command": "python tools/grinder_task.py begin game-directories get_character_dir",
   "promotion_command": "python tools/promote_function.py game-directories get_character_dir",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],

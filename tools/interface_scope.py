@@ -26,3 +26,21 @@ def assess(conflict,source):
 def partition(conflicts,source):
     assessments=[assess(c,source) for c in conflicts]
     return [c for c,a in zip(conflicts,assessments) if a['blocking']],assessments
+
+
+def callees(calls,index,source):
+    """Surface known direct-callee conflicts in the caller's compiled CU."""
+    grouped={}
+    for call in calls:
+        name=call.get('function')
+        if name in index:grouped.setdefault(name,[]).append(call['function_offset'])
+    observations=[]
+    for name,offsets in sorted(grouped.items()):
+        for conflict in index[name]:
+            local=[d for d in conflict.get('candidate_declarations',[]) if d.get('cu')==source]
+            observations.append({**assess(conflict,source),'call_offsets':sorted(set(offsets)),
+                'candidate_card':'docs/current/interfaces/'+name+'.json',
+                'local_declarations':[{k:d[k] for k in ('return_type','parameter_types','canonical_return_type','canonical_parameter_types') if k in d} for d in local],
+                'layout_issues':[x for d in local for x in d.get('game_type_layouts',[]) if x['status']!='AGREE']})
+    return {'observations':observations,'blocking_functions':sorted({r['function'] for r in observations if r['blocking']}),
+            'limit':'Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.'}

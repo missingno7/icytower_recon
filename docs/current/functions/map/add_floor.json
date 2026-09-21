@@ -671,6 +671,7 @@
   "calls": [
     {
       "symbol": "_get_demo",
+      "function": "get_demo",
       "function_offset": 292,
       "target_va": 4221292,
       "verified": true,
@@ -682,6 +683,7 @@
     },
     {
       "symbol": "_rand",
+      "function": "rand",
       "function_offset": 366,
       "target_va": 4959512,
       "verified": false,
@@ -1049,11 +1051,11 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 81,
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_demo",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1080,6 +1082,46 @@
   "verification_command": "python tools/check_function.py game-map add_floor",
   "begin_command": "python tools/grinder_task.py begin game-map add_floor",
   "promotion_command": "python tools/promote_function.py game-map add_floor",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "get_demo",
+        "source": "src/map.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          292,
+          344
+        ],
+        "candidate_card": "docs/current/interfaces/get_demo.json",
+        "local_declarations": [
+          {
+            "return_type": "Tmap_replay*",
+            "parameter_types": [],
+            "canonical_return_type": "Tmap_replay*",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Treplay",
+            "candidate_type": "Tmap_replay",
+            "header": "include/recovered/Treplay.h",
+            "status": "UNAVAILABLE",
+            "reason": "Candidate named type layout is missing or ambiguous"
+          }
+        ],
+        "call_offset_count": 2
+      }
+    ],
+    "blocking_functions": [
+      "get_demo"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -1091,6 +1133,7 @@
   "evidence_counts": {
     "relocation_mismatches": 6,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 2,

@@ -659,3 +659,22 @@ states are unchanged. The function acceptance suite passes 123 tests. Live
 log2file admission is rejected even when MEDIUM work is explicitly requested,
 before creating a session. See
 `docs/attempts/ownership-prerequisite-validation.json`.
+
+
+## Caller-local interface prerequisites
+
+Body routing previously checked only the target function's own declarations.
+add_floor therefore appeared ready for register-shape work while its called
+get_demo declaration returned Tmap_replay instead of historical Treplay and
+lacked complete candidate layout evidence. Direct calls now carry canonical
+function names; known callee conflicts are assessed in the caller CU. Cards
+show exact call offsets, local declarations, layout issues and interface links.
+Resolved addresses do not bypass this check, while remote-only conflicts do not
+block locally proven declarations. Unknown indirect callees are not inferred.
+
+Four MEDIUM tasks now route to SUPERVISOR for local callee prerequisites:
+add_floor, change_profile, fldads_threadmain and do_replay_menu. Function and
+workflow proof states remain unchanged. Six interface-scope controls and the
+129-test function acceptance suite pass. A real add_floor admission with MEDIUM
+work enabled was rejected before session creation. See
+`docs/attempts/callee-interface-validation.json`.

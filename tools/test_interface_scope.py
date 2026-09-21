@@ -1,6 +1,6 @@
 import copy
 import unittest
-from interface_scope import assess,partition
+from interface_scope import assess,partition,callees
 
 
 def fixture():
@@ -34,6 +34,24 @@ class InterfaceScopeTests(unittest.TestCase):
             elif change=='ambiguous': c['historical'].append({**c['historical'][0],'return_type':'void'})
             else: c['type_layout_issues'].append({'cu':'src/a.c','status':'UNAVAILABLE'})
             self.assertTrue(assess(c,'src/a.c')['blocking'],change)
+
+    def test_callee_address_proof_does_not_hide_local_interface_conflict(self):
+        c=fixture();calls=[{'function':'f','function_offset':20,'verified':True},{'function':'f','function_offset':10,'verified':True}]
+        result=callees(calls,{'f':[c]},'src/b.c')
+        self.assertEqual(result['blocking_functions'],['f'])
+        self.assertEqual(result['observations'][0]['call_offsets'],[10,20])
+        self.assertEqual(result['observations'][0]['local_declarations'][0]['return_type'],'void')
+        self.assertTrue(result['observations'][0]['layout_issues'])
+        local=callees(calls,{'f':[c]},'src/a.c')
+        self.assertFalse(local['blocking_functions'])
+        self.assertEqual(local['observations'][0]['state'],'LOCAL_AGREEMENT_REMOTE_CONFLICT')
+
+    def test_missing_callee_declaration_blocks_but_unknown_targets_are_not_guessed(self):
+        c=fixture();calls=[{'function':'f','function_offset':1},{'symbol':'_f','function_offset':2},{'function':'other','function_offset':3}]
+        result=callees(calls,{'f':[c]},'src/missing.c')
+        self.assertEqual(result['blocking_functions'],['f'])
+        self.assertEqual(result['observations'][0]['call_offsets'],[1])
+        self.assertEqual(len(result['observations']),1)
 
     def test_variadic_signature_is_checked(self):
         c=fixture();c['historical'][0]['variadic']=True

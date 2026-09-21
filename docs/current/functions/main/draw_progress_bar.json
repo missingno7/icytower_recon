@@ -633,6 +633,7 @@
   "calls": [
     {
       "symbol": "_makecol",
+      "function": "makecol",
       "function_offset": 87,
       "target_va": 4525208,
       "verified": true,
@@ -647,6 +648,7 @@
     },
     {
       "symbol": "_textout_centre_ex",
+      "function": "textout_centre_ex",
       "function_offset": 413,
       "target_va": 4562892,
       "verified": false,
@@ -1076,6 +1078,12 @@
   "verification_command": "python tools/check_function.py game-main draw_progress_bar",
   "begin_command": "python tools/grinder_task.py begin game-main draw_progress_bar",
   "promotion_command": "python tools/promote_function.py game-main draw_progress_bar",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "value",
@@ -1144,6 +1152,7 @@
   "evidence_counts": {
     "relocation_mismatches": 14,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 2,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

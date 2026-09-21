@@ -1277,6 +1277,7 @@
   "calls": [
     {
       "symbol": "_fopen",
+      "function": "fopen",
       "function_offset": 120,
       "target_va": 4959528,
       "verified": true,
@@ -1288,6 +1289,7 @@
     },
     {
       "symbol": "_fgets",
+      "function": "fgets",
       "function_offset": 166,
       "target_va": 4959568,
       "verified": true,
@@ -1301,6 +1303,7 @@
     },
     {
       "symbol": "get_string_data",
+      "function": "get_string_data",
       "function_offset": 202,
       "target_va": 4202708,
       "verified": true,
@@ -1312,6 +1315,7 @@
     },
     {
       "symbol": "_strcat",
+      "function": "strcat",
       "function_offset": 64,
       "target_va": 4959576,
       "verified": true,
@@ -1324,6 +1328,7 @@
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 222,
       "target_va": 4959560,
       "verified": true,
@@ -1335,6 +1340,7 @@
     },
     {
       "symbol": "_get_character_dir",
+      "function": "get_character_dir",
       "function_offset": 43,
       "target_va": 4209284,
       "verified": true,
@@ -1347,6 +1353,7 @@
     },
     {
       "symbol": "_fclose",
+      "function": "fclose",
       "function_offset": 363,
       "target_va": 4959536,
       "verified": true,
@@ -1361,6 +1368,7 @@
     },
     {
       "symbol": "_get_color_conversion",
+      "function": "get_color_conversion",
       "function_offset": 368,
       "target_va": 4516432,
       "verified": true,
@@ -1843,6 +1851,40 @@
   "verification_command": "python tools/check_function.py game-custom load_character_bmp",
   "begin_command": "python tools/grinder_task.py begin game-custom load_character_bmp",
   "promotion_command": "python tools/promote_function.py game-custom load_character_bmp",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "log2file",
+        "source": "src/custom.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1933
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "pink",
@@ -1868,6 +1910,7 @@
   "evidence_counts": {
     "relocation_mismatches": 23,
     "direct_transfer_mismatches": 2,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 5,

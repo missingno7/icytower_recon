@@ -509,42 +509,49 @@
   "calls": [
     {
       "symbol": "_get_filename",
+      "function": "get_filename",
       "function_offset": 18,
       "target_va": 4474156,
       "verified": true
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 55,
       "target_va": 4209220,
       "verified": true
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 79,
       "target_va": 4959584,
       "verified": true
     },
     {
       "symbol": "_exists",
+      "function": "exists",
       "function_offset": 87,
       "target_va": 4481560,
       "verified": true
     },
     {
       "symbol": "_realloc",
+      "function": "realloc",
       "function_offset": 127,
       "target_va": 4959544,
       "verified": true
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 157,
       "target_va": 4959560,
       "verified": true
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 184,
       "target_va": 4959504,
       "verified": true
@@ -679,6 +686,40 @@
   "verification_command": "python tools/check_function.py game-main add_profile",
   "begin_command": "python tools/grinder_task.py begin game-main add_profile",
   "promotion_command": "python tools/promote_function.py game-main add_profile",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "get_profile_dir_for_profile",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          55
+        ],
+        "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "char*",
+              "size_t",
+              "const char*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "char*",
+              "size_t",
+              "const char*"
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "profiles",

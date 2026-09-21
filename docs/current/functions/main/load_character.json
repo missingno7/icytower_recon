@@ -713,6 +713,7 @@
   "calls": [
     {
       "symbol": "_get_filename",
+      "function": "get_filename",
       "function_offset": 19,
       "target_va": 4474156,
       "verified": true,
@@ -723,6 +724,7 @@
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 62,
       "target_va": 4959584,
       "verified": true,
@@ -733,6 +735,7 @@
     },
     {
       "symbol": "_exists",
+      "function": "exists",
       "function_offset": 70,
       "target_va": 4481560,
       "verified": true,
@@ -743,6 +746,7 @@
     },
     {
       "symbol": "_load_character_bmp",
+      "function": "load_character_bmp",
       "function_offset": 141,
       "target_va": 4207052,
       "verified": true,
@@ -753,6 +757,7 @@
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 213,
       "target_va": 4250200,
       "verified": false,
@@ -763,6 +768,7 @@
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 266,
       "target_va": 4959560,
       "verified": false,
@@ -1220,6 +1226,52 @@
   "verification_command": "python tools/check_function.py game-main load_character",
   "begin_command": "python tools/grinder_task.py begin game-main load_character",
   "promotion_command": "python tools/promote_function.py game-main load_character",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "log2file",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          213
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "count",
@@ -1270,6 +1322,7 @@
   "evidence_counts": {
     "relocation_mismatches": 9,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 3,

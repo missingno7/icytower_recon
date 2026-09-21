@@ -1251,6 +1251,7 @@
   "calls": [
     {
       "symbol": "_create_bitmap",
+      "function": "create_bitmap",
       "function_offset": 50,
       "target_va": 4518896,
       "verified": true,
@@ -1261,6 +1262,7 @@
     },
     {
       "symbol": "_blit",
+      "function": "blit",
       "function_offset": 146,
       "target_va": 4547172,
       "verified": false,
@@ -1272,6 +1274,7 @@
     },
     {
       "symbol": "_text_height",
+      "function": "text_height",
       "function_offset": 178,
       "target_va": 4563008,
       "verified": false,
@@ -1282,6 +1285,7 @@
     },
     {
       "symbol": "_clear_keybuf",
+      "function": "clear_keybuf",
       "function_offset": 203,
       "target_va": 4447324,
       "verified": false,
@@ -1292,6 +1296,7 @@
     },
     {
       "symbol": "destroy_replay",
+      "function": "destroy_replay",
       "function_offset": 286,
       "target_va": 4308328,
       "verified": false,
@@ -1303,6 +1308,7 @@
     },
     {
       "symbol": "_poll_control",
+      "function": "poll_control",
       "function_offset": 351,
       "target_va": 4200792,
       "verified": false,
@@ -1313,6 +1319,7 @@
     },
     {
       "symbol": "_is_any",
+      "function": "is_any",
       "function_offset": 362,
       "target_va": 4200680,
       "verified": false,
@@ -1323,6 +1330,7 @@
     },
     {
       "symbol": "_keypressed",
+      "function": "keypressed",
       "function_offset": 397,
       "target_va": 4447264,
       "verified": false,
@@ -1842,6 +1850,372 @@
   "verification_command": "python tools/check_function.py game-replay replay_selector",
   "begin_command": "python tools/grinder_task.py begin game-replay replay_selector",
   "promotion_command": "python tools/promote_function.py game-replay replay_selector",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "destroy_replay",
+        "source": "src/replay.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          286,
+          849
+        ],
+        "candidate_card": "docs/current/interfaces/destroy_replay.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Treplay*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Treplay*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Treplay_data *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 2
+      },
+      {
+        "function": "draw_replay_selector",
+        "source": "src/replay.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          1494
+        ],
+        "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*",
+              "Treplay*",
+              "Treplay_post*",
+              "int",
+              "int",
+              "int",
+              "int",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*",
+              "Treplay*",
+              "Treplay_post*",
+              "int",
+              "int",
+              "int",
+              "int",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 2",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Treplay_data *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          },
+          {
+            "position": "parameter 3",
+            "historical_type": "Treplay_post",
+            "candidate_type": "Treplay_post",
+            "header": "include/recovered/Treplay_post.h",
+            "status": "MISMATCH",
+            "historical_size": 24,
+            "candidate_size": 24,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "reserved",
+                "historical": null,
+                "candidate": {
+                  "offset": 6,
+                  "size": 2,
+                  "type": "char [2]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "load_replay",
+        "source": "src/replay.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          1792
+        ],
+        "candidate_card": "docs/current/interfaces/load_replay.json",
+        "local_declarations": [
+          {
+            "return_type": "Treplay*",
+            "parameter_types": [
+              "char*"
+            ],
+            "canonical_return_type": "Treplay*",
+            "canonical_parameter_types": [
+              "char*"
+            ]
+          },
+          {
+            "return_type": "Treplay*",
+            "parameter_types": [
+              "char*"
+            ],
+            "canonical_return_type": "Treplay*",
+            "canonical_parameter_types": [
+              "char*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Treplay_data *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          },
+          {
+            "position": "return",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Treplay_data *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "poll_control",
+        "source": "src/replay.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          351
+        ],
+        "candidate_card": "docs/current/interfaces/poll_control.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tcontrol*",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tcontrol*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "is_up",
+        "source": "src/replay.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          496
+        ],
+        "candidate_card": "docs/current/interfaces/is_up.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "Tcontrol*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "Tcontrol*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "my_alert",
+        "source": "src/replay.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          720
+        ],
+        "candidate_card": "docs/current/interfaces/my_alert.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "char*",
+              "char*",
+              "int",
+              "int"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "char*",
+              "char*",
+              "int",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "blit_to_screen",
+        "source": "src/replay.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1507
+        ],
+        "candidate_card": "docs/current/interfaces/blit_to_screen.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [
+      "destroy_replay",
+      "draw_replay_selector",
+      "load_replay"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "itr_file_list",
@@ -2035,6 +2409,7 @@
     "frame_local_declarations": 17,
     "relocation_mismatches": 74,
     "direct_transfer_mismatches": 6,
+    "callee_interface_observations": 7,
     "ownership_prerequisites": 5,
     "reference_diagnostics": 0,
     "literal_diagnostics": 6,

@@ -506,6 +506,7 @@
   "calls": [
     {
       "symbol": "_get_character_dir",
+      "function": "get_character_dir",
       "function_offset": 37,
       "target_va": 4209284,
       "verified": true,
@@ -523,6 +524,7 @@
     },
     {
       "symbol": "_strcat",
+      "function": "strcat",
       "function_offset": 49,
       "target_va": 4959576,
       "verified": true,
@@ -540,6 +542,7 @@
     },
     {
       "symbol": "_fopen",
+      "function": "fopen",
       "function_offset": 92,
       "target_va": 4959528,
       "verified": true,
@@ -550,6 +553,7 @@
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 204,
       "target_va": 4250200,
       "verified": true,
@@ -567,6 +571,7 @@
     },
     {
       "symbol": "_fgets",
+      "function": "fgets",
       "function_offset": 260,
       "target_va": 4959568,
       "verified": true,
@@ -578,6 +583,7 @@
     },
     {
       "symbol": "_load_midi",
+      "function": "load_midi",
       "function_offset": 284,
       "target_va": 4472780,
       "verified": true,
@@ -589,6 +595,7 @@
     },
     {
       "symbol": "get_string_data",
+      "function": "get_string_data",
       "function_offset": 352,
       "target_va": 4202708,
       "verified": true,
@@ -606,6 +613,7 @@
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 368,
       "target_va": 4959560,
       "verified": true,
@@ -746,6 +754,47 @@
   "verification_command": "python tools/check_function.py game-custom load_sounds",
   "begin_command": "python tools/grinder_task.py begin game-custom load_sounds",
   "promotion_command": "python tools/promote_function.py game-custom load_sounds",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "log2file",
+        "source": "src/custom.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          204,
+          228,
+          1268,
+          1325,
+          1382,
+          1439,
+          1496,
+          1553
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 10
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -757,6 +806,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

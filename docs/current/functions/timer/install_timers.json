@@ -274,6 +274,7 @@
   "calls": [
     {
       "symbol": "_install_timer",
+      "function": "install_timer",
       "function_offset": 7,
       "target_va": 4577896,
       "verified": true,
@@ -284,6 +285,7 @@
     },
     {
       "symbol": "_install_int",
+      "function": "install_int",
       "function_offset": 27,
       "target_va": 4578700,
       "verified": true,
@@ -360,6 +362,12 @@
   "verification_command": "python tools/check_function.py game-timer install_timers",
   "begin_command": "python tools/grinder_task.py begin game-timer install_timers",
   "promotion_command": "python tools/promote_function.py game-timer install_timers",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "frame_count",
@@ -411,6 +419,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

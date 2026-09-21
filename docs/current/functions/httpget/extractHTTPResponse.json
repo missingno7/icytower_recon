@@ -1226,6 +1226,7 @@
   "calls": [
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 32,
       "target_va": 4959504,
       "verified": true,
@@ -1239,6 +1240,7 @@
     },
     {
       "symbol": "_sscanf",
+      "function": "sscanf",
       "function_offset": 215,
       "target_va": 4959624,
       "verified": false,
@@ -1249,6 +1251,7 @@
     },
     {
       "symbol": "_realloc",
+      "function": "realloc",
       "function_offset": 556,
       "target_va": 4959544,
       "verified": false,
@@ -1259,6 +1262,7 @@
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 885,
       "target_va": 4250200,
       "verified": false,
@@ -1269,6 +1273,7 @@
     },
     {
       "symbol": "destroyHTTPResponse",
+      "function": "destroyHTTPResponse",
       "function_offset": 899,
       "target_va": 4217104,
       "verified": false,
@@ -1674,7 +1679,7 @@
   "priority": -25,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: log2file",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1701,6 +1706,67 @@
   "verification_command": "python tools/check_function.py game-httpget extractHTTPResponse",
   "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
   "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "log2file",
+        "source": "src/httpget.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          885
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "destroyHTTPResponse",
+        "source": "src/httpget.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          899
+        ],
+        "candidate_card": "docs/current/interfaces/destroyHTTPResponse.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "HTTPResponse*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "HTTPResponse*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [
+      "log2file"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -1743,6 +1809,7 @@
     "frame_local_declarations": 9,
     "relocation_mismatches": 8,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 2,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 2,

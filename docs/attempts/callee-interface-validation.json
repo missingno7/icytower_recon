@@ -1,0 +1,97 @@
+{
+  "routing_changes": [
+    {
+      "function": "change_profile",
+      "before": "MEDIUM",
+      "after": "SUPERVISOR",
+      "prerequisites": [
+        "save_config",
+        "save_profile",
+        "select_profile"
+      ]
+    },
+    {
+      "function": "fldads_threadmain",
+      "before": "MEDIUM",
+      "after": "SUPERVISOR",
+      "prerequisites": [
+        "HTTPGet",
+        "destroyHTTPResponse",
+        "fldads_update_cache",
+        "log2file"
+      ]
+    },
+    {
+      "function": "add_floor",
+      "before": "MEDIUM",
+      "after": "SUPERVISOR",
+      "prerequisites": [
+        "get_demo"
+      ]
+    },
+    {
+      "function": "do_replay_menu",
+      "before": "MEDIUM",
+      "after": "SUPERVISOR",
+      "prerequisites": [
+        "calc_replay_checksum",
+        "destroy_replay",
+        "drawSlot",
+        "get_string",
+        "handle_menu",
+        "load_replay",
+        "save_replay"
+      ]
+    }
+  ],
+  "function_and_workflow_proofs_unchanged": true,
+  "function_acceptance_tests": 129,
+  "add_floor": {
+    "observations": [
+      {
+        "function": "get_demo",
+        "source": "src/map.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          292,
+          344
+        ],
+        "candidate_card": "docs/current/interfaces/get_demo.json",
+        "local_declarations": [
+          {
+            "return_type": "Tmap_replay*",
+            "parameter_types": [],
+            "canonical_return_type": "Tmap_replay*",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Treplay",
+            "candidate_type": "Tmap_replay",
+            "header": "include/recovered/Treplay.h",
+            "status": "UNAVAILABLE",
+            "reason": "Candidate named type layout is missing or ambiguous"
+          }
+        ],
+        "call_offset_count": 2
+      }
+    ],
+    "blocking_functions": [
+      "get_demo"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
+  "scope": "Known direct callee interfaces are assessed in the caller CU. Address resolution and declaration/type compatibility remain separate; no source-cause or body-layout proof is inferred.",
+  "live_admission": {
+    "function": "add_floor",
+    "medium_requested": true,
+    "exit_code": 1,
+    "session_created": false,
+    "reason": "get_demo local interface prerequisite"
+  }
+}

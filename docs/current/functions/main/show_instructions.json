@@ -523,6 +523,7 @@
   "calls": [
     {
       "symbol": "_blit",
+      "function": "blit",
       "function_offset": 78,
       "target_va": 4547172,
       "verified": false,
@@ -533,6 +534,7 @@
     },
     {
       "symbol": "_masked_blit",
+      "function": "masked_blit",
       "function_offset": 154,
       "target_va": 4546808,
       "verified": false,
@@ -543,6 +545,7 @@
     },
     {
       "symbol": "_poll_control",
+      "function": "poll_control",
       "function_offset": 176,
       "target_va": 4200792,
       "verified": false,
@@ -554,6 +557,7 @@
     },
     {
       "symbol": "_is_any",
+      "function": "is_any",
       "function_offset": 188,
       "target_va": 4200680,
       "verified": false,
@@ -564,6 +568,7 @@
     },
     {
       "symbol": "fadeIn",
+      "function": "fadeIn",
       "function_offset": 213,
       "target_va": 4243904,
       "verified": false,
@@ -574,6 +579,7 @@
     },
     {
       "symbol": "checkMenuFocus",
+      "function": "checkMenuFocus",
       "function_offset": 245,
       "target_va": 4222840,
       "verified": false,
@@ -584,6 +590,7 @@
     },
     {
       "symbol": "_is_fire",
+      "function": "is_fire",
       "function_offset": 277,
       "target_va": 4200608,
       "verified": false,
@@ -594,6 +601,7 @@
     },
     {
       "symbol": "_rest",
+      "function": "rest",
       "function_offset": 317,
       "target_va": 4578984,
       "verified": false,
@@ -1033,6 +1041,41 @@
   "verification_command": "python tools/check_function.py game-main show_instructions",
   "begin_command": "python tools/grinder_task.py begin game-main show_instructions",
   "promotion_command": "python tools/promote_function.py game-main show_instructions",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "poll_control",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          176,
+          265
+        ],
+        "candidate_card": "docs/current/interfaces/poll_control.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tcontrol*",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tcontrol*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 2
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "swap_screen",
@@ -1098,6 +1141,7 @@
     "frame_local_declarations": 1,
     "relocation_mismatches": 21,
     "direct_transfer_mismatches": 3,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

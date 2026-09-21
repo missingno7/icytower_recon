@@ -258,12 +258,14 @@
   "calls": [
     {
       "symbol": "_strncpy",
+      "function": "strncpy",
       "function_offset": 36,
       "target_va": 4959592,
       "verified": true
     },
     {
       "symbol": "_for_each_file_ex",
+      "function": "for_each_file_ex",
       "function_offset": 95,
       "target_va": 4487064,
       "verified": true
@@ -343,6 +345,11 @@
   "verification_command": "python tools/check_function.py game-main for_each_directory",
   "begin_command": "python tools/grinder_task.py begin game-main for_each_directory",
   "promotion_command": "python tools/promote_function.py game-main for_each_directory",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],

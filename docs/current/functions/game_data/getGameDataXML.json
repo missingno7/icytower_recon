@@ -951,6 +951,7 @@
   "calls": [
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 64,
       "target_va": 4959584,
       "verified": true,
@@ -968,6 +969,7 @@
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 27,
       "target_va": 4959504,
       "verified": true,
@@ -978,6 +980,7 @@
     },
     {
       "symbol": "___chkstk",
+      "function": "__chkstk",
       "function_offset": 12,
       "target_va": 4926012,
       "verified": true,
@@ -988,6 +991,7 @@
     },
     {
       "symbol": "_strcat",
+      "function": "strcat",
       "function_offset": 1359,
       "target_va": 4959576,
       "verified": false,
@@ -1359,6 +1363,12 @@
   "verification_command": "python tools/check_function.py game-game-data getGameDataXML",
   "begin_command": "python tools/grinder_task.py begin game-game-data getGameDataXML",
   "promotion_command": "python tools/promote_function.py game-game-data getGameDataXML",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [
     {
@@ -1406,6 +1416,7 @@
   "evidence_counts": {
     "relocation_mismatches": 40,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 5,
     "reference_diagnostics": 0,
     "literal_diagnostics": 20,

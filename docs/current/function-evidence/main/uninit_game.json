@@ -1157,174 +1157,203 @@
   "calls": [
     {
       "symbol": "_destroy_all",
+      "function": "destroy_all",
       "function_offset": 47,
       "target_va": 4199600,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 83,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 110,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 137,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 160,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 177,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 199,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 222,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_sample",
+      "function": "destroy_sample",
       "function_offset": 239,
       "target_va": 4458700,
       "verified": true
     },
     {
       "symbol": "_destroy_bitmap",
+      "function": "destroy_bitmap",
       "function_offset": 295,
       "target_va": 4518220,
       "verified": true
     },
     {
       "symbol": "_free",
+      "function": "free",
       "function_offset": 324,
       "target_va": 4959496,
       "verified": true
     },
     {
       "symbol": "_unload_datafile",
+      "function": "unload_datafile",
       "function_offset": 353,
       "target_va": 4538740,
       "verified": true
     },
     {
       "symbol": "_destroy_bitmap",
+      "function": "destroy_bitmap",
       "function_offset": 382,
       "target_va": 4518220,
       "verified": true
     },
     {
       "symbol": "_destroy_hisc_table",
+      "function": "destroy_hisc_table",
       "function_offset": 415,
       "target_va": 4216856,
       "verified": true
     },
     {
       "symbol": "_free",
+      "function": "free",
       "function_offset": 457,
       "target_va": 4959496,
       "verified": true
     },
     {
       "symbol": "_set_gfx_mode",
+      "function": "set_gfx_mode",
       "function_offset": 501,
       "target_va": 4523656,
       "verified": true
     },
     {
       "symbol": "_save_profile",
+      "function": "save_profile",
       "function_offset": 626,
       "target_va": 4301752,
       "verified": true
     },
     {
       "symbol": "_allegro_exit",
+      "function": "allegro_exit",
       "function_offset": 524,
       "target_va": 4452100,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 16,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 59,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 251,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 336,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 365,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 394,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 433,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 513,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 536,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "save_config",
+      "function": "save_config",
       "function_offset": 541,
       "target_va": 4251952,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 565,
       "target_va": 4250200,
       "verified": true
@@ -1751,6 +1780,236 @@
   "verification_command": "python tools/check_function.py game-main uninit_game",
   "begin_command": "python tools/grinder_task.py begin game-main uninit_game",
   "promotion_command": "python tools/promote_function.py game-main uninit_game --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "destroy_hisc_table",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          415
+        ],
+        "candidate_card": "docs/current/interfaces/destroy_hisc_table.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "/*???*/"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "/*???*/"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Thisc_table",
+            "candidate_type": "/*???*/",
+            "header": "include/recovered/Thisc_table.h",
+            "status": "UNAVAILABLE",
+            "reason": "Candidate named type layout is missing or ambiguous"
+          }
+        ]
+      },
+      {
+        "function": "log2file",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          16,
+          59,
+          251,
+          336,
+          365,
+          394,
+          433,
+          513,
+          536,
+          565
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": []
+      },
+      {
+        "function": "save_config",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          541
+        ],
+        "candidate_card": "docs/current/interfaces/save_config.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "/*???*/"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "/*???*/"
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": []
+      },
+      {
+        "function": "save_profile",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          626
+        ],
+        "candidate_card": "docs/current/interfaces/save_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tprofile*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tprofile*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Tprofile",
+            "candidate_type": "Tprofile",
+            "header": "include/recovered/Tprofile.h",
+            "status": "MISMATCH",
+            "historical_size": 1360,
+            "candidate_size": 1328,
+            "member_difference_count": 9,
+            "first_member_differences": [
+              {
+                "member": "best_replay_names",
+                "historical": {
+                  "offset": 220,
+                  "size": 1024,
+                  "type": "char [32][32]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "creationDate",
+                "historical": {
+                  "offset": 1328,
+                  "size": 16,
+                  "type": "char [16]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "header",
+                "historical": {
+                  "offset": 0,
+                  "size": 6,
+                  "type": "char [6]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 0,
+                  "size": 6,
+                  "type": "unsigned char [6]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "last_avatar",
+                "historical": {
+                  "offset": 1252,
+                  "size": 64,
+                  "type": "char [64]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "reserved1",
+                "historical": null,
+                "candidate": {
+                  "offset": 176,
+                  "size": 1068,
+                  "type": "unsigned char [1068]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "reserved2",
+                "historical": null,
+                "candidate": {
+                  "offset": 1252,
+                  "size": 64,
+                  "type": "unsigned char [64]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ]
+      }
+    ],
+    "blocking_functions": [
+      "destroy_hisc_table",
+      "save_config",
+      "save_profile"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "testers",

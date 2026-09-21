@@ -669,6 +669,7 @@
   "calls": [
     {
       "symbol": "_fopen",
+      "function": "fopen",
       "function_offset": 70,
       "target_va": 4959528,
       "verified": true,
@@ -679,6 +680,7 @@
     },
     {
       "symbol": "_vfprintf",
+      "function": "vfprintf",
       "function_offset": 95,
       "target_va": 4959664,
       "verified": true,
@@ -689,6 +691,7 @@
     },
     {
       "symbol": "_vsprintf",
+      "function": "vsprintf",
       "function_offset": 115,
       "target_va": 4959672,
       "verified": true,
@@ -699,6 +702,7 @@
     },
     {
       "symbol": "_fputc",
+      "function": "fputc",
       "function_offset": 131,
       "target_va": 4959680,
       "verified": true,
@@ -709,6 +713,7 @@
     },
     {
       "symbol": "_fclose",
+      "function": "fclose",
       "function_offset": 139,
       "target_va": 4959536,
       "verified": true,
@@ -719,6 +724,7 @@
     },
     {
       "symbol": "_get_logfile_path",
+      "function": "get_logfile_path",
       "function_offset": 180,
       "target_va": 4209140,
       "verified": true,
@@ -1042,6 +1048,12 @@
   "verification_command": "python tools/check_function.py game-main log2file",
   "begin_command": "python tools/grinder_task.py begin game-main log2file",
   "promotion_command": "python tools/promote_function.py game-main log2file",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "itrcheck",
@@ -1119,6 +1131,7 @@
   "evidence_counts": {
     "relocation_mismatches": 2,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

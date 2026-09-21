@@ -955,6 +955,7 @@
   "calls": [
     {
       "symbol": "_rand",
+      "function": "rand",
       "function_offset": 31,
       "target_va": 4959512,
       "verified": true,
@@ -966,6 +967,7 @@
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 16,
       "target_va": 4250200,
       "verified": true,
@@ -982,6 +984,7 @@
     },
     {
       "symbol": "_destroy_game_data",
+      "function": "destroy_game_data",
       "function_offset": 269,
       "target_va": 4211084,
       "verified": false,
@@ -992,6 +995,7 @@
     },
     {
       "symbol": "_create_game_data",
+      "function": "create_game_data",
       "function_offset": 274,
       "target_va": 4211096,
       "verified": false,
@@ -1002,6 +1006,7 @@
     },
     {
       "symbol": "_srand",
+      "function": "srand",
       "function_offset": 425,
       "target_va": 4959688,
       "verified": false,
@@ -1013,6 +1018,7 @@
     },
     {
       "symbol": "_reset_map",
+      "function": "reset_map",
       "function_offset": 449,
       "target_va": 4286116,
       "verified": false,
@@ -1023,6 +1029,7 @@
     },
     {
       "symbol": "_add_floor",
+      "function": "add_floor",
       "function_offset": 464,
       "target_va": 4286428,
       "verified": false,
@@ -1033,6 +1040,7 @@
     },
     {
       "symbol": "_reset_player",
+      "function": "reset_player",
       "function_offset": 490,
       "target_va": 4293968,
       "verified": false,
@@ -1516,10 +1524,10 @@
   ],
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 10,
+  "priority": -20,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, create_replay, destroy_game_data",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1546,6 +1554,324 @@
   "verification_command": "python tools/check_function.py game-main new_game",
   "begin_command": "python tools/grinder_task.py begin game-main new_game",
   "promotion_command": "python tools/promote_function.py game-main new_game",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "destroy_game_data",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          269
+        ],
+        "candidate_card": "docs/current/interfaces/destroy_game_data.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tgame_data*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tgame_data*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Tgame_data",
+            "candidate_type": "Tgame_data",
+            "header": "include/recovered/Tgame_data.h",
+            "status": "MISMATCH",
+            "historical_size": 120084,
+            "candidate_size": 4,
+            "member_difference_count": 14,
+            "first_member_differences": [
+              {
+                "member": "biggest_lost_combo",
+                "historical": {
+                  "offset": 20,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "ccc",
+                "historical": {
+                  "offset": 24,
+                  "size": 20,
+                  "type": "int [5]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "combo",
+                "historical": {
+                  "offset": 12,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "comboPosts",
+                "historical": {
+                  "offset": 64,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "combos",
+                "historical": {
+                  "offset": 68,
+                  "size": 60000,
+                  "type": "Tgd_combo [5000]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "floor",
+                "historical": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "create_game_data",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          274
+        ],
+        "candidate_card": "docs/current/interfaces/create_game_data.json",
+        "local_declarations": [
+          {
+            "return_type": "Tgame_data*",
+            "parameter_types": [],
+            "canonical_return_type": "Tgame_data*",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Tgame_data",
+            "candidate_type": "Tgame_data",
+            "header": "include/recovered/Tgame_data.h",
+            "status": "MISMATCH",
+            "historical_size": 120084,
+            "candidate_size": 4,
+            "member_difference_count": 14,
+            "first_member_differences": [
+              {
+                "member": "biggest_lost_combo",
+                "historical": {
+                  "offset": 20,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "ccc",
+                "historical": {
+                  "offset": 24,
+                  "size": 20,
+                  "type": "int [5]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "combo",
+                "historical": {
+                  "offset": 12,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "comboPosts",
+                "historical": {
+                  "offset": 64,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "combos",
+                "historical": {
+                  "offset": 68,
+                  "size": 60000,
+                  "type": "Tgd_combo [5000]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "floor",
+                "historical": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "create_replay",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          878
+        ],
+        "candidate_card": "docs/current/interfaces/create_replay.json",
+        "local_declarations": [
+          {
+            "return_type": "Treplay*",
+            "parameter_types": [
+              "int"
+            ],
+            "canonical_return_type": "Treplay*",
+            "canonical_parameter_types": [
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Treplay",
+            "candidate_type": "Treplay",
+            "header": "include/recovered/Treplay.h",
+            "status": "MISMATCH",
+            "historical_size": 2220,
+            "candidate_size": 2220,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "Trecord *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 2216,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "log2file",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          16,
+          315,
+          437,
+          650,
+          751,
+          856,
+          1116
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 7
+      }
+    ],
+    "blocking_functions": [
+      "create_game_data",
+      "create_replay",
+      "destroy_game_data"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "cmdline",
@@ -1970,6 +2296,7 @@
   "evidence_counts": {
     "relocation_mismatches": 61,
     "direct_transfer_mismatches": 7,
+    "callee_interface_observations": 4,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 3,
     "literal_diagnostics": 3,

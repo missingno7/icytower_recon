@@ -336,8 +336,8 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     types=relevant_types(ev['parameters']+ev['locals'],offsets)
     line_rows=[l for l in debug_tables()[2] if f['va']<=l['address']<f['va']+f['size']]
     nearest=sorted(line_rows,key=lambda l:abs(l['address']-(f['va']+offset)))[:8]
-    calls=[{'symbol':r.get('symbol'),'function_offset':r['function_offset'],'target_va':r.get('target_va'),'verified':r['equal']} for r in row.get('relocations',[]) if r.get('type')==20]
-    calls += [{'symbol':t['target_function'],'function_offset':t['function_offset'],'target_va':t['target_va'],'verified':t['equal']} for t in row.get('direct_transfers',[])]
+    calls=[{'symbol':r.get('symbol'),'function':(r.get('symbol') or '').removeprefix('_'),'function_offset':r['function_offset'],'target_va':r.get('target_va'),'verified':r['equal']} for r in row.get('relocations',[]) if r.get('type')==20]
+    calls += [{'symbol':t['target_function'],'function':t['target_function'],'function_offset':t['function_offset'],'target_va':t['target_va'],'verified':t['equal']} for t in row.get('direct_transfers',[])]
     original_calls=[i for i in old if i['mnemonic'].startswith('call') or (i['mnemonic']=='jmp' and '*' in i['assembly'])]
     rules=read_json(ROOT/'docs/codegen-rules.json')['rules']
     relevant=select_rules(rules,row,ev,wf,old,report['build'])
@@ -362,13 +362,15 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     interface_path=CURRENT/'interface-conflicts.json'
     local_task_path=CURRENT/'local-declaration-tasks.json'
     local_tasks=[t for t in read_json(local_task_path)['tasks'] if t['source']==unit['source'] and t['target_function']==row['name']] if local_task_path.exists() else []
-    interface_conflicts=[]
-    if interface_index is not None:
-        interface_conflicts=interface_index.get(row['name'],[])
-    elif interface_path.exists():
-        interface_conflicts=[r for r in read_json(interface_path)['conflicts'] if r['function']==row['name']]
-    from interface_scope import partition as scoped_interfaces
+    if interface_index is None:
+        interface_index={}
+        if interface_path.exists():
+            for conflict in read_json(interface_path)['conflicts']:
+                interface_index.setdefault(conflict['function'],[]).append(conflict)
+    interface_conflicts=interface_index.get(row['name'],[])
+    from interface_scope import partition as scoped_interfaces,callees
     local_interface_conflicts,interface_scope=scoped_interfaces(interface_conflicts,unit['source'])
+    callee_scope=callees(calls,interface_index,unit['source'])
     routing_checks={
         'body_edit_allowed':bool(wf['body_edit_allowed']),
         'known_difference_class':wf['difference_class']!='UNKNOWN_SUPERVISOR',
@@ -397,6 +399,9 @@ def card_for(target,report,row,ledger=None,interface_index=None):
     if not supervisor and wf['body_edit_allowed'] and local_interface_conflicts:
         difficulty='SUPERVISOR'; priority=-30
         routing_reason='This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.'
+    if not supervisor and wf['body_edit_allowed'] and callee_scope['blocking_functions']:
+        difficulty='SUPERVISOR'; priority=min(priority,-30)
+        routing_reason='Called-function interface prerequisites in this CU must be resolved before body grinding: '+', '.join(callee_scope['blocking_functions'])
     from literal_dependencies import pattern_prerequisites,ownership_prerequisites
     source_pattern_prerequisites=pattern_prerequisites(row,ev['source_patterns'])
     if not supervisor and source_pattern_prerequisites:
@@ -425,7 +430,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'verification_command':'python tools/check_function.py '+target+' '+row['name'],
             'begin_command':'python tools/grinder_task.py begin '+target+' '+row['name'],
             'promotion_command':'python tools/promote_function.py '+target+' '+row['name']+(' --claim BODY_MATCH_LAYOUT_BLOCKED' if wf['state']=='BODY_MATCH_LAYOUT_BLOCKED' else ''),
-            'storage_declarations':storage,'ownership_prerequisites':owner_prerequisites,
+            'callee_interface_scope':callee_scope,'storage_declarations':storage,'ownership_prerequisites':owner_prerequisites,
             'local_declaration_tasks':[{k:t[k] for k in ('function','status','state','difficulty','candidate_card')} for t in local_tasks],
             'source_pattern_prerequisites':source_pattern_prerequisites,'interface_scope':interface_scope,'interface_conflicts':[{'function':c['function'],'historical':c['historical'],'type_layout_issues':c.get('type_layout_issues',[]),'candidate_signatures':sorted({str((d['return_type'],d['parameter_types'])) for d in c['candidate_declarations']}),'candidate_card':'docs/current/interfaces/'+c['function']+'.json'} for c in interface_conflicts],
             'edit_scope':'Function body only; use supervisor for prototypes/data/headers or missing implementations.'}

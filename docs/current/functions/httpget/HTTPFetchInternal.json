@@ -901,6 +901,7 @@
   "calls": [
     {
       "symbol": "_gethostbyname@4",
+      "function": "gethostbyname@4",
       "function_offset": 123,
       "target_va": 4327268,
       "verified": true,
@@ -911,6 +912,7 @@
     },
     {
       "symbol": "_setsockopt@20",
+      "function": "setsockopt@20",
       "function_offset": 112,
       "target_va": 4327260,
       "verified": true,
@@ -921,6 +923,7 @@
     },
     {
       "symbol": "_htons@4",
+      "function": "htons@4",
       "function_offset": 160,
       "target_va": 4327276,
       "verified": true,
@@ -931,6 +934,7 @@
     },
     {
       "symbol": "_connect@12",
+      "function": "connect@12",
       "function_offset": 191,
       "target_va": 4327284,
       "verified": true,
@@ -941,6 +945,7 @@
     },
     {
       "symbol": "_socket@12",
+      "function": "socket@12",
       "function_offset": 50,
       "target_va": 4327252,
       "verified": true,
@@ -951,6 +956,7 @@
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 20,
       "target_va": 4959504,
       "verified": true,
@@ -961,6 +967,7 @@
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 244,
       "target_va": 4959584,
       "verified": true,
@@ -971,6 +978,7 @@
     },
     {
       "symbol": "_send@16",
+      "function": "send@16",
       "function_offset": 301,
       "target_va": 4327292,
       "verified": true,
@@ -1256,6 +1264,74 @@
   "verification_command": "python tools/check_function.py game-httpget HTTPFetchInternal",
   "begin_command": "python tools/grinder_task.py begin game-httpget HTTPFetchInternal",
   "promotion_command": "python tools/promote_function.py game-httpget HTTPFetchInternal",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "extractHTTPResponse",
+        "source": "src/httpget.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          419
+        ],
+        "candidate_card": "docs/current/interfaces/extractHTTPResponse.json",
+        "local_declarations": [
+          {
+            "return_type": "HTTPResponse*",
+            "parameter_types": [
+              "char*",
+              "int"
+            ],
+            "canonical_return_type": "HTTPResponse*",
+            "canonical_parameter_types": [
+              "char*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "log2file",
+        "source": "src/httpget.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          475,
+          513,
+          538,
+          563,
+          583
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 5
+      }
+    ],
+    "blocking_functions": [
+      "extractHTTPResponse",
+      "log2file"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -1267,6 +1343,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 2,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

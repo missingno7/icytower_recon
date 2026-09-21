@@ -249,6 +249,7 @@
   "calls": [
     {
       "symbol": "_time",
+      "function": "time",
       "function_offset": 16,
       "target_va": 4959608,
       "verified": true,
@@ -259,6 +260,7 @@
     },
     {
       "symbol": "_localtime",
+      "function": "localtime",
       "function_offset": 30,
       "target_va": 4959736,
       "verified": true,
@@ -269,6 +271,7 @@
     },
     {
       "symbol": "_mktime",
+      "function": "mktime",
       "function_offset": 38,
       "target_va": 4959792,
       "verified": true,
@@ -281,6 +284,7 @@
     },
     {
       "symbol": "_gmtime",
+      "function": "gmtime",
       "function_offset": 48,
       "target_va": 4959784,
       "verified": true,
@@ -366,6 +370,12 @@
   "verification_command": "python tools/check_function.py game-timecompat timegm",
   "begin_command": "python tools/grinder_task.py begin game-timecompat timegm",
   "promotion_command": "python tools/promote_function.py game-timecompat timegm",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -377,6 +387,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

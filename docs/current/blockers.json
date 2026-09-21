@@ -551,54 +551,6 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "create_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 20,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 508,
-        "original_va": 4303748,
-        "candidate_byte": 220,
-        "original_byte": 36
-      },
-      "verification_command": "python tools/check_function.py game-profile create_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
-      "promotion_command": "python tools/promote_function.py game-profile create_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: known_difference_class, cheap_difference_class",
-      "size": 823,
-      "candidate_card": "docs/current/functions/profile/create_profile.json",
-      "task_kind": "FUNCTION_BODY"
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "new_game",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 10,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 69,
-        "original_va": 4250849,
-        "candidate_byte": 76,
-        "original_byte": 172
-      },
-      "verification_command": "python tools/check_function.py game-main new_game",
-      "begin_command": "python tools/grinder_task.py begin game-main new_game",
-      "promotion_command": "python tools/promote_function.py game-main new_game",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class",
-      "size": 1139,
-      "candidate_card": "docs/current/functions/main/new_game.json",
-      "task_kind": "FUNCTION_BODY"
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "fadeIn",
@@ -1790,6 +1742,30 @@
     {
       "source": "src/main.c",
       "target": "game-main",
+      "function": "change_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 13,
+        "original_va": 4252121,
+        "candidate_byte": 15,
+        "original_byte": 116
+      },
+      "verification_command": "python tools/check_function.py game-main change_profile",
+      "begin_command": "python tools/grinder_task.py begin game-main change_profile",
+      "promotion_command": "python tools/promote_function.py game-main change_profile",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: save_config, save_profile, select_profile",
+      "size": 188,
+      "candidate_card": "docs/current/functions/main/change_profile.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
       "function": "log2file",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
@@ -1836,6 +1812,30 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "new_game",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 69,
+        "original_va": 4250849,
+        "candidate_byte": 76,
+        "original_byte": 172
+      },
+      "verification_command": "python tools/check_function.py game-main new_game",
+      "begin_command": "python tools/grinder_task.py begin game-main new_game",
+      "promotion_command": "python tools/promote_function.py game-main new_game",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, create_replay, destroy_game_data",
+      "size": 1139,
+      "candidate_card": "docs/current/functions/main/new_game.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
       "source": "src/game_data.c",
       "target": "game-game-data",
       "function": "getGameDataXML",
@@ -1860,30 +1860,6 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "_mangled_main",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -20,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4284184,
-        "candidate_byte": 60,
-        "original_byte": 44
-      },
-      "verification_command": "python tools/check_function.py game-main _mangled_main",
-      "begin_command": "python tools/grinder_task.py begin game-main _mangled_main",
-      "promotion_command": "python tools/promote_function.py game-main _mangled_main",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1938,
-      "candidate_card": "docs/current/functions/main/_mangled_main.json",
-      "task_kind": "FUNCTION_BODY"
-    },
-    {
       "source": "src/hisc.c",
       "target": "game-hisc",
       "function": "view_scores",
@@ -1902,7 +1878,7 @@
       "begin_command": "python tools/grinder_task.py begin game-hisc view_scores",
       "promotion_command": "python tools/promote_function.py game-hisc view_scores",
       "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_table",
       "size": 2552,
       "candidate_card": "docs/current/functions/hisc/view_scores.json",
       "task_kind": "FUNCTION_BODY"
@@ -2252,6 +2228,30 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
+      "source": "src/fld_adspot.c",
+      "target": "game-fld-adspot",
+      "function": "fldads_threadmain",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 6,
+        "original_va": 4210714,
+        "candidate_byte": 68,
+        "original_byte": 84
+      },
+      "verification_command": "python tools/check_function.py game-fld-adspot fldads_threadmain",
+      "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_threadmain",
+      "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_threadmain",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: HTTPGet, destroyHTTPResponse, fldads_update_cache, log2file",
+      "size": 223,
+      "candidate_card": "docs/current/functions/fld_adspot/fldads_threadmain.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "create_replay",
@@ -2348,6 +2348,30 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
+      "source": "src/map.c",
+      "target": "game-map",
+      "function": "add_floor",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "first_difference": {
+        "offset": 297,
+        "original_va": 4286725,
+        "candidate_byte": 184,
+        "original_byte": 176
+      },
+      "verification_command": "python tools/check_function.py game-map add_floor",
+      "begin_command": "python tools/grinder_task.py begin game-map add_floor",
+      "promotion_command": "python tools/promote_function.py game-map add_floor",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_demo",
+      "size": 608,
+      "candidate_card": "docs/current/functions/map/add_floor.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
       "source": "src/player.c",
       "target": "game-player",
       "function": "update_player",
@@ -2396,6 +2420,30 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "create_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 508,
+        "original_va": 4303748,
+        "candidate_byte": 220,
+        "original_byte": 36
+      },
+      "verification_command": "python tools/check_function.py game-profile create_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
+      "promotion_command": "python tools/promote_function.py game-profile create_profile",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_controls, get_profile_dir_for_profile, log2file",
+      "size": 823,
+      "candidate_card": "docs/current/functions/profile/create_profile.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
       "source": "src/httpget.c",
       "target": "game-httpget",
       "function": "extractHTTPResponse",
@@ -2414,7 +2462,7 @@
       "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
       "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
       "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: log2file",
       "size": 923,
       "candidate_card": "docs/current/functions/httpget/extractHTTPResponse.json",
       "task_kind": "FUNCTION_BODY"
@@ -2516,27 +2564,27 @@
       "task_kind": "FUNCTION_BODY"
     },
     {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "get_replay_property",
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "_mangled_main",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
       "priority": -25,
       "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "difference_class": "STACK_FRAME_LAYOUT",
       "first_difference": {
-        "offset": 19,
-        "original_va": 4317783,
-        "candidate_byte": 7,
-        "original_byte": 133
+        "offset": 8,
+        "original_va": 4284184,
+        "candidate_byte": 60,
+        "original_byte": 44
       },
-      "verification_command": "python tools/check_function.py game-replay get_replay_property",
-      "begin_command": "python tools/grinder_task.py begin game-replay get_replay_property",
-      "promotion_command": "python tools/promote_function.py game-replay get_replay_property",
+      "verification_command": "python tools/check_function.py game-main _mangled_main",
+      "begin_command": "python tools/grinder_task.py begin game-main _mangled_main",
+      "promotion_command": "python tools/promote_function.py game-main _mangled_main",
       "body_edit_allowed": true,
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1147,
-      "candidate_card": "docs/current/functions/replay/get_replay_property.json",
+      "size": 1938,
+      "candidate_card": "docs/current/functions/main/_mangled_main.json",
       "task_kind": "FUNCTION_BODY"
     },
     {
@@ -3036,7 +3084,7 @@
       "begin_command": "python tools/grinder_task.py begin game-menu update_game_menu",
       "promotion_command": "python tools/promote_function.py game-menu update_game_menu",
       "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_menu",
       "size": 583,
       "candidate_card": "docs/current/functions/menu/update_game_menu.json",
       "task_kind": "FUNCTION_BODY"
@@ -3188,6 +3236,30 @@
     {
       "source": "src/replay.c",
       "target": "game-replay",
+      "function": "get_replay_property",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -30,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "first_difference": {
+        "offset": 19,
+        "original_va": 4317783,
+        "candidate_byte": 7,
+        "original_byte": 133
+      },
+      "verification_command": "python tools/check_function.py game-replay get_replay_property",
+      "begin_command": "python tools/grinder_task.py begin game-replay get_replay_property",
+      "promotion_command": "python tools/promote_function.py game-replay get_replay_property",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1147,
+      "candidate_card": "docs/current/functions/replay/get_replay_property.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
       "function": "save_replay",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
@@ -3279,6 +3351,30 @@
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
       "size": 2249,
       "candidate_card": "docs/current/functions/profile/view_profile.json",
+      "task_kind": "FUNCTION_BODY"
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "do_replay_menu",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -30,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
+      "first_difference": {
+        "offset": 194,
+        "original_va": 4264026,
+        "candidate_byte": 77,
+        "original_byte": 81
+      },
+      "verification_command": "python tools/check_function.py game-main do_replay_menu",
+      "begin_command": "python tools/grinder_task.py begin game-main do_replay_menu",
+      "promotion_command": "python tools/promote_function.py game-main do_replay_menu",
+      "body_edit_allowed": true,
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: calc_replay_checksum, destroy_replay, drawSlot, get_string, handle_menu, load_replay, save_replay",
+      "size": 2661,
+      "candidate_card": "docs/current/functions/main/do_replay_menu.json",
       "task_kind": "FUNCTION_BODY"
     },
     {
@@ -3396,7 +3492,7 @@
       "begin_command": "python tools/grinder_task.py begin game-main force_create_profile",
       "promotion_command": "python tools/promote_function.py game-main force_create_profile",
       "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_profile, get_string, load_profile",
       "size": 1538,
       "candidate_card": "docs/current/functions/main/force_create_profile.json",
       "task_kind": "FUNCTION_BODY"

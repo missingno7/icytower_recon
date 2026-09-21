@@ -429,24 +429,28 @@
   "calls": [
     {
       "symbol": "_free",
+      "function": "free",
       "function_offset": 34,
       "target_va": 4959496,
       "verified": true
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 93,
       "target_va": 4959584,
       "verified": true
     },
     {
       "symbol": "_for_each_file_ex",
+      "function": "for_each_file_ex",
       "function_offset": 133,
       "target_va": 4487064,
       "verified": true
     },
     {
       "symbol": "_qsort",
+      "function": "qsort",
       "function_offset": 170,
       "target_va": 4959744,
       "verified": true
@@ -538,6 +542,11 @@
   "verification_command": "python tools/check_function.py game-replay update_file_list",
   "begin_command": "python tools/grinder_task.py begin game-replay update_file_list",
   "promotion_command": "python tools/promote_function.py game-replay update_file_list",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "itr_file_list",

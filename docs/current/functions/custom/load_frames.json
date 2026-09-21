@@ -973,6 +973,7 @@
   "calls": [
     {
       "symbol": "___chkstk",
+      "function": "__chkstk",
       "function_offset": 12,
       "target_va": 4926012,
       "verified": true,
@@ -983,6 +984,7 @@
     },
     {
       "symbol": "_get_character_dir",
+      "function": "get_character_dir",
       "function_offset": 47,
       "target_va": 4209284,
       "verified": true,
@@ -995,6 +997,7 @@
     },
     {
       "symbol": "_strcat",
+      "function": "strcat",
       "function_offset": 68,
       "target_va": 4959576,
       "verified": true,
@@ -1007,6 +1010,7 @@
     },
     {
       "symbol": "_fopen",
+      "function": "fopen",
       "function_offset": 124,
       "target_va": 4959528,
       "verified": true,
@@ -1018,6 +1022,7 @@
     },
     {
       "symbol": "_fgets",
+      "function": "fgets",
       "function_offset": 220,
       "target_va": 4959568,
       "verified": true,
@@ -1031,6 +1036,7 @@
     },
     {
       "symbol": "get_string_data",
+      "function": "get_string_data",
       "function_offset": 258,
       "target_va": 4202708,
       "verified": true,
@@ -1042,6 +1048,7 @@
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 278,
       "target_va": 4959560,
       "verified": true,
@@ -1053,6 +1060,7 @@
     },
     {
       "symbol": "_fclose",
+      "function": "fclose",
       "function_offset": 419,
       "target_va": 4959536,
       "verified": true,
@@ -1177,6 +1185,12 @@
   "verification_command": "python tools/check_function.py game-custom load_frames",
   "begin_command": "python tools/grinder_task.py begin game-custom load_frames",
   "promotion_command": "python tools/promote_function.py game-custom load_frames",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "black",
@@ -1215,6 +1229,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

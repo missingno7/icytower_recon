@@ -29,6 +29,15 @@ def compact_card(full,details=None):
     for key in ('relocation_mismatches','direct_transfer_mismatches'):
         rows=card[key]; card['evidence_counts'][key]=len(rows)
         if len(rows)>8: card[key]=sorted(rows,key=lambda r:abs(r['function_offset']-offset))[:8]
+    callee_scope=card.get('callee_interface_scope')
+    if callee_scope:
+        observations=callee_scope['observations']
+        card['evidence_counts']['callee_interface_observations']=len(observations)
+        callee_scope['omitted_observations']=max(0,len(observations)-8)
+        callee_scope['observations']=sorted(observations,key=lambda r:(not r['blocking'],min((abs(n-offset) for n in r['call_offsets']),default=float('inf'))))[:8]
+        for observation in callee_scope['observations']:
+            observation['call_offset_count']=len(observation['call_offsets'])
+            observation['call_offsets']=sorted(observation['call_offsets'],key=lambda n:abs(n-offset))[:8]
     if 'ownership_prerequisites' in card:
         card['evidence_counts']['ownership_prerequisites']=len(card['ownership_prerequisites'])
         card['ownership_prerequisites']=sorted(card['ownership_prerequisites'],key=lambda r:abs(r['function_offset']-offset))[:8]

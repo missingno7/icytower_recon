@@ -625,6 +625,7 @@
   "calls": [
     {
       "symbol": "_stricmp",
+      "function": "stricmp",
       "function_offset": 50,
       "target_va": 4926936,
       "verified": true,
@@ -636,6 +637,7 @@
     },
     {
       "symbol": "_get_filename",
+      "function": "get_filename",
       "function_offset": 32,
       "target_va": 4474156,
       "verified": true,
@@ -646,6 +648,7 @@
     },
     {
       "symbol": "_get_extension",
+      "function": "get_extension",
       "function_offset": 74,
       "target_va": 4483100,
       "verified": false,
@@ -656,6 +659,7 @@
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 121,
       "target_va": 4959504,
       "verified": false,
@@ -667,6 +671,7 @@
     },
     {
       "symbol": "_strcpy",
+      "function": "strcpy",
       "function_offset": 161,
       "target_va": 4959560,
       "verified": false,
@@ -678,6 +683,7 @@
     },
     {
       "symbol": "get_replay_property",
+      "function": "get_replay_property",
       "function_offset": 256,
       "target_va": 4317764,
       "verified": false,
@@ -1066,6 +1072,12 @@
   "verification_command": "python tools/check_function.py game-replay add_itr_file",
   "begin_command": "python tools/grinder_task.py begin game-replay add_itr_file",
   "promotion_command": "python tools/promote_function.py game-replay add_itr_file",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "itr_file_list",
@@ -1126,6 +1138,7 @@
   "evidence_counts": {
     "relocation_mismatches": 23,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 3,
     "reference_diagnostics": 0,
     "literal_diagnostics": 3,

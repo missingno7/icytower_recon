@@ -299,12 +299,14 @@
   "calls": [
     {
       "symbol": "startMenuMusic",
+      "function": "startMenuMusic",
       "function_offset": 34,
       "target_va": 4222312,
       "verified": true
     },
     {
       "symbol": "stopMenuMusic",
+      "function": "stopMenuMusic",
       "function_offset": 53,
       "target_va": 4222812,
       "verified": true
@@ -429,6 +431,11 @@
   "verification_command": "python tools/check_function.py game-main checkMenuFocus",
   "begin_command": "python tools/grinder_task.py begin game-main checkMenuFocus",
   "promotion_command": "python tools/promote_function.py game-main checkMenuFocus --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "hasFocus",

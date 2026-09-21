@@ -297,12 +297,14 @@
   "calls": [
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 42,
       "target_va": 4959584,
       "verified": true
     },
     {
       "symbol": "_delete_file",
+      "function": "delete_file",
       "function_offset": 50,
       "target_va": 4481596,
       "verified": true
@@ -375,6 +377,11 @@
   "verification_command": "python tools/check_function.py game-main myDeleteFile",
   "begin_command": "python tools/grinder_task.py begin game-main myDeleteFile",
   "promotion_command": "python tools/promote_function.py game-main myDeleteFile",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],

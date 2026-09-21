@@ -282,6 +282,7 @@
   "calls": [
     {
       "symbol": "_get_adcache_dir",
+      "function": "get_adcache_dir",
       "function_offset": 22,
       "target_va": 4209060,
       "verified": true,
@@ -292,6 +293,7 @@
     },
     {
       "symbol": "_mkdir",
+      "function": "mkdir",
       "function_offset": 34,
       "target_va": 4926944,
       "verified": true,
@@ -302,6 +304,7 @@
     },
     {
       "symbol": "_strcat",
+      "function": "strcat",
       "function_offset": 53,
       "target_va": 4959576,
       "verified": true,
@@ -441,6 +444,12 @@
   "verification_command": "python tools/check_function.py game-fld-adspot fldads_get_local_cache_name",
   "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_get_local_cache_name",
   "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_get_local_cache_name",
+  "callee_interface_scope": {
+    "observations": [],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -452,6 +461,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

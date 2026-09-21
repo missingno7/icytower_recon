@@ -301,60 +301,70 @@
   "calls": [
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 37,
       "target_va": 4209220,
       "verified": true
     },
     {
       "symbol": "_rmdir",
+      "function": "rmdir",
       "function_offset": 75,
       "target_va": 4926984,
       "verified": true
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 95,
       "target_va": 4209220,
       "verified": true
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 119,
       "target_va": 4959584,
       "verified": true
     },
     {
       "symbol": "_delete_file",
+      "function": "delete_file",
       "function_offset": 127,
       "target_va": 4481596,
       "verified": true
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 147,
       "target_va": 4209220,
       "verified": true
     },
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 171,
       "target_va": 4959584,
       "verified": true
     },
     {
       "symbol": "_delete_file",
+      "function": "delete_file",
       "function_offset": 179,
       "target_va": 4481596,
       "verified": true
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 199,
       "target_va": 4209220,
       "verified": true
     },
     {
       "symbol": "_rmdir",
+      "function": "rmdir",
       "function_offset": 207,
       "target_va": 4926984,
       "verified": true
@@ -482,6 +492,45 @@
   "verification_command": "python tools/check_function.py game-profile delete_profile",
   "begin_command": "python tools/grinder_task.py begin game-profile delete_profile",
   "promotion_command": "python tools/promote_function.py game-profile delete_profile",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "get_profile_dir_for_profile",
+        "source": "src/profile.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          37,
+          95,
+          147,
+          199
+        ],
+        "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "char*",
+              "unsigned int",
+              "const char*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "char*",
+              "unsigned int",
+              "const char*"
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [
+      "get_profile_dir_for_profile"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],

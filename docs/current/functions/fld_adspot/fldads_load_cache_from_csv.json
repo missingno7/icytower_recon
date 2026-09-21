@@ -370,6 +370,7 @@
   "calls": [
     {
       "symbol": "_csv_next",
+      "function": "csv_next",
       "function_offset": 33,
       "target_va": 4201200,
       "verified": true,
@@ -381,6 +382,7 @@
     },
     {
       "symbol": "fldads_get_local_filename_from_url",
+      "function": "fldads_get_local_filename_from_url",
       "function_offset": 53,
       "target_va": 4209996,
       "verified": true,
@@ -392,6 +394,7 @@
     },
     {
       "symbol": "_stat",
+      "function": "stat",
       "function_offset": 68,
       "target_va": 4926960,
       "verified": true,
@@ -402,6 +405,7 @@
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 93,
       "target_va": 4250200,
       "verified": true,
@@ -412,6 +416,7 @@
     },
     {
       "symbol": "fldads_destroy_cache",
+      "function": "fldads_destroy_cache",
       "function_offset": 128,
       "target_va": 4209592,
       "verified": true,
@@ -422,6 +427,7 @@
     },
     {
       "symbol": "_realloc",
+      "function": "realloc",
       "function_offset": 187,
       "target_va": 4959544,
       "verified": true,
@@ -432,6 +438,7 @@
     },
     {
       "symbol": "_strdup",
+      "function": "strdup",
       "function_offset": 208,
       "target_va": 4926952,
       "verified": true,
@@ -444,6 +451,7 @@
     },
     {
       "symbol": "_strtof",
+      "function": "strtof",
       "function_offset": 268,
       "target_va": 4927104,
       "verified": true,
@@ -570,6 +578,40 @@
   "verification_command": "python tools/check_function.py game-fld-adspot fldads_load_cache_from_csv",
   "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_load_cache_from_csv",
   "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_load_cache_from_csv",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "log2file",
+        "source": "src/fld_adspot.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          93
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "/*???*/"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "/*???*/"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [
+      "log2file"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "gFLDADMutex",
@@ -621,6 +663,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 0,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

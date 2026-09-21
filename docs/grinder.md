@@ -423,3 +423,12 @@ when the instruction mismatch is small. Resolve the owner evidence first. An
 existing generated literal/symbolic recipe may cover its own operand; unrelated
 missing bindings still block. Missing ownership is not proof of a correct body
 or a layout-only state.
+
+
+`callee_interface_scope` assesses known direct-callee interface conflicts in the
+caller CU. A resolved call address does not establish that its return/parameter
+types are historical. Blocking entries link to interface cards and show local
+declarations and layout issues. Complete that prerequisite before body grinding.
+Remote-only conflicts do not block a locally proven interface, and unknown
+indirect targets are not guessed. Compact cards show up to eight observations;
+complete target evidence retains all of them.

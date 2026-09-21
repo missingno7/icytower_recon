@@ -574,60 +574,70 @@
   "calls": [
     {
       "symbol": "_getcwd",
+      "function": "getcwd",
       "function_offset": 30,
       "target_va": 4926968,
       "verified": true
     },
     {
       "symbol": "_get_custom_characters_dir",
+      "function": "get_custom_characters_dir",
       "function_offset": 83,
       "target_va": 4209044,
       "verified": true
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 171,
       "target_va": 4959504,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 101,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "for_each_directory",
+      "function": "for_each_directory",
       "function_offset": 117,
       "target_va": 4246464,
       "verified": true
     },
     {
       "symbol": "for_each_directory",
+      "function": "for_each_directory",
       "function_offset": 192,
       "target_va": 4246464,
       "verified": true
     },
     {
       "symbol": "set_current_avatar",
+      "function": "set_current_avatar",
       "function_offset": 261,
       "target_va": 4222180,
       "verified": true
     },
     {
       "symbol": "log2file",
+      "function": "log2file",
       "function_offset": 296,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "for_each_directory",
+      "function": "for_each_directory",
       "function_offset": 312,
       "target_va": 4246464,
       "verified": true
     },
     {
       "symbol": "for_each_directory",
+      "function": "for_each_directory",
       "function_offset": 336,
       "target_va": 4246464,
       "verified": true
@@ -912,6 +922,82 @@
   "verification_command": "python tools/check_function.py game-main check_characters",
   "begin_command": "python tools/grinder_task.py begin game-main check_characters",
   "promotion_command": "python tools/promote_function.py game-main check_characters --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "for_each_directory",
+        "source": "src/main.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          117,
+          192,
+          312,
+          336
+        ],
+        "candidate_card": "docs/current/interfaces/for_each_directory.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "char*",
+              "int(*)(const char*,int,void*)"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "char*",
+              "int(*)(const char*,int,void*)"
+            ]
+          }
+        ],
+        "layout_issues": []
+      },
+      {
+        "function": "log2file",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          101,
+          296
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "const char*",
+              "..."
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "const char*",
+              "..."
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [
+      "for_each_directory"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "num_chars",

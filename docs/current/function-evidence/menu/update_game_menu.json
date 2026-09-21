@@ -1069,84 +1069,98 @@
   "calls": [
     {
       "symbol": "_is_up",
+      "function": "is_up",
       "function_offset": 114,
       "target_va": 4200516,
       "verified": true
     },
     {
       "symbol": "_is_down",
+      "function": "is_down",
       "function_offset": 143,
       "target_va": 4200540,
       "verified": true
     },
     {
       "symbol": "_play_menu_move",
+      "function": "play_menu_move",
       "function_offset": 220,
       "target_va": 4222628,
       "verified": false
     },
     {
       "symbol": "_is_fire",
+      "function": "is_fire",
       "function_offset": 231,
       "target_va": 4200608,
       "verified": false
     },
     {
       "symbol": "_is_left",
+      "function": "is_left",
       "function_offset": 256,
       "target_va": 4200564,
       "verified": false
     },
     {
       "symbol": "_is_right",
+      "function": "is_right",
       "function_offset": 281,
       "target_va": 4200584,
       "verified": false
     },
     {
       "symbol": "_is_down",
+      "function": "is_down",
       "function_offset": 354,
       "target_va": 4200540,
       "verified": false
     },
     {
       "symbol": "_is_up",
+      "function": "is_up",
       "function_offset": 390,
       "target_va": 4200516,
       "verified": false
     },
     {
       "symbol": "_is_right",
+      "function": "is_right",
       "function_offset": 450,
       "target_va": 4200584,
       "verified": false
     },
     {
       "symbol": "_is_left",
+      "function": "is_left",
       "function_offset": 490,
       "target_va": 4200564,
       "verified": false
     },
     {
       "symbol": "_is_enter",
+      "function": "is_enter",
       "function_offset": 518,
       "target_va": 4200656,
       "verified": false
     },
     {
       "symbol": "_is_fire",
+      "function": "is_fire",
       "function_offset": 534,
       "target_va": 4200608,
       "verified": false
     },
     {
       "symbol": "_is_down",
+      "function": "is_down",
       "function_offset": 565,
       "target_va": 4200540,
       "verified": false
     },
     {
       "symbol": "draw_menu",
+      "function": "draw_menu",
       "function_offset": 92,
       "target_va": 4290172,
       "verified": true
@@ -1706,7 +1720,7 @@
   "priority": -30,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_menu",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1733,6 +1747,222 @@
   "verification_command": "python tools/check_function.py game-menu update_game_menu",
   "begin_command": "python tools/grinder_task.py begin game-menu update_game_menu",
   "promotion_command": "python tools/promote_function.py game-menu update_game_menu",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "draw_menu",
+        "source": "src/menu.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          92
+        ],
+        "candidate_card": "docs/current/interfaces/draw_menu.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*",
+              "Tmenu*",
+              "Tmenu_params*",
+              "int",
+              "int",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*",
+              "Tmenu*",
+              "Tmenu_params*",
+              "int",
+              "int",
+              "int"
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*",
+              "Tmenu*",
+              "Tmenu_params*",
+              "int",
+              "int",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*",
+              "Tmenu*",
+              "Tmenu_params*",
+              "int",
+              "int",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 3",
+            "historical_type": "Tmenu_params",
+            "candidate_type": "Tmenu_params",
+            "header": "include/recovered/Tmenu_params.h",
+            "status": "MISMATCH",
+            "historical_size": 60,
+            "candidate_size": 60,
+            "member_difference_count": 3,
+            "first_member_differences": [
+              {
+                "member": "bullet",
+                "historical": {
+                  "offset": 44,
+                  "size": 4,
+                  "type": "BITMAP *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 44,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 52,
+                  "size": 4,
+                  "type": "DATAFILE *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 52,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "font",
+                "historical": {
+                  "offset": 0,
+                  "size": 4,
+                  "type": "FONT *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 0,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          },
+          {
+            "position": "parameter 3",
+            "historical_type": "Tmenu_params",
+            "candidate_type": "Tmenu_params",
+            "header": "include/recovered/Tmenu_params.h",
+            "status": "MISMATCH",
+            "historical_size": 60,
+            "candidate_size": 60,
+            "member_difference_count": 3,
+            "first_member_differences": [
+              {
+                "member": "bullet",
+                "historical": {
+                  "offset": 44,
+                  "size": 4,
+                  "type": "BITMAP *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 44,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "data",
+                "historical": {
+                  "offset": 52,
+                  "size": 4,
+                  "type": "DATAFILE *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 52,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "font",
+                "historical": {
+                  "offset": 0,
+                  "size": 4,
+                  "type": "FONT *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 0,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ]
+      },
+      {
+        "function": "is_up",
+        "source": "src/menu.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          114,
+          390
+        ],
+        "candidate_card": "docs/current/interfaces/is_up.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "Tcontrol*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "Tcontrol*"
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [
+      "draw_menu"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "stepIn",

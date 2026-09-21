@@ -473,6 +473,7 @@
   "calls": [
     {
       "symbol": "_sprintf",
+      "function": "sprintf",
       "function_offset": 60,
       "target_va": 4959584,
       "verified": true,
@@ -483,6 +484,7 @@
     },
     {
       "symbol": "_fopen",
+      "function": "fopen",
       "function_offset": 76,
       "target_va": 4959528,
       "verified": true,
@@ -493,6 +495,7 @@
     },
     {
       "symbol": "_malloc",
+      "function": "malloc",
       "function_offset": 94,
       "target_va": 4959504,
       "verified": true,
@@ -503,6 +506,7 @@
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 36,
       "target_va": 4209220,
       "verified": true,
@@ -513,6 +517,7 @@
     },
     {
       "symbol": "_fread",
+      "function": "fread",
       "function_offset": 124,
       "target_va": 4959520,
       "verified": true,
@@ -523,6 +528,7 @@
     },
     {
       "symbol": "_get_controls",
+      "function": "get_controls",
       "function_offset": 129,
       "target_va": 4221304,
       "verified": true,
@@ -533,6 +539,7 @@
     },
     {
       "symbol": "_load_control",
+      "function": "load_control",
       "function_offset": 141,
       "target_va": 4200704,
       "verified": true,
@@ -543,6 +550,7 @@
     },
     {
       "symbol": "_fclose",
+      "function": "fclose",
       "function_offset": 149,
       "target_va": 4959536,
       "verified": true,
@@ -721,6 +729,218 @@
   "verification_command": "python tools/check_function.py game-profile load_profile",
   "begin_command": "python tools/grinder_task.py begin game-profile load_profile",
   "promotion_command": "python tools/promote_function.py game-profile load_profile",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "get_profile_dir_for_profile",
+        "source": "src/profile.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          36
+        ],
+        "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "char*",
+              "unsigned int",
+              "const char*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "char*",
+              "unsigned int",
+              "const char*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      },
+      {
+        "function": "get_controls",
+        "source": "src/profile.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          129
+        ],
+        "candidate_card": "docs/current/interfaces/get_controls.json",
+        "local_declarations": [
+          {
+            "return_type": "void*",
+            "parameter_types": [],
+            "canonical_return_type": "void*",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "Tcontrol",
+            "candidate_type": "void",
+            "header": "include/recovered/Tcontrol.h",
+            "status": "UNAVAILABLE",
+            "reason": "Candidate named type layout is missing or ambiguous"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "load_control",
+        "source": "src/profile.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          141
+        ],
+        "candidate_card": "docs/current/interfaces/load_control.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "void*",
+              "void*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "void*",
+              "void*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Tcontrol",
+            "candidate_type": "void",
+            "header": "include/recovered/Tcontrol.h",
+            "status": "UNAVAILABLE",
+            "reason": "Candidate named type layout is missing or ambiguous"
+          }
+        ],
+        "call_offset_count": 1
+      },
+      {
+        "function": "generate_profile_checksum",
+        "source": "src/profile.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          157
+        ],
+        "candidate_card": "docs/current/interfaces/generate_profile_checksum.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "Tprofile_checksum*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "Tprofile_checksum*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "Tprofile",
+            "candidate_type": "Tprofile_checksum",
+            "header": "include/recovered/Tprofile.h",
+            "status": "MISMATCH",
+            "historical_size": 1360,
+            "candidate_size": 1364,
+            "member_difference_count": 32,
+            "first_member_differences": [
+              {
+                "member": "before_checksum",
+                "historical": null,
+                "candidate": {
+                  "offset": 0,
+                  "size": 40,
+                  "type": "unsigned char [40]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "best_combo",
+                "historical": {
+                  "offset": 80,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "best_floor",
+                "historical": {
+                  "offset": 76,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "best_replay_names",
+                "historical": {
+                  "offset": 220,
+                  "size": 1024,
+                  "type": "char [32][32]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "best_score",
+                "historical": {
+                  "offset": 84,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "biggest_lost_combo",
+                "historical": {
+                  "offset": 92,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [
+      "generate_profile_checksum",
+      "get_controls",
+      "get_profile_dir_for_profile",
+      "load_control"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [
     {
@@ -941,6 +1161,7 @@
   "evidence_counts": {
     "relocation_mismatches": 1,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 4,
     "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

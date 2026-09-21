@@ -466,48 +466,56 @@
   "calls": [
     {
       "symbol": "_create_bitmap",
+      "function": "create_bitmap",
       "function_offset": 45,
       "target_va": 4518896,
       "verified": true
     },
     {
       "symbol": "_set_trans_blender",
+      "function": "set_trans_blender",
       "function_offset": 162,
       "target_va": 4572632,
       "verified": true
     },
     {
       "symbol": "_drawing_mode",
+      "function": "drawing_mode",
       "function_offset": 198,
       "target_va": 4505428,
       "verified": true
     },
     {
       "symbol": "_makecol",
+      "function": "makecol",
       "function_offset": 226,
       "target_va": 4525208,
       "verified": true
     },
     {
       "symbol": "_solid_mode",
+      "function": "solid_mode",
       "function_offset": 288,
       "target_va": 4506248,
       "verified": true
     },
     {
       "symbol": "_rest",
+      "function": "rest",
       "function_offset": 320,
       "target_va": 4578984,
       "verified": true
     },
     {
       "symbol": "_destroy_bitmap",
+      "function": "destroy_bitmap",
       "function_offset": 367,
       "target_va": 4518220,
       "verified": true
     },
     {
       "symbol": "blit_to_screen",
+      "function": "blit_to_screen",
       "function_offset": 296,
       "target_va": 4241084,
       "verified": true
@@ -696,6 +704,46 @@
   "verification_command": "python tools/check_function.py game-main fadeIn",
   "begin_command": "python tools/grinder_task.py begin game-main fadeIn",
   "promotion_command": "python tools/promote_function.py game-main fadeIn --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "blit_to_screen",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          296
+        ],
+        "candidate_card": "docs/current/interfaces/blit_to_screen.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],

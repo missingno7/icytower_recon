@@ -319,6 +319,7 @@
   "calls": [
     {
       "symbol": "set_current_avatar",
+      "function": "set_current_avatar",
       "function_offset": 78,
       "target_va": 4222180,
       "verified": true,
@@ -329,6 +330,7 @@
     },
     {
       "symbol": "_get_profile_dir_for_profile",
+      "function": "get_profile_dir_for_profile",
       "function_offset": 110,
       "target_va": 4209220,
       "verified": true,
@@ -457,6 +459,42 @@
   "verification_command": "python tools/check_function.py game-main syncOptionsFromProfile",
   "begin_command": "python tools/grinder_task.py begin game-main syncOptionsFromProfile",
   "promotion_command": "python tools/promote_function.py game-main syncOptionsFromProfile --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "get_profile_dir_for_profile",
+        "source": "src/main.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          110
+        ],
+        "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "char*",
+              "size_t",
+              "const char*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "char*",
+              "size_t",
+              "const char*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [
     {
       "name": "options",
@@ -521,6 +559,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 1,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

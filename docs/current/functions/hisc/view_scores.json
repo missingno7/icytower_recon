@@ -1296,6 +1296,7 @@
   "calls": [
     {
       "symbol": "_create_bitmap",
+      "function": "create_bitmap",
       "function_offset": 45,
       "target_va": 4518896,
       "verified": true,
@@ -1307,6 +1308,7 @@
     },
     {
       "symbol": "_blit",
+      "function": "blit",
       "function_offset": 127,
       "target_va": 4547172,
       "verified": false,
@@ -1319,6 +1321,7 @@
     },
     {
       "symbol": "_clear_keybuf",
+      "function": "clear_keybuf",
       "function_offset": 132,
       "target_va": 4447324,
       "verified": false,
@@ -1331,6 +1334,7 @@
     },
     {
       "symbol": "_get_controls",
+      "function": "get_controls",
       "function_offset": 141,
       "target_va": 4221304,
       "verified": false,
@@ -1346,6 +1350,7 @@
     },
     {
       "symbol": "_poll_control",
+      "function": "poll_control",
       "function_offset": 157,
       "target_va": 4200792,
       "verified": false,
@@ -1357,6 +1362,7 @@
     },
     {
       "symbol": "_is_any",
+      "function": "is_any",
       "function_offset": 170,
       "target_va": 4200680,
       "verified": false,
@@ -1367,6 +1373,7 @@
     },
     {
       "symbol": "draw_table",
+      "function": "draw_table",
       "function_offset": 254,
       "target_va": 4213372,
       "verified": false,
@@ -1378,6 +1385,7 @@
     },
     {
       "symbol": "_makecol",
+      "function": "makecol",
       "function_offset": 385,
       "target_va": 4525208,
       "verified": false,
@@ -1787,7 +1795,7 @@
   "priority": -20,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_table",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1814,6 +1822,185 @@
   "verification_command": "python tools/check_function.py game-hisc view_scores",
   "begin_command": "python tools/grinder_task.py begin game-hisc view_scores",
   "promotion_command": "python tools/promote_function.py game-hisc view_scores",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "draw_table",
+        "source": "src/hisc.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          254,
+          677
+        ],
+        "candidate_card": "docs/current/interfaces/draw_table.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "void*",
+              "int",
+              "int",
+              "char*",
+              "Thisc_table*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "void*",
+              "int",
+              "int",
+              "char*",
+              "Thisc_table*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 5",
+            "historical_type": "Thisc_table",
+            "candidate_type": "Thisc_table",
+            "header": "include/recovered/Thisc_table.h",
+            "status": "MISMATCH",
+            "historical_size": 36,
+            "candidate_size": 36,
+            "member_difference_count": 1,
+            "first_member_differences": [
+              {
+                "member": "posts",
+                "historical": {
+                  "offset": 32,
+                  "size": 4,
+                  "type": "Thisc *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 32,
+                  "size": 4,
+                  "type": "Thisc_post *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ],
+        "call_offset_count": 2
+      },
+      {
+        "function": "get_controls",
+        "source": "src/hisc.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          141,
+          162,
+          1234,
+          1255,
+          1289,
+          1323
+        ],
+        "candidate_card": "docs/current/interfaces/get_controls.json",
+        "local_declarations": [
+          {
+            "return_type": "Tcontrol*",
+            "parameter_types": [],
+            "canonical_return_type": "Tcontrol*",
+            "canonical_parameter_types": []
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 6
+      },
+      {
+        "function": "poll_control",
+        "source": "src/hisc.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          157,
+          1250
+        ],
+        "candidate_card": "docs/current/interfaces/poll_control.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "Tcontrol*",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "Tcontrol*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 2
+      },
+      {
+        "function": "blit_to_screen",
+        "source": "src/hisc.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1229,
+          1679
+        ],
+        "candidate_card": "docs/current/interfaces/blit_to_screen.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "BITMAP*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "BITMAP*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 2
+      },
+      {
+        "function": "is_up",
+        "source": "src/hisc.c",
+        "blocking": false,
+        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
+        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
+        "call_offsets": [
+          1263
+        ],
+        "candidate_card": "docs/current/interfaces/is_up.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "Tcontrol*"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "Tcontrol*"
+            ]
+          }
+        ],
+        "layout_issues": [],
+        "call_offset_count": 1
+      }
+    ],
+    "blocking_functions": [
+      "draw_table"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
+    "omitted_observations": 0
+  },
   "storage_declarations": [],
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
@@ -1902,6 +2089,7 @@
     "frame_local_declarations": 16,
     "relocation_mismatches": 79,
     "direct_transfer_mismatches": 2,
+    "callee_interface_observations": 5,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 3,

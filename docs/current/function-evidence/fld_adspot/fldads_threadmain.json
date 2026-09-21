@@ -944,66 +944,77 @@
   "calls": [
     {
       "symbol": "_stat",
+      "function": "stat",
       "function_offset": 35,
       "target_va": 4926960,
       "verified": true
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 51,
       "target_va": 4250200,
       "verified": true
     },
     {
       "symbol": "_HTTPGet",
+      "function": "HTTPGet",
       "function_offset": 63,
       "target_va": 4219284,
       "verified": true
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 94,
       "target_va": 4250200,
       "verified": false
     },
     {
       "symbol": "_destroyHTTPResponse",
+      "function": "destroyHTTPResponse",
       "function_offset": 102,
       "target_va": 4217104,
       "verified": false
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 123,
       "target_va": 4250200,
       "verified": false
     },
     {
       "symbol": "_time",
+      "function": "time",
       "function_offset": 153,
       "target_va": 4959608,
       "verified": false
     },
     {
       "symbol": "_log2file",
+      "function": "log2file",
       "function_offset": 169,
       "target_va": 4250200,
       "verified": false
     },
     {
       "symbol": "fldads_load_local_cache",
+      "function": "fldads_load_local_cache",
       "function_offset": 8,
       "target_va": 4210308,
       "verified": true
     },
     {
       "symbol": "fldads_get_local_cache_name",
+      "function": "fldads_get_local_cache_name",
       "function_offset": 20,
       "target_va": 4209732,
       "verified": true
     },
     {
       "symbol": "fldads_update_cache",
+      "function": "fldads_update_cache",
       "function_offset": 194,
       "target_va": 4210596,
       "verified": false
@@ -1544,11 +1555,11 @@
       }
     }
   ],
-  "difficulty": "MEDIUM",
-  "priority": 94,
+  "difficulty": "SUPERVISOR",
+  "priority": -25,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, cheap_difference_class",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: HTTPGet, destroyHTTPResponse, fldads_update_cache, log2file",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1575,6 +1586,248 @@
   "verification_command": "python tools/check_function.py game-fld-adspot fldads_threadmain",
   "begin_command": "python tools/grinder_task.py begin game-fld-adspot fldads_threadmain",
   "promotion_command": "python tools/promote_function.py game-fld-adspot fldads_threadmain",
+  "callee_interface_scope": {
+    "observations": [
+      {
+        "function": "HTTPGet",
+        "source": "src/fld_adspot.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          63
+        ],
+        "candidate_card": "docs/current/interfaces/HTTPGet.json",
+        "local_declarations": [
+          {
+            "return_type": "HTTPResponse*",
+            "parameter_types": [
+              "char*"
+            ],
+            "canonical_return_type": "HTTPResponse*",
+            "canonical_parameter_types": [
+              "char*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "return",
+            "historical_type": "HTTPResponse",
+            "candidate_type": "HTTPResponse",
+            "header": "include/recovered/HTTPResponse.h",
+            "status": "MISMATCH",
+            "historical_size": 20,
+            "candidate_size": 20,
+            "member_difference_count": 3,
+            "first_member_differences": [
+              {
+                "member": "iNumHeaders",
+                "historical": {
+                  "offset": 4,
+                  "size": 4,
+                  "type": "unsigned int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 4,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "iPayloadSize",
+                "historical": {
+                  "offset": 16,
+                  "size": 4,
+                  "type": "unsigned int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 16,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "pHeaders",
+                "historical": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "HTTPHeader *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ]
+      },
+      {
+        "function": "destroyHTTPResponse",
+        "source": "src/fld_adspot.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          102
+        ],
+        "candidate_card": "docs/current/interfaces/destroyHTTPResponse.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "HTTPResponse*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "HTTPResponse*"
+            ]
+          }
+        ],
+        "layout_issues": [
+          {
+            "position": "parameter 1",
+            "historical_type": "HTTPResponse",
+            "candidate_type": "HTTPResponse",
+            "header": "include/recovered/HTTPResponse.h",
+            "status": "MISMATCH",
+            "historical_size": 20,
+            "candidate_size": 20,
+            "member_difference_count": 3,
+            "first_member_differences": [
+              {
+                "member": "iNumHeaders",
+                "historical": {
+                  "offset": 4,
+                  "size": 4,
+                  "type": "unsigned int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 4,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "iPayloadSize",
+                "historical": {
+                  "offset": 16,
+                  "size": 4,
+                  "type": "unsigned int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 16,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "pHeaders",
+                "historical": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "HTTPHeader *",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": {
+                  "offset": 8,
+                  "size": 4,
+                  "type": "void *",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          }
+        ]
+      },
+      {
+        "function": "fldads_update_cache",
+        "source": "src/fld_adspot.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          194
+        ],
+        "candidate_card": "docs/current/interfaces/fldads_update_cache.json",
+        "local_declarations": [
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "unsigned char*",
+              "int"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "unsigned char*",
+              "int"
+            ]
+          }
+        ],
+        "layout_issues": []
+      },
+      {
+        "function": "log2file",
+        "source": "src/fld_adspot.c",
+        "blocking": true,
+        "state": "LOCAL_INTERFACE_CONFLICT",
+        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
+        "call_offsets": [
+          51,
+          94,
+          123,
+          169
+        ],
+        "candidate_card": "docs/current/interfaces/log2file.json",
+        "local_declarations": [
+          {
+            "return_type": "int",
+            "parameter_types": [
+              "/*???*/"
+            ],
+            "canonical_return_type": "int",
+            "canonical_parameter_types": [
+              "/*???*/"
+            ]
+          }
+        ],
+        "layout_issues": []
+      }
+    ],
+    "blocking_functions": [
+      "HTTPGet",
+      "destroyHTTPResponse",
+      "fldads_update_cache",
+      "log2file"
+    ],
+    "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
+  },
   "storage_declarations": [
     {
       "name": "giAdCacheSize",
