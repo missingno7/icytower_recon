@@ -1,3 +1,4 @@
+#include <allegro.h>
 #include "recovered/Tcontrol.h"
 extern void poll_control(Tcontrol*, int);
 extern int is_up(Tcontrol*);
@@ -209,17 +210,9 @@ typedef struct Tprofile_datafile {
 
 extern Tprofile_datafile *data;
 extern int makecol(int r, int g, int b);
-extern void textprintf_ex(void *dst, void *font, int x, int y, int color,
-                          int background, const char *format, ...);
-extern void *font;
-extern int text_height(void *font);
 extern int stricmp(const char *s1, const char *s2);
-extern void draw_sprite(void *bmp, void *sprite, int x, int y);
 extern void set_trans_blender(int r, int g, int b, int a);
-extern void drawing_mode(int mode, void *pattern, int x_anchor, int y_anchor);
 extern void solid_mode(void);
-extern void rectfill(void *bmp, int x1, int y1, int x2, int y2, int color);
-extern void set_clip_rect(void *bmp, int x1, int y1, int x2, int y2);
 
 void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
                            int numProfiles, int selection, int offset,
@@ -275,7 +268,7 @@ void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
     set_clip_rect(bmp,0,0,((int *)bmp)[0]-1,((int *)bmp)[1]-1);
 }
 
-int draw_buffer(void *bmp, char *buffer, int x, int y)
+int draw_buffer(BITMAP *bmp, char *buffer, int x, int y)
 {
     int pos;
     char tempBuf[256];
@@ -388,10 +381,8 @@ typedef struct Tprofile_tm {
     int tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year;
 } Tprofile_tm;
 
-extern int exists(char *file);
 extern void log2file(char *format, ...);
 extern long time(long *t);
-extern Tprofile_tm *localtime(long *t);
 extern void init_control(Tcontrol*);
 extern int save_profile(Tprofile_create *p);
 
@@ -542,7 +533,6 @@ char *profile_data_page_general(Tprofile_general *p, char *filler)
     return data;
 }
 
-extern int file_exists(char *filename, int attrib, int not_attrib);
 
 int save_profile(Tprofile_create *p)
 {
@@ -616,23 +606,11 @@ typedef struct Tprofile_bitmap {
     int h;
 } Tprofile_bitmap;
 
-typedef struct Tprofile_gfx_driver {
-    unsigned char before_h[0x6c];
-    int h;
-    int w;
-} Tprofile_gfx_driver;
-
-extern void *screen;
 extern void *swap_screen;
-extern Tprofile_gfx_driver *gfx_driver;
 extern volatile int cycle_count;
 extern int closeButtonClicked;
-extern void *create_bitmap(int w, int h);
-extern void destroy_bitmap(void *bmp);
-extern void clear_to_color(void *bmp, int color);
 extern int keypressed(void);
 extern void clear_keybuf(void);
-extern void rest(int time);
 extern void checkMenuFocus(void);
 extern void blit_to_screen(void *bmp);
 
@@ -704,8 +682,8 @@ void view_profile(void *profile)
         draw_sprite(swap_screen, bg, 0, 0);
         set_trans_blender(0, 0, 0, (500 - pageY) / 3);
         drawing_mode(5, 0, 0, 0);
-        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
-                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        rectfill(swap_screen, 0, 0, SCREEN_W,
+                 SCREEN_H, makecol(0, 0, 0));
         solid_mode();
         draw_sprite(swap_screen, bmp, 70, pageY);
         blit_to_screen(swap_screen);
@@ -725,8 +703,8 @@ void view_profile(void *profile)
         draw_sprite(swap_screen, bg, 0, 0);
         set_trans_blender(0, 0, 0, (500 - pageY) / 3);
         drawing_mode(5, 0, 0, 0);
-        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
-                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        rectfill(swap_screen, 0, 0, SCREEN_W,
+                 SCREEN_H, makecol(0, 0, 0));
         solid_mode();
         draw_sprite(swap_screen, bmp, 70, pageY);
         pageY += (int)((targetY - pageY) * 0.2f);
@@ -745,8 +723,6 @@ void view_profile(void *profile)
 
 #include "recovered/Tcontrol.h"
 typedef Tcontrol Tprofile_control;
-extern void blit(void *src, void *dst, int sx, int sy, int dx, int dy,
-                 int w, int h);
 extern int readkey(void);
 extern void simulate_keypress(int keycode);
 extern int my_alert(char *func, char *txt, int choice, int enter_hint);
@@ -754,8 +730,7 @@ extern int rebuild_profile_list(char **profs);
 extern void replaceBadCharacters(char *string, char newChar);
 extern void play_menu_select(void);
 extern void play_menu_move(void);
-extern int get_string(void *bmp, char *text, int w, int max_chars, void *fnt,
-                      int pos_x, int pos_y, int colour, int bg_color);
+extern int get_string(BITMAP*, char*, int, int, FONT*, int, int, int, int);
 
 /* Recovered from profile.c lines 705--867.  The selector owns neither the
  * packed name list nor its input control; it returns a newly loaded profile. */
@@ -849,8 +824,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     set_trans_blender(0, 0, 0, 158);
                     drawing_mode(5, 0, 0, 0);
                     rectfill(swap_screen, 0, 0,
-                             gfx_driver ? gfx_driver->w : 0,
-                             gfx_driver ? gfx_driver->h : 0,
+                             SCREEN_W,
+                             SCREEN_H,
                              makecol(0, 0, 0));
                     solid_mode();
                     input[0] = 0;
@@ -887,8 +862,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
         blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);
         set_trans_blender(0, 0, 0, (500 - pageY) / 3);
         drawing_mode(5, 0, 0, 0);
-        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
-                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        rectfill(swap_screen, 0, 0, SCREEN_W,
+                 SCREEN_H, makecol(0, 0, 0));
         solid_mode();
         draw_profile_selector(swap_screen, (char *)current_profile + 6,
                               profiles, numProfiles, profileIndex, offset,
@@ -906,8 +881,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
         blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);
         set_trans_blender(0, 0, 0, (500 - pageY) / 3);
         drawing_mode(5, 0, 0, 0);
-        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
-                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        rectfill(swap_screen, 0, 0, SCREEN_W,
+                 SCREEN_H, makecol(0, 0, 0));
         solid_mode();
         draw_profile_selector(swap_screen, (char *)current_profile + 6,
                               profiles, numProfiles, profileIndex, offset,

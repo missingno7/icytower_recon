@@ -70,35 +70,7 @@ static char replay_header[] = "ITR140";
 #include "recovered/Trecord.h"
 typedef Trecord Treplay_data;
 
-typedef struct Treplay {
-    char header[6];
-    int size;
-    char name[32];
-    char date[32];
-    int checksum;
-    int score;
-    int floor;
-    int combo;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    int ccc[5];
-    int jc[5];
-    int floor_shrink;
-    int floor_size;
-    int start_speed;
-    int speed_increase;
-    int gravity;
-    int rejump;
-    int random_seed;
-    char comment[42];
-    int tc_posts;
-    float tc_c_data[100];
-    float tc_q_data[100];
-    float tc_t_data[100];
-    float tc_s_data[100];
-    float tc_f_data[100];
-    Trecord *data;
-} Treplay;
+#include "recovered/Treplay.h"
 
 extern void free(void *ptr);
 extern int memcmp(const void *a, const void *b, size_t size);

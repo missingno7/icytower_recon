@@ -1,3 +1,4 @@
+#include "recovered/Tgame_data.h"
 /* Historical CU: F:\projects\icytower\trunk\source\game_data.c
  * Ownership: GAME
  * Partial source recovery.
@@ -11,31 +12,6 @@
 #include "recovered/Tgame_data.h"
 
 #include "recovered/Tcommandline.h"
-
-struct Treplay {
-    char header[6];
-    int size;
-    char name[32];
-    char date[32];
-    int checksum;
-    int score, floor, combo, no_combo_top_floor, biggest_lost_combo;
-    int ccc[5];
-    int jc[5];
-    int floor_shrink;
-    int floor_size;
-    int start_speed;
-    int speed_increase;
-    int gravity;
-    int rejump;
-    int random_seed;
-    char comment[42];
-    int tc_posts;
-    float tc_c_data[100];
-    float tc_q_data[100];
-    float tc_t_data[100];
-    float tc_s_data[100];
-    float tc_f_data[100];
-} Tgd_replay;
 
 extern void free(void *ptr);
 extern void *malloc(unsigned int size);
@@ -131,4 +107,4 @@ void add_combo(Tgame_data *gd,Tgd_combo *c)
     }
 }
 
-void destroy_game_data(void *gd) { free(gd); }
+void destroy_game_data(Tgame_data *gd) { free(gd); }

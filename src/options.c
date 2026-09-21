@@ -1,3 +1,5 @@
+#include "recovered/Toptions.h"
+#include <allegro.h>
 /* Historical CU: F:\projects\icytower\trunk\source\options.c
  * Ownership: GAME
  */
@@ -15,9 +17,6 @@ unsigned int hash3(unsigned int a)
 #include "recovered/Toptions.h"
 
 extern char *strcpy(char *dst,const char *src);
-extern int file_size_ex(const char *filename);
-extern long pack_fread(void *buffer,long bytes,void *fp);
-extern long pack_fwrite(const void *buffer,long bytes,void *fp);
 extern int get_sort_method(void);
 extern void set_sort_method(int sm);
 void reset_options(Toptions *o);
@@ -38,14 +37,14 @@ int generate_options_checksum(Toptions *o)
     return hash3(cs);
 }
 
-void save_options(Toptions *o,void *fp)
+void save_options(Toptions *o,PACKFILE *fp)
 {
     o->sort_method=get_sort_method();
     o->checksum=generate_options_checksum(o);
     pack_fwrite(o,sizeof(Toptions),fp);
 }
 
-void load_options(Toptions *o,void *fp)
+void load_options(Toptions *o,PACKFILE *fp)
 {
     int cs;
 

@@ -4,7 +4,7 @@
   "candidate_text_logical_size": 5682,
   "candidate_text_raw_size": 5684,
   "candidate_zero_clear_projection": {
-    "sha256": "0bc677b322d60dbc95123d997867e8b26ec4b4a32d7c9193161a783bb844b139",
+    "sha256": "e9b4418f883d6ff6d666f40e5790588a784c82e4741d540e2fa5d6d810767ffc",
     "blocks": [
       {
         "start": 2933,
@@ -117,9 +117,135 @@
             "assembly": "movl   $0xffffffff,-0x12c(%ebp)"
           }
         ]
+      },
+      {
+        "start": 26,
+        "end": 31,
+        "original_bytes": "3b50087e05",
+        "canonical_bytes": "3950087d05",
+        "instructions": [
+          {
+            "address": 26,
+            "bytes": "3b5008",
+            "mnemonic": "cmp",
+            "assembly": "cmp    0x8(%eax),%edx"
+          },
+          {
+            "address": 29,
+            "bytes": "7e05",
+            "mnemonic": "jle",
+            "assembly": "jle    24 <_set_slider_value+0x18>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 73,
+        "end": 78,
+        "original_bytes": "3b42047c06",
+        "canonical_bytes": "3942047f06",
+        "instructions": [
+          {
+            "address": 73,
+            "bytes": "3b4204",
+            "mnemonic": "cmp",
+            "assembly": "cmp    0x4(%edx),%eax"
+          },
+          {
+            "address": 76,
+            "bytes": "7c06",
+            "mnemonic": "jl",
+            "assembly": "jl     54 <_set_selection_value+0x18>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 4420,
+        "end": 4428,
+        "original_bytes": "39de0f845fffffff",
+        "canonical_bytes": "39f30f845fffffff",
+        "instructions": [
+          {
+            "address": 4420,
+            "bytes": "39de",
+            "mnemonic": "cmp",
+            "assembly": "cmp    %ebx,%esi"
+          },
+          {
+            "address": 4422,
+            "bytes": "0f845fffffff",
+            "mnemonic": "je",
+            "assembly": "je     10ab <_update_game_menu+0xaf>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 5320,
+        "end": 5328,
+        "original_bytes": "39ca0f8e02feffff",
+        "canonical_bytes": "39d10f8d02feffff",
+        "instructions": [
+          {
+            "address": 5320,
+            "bytes": "39ca",
+            "mnemonic": "cmp",
+            "assembly": "cmp    %ecx,%edx"
+          },
+          {
+            "address": 5322,
+            "bytes": "0f8e02feffff",
+            "mnemonic": "jle",
+            "assembly": "jle    12d2 <_handle_menu+0x8e>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 5522,
+        "end": 5530,
+        "original_bytes": "39ca0f8d38fdffff",
+        "canonical_bytes": "39d10f8e38fdffff",
+        "instructions": [
+          {
+            "address": 5522,
+            "bytes": "39ca",
+            "mnemonic": "cmp",
+            "assembly": "cmp    %ecx,%edx"
+          },
+          {
+            "address": 5524,
+            "bytes": "0f8d38fdffff",
+            "mnemonic": "jge",
+            "assembly": "jge    12d2 <_handle_menu+0x8e>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 5550,
+        "end": 5558,
+        "original_bytes": "39ca0f8e1cfdffff",
+        "canonical_bytes": "39d10f8d1cfdffff",
+        "instructions": [
+          {
+            "address": 5550,
+            "bytes": "39ca",
+            "mnemonic": "cmp",
+            "assembly": "cmp    %ecx,%edx"
+          },
+          {
+            "address": 5552,
+            "bytes": "0f8e1cfdffff",
+            "mnemonic": "jle",
+            "assembly": "jle    12d2 <_handle_menu+0x8e>"
+          }
+        ],
+        "kind": "compare_operand_order"
       }
     ],
-    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes; never FUNCTION_MATCH evidence."
+    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
   },
   "literal_anchor_evidence": [
     {
@@ -18296,8 +18422,8 @@
       "sha256": "aa92b816663b14e59e076abb3ee7f57f8baa404bb3d47b98e1dd10a434c494ae"
     },
     "tools/instructions.py": {
-      "size": 5659,
-      "sha256": "353918b21718e5348b699f662ef515ab97c2c0888fd0d5e6773e38004933f482"
+      "size": 9894,
+      "sha256": "68a490af18d04b4cf30f6a569067785f404e598742d47edce86e301385f3746f"
     },
     "tools/build.py": {
       "size": 10104,
@@ -18318,8 +18444,8 @@
   },
   "analysis_identity": {
     "tools/emission_order.py": {
-      "size": 12114,
-      "sha256": "fd25a0615ea33ccb05f6c7729590dba1edde4fc3a5e0bdfd43f5115a192b92f3"
+      "size": 18907,
+      "sha256": "9880040e74795a21acb5efdeca4793c9576002af07810030bf0034df5ca24e42"
     },
     "tools/type_trial_context.py": {
       "size": 2533,
@@ -18366,12 +18492,12 @@
       "sha256": "3ed060a7fb841191907c8a938257d82d827c80c53a0230f353992ed8eb29ad15"
     },
     "tools/typed_interface_tasks.py": {
-      "size": 9697,
-      "sha256": "7a22a8dfa7f64253a5b80dd9889ed2fe8024aa3a2e29327622d16edbd099d2d6"
+      "size": 13362,
+      "sha256": "d57146a8165d1095cb90982ee6afe6595571c18cebefac490af41f12003b2276"
     },
     "tools/interface_type_probe.py": {
-      "size": 6336,
-      "sha256": "f22a00a7d715acd116455ea3068c6a3830a3d366daf978c6f465bb6a6e922e82"
+      "size": 7355,
+      "sha256": "a3b20b5820b1a1fe21769503defa5d9f6efd1930809d9cfec9600d17d246f854"
     },
     "tools/relocation_diagnostics.py": {
       "size": 3346,
@@ -18418,8 +18544,8 @@
       "sha256": "ff4a31b0313e866f6d1ba5e1006e179f94df73a30e35f95326f3dc402f7ff481"
     },
     "tools/dwarf_locations.py": {
-      "size": 8586,
-      "sha256": "1881f3f4310146170f71dff87e354514d9d29a4d223ee6dde7aa960c6d5fa0b5"
+      "size": 8612,
+      "sha256": "f7b1ac4bff5d408822c8f03d6e2e6f075ca60ac7a29f193d61d45fb8f99e6c4f"
     },
     "tools/compiler_context.py": {
       "size": 8019,
@@ -29441,6 +29567,232 @@
     },
     "typedefs": [
       {
+        "name": "MENU_PLAYER",
+        "die": 14582,
+        "layout": {
+          "kind": "structure_type",
+          "size": 80,
+          "type": "struct MENU_PLAYER",
+          "members": [
+            {
+              "name": "menu",
+              "offset": 0,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "MENU *"
+              }
+            },
+            {
+              "name": "bar",
+              "offset": 4,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "size",
+              "offset": 8,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "sel",
+              "offset": 12,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "x",
+              "offset": 16,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "y",
+              "offset": 20,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "w",
+              "offset": 24,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "h",
+              "offset": 28,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "proc",
+              "offset": 32,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "int (*)(void)"
+              }
+            },
+            {
+              "name": "saved",
+              "offset": 36,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "BITMAP *"
+              }
+            },
+            {
+              "name": "mouse_button_was_pressed",
+              "offset": 40,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "back_from_child",
+              "offset": 44,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "timestamp",
+              "offset": 48,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "mouse_sel",
+              "offset": 52,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "redraw",
+              "offset": 56,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "auto_open",
+              "offset": 60,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "ret",
+              "offset": 64,
+              "bitfield": false,
+              "layout": {
+                "kind": "base_type",
+                "size": 4,
+                "type": "int",
+                "encoding": "5\t(signed)"
+              }
+            },
+            {
+              "name": "dialog",
+              "offset": 68,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "DIALOG *"
+              }
+            },
+            {
+              "name": "parent",
+              "offset": 72,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "struct MENU_PLAYER *"
+              }
+            },
+            {
+              "name": "child",
+              "offset": 76,
+              "bitfield": false,
+              "layout": {
+                "kind": "pointer_type",
+                "size": 4,
+                "type": "struct MENU_PLAYER *"
+              }
+            }
+          ]
+        },
+        "alias_of": null
+      },
+      {
         "name": "Tgamepad",
         "die": 18926,
         "layout": {
@@ -29625,8 +29977,10 @@
       }
     ],
     "requested_types": [
+      "MENU_PLAYER",
       "Tgamepad",
-      "Tmenu_char_selection"
+      "Tmenu_char_selection",
+      "Tprofile"
     ],
     "scope": "Missing interface typedef layouts only. Separate debug-retention build; exact non-debug bytes/symbols/relocations and input identities must match. No replacement of baseline typedefs or reconstruction proof."
   },

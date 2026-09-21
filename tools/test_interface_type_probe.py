@@ -40,6 +40,14 @@ class InterfaceTypeProbeTests(unittest.TestCase):
         self.assertEqual(member_pointee_names(g,{'Tcontrol'}),set())
         self.assertEqual(member_pointee_names(g,{'NoSuchType'}),set())
 
+    def test_interface_pointee_names_follow_historical_pointer_parameters_and_returns(self):
+        from interface_type_probe import interface_pointee_names
+        from type_graph import graph
+        g=graph()
+        names=interface_pointee_names(g,{'blit_to_screen','load_options','get_controls'})
+        self.assertTrue({'BITMAP','PACKFILE','Toptions','Tcontrol'}<=names,names)
+        self.assertEqual(interface_pointee_names(g,{'no_such_function'}),set())
+
     def test_existing_ambiguous_typedefs_are_not_replaced_by_probe(self):
         from interface_type_probe import requested_types
         report=fixture()

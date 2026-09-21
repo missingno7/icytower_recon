@@ -10,9 +10,9 @@
     "EXACT": 165,
     "SOURCE_CONTROL_FLOW_SHAPE": 10,
     "STACK_FRAME_LAYOUT": 18,
-    "UNKNOWN_SUPERVISOR": 12,
+    "UNKNOWN_SUPERVISOR": 11,
     "SAME_CU_CALL_LAYOUT": 22,
-    "REGISTER_OR_INSTRUCTION_SELECTION": 13,
+    "REGISTER_OR_INSTRUCTION_SELECTION": 14,
     "RELOCATION_OR_LITERAL_LAYOUT": 5,
     "LITERAL_CONTENT_DIFFERENCE": 3,
     "INSTRUCTION_ORDER": 1,
@@ -669,6 +669,31 @@
     {
       "source": "src/main.c",
       "target": "game-main",
+      "function": "new_game",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 10,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 69,
+        "original_va": 4250849,
+        "candidate_byte": 76,
+        "original_byte": 172
+      },
+      "verification_command": "python tools/check_function.py game-main new_game",
+      "begin_command": "python tools/grinder_task.py begin game-main new_game",
+      "promotion_command": "python tools/promote_function.py game-main new_game",
+      "body_edit_allowed": true,
+      "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class",
+      "size": 1139,
+      "candidate_card": "docs/current/functions/main/new_game.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/main.c",
+      "target": "game-main",
       "function": "fadeIn",
       "status": "FUNCTION_MATCH",
       "state": "BODY_MATCH_LAYOUT_BLOCKED",
@@ -861,144 +886,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "create_game_data",
-      "source": "src/game_data.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin create_game_data",
-      "verification_command": "python tools/interface_task.py check create_game_data",
-      "promotion_command": "python tools/interface_task.py promote create_game_data",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/create_game_data.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "new_game",
-          "candidate_card": "docs/current/functions/main/new_game.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "destroy_game_data",
-      "source": "src/game_data.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin destroy_game_data",
-      "verification_command": "python tools/interface_task.py check destroy_game_data",
-      "promotion_command": "python tools/interface_task.py promote destroy_game_data",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/destroy_game_data.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "new_game",
-          "candidate_card": "docs/current/functions/main/new_game.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "draw_table",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
-      "begin_command": "python tools/interface_task.py begin draw_table",
-      "verification_command": "python tools/interface_task.py check draw_table",
-      "promotion_command": "python tools/interface_task.py promote draw_table",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/draw_table.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/hisc.c",
-          "function": "view_scores",
-          "candidate_card": "docs/current/functions/hisc/view_scores.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "load_hisc_table",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin load_hisc_table",
-      "verification_command": "python tools/interface_task.py check load_hisc_table",
-      "promotion_command": "python tools/interface_task.py promote load_hisc_table",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/load_hisc_table.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "init_game",
-          "candidate_card": "docs/current/functions/main/init_game.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "save_hisc_table",
-      "source": "src/hisc.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin save_hisc_table",
-      "verification_command": "python tools/interface_task.py check save_hisc_table",
-      "promotion_command": "python tools/interface_task.py promote save_hisc_table",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_hisc_table.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "HTTPGet",
       "source": "src/httpget.c",
       "sources": null,
@@ -1130,142 +1017,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "task_kind": "CANONICAL_TYPE",
-      "function": "Treplay",
-      "source": "src/main.c",
-      "sources": [
-        "src/main.c",
-        "src/replay.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Tagged struct is used outside the replaceable declarations",
-      "state": "CANONICAL_TYPE_REPAIR",
-      "status": "DUPLICATE_TYPE",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_DECLARATION",
-      "begin_command": "python tools/interface_task.py begin Treplay",
-      "verification_command": "python tools/interface_task.py check Treplay",
-      "promotion_command": "python tools/interface_task.py promote Treplay",
-      "size": 0,
-      "candidate_card": "docs/current/types/Treplay.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "blit_to_screen",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
-      "begin_command": "python tools/interface_task.py begin blit_to_screen",
-      "verification_command": "python tools/interface_task.py check blit_to_screen",
-      "promotion_command": "python tools/interface_task.py promote blit_to_screen",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "drawSlot",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Implicit prototype needs non-builtin type visibility",
-      "begin_command": "python tools/interface_task.py begin drawSlot",
-      "verification_command": "python tools/interface_task.py check drawSlot",
-      "promotion_command": "python tools/interface_task.py promote drawSlot",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/drawSlot.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "get_string",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Implicit prototype needs non-builtin type visibility",
-      "begin_command": "python tools/interface_task.py begin get_string",
-      "verification_command": "python tools/interface_task.py check get_string",
-      "promotion_command": "python tools/interface_task.py promote get_string",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/get_string.json",
-      "size": 0,
-      "prerequisite_for_count": 4,
-      "prerequisite_for": [
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/main.c",
-          "function": "force_create_profile",
-          "candidate_card": "docs/current/functions/main/force_create_profile.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/main.c",
-          "function": "get_string",
-          "candidate_card": "docs/current/functions/main/get_string.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "handle_player_input",
       "source": "src/main.c",
       "sources": null,
@@ -1380,85 +1131,6 @@
           "source": "src/menu.c",
           "function": "update_game_menu",
           "candidate_card": "docs/current/functions/menu/update_game_menu.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "load_options",
-      "source": "src/options.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> PACKFILE*",
-      "begin_command": "python tools/interface_task.py begin load_options",
-      "verification_command": "python tools/interface_task.py check load_options",
-      "promotion_command": "python tools/interface_task.py promote load_options",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/load_options.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "save_options",
-      "source": "src/options.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> PACKFILE*",
-      "begin_command": "python tools/interface_task.py begin save_options",
-      "verification_command": "python tools/interface_task.py check save_options",
-      "promotion_command": "python tools/interface_task.py promote save_options",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/save_options.json",
-      "size": 0,
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "draw_buffer",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
-      "begin_command": "python tools/interface_task.py begin draw_buffer",
-      "verification_command": "python tools/interface_task.py check draw_buffer",
-      "promotion_command": "python tools/interface_task.py promote draw_buffer",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/draw_buffer.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "draw_buffer",
-          "candidate_card": "docs/current/functions/profile/draw_buffer.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
           "planned_in_caller_cu": true
         }
       ],
@@ -1764,48 +1436,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "new_game",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -20,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 69,
-        "original_va": 4250849,
-        "candidate_byte": 76,
-        "original_byte": 172
-      },
-      "verification_command": "python tools/check_function.py game-main new_game",
-      "begin_command": "python tools/grinder_task.py begin game-main new_game",
-      "promotion_command": "python tools/promote_function.py game-main new_game",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: create_game_data, destroy_game_data",
-      "size": 1139,
-      "candidate_card": "docs/current/functions/main/new_game.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "create_game_data",
-          "candidate_card": "docs/current/interfaces/create_game_data.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "destroy_game_data",
-          "candidate_card": "docs/current/interfaces/destroy_game_data.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/game_data.c",
       "target": "game-game-data",
       "function": "getGameDataXML",
@@ -1898,30 +1528,6 @@
       "promotion_command": "python tools/interface_task.py promote view_loadpng_MEMORY_READER_STATE",
       "size": 0,
       "candidate_card": "docs/current/type-views/view_loadpng_MEMORY_READER_STATE.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_main_Tgame_data",
-      "source": "src/main.c",
-      "sources": [
-        "src/main.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -25,
-      "reason": "Canonicalize included types first to avoid duplicate typedefs in this CU: Treplay",
-      "state": "WAITING_FOR_CANONICAL_DEPENDENCY",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_main_Tgame_data",
-      "verification_command": "python tools/interface_task.py check view_main_Tgame_data",
-      "promotion_command": "python tools/interface_task.py promote view_main_Tgame_data",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_main_Tgame_data.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
       "omitted_dependents": 0,
@@ -2175,12 +1781,12 @@
       "state": "SOURCE_DIFFER",
       "priority": -25,
       "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
       "first_difference": {
-        "offset": 508,
-        "original_va": 4303748,
-        "candidate_byte": 220,
-        "original_byte": 36
+        "offset": 69,
+        "original_va": 4303309,
+        "candidate_byte": 125,
+        "original_byte": 117
       },
       "verification_command": "python tools/check_function.py game-profile create_profile",
       "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
@@ -2902,40 +2508,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "draw_buffer",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 27,
-        "original_va": 4297187,
-        "candidate_byte": 137,
-        "original_byte": 141
-      },
-      "verification_command": "python tools/check_function.py game-profile draw_buffer",
-      "begin_command": "python tools/grinder_task.py begin game-profile draw_buffer",
-      "promotion_command": "python tools/promote_function.py game-profile draw_buffer",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 185,
-      "candidate_card": "docs/current/functions/profile/draw_buffer.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_buffer",
-          "candidate_card": "docs/current/interfaces/draw_buffer.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/menu.c",
       "target": "game-menu",
       "function": "update_game_menu",
@@ -2996,40 +2568,6 @@
         {
           "function": "handle_player_input",
           "candidate_card": "docs/current/interfaces/handle_player_input.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "get_string",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4242508,
-        "candidate_byte": 156,
-        "original_byte": 188
-      },
-      "verification_command": "python tools/check_function.py game-main get_string",
-      "begin_command": "python tools/grinder_task.py begin game-main get_string",
-      "promotion_command": "python tools/promote_function.py game-main get_string",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 790,
-      "candidate_card": "docs/current/functions/main/get_string.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "get_string",
-          "candidate_card": "docs/current/interfaces/get_string.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
@@ -3157,10 +2695,10 @@
       "difficulty": "SUPERVISOR",
       "difference_class": "STACK_FRAME_LAYOUT",
       "first_difference": {
-        "offset": 8,
-        "original_va": 4299508,
-        "candidate_byte": 76,
-        "original_byte": 92
+        "offset": 9,
+        "original_va": 4299509,
+        "candidate_byte": 12,
+        "original_byte": 8
       },
       "verification_command": "python tools/check_function.py game-profile view_profile",
       "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
@@ -3174,14 +2712,6 @@
         {
           "function": "blit_to_screen",
           "candidate_card": "docs/current/interfaces/blit_to_screen.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "draw_buffer",
-          "candidate_card": "docs/current/interfaces/draw_buffer.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
@@ -3206,48 +2736,6 @@
         {
           "function": "view_profile",
           "candidate_card": "docs/current/interfaces/view_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "do_replay_menu",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 194,
-        "original_va": 4264026,
-        "candidate_byte": 77,
-        "original_byte": 81
-      },
-      "verification_command": "python tools/check_function.py game-main do_replay_menu",
-      "begin_command": "python tools/grinder_task.py begin game-main do_replay_menu",
-      "promotion_command": "python tools/promote_function.py game-main do_replay_menu",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string",
-      "size": 2661,
-      "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "drawSlot",
-          "candidate_card": "docs/current/interfaces/drawSlot.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "get_string",
-          "candidate_card": "docs/current/interfaces/get_string.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
@@ -3299,10 +2787,10 @@
       "difficulty": "SUPERVISOR",
       "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
       "first_difference": {
-        "offset": 13,
-        "original_va": 4304077,
-        "candidate_byte": 125,
-        "original_byte": 117
+        "offset": 12,
+        "original_va": 4304076,
+        "candidate_byte": 161,
+        "original_byte": 139
       },
       "verification_command": "python tools/check_function.py game-profile select_profile",
       "begin_command": "python tools/grinder_task.py begin game-profile select_profile",
@@ -3318,7 +2806,7 @@
           "candidate_card": "docs/current/interfaces/blit_to_screen.json",
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
+          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
@@ -3327,14 +2815,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "get_string",
-          "candidate_card": "docs/current/interfaces/get_string.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {
@@ -3378,16 +2858,7 @@
       "size": 5788,
       "candidate_card": "docs/current/functions/main/init_game.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "load_hisc_table",
-          "candidate_card": "docs/current/interfaces/load_hisc_table.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "source": "src/main.c",
@@ -3433,20 +2904,11 @@
       "begin_command": "python tools/grinder_task.py begin game-main force_create_profile",
       "promotion_command": "python tools/promote_function.py game-main force_create_profile",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_string",
+      "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
       "size": 1538,
       "candidate_card": "docs/current/functions/main/force_create_profile.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "get_string",
-          "candidate_card": "docs/current/interfaces/get_string.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "source": "src/main.c",
@@ -3593,6 +3055,43 @@
       "candidate_card": "docs/current/type-views/view_httpget_HTTPResponse.json",
       "prerequisite_for_count": 0,
       "prerequisite_for": [],
+      "omitted_dependents": 0,
+      "dependency_priority_bonus": 0
+    },
+    {
+      "function": "blit_to_screen",
+      "source": "src/main.c",
+      "sources": [
+        "src/profile.c"
+      ],
+      "difficulty": "SUPERVISOR",
+      "priority": -100,
+      "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
+      "begin_command": "python tools/interface_task.py begin blit_to_screen",
+      "verification_command": "python tools/interface_task.py check blit_to_screen",
+      "promotion_command": "python tools/interface_task.py promote blit_to_screen",
+      "state": "INTERFACE_REPAIR",
+      "status": "INTERFACE_CONFLICT",
+      "body_edit_allowed": false,
+      "difference_class": "INTERFACE_DECLARATION",
+      "task_kind": "INTERFACE",
+      "candidate_card": "docs/current/interfaces/blit_to_screen.json",
+      "size": 0,
+      "prerequisite_for_count": 2,
+      "prerequisite_for": [
+        {
+          "source": "src/profile.c",
+          "function": "select_profile",
+          "candidate_card": "docs/current/functions/profile/select_profile.json",
+          "planned_in_caller_cu": true
+        },
+        {
+          "source": "src/profile.c",
+          "function": "view_profile",
+          "candidate_card": "docs/current/functions/profile/view_profile.json",
+          "planned_in_caller_cu": true
+        }
+      ],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
     },
@@ -3838,20 +3337,11 @@
       "begin_command": "python tools/grinder_task.py begin game-hisc view_scores",
       "promotion_command": "python tools/promote_function.py game-hisc view_scores",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: draw_table",
+      "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class",
       "size": 2552,
       "candidate_card": "docs/current/functions/hisc/view_scores.json",
       "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_table",
-          "candidate_card": "docs/current/interfaces/draw_table.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
+      "prerequisite_tasks": []
     },
     {
       "source": "src/main.c",

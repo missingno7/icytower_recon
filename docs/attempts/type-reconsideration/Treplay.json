@@ -1,0 +1,223 @@
+{
+  "task": "Treplay",
+  "prior_block": {
+    "reason": "check failed: Focused contribution evidence: docs/attempts/interface-diagnostics/Treplay/game-main-71a0e04fc3f6d89b103165cad4496add1015e0b72892c108db4dc674b98703ca.json\nFocused contribution evidence: docs/attempts/interface-diagnostics/Treplay/game-replay-96c780eec610d7b818f9fd494579aa51da9c082535a9c9c060adea4fc39c8807.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-replay",
+    "changes": [
+      {
+        "file": "src/main.c",
+        "start": 2411,
+        "end": 2998,
+        "before": "typedef struct Treplay {\n    char header[6];\n    int size;\n    char name[32];\n    char date[32];\n    int checksum;\n    int score;\n    int floor;\n    int combo;\n    int no_combo_top_floor;\n    int biggest_lost_combo;\n    int ccc[5];\n    int jc[5];\n    int floor_shrink;\n    int floor_size;\n    int start_speed;\n    int speed_increase;\n    int gravity;\n    int rejump;\n    int random_seed;\n    char comment[42];\n    int tc_posts;\n    float tc_c_data[100];\n    float tc_q_data[100];\n    float tc_t_data[100];\n    float tc_s_data[100];\n    float tc_f_data[100];\n    Trecord *data;\n} Treplay;",
+        "after": "#include \"recovered/Treplay.h\"",
+        "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+      },
+      {
+        "file": "src/replay.c",
+        "start": 2279,
+        "end": 2866,
+        "before": "typedef struct Treplay {\n    char header[6];\n    int size;\n    char name[32];\n    char date[32];\n    int checksum;\n    int score;\n    int floor;\n    int combo;\n    int no_combo_top_floor;\n    int biggest_lost_combo;\n    int ccc[5];\n    int jc[5];\n    int floor_shrink;\n    int floor_size;\n    int start_speed;\n    int speed_increase;\n    int gravity;\n    int rejump;\n    int random_seed;\n    char comment[42];\n    int tc_posts;\n    float tc_c_data[100];\n    float tc_q_data[100];\n    float tc_t_data[100];\n    float tc_s_data[100];\n    float tc_f_data[100];\n    Trecord *data;\n} Treplay;",
+        "after": "#include \"recovered/Treplay.h\"",
+        "reason": "Member declaration tokens equal the generated historical type exactly; use its canonical declaration and assertions"
+      }
+    ],
+    "failure_context": {
+      "outcome": "FAST_FAILED",
+      "error": "Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-replay",
+      "evidence": [
+        {
+          "path": "docs/attempts/interface-diagnostics/Treplay/game-main-71a0e04fc3f6d89b103165cad4496add1015e0b72892c108db4dc674b98703ca.json",
+          "identity": {
+            "size": 235,
+            "sha256": "71a0e04fc3f6d89b103165cad4496add1015e0b72892c108db4dc674b98703ca"
+          },
+          "changed_function_count": 0,
+          "changed_functions": [],
+          "omitted_changed_functions": 0
+        },
+        {
+          "path": "docs/attempts/interface-diagnostics/Treplay/game-replay-96c780eec610d7b818f9fd494579aa51da9c082535a9c9c060adea4fc39c8807.json",
+          "identity": {
+            "size": 8212,
+            "sha256": "96c780eec610d7b818f9fd494579aa51da9c082535a9c9c060adea4fc39c8807"
+          },
+          "changed_function_count": 1,
+          "changed_functions": [
+            {
+              "function": "replay_selector",
+              "source_body_unchanged": true,
+              "size_before": 1902,
+              "size_after": 1902,
+              "original_comparison": {
+                "before": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "STACK_FRAME_LAYOUT",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 2845,
+                  "candidate_size": 1902,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 8,
+                    "original_va": 4313696,
+                    "candidate_byte": 92,
+                    "original_byte": 108
+                  },
+                  "relocation_mismatch_count": 74,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 69,
+                      "symbol": "_gfx_driver",
+                      "resolved_value": 5102212,
+                      "original_value": 2675,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 138,
+                      "symbol": "_screen",
+                      "resolved_value": 5102220,
+                      "original_value": 233342,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 146,
+                      "symbol": "_blit",
+                      "resolved_value": 233334,
+                      "original_value": 1619036928,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 151,
+                      "symbol": "_data",
+                      "resolved_value": 5100092,
+                      "original_value": 2493710336,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 170,
+                      "symbol": "_font",
+                      "resolved_value": 5033108,
+                      "original_value": 2298478593,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 178,
+                      "symbol": "_text_height",
+                      "resolved_value": 249138,
+                      "original_value": 2240412663,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 68,
+                  "direct_transfer_mismatch_count": 6,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                },
+                "after": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "STACK_FRAME_LAYOUT",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 2845,
+                  "candidate_size": 1902,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 8,
+                    "original_va": 4313696,
+                    "candidate_byte": 92,
+                    "original_byte": 108
+                  },
+                  "relocation_mismatch_count": 74,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 69,
+                      "symbol": "_gfx_driver",
+                      "resolved_value": 5102212,
+                      "original_value": 2675,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 138,
+                      "symbol": "_screen",
+                      "resolved_value": 5102220,
+                      "original_value": 233342,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 146,
+                      "symbol": "_blit",
+                      "resolved_value": 233334,
+                      "original_value": 1619036928,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 151,
+                      "symbol": "_data",
+                      "resolved_value": 5100092,
+                      "original_value": 2493710336,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 170,
+                      "symbol": "_font",
+                      "resolved_value": 5033108,
+                      "original_value": 2298478593,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 178,
+                      "symbol": "_text_height",
+                      "resolved_value": 249138,
+                      "original_value": 2240412663,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 68,
+                  "direct_transfer_mismatch_count": 6,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                }
+              }
+            }
+          ],
+          "omitted_changed_functions": 0
+        }
+      ],
+      "omitted_evidence": 0,
+      "limit": "Historical rejected attempt for this source plan; not current proof or permission to edit bodies."
+    }
+  },
+  "probes": [
+    {
+      "path": "docs/attempts/type-context-probes/game-main/Treplay.json",
+      "identity": {
+        "size": 201020,
+        "sha256": "411e795128f7ceeabe454c16d2dc1de979908dd5a4248dcfc3a164f34591f5a7"
+      }
+    },
+    {
+      "path": "docs/attempts/type-context-probes/game-replay/Treplay.json",
+      "identity": {
+        "size": 145830,
+        "sha256": "e481802ebac2f56ed2571540e564f38fd528a38c05e3454ad6251a7061647e15"
+      }
+    }
+  ],
+  "state": "REOPENED_FOR_VERIFIED_EXPERIMENT",
+  "source_inputs": {
+    "src/main.c": {
+      "size": 90748,
+      "sha256": "b7f14dd2fc737446557ab14aee048dc05e07c01ba56178a5f83839f1a31a20e4"
+    },
+    "src/replay.c": {
+      "size": 24377,
+      "sha256": "dd8b4b2ea21fc48ebe9b05748a1dcc467fc13a8309941cf9104a60ae4d625f14"
+    }
+  },
+  "limit": "Only the historical block is retired. No source or proof status changed; ordinary FAST and atomic promotion remain mandatory."
+}

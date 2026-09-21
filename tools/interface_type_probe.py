@@ -80,6 +80,23 @@ def member_pointee_names(g, type_names):
     return names
 
 
+def interface_pointee_names(g, function_names):
+    """Typedef names behind pointer parameters/returns of the named historical functions.
+
+    A CU that spells a function through a void-pointer placeholder never uses the historical
+    pointee type, so optimized DWARF omits it; requesting the name only selects probe output.
+    """
+    names=set()
+    for d in g.dies.values():
+        if d['tag']!='DW_TAG_subprogram' or d.get('name') not in function_names: continue
+        refs=[d.get('type_ref')]+[c.get('type_ref') for c in g.children.get(d['offset'],[]) if c['tag']=='DW_TAG_formal_parameter']
+        for ref in refs:
+            node=g.dies.get(ref)
+            while node and node['tag'] in ('DW_TAG_const_type','DW_TAG_volatile_type','DW_TAG_pointer_type'): node=g.dies.get(node.get('type_ref'))
+            if node and node['tag']=='DW_TAG_typedef' and node.get('name'): names.add(node['name'])
+    return names
+
+
 def supplement(report,dest,objdump):
     from type_graph import graph
     g=graph(); names=set()
@@ -89,12 +106,13 @@ def supplement(report,dest,objdump):
     missing=requested_types(report,names,g.game_types)
     present={t['name'] for t in report['candidate_debug']['typedefs']}
     missing|=member_pointee_names(g,names&set(g.game_types))-present
+    missing|=interface_pointee_names(g,names)-present
     if not missing: return
     build=report['build'];extra=build['config'].get('flags',[])
     flags=build['flags'][:-len(extra)] if extra else build['flags']
     obj,probe_build=compile_target(build['target'],flags=[*flags,FLAG],dest=dest/'interface-types',compiler=build['compiler'])
     binary=Binary(obj)
-    debug=candidate_debug(probe_build,objdump)
+    debug=candidate_debug(probe_build,objdump,extra_names=missing)
     if identity(obj)!=probe_build['object']: raise ValueError('Interface type probe changed during extraction')
     report['interface_type_probe']={
         'build':probe_build,'object':debug['object'],

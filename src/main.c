@@ -77,35 +77,9 @@ Tbeta *testers;
 Tbeta *the_tester;
 
 #include "recovered/Trecord.h"
-typedef struct Treplay {
-    char header[6];
-    int size;
-    char name[32];
-    char date[32];
-    int checksum;
-    int score;
-    int floor;
-    int combo;
-    int no_combo_top_floor;
-    int biggest_lost_combo;
-    int ccc[5];
-    int jc[5];
-    int floor_shrink;
-    int floor_size;
-    int start_speed;
-    int speed_increase;
-    int gravity;
-    int rejump;
-    int random_seed;
-    char comment[42];
-    int tc_posts;
-    float tc_c_data[100];
-    float tc_q_data[100];
-    float tc_t_data[100];
-    float tc_s_data[100];
-    float tc_f_data[100];
-    Trecord *data;
-} Treplay;
+#include "recovered/Treplay.h"
+extern int get_string(BITMAP*, char*, int, int, FONT*, int, int, int, int);
+extern void drawSlot(BITMAP*, int, int, char*, char*, int);
 Treplay *demo;
 int uberChecksum;
 Tcontrol ctrl;
@@ -233,9 +207,7 @@ typedef struct Tavatar_profile {
 
 #include "recovered/Tcharacter.h"
 
-typedef struct Tgame_data {
-    Treplay *replay;
-} Tgame_data;
+#include "recovered/Tgame_data.h"
 
 #include "recovered/Tgd_jump_sequence.h"
 typedef Tgd_jump_sequence Tjump_sequence;
@@ -480,8 +452,8 @@ extern void load_options(Toptions *o, PACKFILE *fp);
 extern void reset_options(Toptions *o);
 extern Thisc_table *make_hisc_table(char*);
 extern void reset_hisc_table(Thisc_table*, char*, int, int);
-extern int load_hisc_table(void *table, PACKFILE *fp);
-extern void save_hisc_table(void *table, PACKFILE *fp);
+extern int load_hisc_table(Thisc_table*, PACKFILE*);
+extern void save_hisc_table(Thisc_table*, PACKFILE*);
 extern int save_profile(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
@@ -845,13 +817,6 @@ int show_name(char *name, int attribs)
     return 0;
 }
 
-void startMenuMusic(void)
-{
-    if (bg_menu)
-        play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
-}
-
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void play_sound(SAMPLE *s, int pitch, int please_pan)
 {
     int pan;
@@ -869,13 +834,15 @@ void play_sound(SAMPLE *s, int pitch, int please_pan)
     if (fast_fast_forward) pit<<=1;
     play_sample(s,options.snd_volume,pan,pit,0);
 }
-#else
-void play_sound(SAMPLE *s, int pitch, int please_pan);
-#endif
 
-void play_menu_select(void)
+void play_jump_sound(Tplayer *p)
 {
-    play_sound(menu_sounds[0], 0, 0);
+    if (p->sy < -22.0f)
+        play_sound(custom.jump_sound[2], 1, 1);
+    else if (p->sy < -15.0f)
+        play_sound(custom.jump_sound[1], 1, 1);
+    else
+        play_sound(custom.jump_sound[0], 1, 1);
 }
 
 void play_menu_move(void)
@@ -883,11 +850,57 @@ void play_menu_move(void)
     play_sound(menu_sounds[1], 0, 0);
 }
 
+void play_menu_select(void)
+{
+    play_sound(menu_sounds[0], 0, 0);
+}
+
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
+{
+    textout_ex(dst, data[54].dat, title, x, y - 16, makecol(0, 0, 0), -1);
+    rectfill(dst, x - 1, y - 1, x + 340, y + 18, makecol(255, 255, 255));
+    rect(dst, x - 1, y - 1, x + 340, y + 18, makecol(80, 80, 80));
+    textout_ex(dst, data[54].dat, text, x + 2, y, color, -1);
+}
+
+void startMenuMusic(void)
+{
+    if (bg_menu)
+        play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
+}
+
 void stopMenuMusic(void)
 {
     if (bg_menu)
         stop_sample(bg_menu);
 }
+
+void checkMenuFocus(void)
+{
+    if (in_replay_menu)
+        return;
+    if (lastFocus==hasFocus)
+        return;
+    if (hasFocus)
+        startMenuMusic();
+    else
+        stopMenuMusic();
+    lastFocus=hasFocus;
+}
+
+
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#else
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+#endif
+
+
+
+
+
+
 
 void stopGameMusic(void)
 {
@@ -1731,18 +1744,7 @@ void update_frame(void)
 }
 #endif
 
-void checkMenuFocus(void)
-{
-    if (in_replay_menu)
-        return;
-    if (lastFocus==hasFocus)
-        return;
-    if (hasFocus)
-        startMenuMusic();
-    else
-        stopMenuMusic();
-    lastFocus=hasFocus;
-}
+
 
 int check_dir(const char *filename, int attrib, void *param)
 {
@@ -1796,15 +1798,7 @@ void for_each_directory(const char *basedir,
 }
 
 #ifndef ICYTOWER_SYNTHETIC_LINK
-void play_jump_sound(Tplayer *p)
-{
-    if (p->sy < -22.0f)
-        play_sound(custom.jump_sound[2], 1, 1);
-    else if (p->sy < -15.0f)
-        play_sound(custom.jump_sound[1], 1, 1);
-    else
-        play_sound(custom.jump_sound[0], 1, 1);
-}
+
 #endif
 
 #ifndef ICYTOWER_SYNTHETIC_LINK
@@ -1985,13 +1979,7 @@ int check_characters(void)
 
 
 
-void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
-{
-    textout_ex(dst, data[54].dat, title, x, y - 16, makecol(0, 0, 0), -1);
-    rectfill(dst, x - 1, y - 1, x + 340, y + 18, makecol(255, 255, 255));
-    rect(dst, x - 1, y - 1, x + 340, y + 18, makecol(80, 80, 80));
-    textout_ex(dst, data[54].dat, text, x + 2, y, color, -1);
-}
+
 
 int start_reward(int lev)
 {

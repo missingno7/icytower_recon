@@ -21,12 +21,212 @@
     }
   ],
   "type_layout_issues": [],
-  "changes": [],
+  "changes": [
+    {
+      "start": 18798,
+      "end": 18807,
+      "before": "void *bmp",
+      "after": "BITMAP*",
+      "reason": "Restore complete historical caller prototype",
+      "file": "src/profile.c",
+      "line": 615
+    }
+  ],
   "verification_command": "python tools/interface_task.py check blit_to_screen",
   "begin_command": "python tools/interface_task.py begin blit_to_screen",
   "apply_command": "python tools/interface_task.py apply blit_to_screen",
   "promotion_command": "python tools/interface_task.py promote blit_to_screen",
   "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
-  "priority": -20
+  "reason": "Unique historical pointer interface; generated type visibility plus caller-only prototype edits. Fresh layout agreement and emission preservation remain mandatory.",
+  "priority": -100,
+  "sources": [
+    "src/profile.c"
+  ],
+  "source_identities": {
+    "src/profile.c": {
+      "size": 28789,
+      "sha256": "b4cf057c31dc3c1753bfde95303b38096f4487abb569ccae1691544a16063593"
+    }
+  },
+  "affected_targets": [
+    "game-profile"
+  ],
+  "required_generated_headers": {},
+  "expected_prototype": "extern void blit_to_screen(BITMAP*);",
+  "typed_caller_repair": true,
+  "supervisor_block": {
+    "reason": "check failed: Focused contribution evidence: docs/attempts/interface-diagnostics/blit_to_screen/game-profile-957f1c8734bd9e004605a43cc478ead4d1841f99e93def9a48d6c9db077fb03b.json\nCANDIDATE_REJECTED: Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-profile",
+    "changes": [
+      {
+        "start": 18796,
+        "end": 18805,
+        "before": "void *bmp",
+        "after": "BITMAP*",
+        "reason": "Restore complete historical caller prototype",
+        "file": "src/profile.c",
+        "line": 615
+      }
+    ],
+    "failure_context": {
+      "outcome": "FAST_FAILED",
+      "error": "Interface repair changed emitted code/data/BSS/symbol/relocation contribution: game-profile",
+      "evidence": [
+        {
+          "path": "docs/attempts/interface-diagnostics/blit_to_screen/game-profile-957f1c8734bd9e004605a43cc478ead4d1841f99e93def9a48d6c9db077fb03b.json",
+          "identity": {
+            "size": 7947,
+            "sha256": "957f1c8734bd9e004605a43cc478ead4d1841f99e93def9a48d6c9db077fb03b"
+          },
+          "changed_function_count": 1,
+          "changed_functions": [
+            {
+              "function": "view_profile",
+              "source_body_unchanged": true,
+              "size_before": 2160,
+              "size_after": 2160,
+              "original_comparison": {
+                "before": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "STACK_FRAME_LAYOUT",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 2249,
+                  "candidate_size": 2160,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 9,
+                    "original_va": 4299509,
+                    "candidate_byte": 12,
+                    "original_byte": 8
+                  },
+                  "relocation_mismatch_count": 66,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 63,
+                      "symbol": "_clear_keybuf",
+                      "resolved_value": 147757,
+                      "original_value": 5269971,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 83,
+                      "symbol": "_create_bitmap",
+                      "resolved_value": 219309,
+                      "original_value": 604292864,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 94,
+                      "symbol": "_screen",
+                      "resolved_value": 5102220,
+                      "original_value": 2240348163,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 146,
+                      "symbol": "_data",
+                      "resolved_value": 5100092,
+                      "original_value": 210306084,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 175,
+                      "symbol": "_create_bitmap",
+                      "resolved_value": 219217,
+                      "original_value": 3229810827,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 205,
+                      "symbol": "_makecol",
+                      "resolved_value": 225499,
+                      "original_value": 604292864,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 60,
+                  "direct_transfer_mismatch_count": 9,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                },
+                "after": {
+                  "status": "DIFFER",
+                  "workflow": {
+                    "state": "SOURCE_DIFFER",
+                    "difference_class": "STACK_FRAME_LAYOUT",
+                    "body_edit_allowed": true,
+                    "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+                  },
+                  "historical_size": 2249,
+                  "candidate_size": 2160,
+                  "body_shape_equal": false,
+                  "relocation_resolved_equal": false,
+                  "first_difference": {
+                    "offset": 9,
+                    "original_va": 4299509,
+                    "candidate_byte": 12,
+                    "original_byte": 8
+                  },
+                  "relocation_mismatch_count": 66,
+                  "relocation_mismatches": [
+                    {
+                      "function_offset": 63,
+                      "symbol": "_clear_keybuf",
+                      "resolved_value": 147757,
+                      "original_value": 5269971,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 83,
+                      "symbol": "_create_bitmap",
+                      "resolved_value": 219309,
+                      "original_value": 604292864,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 94,
+                      "symbol": "_screen",
+                      "resolved_value": 5102220,
+                      "original_value": 2240348163,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 146,
+                      "symbol": "_data",
+                      "resolved_value": 5100092,
+                      "original_value": 210306084,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 175,
+                      "symbol": "_create_bitmap",
+                      "resolved_value": 219217,
+                      "original_value": 3229810827,
+                      "resolution": "named symbol"
+                    },
+                    {
+                      "function_offset": 205,
+                      "symbol": "_makecol",
+                      "resolved_value": 225499,
+                      "original_value": 604292864,
+                      "resolution": "named symbol"
+                    }
+                  ],
+                  "omitted_relocation_mismatches": 60,
+                  "direct_transfer_mismatch_count": 9,
+                  "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+                }
+              }
+            }
+          ],
+          "omitted_changed_functions": 0
+        }
+      ],
+      "omitted_evidence": 0,
+      "limit": "Historical rejected attempt for this source plan; not current proof or permission to edit bodies."
+    }
+  }
 }

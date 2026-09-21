@@ -13,6 +13,17 @@ def placeholder_for(type_text):
     return 'void'+match[2] if match else None
 
 
+def after_leading_includes(text):
+    """Offset just after the last #include line that precedes the first function definition."""
+    from source_order import definition_spans
+    spans=definition_spans(text); first=min((s['start'] for s in spans),default=len(text))
+    last=None
+    for m in re.finditer(r'(?m)^[ \t]*#[ \t]*include\b[^\n]*\n?',text):
+        if m.start()>=first: break
+        last=m.end()
+    return last
+
+
 def call_values_unused(clean,name):
     """Every source-spelled call of `name` is a statement whose value is discarded.
 
@@ -45,18 +56,20 @@ def plan(row,ledger,source_texts=None):
     if len({signature(r) for r in old})!=1: raise ValueError('Conflicting historical interfaces')
     expected=old[0];name=row['function']
     if expected.get('calling_convention') is not None or expected.get('variadic'): raise ValueError('Typed prototype needs a fixed default-C interface')
-    names=set(); typed_return=None
+    from type_views import library_pointees
+    g=graph(); names=set(); library_names=set(); typed_return=None
     if not set(re.findall(r'[A-Za-z_]\w*',expected['return_type']))<=BUILTINS:
         match=GAME_POINTER.fullmatch(expected['return_type'])
-        if not match or match[1] not in graph().game_types: raise ValueError('Typed return repair is not supported')
+        if not match or match[1] not in g.game_types: raise ValueError('Typed return repair is not supported')
         names.add(match[1]); typed_return=match[1]
     for parameter in expected['parameter_types']:
         tokens=set(re.findall(r'[A-Za-z_]\w*',parameter))-BUILTINS
         if not tokens: continue
         match=GAME_POINTER.fullmatch(parameter)
-        if not match or match[1] not in graph().game_types: raise ValueError('Only pointers to generated historical types are supported')
-        names.add(match[1])
-    if not names: raise ValueError('No canonical pointer type prerequisite')
+        if not match: raise ValueError('Only pointers to named types are supported')
+        if match[1] in g.game_types: names.add(match[1])
+        else: library_names.add(match[1])
+    if not names and not library_names: raise ValueError('No canonical pointer type prerequisite')
     headers={n:'include/recovered/'+n+'.h' for n in names}
     if any(not (ROOT/p).is_file() for p in headers.values()): raise ValueError('Generated type header unavailable')
     patches={};texts={};proof_headers={}
@@ -66,8 +79,10 @@ def plan(row,ledger,source_texts=None):
         if actual==signature(expected):
             if issues: raise ValueError('Already named type has unresolved or conflicting layout')
             continue
-        if declaration['kind'] not in ('IC','NC','OC'): raise ValueError('Typed repair cannot change a function definition')
+        if declaration['kind'] not in ('IC','NC','OC','NF'): raise ValueError('Unsupported declaration kind for a typed repair')
         return_repair=None
+        if declaration['kind']=='NF' and declaration['return_type']!=expected['return_type']:
+            raise ValueError('Typed repair cannot change a definition return type')
         if declaration['return_type']!=expected['return_type']:
             if declaration['kind']=='IC':
                 # An implicit call declares int; the prototype may restore void or a game pointer only
@@ -83,6 +98,10 @@ def plan(row,ledger,source_texts=None):
         if not file.startswith('src/') or declaration.get('cu')!=file: raise ValueError('Typed repair requires a CU-local declaration')
         if declaration['cu'] not in ledger: raise ValueError('Owning CU proof is unavailable')
         report=read_json(ROOT/ledger[declaration['cu']]['verified_report'])
+        # Library pointees (BITMAP, PACKFILE, ...) need the owning CU's historical typedef layout,
+        # reproduced by the compiled CU; a spelled name alone is not evidence.
+        library=library_pointees(declaration['cu'],report,g) if library_names else set()
+        typed_names=names|(library_names&library)
         text=texts.setdefault(file,source_text(file,source_texts,ROOT));newline='\r\n' if '\r\n' in text else '\n'
         if return_repair=='IMPLICIT_VALUES_UNUSED':
             if not call_values_unused(sanitized(text),name):
@@ -99,8 +118,37 @@ def plan(row,ledger,source_texts=None):
         insertion=len(prefix) if text.startswith(prefix) else 0
         if insertion: prefix=''
         if declaration['kind']=='IC':
+            if library_names-library: raise ValueError('Library pointee lacks owning-CU layout evidence: '+', '.join(sorted(library_names-library)))
+            if library_names and not prefix:
+                # A library type is declared by an existing include, so the prototype must follow the
+                # last include that precedes the first definition; the file top would not see the type.
+                insertion=after_leading_includes(text)
+                if insertion is None: raise ValueError('No include precedes the first definition for a library-typed prototype')
             prefix+=prototype(expected,name)+newline
             edits=[]
+        elif declaration['kind']=='NF':
+            # Definition: retype only void-pointer placeholder parameters in place. Parameter names,
+            # spacing, the return type and the body are untouched; the emission gate decides.
+            pos,start,end=declaration_site(text,name,declaration['line'])
+            if not sanitized(text[end+1:]).lstrip().startswith('{'): raise ValueError('Definition is not followed by its body')
+            params=text[start:end];parts=split_params(params);actual_types=declaration['parameter_types']
+            if len(parts)!=len(expected['parameter_types']) or len(actual_types)!=len(parts): raise ValueError('Typed repair cannot change parameter count')
+            edits=[];cursor=0
+            for part,actual_type,wanted in zip(parts,actual_types,expected['parameter_types']):
+                at=params.find(part,cursor)
+                if at<0: raise ValueError('Cannot locate parameter text')
+                cursor=at+len(part)
+                if actual_type==wanted: continue
+                if parameter_type(part)!=actual_type: raise ValueError('Compiler/source parameter disagreement')
+                pointee=GAME_POINTER.fullmatch(wanted)
+                if actual_type!=placeholder_for(wanted) or not pointee or pointee[1] not in typed_names:
+                    raise ValueError('Only evidenced void-pointer placeholders can become named pointers in a definition')
+                voids=list(re.finditer(r'\bvoid\b',sanitized(part)))
+                if len(voids)!=1: raise ValueError('Placeholder parameter spelling is ambiguous')
+                span_start=start+at+voids[0].start()
+                edits.append({'start':span_start,'end':span_start+4,'before':'void','after':pointee[1],
+                              'reason':'Restore the historical parameter type from its void-pointer placeholder; parameter name and body unchanged'})
+            if not edits: raise ValueError('No definition placeholder to repair')
         else:
             pos,start,end=declaration_site(text,name,declaration['line'])
             if not sanitized(text[end+1:]).lstrip().startswith(';'): raise ValueError('Caller declaration is not a plain prototype')
@@ -111,8 +159,8 @@ def plan(row,ledger,source_texts=None):
                 if len(parts)!=len(expected['parameter_types']): raise ValueError('Typed repair cannot change parameter count')
                 for part,actual_type,wanted in zip(parts,actual_types,expected['parameter_types']):
                     if parameter_type(part)!=actual_type: raise ValueError('Compiler/source parameter disagreement')
-                    if actual_type!=wanted and not (actual_type==placeholder_for(wanted) and GAME_POINTER.fullmatch(wanted)[1] in names):
-                        raise ValueError('Only void-pointer placeholders can become named pointers')
+                    if actual_type!=wanted and not (actual_type==placeholder_for(wanted) and GAME_POINTER.fullmatch(wanted)[1] in typed_names):
+                        raise ValueError('Only evidenced void-pointer placeholders can become named pointers')
             replacement=', '.join(expected['parameter_types'] or ['void'])
             edits=[]
             if replacement!=text[start:end]:

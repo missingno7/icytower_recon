@@ -27,6 +27,40 @@ class TypedCallerTests(unittest.TestCase):
                 result=plan(row,{'src/a.c':{'verified_report':'report.json'}})
             return result,patch_text(text,result['changes'])
 
+    def test_definition_placeholder_parameter_is_retyped_in_place(self):
+        import typed_interface_tasks
+        with patch.object(typed_interface_tasks,'plan',typed_interface_tasks.plan):
+            text='void f(void *p, int n)\n{\n    use(p, n);\n}\n'
+            result,new=self.run_plan(text,kind='NF',expected_return='void',actual_return='void',params=['void*','int'],
+                                     mutate=lambda r:r['historical'][0].update(parameter_types=['Tcontrol*','int']))
+            self.assertEqual(new,'#include "recovered/Tcontrol.h"\nvoid f(Tcontrol *p, int n)\n{\n    use(p, n);\n}\n')
+            self.assertEqual([e['before'] for e in result['changes'] if e['before']],['void'])
+        # Return changes, typed non-placeholder parameters and count changes stay out of definitions.
+        with self.assertRaises(ValueError):self.run_plan('void *f(void *p) {}\n',kind='NF',expected_return='Tcontrol*',actual_return='void*')
+        with self.assertRaises(ValueError):self.run_plan('void f(int *p) {}\n',kind='NF',params=['int*'])
+        with self.assertRaises(ValueError):self.run_plan('void f(void *p, int n) {}\n',kind='NF',params=['void*','int'])
+
+    def test_library_typed_prototype_follows_the_includes(self):
+        mutate=lambda r:r['historical'][0].update(parameter_types=['BITMAP*'])
+        text='/* banner */\n#include <stdio.h>\nextern int z;\n#include <allegro.h>\nint caller(void) { f(0); return 0; }\n'
+        with patch('type_views.library_pointees',return_value={'BITMAP'}):
+            result,new=self.run_plan(text,kind='IC',expected_return='void',actual_return='int',params=['/*???*/'],mutate=mutate)
+        self.assertEqual(new,'/* banner */\n#include <stdio.h>\nextern int z;\n#include <allegro.h>\nextern void f(BITMAP*);\nint caller(void) { f(0); return 0; }\n')
+        with patch('type_views.library_pointees',return_value={'BITMAP'}):
+            with self.assertRaises(ValueError):self.run_plan('int caller(void) { f(0); return 0; }\n',kind='IC',expected_return='void',actual_return='int',params=['/*???*/'],mutate=mutate)
+
+    def test_library_pointee_needs_owning_cu_layout_evidence(self):
+        import typed_interface_tasks
+        mutate=lambda r:r['historical'][0].update(parameter_types=['BITMAP*'])
+        with patch('type_views.library_pointees',return_value={'BITMAP'}):
+            result,new=self.run_plan('extern void f(void *p);\n',mutate=mutate)
+            self.assertEqual(new,'extern void f(BITMAP*);\n'); self.assertEqual(result['required_generated_headers'],{})
+            result,new=self.run_plan('void f(void *bmp) { draw(bmp); }\n',kind='NF',mutate=mutate)
+            self.assertEqual(new,'void f(BITMAP *bmp) { draw(bmp); }\n')
+        with patch('type_views.library_pointees',return_value=set()):
+            with self.assertRaises(ValueError):self.run_plan('extern void f(void *p);\n',mutate=mutate)
+            with self.assertRaises(ValueError):self.run_plan('void f(void *bmp) { draw(bmp); }\n',kind='NF',mutate=mutate)
+
     def test_void_placeholder_gets_header_and_historical_caller_type(self):
         result,text=self.run_plan()
         self.assertEqual(text,'#include "recovered/Tcontrol.h"\nextern void f(Tcontrol*);\n')
@@ -45,7 +79,6 @@ class TypedCallerTests(unittest.TestCase):
         self.assertEqual(new.count('#include'),1)
 
     def test_definitions_and_return_changes_are_not_supported(self):
-        with self.assertRaises(ValueError):self.run_plan('void f(void *p) {}\n',kind='NF')
         # A named non-placeholder return is never reinterpreted.
         with self.assertRaises(ValueError):self.run_plan('extern int f(void *p);\n',actual_return='int')
         with self.assertRaises(ValueError):self.run_plan('extern int f(void *p);\n',expected_return='Tcontrol*',actual_return='int')

@@ -74,6 +74,58 @@ def _disjoint(destinations):
     return all(a[1]<=b[0] for a,b in zip(spans,spans[1:]))
 
 
+SWAP_CC={0x2:0x7,0x7:0x2,0x3:0x6,0x6:0x3,0xc:0xf,0xf:0xc,0xd:0xe,0xe:0xd,0x4:0x4,0x5:0x5}
+
+
+def flag_reader(code):
+    """Conservative: any instruction that may read EFLAGS (jcc, setcc, cmovcc, adc, sbb, rotates, pushf, lahf)."""
+    if not code: return True
+    b=code[0]
+    if 0x70<=b<=0x7f or 0x10<=b<=0x15 or 0x18<=b<=0x1d or b in (0x9c,0x9f,0xd0,0xd1,0xd2,0xd3,0xe3): return True
+    if b==0x0f and len(code)>1 and (0x40<=code[1]<=0x4f or 0x80<=code[1]<=0x8f or 0x90<=code[1]<=0x9f): return True
+    if b in (0x80,0x81,0x83) and len(code)>1 and ((code[1]>>3)&7) in (2,3): return True
+    return False
+
+
+def compare_jump(raw, rows, index, targets_by_address):
+    """Decode `cmp r/m32,r32` or `cmp r32,r/m32` followed by a swappable jcc whose flags die there.
+
+    Returns (start, end, canonical_bytes) or None. Semantics: 39 /r computes rm-reg, 3b /r
+    computes reg-rm; swapping the operands of the subtraction inverts a signed/unsigned
+    ordering condition, so the pair is canonicalized to a fixed operand order.
+    """
+    cmp_row=rows[index]; code=bytes.fromhex(cmp_row['bytes']); off=cmp_row['address']
+    if raw[off:off+len(code)]!=code or len(code)<2 or code[0] not in (0x39,0x3b): return None
+    if index+1>=len(rows): return None
+    jcc=rows[index+1]; jcode=bytes.fromhex(jcc['bytes'])
+    if jcc['address']!=off+len(code) or raw[jcc['address']:jcc['address']+len(jcode)]!=jcode: return None
+    if len(jcode)==2 and 0x70<=jcode[0]<=0x7f: cc=jcode[0]&0xf; rel=int.from_bytes(jcode[1:2],'little',signed=True)
+    elif len(jcode)==6 and jcode[0]==0x0f and 0x80<=jcode[1]<=0x8f: cc=jcode[1]&0xf; rel=int.from_bytes(jcode[2:6],'little',signed=True)
+    else: return None
+    if cc not in SWAP_CC: return None
+    end=jcc['address']+len(jcode); target=end+rel
+    # Flags must die at this jump: neither the fall-through nor the target instruction reads them.
+    following=rows[index+2] if index+2<len(rows) else None
+    if following is None or following['address']!=end or flag_reader(bytes.fromhex(following['bytes'])): return None
+    target_row=targets_by_address.get(target)
+    if target_row is None or flag_reader(bytes.fromhex(target_row['bytes'])): return None
+    modrm=code[1]; mod=modrm>>6; reg=(modrm>>3)&7; rm=modrm&7
+    if code[0]==0x39: a,b=('rm',rm),('reg',reg)   # rm - reg
+    else: a,b=('reg',reg),('rm',rm)                # reg - rm
+    if mod==3:
+        # register-register: canonical order is (smaller register) - (larger register)
+        ra=a[1]; rb=b[1]
+        if ra<=rb: canonical=bytes([0x39,0xc0|(rb<<3)|ra])+code[2:]; new_cc=cc
+        else: canonical=bytes([0x39,0xc0|(ra<<3)|rb])+code[2:]; new_cc=SWAP_CC[cc]
+    else:
+        # memory-register: canonical form is 39 (memory - register)
+        if code[0]==0x39: canonical=code; new_cc=cc
+        else: canonical=bytes([0x39])+code[1:]; new_cc=SWAP_CC[cc]
+    if len(jcode)==2: jnew=bytes([0x70|new_cc])+jcode[1:]
+    else: jnew=bytes([0x0f,0x80|new_cc])+jcode[2:]
+    return off,end,canonical+jnew
+
+
 def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
     """Candidate-to-candidate scheduling evidence, NEVER original matching.
 
@@ -107,5 +159,22 @@ def zero_clear_projection(raw, rows, protected_targets=(), forbidden_ranges=()):
         canonical[start:end]=b''.join(sorted(codes))
         blocks.append({'start':start,'end':end,'original_bytes':raw[start:end].hex(),
                        'canonical_bytes':bytes(canonical[start:end]).hex(),'instructions':[i for i,_ in run_]})
+    # Operand-swapped compares with inverted ordering conditions whose flags die at the jump.
+    by_address={row['address']:row for row in rows}
+    for index,row in enumerate(rows):
+        if row['mnemonic']!='cmp': continue
+        if any(a<=row['address']<b for a,b in forbidden_ranges): continue
+        pair=compare_jump(raw,rows,index,by_address)
+        if pair is None: continue
+        start,end,code=pair
+        changed={start+i for i,(x,y) in enumerate(zip(bytes(canonical[start:end]),code)) if x!=y}
+        # Nothing may jump directly to the jcc (its condition changes), and no protected byte
+        # (relocation field or entry) may change; an untouched displacement field is fine.
+        jcc_start=rows[index+1]['address']
+        if jcc_start in targets or any(t in changed for t in targets): continue
+        if changed:
+            blocks.append({'start':start,'end':end,'original_bytes':raw[start:end].hex(),'canonical_bytes':code.hex(),'instructions':[row,rows[index+1]],
+                           'kind':'compare_operand_order'})
+            canonical[start:end]=code
     return {'sha256':sha(canonical),'blocks':blocks,
-            'scope':'Only candidate scheduling preservation of adjacent independent immediate writes; never FUNCTION_MATCH evidence.'}
+            'scope':'Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence.'}

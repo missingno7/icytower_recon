@@ -2,12 +2,8 @@
   "schema": 1,
   "task_kind": "INTERFACE",
   "function": "create_game_data",
-  "source": "src/game_data.c",
+  "status": "AGREE",
   "body_edit_allowed": false,
-  "difference_class": "TYPE_LAYOUT_CONFLICT",
-  "status": "TYPE_LAYOUT_CONFLICT",
-  "state": "TYPE_LAYOUT_BLOCKED",
-  "difficulty": "SUPERVISOR",
   "historical": [
     {
       "cu": "src/game_data.c",
@@ -18,96 +14,5 @@
       "die": 57148
     }
   ],
-  "type_layout_issues": [
-    {
-      "position": "return",
-      "historical_type": "Tgame_data",
-      "candidate_type": "Tgame_data",
-      "header": "include/recovered/Tgame_data.h",
-      "status": "MISMATCH",
-      "historical_size": 120084,
-      "candidate_size": 4,
-      "member_difference_count": 14,
-      "first_member_differences": [
-        {
-          "member": "biggest_lost_combo",
-          "historical": {
-            "offset": 20,
-            "size": 4,
-            "type": "int",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        },
-        {
-          "member": "ccc",
-          "historical": {
-            "offset": 24,
-            "size": 20,
-            "type": "int [5]",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        },
-        {
-          "member": "combo",
-          "historical": {
-            "offset": 12,
-            "size": 4,
-            "type": "int",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        },
-        {
-          "member": "comboPosts",
-          "historical": {
-            "offset": 64,
-            "size": 4,
-            "type": "int",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        },
-        {
-          "member": "combos",
-          "historical": {
-            "offset": 68,
-            "size": 60000,
-            "type": "Tgd_combo [5000]",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        },
-        {
-          "member": "floor",
-          "historical": {
-            "offset": 8,
-            "size": 4,
-            "type": "int",
-            "qualifiers": [],
-            "bitfield": false
-          },
-          "candidate": null
-        }
-      ],
-      "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-      "cu": "src/main.c",
-      "file": "src/main.c",
-      "line": 731
-    }
-  ],
-  "changes": [],
-  "verification_command": "python tools/interface_task.py check create_game_data",
-  "begin_command": "python tools/interface_task.py begin create_game_data",
-  "apply_command": "python tools/interface_task.py apply create_game_data",
-  "promotion_command": "python tools/interface_task.py promote create_game_data",
-  "edit_scope": "Only the exact generated declaration edits. Preserve exact functions, all data/BSS/relocations and layout. Candidate text may only reorder proven independent adjacent register clears; this never proves an original byte match.",
-  "reason": "Repair or establish the named aggregate layouts before editing this interface",
-  "priority": -20
+  "changes": []
 }

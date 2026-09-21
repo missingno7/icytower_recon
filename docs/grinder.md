@@ -71,9 +71,12 @@ and separate struct-tag users still require supervisor review.
 The gate recompiles the actual affected dependency closure, compares every
 maintained declaration with the unique DWARF signature, and preserves all exact
 function proofs, source bodies, data/BSS/relocations and allocated layout.
-Declaration UID changes may renumber compiler static symbols or reorder adjacent
-independent register clears. These narrow candidate preservation checks never
-supply FUNCTION_MATCH evidence; the original comparison still requires exact bytes.
+Declaration UID changes may renumber compiler static symbols, reorder adjacent
+independent immediate writes (register clears, constant register loads and constant
+stores to disjoint stack slots), or swap the operands of a compare whose ordering
+condition is inverted at the following jump when the flags die there. These narrow
+candidate preservation checks never supply FUNCTION_MATCH evidence; the original
+comparison still requires exact bytes.
 Any other emission change fails. Use `python tools/interface_task.py block <name>
 --reason "Exact failure"` to restore and route a failure to the supervisor.
 All these task types support `abort` with a reason to restore without blocking.

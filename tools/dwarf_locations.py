@@ -88,7 +88,7 @@ def annotate(rows,variables,frame_location,locations,base,scopes=None):
     return result
 
 
-def candidate_debug(build,objdump):
+def candidate_debug(build,objdump,extra_names=()):
     path=build['command'][-1]
     if identity(path)!=build['object']: raise ValueError('Candidate object changed; fresh-verify '+build['target'])
     obj=Binary(path); dies,_=parse(run([objdump,'--dwarf=info',path])); graph=TypeGraph(dies.values())
@@ -123,7 +123,7 @@ def candidate_debug(build,objdump):
     if identity(path)!=build['object']: raise ValueError('Candidate object changed during diagnostic extraction')
     globals_=[{'name':d['name'],'die':d['offset'],'layout':layout(graph,d.get('type_ref'))}
               for d in dies.values() if d['tag']=='DW_TAG_variable' and d.get('name') and dies.get(d.get('parent'),{}).get('tag')=='DW_TAG_compile_unit']
-    maintained_names=set()
+    maintained_names=set(extra_names)
     for source in build['local_inputs']:
         if source.startswith(('src/','include/')):
             maintained_names.update(re.findall(r'\b[A-Za-z_]\w*\b',(ROOT/source).read_bytes().decode('cp1252')))

@@ -4,7 +4,7 @@
   "candidate_text_logical_size": 920,
   "candidate_text_raw_size": 920,
   "candidate_zero_clear_projection": {
-    "sha256": "649ada9f068efb91d14710908db6b922fe63e166115e3eb29e32fa5a75b61019",
+    "sha256": "8eea6c6da0dac9984ce39bd43c28bf0c44a24e19581e4951069edab12632d410",
     "blocks": [
       {
         "start": 324,
@@ -25,9 +25,51 @@
             "assembly": "mov    $0x6,%edx"
           }
         ]
+      },
+      {
+        "start": 107,
+        "end": 112,
+        "original_bytes": "3b70047c24",
+        "canonical_bytes": "3970047f24",
+        "instructions": [
+          {
+            "address": 107,
+            "bytes": "3b7004",
+            "mnemonic": "cmp",
+            "assembly": "cmp    0x4(%eax),%esi"
+          },
+          {
+            "address": 110,
+            "bytes": "7c24",
+            "mnemonic": "jl",
+            "assembly": "jl     94 <_is_solid+0x5c>"
+          }
+        ],
+        "kind": "compare_operand_order"
+      },
+      {
+        "start": 112,
+        "end": 117,
+        "original_bytes": "3b70087f1f",
+        "canonical_bytes": "3970087c1f",
+        "instructions": [
+          {
+            "address": 112,
+            "bytes": "3b7008",
+            "mnemonic": "cmp",
+            "assembly": "cmp    0x8(%eax),%esi"
+          },
+          {
+            "address": 115,
+            "bytes": "7f1f",
+            "mnemonic": "jg",
+            "assembly": "jg     94 <_is_solid+0x5c>"
+          }
+        ],
+        "kind": "compare_operand_order"
       }
     ],
-    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes; never FUNCTION_MATCH evidence."
+    "scope": "Only candidate scheduling preservation of adjacent independent immediate writes and operand-swapped compare/jump pairs whose flags die at the jump; never FUNCTION_MATCH evidence."
   },
   "literal_anchor_evidence": [],
   "functions": [
@@ -4086,8 +4128,8 @@
       "sha256": "aa92b816663b14e59e076abb3ee7f57f8baa404bb3d47b98e1dd10a434c494ae"
     },
     "tools/instructions.py": {
-      "size": 5659,
-      "sha256": "353918b21718e5348b699f662ef515ab97c2c0888fd0d5e6773e38004933f482"
+      "size": 9894,
+      "sha256": "68a490af18d04b4cf30f6a569067785f404e598742d47edce86e301385f3746f"
     },
     "tools/build.py": {
       "size": 10104,
@@ -4108,8 +4150,8 @@
   },
   "analysis_identity": {
     "tools/emission_order.py": {
-      "size": 12114,
-      "sha256": "fd25a0615ea33ccb05f6c7729590dba1edde4fc3a5e0bdfd43f5115a192b92f3"
+      "size": 18907,
+      "sha256": "9880040e74795a21acb5efdeca4793c9576002af07810030bf0034df5ca24e42"
     },
     "tools/type_trial_context.py": {
       "size": 2533,
@@ -4156,12 +4198,12 @@
       "sha256": "3ed060a7fb841191907c8a938257d82d827c80c53a0230f353992ed8eb29ad15"
     },
     "tools/typed_interface_tasks.py": {
-      "size": 9697,
-      "sha256": "7a22a8dfa7f64253a5b80dd9889ed2fe8024aa3a2e29327622d16edbd099d2d6"
+      "size": 13362,
+      "sha256": "d57146a8165d1095cb90982ee6afe6595571c18cebefac490af41f12003b2276"
     },
     "tools/interface_type_probe.py": {
-      "size": 6336,
-      "sha256": "f22a00a7d715acd116455ea3068c6a3830a3d366daf978c6f465bb6a6e922e82"
+      "size": 7355,
+      "sha256": "a3b20b5820b1a1fe21769503defa5d9f6efd1930809d9cfec9600d17d246f854"
     },
     "tools/relocation_diagnostics.py": {
       "size": 3346,
@@ -4208,8 +4250,8 @@
       "sha256": "ff4a31b0313e866f6d1ba5e1006e179f94df73a30e35f95326f3dc402f7ff481"
     },
     "tools/dwarf_locations.py": {
-      "size": 8586,
-      "sha256": "1881f3f4310146170f71dff87e354514d9d29a4d223ee6dde7aa960c6d5fa0b5"
+      "size": 8612,
+      "sha256": "f7b1ac4bff5d408822c8f03d6e2e6f075ca60ac7a29f193d61d45fb8f99e6c4f"
     },
     "tools/compiler_context.py": {
       "size": 8019,

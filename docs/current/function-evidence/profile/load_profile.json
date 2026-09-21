@@ -157,8 +157,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 344,
-    "body_end_line": 365,
+    "body_start_line": 337,
+    "body_end_line": 358,
     "body_sha256": "e128a9315d12268a23bf13b1a17e667f7fa62579629013576bd6b015b6914227"
   },
   "reference_diagnostics": [],
@@ -174,7 +174,7 @@
       "candidate_hex": "7262",
       "original_hex": "7262",
       "candidate_instruction": {
-        "address": 6992,
+        "address": 7348,
         "bytes": "c74424046c050000",
         "mnemonic": "movl",
         "assembly": "movl   $0x56c,0x4(%esp)"
@@ -205,7 +205,13 @@
       },
       "candidate_text": "rb",
       "original_text": "rb",
-      "candidate_source_lines": []
+      "candidate_source_lines": [
+        {
+          "file": "src/profile.c",
+          "line": 345,
+          "text": "    fp = fopen(file, \"rb\");"
+        }
+      ]
     }
   ],
   "tail_jump_layout": null,
@@ -374,7 +380,7 @@
       "nearest_branches": [
         {
           "offset": 84,
-          "instruction": "je     1bbe <_load_profile+0xae>",
+          "instruction": "je     1d22 <_load_profile+0xae>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "zero/equal",
@@ -406,7 +412,7 @@
         },
         {
           "offset": 164,
-          "instruction": "je     1bc0 <_load_profile+0xb0>",
+          "instruction": "je     1d24 <_load_profile+0xb0>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "zero/equal",
@@ -484,7 +490,7 @@
           "function_offset": 64,
           "instructions": [
             {
-              "address": 6992,
+              "address": 7348,
               "bytes": "c74424046c050000",
               "mnemonic": "movl",
               "assembly": "movl   $0x56c,0x4(%esp)"
@@ -565,63 +571,63 @@
     ],
     "candidate": [
       {
-        "address": 6972,
+        "address": 7328,
         "bytes": "895c2408",
         "mnemonic": "mov",
         "assembly": "mov    %ebx,0x8(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 6976,
+        "address": 7332,
         "bytes": "c7442404f0030000",
         "mnemonic": "movl",
         "assembly": "movl   $0x3f0,0x4(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 6984,
+        "address": 7340,
         "bytes": "891c24",
         "mnemonic": "mov",
         "assembly": "mov    %ebx,(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 6987,
+        "address": 7343,
         "bytes": "e800000000",
         "mnemonic": "call",
-        "assembly": "call   1b50 <_load_profile+0x40>",
+        "assembly": "call   1cb4 <_load_profile+0x40>",
         "dwarf_variables": []
       },
       {
-        "address": 6992,
+        "address": 7348,
         "bytes": "c74424046c050000",
         "mnemonic": "movl",
         "assembly": "movl   $0x56c,0x4(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 7000,
+        "address": 7356,
         "bytes": "891c24",
         "mnemonic": "mov",
         "assembly": "mov    %ebx,(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 7003,
+        "address": 7359,
         "bytes": "e800000000",
         "mnemonic": "call",
-        "assembly": "call   1b60 <_load_profile+0x50>",
+        "assembly": "call   1cc4 <_load_profile+0x50>",
         "dwarf_variables": []
       },
       {
-        "address": 7008,
+        "address": 7364,
         "bytes": "89c6",
         "mnemonic": "mov",
         "assembly": "mov    %eax,%esi",
         "dwarf_variables": []
       },
       {
-        "address": 7010,
+        "address": 7366,
         "bytes": "85c0",
         "mnemonic": "test",
         "assembly": "test   %eax,%eax",
@@ -913,7 +919,7 @@
   "relocation_mismatches": [
     {
       "section": 1,
-      "offset": 6996,
+      "offset": 7352,
       "symbol_index": 32,
       "symbol": ".rdata",
       "type": 6,
@@ -930,7 +936,7 @@
         "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 6992,
+          "address": 7348,
           "bytes": "c74424046c050000",
           "mnemonic": "movl",
           "assembly": "movl   $0x56c,0x4(%esp)"
@@ -956,7 +962,7 @@
       "target_function": "generate_profile_checksum",
       "target_va": 4295188,
       "candidate_target": 232,
-      "candidate_displacement": -6857,
+      "candidate_displacement": -7213,
       "layout_operand_equal": false,
       "resolved_value": 4294959495,
       "original_value": 4294959495,
@@ -978,22 +984,22 @@
       "function": "save_profile",
       "status": "DIFFER",
       "historical_offset": 6636,
-      "candidate_offset": 4804,
+      "candidate_offset": 5160,
       "size_delta": 0
     },
     {
       "function": "delete_profile",
       "status": "FUNCTION_MATCH",
       "historical_offset": 7900,
-      "candidate_offset": 6704,
+      "candidate_offset": 7060,
       "size_delta": 0
     },
     {
       "function": "select_profile",
       "status": "DIFFER",
       "historical_offset": 8948,
-      "candidate_offset": 8156,
-      "size_delta": -444
+      "candidate_offset": 8604,
+      "size_delta": -364
     }
   ],
   "emission_order": {

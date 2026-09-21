@@ -117,8 +117,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 1647,
-    "body_end_line": 1663,
+    "body_start_line": 1660,
+    "body_end_line": 1676,
     "body_sha256": "3c8cc21b59f431db33625e7f9e0b122d84ba04bbc4c7aaf678107ef3c32a7e41"
   },
   "reference_diagnostics": [],
@@ -225,35 +225,35 @@
     ],
     "candidate": [
       {
-        "address": 3608,
+        "address": 3280,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 3609,
+        "address": 3281,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 3611,
+        "address": 3283,
         "bytes": "56",
         "mnemonic": "push",
         "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 3612,
+        "address": 3284,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 3613,
+        "address": 3285,
         "bytes": "81ec10010000",
         "mnemonic": "sub",
         "assembly": "sub    $0x110,%esp",
@@ -374,7 +374,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 146,
+          "index": 145,
           "name": "_hisc_tables",
           "section": 0,
           "value": 64,
@@ -581,7 +581,7 @@
       "transfer_kind": "call",
       "target_function": "log2file",
       "target_va": 4250200,
-      "candidate_target": 2392,
+      "candidate_target": 2064,
       "candidate_displacement": -1239,
       "layout_operand_equal": false,
       "resolved_value": 4294965521,
@@ -597,7 +597,7 @@
       "transfer_kind": "call",
       "target_function": "log2file",
       "target_va": 4250200,
-      "candidate_target": 2392,
+      "candidate_target": 2064,
       "candidate_displacement": -1360,
       "layout_operand_equal": false,
       "resolved_value": 4294965400,
@@ -613,41 +613,41 @@
       "function": "log2file",
       "status": "DIFFER",
       "historical_offset": 28920,
-      "candidate_offset": 2392,
+      "candidate_offset": 2064,
       "size_delta": 0
     },
     {
       "function": "end_game",
       "status": "FUNCTION_MATCH",
       "historical_offset": 30640,
-      "candidate_offset": 4608,
+      "candidate_offset": 4280,
       "size_delta": 0
     },
     {
       "function": "change_profile",
       "status": "DIFFER",
       "historical_offset": 30828,
-      "candidate_offset": 3764,
+      "candidate_offset": 3436,
       "size_delta": 8
     },
     {
       "function": "uninit_game",
       "status": "FUNCTION_MATCH",
       "historical_offset": 31016,
-      "candidate_offset": 3960,
+      "candidate_offset": 3632,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 66,
-    "candidate_position": 30,
+    "candidate_position": 29,
     "historical_predecessor": "end_game",
     "candidate_predecessor": "check_dir",
     "predecessor_same": false,
     "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 25,
+    "cu_same_predecessor_count": 28,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
@@ -727,72 +727,9 @@
           }
         ],
         "layout_issues": []
-      },
-      {
-        "function": "save_hisc_table",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          103
-        ],
-        "candidate_card": "docs/current/interfaces/save_hisc_table.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "void*",
-              "PACKFILE*"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "void*",
-              "PACKFILE*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Thisc_table",
-            "candidate_type": "void",
-            "header": "include/recovered/Thisc_table.h",
-            "status": "UNAVAILABLE",
-            "reason": "Candidate named type layout is missing or ambiguous"
-          }
-        ]
-      },
-      {
-        "function": "save_options",
-        "source": "src/main.c",
-        "blocking": false,
-        "state": "LOCAL_AGREEMENT_REMOTE_CONFLICT",
-        "reason": "All compiled declarations and checked game layouts in this CU agree; retain the cross-CU repair separately.",
-        "call_offsets": [
-          79
-        ],
-        "candidate_card": "docs/current/interfaces/save_options.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "Toptions*",
-              "PACKFILE*"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "Toptions*",
-              "PACKFILE*"
-            ]
-          }
-        ],
-        "layout_issues": []
       }
     ],
-    "blocking_functions": [
-      "save_hisc_table"
-    ],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
   },
   "storage_declarations": [

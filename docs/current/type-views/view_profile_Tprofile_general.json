@@ -13,7 +13,7 @@
       "variable": "p",
       "historical_type": "Tprofile",
       "historical_die": 198371,
-      "candidate_die": 3241
+      "candidate_die": 9439
     }
   ],
   "difficulty": "SUPERVISOR",
@@ -21,8 +21,8 @@
   "changes": [
     {
       "file": "src/profile.c",
-      "start": 14581,
-      "end": 14862,
+      "start": 14047,
+      "end": 14328,
       "before": "typedef struct Tprofile_general {\n    unsigned char before_games_played[0x2c];\n    int games_played;\n    int custom_games_played;\n    int games_quit;\n    int seconds_spent_playing;\n    unsigned char before_creation_date[0x530 - 0x3c];\n    char creationDate[16];\n} Tprofile_general;",
       "after": "#include \"recovered/Tprofile.h\"\ntypedef Tprofile Tprofile_general;",
       "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
@@ -34,8 +34,8 @@
   "body_edit_allowed": false,
   "source_identities": {
     "src/profile.c": {
-      "size": 30124,
-      "sha256": "a21197b0854822ca947b87f3c6d4b14ed7b891568cd4fe2db2b6da721f1a01cb"
+      "size": 28789,
+      "sha256": "b4cf057c31dc3c1753bfde95303b38096f4487abb569ccae1691544a16063593"
     }
   },
   "begin_command": "python tools/interface_task.py begin view_profile_Tprofile_general",
@@ -131,7 +131,7 @@
   ],
   "type_scope": {
     "basis": "GCC_DEPFILE",
-    "maintained_input_count": 3,
+    "maintained_input_count": 4,
     "limit": "Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked."
   },
   "view_completeness": "PARTIAL_LAYOUT",

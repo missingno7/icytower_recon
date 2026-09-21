@@ -186,6 +186,31 @@ class InterfaceTests(unittest.TestCase):
         for register in ('jmp    *%eax','jmp    *0x10(%eax)','call   *%edx'):
             self.assertFalse(re.search(pattern,register),register)
 
+    def test_operand_swapped_compare_jump_pairs_canonicalize_only_when_flags_die(self):
+        def project(codes,mnems,**kwargs):
+            raw=b''.join(bytes.fromhex(c) for c in codes); rows=[]; off=0
+            for code,m in zip(codes,mnems):
+                rows.append({'address':off,'bytes':code,'mnemonic':m,'assembly':m}); off+=len(bytes.fromhex(code))
+            return zero_clear_projection(raw,rows,**kwargs)
+        tail=['8d0476','c1e003']; tm=['lea','shl']  # jcc rel 3 lands on the shl boundary
+        a=project(['39f0','7e03']+tail,['cmp','jle']+tm); b=project(['39c6','7d03']+tail,['cmp','jge']+tm)
+        self.assertEqual(a['sha256'],b['sha256']); self.assertEqual(b['blocks'][0]['kind'],'compare_operand_order'); self.assertEqual(a['blocks'],[])
+        # 3b c6 (eax - esi) equals 39 f0 (eax - esi) without any condition change.
+        self.assertEqual(project(['3bc6','7e03']+tail,['cmp','jle']+tm)['sha256'],a['sha256'])
+        # Memory forms: cmp %esi,mem ; jle  versus  cmp mem,%esi ; jge
+        m1=project(['393500000000','0f8e03000000']+tail,['cmp','jle']+tm); m2=project(['3b3500000000','0f8d03000000']+tail,['cmp','jge']+tm)
+        self.assertEqual(m1['sha256'],m2['sha256'])
+        # A relocation field inside the displacement stays untouched and does not block the pair.
+        r1=project(['393500000000','0f8e03000000']+tail,['cmp','jle']+tm,protected_targets=range(2,6)); r2=project(['3b3500000000','0f8d03000000']+tail,['cmp','jge']+tm,protected_targets=range(2,6))
+        self.assertEqual(r1['sha256'],r2['sha256'])
+        # A flag reader after the jump, at the target, a sign/overflow condition, or an entry target inside blocks it.
+        for codes,mnems in ((['39f0','7e03','0f94c0','90'],['cmp','jle','sete','nop']),
+                            (['39f0','7803']+tail,['cmp','js']+tm),
+                            (['39f0','7e02','7c00','90'],['cmp','jle','jl','nop'])):
+            x=project(codes,mnems); y=project([codes[0][:2]+('c6' if codes[0][2:]=='f0' else 'f0')]+[('7d' if codes[1][:2]=='7e' else '79' if codes[1][:2]=='78' else codes[1][:2])+codes[1][2:]]+codes[2:],mnems)
+            self.assertNotEqual(x['sha256'],y['sha256'],(codes,mnems))
+        self.assertNotEqual(project(['39f0','7e03']+tail,['cmp','jle']+tm,protected_targets=[2])['sha256'],project(['39c6','7d03']+tail,['cmp','jge']+tm,protected_targets=[2])['sha256'])
+
     def test_projection_respects_decoding_and_cfg(self):
         raw=bytes.fromhex('31f631dbebfc')
         rows=[{'address':0,'bytes':'31f6','mnemonic':'xor','assembly':'xor %esi,%esi'},

@@ -1,3 +1,4 @@
+#include "recovered/Thisc_table.h"
 #include <allegro.h>
 #include "control.h"
 #include "timer.h"
@@ -115,7 +116,7 @@ int generate_checksum(Thisc_post *entry)
  * flow, and rendering call surface.  Its animation constants and asset order
  * are oracle-derived; the complete 2552-byte function still needs matching
  * source structure for exact code generation. */
-int load_hisc_table(Thisc_table *table,void *fp)
+int load_hisc_table(Thisc_table *table,PACKFILE *fp)
 {
     int i;
     int ok=1;
@@ -130,7 +131,7 @@ int load_hisc_table(Thisc_table *table,void *fp)
     return ok;
 }
 
-void save_hisc_table(Thisc_table *table,void *fp)
+void save_hisc_table(Thisc_table *table,PACKFILE *fp)
 {
     int i;
 
@@ -142,7 +143,7 @@ void save_hisc_table(Thisc_table *table,void *fp)
     }
 }
 
-int draw_table(void *dst,int x,int y,char *header,Thisc_table *table)
+int draw_table(BITMAP *dst,int x,int y,char *header,Thisc_table *table)
 {
     int i;
     int yPos;

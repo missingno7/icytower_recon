@@ -1258,3 +1258,44 @@ it14) is confirmed but sits inside the exact reset_options body, so it awaits an
 explicit protected-body literal channel. Remaining profile clusters are an extra
 pluralization literal and "SELECT PROFILE"/"(current)" strings that the original keeps
 in another CU's region, which is body-level evidence for select_profile.
+
+
+## Compare-operand preservation and the Treplay dependency
+
+The Tgame_data view in main.c waited for a complete Treplay canonicalization although it
+holds only a `Treplay *`. Because the historical structs are anonymous typedefs, a pointer
+member still needs the typedef name in scope and a tag-based forward declaration would
+invent a struct name the original never had, so no pointer-only shortcut is justified. The
+real obstacle was a stray tagged `struct Treplay {...} Tgd_replay;` left in game_data.c: an
+unused 2224-byte common object and the only remaining tag user. Removing it made the
+exact-duplicate Treplay canonicalization eligible.
+
+Its first attempt was rejected on replay_selector: the type edit swapped the operands of
+three compares and inverted the following jump conditions (`cmp a,b; jle` versus
+`cmp b,a; jge`), one more shape of the same declaration-context effect. The candidate
+preservation projection now canonicalizes an operand-swapped compare/jump pair when the
+condition is an ordering condition, nothing jumps directly to the jump, no protected byte
+changes, and neither the fall-through nor the target instruction reads flags. This is a
+candidate-to-candidate preservation rule only; original matching is unchanged. The move
+prober's leading-comment capture was also corrected to use sanitized text after it matched
+a `/*` inside the string literal "/*.itp" and produced a malformed overlay; the other five
+failed move trials are genuine declaration dependencies and are now classified as such.
+
+
+## Historical library declarations in profile.c and options.c
+
+The historical profile.c and options.c CUs carried Allegro typedefs (BITMAP, FONT,
+PACKFILE, DATAFILE) in their DWARF, but the candidates never included allegro.h and
+redeclared library functions and globals through void-pointer placeholders. With no
+declared library type, the debug-retention probe could not supply layout evidence and every
+void-pointer repair in those CUs stayed blocked. Both CUs now include allegro.h; the local
+placeholder prototypes that conflicted with the real header were removed, driven by the
+compiler's own conflict errors, and options.c's five exact functions stayed exact.
+profile.c's field-swapped GFX_DRIVER placeholder is replaced by Allegro's SCREEN_W and
+SCREEN_H macros, which the original's read order (0x70 then 0x6c under right-to-left
+argument evaluation) confirms. The probe now requests the historical pointee typedefs of
+functions spelled in a CU and extracts requested typedefs even when the CU never spells them.
+Definition placeholders (`void *fp` for PACKFILE, `void *bmp` for BITMAP) are repaired in
+place by the typed recipe, and a library-typed prototype is inserted after the last include
+that precedes the first definition. Seven interface tasks became mechanical, including
+get_string, a prerequisite of four bodies.

@@ -46,13 +46,26 @@ def priority_adjustment(context):
     return 5, 'Historical predecessor is emitted in order and exact.'
 
 
+def leading_comment_start(text, clean, start):
+    """Start of a block comment directly preceding `start`, verified on sanitized text.
+
+    A raw-text regex could match a `/*` inside a string literal in another function and
+    turn the moved span into a malformed island; the sanitized text blanks comment and
+    string interiors, so the candidate region must be entirely blank there.
+    """
+    p = start
+    while p > 0 and text[p - 1] in ' \t\r\n': p -= 1
+    if text[p - 2:p] != '*/': return start
+    q = text.rfind('/*', 0, p - 2)
+    if q < 0 or clean[q:p].strip(): return start
+    return q
+
+
 def _definition_spans(text):
     from source_order import definition_spans
-    spans = definition_spans(text)
-    for s in spans:
-        gap = text[:s['start']]
-        m = re.search(r'(/\*(?:(?!\*/).)*\*/\s*)$', gap, re.S)
-        s['cstart'] = s['start'] - len(m[1]) if m else s['start']
+    from source_scope import sanitized
+    spans = definition_spans(text); clean = sanitized(text)
+    for s in spans: s['cstart'] = leading_comment_start(text, clean, s['start'])
     return spans
 
 
@@ -107,7 +120,9 @@ def probe(target, source, only=()):
         r = subprocess.run([str(x) for x in args], cwd=ROOT, env=env, capture_output=True, text=True)
         row = {'move': name, 'after': anchor}
         if r.returncode:
-            row.update(compile='FAILED', error=[l for l in r.stderr.splitlines() if 'error' in l][:3]); results.append(row); continue
+            errors = [l for l in r.stderr.splitlines() if 'error' in l][:3]
+            kind = 'MISSING_DECLARATION' if any('undeclared' in l for l in errors) else 'PROBER_BUG_OR_MALFORMED_OVERLAY' if any('terminating' in l or 'expected' in l for l in errors) else 'COMPILE_FAILED'
+            row.update(compile='FAILED', failure_kind=kind, error=errors); results.append(row); continue
         report = compare(out / 'unit.o', ref['historical_cu'], ROOT / 'assets/icytower15.exe', OBJDUMP)
         after = {f['name']: f['status'] for f in report['functions']}; asz = {f['name']: f.get('candidate_size') for f in report['functions']}
         from interfaces import declarations
@@ -157,8 +172,79 @@ def move_plans(unit, ledger):
     return cards
 
 
+def block_edits(text, spans, functions, lines):
+    """Edits that place `functions` consecutively in historical line order at the slot of the earliest one.
+
+    Definitions move with their leading comments; declarations between them stay where
+    they are. Nothing else changes.
+    """
+    byname = {s['name']: s for s in spans}
+    chosen = [byname[n] for n in functions]
+    ordered = sorted(chosen, key=lambda s: lines[s['name']])
+    slot = min(s['cstart'] for s in chosen)
+    nl = '\r\n' if '\r\n' in text else '\n'
+    blocks = [text[s['cstart']:s['end']].strip('\r\n') for s in ordered]
+    edits = [{'start': s['cstart'], 'end': s['end'], 'before': text[s['cstart']:s['end']], 'after': '', 'reason': 'Remove the unchanged definition from its current slot'} for s in chosen]
+    edits.append({'start': slot, 'end': slot, 'before': '', 'after': (nl + nl).join(blocks) + nl + nl, 'reason': 'Re-insert the historical block in historical order'})
+    return edits
+
+
+def probe_block(target, source, functions):
+    """Diagnostic compound move of a small historical block; scratch overlay only, never promotion."""
+    from build import COMPILERS
+    from experiment import compare
+    from interface_tasks import patch_text
+    from interfaces import declarations
+    from recovery_pipeline import OBJDUMP
+    if not 2 <= len(functions) <= 8: raise ValueError('A block probe moves two to eight complete definitions')
+    ledger = read_json(ROOT / 'src/recovery.json'); ref = read_json(ROOT / ledger[source]['verified_report']); build = ref['build']
+    unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == source)
+    text = (ROOT / source).read_bytes().decode('cp1252'); spans = _definition_spans(text); lines = _historical_lines(unit, source)
+    missing = [f for f in functions if f not in {s['name'] for s in spans} or f not in lines]
+    if missing: raise ValueError('Unknown or unlined definitions: ' + ', '.join(missing))
+    edits = block_edits(text, spans, functions, lines); new = patch_text(text, edits)
+    label = '+'.join(functions); out = ROOT / 'build/order-blocks' / target / label; overlay = out / 'overlay'; (overlay / Path(source).parent).mkdir(parents=True, exist_ok=True)
+    (overlay / source).write_bytes(new.encode('cp1252'))
+    env = os.environ.copy(); env['PATH'] = str(COMPILERS[build['compiler']] / 'bin') + os.pathsep + env['PATH']
+    args = list(build['command'])
+    for flag, value in [('-MF', out / 'unit.d'), ('-aux-info', out / 'interfaces.aux'), ('-c', overlay / source), ('-o', out / 'unit.o')]: args[args.index(flag) + 1] = str(value)
+    args[1:1] = ['-I' + str((ROOT / source).parent)]
+    record = {'scope': 'Diagnostic compound definition move in a scratch overlay; complete definitions only, no body or declaration edits, never a promotion input.',
+              'target': target, 'source': source, 'functions': functions, 'source_identity': identity(ROOT / source), 'object_identity': build['object']}
+    r = subprocess.run([str(x) for x in args], cwd=ROOT, env=env, capture_output=True, text=True)
+    if r.returncode:
+        errors = [l for l in r.stderr.splitlines() if 'error' in l][:5]
+        record.update(compile='FAILED', failure_kind='MISSING_DECLARATION' if any('undeclared' in l for l in errors) else 'COMPILE_FAILED', error=errors)
+    else:
+        report = compare(out / 'unit.o', ref['historical_cu'], ROOT / 'assets/icytower15.exe', OBJDUMP)
+        before = {f['name']: f['status'] for f in ref['functions']}; after = {f['name']: f['status'] for f in report['functions']}
+        sizes = {f['name']: f.get('candidate_size') for f in ref['functions']}; asz = {f['name']: f.get('candidate_size') for f in report['functions']}; hsz = {f['name']: f['original_size'] for f in ref['functions']}
+        hist = [f['name'] for f in sorted(report['functions'], key=lambda f: f['va'])]
+        cand = [f['name'] for f in sorted(report['functions'], key=lambda f: f.get('candidate_offset') if f.get('candidate_offset') is not None else 1 << 40)]
+        same = sum(1 for i, n in enumerate(hist) if (hist[i - 1] if i else None) == (cand[cand.index(n) - 1] if cand.index(n) else None))
+        old_same = emission_context(ref, hist[0])['cu_same_predecessor_count']
+        implicit_before = {d['name'] for d in declarations(ref.get('interfaces_aux', '')) if d['kind'] == 'IC'}
+        implicit_after = {d['name'] for d in declarations((out / 'interfaces.aux').read_text(errors='replace')) if d['kind'] == 'IC'}
+        record.update(compile='OK', matches_before=ref['function_matches'], matches_after=report['function_matches'],
+                      gains=sorted(n for n in before if before[n] != 'FUNCTION_MATCH' and after.get(n) == 'FUNCTION_MATCH'),
+                      losses=sorted(n for n in before if before[n] == 'FUNCTION_MATCH' and after.get(n) != 'FUNCTION_MATCH'),
+                      now_historical_size=sorted(n for n in before if after.get(n) != 'FUNCTION_MATCH' and asz.get(n) != sizes.get(n) and asz.get(n) == hsz.get(n)),
+                      size_changes={n: [sizes.get(n), asz.get(n), hsz.get(n)] for n in before if asz.get(n) != sizes.get(n)},
+                      same_predecessor_before=old_same, same_predecessor_after=same, function_count=len(hist),
+                      new_implicit_declarations=sorted(implicit_after - implicit_before))
+    folder = EVIDENCE.parent / 'order-blocks' / target; folder.mkdir(parents=True, exist_ok=True)
+    write_json(folder / (label + '.json'), record)
+    return record
+
+
 if __name__ == '__main__':
     import argparse
     p = argparse.ArgumentParser(description=__doc__); p.add_argument('target'); p.add_argument('source'); p.add_argument('functions', nargs='*')
-    a = p.parse_args(); record = probe(a.target, a.source, tuple(a.functions))
-    print('safe moves:', [r['move'] for r in record['results'] if r.get('compile') == 'OK' and r.get('gains') and not r.get('losses') and not r.get('new_implicit_declarations')])
+    p.add_argument('--block', action='store_true', help='Diagnostic compound move of the named definitions as one historical block (no promotion).')
+    a = p.parse_args()
+    if a.block:
+        record = probe_block(a.target, a.source, list(a.functions))
+        print(json.dumps({k: v for k, v in record.items() if k not in ('scope', 'size_changes')}, indent=1))
+    else:
+        record = probe(a.target, a.source, tuple(a.functions))
+        print('safe moves:', [r['move'] for r in record['results'] if r.get('compile') == 'OK' and r.get('gains') and not r.get('losses') and not r.get('new_implicit_declarations')])

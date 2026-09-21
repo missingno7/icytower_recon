@@ -57,6 +57,37 @@ class MoveTests(unittest.TestCase):
             x, y = function_span(self.text, name); p, q = function_span(new, name)
             self.assertEqual(self.text[x:y], new[p:q])
 
+    def test_leading_comment_never_starts_inside_a_string_literal(self):
+        from emission_order import leading_comment_start
+        from source_scope import sanitized
+        text = 'int a(void) { return strcat(x, "/*.itp"); }\n\n/* about b */\nint b(void) { return 2; }\n\nint c(void) { return 3; }\n'
+        spans = _definition_spans(text); by = {s['name']: s for s in spans}
+        self.assertEqual(text[by['b']['cstart']:by['b']['start']], '/* about b */\n')
+        self.assertEqual(by['c']['cstart'], by['c']['start'])
+        # A comment-looking sequence inside a string before a function without its own comment is not captured.
+        text2 = 'int a(void) { return strcat(x, "/*"); }\nint d(void) { return f("*/"); }\nint b(void) { return 2; }\n'
+        spans2 = _definition_spans(text2); by2 = {s['name']: s for s in spans2}
+        self.assertEqual(by2['b']['cstart'], by2['b']['start'])
+        from interface_tasks import patch_text
+        from source_scope import function_span
+        new = patch_text(text2, move_edit(text2, spans2, 'a', 'b'))
+        for name in ('a', 'b', 'd'):
+            x, y = function_span(text2, name); p, q = function_span(new, name)
+            self.assertEqual(text2[x:y], new[p:q])
+
+    def test_block_edits_place_functions_consecutively_in_historical_order(self):
+        from emission_order import block_edits
+        from interface_tasks import patch_text
+        from source_scope import function_span
+        text = 'int a(void) { return 1; }\n\nextern int z;\n\n/* about b */\nint b(void) { return 2; }\n\nint c(void) { return 3; }\n\nint d(void) { return 4; }\n'
+        spans = _definition_spans(text)
+        new = patch_text(text, block_edits(text, spans, ['d', 'b'], {'a': 1, 'b': 40, 'c': 20, 'd': 30}))
+        self.assertLess(new.index('int d('), new.index('int b(')); self.assertLess(new.index('int b('), new.index('int c('))
+        self.assertIn('extern int z;', new); self.assertIn('/* about b */\nint b(void)', new)
+        for name in 'abcd':
+            x, y = function_span(text, name); p, q = function_span(new, name)
+            self.assertEqual(text[x:y], new[p:q])
+
     def test_candidate_moves_list_only_out_of_order_functions(self):
         spans = _definition_spans(self.text)
         self.assertEqual(candidate_moves(self.text, spans, {'a': 10, 'b': 30, 'c': 20}), [('b', 'c'), ('c', 'a')])
