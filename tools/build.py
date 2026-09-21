@@ -91,6 +91,7 @@ def depfile_inputs(path):
     paths = []
     for token in tokens:
         token = re.sub(r'\\([ #\\])', r'\1', token)
+        token = token.replace('$$', '$')  # GCC's makefile dollar quoting
         p = (ROOT / token).resolve()
         p.relative_to(ROOT)  # no untracked external include inputs
         if p not in paths:

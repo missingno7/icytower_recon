@@ -73,6 +73,19 @@ class GrinderTests(unittest.TestCase):
             with patch.object(grinder_task,'ROOT',root),patch.object(grinder_task,'snapshot_files',return_value={'src/a.c':{}}):
                 with self.assertRaisesRegex(ValueError,'outside authorized'): grinder_task.validate_scope(session)
 
+    def test_locked_gcc_depfile_dollar_quoting(self):
+        from build import COMPILERS
+        from common import run
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
+            root=Path(folder)
+            names=['cash$header.h','cash$$header.h','space header.h','hash#header.h']
+            for name in names: (root/name).write_text('/* dependency */\n')
+            source=root/'unit.c'
+            source.write_text(''.join('#include "'+name+'"\n' for name in names)+'int example(void) { return 1; }\n')
+            depfile=root/'unit.d'
+            run([COMPILERS['tdm-2']/'bin/gcc.exe','-MM','-MF',depfile,source],toolchain=COMPILERS['tdm-2'])
+            self.assertEqual(set(depfile_inputs(depfile)),{source.resolve()}|{(root/name).resolve() for name in names})
+
     def test_depfile_continuations_and_escaped_spaces(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'build') as folder:
             path=Path(folder)/'unit.d'

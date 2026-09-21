@@ -537,3 +537,13 @@ Validation compared the entire before/after queue: every decision, priority and
 position is unchanged. Every body-task reason agrees with its card, and every
 recorded supervisor reason is preserved. All 24 grinder tests passed. Examples
 are recorded in `docs/attempts/routing-explanations-validation.json`.
+
+
+## GCC depfile quoting
+
+A locked-GCC probe exposed a dependency parser gap: GCC writes a literal dollar
+in a path as two dollars for Make. The parser now decodes this quoting before
+resolving and fingerprinting dependencies. The regression test invokes the actual
+TDM-2 compiler on headers containing single/double dollars, spaces and hash
+characters and checks the exact returned paths. Existing included-header
+invalidation and unrelated-header preservation controls remain in place.
