@@ -151,6 +151,12 @@ int play(void)
             add_floor(&map);                                            /* 3789 */
         }
 
+        /* lastY shares level's stack slot (-0x92c(%ebp)/-2348 in the DWARF dump); no
+         * separate store to that address exists between the level updates above and
+         * the switch below, so the switch's second argument is simply level's
+         * current value carried over under a different DWARF name. */
+        lastY = level;                                                  /* ? evidence: shared slot, no distinct write found */
+
         switch (collision_type) {                                       /* 3814 */
         case 3:
             handle_player_collision_original(midX, lastY);               /* 3815 */

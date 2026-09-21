@@ -102,7 +102,13 @@ void draw_frame(BITMAP *bmp)
             textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);
             textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);
         }
-    }
+        /* DWARF lexical block 124048 (myBuf/myPos/vcr/len/scrollerText) has PC ranges
+         * covering both this REPLAY/custom-game text (main.c:2742..2768) and D4's
+         * scroller/controller-icon code (main.c up to ~2803, ending right before the
+         * unconditional debug F2 overlay): they are one shared `if (!recording) { }`
+         * block, not two separate blocks. This region intentionally leaves that
+         * block open; D4 declares myPos/len/vcr/scrollerText as siblings of myBuf
+         * and closes the brace itself. */
 
     /* REGION D4: lines 2773..2822 (clip rects, debug overlay, FPS/REC/POS readouts) */
 }

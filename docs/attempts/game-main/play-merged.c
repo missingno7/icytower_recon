@@ -129,6 +129,11 @@ int play(void)
                                                             * call inside the loop, line 3610) */
     clockTimeStart = clock();                            /* line 3528 */
     timeTimeStart = time(NULL);                          /* line 3530 */
+    playing = 1;                                         /* line 3533: the original enters the loop
+                                                            * without testing playing (offset 351 jumps
+                                                            * straight to the closeButtonClicked test),
+                                                            * so it is known non-zero here; the value is
+                                                            * constant-folded away and emits no code */
 
     while (playing && !closeButtonClicked) {   /* lines 3534..3536 */
         cycle_count = 0;                                 /* line 3540 */
@@ -162,22 +167,24 @@ int play(void)
         if (!itrcheck) {                                  /* line 3574 (compiled as its own re-test of
                                                              * itrcheck, redundant with the block above) */
             if (checkMusicVoiceID >= 0) {                 /* line 3574 */
-                int pos = voice_get_position(checkMusicVoiceID); /* line 3575; "pos" is a block-scoped
-                                                             * temp with no DWARF location at this PC --
-                                                             * introduced here only to hold the single
-                                                             * call's result for reuse, matching the
-                                                             * single voice_get_position call in evidence */
-                if (pos < lastMusicPos) {                 /* line 3576 */
+                int vgp;   /* DWARF block 132257 [760..886]: vgp (int), a (float), b (float) */
+                float a, b;
+
+                vgp = voice_get_position(checkMusicVoiceID); /* line 3575 */
+                if (vgp < lastMusicPos) {                 /* line 3576 */
                     musicCounter = 0;
                 }
-                /* lines 3580-3585: running average of a 44000/pos "speed" ratio into accMusics,
+                /* lines 3580-3585: running average of a 44000/vgp "speed" ratio into accMusics,
                  * gated on that ratio being > 0.01 (x87 fucompp/fnstsw/test $0x45 idiom); see report
-                 * for the derivation of the comparison direction. */
-                if (44000.0 / pos > 0.01) {               /* line 3583 */
+                 * for the derivation of the comparison direction. The two named DWARF temps a/b hold
+                 * the ratio and the scaled increment across lines 3580-3584. */
+                a = 44000.0f / vgp;                       /* lines 3580-3583 */
+                if (a > 0.01f) {                          /* line 3583 */
+                    b = a * 50.0f / musicCounter;         /* line 3584 */
+                    accMusics += b;
                     totMusics++;                          /* line 3585 */
-                    accMusics += (44000.0 / pos) * 50.0 / musicCounter; /* line 3584 */
                 }
-                lastMusicPos = pos;                       /* line 3585 (tail) */
+                lastMusicPos = vgp;                       /* line 3585 (tail) */
             }
         }
         if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595-3597 */
@@ -324,6 +331,12 @@ int play(void)
              * resolved. */
             add_floor(&map);                                            /* 3789 */
         }
+
+        /* lastY shares level's stack slot (-0x92c(%ebp)/-2348 in the DWARF dump); no
+         * separate store to that address exists between the level updates above and
+         * the switch below, so the switch's second argument is simply level's
+         * current value carried over under a different DWARF name. */
+        lastY = level;                                                  /* ? evidence: shared slot, no distinct write found */
 
         switch (collision_type) {                                       /* 3814 */
         case 3:
@@ -508,13 +521,13 @@ int play(void)
                              * not otherwise confirmed. See report. */
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
-            int t0, t1;
-            t0 = time(NULL);                                                   /* 4063 */
+            int pauseTime, addTime; /* DWARF block 132550 [4560..4780]: pauseTime, addTime */
+            pauseTime = time(NULL);                                            /* 4063 */
             take_screenshot(swap_screen);                                      /* 4064 */
             if (key[KEY_F1]) {                                                 /* 4065 (see report: odd self-target) */
-                t1 = time(NULL);                                               /* 4066 */
-                if (t1 - t0 > 0)                                               /* 4067 */
-                    startTime += t1 - t0;                                      /* 4068 */
+                addTime = time(NULL) - pauseTime;                              /* 4066-4067 */
+                if (addTime > 0)                                               /* 4067 */
+                    startTime += addTime;                                      /* 4068 */
             }
             if (gameMusicVoiceID >= 0)                                        /* 4075 */
                 musicCounter = (int)(voice_get_position(gameMusicVoiceID) * 50.0 / 44000.0); /* 4077 */
@@ -541,7 +554,7 @@ int play(void)
                     playing = 0;
                 } else {
                     /* REGION W3a: ESC pause screen, lines 4117..4182 */
-                    int pauseTime, fc, ca; /* block-scoped DWARF locals (block 132596), not in the 52-local skeleton */
+                    int pauseTime, fc, ca, addTime; /* block-scoped DWARF locals (block 132596), not in the 52-local skeleton */
 
                     pauseTime = time(NULL);                                   /* 4117 */
                     fc = fall_count;                                          /* 4118 */
@@ -587,8 +600,9 @@ int play(void)
                     fall_count = fc;                                          /* 4156 */
                     clock_angle = ca;                                         /* 4157 */
                     log2file("  game unpaused");                              /* 4158 */
-                    if (time(NULL) - pauseTime > 0)                           /* 4159/4160 */
-                        startTime += time(NULL) - pauseTime;                  /* 4161 */
+                    addTime = time(NULL) - pauseTime;                         /* 4159 */
+                    if (addTime > 0)                                          /* 4160 */
+                        startTime += addTime;                                 /* 4161 */
                     if (gameMusicVoiceID >= 0)                                /* 4168 */
                         musicCounter = (int)(voice_get_position(gameMusicVoiceID) * 50.0 / 44000.0); /* 4170 */
                     clockTimeStart = clock();                                 /* 4175 */
@@ -601,7 +615,7 @@ int play(void)
             }
             if (is_pause(&ctrl) && ply[player_id]->dead == 0) {               /* 4186 */
                 /* REGION W3b: pause-key screen, lines 4187..4245 (near-identical to W3a) */
-                int pauseTime, fc, ca; /* block-scoped DWARF locals (block 132838), not in the 52-local skeleton */
+                int pauseTime, fc, ca, addTime; /* block-scoped DWARF locals (block 132838), not in the 52-local skeleton */
 
                 pauseTime = time(NULL);                                       /* 4187 */
                 fc = fall_count;                                              /* 4188 */
@@ -640,8 +654,9 @@ int play(void)
                 fall_count = fc;                                              /* 4219 */
                 clock_angle = ca;                                             /* 4220 */
                 log2file("  game unpaused");                                  /* 4221 */
-                if (time(NULL) - pauseTime > 0)                               /* 4222/4223 */
-                    startTime += time(NULL) - pauseTime;                      /* 4224 */
+                addTime = time(NULL) - pauseTime;                             /* 4222 */
+                if (addTime > 0)                                              /* 4223 */
+                    startTime += addTime;                                     /* 4224 */
                 if (gameMusicVoiceID >= 0)                                    /* 4231 */
                     musicCounter = (int)(voice_get_position(gameMusicVoiceID) * 50.0 / 44000.0); /* 4233 */
                 clockTimeStart = clock();                                     /* 4238 */
@@ -697,13 +712,13 @@ int play(void)
         }
         if (!itrcheck) {                                                     /* 4319 */
             static int someCounter;
-            int comboSpeedDiv;
+            int ffstep; /* DWARF block 132354 [2740..2804 6150..6448]: someCounter, ffstep, drew, skipDrawing */
 
             someCounter++;                                                    /* 4324 */
-            comboSpeedDiv = fast_forward ? 4 : 1;                             /* 4327 */
+            ffstep = fast_forward ? 4 : 1;                                   /* 4327 */
             if (fast_fast_forward)                                            /* 4330 */
-                comboSpeedDiv = 32;
-            if (!quit && someCounter % comboSpeedDiv == 0) {                  /* 4337 */
+                ffstep = 32;
+            if (!quit && someCounter % ffstep == 0) {                        /* 4337 */
                 draw_frame(swap_screen);                                      /* 4338 */
                 if (ply[player_id]->shake) {                                  /* 4346 */
                     acquire_screen();                                          /* gfx.inl:221/203 */

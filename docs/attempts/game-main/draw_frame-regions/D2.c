@@ -38,6 +38,7 @@ void draw_frame(BITMAP *bmp)
             sw = ((BITMAP *)data[s].dat)->w;
             cy = map.room[ls].start_tile + (map.room[ls].end_tile - map.room[ls].start_tile) / 2;
             cy *= 16;
+            draw_sprite(bmp, data[s].dat, cy, sy);
             c1 = makecol(255, 255, 255);
             c2 = makecol(55, 55, 55);
             cy += sw / 2;
@@ -80,20 +81,17 @@ void draw_frame(BITMAP *bmp)
             p_im = 6;
         }
 
-        if (p_im == 6) {                                  /* ? refine default frame by vertical speed thresholds */
-            if (ply[player_id]->sy > -0.02 && ply[player_id]->sy < 0.02) {
-                if (ply[player_id]->sy > 0.01 || ply[player_id]->sy < -0.01)   /* ? */
+        if (p_im == 6) {                                  /* ? refine default frame by horizontal speed thresholds */
+            if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
+                if (ply[player_id]->sx > 0.01 || ply[player_id]->sx < -0.01)   /* ? */
                     p_im = 8;
             }
         }
 
-        if (ply[player_id]->sy > 0.2 || ply[player_id]->sy < -0.2)   /* ? */
+        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
             ply[player_id]->frame = 0;
 
-        if (logic_count > 11)                              /* ? */
-            ply[player_id]->frame = 0;
-
-        if (ply[player_id]->frame > 24)                     /* ? */
+        if (ply[player_id]->frame > 3)
             ply[player_id]->frame = 0;
 
         fo = 0;                                             /* reuse fo as the custom.frame[] base index for this player's pose */
@@ -102,9 +100,8 @@ void draw_frame(BITMAP *bmp)
         }
 
         if (ply[player_id]->edge) {
-            if ((logic_count & 8) == 0)
-                customFrame = custom.frame[14];
-            if (ply[player_id]->rotate == 2) {
+            customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];
+            if (ply[player_id]->edge == 2) {
                 ply[player_id]->frame = 0;
             }
             else {
@@ -116,7 +113,7 @@ void draw_frame(BITMAP *bmp)
                         fo = 10;
                 }
                 else {
-                    fo = (ply[player_id]->sy > 400.0) ? 11 : 9;   /* ? */
+                    fo = (ply[player_id]->y > 400.0) ? 11 : 9;   /* ? */
                 }
             }
         }
@@ -127,7 +124,11 @@ void draw_frame(BITMAP *bmp)
 
         if (customFrame) {
             ox = -(customFrame->w / 2);
-            oy = -(customFrame->h / 2);                     /* ? mirrors the ox halving; the exact source of the 0x10/0x8/0x0(%esi) double reads for oy is not fully resolved */
+            oy = -(customFrame->h / 2);
+            if (ply[player_id]->sx == 0) {                  /* ? fldl 0x10(%esi)/fldz/fucompp guards this whole adjustment */
+                oy = (int)ply[player_id]->y + oy;            /* ? fistpl-truncated y folded into the centering offset */
+                ox = (int)ply[player_id]->x + ox;            /* ? fistpl-truncated x folded into the centering offset */
+            }
         }
     }
 

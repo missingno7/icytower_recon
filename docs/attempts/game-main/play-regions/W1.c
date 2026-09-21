@@ -130,6 +130,11 @@ int play(void)
                                                             * call inside the loop, line 3610) */
     clockTimeStart = clock();                            /* line 3528 */
     timeTimeStart = time(NULL);                          /* line 3530 */
+    playing = 1;                                         /* line 3533: the original enters the loop
+                                                            * without testing playing (offset 351 jumps
+                                                            * straight to the closeButtonClicked test),
+                                                            * so it is known non-zero here; the value is
+                                                            * constant-folded away and emits no code */
 
     while (playing && !closeButtonClicked) {   /* lines 3534..3536 */
         /* REGION W1b: lines 3540..3699 (per-frame counters, music sync, debug timing, speed steps) */
@@ -164,22 +169,24 @@ int play(void)
         if (!itrcheck) {                                  /* line 3574 (compiled as its own re-test of
                                                              * itrcheck, redundant with the block above) */
             if (checkMusicVoiceID >= 0) {                 /* line 3574 */
-                int pos = voice_get_position(checkMusicVoiceID); /* line 3575; "pos" is a block-scoped
-                                                             * temp with no DWARF location at this PC --
-                                                             * introduced here only to hold the single
-                                                             * call's result for reuse, matching the
-                                                             * single voice_get_position call in evidence */
-                if (pos < lastMusicPos) {                 /* line 3576 */
+                int vgp;   /* DWARF block 132257 [760..886]: vgp (int), a (float), b (float) */
+                float a, b;
+
+                vgp = voice_get_position(checkMusicVoiceID); /* line 3575 */
+                if (vgp < lastMusicPos) {                 /* line 3576 */
                     musicCounter = 0;
                 }
-                /* lines 3580-3585: running average of a 44000/pos "speed" ratio into accMusics,
+                /* lines 3580-3585: running average of a 44000/vgp "speed" ratio into accMusics,
                  * gated on that ratio being > 0.01 (x87 fucompp/fnstsw/test $0x45 idiom); see report
-                 * for the derivation of the comparison direction. */
-                if (44000.0 / pos > 0.01) {               /* line 3583 */
+                 * for the derivation of the comparison direction. The two named DWARF temps a/b hold
+                 * the ratio and the scaled increment across lines 3580-3584. */
+                a = 44000.0f / vgp;                       /* lines 3580-3583 */
+                if (a > 0.01f) {                          /* line 3583 */
+                    b = a * 50.0f / musicCounter;         /* line 3584 */
+                    accMusics += b;
                     totMusics++;                          /* line 3585 */
-                    accMusics += (44000.0 / pos) * 50.0 / musicCounter; /* line 3584 */
                 }
-                lastMusicPos = pos;                       /* line 3585 (tail) */
+                lastMusicPos = vgp;                       /* line 3585 (tail) */
             }
         }
         if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595-3597 */

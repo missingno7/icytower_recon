@@ -126,6 +126,7 @@ void draw_frame(BITMAP *bmp)
             sw = ((BITMAP *)data[s].dat)->w;
             cy = map.room[ls].start_tile + (map.room[ls].end_tile - map.room[ls].start_tile) / 2;
             cy *= 16;
+            draw_sprite(bmp, data[s].dat, cy, sy);
             c1 = makecol(255, 255, 255);
             c2 = makecol(55, 55, 55);
             cy += sw / 2;
@@ -168,20 +169,17 @@ void draw_frame(BITMAP *bmp)
             p_im = 6;
         }
 
-        if (p_im == 6) {                                  /* ? refine default frame by vertical speed thresholds */
-            if (ply[player_id]->sy > -0.02 && ply[player_id]->sy < 0.02) {
-                if (ply[player_id]->sy > 0.01 || ply[player_id]->sy < -0.01)   /* ? */
+        if (p_im == 6) {                                  /* ? refine default frame by horizontal speed thresholds */
+            if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
+                if (ply[player_id]->sx > 0.01 || ply[player_id]->sx < -0.01)   /* ? */
                     p_im = 8;
             }
         }
 
-        if (ply[player_id]->sy > 0.2 || ply[player_id]->sy < -0.2)   /* ? */
+        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
             ply[player_id]->frame = 0;
 
-        if (logic_count > 11)                              /* ? */
-            ply[player_id]->frame = 0;
-
-        if (ply[player_id]->frame > 24)                     /* ? */
+        if (ply[player_id]->frame > 3)
             ply[player_id]->frame = 0;
 
         fo = 0;                                             /* reuse fo as the custom.frame[] base index for this player's pose */
@@ -190,9 +188,8 @@ void draw_frame(BITMAP *bmp)
         }
 
         if (ply[player_id]->edge) {
-            if ((logic_count & 8) == 0)
-                customFrame = custom.frame[14];
-            if (ply[player_id]->rotate == 2) {
+            customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];
+            if (ply[player_id]->edge == 2) {
                 ply[player_id]->frame = 0;
             }
             else {
@@ -204,7 +201,7 @@ void draw_frame(BITMAP *bmp)
                         fo = 10;
                 }
                 else {
-                    fo = (ply[player_id]->sy > 400.0) ? 11 : 9;   /* ? */
+                    fo = (ply[player_id]->y > 400.0) ? 11 : 9;   /* ? */
                 }
             }
         }
@@ -215,7 +212,11 @@ void draw_frame(BITMAP *bmp)
 
         if (customFrame) {
             ox = -(customFrame->w / 2);
-            oy = -(customFrame->h / 2);                     /* ? mirrors the ox halving; the exact source of the 0x10/0x8/0x0(%esi) double reads for oy is not fully resolved */
+            oy = -(customFrame->h / 2);
+            if (ply[player_id]->sx == 0) {                  /* ? fldl 0x10(%esi)/fldz/fucompp guards this whole adjustment */
+                oy = (int)ply[player_id]->y + oy;            /* ? fistpl-truncated y folded into the centering offset */
+                ox = (int)ply[player_id]->x + ox;            /* ? fistpl-truncated x folded into the centering offset */
+            }
         }
     }
 
@@ -298,19 +299,29 @@ void draw_frame(BITMAP *bmp)
             textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);
             textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);
         }
-    }
+        /* DWARF lexical block 124048 (myBuf/myPos/vcr/len/scrollerText) has PC ranges
+         * covering both this REPLAY/custom-game text (main.c:2742..2768) and D4's
+         * scroller/controller-icon code (main.c up to ~2803, ending right before the
+         * unconditional debug F2 overlay): they are one shared `if (!recording) { }`
+         * block, not two separate blocks. This region intentionally leaves that
+         * block open; D4 declares myPos/len/vcr/scrollerText as siblings of myBuf
+         * and closes the brace itself. */
 
-    {
+    /* Continues D3's `if (!recording) { ... }` block (DWARF lexical block 124048
+     * covers myBuf through here, up to and including the rectfill() below, as one
+     * shared block, not a nested one); the brace is closed just before the
+     * unconditional debug F2 overlay. */
         int myPos;
         int len;
+        BITMAP *vcr;
         char scrollerText[70];
 
-        customFrame = data[127].dat;
+        vcr = data[127].dat;
         myPos = rec_pos;
         len = demo->size;
-        ox = 0x27b - customFrame->w;
-        oy = 0x1db - customFrame->h;
-        draw_sprite(bmp, customFrame, ox, oy); /* ? line 2778: no main.c row in the line table for this call; it is fully absorbed by draw.inl:238 between the 2777 and 2779 rows */
+        ox = 0x27b - vcr->w;
+        oy = 0x1db - vcr->h;
+        draw_sprite(bmp, vcr, ox, oy); /* ? line 2778: no main.c row in the line table for this call; it is fully absorbed by draw.inl:238 between the 2777 and 2779 rows */
         if (!ply[player_id]->dead) {
             if (is_left(&ctrl))
                 draw_sprite(bmp, data[128].dat, ox + 0x61, oy + 5);
@@ -352,7 +363,9 @@ void draw_frame(BITMAP *bmp)
         rectfill(bmp, cx, cy + 0x1e,
             cx + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
             cy + 0x1d, makecol(50, 200, 50));
-        if (debug && key[KEY_F2]) {
+    }
+
+    if (debug && key[KEY_F2]) {
             textprintf_ex(bmp, font, 0, 0, 15, -1, "FPS:%6d / %d", fps, lps);
             textprintf_ex(bmp, font, 0, 0xa, 15, -1, "REC:%6d / %d", rec_pos,
                 demo->size);
@@ -369,11 +382,10 @@ void draw_frame(BITMAP *bmp)
             textprintf_ex(bmp, font, 0x190, 0xa, 15, -1, "any: %6d %6d %6d",
                 any21, any22, any23);
         }
-        /* ? line 2822 tail: fragments at offsets 2246 ("mov $0x2,%edi") and 2556
-         * ("mov $0x6,%esi") are also attributed to this line by the line table,
-         * but they sit far outside this region's byte range and duplicate
-         * register-constant setup that reads as spillover from an earlier
-         * region's block layout; no call is associated with them, so nothing
-         * is written here beyond the implicit function epilogue. */
-    }
+    /* ? line 2822 tail: fragments at offsets 2246 ("mov $0x2,%edi") and 2556
+     * ("mov $0x6,%esi") are also attributed to this line by the line table,
+     * but they sit far outside this region's byte range and duplicate
+     * register-constant setup that reads as spillover from an earlier
+     * region's block layout; no call is associated with them, so nothing
+     * is written here beyond the implicit function epilogue. */
 }
