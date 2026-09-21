@@ -57,32 +57,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/handle_player_collision_vector_2.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/handle_player_collision_vector_2.json",
-      "repair_state": "INTERFACE_REPAIR",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/handle_player_collision_vector_2.json",
-          "source": "src/main.c",
-          "function": "handle_player_collision_vector_2",
-          "candidate_card": "docs/current/functions/main/handle_player_collision_vector_2.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/handle_player_collision_vector_2.json",
-          "source": "src/main.c",
-          "function": "play",
-          "candidate_card": "docs/current/functions/main/play.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/update_game_menu.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 2,
@@ -233,7 +207,7 @@
       "key": "game-main:STACK_FRAME_LAYOUT",
       "target": "game-main",
       "difference_class": "STACK_FRAME_LAYOUT",
-      "affected_function_count": 7,
+      "affected_function_count": 8,
       "examples": [
         {
           "source": "src/main.c",
@@ -253,6 +227,14 @@
         },
         {
           "source": "src/main.c",
+          "function": "handle_player_collision_vector_2",
+          "candidate_card": "docs/current/functions/main/handle_player_collision_vector_2.json",
+          "size": 1086,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class"
+        },
+        {
+          "source": "src/main.c",
           "function": "handle_player_collision_combo",
           "candidate_card": "docs/current/functions/main/handle_player_collision_combo.json",
           "size": 1390,
@@ -266,17 +248,9 @@
           "size": 1538,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900, cheap_difference_class"
-        },
-        {
-          "source": "src/main.c",
-          "function": "_mangled_main",
-          "candidate_card": "docs/current/functions/main/_mangled_main.json",
-          "size": 1938,
-          "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
-      "omitted_examples": 2,
+      "omitted_examples": 3,
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     },
     {
@@ -284,7 +258,7 @@
       "key": "game-main:REGISTER_OR_INSTRUCTION_SELECTION",
       "target": "game-main",
       "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "affected_function_count": 6,
+      "affected_function_count": 7,
       "examples": [
         {
           "source": "src/main.c",
@@ -316,7 +290,7 @@
           "candidate_card": "docs/current/functions/main/draw_reward.json",
           "size": 581,
           "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow"
         },
         {
           "source": "src/main.c",
@@ -327,7 +301,7 @@
           "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow"
         }
       ],
-      "omitted_examples": 1,
+      "omitted_examples": 2,
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     },
     {
@@ -394,7 +368,7 @@
           "candidate_card": "docs/current/functions/main/get_string.json",
           "size": 790,
           "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow"
         },
         {
           "source": "src/main.c",
@@ -417,14 +391,6 @@
       "examples": [
         {
           "source": "src/main.c",
-          "function": "handle_player_input",
-          "candidate_card": "docs/current/functions/main/handle_player_input.json",
-          "size": 728,
-          "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
-        },
-        {
-          "source": "src/main.c",
           "function": "new_game",
           "candidate_card": "docs/current/functions/main/new_game.json",
           "size": 1139,
@@ -436,6 +402,14 @@
           "function": "blit_to_screen",
           "candidate_card": "docs/current/functions/main/blit_to_screen.json",
           "size": 1415,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+        },
+        {
+          "source": "src/main.c",
+          "function": "play",
+          "candidate_card": "docs/current/functions/main/play.json",
+          "size": 17420,
           "body_edit_allowed": true,
           "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
@@ -829,10 +803,10 @@
       "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
     }
   ],
-  "protected_layout_functions": 24,
+  "protected_layout_functions": 23,
   "protected_layout_by_target": {
     "game-httpget": 1,
-    "game-main": 20,
+    "game-main": 19,
     "game-profile": 2,
     "game-strptime": 1
   },

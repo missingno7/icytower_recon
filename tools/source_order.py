@@ -51,15 +51,10 @@ def plan_order(unit,ledger):
         if [s['name'] for s in ordered]==card['current_order']:
             card.update(state='NOT_QUEUED',status='DEFINITION_ORDER_AGREES',reason='Explicit function definitions already follow original DWARF lines')
             return card
-        clean=sanitized(text)
-        if any(clean[left['end']:right['start']].strip() for left,right in zip(spans,spans[1:])):
-            return tu_context_order(card,unit,target,source,ordered)
-        for slot,definition in zip(spans,ordered):
-            before=text[slot['start']:slot['end']]; after=text[definition['start']:definition['end']]
-            if before!=after: card['changes'].append({'file':source,'start':slot['start'],'end':slot['end'],'before':before,'after':after,
-                'reason':'Move the complete unchanged definition to its original DWARF source-order slot'})
-        card.update(difficulty='CHEAP',priority=300,reason='Unique original declaration lines; only complete definitions move; every body is preserved byte-for-byte.',
-                    edit_scope='Generated complete-definition reorder only. Freshly preserve every exact function and prohibit new implicit declarations. No linker placement or target addresses.')
+        # A whole-unit reorder changes the emission order and the peephole scratch cursor of every later
+        # function, so it is always a TU_CONTEXT transaction gated by a retained whole-unit probe, never a
+        # blind slot-by-slot edit list (docs/tu-context-analysis.md).
+        tu_context_order(card,unit,target,source,ordered)
     except ValueError as exc: card['reason']=str(exc)
     blocked=ROOT/'docs/current/interface-blocks.json'
     if blocked.exists() and name in read_json(blocked): card.update(difficulty='SUPERVISOR',priority=-100,supervisor_block=read_json(blocked)[name])

@@ -7,10 +7,10 @@
   "historical_va": "0x406da4",
   "historical_size": 215,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void play_sound(SAMPLE *s, int pitch, int please_pan);",
   "return_type": "void",
   "parameters": [
@@ -246,8 +246,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 822,
-    "body_end_line": 837,
+    "body_start_line": 955,
+    "body_end_line": 970,
     "body_sha256": "e3aada3a6838ca7867dad36355e8d532060dc164ba526d3a8f567bec6e04c21b"
   },
   "reference_diagnostics": [],
@@ -498,41 +498,41 @@
     ],
     "candidate": [
       {
-        "address": 9860,
+        "address": 1092,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 9861,
+        "address": 1093,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 9863,
+        "address": 1095,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 9864,
+        "address": 1096,
         "bytes": "83ec34",
         "mnemonic": "sub",
         "assembly": "sub    $0x34,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 9867,
+        "address": 1099,
         "bytes": "8b5d08",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 23074,
+            "die": 18577,
             "name": "s",
             "type": "SAMPLE *",
             "base_type": "SAMPLE",
@@ -629,7 +629,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 142,
+          "index": 137,
           "name": "_itrcheck",
           "section": 0,
           "value": 16,
@@ -662,7 +662,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 168,
+          "index": 140,
           "name": "_any11",
           "section": 0,
           "value": 16,
@@ -792,7 +792,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 166,
+          "index": 138,
           "name": "_fast_forward",
           "section": 0,
           "value": 16,
@@ -825,7 +825,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 167,
+          "index": 139,
           "name": "_fast_fast_forward",
           "section": 0,
           "value": 16,
@@ -852,7 +852,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6cb8",
-      "candidate_addend": 5224,
+      "candidate_addend": 5216,
       "dwarf_type": null,
       "references": [
         157
@@ -878,7 +878,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6cbc",
-      "candidate_addend": 5228,
+      "candidate_addend": 5220,
       "dwarf_type": null,
       "references": [
         169
@@ -904,7 +904,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6cc0",
-      "candidate_addend": 5232,
+      "candidate_addend": 5224,
       "dwarf_type": null,
       "references": [
         175
@@ -958,24 +958,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 116,
-      "function_offset": 117,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "new_rand",
-      "target_va": 4221316,
-      "candidate_target": 36,
-      "candidate_displacement": -9945,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966119,
-      "original_value": 4294966119,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -990,83 +973,83 @@
       "function": "startMenuMusic",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1032,
-      "candidate_offset": 9800,
+      "candidate_offset": 1032,
       "size_delta": 0
     },
     {
       "function": "play_menu_select",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1308,
-      "candidate_offset": 14316,
+      "candidate_offset": 5548,
       "size_delta": 0
     },
     {
       "function": "play_menu_move",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1348,
-      "candidate_offset": 14356,
+      "candidate_offset": 5588,
       "size_delta": 0
     },
     {
       "function": "play_jump_sound",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1388,
-      "candidate_offset": 14396,
+      "candidate_offset": 5628,
       "size_delta": 0
     },
     {
       "function": "start_reward",
       "status": "DIFFER",
       "historical_offset": 4824,
-      "candidate_offset": 13844,
+      "candidate_offset": 5076,
       "size_delta": 0
     },
     {
       "function": "handle_player_collision_original",
       "status": "DIFFER",
       "historical_offset": 5296,
-      "candidate_offset": 13392,
+      "candidate_offset": 4624,
       "size_delta": -7
     },
     {
       "function": "handle_player_collision_old",
       "status": "DIFFER",
       "historical_offset": 5752,
-      "candidate_offset": 12656,
+      "candidate_offset": 3888,
       "size_delta": -160
     },
     {
       "function": "handle_player_collision_combo",
       "status": "DIFFER",
       "historical_offset": 6648,
-      "candidate_offset": 10076,
+      "candidate_offset": 1308,
       "size_delta": -401
     },
     {
       "function": "handle_player_collision_vector_2",
       "status": "DIFFER",
       "historical_offset": 8040,
-      "candidate_offset": 11068,
+      "candidate_offset": 2300,
       "size_delta": -205
     },
     {
       "function": "handle_player_collision_vector",
       "status": "DIFFER",
       "historical_offset": 9128,
-      "candidate_offset": 11952,
+      "candidate_offset": 3184,
       "size_delta": -369
     }
   ],
   "emission_order": {
     "historical_position": 18,
-    "candidate_position": 45,
+    "candidate_position": 18,
     "historical_predecessor": "startMenuMusic",
     "candidate_predecessor": "startMenuMusic",
     "predecessor_same": true,
     "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 28,
+    "cu_same_predecessor_count": 31,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
@@ -1141,7 +1124,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main play_sound",
   "begin_command": "python tools/grinder_task.py begin game-main play_sound",
-  "promotion_command": "python tools/promote_function.py game-main play_sound --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main play_sound",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

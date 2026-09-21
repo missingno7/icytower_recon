@@ -119,3 +119,30 @@ transition until the three context-accidental matches are re-established through
 reconstruction (`play` call structure and the bodies above).  The recommended path is to do
 that reconstruction against the historical layout in the probe overlay (`--order historical
 --body ...`) and land everything as one `TU_CONTEXT` transaction when it reaches zero losses.
+
+## 5. What the mechanism has landed (2026-09-21)
+
+| transaction | unit | edit set | result |
+|---|---|---|---|
+| `order_profile` | profile.c | whole-unit DWARF definition order | 8 -> 11 exact (`load_profile`, `save_profile`, `profile_data_page_advanced`), 0 losses |
+| `order_menu` | menu.c | whole-unit DWARF order | 7 -> 7, historical predecessors 7 -> 10 / 10 |
+| `order_replay` | replay.c | whole-unit DWARF order | 5 -> 5, historical predecessors 5 -> 15 / 15 |
+| `order_player` | player.c | whole-unit DWARF order | 2 -> 2 |
+| `main_hpi_context` | main.c | retained 728-byte `handle_player_input` + three historical-anchor moves | 54 -> 54, 0 losses, historical predecessors 28 -> 31 |
+
+The `main.c` repair came from the bounded search (`tools/tu_context_repair_search.py`; candidates = an
+island or a DWARF-contiguous block placed after its historical predecessor, combinations of at most
+three; 63 compiles).  Under the old single-move model the retained `handle_player_input` regressed
+`checkMenuFocus`, `startGameMusic` and `stopGameMusic`; as one transaction with `startGameMusic`
+after `check_characters` (lines 818/876), `handle_player_input` after `play_jump_sound`
+(2381/2389) and the `startMenuMusic..._mangled_main` tail after `force_create_profile` (5650/5726),
+all three stay exact and the fuller body is in production.  The single move of
+`handle_player_input` alone was also loss-free; the compound was preferred for its higher
+historical-predecessor count.  None of the component edits was judged on its own: several of them
+regress when applied alone (`docs/attempts/tu-context/game-main/bounded-repair-search-pre-transaction.json`).
+
+Whole-unit reorders are now always `TU_CONTEXT` cards (`source_order.py`), queued only when the
+retained whole-unit probe is fresh and loss-free; `order_main` remains SUPERVISOR with its three
+context-accidental losses named.  The way to clear it is unchanged: reconstruct `play`'s call
+structure, `draw_frame`, `_mangled_main` and `init_game` against the historical layout in the probe
+overlay (`--order historical --body ...`), then land the order and the bodies as one transaction.

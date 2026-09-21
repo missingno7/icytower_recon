@@ -86,95 +86,11 @@ int uberChecksum;
 Tcontrol ctrl;
 extern DATAFILE *data;
 
-void line_alert(char *text)
-{
-    int color;
-    int width;
-    int height;
-
-    set_trans_blender(0,0,0,158);
-    drawing_mode(DRAW_MODE_TRANS,0,0,0);
-    color=makecol(0,0,0);
-    width=0;
-    height=0;
-    if (gfx_driver) {
-        height=gfx_driver->h;
-        width=gfx_driver->w;
-    }
-    rectfill(screen,0,0,width,height,color);
-    solid_mode();
-    draw_sprite(screen,data[88].dat,103,200);
-    textprintf_centre_ex(screen,data[51].dat,320,220,-1,-1,"%s",text);
-}
-
 void blit_to_screen(BITMAP *bmp);
 void checkMenuFocus(void);
 
 BITMAP *swap_screen;
 BITMAP *gameover_bmp;
-
-void fadeIn(BITMAP *bmp, int speed)
-{
-    int a;
-    BITMAP *mybmp;
-
-    mybmp=create_bitmap(SCREEN_W,SCREEN_H);
-    for (a=255;a>0;a-=speed) {
-        cycle_count=0;
-        draw_sprite(mybmp,bmp,0,0);
-        set_trans_blender(0,0,0,a);
-        drawing_mode(DRAW_MODE_TRANS,0,0,0);
-        rectfill(mybmp,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
-        solid_mode();
-        blit_to_screen(mybmp);
-        while (cycle_count <= 0) rest(2);
-    }
-    destroy_bitmap(mybmp);
-}
-
-void fadeOut(int speed)
-{
-    int a;
-    BITMAP *bmp;
-
-    bmp=create_bitmap(SCREEN_W,SCREEN_H);
-    blit(screen,bmp,0,0,0,0,SCREEN_W,SCREEN_H);
-    for (a=255;a>0;a-=speed) {
-        cycle_count=0;
-        draw_sprite(swap_screen,bmp,0,0);
-        set_trans_blender(0,0,0,255-a);
-        drawing_mode(DRAW_MODE_TRANS,0,0,0);
-        rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
-        solid_mode();
-        blit_to_screen(swap_screen);
-        while (cycle_count<=0) rest(2);
-    }
-    destroy_bitmap(bmp);
-    rectfill(screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
-}
-
-void show_instructions(void)
-{
-    int done;
-
-    blit(data[126].dat,screen,0,0,0,0,640,480);
-    masked_blit(data[70].dat,screen,0,0,0,0,640,480);
-    while (is_any(&ctrl))
-        poll_control(&ctrl,0);
-    fadeIn(screen,16);
-    done=0;
-    while (!closeButtonClicked && !done) {
-        cycle_count=0;
-        checkMenuFocus();
-        poll_control(&ctrl,0);
-        done=is_fire(&ctrl)!=0;
-        if (key[KEY_ESC] || key[KEY_ENTER])
-            done=1;
-        while (!cycle_count)
-            rest(2);
-    }
-    fadeOut(16);
-}
 
 #include "recovered/Toptions.h"
 
@@ -377,6 +293,270 @@ Tmenu replay_menu[5] = {
     { "Main Menu",     'l', 0, 0, 0x80, NULL }
 };
 
+extern void save_options(Toptions *o, PACKFILE *fp);
+extern void load_options(Toptions *o, PACKFILE *fp);
+extern void reset_options(Toptions *o);
+extern Thisc_table *make_hisc_table(char*);
+extern void reset_hisc_table(Thisc_table*, char*, int, int);
+extern int load_hisc_table(Thisc_table*, PACKFILE*);
+extern void save_hisc_table(Thisc_table*, PACKFILE*);
+extern int save_profile(Tprofile *profile);
+extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
+                                int numProfiles, Tcontrol *ctrl);
+extern int rebuild_profile_list(Tavailable_profile **profs);
+extern Tprofile *load_profile(char *handle);
+extern Tprofile *create_profile(char *handle, int overwrite);
+extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
+                       BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
+extern int get_slider_value(Tmenu_slider *s);
+extern int get_selection_value(Tmenu_selection *s);
+extern void draw_menu(BITMAP *bmp, Tmenu *menu, Tmenu_params *mp,
+                      int x, int y, int dx);
+extern void reset_menu(Tmenu *menu, Tmenu_params *mp, int selection);
+extern void destroy_replay(Treplay *r);
+extern Treplay *load_replay(const char *filename);
+extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
+extern int calc_replay_checksum(Treplay *r);
+extern int save_replay(const char *path, const char *file, Treplay *r, int size,
+                       int make_new_date);
+extern char *get_filename(const char *path);
+extern char *get_extension(const char *path);
+extern void fldads_start(void);
+extern void run_demo(char *file_name);
+extern int new_game(void);
+extern int play(void);
+extern int load_character(const char *filename, int attrib, void *param);
+extern void view_scores(Thisc_table**, char**);
+
+void set_current_avatar(void);
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+extern void destroy_game_data(Tgame_data *gd);
+extern Tgame_data *create_game_data(void);
+extern void reset_player(Tplayer *p);
+extern Treplay *create_replay(int size);
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#else
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+#endif
+
+/* Oracle: main.c:2267, 0x40b6bc..0x40bc43.  Debug keys select the historical
+ * presentation experiments; ordinary play always takes the direct path. */
+int debug;
+int blit_mode;
+
+/* Partial source recovery of main.c:3405, 0x411a00..0x415e0c.  This retains
+ * the oracle's real game-state ownership and phase order while the remaining
+ * results/replay branches are being recovered instruction by instruction. */
+extern void handle_player_input(Tcontrol*);
+extern void update_player(Tplayer *p);
+extern int jump_player(Tplayer *p, int force);
+extern void play_jump_sound(Tplayer *p);
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+#ifndef ICYTOWER_SYNTHETIC_LINK
+
+#endif
+
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
+void line_alert(char *text)
+{
+    int color;
+    int width;
+    int height;
+
+    set_trans_blender(0,0,0,158);
+    drawing_mode(DRAW_MODE_TRANS,0,0,0);
+    color=makecol(0,0,0);
+    width=0;
+    height=0;
+    if (gfx_driver) {
+        height=gfx_driver->h;
+        width=gfx_driver->w;
+    }
+    rectfill(screen,0,0,width,height,color);
+    solid_mode();
+    draw_sprite(screen,data[88].dat,103,200);
+    textprintf_centre_ex(screen,data[51].dat,320,220,-1,-1,"%s",text);
+}
+
+void fadeIn(BITMAP *bmp, int speed)
+{
+    int a;
+    BITMAP *mybmp;
+
+    mybmp=create_bitmap(SCREEN_W,SCREEN_H);
+    for (a=255;a>0;a-=speed) {
+        cycle_count=0;
+        draw_sprite(mybmp,bmp,0,0);
+        set_trans_blender(0,0,0,a);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(mybmp,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+        blit_to_screen(mybmp);
+        while (cycle_count <= 0) rest(2);
+    }
+    destroy_bitmap(mybmp);
+}
+
+void fadeOut(int speed)
+{
+    int a;
+    BITMAP *bmp;
+
+    bmp=create_bitmap(SCREEN_W,SCREEN_H);
+    blit(screen,bmp,0,0,0,0,SCREEN_W,SCREEN_H);
+    for (a=255;a>0;a-=speed) {
+        cycle_count=0;
+        draw_sprite(swap_screen,bmp,0,0);
+        set_trans_blender(0,0,0,255-a);
+        drawing_mode(DRAW_MODE_TRANS,0,0,0);
+        rectfill(swap_screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+        blit_to_screen(swap_screen);
+        while (cycle_count<=0) rest(2);
+    }
+    destroy_bitmap(bmp);
+    rectfill(screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+}
+
+void show_instructions(void)
+{
+    int done;
+
+    blit(data[126].dat,screen,0,0,0,0,640,480);
+    masked_blit(data[70].dat,screen,0,0,0,0,640,480);
+    while (is_any(&ctrl))
+        poll_control(&ctrl,0);
+    fadeIn(screen,16);
+    done=0;
+    while (!closeButtonClicked && !done) {
+        cycle_count=0;
+        checkMenuFocus();
+        poll_control(&ctrl,0);
+        done=is_fire(&ctrl)!=0;
+        if (key[KEY_ESC] || key[KEY_ENTER])
+            done=1;
+        while (!cycle_count)
+            rest(2);
+    }
+    fadeOut(16);
+}
+
 /* Candidate recovered from the complete 0x40cd68..0x40d452 modal path. */
 int my_alert(char *func, char *txt, int choice, int enter_hint)
 {
@@ -447,42 +627,6 @@ void show_credits(void)
     fadeOut(16);
 }
 
-
-extern void save_options(Toptions *o, PACKFILE *fp);
-extern void load_options(Toptions *o, PACKFILE *fp);
-extern void reset_options(Toptions *o);
-extern Thisc_table *make_hisc_table(char*);
-extern void reset_hisc_table(Thisc_table*, char*, int, int);
-extern int load_hisc_table(Thisc_table*, PACKFILE*);
-extern void save_hisc_table(Thisc_table*, PACKFILE*);
-extern int save_profile(Tprofile *profile);
-extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
-                                int numProfiles, Tcontrol *ctrl);
-extern int rebuild_profile_list(Tavailable_profile **profs);
-extern Tprofile *load_profile(char *handle);
-extern Tprofile *create_profile(char *handle, int overwrite);
-extern int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl,
-                       BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
-extern int get_slider_value(Tmenu_slider *s);
-extern int get_selection_value(Tmenu_selection *s);
-extern void draw_menu(BITMAP *bmp, Tmenu *menu, Tmenu_params *mp,
-                      int x, int y, int dx);
-extern void reset_menu(Tmenu *menu, Tmenu_params *mp, int selection);
-extern void destroy_replay(Treplay *r);
-extern Treplay *load_replay(const char *filename);
-extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
-extern int calc_replay_checksum(Treplay *r);
-extern int save_replay(const char *path, const char *file, Treplay *r, int size,
-                       int make_new_date);
-extern char *get_filename(const char *path);
-extern char *get_extension(const char *path);
-extern void fldads_start(void);
-extern void run_demo(char *file_name);
-extern int new_game(void);
-extern int play(void);
-extern int load_character(const char *filename, int attrib, void *param);
-extern void view_scores(Thisc_table**, char**);
-
 char *get_version_str(void)
 {
     return "1.5.1";
@@ -511,8 +655,6 @@ inline void new_srand(int s)
 {
     seed=s;
 }
-
-void set_current_avatar(void);
 
 inline void syncProfileFromOptions(void)
 {
@@ -612,7 +754,6 @@ void take_screenshot(BITMAP *bmp)
         ;
 }
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void open_web_browser(const char *pURL)
 {
     char cmd[256];
@@ -620,9 +761,7 @@ void open_web_browser(const char *pURL)
     log2file(" calling '%s'", cmd);
     ShellExecuteA(NULL, "open", "rundll32", cmd, "", 4);
 }
-#endif
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void load_new_ad_image(void)
 {
     const FLDAdSpot *pAd = fldads_get_random_ad();
@@ -636,7 +775,6 @@ void load_new_ad_image(void)
         pFLDAd = pAd;
     }
 }
-#endif
 
 int ok_to_play(void)
 {
@@ -699,11 +837,6 @@ inline int is_custom_replay(Treplay *r)
     return r->floor_shrink != 1 || r->floor_size != 1 ||
            r->start_speed != 5 || r->speed_increase != 1 || r->gravity != 1;
 }
-
-extern void destroy_game_data(Tgame_data *gd);
-extern Tgame_data *create_game_data(void);
-extern void reset_player(Tplayer *p);
-extern Treplay *create_replay(int size);
 
 /* Recovered from the full 0x40dc9c..0x40e10f control-flow range.  The
  * candidate retains the original state transitions and API boundary; its
@@ -846,6 +979,95 @@ void play_jump_sound(Tplayer *p)
         play_sound(custom.jump_sound[0], 1, 1);
 }
 
+/* Partial recovery of main.c, 0x40b3e4..0x40b6bc.  This is the oracle's
+ * normal-control path; replay control recording remains to be restored. */
+void handle_player_input(Tcontrol *control)
+{
+    int rp;
+    unsigned char flags;
+
+    if (!control)
+        return;
+    if (recording) {
+        poll_control(control,0);
+        if (ply[player_id]->dead) {
+            demo->data[rec_pos+1].key_flags=0x80;
+            demo->data[rec_pos+1].cycle_count=0;
+            demo->data[rec_pos+2].key_flags=0;
+            demo->data[rec_pos+2].cycle_count=0;
+        }
+        else {
+            flags=control->flags&0x93;
+            if (demo->data[rec_pos].key_flags&0x80) {
+                demo->data[rec_pos+1].key_flags=0x80;
+                demo->data[rec_pos+1].cycle_count=0;
+                demo->data[rec_pos+2].key_flags=0;
+                demo->data[rec_pos+2].cycle_count=0;
+            }
+            else if (demo->data[rec_pos].key_flags==flags)
+                demo->data[rec_pos].cycle_count++;
+            else {
+                rec_pos++;
+                demo->data[rec_pos].key_flags=flags;
+                demo->data[rec_pos].cycle_count=0;
+            }
+        }
+    }
+    else {
+        rp=rec_pos-1;
+        if (rp>=0) {
+            if (rp>=demo->size)
+                control->flags=0;
+            else {
+                control->flags=demo->data[rp].key_flags;
+                if (demo->data[rp].cycle_count>0)
+                    demo->data[rp].cycle_count--;
+                else
+                    rec_pos++;
+            }
+        }
+        else
+            rec_pos++;
+    }
+
+    if (is_left(control)) {
+        if (ply[player_id]->sx>0)
+            ply[player_id]->sx*=0.7;
+        ply[player_id]->sx-=0.3;
+    }
+    else if (is_right(control)) {
+        if (ply[player_id]->sx<0)
+            ply[player_id]->sx*=0.7;
+        ply[player_id]->sx+=0.3;
+    }
+    else
+        ply[player_id]->sx*=0.9;
+
+    if (!rejump) {
+        if (is_fire(control)) {
+            if (!ply[player_id]->jump_key) {
+                if (jump_player(ply[player_id],0)) {
+                    ply[player_id]->jump_key=-1;
+                    play_jump_sound(ply[player_id]);
+                    if (profile)
+                        profile->total_jumps++;
+                }
+            }
+        }
+        if (!is_fire(control))
+            ply[player_id]->jump_key=0;
+    }
+    else {
+        if (is_fire(control)) {
+            if (jump_player(ply[player_id],0)) {
+                play_jump_sound(ply[player_id]);
+                if (profile)
+                    profile->total_jumps++;
+            }
+        }
+    }
+}
+
 void play_menu_move(void)
 {
     play_sound(menu_sounds[1], 0, 0);
@@ -864,45 +1086,6 @@ void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color)
     textout_ex(dst, data[54].dat, text, x + 2, y, color, -1);
 }
 
-void startMenuMusic(void)
-{
-    if (bg_menu)
-        play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
-}
-
-void stopMenuMusic(void)
-{
-    if (bg_menu)
-        stop_sample(bg_menu);
-}
-
-void checkMenuFocus(void)
-{
-    if (in_replay_menu)
-        return;
-    if (lastFocus==hasFocus)
-        return;
-    if (hasFocus)
-        startMenuMusic();
-    else
-        stopMenuMusic();
-    lastFocus=hasFocus;
-}
-
-
-
-#ifndef ICYTOWER_SYNTHETIC_LINK
-
-#else
-void play_sound(SAMPLE *s, int pitch, int please_pan);
-#endif
-
-
-
-
-
-
-
 void stopGameMusic(void)
 {
     if (gameMusicVoiceID >= 0)
@@ -911,26 +1094,6 @@ void stopGameMusic(void)
         stop_sample(custom.bg_music);
     if (custom.bg_midi)
         stop_midi();
-}
-
-void startGameMusic(void)
-{
-    gameMusicVoiceID = -1;
-    if (!options.msc_volume)
-        return;
-    if (custom.bg_music) {
-        gameMusicVoiceID = play_sample(custom.bg_music, options.msc_volume,
-                                       128, 1000, 1);
-        return;
-    }
-    if (custom.bg_midi) {
-        set_volume(-1, options.msc_volume);
-        play_midi(custom.bg_midi, 1);
-        return;
-    }
-    if (bg_beat)
-        gameMusicVoiceID = play_sample(bg_beat, options.msc_volume,
-                                       128, 1000, 1);
 }
 
 void replaceBadCharacters(char *string, char newChar)
@@ -942,11 +1105,6 @@ void replaceBadCharacters(char *string, char newChar)
         if (!strchr(letters, string[i]))
             string[i] = newChar;
 }
-
-/* Oracle: main.c:2267, 0x40b6bc..0x40bc43.  Debug keys select the historical
- * presentation experiments; ordinary play always takes the direct path. */
-int debug;
-int blit_mode;
 
 void blit_to_screen(BITMAP *bmp)
 {
@@ -977,14 +1135,6 @@ void blit_to_screen(BITMAP *bmp)
     }
     release_screen();
 }
-
-/* Partial source recovery of main.c:3405, 0x411a00..0x415e0c.  This retains
- * the oracle's real game-state ownership and phase order while the remaining
- * results/replay branches are being recovered instruction by instruction. */
-extern void handle_player_input(Tcontrol*);
-extern void update_player(Tplayer *p);
-extern int jump_player(Tplayer *p, int force);
-extern void play_jump_sound(Tplayer *p);
 
 /* Partial recovery of main.c:2320, 0x4070fc..0x407341.  The two paths are
  * distinguished by the original eye-candy option: rectangular scaling for
@@ -1374,6 +1524,192 @@ void force_create_profile(void)
     rebuild_profile_list(0);
 }
 
+void startMenuMusic(void)
+{
+    if (bg_menu)
+        play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
+}
+
+void stopMenuMusic(void)
+{
+    if (bg_menu)
+        stop_sample(bg_menu);
+}
+
+void checkMenuFocus(void)
+{
+    if (in_replay_menu)
+        return;
+    if (lastFocus==hasFocus)
+        return;
+    if (hasFocus)
+        startMenuMusic();
+    else
+        stopMenuMusic();
+    lastFocus=hasFocus;
+}
+
+/* Source recovery of main.c:5761, 0x415f10..0x4166a2.  This retains the
+ * startup, main-menu action dispatch, game/replay transitions, and orderly
+ * shutdown recovered from the original control-flow branches. */
+int _mangled_main(int argc, char **argv)
+{
+    char executable_name[1024];
+    char logfile_path[256];
+    FILE *fp;
+    int i;
+    int ret;
+    int must_fade;
+    int play_result;
+    int redraw_menu;
+
+    if (!LoadLibraryA("exchndl.dll"))
+        printf("No exception handler present, RPTs will not be generated");
+    allegro_init();
+    register_png_file_type();
+    get_executable_name(executable_name, sizeof(executable_name));
+    replace_filename(working_directory, executable_name, "data",
+                     sizeof(working_directory));
+    chdir(working_directory);
+    memset(logfile_path, 0, sizeof(logfile_path));
+    get_logfile_path(logfile_path, sizeof(logfile_path));
+    fp = fopen(logfile_path, "wt");
+    if (fp) {
+        fprintf(fp, "Icy Tower v%s - log file\n----------------------------\n",
+                "1.5.1");
+        fclose(fp);
+    }
+    for (i = 0; i < argc; i++)
+        if (!stricmp(argv[i], "-check"))
+            itrcheck = 1;
+    log2file("Game started with the following commands:");
+    for (i = 0; i < argc; i++)
+        log2file("    %s", argv[i]);
+    log2file("Working directory is:\n    %s", working_directory);
+    if (!init_game(argc,argv)) {
+        if (!dropped_file_is_not_a_replay) {
+            log2file("* Failed to initialize the game *");
+            allegro_message("Failed to initialize the game.");
+        }
+        log2file("Cleaning up Allegro");
+        uninit_game();
+        log2file("Done...");
+        return 1;
+    }
+
+    if (itrcheck && demo) {
+        log2file("Running replay.");
+        run_demo(NULL);
+        if (closeButtonClicked) {
+            log2file("Done...");
+            allegro_exit();
+            return 0;
+        }
+    }
+    if (itrcheck)
+        load_new_ad_image();
+    init_scroller(&greeting_scroller, data[54].dat, scroller_greetings,
+                  640, 30, -1);
+    menu_params.font=data[51].dat;
+    menu_params.bullet=data[72].dat;
+    menu_params.pos=0;
+    menu_params.data=data;
+    init_control(&menu_params.ctrl);
+    reset_menu(main_menu,&menu_params,0);
+    startMenuMusic();
+    clear_keybuf();
+
+    must_fade=1;
+    if (options.timesStarted==1 && !stricmp("guest",options.lastProfile)) {
+        main_menu_callback();
+        draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+        fadeIn(swap_screen,16);
+        force_create_profile();
+        syncOptionsFromProfile();
+        must_fade=0;
+    }
+    redraw_menu=1;
+    while (!closeButtonClicked) {
+        if (redraw_menu) {
+            main_menu_callback();
+            draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+            if (must_fade)
+                fadeIn(swap_screen,16);
+            else
+                blit_to_screen(swap_screen);
+            redraw_menu=0;
+        }
+        ret=handle_menu(main_menu,&menu_params,&ctrl,swap_screen,
+                        main_menu_callback,355,285,0);
+
+        if (ret=='e' || ret==0x85) {
+            in_replay_menu=(ret!='e');
+            fadeOut(16);
+            stopMenuMusic();
+            if (demo) {
+                destroy_replay(demo);
+                demo=NULL;
+            }
+            do {
+                play_result=0;
+                if (new_game()) {
+                    play_result=play();
+                    end_game();
+                    fadeOut(16);
+                } else
+                    fadeOut(16);
+            } while (play_result && !closeButtonClicked);
+            if (menu_sounds[1])
+                play_menu_select();
+            must_fade=1;
+        }
+        else if (ret=='i') {
+            view_scores(hisc_tables,hisc_names);
+            must_fade=0;
+        }
+        else if (ret=='h') {
+            fadeOut(16);
+            show_instructions();
+            must_fade=1;
+        }
+        else if (ret=='z') {
+            if (demo) {
+                destroy_replay(demo);
+                demo=NULL;
+            }
+            for (;;) {
+                demo=replay_selector(&ctrl,replay_directory);
+                if (!demo) {
+                    must_fade=0;
+                    break;
+                }
+                fadeOut(16);
+                stopMenuMusic();
+                run_demo(NULL);
+                fadeOut(16);
+                main_menu_callback();
+                draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
+                fadeIn(swap_screen,32);
+                if (closeButtonClicked)
+                    break;
+                if (menu_sounds[1])
+                    play_menu_select();
+            }
+        }
+        else if (ret=='k')
+            break;
+        rest(2);
+        if (closeButtonClicked || ret=='k')
+            break;
+        redraw_menu=1;
+    }
+    fadeOut(16);
+    show_credits();
+    stopMenuMusic();
+    uninit_game();
+    return 0;
+}
+
 /* Partial recovery of main.c:2490, 0x40929c..0x40b3e4.  This keeps the
  * oracle's renderer phases in source: floor plane, animated character,
  * particles, rewards, advertising image, and score/status overlays. */
@@ -1565,8 +1901,6 @@ int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int d
     return 1;
 }
 
-
-
 void datafile_callback_slow(DATAFILE *d)
 {
     static int p;
@@ -1663,7 +1997,6 @@ void uninit_game(void)
     allegro_exit();
 }
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void save_config(void)
 {
     FILE *fp;
@@ -1702,8 +2035,6 @@ void change_profile(void)
     }
 }
 
-#endif
-
 inline void update_reward(void)
 {
     if (reward_time > 60)
@@ -1731,7 +2062,6 @@ void set_current_avatar(void)
     }
 }
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void update_frame(void)
 {
     Tplayer *p;
@@ -1750,9 +2080,6 @@ void update_frame(void)
     if (logic_count%10==0)
         p->frame++;
 }
-#endif
-
-
 
 int check_dir(const char *filename, int attrib, void *param)
 {
@@ -1803,11 +2130,6 @@ void for_each_directory(const char *basedir,
     for_each_file_ex(dir_and_wildcard, FA_DIREC, 0, cb, NULL);
 }
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
-
-#endif
-
-#ifndef ICYTOWER_SYNTHETIC_LINK
 void run_demo(char *file_name)
 {
     int fo;
@@ -1834,8 +2156,6 @@ void run_demo(char *file_name)
         }
     }
 }
-
-#endif
 
 int add_profile(const char *filename, int attrib, void *param)
 {
@@ -1877,7 +2197,6 @@ int rebuild_profile_list(Tavailable_profile **profs)
     return numProfiles;
 }
 
-#ifndef ICYTOWER_SYNTHETIC_LINK
 BITMAP *loadScrambled(char *fileName)
 {
     int fileSize;
@@ -1916,9 +2235,6 @@ BITMAP *loadScrambled(char *fileName)
     return png;
 }
 
-#endif
-
-#ifndef ICYTOWER_SYNTHETIC_LINK
 int check_beta_tester(void)
 {
     int i;
@@ -1946,8 +2262,6 @@ int check_beta_tester(void)
     log2file("no tester match found");
     return 0;
 }
-
-#endif
 
 int check_characters(void)
 {
@@ -1983,9 +2297,25 @@ int check_characters(void)
     return 1;
 }
 
-
-
-
+void startGameMusic(void)
+{
+    gameMusicVoiceID = -1;
+    if (!options.msc_volume)
+        return;
+    if (custom.bg_music) {
+        gameMusicVoiceID = play_sample(custom.bg_music, options.msc_volume,
+                                       128, 1000, 1);
+        return;
+    }
+    if (custom.bg_midi) {
+        set_volume(-1, options.msc_volume);
+        play_midi(custom.bg_midi, 1);
+        return;
+    }
+    if (bg_beat)
+        gameMusicVoiceID = play_sample(bg_beat, options.msc_volume,
+                                       128, 1000, 1);
+}
 
 int start_reward(int lev)
 {
@@ -2306,39 +2636,6 @@ void handle_player_collision_combo(int lastX, int lastY)
     p->y = floor_y - 1;
     p->x = left ? left_x + 11 : right_x - 11;
     p->rotate = 0;
-}
-
-/* Partial recovery of main.c, 0x40b3e4..0x40b6bc.  This is the oracle's
- * normal-control path; replay control recording remains to be restored. */
-void handle_player_input(Tcontrol *control)
-{
-    Tcontrol *input = (Tcontrol *)control;
-    Tplayer *p;
-
-    if (!input)
-        return;
-    p = ply[player_id];
-    if (is_left(input)) {
-        if (p->sx < 0.0)
-            p->sx *= 0.8;
-        p->sx -= 0.1;
-    }
-    else if (is_right(input)) {
-        if (p->sx > 0.0)
-            p->sx *= 0.8;
-        p->sx += 0.1;
-    }
-    else
-        p->sx *= 0.9;
-
-    if (is_fire(input)) {
-        if (!p->jump_key && jump_player(p, 0)) {
-            p->jump_key = -1;
-            play_jump_sound(p);
-        }
-        return;
-    }
-    p->jump_key = 0;
 }
 
 /* Partial recovery of main.c:1375, 0x40e7dc..0x40fe78.  The oracle starts
@@ -2764,167 +3061,4 @@ int init_game(int argc, char **argv)
     return -1;
 }
 
-/* Source recovery of main.c:5761, 0x415f10..0x4166a2.  This retains the
- * startup, main-menu action dispatch, game/replay transitions, and orderly
- * shutdown recovered from the original control-flow branches. */
-int _mangled_main(int argc, char **argv)
-{
-    char executable_name[1024];
-    char logfile_path[256];
-    FILE *fp;
-    int i;
-    int ret;
-    int must_fade;
-    int play_result;
-    int redraw_menu;
-
-    if (!LoadLibraryA("exchndl.dll"))
-        printf("No exception handler present, RPTs will not be generated");
-    allegro_init();
-    register_png_file_type();
-    get_executable_name(executable_name, sizeof(executable_name));
-    replace_filename(working_directory, executable_name, "data",
-                     sizeof(working_directory));
-    chdir(working_directory);
-    memset(logfile_path, 0, sizeof(logfile_path));
-    get_logfile_path(logfile_path, sizeof(logfile_path));
-    fp = fopen(logfile_path, "wt");
-    if (fp) {
-        fprintf(fp, "Icy Tower v%s - log file\n----------------------------\n",
-                "1.5.1");
-        fclose(fp);
-    }
-    for (i = 0; i < argc; i++)
-        if (!stricmp(argv[i], "-check"))
-            itrcheck = 1;
-    log2file("Game started with the following commands:");
-    for (i = 0; i < argc; i++)
-        log2file("    %s", argv[i]);
-    log2file("Working directory is:\n    %s", working_directory);
-    if (!init_game(argc,argv)) {
-        if (!dropped_file_is_not_a_replay) {
-            log2file("* Failed to initialize the game *");
-            allegro_message("Failed to initialize the game.");
-        }
-        log2file("Cleaning up Allegro");
-        uninit_game();
-        log2file("Done...");
-        return 1;
-    }
-
-    if (itrcheck && demo) {
-        log2file("Running replay.");
-        run_demo(NULL);
-        if (closeButtonClicked) {
-            log2file("Done...");
-            allegro_exit();
-            return 0;
-        }
-    }
-    if (itrcheck)
-        load_new_ad_image();
-    init_scroller(&greeting_scroller, data[54].dat, scroller_greetings,
-                  640, 30, -1);
-    menu_params.font=data[51].dat;
-    menu_params.bullet=data[72].dat;
-    menu_params.pos=0;
-    menu_params.data=data;
-    init_control(&menu_params.ctrl);
-    reset_menu(main_menu,&menu_params,0);
-    startMenuMusic();
-    clear_keybuf();
-
-    must_fade=1;
-    if (options.timesStarted==1 && !stricmp("guest",options.lastProfile)) {
-        main_menu_callback();
-        draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
-        fadeIn(swap_screen,16);
-        force_create_profile();
-        syncOptionsFromProfile();
-        must_fade=0;
-    }
-    redraw_menu=1;
-    while (!closeButtonClicked) {
-        if (redraw_menu) {
-            main_menu_callback();
-            draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
-            if (must_fade)
-                fadeIn(swap_screen,16);
-            else
-                blit_to_screen(swap_screen);
-            redraw_menu=0;
-        }
-        ret=handle_menu(main_menu,&menu_params,&ctrl,swap_screen,
-                        main_menu_callback,355,285,0);
-
-        if (ret=='e' || ret==0x85) {
-            in_replay_menu=(ret!='e');
-            fadeOut(16);
-            stopMenuMusic();
-            if (demo) {
-                destroy_replay(demo);
-                demo=NULL;
-            }
-            do {
-                play_result=0;
-                if (new_game()) {
-                    play_result=play();
-                    end_game();
-                    fadeOut(16);
-                } else
-                    fadeOut(16);
-            } while (play_result && !closeButtonClicked);
-            if (menu_sounds[1])
-                play_menu_select();
-            must_fade=1;
-        }
-        else if (ret=='i') {
-            view_scores(hisc_tables,hisc_names);
-            must_fade=0;
-        }
-        else if (ret=='h') {
-            fadeOut(16);
-            show_instructions();
-            must_fade=1;
-        }
-        else if (ret=='z') {
-            if (demo) {
-                destroy_replay(demo);
-                demo=NULL;
-            }
-            for (;;) {
-                demo=replay_selector(&ctrl,replay_directory);
-                if (!demo) {
-                    must_fade=0;
-                    break;
-                }
-                fadeOut(16);
-                stopMenuMusic();
-                run_demo(NULL);
-                fadeOut(16);
-                main_menu_callback();
-                draw_menu(swap_screen,main_menu,&menu_params,355,285,0);
-                fadeIn(swap_screen,32);
-                if (closeButtonClicked)
-                    break;
-                if (menu_sounds[1])
-                    play_menu_select();
-            }
-        }
-        else if (ret=='k')
-            break;
-        rest(2);
-        if (closeButtonClicked || ret=='k')
-            break;
-        redraw_menu=1;
-    }
-    fadeOut(16);
-    show_credits();
-    stopMenuMusic();
-    uninit_game();
-    return 0;
-}
-
-#ifndef ICYTOWER_SYNTHETIC_LINK
 END_OF_MAIN()
-#endif

@@ -2,7 +2,7 @@
   "authority": "Original DWARF source file and declaration lines; executable addresses never determine source order",
   "tasks": [
     {
-      "task_kind": "SOURCE_ORDER",
+      "task_kind": "TU_CONTEXT",
       "function": "order_fld_adspot",
       "source": "src/fld_adspot.c",
       "sources": [
@@ -10,14 +10,14 @@
       ],
       "difficulty": "SUPERVISOR",
       "priority": -100,
-      "reason": "Unique original declaration lines; only complete definitions move; every body is preserved byte-for-byte.",
+      "reason": "Historical definition order is right but the retained probe loses fldads_dump_local_cache, fldads_get_local_filename_from_url, fldads_get_random_ad, fldads_update_local_adimg: these functions match today only through the current emission order/register-cursor context; recover their historical emission prefixes (bodies and call structure) and land everything as one TU_CONTEXT transaction.",
       "state": "SOURCE_ORDER_REPAIR",
-      "status": "DEFINITION_ORDER_DIFFERS",
+      "status": "HISTORICAL_ORDER_LOSES_CONTEXT_ACCIDENTAL_MATCHES",
       "body_edit_allowed": false,
       "difference_class": "HISTORICAL_DEFINITION_ORDER",
-      "begin_command": "python tools/interface_task.py begin order_fld_adspot",
-      "verification_command": "python tools/interface_task.py check order_fld_adspot",
-      "promotion_command": "python tools/interface_task.py promote order_fld_adspot",
+      "begin_command": "python tools/tu_context_task.py begin order_fld_adspot",
+      "verification_command": "python tools/tu_context_task.py check order_fld_adspot",
+      "promotion_command": "python tools/tu_context_task.py promote order_fld_adspot",
       "size": 0,
       "candidate_card": "docs/current/source-order/game-fld-adspot.json"
     },

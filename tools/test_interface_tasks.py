@@ -335,12 +335,15 @@ class InterfaceTests(unittest.TestCase):
                                        2:{'tag':'DW_TAG_subprogram','cu':1,'name':'b','decl_file_path':'original/a.c','resolved':{'DW_AT_decl_line':'20'}}})
             with patch.object(source_order,'ROOT',root),patch.object(source_order,'graph',return_value=graph):
                 plan=source_order.plan_order(unit,{'src/a.c':{'verified_report':'report.json'}})
-                self.assertEqual(plan['difficulty'],'CHEAP')
-                new=patch_text(text,plan['changes'])
-                self.assertLess(new.index('int a('),new.index('int b('))
-                for name in ('a','b'): self.assertEqual(body_hash(text,name),body_hash(new,name))
+                # A whole-unit reorder is a TU_CONTEXT transaction (compiled and accepted on the final unit state),
+                # never a slot-by-slot edit list; without a retained whole-unit probe it stays with the supervisor.
+                self.assertEqual(plan['task_kind'],'TU_CONTEXT'); self.assertEqual(plan['changes'],[])
+                self.assertEqual([d['function'] for d in plan['definition_order']],['a','b'])
+                self.assertEqual(plan['spec'],{'target':'game-a','source':'src/a.c','order':'historical'})
+                self.assertIn('tu_context_task.py promote order_a',plan['promotion_command'])
+                self.assertEqual(plan['difficulty'],'SUPERVISOR'); self.assertIn('tu_context_probe.py',plan['reason'])
                 (root/'src/a.c').write_text(text.replace('\nint a','\nint global;\nint a'))
-                self.assertEqual(source_order.plan_order(unit,{'src/a.c':{'verified_report':'report.json'}})['difficulty'],'SUPERVISOR')
+                self.assertEqual(source_order.plan_order(unit,{'src/a.c':{'verified_report':'report.json'}})['task_kind'],'TU_CONTEXT')
 
     def test_definition_span_ignores_strings_comments_and_calls(self):
         from source_order import definition_spans
