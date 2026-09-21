@@ -14,6 +14,17 @@ def compact_card(full,details=None):
         card[key]=[{k:v for k,v in variable.items() if k!='location_list'} for variable in card[key]]
     card['lexical_blocks']=[{k:v for k,v in block.items() if k!='range_list'} for block in card['lexical_blocks']]
     card['signedness']['variables']=[{k:v for k,v in variable.items() if k not in ('location_list','location')} for variable in card['signedness']['variables']]
+    inventory=(card.get('frame_layout') or {}).get('local_inventory')
+    if inventory:
+        rows=inventory['declarations']
+        # Keep mismatched/missing/ambiguous declarations ahead of routine pairs.
+        def rank(row):
+            if row['state']!='UNIQUE_NAME_PAIR': return 0
+            a,b=row['original'][0],row['candidate'][0]
+            return 1 if (a['type'],a['byte_size'])!=(b['type'],b['byte_size']) else 2
+        inventory['declarations']=sorted(rows,key=rank)[:8]
+        inventory['omitted_declarations']=max(0,len(rows)-8)
+        card['evidence_counts']['frame_local_declarations']=len(rows)
     offset=(card.get('first_difference') or {}).get('offset',0)
     for key in ('relocation_mismatches','direct_transfer_mismatches'):
         rows=card[key]; card['evidence_counts'][key]=len(rows)

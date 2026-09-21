@@ -115,6 +115,10 @@ def main():
         if card.get('frame_layout'):
             frame=card['frame_layout']
             print('  stack allocation: original %d; candidate %d; source cause not proven'%(frame['original']['reserved_bytes'],frame['candidate']['reserved_bytes']))
+            inventory=frame.get('local_inventory')
+            if inventory:
+                counts=inventory['counts']
+                print('  local debug inventory: %d paired; %d original-only; %d candidate-only; %d ambiguous names (not stack accounting)'%tuple(counts[k] for k in ('UNIQUE_NAME_PAIR','ORIGINAL_ONLY_DEBUG_DECLARATION','CANDIDATE_ONLY_DEBUG_DECLARATION','AMBIGUOUS_NAME')))
             for local in frame['local_width_differences']:
                 print('  local width %s: original %d; candidate %d'%(local['variable'],local['original_bytes'],local['candidate_bytes']))
         if card.get('compiler_trials'):

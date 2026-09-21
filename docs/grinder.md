@@ -365,3 +365,11 @@ point to complete stdout, stderr and return codes, including rejected attempts.
 They survive build cleanup; commit this run directory with its history and the
 accepted source/proof changes. For older build-only runs, preserve available
 outputs with an archive manifest instead of rewriting the historical events.
+
+
+For stack-frame differences, `frame_layout.local_inventory` distinguishes unique
+name pairs, original-only and candidate-only debug declarations, and ambiguous
+shadowed names. FAST prints counts; the compact card prioritizes exceptions and
+links full details. A missing debug declaration does not prove missing source,
+and type sizes are not a stack-allocation total. Use the recorded locations and
+separate width evidence before proposing a bounded change.

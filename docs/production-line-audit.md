@@ -491,3 +491,20 @@ audit; this is interface recovery, not a new function-byte match claim.
 
 A fourth real task, check_dir, promoted using the new durable log path. All 16
 worker tests passed. See `docs/attempts/durable-worker-validation.json`.
+
+
+## Frame-local evidence coverage
+
+Stack diagnostics previously compared only names present uniquely on both sides,
+hiding unmatched and shadowed declarations. The new inventory retains original
+and candidate types, sizes, scopes and locations without guessing correspondence
+for duplicate names. Compact cards show eight prioritized rows and omission counts;
+full function evidence retains every row. FAST prints the four inventory counts.
+
+Real validation covers draw_frame (22 historical-only declarations), get_string,
+view_profile, replay_selector (shadowed p), and fldads_threadmain (all three locals
+paired despite different frame sizes). These observations do not establish source
+omissions or stack occupancy. Eight stack/compaction controls and global audit
+passed; live FAST retains the expected unresolved result. The entire queue and
+ledger function states remain unchanged. See
+`docs/attempts/frame-local-inventory-validation.json`.
