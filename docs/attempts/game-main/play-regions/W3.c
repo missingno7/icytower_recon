@@ -351,8 +351,17 @@ int play(void)
     }
 
     /* REGION W4: lines 4374..4683 (post-game accounting, gameData XML, replay files, profile, highscore qualification) */
+    {
+        /* DWARF block 133269 opens at main.c:4650 and runs to the end of the function, so the
+         * highscore/results state is one scope that spans regions W4 and W5. */
+        float hy;
+        int gotHigh;
+        int qualify[15];
+        int qualifyValue[15];
+        int gameover_bmp_id;
 
     /* REGION W5: lines 4687..5021 (results screens, name entry, highscore entry, epilogue, replay menu) */
+    }
 
     return play_again;
 }

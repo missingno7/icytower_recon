@@ -754,6 +754,15 @@ int play(void)
         rest(2);                                                             /* 4369 */
     }
 
+    {
+        /* DWARF block 133269 opens at main.c:4650 and runs to the end of the function, so the
+         * highscore/results state is one scope that spans regions W4 and W5. */
+        float hy;
+        int gotHigh;
+        int qualify[15];
+        int qualifyValue[15];
+        int gameover_bmp_id;
+
     /* lines 4374..4426: recording gates a small profile play-time update vs. the full
      * gameData stats snapshot + itrcheck-gated XML dump. */
     if (recording) {
@@ -938,11 +947,8 @@ int play(void)
 
         /* lines 4650..4683: highscore qualification */
         if (!closeButtonClicked) {
-            int qualify[15];
-            int qualifyValue[15];
-            int gotHigh;
-            int gameover_bmp_id;
-            int rank;
+            int rank;   /* qualify, qualifyValue, gotHigh and gameover_bmp_id live in the enclosing
+                         * DWARF block 133269, which opens here and runs into REGION W5 */
 
             for (i = 0; i < 15; i++)
                 qualify[i] = 0;
@@ -988,13 +994,9 @@ int play(void)
     }
 
     {
-        /* DWARF block (outer, shared with REGION W4): results-panel/highscore state. */
-        float hy = 0.0f;   /* slides in toward 136.0; block 133269 opens at main.c:4650, shared
-                            * with REGION W4 which is out of this region's reach, so no write is
-                            * visible inside 4687..5021 -- initialize at first use here */
-        int gotHigh;
-        int qualify[15];
-        int qualifyValue[15];
+        /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
+         * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
+        hy = 0.0f;         /* slides in toward 136.0 */
         int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
         char *initials = NULL;
 
@@ -1345,6 +1347,8 @@ int play(void)
             clear_bitmap(screen);                                                                 /* inlined */
         }
     }
+
+    }   /* end of DWARF block 133269, opened in REGION W4 */
 
     return play_again;
 }

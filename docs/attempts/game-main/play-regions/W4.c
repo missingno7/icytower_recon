@@ -70,6 +70,16 @@ int play(void)
         /* REGION W3: lines 4000..4369 (combo sounds, quit/pause screens, screenshots, frame draw and pacing) */
     }
 
+    /* REGION W4: lines 4374..4683 (post-game accounting, gameData XML, replay files, profile, highscore qualification) */
+    {
+        /* DWARF block 133269 opens at main.c:4650 and runs to the end of the function, so the
+         * highscore/results state is one scope that spans regions W4 and W5. */
+        float hy;
+        int gotHigh;
+        int qualify[15];
+        int qualifyValue[15];
+        int gameover_bmp_id;
+
     /* lines 4374..4426: recording gates a small profile play-time update vs. the full
      * gameData stats snapshot + itrcheck-gated XML dump. */
     if (recording) {
@@ -254,11 +264,8 @@ int play(void)
 
         /* lines 4650..4683: highscore qualification */
         if (!closeButtonClicked) {
-            int qualify[15];
-            int qualifyValue[15];
-            int gotHigh;
-            int gameover_bmp_id;
-            int rank;
+            int rank;   /* qualify, qualifyValue, gotHigh and gameover_bmp_id live in the enclosing
+                         * DWARF block 133269, which opens here and runs into REGION W5 */
 
             for (i = 0; i < 15; i++)
                 qualify[i] = 0;
@@ -304,6 +311,7 @@ int play(void)
     }
 
     /* REGION W5: lines 4687..5021 (results screens, name entry, highscore entry, epilogue, replay menu) */
+    }
 
     return play_again;
 }

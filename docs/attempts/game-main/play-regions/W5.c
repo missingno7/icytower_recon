@@ -71,16 +71,20 @@ int play(void)
     }
 
     /* REGION W4: lines 4374..4683 (post-game accounting, gameData XML, replay files, profile, highscore qualification) */
-
-    /* REGION W5: lines 4687..5021 (results screens, name entry, highscore entry, epilogue, replay menu) */
     {
-        /* DWARF block (outer, shared with REGION W4): results-panel/highscore state. */
-        float hy = 0.0f;   /* slides in toward 136.0; block 133269 opens at main.c:4650, shared
-                            * with REGION W4 which is out of this region's reach, so no write is
-                            * visible inside 4687..5021 -- initialize at first use here */
+        /* DWARF block 133269 opens at main.c:4650 and runs to the end of the function, so the
+         * highscore/results state is one scope that spans regions W4 and W5. */
+        float hy;
         int gotHigh;
         int qualify[15];
         int qualifyValue[15];
+        int gameover_bmp_id;
+
+    /* REGION W5: lines 4687..5021 (results screens, name entry, highscore entry, epilogue, replay menu) */
+    {
+        /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
+         * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
+        hy = 0.0f;         /* slides in toward 136.0 */
         int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
         char *initials = NULL;
 
@@ -431,6 +435,8 @@ int play(void)
             clear_bitmap(screen);                                                                 /* inlined */
         }
     }
+
+    }   /* end of DWARF block 133269, opened in REGION W4 */
 
     return play_again;
 }
