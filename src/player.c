@@ -81,11 +81,10 @@ void update_player(Tplayer *p)
         if (ABS(p->sx) > 4)
             p->bounce = 20;
     }
-    if (p->status) {
+    if (p->status)
         p->sy += 0.8 + gravity_modifier[get_demo()->gravity];
-        if (p->status == 1 && p->sy > 0)
-            p->status = 2;
-    }
+    if (p->status == 1 && p->sy > 0)
+        p->status = 2;
 }
 
 int jump_player(Tplayer *p, int cheat)
