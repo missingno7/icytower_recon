@@ -991,21 +991,20 @@ extern void play_jump_sound(Tplayer *p);
  * flash mode 1 and fixed-point rotation/scaling for mode 0. */
 void draw_reward(BITMAP *bmp)
 {
-    int w;
-    int h;
-
     if (options.flash) {
         if (options.flash!=1)
             return;
-        w=fixtoi(fixmul(itofix(reward_bmp->w),reward_scale));
-        h=fixtoi(fixmul(itofix(reward_bmp->h),reward_scale));
-        stretch_sprite(bmp,reward_bmp,360-w/2,320-h/2,w,h);
+        stretch_sprite(bmp,reward_bmp,
+                       320-(int)(fixtof(reward_scale/2)*reward_bmp->w),
+                       360-(int)(fixtof(reward_scale/2)*reward_bmp->h)-fixtoi(reward_scale*reward_bmp->h/2),
+                       fixtoi(reward_scale*reward_bmp->w),
+                       fixtoi(reward_scale*reward_bmp->h));
     }
     else {
         rotate_scaled_sprite(bmp,reward_bmp,
-                             itofix(360)-fixmul(itofix(reward_bmp->w),reward_scale)/2,
-                             itofix(320)-fixmul(itofix(reward_bmp->h),reward_scale)/2,
-                             itofix(0),reward_scale);
+                             320-(int)(fixtof(reward_scale/2)*reward_bmp->w),
+                             360-(int)(fixtof(reward_scale)*120-fixtof(reward_scale/2)*reward_bmp->h),
+                             reward_scale<<8,reward_scale);
     }
 }
 
@@ -2313,33 +2312,89 @@ void handle_player_collision_combo(int lastX, int lastY)
  * normal-control path; replay control recording remains to be restored. */
 void handle_player_input(Tcontrol *control)
 {
-    Tcontrol *input = (Tcontrol *)control;
-    Tplayer *p;
+    int rp;
+    unsigned char flags;
 
-    if (!input)
+    if (!control)
         return;
-    p = ply[player_id];
-    if (is_left(input)) {
-        if (p->sx < 0.0)
-            p->sx *= 0.8;
-        p->sx -= 0.1;
+    if (recording) {
+        poll_control(control,0);
+        if (ply[player_id]->dead) {
+            demo->data[rec_pos+1].key_flags=0x80;
+            demo->data[rec_pos+1].cycle_count=0;
+            demo->data[rec_pos+2].key_flags=0;
+            demo->data[rec_pos+2].cycle_count=0;
+        }
+        else {
+            flags=control->flags&0x93;
+            if (demo->data[rec_pos].key_flags&0x80) {
+                demo->data[rec_pos+1].key_flags=0x80;
+                demo->data[rec_pos+1].cycle_count=0;
+                demo->data[rec_pos+2].key_flags=0;
+                demo->data[rec_pos+2].cycle_count=0;
+            }
+            else if (demo->data[rec_pos].key_flags==flags)
+                demo->data[rec_pos].cycle_count++;
+            else {
+                rec_pos++;
+                demo->data[rec_pos].key_flags=flags;
+                demo->data[rec_pos].cycle_count=0;
+            }
+        }
     }
-    else if (is_right(input)) {
-        if (p->sx > 0.0)
-            p->sx *= 0.8;
-        p->sx += 0.1;
+    else {
+        rp=rec_pos-1;
+        if (rp>=0) {
+            if (rp>=demo->size)
+                control->flags=0;
+            else {
+                control->flags=demo->data[rp].key_flags;
+                if (demo->data[rp].cycle_count>0)
+                    demo->data[rp].cycle_count--;
+                else
+                    rec_pos++;
+            }
+        }
+        else
+            rec_pos++;
+    }
+
+    if (is_left(control)) {
+        if (ply[player_id]->sx>0)
+            ply[player_id]->sx*=0.7;
+        ply[player_id]->sx-=0.3;
+    }
+    else if (is_right(control)) {
+        if (ply[player_id]->sx<0)
+            ply[player_id]->sx*=0.7;
+        ply[player_id]->sx+=0.3;
     }
     else
-        p->sx *= 0.9;
+        ply[player_id]->sx*=0.9;
 
-    if (is_fire(input)) {
-        if (!p->jump_key && jump_player(p, 0)) {
-            p->jump_key = -1;
-            play_jump_sound(p);
+    if (!rejump) {
+        if (is_fire(control)) {
+            if (!ply[player_id]->jump_key) {
+                if (jump_player(ply[player_id],0)) {
+                    ply[player_id]->jump_key=-1;
+                    play_jump_sound(ply[player_id]);
+                    if (profile)
+                        profile->total_jumps++;
+                }
+            }
         }
-        return;
+        if (!is_fire(control))
+            ply[player_id]->jump_key=0;
     }
-    p->jump_key = 0;
+    else {
+        if (is_fire(control)) {
+            if (jump_player(ply[player_id],0)) {
+                play_jump_sound(ply[player_id]);
+                if (profile)
+                    profile->total_jumps++;
+            }
+        }
+    }
 }
 
 /* Partial recovery of main.c:1375, 0x40e7dc..0x40fe78.  The oracle starts
