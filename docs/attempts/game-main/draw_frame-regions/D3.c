@@ -32,7 +32,13 @@ void draw_frame(BITMAP *bmp)
 
     /* lines 2698..2699: cmp/idiv fragments (offset 2970..3063) that sit between
      * the D1/D2 loop tail above and line 2705's code below; they could not be
-     * isolated as standalone D3 statements from this evidence alone. (?) */
+     * isolated as standalone D3 statements from this evidence alone. (?)
+     * Checked: offset 2970 is "cmp $0x1f0,%esi; je ..." and 2982..3063 computes
+     * (map.offset / edi) via idiv, multiplies by the fp constant 1.476 (fmul),
+     * truncates back to int (fistpl), adds it to %esi and indexes data[] off the
+     * result (mov 0x640(%eax),%eax) -- a map.offset-driven floor/background-tile
+     * lookup, i.e. the same parallax/floor-tile family as the D1/D2 unrolled loop
+     * noted above, not a D3 statement. Still left to D1/D2's owner. */
 
     draw_sprite(bmp, data[16].dat, 22, 100);
     if (ply[player_id]->in_combo) {

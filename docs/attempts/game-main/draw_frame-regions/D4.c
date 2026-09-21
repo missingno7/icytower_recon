@@ -38,34 +38,47 @@ void draw_frame(BITMAP *bmp)
         myPos = rec_pos;
         len = demo->size;
         ox = 0x27b - vcr->w;
-        oy = 0x1db - vcr->h;
-        draw_sprite(bmp, vcr, ox, oy); /* ? line 2778: no main.c row in the line table for this call; it is fully absorbed by draw.inl:238 between the 2777 and 2779 rows */
+        y = 0x1db - vcr->h; /* DWARF: `y`'s slot (reg edi) is live 4279..4341, exactly this
+                              * assignment through the dead-check below; the D1-owned `x`
+                              * local is NOT live over the matching esi computation here
+                              * (its ranges stop at 2234), so that esi temp stays `ox`. */
+        draw_sprite(bmp, vcr, ox, y); /* offsets 4282..4315, draw.inl:238 -- the only main.c:2778
+                                        * candidate in this range; args are the ox/y just set. */
         if (!ply[player_id]->dead) {
+            /* `y` stays live (edi) through 7594..7837 for these three: is_left/is_fire/is_right
+             * each build `y + 5` directly in a register (ecx) while the x-argument is spilled
+             * through the `cx` stack slot (-0x178) only as a call-argument temporary. */
             if (is_left(&ctrl))
-                draw_sprite(bmp, data[128].dat, ox + 0x61, oy + 5);
+                draw_sprite(bmp, data[128].dat, ox + 0x61, y + 5);
             if (is_fire(&ctrl))
-                draw_sprite(bmp, data[130].dat, ox + 0x6b, oy + 5);
+                draw_sprite(bmp, data[130].dat, ox + 0x6b, y + 5);
             if (is_right(&ctrl))
-                draw_sprite(bmp, data[129].dat, ox + 0x75, oy + 5);
+                draw_sprite(bmp, data[129].dat, ox + 0x75, y + 5);
         }
-        cy = oy + 0xa;
-        cx = ox + 0xa;
-        set_clip_rect(bmp, cx, 0, 0x26f, 0x1df);
+        /* Stack-slot evidence (DW_OP_breg5): cx = -0x178(ebp), cy = -0x174(ebp).
+         * offset 4338 "add $0xa,%edi; mov %edi,-0x178(%ebp)" stores y+0xa into cx (edi holds y).
+         * offset 4347 "lea 0xa(%esi),%edi; mov %edi,-0x174(%ebp)" stores ox+0xa into cy (esi holds ox),
+         * and that same edi is the set_clip_rect x1 argument, i.e. cy, not cx. */
+        cx = y + 0xa;
+        cy = ox + 0xa;
+        set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);
         if (!demo->comment[0])
             sprintf(scrollerText, "%s%s%s", "", " - ", demo->name);
         else
             sprintf(scrollerText, "%s%s%s", demo->comment, " - ", demo->name);
+        /* offset 4479 "mov -0x178(%ebp),%edi; add $0x4,%edi" reloads cx (not cy) for the
+         * y-coordinate of every textout_ex below; the x-coordinate keeps using ox. */
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,
-            cy + 4, makecol(150, 150, 160), -1);
+            cx + 4, makecol(150, 150, 160), -1);
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xd - scroll_count / 2,
-            cy + 4, makecol(200, 200, 210), -1);
+            cx + 4, makecol(200, 200, 210), -1);
         if (demo->comment[0]) {
             textout_ex(bmp, data[53].dat, " - ",
                 ox + 0xc - scroll_count / 2 + text_length(data[53].dat, demo->name),
-                cy + 4, makecol(200, 200, 210), -1);
+                cx + 4, makecol(200, 200, 210), -1);
             textout_ex(bmp, data[53].dat, demo->comment,
                 ox - scroll_count / 2 + 0x1e + text_length(data[53].dat, demo->name),
-                cy + 4, makecol(200, 200, 210), -1);
+                cx + 4, makecol(200, 200, 210), -1);
         }
         set_clip_rect(bmp, 0, 0, 0x27f, 0x1df);
         if (demo->comment[0]) {
@@ -78,9 +91,14 @@ void draw_frame(BITMAP *bmp)
                     scroll_count = -250;
             }
         }
-        rectfill(bmp, cx, cy + 0x1e,
-            cx + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
-            cy + 0x1d, makecol(50, 200, 50));
+        /* rectfill is inlined (draw.inl:112, offsets 4801..4895) with no visible mnemonics
+         * through the available tools, so its argument order is inferred, not disassembled:
+         * cx is the value carrying the y+0xa quantity throughout this scope (used as the
+         * y-coordinate for every textout_ex above) and cy carries the ox+0xa quantity (used
+         * as set_clip_rect's x1), so the bar rect keeps that same x=cy / y=cx pairing. (?) */
+        rectfill(bmp, cy, cx + 0x1e,
+            cy + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
+            cx + 0x1d, makecol(50, 200, 50));
     }
 
     if (debug && key[KEY_F2]) {

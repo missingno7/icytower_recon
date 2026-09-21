@@ -400,6 +400,11 @@ int play(void)
                                        320, 0x1b8, -1, -1);                                    /* 4983 */
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
+                    while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */
+                        /* ? the two-stage key test at these lines (checked twice, once before
+                         * and once after the fall-through) may debounce a stale press; no
+                         * distinguishing branch structure survives at the C level */
+                    }
                 }
             }
         }
