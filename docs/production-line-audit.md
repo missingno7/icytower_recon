@@ -973,3 +973,16 @@ prerequisites in replay.c. Every raw function and workflow proof state is unchan
 CANONICAL_POINTEE_MATCH is a separate type-migration result, never a new function
 match. The full attempt and resulting dependency changes are indexed in
 docs/attempts/pointee-promotion-validation.json.
+
+
+## Validated supervisor-to-worker handoff
+
+After the shared replay pointee intervention, an unmodified mechanical worker
+selected and promoted load_replay and save_replay interface qualifiers across
+main.c and replay.c, then canonicalized Toptions. All three completed in one
+unattended run through normal FAST/ACCEPTANCE, link and audit gates. This removed
+seven additional direct caller prerequisites, with every raw function and workflow
+proof unchanged. No session remains open. The replay-type lesson enabled routine
+follow-up work rather than another per-caller type investigation. Complete evidence
+is indexed in docs/attempts/pointee-handoff-validation.json. This does not complete
+the outstanding cheap function-body handover requirement.

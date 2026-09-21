@@ -275,26 +275,7 @@
     ],
     "instruction_differences": [],
     "instruction_count_hypotheses": [],
-    "declaration_differences": [
-      {
-        "variable": "file",
-        "original_type": "const char *",
-        "candidate_type": "char *",
-        "original_die": 224086,
-        "candidate_die": 12088,
-        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
-        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
-      },
-      {
-        "variable": "path",
-        "original_type": "const char *",
-        "candidate_type": "char *",
-        "original_die": 224069,
-        "candidate_die": 12071,
-        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
-        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
-      }
-    ],
+    "declaration_differences": [],
     "cast_chains": [],
     "shifts": [],
     "confidence": "NO_INSTRUCTION_EVIDENCE",
@@ -612,7 +593,7 @@
           {
             "die": 12088,
             "name": "file",
-            "type": "char *",
+            "type": "const char *",
             "base_type": "char",
             "base_encoding": "6\t(signed char)",
             "location": {
@@ -1154,7 +1135,7 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -30,
+  "priority": -25,
   "compound_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
@@ -1188,41 +1169,6 @@
   "callee_interface_scope": {
     "observations": [
       {
-        "function": "load_replay",
-        "source": "src/replay.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          1173
-        ],
-        "candidate_card": "docs/current/interfaces/load_replay.json",
-        "local_declarations": [
-          {
-            "return_type": "Treplay*",
-            "parameter_types": [
-              "char*"
-            ],
-            "canonical_return_type": "Treplay*",
-            "canonical_parameter_types": [
-              "char*"
-            ]
-          },
-          {
-            "return_type": "Treplay*",
-            "parameter_types": [
-              "char*"
-            ],
-            "canonical_return_type": "Treplay*",
-            "canonical_parameter_types": [
-              "char*"
-            ]
-          }
-        ],
-        "layout_issues": [],
-        "call_offset_count": 1
-      },
-      {
         "function": "log2file",
         "source": "src/replay.c",
         "blocking": false,
@@ -1250,9 +1196,7 @@
         "call_offset_count": 1
       }
     ],
-    "blocking_functions": [
-      "load_replay"
-    ],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
     "omitted_observations": 0
   },
@@ -1268,47 +1212,14 @@
   ],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "save_replay",
-      "source": "src/replay.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "save_replay",
-      "historical": [
-        {
-          "cu": "src/replay.c",
-          "return_type": "int",
-          "parameter_types": [
-            "const char*",
-            "const char*",
-            "Treplay*",
-            "int",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 224031
-        }
-      ],
-      "type_layout_issues": [],
-      "candidate_signatures": [
-        "('int', ['char*', 'char*', 'Treplay*', 'int', 'int'])"
-      ],
-      "candidate_card": "docs/current/interfaces/save_replay.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/replay/save_replay.json",
   "evidence_counts": {
     "relocation_mismatches": 1,
     "direct_transfer_mismatches": 2,
-    "callee_interface_observations": 2,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 1,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,

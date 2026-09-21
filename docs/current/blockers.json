@@ -3372,6 +3372,31 @@
     {
       "source": "src/replay.c",
       "target": "game-replay",
+      "function": "load_replay",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 16,
+        "original_va": 4312568,
+        "candidate_byte": 7,
+        "original_byte": 133
+      },
+      "verification_command": "python tools/check_function.py game-replay load_replay",
+      "begin_command": "python tools/grinder_task.py begin game-replay load_replay",
+      "promotion_command": "python tools/promote_function.py game-replay load_replay",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1136,
+      "candidate_card": "docs/current/functions/replay/load_replay.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
       "function": "get_replay_property",
       "status": "DIFFER",
       "state": "SOURCE_DIFFER",
@@ -3391,6 +3416,31 @@
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
       "size": 1147,
       "candidate_card": "docs/current/functions/replay/get_replay_property.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "save_replay",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -25,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "first_difference": {
+        "offset": 16,
+        "original_va": 4316552,
+        "candidate_byte": 32,
+        "original_byte": 160
+      },
+      "verification_command": "python tools/check_function.py game-replay save_replay",
+      "begin_command": "python tools/grinder_task.py begin game-replay save_replay",
+      "promotion_command": "python tools/promote_function.py game-replay save_replay",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 1227,
+      "candidate_card": "docs/current/functions/replay/save_replay.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -4238,82 +4288,6 @@
       ]
     },
     {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "load_replay",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 16,
-        "original_va": 4312568,
-        "candidate_byte": 7,
-        "original_byte": 133
-      },
-      "verification_command": "python tools/check_function.py game-replay load_replay",
-      "begin_command": "python tools/grinder_task.py begin game-replay load_replay",
-      "promotion_command": "python tools/promote_function.py game-replay load_replay",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1136,
-      "candidate_card": "docs/current/functions/replay/load_replay.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "load_replay",
-          "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "save_replay",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 16,
-        "original_va": 4316552,
-        "candidate_byte": 32,
-        "original_byte": 160
-      },
-      "verification_command": "python tools/check_function.py game-replay save_replay",
-      "begin_command": "python tools/grinder_task.py begin game-replay save_replay",
-      "promotion_command": "python tools/promote_function.py game-replay save_replay",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 1227,
-      "candidate_card": "docs/current/functions/replay/save_replay.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "load_replay",
-          "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "save_replay",
-          "candidate_card": "docs/current/interfaces/save_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/profile.c",
       "target": "game-profile",
       "function": "draw_profile_selector",
@@ -4464,7 +4438,7 @@
       "begin_command": "python tools/grinder_task.py begin game-main do_replay_menu",
       "promotion_command": "python tools/promote_function.py game-main do_replay_menu",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string, handle_menu, load_replay, save_replay",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: drawSlot, get_string, handle_menu",
       "size": 2661,
       "candidate_card": "docs/current/functions/main/do_replay_menu.json",
       "task_kind": "FUNCTION_BODY",
@@ -4491,22 +4465,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "load_replay",
-          "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "save_replay",
-          "candidate_card": "docs/current/interfaces/save_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -4539,14 +4497,6 @@
           "function": "draw_replay_selector",
           "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
           "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "load_replay",
-          "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "CHEAP",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
@@ -4681,14 +4631,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "load_replay",
-          "candidate_card": "docs/current/interfaces/load_replay.json",
-          "difficulty": "CHEAP",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         },
         {

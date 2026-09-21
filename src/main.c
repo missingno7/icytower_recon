@@ -204,27 +204,7 @@ void show_instructions(void)
     fadeOut(16);
 }
 
-typedef struct Toptions {
-    int flash;
-    int checksum;
-    int jump_hold;
-    int full_screen;
-    int floor_shrink;
-    int floor_size;
-    int start_speed;
-    int speed_increase;
-    int gravity;
-    int msc_volume;
-    int snd_volume;
-    int sort_method;
-    char updateDate[16];
-    char posterDate[16];
-    char posterUrl[256];
-    char posterSrc[256];
-    int posterSize;
-    char lastProfile[32];
-    int timesStarted;
-} Toptions;
+#include "recovered/Toptions.h"
 
 typedef struct Tprofile {
     unsigned char header[6];
@@ -565,10 +545,10 @@ extern void draw_menu(BITMAP *bmp, Tmenu *menu, Tmenu_params *mp,
                       int x, int y, int dx);
 extern void reset_menu(Tmenu *menu, Tmenu_params *mp, int selection);
 extern void destroy_replay(Treplay *r);
-extern Treplay *load_replay(char *filename);
+extern Treplay *load_replay(const char *filename);
 extern Treplay *replay_selector(Tcontrol *ctrl, char *path);
 extern int calc_replay_checksum(Treplay *r);
-extern int save_replay(char *path, char *file, Treplay *r, int size,
+extern int save_replay(const char *path, const char *file, Treplay *r, int size,
                        int make_new_date);
 extern char *get_filename(const char *path);
 extern char *get_extension(const char *path);

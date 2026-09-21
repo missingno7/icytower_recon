@@ -110,7 +110,7 @@ extern void checkMenuFocus(void);
 extern void play_menu_move(void);
 extern void play_menu_select(void);
 extern int my_alert(char *func, char *txt, int choice, int enter_hint);
-Treplay *load_replay(char *filename);
+Treplay *load_replay(const char *filename);
 
 int calc_replay_checksum_131(Treplay *r)
 {
@@ -481,7 +481,7 @@ Treplay *create_replay(int size)
     return r;
 }
 
-Treplay *load_replay(char *filename)
+Treplay *load_replay(const char *filename)
 {
     void *pf;
     Treplay r_temp;
@@ -626,7 +626,7 @@ int get_replay_property(const char *filename, int property)
     return retval;
 }
 
-int save_replay(char *path, char *file, Treplay *r, int size, int make_new_date)
+int save_replay(const char *path, const char *file, Treplay *r, int size, int make_new_date)
 {
     void *pf;
     int i;
