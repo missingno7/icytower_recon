@@ -19,11 +19,12 @@ from compiler_context import load_context
 from branch_diagnostics import localized_guards
 from data_diagnostics import capture_snapshot,diagnose
 from relocation_diagnostics import mismatch_views
+from instruction_alignment import analyze as instruction_alignment
 
 OBJDUMP = Path('C:/msys64/mingw64/bin/objdump.exe')
 CURRENT = ROOT/'docs/current'
 VERIFIER_FILES = ['tools/common.py','tools/experiment.py','tools/binary.py','tools/dwarf.py','tools/instructions.py','tools/build.py','tools/data_owners.py','tools/type_graph.py','tools/control_transfers.py']
-ANALYSIS_FILES = ['tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
+ANALYSIS_FILES = ['tools/instruction_alignment.py','tools/typed_interface_tasks.py','tools/interface_type_probe.py','tools/relocation_diagnostics.py','tools/interface_scope.py','tools/classify_diff.py','tools/recovery_pipeline.py','tools/type_graph.py','tools/source_scope.py','tools/audit_signedness.py','tools/interfaces.py','tools/interface_tasks.py','tools/card_view.py','tools/type_tasks.py','tools/dwarf_locations.py','tools/compiler_context.py','tools/source_order.py','tools/array_tasks.py','tools/branch_diagnostics.py',
                   'tools/literal_dependencies.py','tools/global_type_tasks.py','tools/reference_diagnostics.py','tools/literal_diagnostics.py','tools/generate_types.py','tools/storage_diagnostics.py','tools/static_scope_tasks.py','tools/scheduling_diagnostics.py','tools/stack_diagnostics.py','tools/local_declarations.py','tools/type_aliases.py','tools/type_views.py','tools/dwarf_layout.py','tools/data_diagnostics.py','tools/data_tasks.py','tools/initializer_scope.py',
                   'evidence/census/location-lists.json','evidence/census/range-lists.json','evidence/census/line-mappings.json','docs/codegen-rules.json']
 
@@ -398,7 +399,7 @@ def card_for(target,report,row,ledger=None,interface_index=None):
             'historical_va':hex(f['va']),'historical_size':f['size'],'status':row['status'],**wf,**ev,
             'compiler':report['build']['compiler'],'compiler_flags':report['build']['flags'],'current_candidate_size':row.get('candidate_size'),
             'first_difference':diff,'mismatch_count':len(row.get('difference_offsets',[])),'classification_confidence':'MECHANICAL_PROOF' if row['status']=='FUNCTION_MATCH' else 'OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN' if (row.get('frame_layout') or {}).get('first_mismatch_is_frame_allocation') else 'CONSERVATIVE_HYPOTHESIS',
-            'disassembly':{'original':old_window,'candidate':new_window},'relevant_types':types,'original_line_window':sorted(nearest,key=lambda l:l['address']),
+            'instruction_alignment':instruction_alignment(row,old),'disassembly':{'original':old_window,'candidate':new_window},'relevant_types':types,'original_line_window':sorted(nearest,key=lambda l:l['address']),
             'referenced_globals':data,'literal_dependencies':literal_dependencies(literal_groups(report),row['name']),'calls':calls,'original_calls':original_calls,'indirect_control_flow':indirect,
             'relocation_mismatches':mismatch_views(row,old),
             'direct_transfer_mismatches':[t for t in row.get('direct_transfers',[]) if not t['equal'] or not t.get('layout_operand_equal',True)],

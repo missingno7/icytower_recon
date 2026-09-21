@@ -403,6 +403,133 @@
   },
   "mismatch_count": 220,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "instruction_alignment": {
+    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
+    "original_instruction_count": 185,
+    "candidate_instruction_count": 80,
+    "changed_group_count": 10,
+    "shown_group_count": 3,
+    "hunks": [
+      {
+        "kind": "delete",
+        "original": {
+          "instruction_start": 2,
+          "instruction_end": 3,
+          "function_offset": 3,
+          "instructions": [
+            {
+              "address": 4240359,
+              "bytes": "57",
+              "mnemonic": "push",
+              "assembly": "push   %edi"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 2,
+          "instruction_end": 2,
+          "function_offset": 3,
+          "instructions": [],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 5,
+          "instruction_end": 6,
+          "function_offset": 6,
+          "instructions": [
+            {
+              "address": 4240362,
+              "bytes": "83ec2c",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x2c,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 4,
+          "instruction_end": 5,
+          "function_offset": 5,
+          "instructions": [
+            {
+              "address": 15549,
+              "bytes": "83ec10",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x10,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 8,
+          "instruction_end": 20,
+          "function_offset": 14,
+          "instructions": [
+            {
+              "address": 4240370,
+              "bytes": "0f84bf000000",
+              "mnemonic": "je",
+              "assembly": "je     40b4b7 <_handle_player_input+0xd3>"
+            },
+            {
+              "address": 4240376,
+              "bytes": "8b3d288e4f00",
+              "mnemonic": "mov",
+              "assembly": "mov    0x4f8e28,%edi"
+            },
+            {
+              "address": 4240382,
+              "bytes": "85ff",
+              "mnemonic": "test",
+              "assembly": "test   %edi,%edi"
+            },
+            {
+              "address": 4240384,
+              "bytes": "0f8596010000",
+              "mnemonic": "jne",
+              "assembly": "jne    40b59c <_handle_player_input+0x1b8>"
+            }
+          ],
+          "omitted_instructions": 8
+        },
+        "candidate": {
+          "instruction_start": 7,
+          "instruction_end": 10,
+          "function_offset": 13,
+          "instructions": [
+            {
+              "address": 15557,
+              "bytes": "7442",
+              "mnemonic": "je",
+              "assembly": "je     3d09 <_handle_player_input+0x51>"
+            },
+            {
+              "address": 15559,
+              "bytes": "a100000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x0,%eax"
+            },
+            {
+              "address": 15564,
+              "bytes": "8b348500000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x0(,%eax,4),%esi"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      }
+    ],
+    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
+    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
+  },
   "disassembly": {
     "original": [
       {

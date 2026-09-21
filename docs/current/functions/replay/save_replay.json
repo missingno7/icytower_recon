@@ -314,6 +314,134 @@
   },
   "mismatch_count": 7,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "instruction_alignment": {
+    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
+    "original_instruction_count": 296,
+    "candidate_instruction_count": 296,
+    "changed_group_count": 3,
+    "shown_group_count": 3,
+    "hunks": [
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 7,
+          "instruction_end": 8,
+          "function_offset": 15,
+          "instructions": [
+            {
+              "address": 4316551,
+              "bytes": "bea07d4d00",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x4d7da0,%esi"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 7,
+          "instruction_end": 8,
+          "function_offset": 15,
+          "instructions": [
+            {
+              "address": 4059,
+              "bytes": "be20030000",
+              "mnemonic": "mov",
+              "assembly": "mov    $0x320,%esi"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 21,
+          "instruction_end": 23,
+          "function_offset": 79,
+          "instructions": [
+            {
+              "address": 4316615,
+              "bytes": "8b5518",
+              "mnemonic": "mov",
+              "assembly": "mov    0x18(%ebp),%edx"
+            },
+            {
+              "address": 4316618,
+              "bytes": "85d2",
+              "mnemonic": "test",
+              "assembly": "test   %edx,%edx"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 21,
+          "instruction_end": 23,
+          "function_offset": 79,
+          "instructions": [
+            {
+              "address": 4123,
+              "bytes": "8b7518",
+              "mnemonic": "mov",
+              "assembly": "mov    0x18(%ebp),%esi"
+            },
+            {
+              "address": 4126,
+              "bytes": "85f6",
+              "mnemonic": "test",
+              "assembly": "test   %esi,%esi"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 243,
+          "instruction_end": 245,
+          "function_offset": 1041,
+          "instructions": [
+            {
+              "address": 4317577,
+              "bytes": "8b4208",
+              "mnemonic": "mov",
+              "assembly": "mov    0x8(%edx),%eax"
+            },
+            {
+              "address": 4317580,
+              "bytes": "85c0",
+              "mnemonic": "test",
+              "assembly": "test   %eax,%eax"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 243,
+          "instruction_end": 245,
+          "function_offset": 1041,
+          "instructions": [
+            {
+              "address": 5085,
+              "bytes": "8b4a08",
+              "mnemonic": "mov",
+              "assembly": "mov    0x8(%edx),%ecx"
+            },
+            {
+              "address": 5088,
+              "bytes": "85c9",
+              "mnemonic": "test",
+              "assembly": "test   %ecx,%ecx"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      }
+    ],
+    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
+    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
+  },
   "disassembly": {
     "original": [
       {

@@ -383,3 +383,21 @@ retry. Three further typed caller tasks remain generated and CHEAP at this
 checkpoint. The full 257-test suite passed. Evidence and task links are in
 `docs/attempts/typed-caller-validation.json`; complete attempts are in
 `docs/attempts/interfaces/`.
+
+
+## Shifted instruction sequences
+
+Fixed-offset byte differences amplified small instruction-length changes. Cards
+and FAST now include bounded heuristic instruction-sequence groups, with separate
+original/candidate offsets. Keys preserve registers and ordinary immediates;
+candidate relocated fields use independent resolved values, external transfers
+use independent targets, and internal branches use decoded instruction indices.
+Unresolved fields do not align with original bytes. Complete decode and size
+limits bound cost; output is capped at three groups and four instructions per
+side. Nothing in this diagnostic feeds status, routing or promotion.
+
+Real change_profile output reduces 171 byte offsets to six sequence groups;
+stopGameMusic reduces 16 offsets to two groups. create_profile and add_floor also
+retain focused examples. The generated queue, all function statuses and workflows
+remain identical. Sixty diagnostic tests, fresh rejecting FAST and global audit
+passed. See `docs/attempts/instruction-alignment-validation.json`.

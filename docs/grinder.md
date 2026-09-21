@@ -313,3 +313,12 @@ conflicts and unsupported pointer forms stay with the supervisor. FAST/ACCEPTANC
 require every maintained declaration to agree, complete historical aggregate
 layout checks, and the existing whole-CU contribution-preservation gate. A generated
 recipe is permission for a bounded experiment, not proof that it will pass.
+
+
+For a source mismatch, `instruction_alignment` provides at most three short
+sequence-diff groups with separate original/candidate offsets and omitted counts.
+This helps when an early instruction-length change shifts many later byte offsets.
+Resolved relocation values and decoded transfer destinations supply comparison
+keys; unresolved fields stay distinct. Repeated sequences can align ambiguously,
+and a zero-group result is not equality or semantic proof. Use the strict FAST
+status and ownership diagnostics for acceptance, never sequence alignment.

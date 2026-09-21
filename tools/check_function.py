@@ -8,7 +8,7 @@ from card_view import compact_card
 
 
 def diagnostic(card):
-    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
+    keys=('function','source','status','state','interface_scope','source_pattern_prerequisites','body_edit_allowed','difference_class','current_candidate_size','historical_size','first_difference','disassembly','instruction_alignment','relocation_mismatches','direct_transfer_mismatches','prototype','parameters','locals','lexical_blocks','signedness','compiler_context','localized_guards','frame_layout','tail_jump_layout','literal_diagnostics','literal_dependencies','reference_diagnostics','instruction_order','source_patterns','storage_declarations','local_declaration_tasks','neighbor_layout','known_rules','difficulty','promotion_command')
     return {k:card[k] for k in keys}
 
 
@@ -22,7 +22,7 @@ def record_attempt(target,name,report,card,outcome='FAST',failure=None):
     except ValueError: body=None
     row={'source_body':body,'disassembly':card['disassembly'],'outcome':outcome,'source_inputs':report['build']['local_inputs'],'flags':report['build']['flags'],
          'status':card['status'],'state':card['state'],'first_difference':card['first_difference'],
-         'difference_class':card['difference_class'],'localized_guards':card.get('localized_guards'),
+         'difference_class':card['difference_class'],'instruction_alignment':card.get('instruction_alignment'),'localized_guards':card.get('localized_guards'),
          'reference_diagnostics':card.get('reference_diagnostics'),'literal_diagnostics':card.get('literal_diagnostics'),'tail_jump_layout':card.get('tail_jump_layout'),'instruction_order':card.get('instruction_order'),'source_patterns':card.get('source_patterns'),'storage_declarations':card.get('storage_declarations'),'compiler_context':card.get('compiler_context'),'frame_layout':card.get('frame_layout'),'difficulty':card.get('difficulty'),
          'routing_reason':card.get('routing_reason'),'failure':failure}
     from grinder_task import SESSION
@@ -80,6 +80,11 @@ def main():
             for i in rows:
                 bindings=', '.join(v['name']+': '+v['type'] for v in i.get('dwarf_variables',[]) if v.get('name'))
                 print('  %08x  %-22s %s%s'%(i['address'],i['bytes'],i['assembly'],' ; '+bindings if bindings else ''))
+        alignment=card.get('instruction_alignment') or {}
+        if alignment.get('state')=='DIAGNOSTIC_SEQUENCE_ALIGNMENT':
+            print('Instruction-sequence diagnostic:',alignment['changed_group_count'],'changed groups; heuristic, not proof')
+            for hunk in alignment['hunks']:
+                print('  %s: original instructions %d:%d at +%#x; candidate %d:%d at +%#x'%(hunk['kind'],hunk['original']['instruction_start'],hunk['original']['instruction_end'],hunk['original']['function_offset'],hunk['candidate']['instruction_start'],hunk['candidate']['instruction_end'],hunk['candidate']['function_offset']))
         print('relocation mismatches:',len(card['relocation_mismatches']),'direct-transfer/layout differences:',len(card['direct_transfer_mismatches']))
         for r in card['relocation_mismatches'][:4]:
             print('  relocation +%#x %s: %s; independently resolved target %s'%(r['function_offset'],r['symbol'],r['resolution'],r.get('target_va')))

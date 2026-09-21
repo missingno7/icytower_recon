@@ -352,6 +352,139 @@
   },
   "mismatch_count": 344,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "instruction_alignment": {
+    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
+    "original_instruction_count": 358,
+    "candidate_instruction_count": 113,
+    "changed_group_count": 18,
+    "shown_group_count": 3,
+    "hunks": [
+      {
+        "kind": "delete",
+        "original": {
+          "instruction_start": 2,
+          "instruction_end": 3,
+          "function_offset": 3,
+          "instructions": [
+            {
+              "address": 4241087,
+              "bytes": "56",
+              "mnemonic": "push",
+              "assembly": "push   %esi"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 2,
+          "instruction_end": 2,
+          "function_offset": 3,
+          "instructions": [],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 4,
+          "instruction_end": 5,
+          "function_offset": 5,
+          "instructions": [
+            {
+              "address": 4241089,
+              "bytes": "83ec40",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x40,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 3,
+          "instruction_end": 4,
+          "function_offset": 4,
+          "instructions": [
+            {
+              "address": 9472,
+              "bytes": "83ec34",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x34,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 6,
+          "instruction_end": 10,
+          "function_offset": 11,
+          "instructions": [
+            {
+              "address": 4241095,
+              "bytes": "a160d14d00",
+              "mnemonic": "mov",
+              "assembly": "mov    0x4dd160,%eax"
+            },
+            {
+              "address": 4241100,
+              "bytes": "85c0",
+              "mnemonic": "test",
+              "assembly": "test   %eax,%eax"
+            },
+            {
+              "address": 4241102,
+              "bytes": "747b",
+              "mnemonic": "je",
+              "assembly": "je     40b74b <_blit_to_screen+0x8f>"
+            },
+            {
+              "address": 4241104,
+              "bytes": "a0b8695000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x5069b8,%al"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 5,
+          "instruction_end": 9,
+          "function_offset": 10,
+          "instructions": [
+            {
+              "address": 9478,
+              "bytes": "8b1500000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x0,%edx"
+            },
+            {
+              "address": 9484,
+              "bytes": "85d2",
+              "mnemonic": "test",
+              "assembly": "test   %edx,%edx"
+            },
+            {
+              "address": 9486,
+              "bytes": "747f",
+              "mnemonic": "je",
+              "assembly": "je     258f <_blit_to_screen+0x93>"
+            },
+            {
+              "address": 9488,
+              "bytes": "a038000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x38,%al"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      }
+    ],
+    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
+    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
+  },
   "disassembly": {
     "original": [
       {

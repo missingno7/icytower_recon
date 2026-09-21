@@ -2545,6 +2545,122 @@
   },
   "mismatch_count": 1376,
   "classification_confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
+  "instruction_alignment": {
+    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
+    "original_instruction_count": 572,
+    "candidate_instruction_count": 564,
+    "changed_group_count": 34,
+    "shown_group_count": 3,
+    "hunks": [
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 5,
+          "instruction_end": 6,
+          "function_offset": 6,
+          "instructions": [
+            {
+              "address": 4322886,
+              "bytes": "83ec4c",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x4c,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 5,
+          "instruction_end": 6,
+          "function_offset": 6,
+          "instructions": [
+            {
+              "address": 130,
+              "bytes": "83ec6c",
+              "mnemonic": "sub",
+              "assembly": "sub    $0x6c,%esp"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 48,
+          "instruction_end": 50,
+          "function_offset": 131,
+          "instructions": [
+            {
+              "address": 4323011,
+              "bytes": "8b7dd0",
+              "mnemonic": "mov",
+              "assembly": "mov    -0x30(%ebp),%edi"
+            },
+            {
+              "address": 4323014,
+              "bytes": "8a5701",
+              "mnemonic": "mov",
+              "assembly": "mov    0x1(%edi),%dl"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 48,
+          "instruction_end": 50,
+          "function_offset": 131,
+          "instructions": [
+            {
+              "address": 255,
+              "bytes": "8b45d0",
+              "mnemonic": "mov",
+              "assembly": "mov    -0x30(%ebp),%eax"
+            },
+            {
+              "address": 258,
+              "bytes": "8a5001",
+              "mnemonic": "mov",
+              "assembly": "mov    0x1(%eax),%dl"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 81,
+          "instruction_end": 82,
+          "function_offset": 214,
+          "instructions": [
+            {
+              "address": 4323094,
+              "bytes": "0f8563060000",
+              "mnemonic": "jne",
+              "assembly": "jne    41fd7f <__strptime+0x73f>"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 81,
+          "instruction_end": 82,
+          "function_offset": 214,
+          "instructions": [
+            {
+              "address": 338,
+              "bytes": "0f8585060000",
+              "mnemonic": "jne",
+              "assembly": "jne    7dd <__strptime+0x761>"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      }
+    ],
+    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
+    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
+  },
   "disassembly": {
     "original": [
       {

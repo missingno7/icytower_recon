@@ -182,6 +182,133 @@
   },
   "mismatch_count": 206,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "instruction_alignment": {
+    "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
+    "original_instruction_count": 181,
+    "candidate_instruction_count": 184,
+    "changed_group_count": 12,
+    "shown_group_count": 3,
+    "hunks": [
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 96,
+          "instruction_end": 99,
+          "function_offset": 296,
+          "instructions": [
+            {
+              "address": 4286724,
+              "bytes": "8bb08c000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x8c(%eax),%esi"
+            },
+            {
+              "address": 4286730,
+              "bytes": "85f6",
+              "mnemonic": "test",
+              "assembly": "test   %esi,%esi"
+            },
+            {
+              "address": 4286732,
+              "bytes": "0f84aa000000",
+              "mnemonic": "je",
+              "assembly": "je     4169bc <_add_floor+0x1e0>"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 96,
+          "instruction_end": 99,
+          "function_offset": 296,
+          "instructions": [
+            {
+              "address": 608,
+              "bytes": "8bb88c000000",
+              "mnemonic": "mov",
+              "assembly": "mov    0x8c(%eax),%edi"
+            },
+            {
+              "address": 614,
+              "bytes": "85ff",
+              "mnemonic": "test",
+              "assembly": "test   %edi,%edi"
+            },
+            {
+              "address": 616,
+              "bytes": "0f8486000000",
+              "mnemonic": "je",
+              "assembly": "je     2f4 <_add_floor+0x1bc>"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "replace",
+        "original": {
+          "instruction_start": 101,
+          "instruction_end": 102,
+          "function_offset": 321,
+          "instructions": [
+            {
+              "address": 4286749,
+              "bytes": "0f8eb0000000",
+              "mnemonic": "jle",
+              "assembly": "jle    4169d3 <_add_floor+0x1f7>"
+            }
+          ],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 101,
+          "instruction_end": 102,
+          "function_offset": 321,
+          "instructions": [
+            {
+              "address": 633,
+              "bytes": "0f8eb5000000",
+              "mnemonic": "jle",
+              "assembly": "jle    334 <_add_floor+0x1fc>"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      },
+      {
+        "kind": "insert",
+        "original": {
+          "instruction_start": 104,
+          "instruction_end": 104,
+          "function_offset": 334,
+          "instructions": [],
+          "omitted_instructions": 0
+        },
+        "candidate": {
+          "instruction_start": 104,
+          "instruction_end": 106,
+          "function_offset": 334,
+          "instructions": [
+            {
+              "address": 646,
+              "bytes": "eb02",
+              "mnemonic": "jmp",
+              "assembly": "jmp    28a <_add_floor+0x152>"
+            },
+            {
+              "address": 648,
+              "bytes": "ddd8",
+              "mnemonic": "fstp",
+              "assembly": "fstp   %st(0)"
+            }
+          ],
+          "omitted_instructions": 0
+        }
+      }
+    ],
+    "normalization": "Candidate absolute fields use independent resolved values; external transfers use independent targets; intra-function transfers use decoded instruction indices. Unresolved fields never align with original bytes.",
+    "limit": "Sequence alignment is heuristic and may be ambiguous in repeated code. Equal groups are not body/semantic/layout proof. Never changes status, routing, edit permission or promotion."
+  },
   "disassembly": {
     "original": [
       {
