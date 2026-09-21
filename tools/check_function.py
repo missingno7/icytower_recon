@@ -96,6 +96,9 @@ def main():
             print('  shared literal .rdata+%#x: %d peer functions; owner unproven; %s'%(pool['candidate_addend'],pool['peer_function_count'],pool['candidate_card']))
         for literal in card.get('literal_diagnostics',[])[:4]:
             print('  literal +%#x: %s; candidate %r; original %r'%(literal['function_offset'],literal['classification'],literal.get('candidate_text',literal.get('candidate_hex')),literal.get('original_text',literal.get('original_hex'))))
+            placement=literal.get('placement_evidence',{})
+            if placement.get('state')=='UNIQUE_CONTENT_DISAGREES_WITH_RESOLVED_PLACEMENT':
+                print('    placement conflict: resolved %#x; unique content %#x; delta %+d (diagnostic only; binding retained)'%(placement['resolved_target'],placement['locations'][0],placement['content_minus_resolved_target']))
         for t in card['direct_transfer_mismatches'][:4]:
             print('  transfer +%#x %s: target proof %s; original layout operand %s'%(t['function_offset'],t['target_function'],t['equal'],t.get('layout_operand_equal')))
         for t in card['signedness']['declaration_differences'][:4]:

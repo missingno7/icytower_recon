@@ -19,6 +19,31 @@ def fixture():
 
 
 class LiteralTests(unittest.TestCase):
+    def test_placement_search_is_independent_of_original_operand_and_keeps_binding(self):
+        from literal_diagnostics import placement_evidence
+        relocation={'target_va':0x401004,'original_value':0x12345678,'resolution':'section base'}
+        first=placement_evidence(b'wb','C_STRING',relocation,Image())
+        relocation['original_value']=0x401000
+        self.assertEqual(first,placement_evidence(b'wb','C_STRING',relocation,Image()))
+        self.assertEqual(first['state'],'UNIQUE_CONTENT_DISAGREES_WITH_RESOLVED_PLACEMENT')
+        self.assertEqual(first['locations'],[0x401000])
+        self.assertEqual(first['resolved_target'],0x401004)
+        self.assertEqual(first['content_minus_resolved_target'],-4)
+
+    def test_ambiguous_empty_missing_and_truncated_content_are_explicit(self):
+        from literal_diagnostics import placement_evidence
+        image=Image();image.section_bytes=lambda s:b'wb\0'*20
+        ambiguous=placement_evidence(b'wb','C_STRING',{},image)
+        self.assertEqual(ambiguous['state'],'CONTENT_LOCATION_AMBIGUOUS')
+        self.assertIsNone(ambiguous['occurrence_count'])
+        self.assertEqual(ambiguous['occurrence_count_lower_bound'],9)
+        self.assertEqual(len(ambiguous['locations']),8)
+        self.assertTrue(ambiguous['locations_truncated'])
+        self.assertEqual(placement_evidence(b'','C_STRING',{},image)['state'],'EMPTY_PAYLOAD_NOT_IDENTIFYING')
+        self.assertEqual(placement_evidence(b'missing','C_STRING',{},image)['state'],'CONTENT_NOT_FOUND')
+        image.sections=[{'name':'.data','rva':0x1000}]
+        self.assertEqual(placement_evidence(b'wb','C_STRING',{},image)['state'],'CONTENT_NOT_FOUND')
+
     def test_wrong_content_is_source_difference_not_layout(self):
         args=fixture(); row=args[0]; row['literal_diagnostics']=diagnose(*args)
         d=row['literal_diagnostics'][0]

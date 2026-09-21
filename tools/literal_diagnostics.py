@@ -24,6 +24,37 @@ def operand_kind(raw,p):
     return None
 
 
+def placement_evidence(payload, kind, relocation, exe):
+    """Search candidate payload only; never consume the tested original operand."""
+    result={'resolved_target':relocation.get('target_va'),
+        'resolution':relocation.get('resolution'),
+        'limit':'Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.'}
+    if not payload:
+        return result|{'state':'EMPTY_PAYLOAD_NOT_IDENTIFYING','occurrence_count':None,'locations':[]}
+    needle=payload+(b'\0' if kind=='C_STRING' else b'')
+    locations=[]
+    for section in exe.sections:
+        if section['name']!='.rdata': continue
+        data=exe.section_bytes(section);start=0
+        while len(locations)<9:
+            offset=data.find(needle,start)
+            if offset<0: break
+            locations.append(exe.image_base+section['rva']+offset);start=offset+1
+        if len(locations)>=9: break
+    truncated=len(locations)>=9
+    result.update(locations=locations[:8],occurrence_count=None if truncated else len(locations),
+                  occurrence_count_lower_bound=len(locations),locations_truncated=truncated)
+    if not locations: state='CONTENT_NOT_FOUND'
+    elif len(locations)!=1: state='CONTENT_LOCATION_AMBIGUOUS'
+    elif result['resolved_target'] is None: state='UNIQUE_CONTENT_WITHOUT_RESOLVED_OWNER'
+    elif locations[0]==result['resolved_target']: state='UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT'
+    else:
+        state='UNIQUE_CONTENT_DISAGREES_WITH_RESOLVED_PLACEMENT'
+        result['content_minus_resolved_target']=locations[0]-result['resolved_target']
+    result['state']=state
+    return result
+
+
 def diagnose(row,original,snapshot,sections,exe,line_mappings=(),source=None):
     observations=[]; old_by_offset={i['address']-row['va']:i for i in original}
     candidates=row.get('instructions',[]); base=row.get('candidate_offset',0)
@@ -63,6 +94,7 @@ def diagnose(row,original,snapshot,sections,exe,line_mappings=(),source=None):
         item.update(kind=kind,historical_operand_va=value,candidate_hex=a.hex(),original_hex=b.hex(),content_equal=a==b,
                     classification='CONTENT_EQUAL_OWNER_UNPROVEN' if a==b else 'LITERAL_CONTENT_DIFFERENCE',
                     candidate_instruction=ins,original_instruction=before)
+        item['placement_evidence']=placement_evidence(a,kind,r,exe)
         if kind=='C_STRING': item.update(candidate_text=a.decode('ascii'),original_text=b.decode('ascii'))
         if source:
             from scheduling_diagnostics import source_rows

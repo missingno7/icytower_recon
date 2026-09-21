@@ -742,3 +742,21 @@ a different plan supplies no such evidence. The interface acceptance suite passe
 and bounded-display controls. The saved candidate pair reproduces every field of
 the original archived rejection before enrichment; see
 `docs/attempts/interface-emission-diagnostic-validation.json`.
+
+
+## Literal content versus resolved placement
+
+Literal cards and FAST diagnostics now separate the existing independently resolved
+section/object address from an independent search for the candidate payload in
+historical read-only data. The search never consumes the tested original operand.
+Unique disagreement, unique agreement, missing content, ambiguous duplicates and
+empty non-identifying payloads are explicit. Search/display is bounded; truncated
+occurrences carry a lower bound rather than a fabricated exact count.
+
+This clarifies fldads_threadmain: several equal strings reside at different offsets
+from the current section-based relocation targets. The verifier still keeps its
+section binding; content matching cannot override it or promote a body. All function
+and workflow proofs are unchanged. The 135-test function acceptance suite passes,
+and real FAST prints the two currently aligned conflicts. The previously rejected
+223-byte candidate has its remaining literal observations captured separately in
+`docs/attempts/literal-placement-validation.json` as historical diagnostics.
