@@ -132,6 +132,29 @@ class CompilerContextTests(unittest.TestCase):
                 trial=context.load_trials('game-a','f',self.row(),{})['trials'][0]
             self.assertEqual(trial['diagnostic_original_comparison'],{'verdict':'FUNCTION_MATCH','mismatch_count':0,'acceptance_input':False})
 
+    def test_archive_negatives_survive_narrower_followup_with_own_freshness(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'docs/attempts/compiler-context/game-a/f.json';path.parent.mkdir(parents=True)
+            base={'variant':'baseline','candidate_size':5,'resolved_code':'e878563412'}
+            def trial(name,code='e878563412'):
+                return {'variant':name,'target_body_sha256':'body','candidate_size':5,'resolved_code':code}
+            latest={'probe_tool':{},'source_inputs':{},'toolchain_lock':{},'target_body_sha256':'body',
+                    'variants':[base,trial('flag-a','9090909090')]}
+            archive=copy.deepcopy(latest);archive['probe_tool']={'old':True}
+            archive['variants']=[base,trial('flag-a'),trial('flag-b'),trial('flag-c'),trial('flag-d')]
+            path.write_text(json.dumps(latest));path.with_suffix('.jsonl').write_text(json.dumps(archive)+'\n')
+            with patch.object(context,'ROOT',root),patch.object(context,'identity',return_value={}):
+                found=context.load_trials('game-a','f',self.row(),{})
+            self.assertEqual(found['state'],'CURRENT_BASELINE')
+            self.assertEqual(found['trial_count'],4);self.assertEqual(found['omitted_trial_count'],1)
+            a,b,c=found['trials']
+            self.assertEqual(a['variant'],'flag-a');self.assertGreater(a['difference']['changed_byte_count'],0)
+            self.assertEqual(a['baseline_state'],'CURRENT_BASELINE');self.assertIsNone(a['archive_line'])
+            self.assertEqual(b['variant'],'flag-b');self.assertEqual(b['difference']['changed_byte_count'],0)
+            self.assertEqual(b['baseline_state'],'BASELINE_REQUIRES_REVIEW');self.assertEqual(b['archive_line'],1)
+            self.assertEqual(c['variant'],'flag-c');self.assertTrue(b['evidence'].endswith('.jsonl'))
+            self.assertEqual(found['records_considered'],2)
+
     def test_rtl_excerpt_is_only_requested_function(self):
         text='preamble\n;; Function first (first)\nfirst body\n;; Function second (second)\nsecond body\n'
         excerpt=scoped_dump(text,'first')

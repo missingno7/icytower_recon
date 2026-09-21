@@ -125,7 +125,7 @@ def main():
             trials=card['compiler_trials']
             print('Compiler trial memory:',trials['state'],';',trials['evidence'])
             for trial in trials['trials']:
-                print('  %s: size delta %s; changed resolved bytes %s'%(trial['variant'],trial['difference']['size_delta'],trial['difference']['changed_byte_count']))
+                print('  %s [%s]: size delta %s; changed resolved bytes %s'%(trial['variant'],trial.get('baseline_state',trials['state']),trial['difference']['size_delta'],trial['difference']['changed_byte_count']))
         if card.get('compiler_context'):
             print('Compiler context:',card['compiler_context']['state'],';',card['compiler_context']['evidence'])
         if card.get('localized_guards'):

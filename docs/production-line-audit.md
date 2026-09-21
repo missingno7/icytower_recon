@@ -608,3 +608,20 @@ production baseline remains DIFFER. Three trace tests and eleven compiler-contex
 tests passed. The initial probe rejected the hyphenated init-regs name; support
 and a regression case were added before the successful rerun. Trial cards link
 `docs/attempts/compiler-context/game-main/stopGameMusic-rtl.json`.
+
+
+## Trial memory across follow-up probes
+
+A narrower follow-up probe hid earlier negative experiments because cards read
+only the latest record. Trial memory now walks current and archived records in
+newest-first order and retains the latest result for each experiment name. Each
+trial has independent baseline freshness and an exact archive line reference.
+The three-row display limit has an explicit omission count. FAST prints each
+trial freshness label rather than implying that the top-level state covers all
+rows. No routing or proof decision depends on these summaries.
+
+The real stopGameMusic card again shows the prior scheduling/peephole experiments
+alongside the fresh whole-unit experiment. Twelve context tests pass, including
+newest-result selection, archived negative retention, stale baseline labels and
+omission counts. Queue content is unchanged. See
+`docs/attempts/compiler-trial-history-validation.json`.

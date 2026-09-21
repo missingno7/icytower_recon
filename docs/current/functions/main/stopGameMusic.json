@@ -528,11 +528,14 @@
   "compiler_trials": {
     "state": "CURRENT_BASELINE",
     "evidence": "docs/attempts/compiler-context/game-main/stopGameMusic.json",
-    "trial_count": 1,
+    "trial_count": 3,
     "trials": [
       {
         "variant": "flag-fno-unit-at-a-time",
         "target_body_unchanged": true,
+        "baseline_state": "CURRENT_BASELINE",
+        "evidence": "docs/attempts/compiler-context/game-main/stopGameMusic.json",
+        "archive_line": null,
         "difference": {
           "baseline_size": 58,
           "candidate_size": 58,
@@ -565,10 +568,65 @@
           "mismatch_count": 0,
           "acceptance_input": false
         }
+      },
+      {
+        "variant": "flag-fno-peephole2",
+        "target_body_unchanged": true,
+        "baseline_state": "BASELINE_REQUIRES_REVIEW",
+        "evidence": "docs/attempts/compiler-context/game-main/stopGameMusic.jsonl",
+        "archive_line": 1,
+        "difference": {
+          "baseline_size": 58,
+          "candidate_size": 58,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 7,
+          "first_changed_offsets": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46
+          ],
+          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
+        "diagnostic_original_comparison": {
+          "verdict": "DIFFER",
+          "mismatch_count": 12,
+          "acceptance_input": false
+        }
+      },
+      {
+        "variant": "flag-fno-schedule-insns2",
+        "target_body_unchanged": true,
+        "baseline_state": "BASELINE_REQUIRES_REVIEW",
+        "evidence": "docs/attempts/compiler-context/game-main/stopGameMusic.jsonl",
+        "archive_line": 1,
+        "difference": {
+          "baseline_size": 58,
+          "candidate_size": 58,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 0,
+          "first_changed_offsets": [],
+          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
+        "diagnostic_original_comparison": {
+          "verdict": "DIFFER",
+          "mismatch_count": 16,
+          "acceptance_input": false
+        }
       }
     ],
+    "omitted_trial_count": 0,
+    "records_considered": 2,
+    "history_evidence": "docs/attempts/compiler-context/game-main/stopGameMusic.jsonl",
     "rtl_evidence": "docs/attempts/compiler-context/game-main/stopGameMusic-rtl.json",
-    "limit": "Diagnostic trial memory only. A no-change result applies to this input snapshot and experiment, not every possible compiler context; stale or unresolvable baselines are explicit. No original-match or edit-permission claim."
+    "limit": "Newest result per experiment name, latest record first; archived trials retain their own baseline freshness and line number. No-change results apply only to the recorded input snapshot. Diagnostic memory grants no original-match or edit permission."
   },
   "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes",
   "routing_evidence": {

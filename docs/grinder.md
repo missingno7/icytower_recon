@@ -407,3 +407,11 @@ three changed-pass excerpts. Only exact scratch paths and compiler heap
 declaration addresses are normalized. Alias sets, register IDs, labels and
 source lines remain visible. First textual divergence is not necessarily the
 pass causing the machine-code mismatch; missing passes are explicit.
+
+
+Trial memory keeps the newest result for each experiment name across current and
+archived probe records. Each displayed trial has its own `baseline_state` and
+evidence path; archived rows include the JSONL line number. The top-level state
+only describes the latest probe. At most three distinct trials are shown, with
+omission counts and an archive link for the rest. Do not treat archived no-change
+results as proof about a changed source/toolchain baseline.
