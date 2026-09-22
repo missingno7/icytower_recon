@@ -130,6 +130,25 @@ void view_profile(void *profile);
 void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
 Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);
 
+/* Forward declarations; definitions follow in their original source order. */
+unsigned int hash2(unsigned int a);
+int generate_profile_checksum(Tprofile_checksum *p);
+Tprofile_create *create_profile(char *handle, int overwrite);
+inline int get_rank_id(Tprofile_rank *profile);
+inline char *get_rank(Tprofile_rank *profile);
+void set_next_rank_message(char *buf, Tprofile_rank *p);
+void delete_profile(char *handle);
+Tprofile_load *load_profile(char *handle);
+char *profile_data_page_extra(Tprofile_extra *p);
+char *profile_data_page_general(Tprofile_general *p, char *filler);
+char *profile_data_page_basic(Tprofile_basic *p);
+char *profile_data_page_advanced(Tprofile_advanced *p);
+int save_profile(Tprofile_create *p);
+int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
+void view_profile(void *profile);
+void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
+Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);
+
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
  * Current recovery status: src/recovery.json and docs/current/.
@@ -240,8 +259,8 @@ Tprofile_create *create_profile(char *handle, int overwrite)
     p->total_jumps = 0;
     strcpy(p->last_avatar, "harold_the_homeboy");
     p->jump_hold = 1;
-    p->flash = 0;
     p->start_floor = 0;
+    p->flash = 0;
     p->msc_volume = 150;
     p->snd_volume = 150;
     now = time(0);

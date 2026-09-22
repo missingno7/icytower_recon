@@ -271,8 +271,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 587,
-    "body_end_line": 691,
+    "body_start_line": 606,
+    "body_end_line": 710,
     "body_sha256": "946f4425119a4866d6791bb3c3678a258b43a29f4dbce3b9c0ea4d76345239e0"
   },
   "reference_diagnostics": [],
@@ -1861,9 +1861,100 @@
               "char*",
               "Tprofile_rank*"
             ]
+          },
+          {
+            "return_type": "void",
+            "parameter_types": [
+              "char*",
+              "Tprofile_rank*"
+            ],
+            "canonical_return_type": "void",
+            "canonical_parameter_types": [
+              "char*",
+              "Tprofile_rank*"
+            ]
           }
         ],
         "layout_issues": [
+          {
+            "position": "parameter 2",
+            "historical_type": "Tprofile",
+            "candidate_type": "Tprofile_rank",
+            "header": "include/recovered/Tprofile.h",
+            "status": "MISMATCH",
+            "historical_size": 1360,
+            "candidate_size": 140,
+            "member_difference_count": 37,
+            "first_member_differences": [
+              {
+                "member": "before_ccc",
+                "historical": null,
+                "candidate": {
+                  "offset": 84,
+                  "size": 4,
+                  "type": "unsigned char [4]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "before_nml",
+                "historical": null,
+                "candidate": {
+                  "offset": 92,
+                  "size": 44,
+                  "type": "unsigned char [44]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "before_score",
+                "historical": null,
+                "candidate": {
+                  "offset": 0,
+                  "size": 76,
+                  "type": "unsigned char [76]",
+                  "qualifiers": [],
+                  "bitfield": false
+                }
+              },
+              {
+                "member": "best_combo",
+                "historical": {
+                  "offset": 80,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "best_floor",
+                "historical": {
+                  "offset": 76,
+                  "size": 4,
+                  "type": "int",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              },
+              {
+                "member": "best_replay_names",
+                "historical": {
+                  "offset": 220,
+                  "size": 1024,
+                  "type": "char [32][32]",
+                  "qualifiers": [],
+                  "bitfield": false
+                },
+                "candidate": null
+              }
+            ],
+            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+          },
           {
             "position": "parameter 2",
             "historical_type": "Tprofile",
@@ -2107,7 +2198,18 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 586
+          "line": 148
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "void",
+          "header": "include/recovered/Tprofile.h",
+          "status": "UNAVAILABLE",
+          "reason": "Candidate named type layout is missing or ambiguous",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 605
         }
       ],
       "candidate_signatures": [

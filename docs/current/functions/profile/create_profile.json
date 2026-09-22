@@ -131,73 +131,14 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 181,
-    "body_end_line": 262,
-    "body_sha256": "3b119575b6f4ce1dc1854466c5e22e589bbeb15071bbc7038447ca090e3b130e"
+    "body_start_line": 200,
+    "body_end_line": 281,
+    "body_sha256": "0f91f5fcbfa758c336066512bc88dee1b12cb71e34bba426ebb703895c3608fd"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [],
   "tail_jump_layout": null,
-  "instruction_order": {
-    "confidence": "DECODED_INSTRUCTION_PERMUTATIONS",
-    "windows": [
-      {
-        "function_offset": 506,
-        "byte_length": 20,
-        "original": [
-          {
-            "address": 4303746,
-            "bytes": "c7832405000000000000",
-            "mnemonic": "movl",
-            "assembly": "movl   $0x0,0x524(%ebx)"
-          },
-          {
-            "address": 4303756,
-            "bytes": "c783dc04000000000000",
-            "mnemonic": "movl",
-            "assembly": "movl   $0x0,0x4dc(%ebx)"
-          }
-        ],
-        "candidate": [
-          {
-            "address": 8502,
-            "bytes": "c783dc04000000000000",
-            "mnemonic": "movl",
-            "assembly": "movl   $0x0,0x4dc(%ebx)"
-          },
-          {
-            "address": 8512,
-            "bytes": "c7832405000000000000",
-            "mnemonic": "movl",
-            "assembly": "movl   $0x0,0x524(%ebx)"
-          }
-        ],
-        "candidate_source_lines": [
-          {
-            "file": "src/profile.c",
-            "line": 243,
-            "text": "    p->flash = 0;"
-          },
-          {
-            "file": "src/profile.c",
-            "line": 244,
-            "text": "    p->start_floor = 0;"
-          }
-        ],
-        "observation": "Same decoded instructions occur in a different order; source cause and semantic independence are not inferred."
-      }
-    ],
-    "all_other_resolved_bytes_equal": false,
-    "remaining_difference_count": 2,
-    "remaining_difference_offsets": [
-      69,
-      72
-    ],
-    "unresolved_relocation_offsets": [],
-    "indirect_jump_present": false,
-    "cheap_routing_eligible": false,
-    "limit": "Routing and source-experiment evidence only. Neither instruction reordering nor equality after reordering proves FUNCTION_MATCH or a layout-only body."
-  },
+  "instruction_order": null,
   "source_patterns": [],
   "frame_layout": null,
   "signedness": {
@@ -501,14 +442,14 @@
     "candidate_byte": 125,
     "original_byte": 117
   },
-  "mismatch_count": 6,
+  "mismatch_count": 2,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
   "instruction_alignment": {
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 162,
     "candidate_instruction_count": 162,
-    "changed_group_count": 3,
-    "shown_group_count": 3,
+    "changed_group_count": 1,
+    "shown_group_count": 1,
     "hunks": [
       {
         "kind": "replace",
@@ -550,54 +491,6 @@
               "assembly": "test   %edi,%edi"
             }
           ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "insert",
-        "original": {
-          "instruction_start": 93,
-          "instruction_end": 93,
-          "function_offset": 506,
-          "instructions": [],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 93,
-          "instruction_end": 94,
-          "function_offset": 506,
-          "instructions": [
-            {
-              "address": 8502,
-              "bytes": "c783dc04000000000000",
-              "mnemonic": "movl",
-              "assembly": "movl   $0x0,0x4dc(%ebx)"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "delete",
-        "original": {
-          "instruction_start": 94,
-          "instruction_end": 95,
-          "function_offset": 516,
-          "instructions": [
-            {
-              "address": 4303756,
-              "bytes": "c783dc04000000000000",
-              "mnemonic": "movl",
-              "assembly": "movl   $0x0,0x4dc(%ebx)"
-            }
-          ],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 95,
-          "instruction_end": 95,
-          "function_offset": 526,
-          "instructions": [],
           "omitted_instructions": 0
         }
       }
@@ -1133,7 +1026,7 @@
       "status": "DIFFER",
       "historical_offset": 8948,
       "candidate_offset": 8820,
-      "size_delta": -384
+      "size_delta": -364
     }
   ],
   "emission_order": {
@@ -1184,6 +1077,43 @@
           "has_loop",
           "has_pointer_variable",
           "has_integer_variable"
+        ],
+        "evidence_field": null,
+        "priority_bonus_eligible": true,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
+    },
+    {
+      "id": "assignment-register",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "symptom": "Argument setup differs at equal size",
+      "known_source_cause": "Source expression shape affects result register",
+      "known_fix_pattern": "Try an evidence-backed assignment expression or temporary; retain failed trials",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
+        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
+      },
+      "example_functions": [
+        "draw_scroller"
+      ],
+      "evidence": "docs/scroller-experiment.md",
+      "confidence": "HYPOTHESIS",
+      "required_features": [
+        "same_size",
+        "register_only_shape"
+      ],
+      "applicability": {
+        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "observed_features": [
+          "same_size",
+          "register_only_shape"
         ],
         "evidence_field": null,
         "priority_bonus_eligible": true,
@@ -1250,7 +1180,7 @@
     "observed": {
       "historical_size": 823,
       "candidate_size": 823,
-      "differing_bytes": 6,
+      "differing_bytes": 2,
       "unresolved_calls": 0,
       "indirect_transfers": 0
     },

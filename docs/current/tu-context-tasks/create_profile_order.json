@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "create_profile_order",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "target": "game-profile",
+  "affected_targets": [
+    "game-profile"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-profile",
+    "source": "src/profile.c",
+    "order": "current",
+    "bodies": {
+      "create_profile": "docs/attempts/game-profile/bodies/create_profile.c"
+    },
+    "evidence": "Retained complete body: the original clears start_floor before flash, the reverse of the reconstruction, which accounted for four of its six differing bytes (6 -> 2)."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {},
+    "order": [
+      "hash2",
+      "generate_profile_checksum",
+      "create_profile",
+      "get_rank_id",
+      "get_rank",
+      "set_next_rank_message",
+      "delete_profile",
+      "load_profile",
+      "profile_data_page_extra",
+      "profile_data_page_general",
+      "profile_data_page_basic",
+      "profile_data_page_advanced",
+      "save_profile",
+      "draw_buffer",
+      "view_profile",
+      "draw_profile_selector",
+      "select_profile"
+    ],
+    "definition_order_with_static": [
+      [
+        "hash2",
+        false
+      ],
+      [
+        "generate_profile_checksum",
+        false
+      ],
+      [
+        "create_profile",
+        false
+      ],
+      [
+        "get_rank_id",
+        false
+      ],
+      [
+        "get_rank",
+        false
+      ],
+      [
+        "set_next_rank_message",
+        false
+      ],
+      [
+        "delete_profile",
+        false
+      ],
+      [
+        "load_profile",
+        false
+      ],
+      [
+        "profile_data_page_extra",
+        false
+      ],
+      [
+        "profile_data_page_general",
+        false
+      ],
+      [
+        "profile_data_page_basic",
+        false
+      ],
+      [
+        "profile_data_page_advanced",
+        false
+      ],
+      [
+        "save_profile",
+        false
+      ],
+      [
+        "draw_buffer",
+        false
+      ],
+      [
+        "view_profile",
+        false
+      ],
+      [
+        "draw_profile_selector",
+        false
+      ],
+      [
+        "select_profile",
+        false
+      ]
+    ],
+    "bodies": {
+      "create_profile": {
+        "path": "docs/attempts/game-profile/bodies/create_profile.c",
+        "identity": {
+          "size": 2194,
+          "sha256": "0f1ef30f36f447fdf8afb9fed4f3cbfa3daa98c6632b3b76b89621475511df32"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  },
+  "source_identities": {
+    "src/profile.c": {
+      "size": 29777,
+      "sha256": "d3f960c3d89b42b289957bb8941f59143fc5dc4f906afe66521f14dc308091b1"
+    }
+  },
+  "new_text_identity": {
+    "size": 30867,
+    "sha256": "7b9b7fa80e6a4f938bc6ebe51617b5a6630d5a89cfa689569d5e64ab77ddc887"
+  },
+  "new_header_identities": {},
+  "preserved_definitions": [
+    "delete_profile",
+    "draw_buffer",
+    "draw_profile_selector",
+    "generate_profile_checksum",
+    "get_rank",
+    "get_rank_id",
+    "hash2",
+    "load_profile",
+    "profile_data_page_advanced",
+    "profile_data_page_basic",
+    "profile_data_page_extra",
+    "profile_data_page_general",
+    "save_profile",
+    "select_profile",
+    "set_next_rank_message",
+    "view_profile"
+  ],
+  "replaced_definitions": [
+    "create_profile"
+  ],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin create_profile_order",
+  "apply_command": "python tools/tu_context_task.py apply create_profile_order",
+  "verification_command": "python tools/tu_context_task.py check create_profile_order",
+  "promotion_command": "python tools/tu_context_task.py promote create_profile_order",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/create_profile_order.json"
+}
