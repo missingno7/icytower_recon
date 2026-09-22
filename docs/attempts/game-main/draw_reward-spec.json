@@ -1,0 +1,9 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "bodies": {
+    "draw_reward": "docs/attempts/game-main/bodies/draw_reward.c"
+  },
+  "evidence": "One operand order swap makes draw_reward exact. Its 34 differing bytes were one contiguous block at offsets 289..322, entirely inside the else branch's y coordinate 360 - (int)(fixtof(reward_scale) * 120 - fixtof(reward_scale / 2) * reward_bmp->h). Side by side against the original, the historical code loads reward_bmp and reward_bmp->h BEFORE it computes reward_scale / 2, while ours computed the division first: GCC evaluates this multiplication's left operand first, so reward_bmp->h is the left operand historically. Writing it that way reproduces the original's instruction order exactly and the difference goes to zero, with all nine relocations equal. draw_reward has no DWARF locals, which is consistent with the cause being operand order rather than a missing statement. 581 of 581 bytes, DIFFER -> FUNCTION_MATCH, no losses."
+}

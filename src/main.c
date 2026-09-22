@@ -1387,6 +1387,89 @@ void handle_player_collision_vector_2(int lastX, int lastY);
 void handle_player_collision_combo(int lastX, int lastY);
 int init_game(int argc, char **argv);
 
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
 void line_alert(char *text)
 {
     int color;
@@ -2123,7 +2206,7 @@ void draw_reward(BITMAP *bmp)
     else {
         rotate_scaled_sprite(bmp,reward_bmp,
                              320-(int)(fixtof(reward_scale/2)*reward_bmp->w),
-                             360-(int)(fixtof(reward_scale)*120-fixtof(reward_scale/2)*reward_bmp->h),
+                             360-(int)(fixtof(reward_scale)*120-reward_bmp->h*fixtof(reward_scale/2)),
                              reward_scale<<8,reward_scale);
     }
 }
