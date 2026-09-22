@@ -64,7 +64,18 @@ def plan(name, spec_path):
             end = t.find('\n\n', m.end())
             t = t[:m.start()] + t[(end if end >= 0 else len(t)):]
         return len(re.findall(FORBIDDEN, sanitized(t), re.M))
-    if directives(new) > directives(text): raise ValueError('Transaction introduces forbidden code-generation directives')
+    # A `volatile` in an added declaration of an EXISTING global is that variable's own type, not a
+    # codegen directive, and is allowed only when another source file already declares or defines the
+    # same name volatile.  Dropping it would let the compiler cache a variable the original re-reads.
+    allowed = 0
+    for item in (spec.get('declarations') or {}).get('add_top_level', []):
+        n = item['name']; decl = item['declaration']
+        if 'volatile' not in decl: continue
+        elsewhere = [p for p in sorted((ROOT / 'src').glob('*.c')) if p.name != Path(source).name
+                     and re.search(r'\bvolatile\b[^;]*\b' + re.escape(n) + r'\b', sanitized(p.read_bytes().decode('cp1252')))]
+        if not elsewhere: raise ValueError('No volatile evidence elsewhere for ' + n)
+        allowed += len(re.findall(FORBIDDEN, decl, re.M))
+    if directives(new) - allowed > directives(text): raise ValueError('Transaction introduces forbidden code-generation directives')
     files = [source] + sorted(headers)
     card = {'schema': 1, 'task_kind': 'TU_CONTEXT', 'function': name, 'source': source, 'sources': files, 'target': target, 'affected_targets': [target],
             'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': {f: identity(ROOT / f) for f in files},

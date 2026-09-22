@@ -145,11 +145,16 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
                 offset = curr_file_id;
         }
 
+        /* 889: pageY interpolates toward the literal 25 at a fixed 0.2 rate --
+         * NOT the existing `pageY -= (pageY - targetY) / 3 + 1;` formula this
+         * replaces. Evidenced directly (fldl 0.2; fimul; fiadd; fistp),
+         * unguarded by any `pageY > targetY` test in this fragment (the test
+         * that gated the old formula was not found in this instruction
+         * range and may not exist at all -- flagged, not confirmed absent). */
+        pageY = (int)(0.2 * (25 - pageY) + pageY);
         /* 892: blit target is swap_screen, not screen -- confirmed by the
          * 0x4dd194 operand at every call in this whole present sequence
          * (blit, draw_replay_selector's bmp arg, blit_to_screen). */
-        if (pageY > targetY)
-            pageY -= (pageY - targetY) / 3 + 1;
         blit(bg, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);           /* 892 */
         set_trans_blender(0, 0, 0, (500 - pageY) / 3);                    /* 894 */
         drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                            /* 895 */
@@ -158,6 +163,9 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
         rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,          /* 896 */
                  gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
         solid_mode();                                                        /* 897 */
+        /* 899: y is pageY itself, with no "+120" added at the call site --
+         * the existing reconstruction's `pageY + 120` does not match this
+         * call's own operand (a bare register carrying pageY's value). */
         draw_replay_selector(swap_screen, rep, itr_file_list, curr_file_id,   /* 899 */
                              offset, page_size, 120, pageY);
         blit_to_screen(swap_screen);                                          /* 900 */
