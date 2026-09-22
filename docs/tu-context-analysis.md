@@ -413,3 +413,38 @@ The rule that follows: **never land a partial write set.**  A subset of a variab
 than none, because it hands the optimiser a constant the original never had and the resulting
 deletions are attributed to whatever line happens to own them, misleading everyone else measuring the
 same function.
+
+## 14. The dominant remaining blocker is register scheduling, not missing statements
+
+Five functions have now been driven to the point where their statements are right, their call graph is
+right, their relocations resolve equal, and what remains is where GCC decided to keep a value.  They
+are worth naming together, because the same three or four rewrites get tried on each one and none of
+them reaches the cause.
+
+| function | size | residue |
+|---|---|---|
+| load_character | 330 / 330 | the original re-reads the `filename` parameter from `ebp+8` from offset 58 onward, freeing `esi` for `buf`; ours keeps it in a callee-saved register |
+| handle_player_input | 728 / 728 | one 50-byte cluster; the original tests `key_flags & 0x80` before computing `control->flags & 0x93`, and every shape that reproduces that order frees a callee-saved register |
+| handle_player_collision_combo | 1381 / 1390 | a `return`-terminated block the original places out of line at offset 738, leaving nothing at the branch site |
+| handle_player_collision_vector | 1000 / 1071 | the original converts `y` to int once into a register that survives to its second use; ours re-converts at each cast |
+| play, lines 3580/3584/3636..3638 | — | the original spills a float intermediate with `fstps`/`flds` and reloads it where ours keeps it in an x87 register |
+
+Two rules have come out of grinding these.
+
+**The prologue is a fast reject.**  Compare which callee-saved registers the original pushes before
+looking at anything else.  A candidate shape that changes that set is wrong however plausible its
+statements are, and it can be rejected in one measurement — that test killed two `handle_player_input`
+variants and confirmed every `_combo` variant was at least not failing that way.
+
+**Surface rewrites do not reach it.**  Swapping declaration order, moving a declaration into or out of
+a block, splitting `&&` into nested `if`s, and writing `else if` instead of a nested `else` have all
+been measured on these functions and every one produced byte-identical output: GCC's front end
+normalises them to the same GIMPLE.  A rewrite only matters if it changes what is live where.  The
+shapes that do are: a repeated cast versus a named local holding the converted value (a repeated cast
+licenses re-conversion at each site), a value used on one path versus all paths, and a block that ends
+in `return` versus one that falls through.
+
+None of these is a reason to stop recovering statements elsewhere — `select_profile` gained 273 bytes
+of real missing UI in the same session, and roughly 2,300 bytes of plainly missing call sites remain in
+the two replay selectors.  Statements first; this class last, and only with a hypothesis about liveness
+rather than another rewrite of statements that are already right.
