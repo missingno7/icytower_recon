@@ -1,0 +1,9 @@
+{
+ "target": "game-main",
+ "source": "src/main.c",
+ "order": "current",
+ "bodies": {
+  "handle_player_collision_old": "docs/attempts/game-main/bodies/handle_player_collision_old.c"
+ },
+ "evidence": "Retained complete body: this handler has no debug line drawing (unlike its siblings), refetches ply[player_id] after every call rather than caching it, and duplicates its whole resolve block textually at historical lines 3277..3286 instead of sharing the one at 3260..3267. 734 -> 961 against 894 historical, so from 160 under to 67 over."
+}

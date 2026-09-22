@@ -1221,6 +1221,89 @@ void handle_player_collision_vector_2(int lastX, int lastY);
 void handle_player_collision_combo(int lastX, int lastY);
 int init_game(int argc, char **argv);
 
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
 void line_alert(char *text)
 {
     int color;
@@ -3244,74 +3327,133 @@ void handle_player_collision_original(int lastX, int lastY)
  * current feet, then sweeps a midpoint when the player moved downward. */
 void handle_player_collision_old(int lastX, int lastY)
 {
-    Tplayer *p;
     int x, y, dx, dy;
     int solid1, solid2;
 
-    p = ply[player_id];
-    x = (int)p->x;
-    y = (int)p->y;
+    /* 3246 */
+    x = (int)ply[player_id]->x;
     dx = lastX - x;
     if (dx < 0) dx = -dx;
+    /* 3247 */
+    y = (int)ply[player_id]->y;
     dy = lastY - y;
     if (dy < 0) dy = -dy;
-    if ((int)p->x < lastX) x = lastX - dx / 2;
+    /* 3248 */
+    if ((int)ply[player_id]->x < lastX) x = lastX - dx / 2;
+    /* 3249 */
     else x = lastX + dx / 2;
-    if ((int)p->y < lastY) y = lastY - dy / 2;
+    /* 3250 */
+    if ((int)ply[player_id]->y < lastY) y = lastY - dy / 2;
+    /* 3251 */
     else y = lastY + dy / 2;
 
-    solid1 = is_solid(&map, (int)p->x - 11, (int)p->y);
-    solid2 = is_solid(&map, (int)p->x + 11, (int)p->y);
+    /* 3253 */
+    solid1 = is_solid(&map, (int)ply[player_id]->x - 11, (int)ply[player_id]->y);
+    /* 3254 */
+    solid2 = is_solid(&map, (int)ply[player_id]->x + 11, (int)ply[player_id]->y);
+    /* 3255 */
     any11 = solid1;
+    /* 3256 */
     any12 = solid2;
+    /* 3257 */
     any23 = 0;
     any22 = 0;
     any21 = 0;
+    /* 3258 */
     if (solid1 + solid2 == 0) {
-        if (p->status == 2 || p->status == 0)
-            p->status = 3;
+        /* 3259 */
+        if (ply[player_id]->status == 2 || ply[player_id]->status == 0)
+            ply[player_id]->status = 3;
+        /* 3270 */
         if (y <= lastY)
             return;
         goto sweep;
     }
 
 resolve:
-    if (p->status == 1 || p->status == 2)
+    /* 3260 */
+    if (ply[player_id]->status == 1 || ply[player_id]->status == 2)
         return;
-    if (p->status)
+    /* 3261 */
+    if (ply[player_id]->status)
         play_sound(combo_sound[0], 1, 1);
-    p->status = 0;
-    p->sy = 0;
+    /* 3262 */
+    ply[player_id]->status = 0;
+    /* 3263 */
+    ply[player_id]->sy = 0;
+    /* 3264 */
     if (solid1) {
-        p->y -= solid1 - 9999;
-        p->rotate = 0;
-        p->edge = solid1 == solid2 ? 0 : 1;
+        ply[player_id]->y -= solid1 - 9999;
+        /* 3266 */
+        ply[player_id]->rotate = 0;
+        /* 3267 */
+        if (solid1 == solid2)
+            ply[player_id]->edge = 0;
+        else
+            ply[player_id]->edge = 1;
         return;
     }
     if (solid2) {
-        p->y -= solid2 - 9999;
-        p->rotate = 0;
-        p->edge = 2;
+        ply[player_id]->y -= solid2 - 9999;
+        ply[player_id]->rotate = 0;
+        ply[player_id]->edge = 2;
         return;
     }
-    p->rotate = 0;
-    p->edge = 0;
+    ply[player_id]->rotate = 0;
+    ply[player_id]->edge = 0;
     return;
 
 sweep:
+    /* 3271 */
     solid1 = is_solid(&map, x - 11, y);
+    /* 3272 */
     solid2 = is_solid(&map, x + 11, y);
+    /* 3273 */
     any21 = solid1;
+    /* 3274 */
     any22 = solid2;
+    /* 3275 */
     if (solid1 + solid2 == 0) {
-        if (p->status == 2 || p->status == 0)
-            p->status = 3;
+        /* 3276 */
+        if (ply[player_id]->status == 2 || ply[player_id]->status == 0)
+            ply[player_id]->status = 3;
         return;
     }
-    if (p->status == 1 || p->status == 2)
+    /* 3277 */
+    if (ply[player_id]->status == 1 || ply[player_id]->status == 2)
         return;
+    /* 3278 */
     any23 = 1;
-    goto resolve;
+    /* 3279 */
+    if (ply[player_id]->status)
+        play_sound(combo_sound[0], 1, 1);
+    /* 3280 */
+    ply[player_id]->status = 0;
+    /* 3281 */
+    ply[player_id]->sy = 0;
+    /* 3282 */
+    if (solid1) {
+        ply[player_id]->y -= solid1 - 9999;
+        /* 3284 */
+        ply[player_id]->rotate = 0;
+        /* 3285 */
+        if (solid1 == solid2)
+            ply[player_id]->edge = 0;
+        else
+            ply[player_id]->edge = 1;
+        return;
+    }
+    /* 3283 */
+    if (solid2) {
+        ply[player_id]->y -= solid2 - 9999;
+        ply[player_id]->rotate = 0;
+        ply[player_id]->edge = 2;
+        return;
+    }
+    /* 3286 */
+    ply[player_id]->rotate = 0;
+    ply[player_id]->edge = 0;
+    return;
 }
 
 /* Partial recovery of main.c, 0x408d08..0x409137.  The normal path is the
