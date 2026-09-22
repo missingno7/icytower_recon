@@ -1183,13 +1183,13 @@ int play(void)
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
-                    if (pos >= 1)                                                       /* 4814 */
+                    if (pos != 0 || (step_count & 4))                                   /* 4814 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[0],
                                            300, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos >= 2)                                                       /* 4815 */
+                    if (pos != 1 || (step_count & 4))                                   /* 4815 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[2],
                                            320, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos >= 3)                                                       /* 4816 */
+                    if (pos != 2 || (step_count & 4))                                   /* 4816 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[4],
                                            340, (int)(hy * 2.0 + 120.0), -1, -1);
                     if (pos >= 3)                                                       /* 4817 */
