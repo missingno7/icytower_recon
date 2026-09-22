@@ -125,12 +125,12 @@ def annotated_lines(body_path, region_spans, own='main.c'):
     return out
 
 
-def budget(target, source, fn, bodies, order='historical', top=40, no_inline=False):
+def budget(target, source, fn, bodies, order='historical', top=40, no_inline=False, label=None):
     from experiment import compare
     from recovery_pipeline import OBJDUMP
     spec = {'order': order, 'bodies': bodies}
     new, edits, headers = build_text(target, source, spec)
-    out, ref, build, r = compile_overlay(target, source, new, 'line-budget-' + fn, dumps=False, headers=headers, cgraph=False,
+    out, ref, build, r = compile_overlay(target, source, new, label or ('line-budget-' + fn), dumps=False, headers=headers, cgraph=False,
                                          extra_flags=('-fno-inline-functions-called-once', '-fno-inline') if no_inline else ())
     if r.returncode:
         raise SystemExit('overlay compile failed:\n' + '\n'.join(l for l in r.stderr.splitlines() if 'error' in l)[:2000])
@@ -159,10 +159,11 @@ def main():
     ap.add_argument('--lines', help='only lines in this inclusive range, e.g. 3700-3999')
     ap.add_argument('--no-inline', action='store_true', help='measure with inlining off (diagnostic only): makes a body far smaller than its original comparable with history, which inlined none of these callees')
     ap.add_argument('--annotations', action='store_true', help="compare per HISTORICAL line, mapping candidate lines through the body's own /* 2551 */ annotations")
+    ap.add_argument('--label', help='overlay build label; give each concurrent run its own so two workers do not share one build directory')
     ap.add_argument('--regions', nargs='*', help='TAG=LO-HI per region of the retained body, e.g. W1a=3405-3530 W2=3700-3999')
     a = ap.parse_args()
     bodies = dict(b.split('=', 1) for b in a.body)
-    f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order, no_inline=a.no_inline)
+    f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order, no_inline=a.no_inline, label=a.label)
     if a.annotations:
         body = ROOT / bodies[a.function]
         ann = annotated_lines(body, regions)
