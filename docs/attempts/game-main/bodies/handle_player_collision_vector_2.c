@@ -3,8 +3,7 @@
 void handle_player_collision_vector_2(int lastX, int lastY)
 {
     Tplayer *p;
-    int floor_y = -12345678;
-    int floor_x1 = 0, floor_x2 = 0;
+    int floor_y, floor_x1, floor_x2;
     int left_x, left_y, right_x, right_y;
     int left, right;
     int current_x, current_y;
@@ -20,6 +19,9 @@ void handle_player_collision_vector_2(int lastX, int lastY)
     prx2 = lastX + 11;
     col1 = makecol(255, 0, 0);
     col2 = makecol(255, 255, 0);
+    floor_y = -12345678;
+    floor_x1 = 0;
+    floor_x2 = 0;
     getFloorData(&map, (int)p->y, &floor_y, &floor_x1, &floor_x2);
     if (floor_y == -12345678) {
         getFloorData(&map, lastY, &floor_y, &floor_x1, &floor_x2);

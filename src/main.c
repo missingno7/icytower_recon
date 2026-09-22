@@ -1138,6 +1138,89 @@ void handle_player_collision_vector_2(int lastX, int lastY);
 void handle_player_collision_combo(int lastX, int lastY);
 int init_game(int argc, char **argv);
 
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
 void line_alert(char *text)
 {
     int color;
@@ -1226,10 +1309,9 @@ void show_instructions(void)
 int my_alert(char *func, char *txt, int choice, int enter_hint)
 {
     Tcontrol *menu_ctrl = &menu_params.ctrl;
-    int status = 0;
-    int done = 0;
+    int status;
+    int done;
     int w;
-    int width, height;
 
     w = MAX(text_length(data[51].dat, func ? func : " "),      /* 467 */
             text_length(data[51].dat, txt ? txt : " "));
@@ -1237,13 +1319,8 @@ int my_alert(char *func, char *txt, int choice, int enter_hint)
     gui_bg_color = makecol(255, 255, 255);                     /* 471 */
     set_trans_blender(0, 0, 0, 158);                           /* 473 */
     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                    /* 474 */
-    width = 0;
-    height = 0;
-    if (gfx_driver) {
-        height = gfx_driver->h;
-        width = gfx_driver->w;
-    }
-    rectfill(screen, 0, 0, width, height, makecol(0, 0, 0));   /* 475 */
+    rectfill(screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
+             gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0)); /* 475 */
     solid_mode();                                              /* 476 */
     blit(screen, swap_screen, 0, 0, 0, 0, 639, 479); /* 478 */
     acquire_bitmap(screen);
@@ -1258,6 +1335,8 @@ int my_alert(char *func, char *txt, int choice, int enter_hint)
         poll_control(&ctrl, 0); poll_control(menu_ctrl, 0); rest(2);
     }
     clear_keybuf();                                            /* 500 */
+    done = 0;
+    status = 0;
     while (!done && !closeButtonClicked) {                     /* 502 */
         cycle_count = 0;                                       /* 503 */
         poll_control(&ctrl, 0); poll_control(menu_ctrl, 0);     /* 504 */
@@ -3242,7 +3321,7 @@ void handle_player_collision_vector(int lastX, int lastY)
 {
     Tplayer *p;
     int floor_y;
-    int floor_x1 = 0, floor_x2 = 0;
+    int floor_x1, floor_x2;
     int left_x, left_y, right_x, right_y;
     int left, right;
     int current_x, current_y;
@@ -3251,6 +3330,8 @@ void handle_player_collision_vector(int lastX, int lastY)
     current_x = (int)p->x;
     current_y = (int)p->y;
     floor_y = -12345678;
+    floor_x1 = 0;
+    floor_x2 = 0;
     getFloorData(&map, current_y, &floor_y, &floor_x1, &floor_x2);
     if (floor_y == -12345678) {
         getFloorData(&map, lastY, &floor_y, &floor_x1, &floor_x2);
@@ -3299,8 +3380,7 @@ void handle_player_collision_vector(int lastX, int lastY)
 void handle_player_collision_vector_2(int lastX, int lastY)
 {
     Tplayer *p;
-    int floor_y = -12345678;
-    int floor_x1 = 0, floor_x2 = 0;
+    int floor_y, floor_x1, floor_x2;
     int left_x, left_y, right_x, right_y;
     int left, right;
     int current_x, current_y;
@@ -3316,6 +3396,9 @@ void handle_player_collision_vector_2(int lastX, int lastY)
     prx2 = lastX + 11;
     col1 = makecol(255, 0, 0);
     col2 = makecol(255, 255, 0);
+    floor_y = -12345678;
+    floor_x1 = 0;
+    floor_x2 = 0;
     getFloorData(&map, (int)p->y, &floor_y, &floor_x1, &floor_x2);
     if (floor_y == -12345678) {
         getFloorData(&map, lastY, &floor_y, &floor_x1, &floor_x2);
@@ -3370,10 +3453,11 @@ void handle_player_collision_combo(int lastX, int lastY)
     int fx1 = 0, fx2 = 0;
     int ilx, ily, irx, iry;
     int solid1, solid2, left, right;
-    int col1 = makecol(255, 0, 0);
-    int col2 = makecol(255, 255, 0);
+    int col1, col2;
 
     p = ply[player_id];
+    col1 = makecol(255, 0, 0);
+    col2 = makecol(255, 255, 0);
     solid1 = is_solid(&map, (int)p->x - 11, (int)p->y);
     solid2 = is_solid(&map, (int)p->x + 11, (int)p->y);
     any11 = solid1;

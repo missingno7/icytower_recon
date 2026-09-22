@@ -2,10 +2,9 @@
 int my_alert(char *func, char *txt, int choice, int enter_hint)
 {
     Tcontrol *menu_ctrl = &menu_params.ctrl;
-    int status = 0;
-    int done = 0;
+    int status;
+    int done;
     int w;
-    int width, height;
 
     w = MAX(text_length(data[51].dat, func ? func : " "),      /* 467 */
             text_length(data[51].dat, txt ? txt : " "));
@@ -13,13 +12,8 @@ int my_alert(char *func, char *txt, int choice, int enter_hint)
     gui_bg_color = makecol(255, 255, 255);                     /* 471 */
     set_trans_blender(0, 0, 0, 158);                           /* 473 */
     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                    /* 474 */
-    width = 0;
-    height = 0;
-    if (gfx_driver) {
-        height = gfx_driver->h;
-        width = gfx_driver->w;
-    }
-    rectfill(screen, 0, 0, width, height, makecol(0, 0, 0));   /* 475 */
+    rectfill(screen, 0, 0, gfx_driver ? gfx_driver->w : 0,
+             gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0)); /* 475 */
     solid_mode();                                              /* 476 */
     blit(screen, swap_screen, 0, 0, 0, 0, 639, 479); /* 478 */
     acquire_bitmap(screen);
@@ -34,6 +28,8 @@ int my_alert(char *func, char *txt, int choice, int enter_hint)
         poll_control(&ctrl, 0); poll_control(menu_ctrl, 0); rest(2);
     }
     clear_keybuf();                                            /* 500 */
+    done = 0;
+    status = 0;
     while (!done && !closeButtonClicked) {                     /* 502 */
         cycle_count = 0;                                       /* 503 */
         poll_control(&ctrl, 0); poll_control(menu_ctrl, 0);     /* 504 */

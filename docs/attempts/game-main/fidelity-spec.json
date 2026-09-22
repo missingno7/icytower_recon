@@ -1,0 +1,12 @@
+{
+ "target": "game-main",
+ "source": "src/main.c",
+ "order": "current",
+ "bodies": {
+  "my_alert": "docs/attempts/game-main/bodies/my_alert.c",
+  "handle_player_collision_combo": "docs/attempts/game-main/bodies/handle_player_collision_combo.c",
+  "handle_player_collision_vector": "docs/attempts/game-main/bodies/handle_player_collision_vector.c",
+  "handle_player_collision_vector_2": "docs/attempts/game-main/bodies/handle_player_collision_vector_2.c"
+ },
+ "evidence": "Byte-neutral provenance corrections confirmed against the aligned disassembly: my_alert evaluates makecol before the gfx_driver check by folding it into the rectfill arguments, and sets status and done where their DWARF live ranges begin rather than at declaration; the three collision handlers cache ply[player_id] before the makecol calls and initialise the floor-data outputs immediately before getFloorData, both as the original does. Sizes unchanged, no loss, no gain."
+}

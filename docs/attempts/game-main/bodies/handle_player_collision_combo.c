@@ -7,10 +7,11 @@ void handle_player_collision_combo(int lastX, int lastY)
     int fx1 = 0, fx2 = 0;
     int ilx, ily, irx, iry;
     int solid1, solid2, left, right;
-    int col1 = makecol(255, 0, 0);
-    int col2 = makecol(255, 255, 0);
+    int col1, col2;
 
     p = ply[player_id];
+    col1 = makecol(255, 0, 0);
+    col2 = makecol(255, 255, 0);
     solid1 = is_solid(&map, (int)p->x - 11, (int)p->y);
     solid2 = is_solid(&map, (int)p->x + 11, (int)p->y);
     any11 = solid1;
