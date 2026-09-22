@@ -62,10 +62,16 @@ void draw_frame(BITMAP *bmp)
         cx = y + 0xa;                                     /* 2784 */
         cy = ox + 0xa;                                     /* 2785 */
         set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);            /* 2785 */
-        if (!demo->comment[0])                              /* 2787 */
-            sprintf(scrollerText, "%s%s%s", "", " - ", demo->name);
-        else
-            sprintf(scrollerText, "%s%s%s", demo->comment, " - ", demo->name);
+        /* Machine evidence (offsets 4392..4451 fallthrough vs 6010..6026 jump-in):
+         * there is exactly one physical call to sprintf; the empty-comment path only
+         * sets up arg3 = "" (esp+0x10) before falling into the shared arg2/arg1/fmt/
+         * dest setup and the single call, and the comment path only sets up
+         * arg3 = demo->comment before jumping into that same shared setup -- so this
+         * is sprintf(scrollerText, "%s%s%s", demo->name, " - ", <arg3>) with a single
+         * call site, arg3 selected by the test at 2787, not two separate sprintf
+         * statements. */
+        sprintf(scrollerText, "%s%s%s", demo->name, " - ",         /* 2787 */
+                !demo->comment[0] ? "" : demo->comment);
         /* offset 4479 "mov -0x178(%ebp),%edi; add $0x4,%edi" reloads cx (not cy) for the
          * y-coordinate of every textout_ex below; the x-coordinate keeps using ox. */
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,     /* 2788 */

@@ -364,27 +364,34 @@ void draw_frame(BITMAP *bmp)
      * a separate main.c statement). The sprite is data[100].dat and the two constant arguments in
      * the third slot (x) are 0x235 (565) and 0xffffffc7 (-57), so the strips are vertical, at the
      * right and left screen edges, sharing one y per iteration. Resolved by side-by-side reading
-     * of offsets 2786..3110 (aligned_view sbs): the call reached with x=0x235 uses vtable slot
-     * 0x48 (draw_sprite_v_flip, offset 3097 `call *0x48(%edx)`), and the call reached with
-     * x=0xffffffc7 uses slot 0x50 (draw_sprite_vh_flip, offset 2964 `call *0x50(%ecx)`); the 0x44
-     * (draw_256_sprite) call at offset 2858 in the same window is tail-duplicated code from the
-     * plain draw_sprite at line 2651, not part of this loop. */
+     * of offsets 2786..3110 (aligned_view sbs) against the ORIGINAL's own GFX_VTABLE layout, read
+     * from its DWARF rather than guessed: 0x44 draw_sprite, 0x48 draw_256_sprite, 0x4c
+     * draw_sprite_v_flip, 0x50 draw_sprite_h_flip, 0x54 draw_sprite_vh_flip. So the call reached
+     * with x=0x235 uses 0x44 and 0x48, which is the depth check inside the plain draw_sprite
+     * inline (draw.inl:238), and the call reached with x=0xffffffc7 uses 0x50, which is
+     * draw_sprite_h_flip: the left strip is the right strip mirrored horizontally. An earlier
+     * reading of this block was one vtable slot out and used the vertical flips. */
     for (cy = -124; cy != 496; cy += 124) {                                    /* 2698 */
         cx = cy + (int)((map.offset % 84) * 1.476);                             /* 2699 */
-        draw_sprite_v_flip(bmp, data[100].dat, 565, cx);                        /* 2699 */
-        draw_sprite_vh_flip(bmp, data[100].dat, -57, cx);                       /* 2699 */
+        draw_sprite(bmp, data[100].dat, 565, cx);                                /* 2699 */
+        draw_sprite_h_flip(bmp, data[100].dat, -57, cx);                        /* 2699 */
     }
 
     draw_sprite(bmp, data[16].dat, 22, 100);          /* 2705 */
+    /* Machine evidence (offsets 3640..3806 vs 5823..5968, --report comparison.json):
+     * the in_combo branch's own tail (after its own blit+draw_sprite) jumps directly
+     * into offset 3744, which is INSIDE the reward_time branch's argument setup for
+     * textprintf_centre_ex, skipping reward_time's own test (3663) and its own
+     * draw_sprite (3677) entirely. A live combo can therefore never also run the
+     * reward_time body in the same frame, which is only reachable if the two `if`s
+     * are one if/else-if chain, not two independent statements. */
     if (ply[player_id]->in_combo) {                    /* 2706 */
         blit(data[15].dat, bmp, 0, 100 - ply[player_id]->in_combo, 33,   /* 2707 */
              219 - ply[player_id]->in_combo, 16, ply[player_id]->in_combo);
         draw_sprite(bmp, data[14].dat, -8, 210);         /* 2708 */
         textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",   /* 2709 */
                               ply[player_id]->acc_level);
-    }
-
-    if (reward_time) {                                   /* 2711 */
+    } else if (reward_time) {                            /* 2711 */
         draw_sprite(bmp, data[14].dat, -8, 210);           /* 2712 */
         textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",     /* 2713 */
                               ply[player_id]->latest_combo);
@@ -488,10 +495,16 @@ void draw_frame(BITMAP *bmp)
         cx = y + 0xa;                                     /* 2784 */
         cy = ox + 0xa;                                     /* 2785 */
         set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);            /* 2785 */
-        if (!demo->comment[0])                              /* 2787 */
-            sprintf(scrollerText, "%s%s%s", "", " - ", demo->name);
-        else
-            sprintf(scrollerText, "%s%s%s", demo->comment, " - ", demo->name);
+        /* Machine evidence (offsets 4392..4451 fallthrough vs 6010..6026 jump-in):
+         * there is exactly one physical call to sprintf; the empty-comment path only
+         * sets up arg3 = "" (esp+0x10) before falling into the shared arg2/arg1/fmt/
+         * dest setup and the single call, and the comment path only sets up
+         * arg3 = demo->comment before jumping into that same shared setup -- so this
+         * is sprintf(scrollerText, "%s%s%s", demo->name, " - ", <arg3>) with a single
+         * call site, arg3 selected by the test at 2787, not two separate sprintf
+         * statements. */
+        sprintf(scrollerText, "%s%s%s", demo->name, " - ",         /* 2787 */
+                !demo->comment[0] ? "" : demo->comment);
         /* offset 4479 "mov -0x178(%ebp),%edi; add $0x4,%edi" reloads cx (not cy) for the
          * y-coordinate of every textout_ex below; the x-coordinate keeps using ox. */
         textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,     /* 2788 */

@@ -262,7 +262,11 @@ int play(void)
                             ply[player_id]->acc_jumps = 1;               /* 3927 */
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
-                        lastJumpLength = diff;                          /* 3928 tail */
+                        lastJumpLength = 1;                              /* 3928: slot trace shows a literal
+                                                                            * $0x1 store here (offset 15650),
+                                                                            * not a reload of diff -- distinct
+                                                                            * from the 3932 tail below, which
+                                                                            * does store diff (offset 6139). */
                     } else if (ply[player_id]->in_combo) {               /* 3932: two-part condition,
                                                                             * diff==1 (offset 3888) &&
                                                                             * in_combo!=0 (offset 3897,
@@ -288,6 +292,10 @@ int play(void)
                         ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3949 */
                     ply[player_id]->jc[i] = 0;                             /* 3952 */
                 }
+                lastJumpLength = 0;                                     /* 3945: slot trace shows a second
+                                                                            * write to lastJumpLength's slot
+                                                                            * here (offset 4454), missing from
+                                                                            * this block until now. */
                 ply[player_id]->level = level;                          /* 3962 */
                 if (!numComboJumps &&                                    /* 3967 */
                     ply[player_id]->no_combo_top_floor < ply[player_id]->level)
