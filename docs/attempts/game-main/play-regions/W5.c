@@ -147,7 +147,7 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
                              qualifyValue,
                              is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
@@ -222,7 +222,7 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
                              qualifyValue, is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
@@ -249,7 +249,7 @@ int play(void)
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
-                    /* 4823 */ rank_y = rank_y + (int)((320 - rank_y) * 0.1);
+                    /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */

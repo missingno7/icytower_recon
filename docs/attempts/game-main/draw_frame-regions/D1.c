@@ -108,17 +108,16 @@ void draw_frame(BITMAP *bmp)
                 x = cy;                      /* ? DWARF tracks a separate `x` over this same span; mirrored here */
                 draw_sprite(bmp, data[ls].dat, x, cx + (map.offset & 0xf) - 6);
 
-                /* middle tiles: 2553..2556 */
-                for (f++; f < room->end_tile; f++) {
-                    cy = f * 16;
-                    x = cy;                  /* ? */
-                    draw_sprite(bmp, data[ls + 1].dat, x, cx + (map.offset & 0xf) - 6);
+                f++;                                  /* 2553 */
+                for (; f < room->end_tile; f++) {      /* 2554 */
+                    cy = f * 16;                        /* 2555 */
+                    x = cy;
+                    draw_sprite(bmp, data[ls + 1].dat, x, cx + (map.offset & 0xf) - 6); /* 2555 */
                 }
 
-                /* right edge tile, 2558 */
-                cy = f * 16;
-                x = cy;                      /* ? */
-                draw_sprite(bmp, data[ls + 2].dat, x, cx + (map.offset & 0xf) - 6);
+                cy = f * 16;                            /* 2558 */
+                x = cy;
+                draw_sprite(bmp, data[ls + 2].dat, x, cx + (map.offset & 0xf) - 6);     /* 2558 */
 
                 if (debug && !key[KEY_F2]) {  /* 2560 */
                     textprintf_ex(bmp, font, 0x208, cx + (map.offset & 0xf), 15, -1, "%d",

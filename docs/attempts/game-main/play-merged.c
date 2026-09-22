@@ -587,30 +587,49 @@ int play(void)
                         vline(swap_screen, i, 0, 480, 0);                     /* draw.inl:46 */
                         hline(swap_screen, 0, i, 640, 0);                     /* draw.inl:54 */
                     }
-                    textout_centre_ex(swap_screen, data[50].dat,
-                                       "DO YOU REALLY WANT TO EXIT?", 320, 160, -1, -1); /* 4126 */
-                    textout_centre_ex(swap_screen, data[52].dat,
-                                       "Press any key to resume", 320, 210, -1, -1);     /* 4127 */
-                    textout_centre_ex(swap_screen, data[52].dat,
-                                       "Press ESC to exit", 320, 240, -1, -1);            /* 4128 */
+                    textout_centre_ex(swap_screen, data[50].dat,               /* 4126: GCC attributes a call's
+                                                                                  bytes to its opening line, so the
+                                                                                  annotation moves here (was on the
+                                                                                  closing line, which left the
+                                                                                  line_budget tool crediting each
+                                                                                  call's bytes to the call above it
+                                                                                  and showing 4128 as 0 bytes even
+                                                                                  though the call is present). */
+                                       "DO YOU REALLY WANT TO EXIT?", 320, 160, -1, -1);
+                    textout_centre_ex(swap_screen, data[52].dat,               /* 4127 */
+                                       "Press any key to resume", 320, 210, -1, -1);
+                    textout_centre_ex(swap_screen, data[52].dat,               /* 4128 */
+                                       "Press ESC to exit", 320, 240, -1, -1);
                     blit_to_screen(swap_screen);                              /* 4129 */
                     play_sound(custom.wazup, 0, 1);                           /* 4130 */
-                    poll_control(&ctrl, 0);                                   /* 4132 */
-                    while (1) {                                               /* 4133..4144 (see report: simplified) */
-                        while (key[KEY_ESC]) {                                /* ESC held */
-                            poll_control(&ctrl, 0);
-                            rest(2);
-                        }
-                        if (is_any(&ctrl) || is_pause(&ctrl))
+                    /* Two-loop wait, re-derived from the assembly (source-view 4117..4182):
+                     * outer loop's entry jmp lands on its is_any/is_pause/ESC compound test
+                     * (offsets 1717.. no -- offsets 5357/5316 etc, see function_lines source-view),
+                     * a plain bottom-tested `while (cond) body`; the inner "key still held" loop's
+                     * entry jmp lands on keypressed() alone (offset 5490), meaning keypressed() is
+                     * the sole loop condition and the is_any/is_pause/closeButtonClicked/key[ESC]
+                     * checks are an if-break inside its body -- GCC then thread the break's three
+                     * different truth cases into different entry points of the loop that follows
+                     * (closeButtonClicked jumps straight past that loop's own redundant
+                     * closeButtonClicked test; key[ESC] jumps into its is_pause call for the same
+                     * reason), which is why the reconstruction only needs three plain loops. */
+                    poll_control(&ctrl, 0);                                    /* 4132 */
+                    while (is_any(&ctrl) || is_pause(&ctrl)                    /* 4133 */
+                           || (!closeButtonClicked && key[KEY_ESC])) {         /* 4133 */
+                        poll_control(&ctrl, 0);                                /* 4134 */
+                        rest(2);                                               /* 4135 */
+                    }
+                    clear_keybuf();                                            /* 4137 */
+                    while (!keypressed()) {                                    /* 4138 */
+                        if (is_any(&ctrl) || is_pause(&ctrl) ||
+                            closeButtonClicked || key[KEY_ESC])                /* 4138 */
                             break;
-                        if (closeButtonClicked) {                             /* 4142 */
-                            clear_keybuf();                                   /* 4137 */
-                            break;
-                        }
-                        poll_control(&ctrl, 0);                               /* 4139 */
-                        rest(2);                                              /* 4140 */
-                        if (keypressed())                                    /* 4138 */
-                            break;
+                        poll_control(&ctrl, 0);                                /* 4139 */
+                        rest(2);                                               /* 4140 */
+                    }
+                    while (!closeButtonClicked && is_pause(&ctrl)) {           /* 4142 */
+                        poll_control(&ctrl, 0);                                /* 4143 */
+                        rest(2);                                               /* 4144 */
                     }
                     if (key[KEY_ESC]) {                                       /* 4146 */
                         log2file("  game quit from esc pause");               /* 4150 */
@@ -648,29 +667,34 @@ int play(void)
                     vline(swap_screen, i, 0, 480, 0);                         /* draw.inl:46 */
                     hline(swap_screen, 0, i, 640, 0);                         /* draw.inl:54 */
                 }
-                textout_centre_ex(swap_screen, data[50].dat,
-                                   "Game Paused", 320, 160, -1, -1);           /* 4196 */
-                textout_centre_ex(swap_screen, data[52].dat,
-                                   "Press any key to resume", 320, 210, -1, -1); /* 4197 */
+                textout_centre_ex(swap_screen, data[50].dat,                  /* 4196 (annotation kept on the
+                                                                                  opening line; see the note above
+                                                                                  the ESC screen's identical calls) */
+                                   "Game Paused", 320, 160, -1, -1);
+                textout_centre_ex(swap_screen, data[52].dat,                  /* 4197 */
+                                   "Press any key to resume", 320, 210, -1, -1);
                 blit_to_screen(swap_screen);                                  /* 4198 */
                 play_sound(custom.wazup, 0, 1);                               /* 4199 */
+                /* Same three-loop shape as the ESC screen (W3a above), but this screen's
+                 * outer wait has no closeButtonClicked term (source-view 4186..4245 never
+                 * loads it before is_any/is_pause/ESC), and its final loop tests
+                 * is_pause() || key[KEY_ESC] directly (continues on either, offset
+                 * 7018/7027 both jump back to the poll_control/rest body) rather than the
+                 * negated-AND the ESC screen's closing loop uses. */
                 poll_control(&ctrl, 0);                                       /* 4200 */
-                while (1) {                                                   /* 4201..4209 (see report: simplified) */
-                    if (is_any(&ctrl) || is_pause(&ctrl))
+                while (is_any(&ctrl) || is_pause(&ctrl)) {                    /* 4201 */
+                    poll_control(&ctrl, 0);                                   /* 4202 */
+                    rest(2);                                                  /* 4203 */
+                }
+                clear_keybuf();                                               /* 4206 */
+                while (!keypressed()) {                                       /* 4207 */
+                    if (is_any(&ctrl) || is_pause(&ctrl) || key[KEY_ESC])      /* 4207 */
                         break;
-                    if (key[KEY_ESC]) {                                       /* ESC */
-                        clear_keybuf();                                       /* 4206 */
-                        break;
-                    }
                     poll_control(&ctrl, 0);                                   /* 4208 */
                     rest(2);                                                  /* 4209 */
-                    if (keypressed())                                        /* 4207 */
-                        break;
                 }
                 poll_control(&ctrl, 0);                                       /* 4212 */
-                while (is_pause(&ctrl)) {                                     /* 4213 */
-                    if (key[KEY_ESC])
-                        break;
+                while (is_pause(&ctrl) || key[KEY_ESC]) {                     /* 4213 */
                     poll_control(&ctrl, 0);                                   /* 4214 */
                     rest(2);                                                  /* 4215 */
                 }
@@ -745,8 +769,18 @@ int play(void)
                 draw_frame(swap_screen);                                      /* 4338 */
                 if (ply[player_id]->shake) {                                  /* 4346 */
                     acquire_screen();                                          /* gfx.inl:221/203 */
-                    blit(swap_screen, swap_screen, 0, shake, 0, 0,
-                         swap_screen->w, swap_screen->h);                      /* 4348 */
+                    blit(swap_screen, swap_screen, 0, shake, 0, 0,             /* 4348: args from
+                                                                                    fragments 6207..6271 (source-view
+                                                                                    4340 4352) -- src=dst=swap_screen,
+                                                                                    src_x=0, src_y=shake (ebp-0x96c),
+                                                                                    dst_x=dst_y=0, w/h read back from
+                                                                                    swap_screen's own struct fields
+                                                                                    (mov (%eax),%edx / mov 0x4(%eax));
+                                                                                    annotation moved to the opening
+                                                                                    line for the same reason as 4126
+                                                                                    above (GCC attributes a call's
+                                                                                    bytes to where it opens). */
+                         swap_screen->w, swap_screen->h);
                     blit_to_screen(swap_screen);                              /* 4349 */
                     release_screen();                                         /* gfx.inl:227/212 */
                 } else {
@@ -1069,7 +1103,7 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
                              qualifyValue,
                              is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
@@ -1144,7 +1178,7 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
                              qualifyValue, is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
@@ -1171,7 +1205,7 @@ int play(void)
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
-                    /* 4823 */ rank_y = rank_y + (int)((320 - rank_y) * 0.1);
+                    /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */

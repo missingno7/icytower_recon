@@ -36,7 +36,7 @@ void draw_frame(BITMAP *bmp)
                 if (room->level > 0x1387) {    /* 2564 */
                     s++;
                 }
-                sy = cx + (map.offset & 0xf) + 10;  /* ? sign-preserving mod-16 term like 2552's, 2565 */
+                sy = cx + (map.offset & 0xf) + 10;  /* 2565 */
                 sw = ((BITMAP *)data[s].dat)->w;     /* 2566 */
                 cy = room->start_tile + (room->end_tile - room->start_tile) / 2; /* 2567 */
                 cy *= 16;
