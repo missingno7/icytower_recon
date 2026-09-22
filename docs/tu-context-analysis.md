@@ -297,3 +297,44 @@ definition order **alone**, with no reconstructed bodies, is a net regression: o
 against six losses (`check_beta_tester`, `line_alert`, `show_instructions`, `start_reward`,
 `stopGameMusic`, `uninit_game`).  The same order with the two bodies is +3/-1.  Order and bodies are
 one transaction precisely because neither is acceptable alone.
+
+## 11. A DWARF local our source never names is a located gap
+
+Every local the historical source declared got a stack slot or a register, so a DWARF local whose name
+appears nowhere in a reconstruction marks statements we have not recovered.  Unlike a byte budget this
+does not depend on line attribution, cross-jumping or inlining, so it stays meaningful while a body is
+still far from its original size, which is exactly when a byte budget stops being trustworthy.
+`tools/unused_locals.py` reports them with each one's lexical block resolved to a historical line span.
+
+On `play` it located three separate gaps in one call, two of which two byte-budget passes had failed to
+find: `clockSpeed`/`qpcSpeed`/`timeSpeed` in a debug-timing block at lines 3604..3661; `skipCategories[5]`
+and `achs` in a block covering exactly lines 4753..4770, where the reconstruction had written two string
+copies instead (and where our three spurious `memcpy`/`__builtin_memcpy`/`strlen` call edges come from);
+and `done`, `pos`, `hyTarget`, `scrollerY`, `scrollerTargetY`, `rankTargetY` in the results block, whose
+`*Target` names give away the easing shape of a block that had twice been reconstructed wrongly.
+
+The check is cheap enough to sweep the whole project.  Excluding `play` and `draw_frame`, whose
+production definitions are placeholders, the functions with unrecovered locals are, by count:
+
+| function | unnamed locals | candidate / historical |
+|---|---|---|
+| handle_player_collision_vector | 16 | 1021 / 1071 |
+| handle_player_collision_vector_2 | 13 | 1057 / 1086 |
+| handle_player_collision_combo | 9 | 1381 / 1390 |
+| do_replay_menu | 9 | 2159 / 2661 |
+| init_game | 8 | 5666 / 5788 |
+| _mangled_main | 8 | 1730 / 1938 |
+| draw_profile_selector | 5 | 1242 / 1268 |
+| handle_player_collision_old | 4 | 961 / 894 |
+| select_profile | 3 | 2706 / 3070 |
+| draw_results | 2 | 839 / 839 |
+| extractHTTPResponse | 2 | 918 / 923 |
+
+The four collision handlers share the same missing geometry variables (`fx1`, `fy1`, `fx2`, `fy2`,
+`plx1`, `ply1` ...), so they are one gap appearing four times, not four gaps.  `draw_results` is already
+the exact historical size with two locals unnamed, and `extractHTTPResponse` needs only `last` and `c` --
+and it is the function whose single missing peephole scratch is the one thing keeping `dumpHTTPResponse`
+from being exact (section 10).
+
+The converse carries no information: a name we do use may still be used for the wrong thing.  On
+`draw_frame` the tool reports nothing missing, and `draw_frame` is still 12 bytes short.
