@@ -193,10 +193,13 @@ void draw_frame(BITMAP *bmp)
                                                             * so the 2594 range test that keeps it in [5,8] guards
                                                             * a real array bound, not a provably-redundant compare */
         ox = -(customFrame->w / 2);
-        if (ply[player_id]->sx == 0) {                  /* 2686: fldl 0x10(%edx)/fldz/fucompp guards the draw */
-            oy = (int)ply[player_id]->y + oy;            /* 2706..2755: fistpl-truncated y added onto the running oy */
-            ox = (int)ply[player_id]->x + ox;            /* 2757..2783: fistpl-truncated x added onto ox */
-            draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2786..2824 */
+        /* 2651: fldl 0x10(%edx)/fldz/fucompp guards the draw, then the fistpl-truncated y and x
+         * are added onto the running oy/ox and the draw call issued -- offsets 2686..2786, all one
+         * historical source line per function_lines --source-view. */
+        if (ply[player_id]->sx == 0) {                  /* 2651 */
+            oy = (int)ply[player_id]->y + oy;            /* 2651 */
+            ox = (int)ply[player_id]->x + ox;            /* 2651 */
+            draw_sprite(bmp, customFrame, ox, oy);       /* 2651, draw.inl:238 */
         }
         /* ? ply[player_id]->sx != 0.0 (jne to offset 7917) leaves this region entirely --
          * not reconstructed here, out of scope for D2 (historical lines end at 2651). */
