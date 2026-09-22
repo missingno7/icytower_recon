@@ -266,3 +266,34 @@ assumed `alpha_pos` had written the wrong argument into the reconstruction.
 
 The rule this establishes: when a body compiles short and a local's write looks dead, trace the slot
 before concluding anything.  A dead write is a symptom of missing readers, never a cause in itself.
+
+## 10. The peephole cursor is a global counter, and a downstream loss is a downstream indicator
+
+`peep2_find_free_register` keeps a file-static `search_ofs` that rotates through the allocation
+order (ax, dx, cx, bx, si, di, bp) and is never reset between functions.  Two measurements pin the
+behaviour down exactly.
+
+In `httpget.c` a control overlay inserted one artificial extra scratch consumer ahead of every
+other function.  It took `dx`; `destroyHTTPResponse` moved `ax -> cx` and the candidate
+`dumpHTTPResponse` moved `dx -> bx`.  Each consumer advances the cursor by one step for everything
+emitted after it, with no other coupling.  That arithmetic is strong enough to run backwards: the
+original's `dumpHTTPResponse` takes `cx` where ours takes `dx`, so exactly one more scratch was
+consumed before it historically; `SplitURL` is exact and consumes none; therefore the missing
+consumer is `extractHTTPResponse`, and the original's `extractHTTPResponse` does contain the
+predicted peephole at offset 70 with the predicted register `dx`.
+(`docs/attempts/game-httpget/dumpHTTPResponse-finding.md`.)
+
+In `main.c` the same arithmetic explains the single loss that blocks the prepared historical-order
+transaction.  Under the historical order with the reconstructed `play` and `draw_frame` bodies, the
+probe reports gains `draw_progress_bar`, `log2file`, `open_web_browser` and one loss, `run_demo`,
+which needs `cx, bx` and gets `dx, cx`: one step short.  133 scratches are consumed before it and
+134 are needed.  Sixteen of the functions emitted before `run_demo` are still DIFFER (`draw_frame`
+alone consumes 11, `play` 67), so the deficit is not `play`'s private property and `run_demo` is not
+a separate problem to solve.  It is an indicator that goes green when the bodies ahead of it are
+right, and it must not be chased by altering `run_demo` or by reordering around it.
+
+The order is only worth having with the bodies.  A control overlay applying the historical
+definition order **alone**, with no reconstructed bodies, is a net regression: one gain (`log2file`)
+against six losses (`check_beta_tester`, `line_alert`, `show_instructions`, `start_reward`,
+`stopGameMusic`, `uninit_game`).  The same order with the two bodies is +3/-1.  Order and bodies are
+one transaction precisely because neither is acceptable alone.
