@@ -4,7 +4,7 @@
 void handle_player_collision_vector(int lastX, int lastY)
 {
     Tplayer *p;
-    int floor_y = -12345678;
+    int floor_y;
     int floor_x1 = 0, floor_x2 = 0;
     int left_x, left_y, right_x, right_y;
     int left, right;
@@ -13,6 +13,7 @@ void handle_player_collision_vector(int lastX, int lastY)
     p = ply[player_id];
     current_x = (int)p->x;
     current_y = (int)p->y;
+    floor_y = -12345678;
     getFloorData(&map, current_y, &floor_y, &floor_x1, &floor_x2);
     if (floor_y == -12345678) {
         getFloorData(&map, lastY, &floor_y, &floor_x1, &floor_x2);
@@ -23,10 +24,19 @@ void handle_player_collision_vector(int lastX, int lastY)
         }
     }
 
+    if (debug) {
+        if (key[KEY_F2]) {
+            int col1 = makecol(255, 0, 0);
+            int col2 = makecol(255, 255, 0);
+            line(screen, floor_x1, floor_y, floor_x2, floor_y, col1);
+            line(screen, current_x - 11, current_y + 1, lastX - 11, lastY, col2);
+            line(screen, current_x + 11, current_y + 1, lastX + 11, lastY, col2);
+        }
+    }
     left = line_intersect(floor_x1, floor_y, floor_x2, floor_y,
-        lastX - 11, lastY, current_x - 11, current_y + 1, &left_x, &left_y);
+        current_x - 11, current_y + 1, lastX - 11, lastY, &left_x, &left_y);
     right = line_intersect(floor_x1, floor_y, floor_x2, floor_y,
-        lastX + 11, lastY, current_x + 11, current_y + 1, &right_x, &right_y);
+        current_x + 11, current_y + 1, lastX + 11, lastY, &right_x, &right_y);
     if (!left && !right) {
         if (p->status == 2 || p->status == 0)
             p->status = 3;
@@ -41,7 +51,6 @@ void handle_player_collision_vector(int lastX, int lastY)
 
     play_sound(combo_sound[0], 1, 1);
     p->status = 0;
-    p->sx = 0;
     p->sy = 0;
     p->y = floor_y - 1;
     p->x = left ? left_x + 11 : right_x - 11;

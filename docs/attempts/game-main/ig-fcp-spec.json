@@ -1,0 +1,10 @@
+{
+ "target": "game-main",
+ "source": "src/main.c",
+ "order": "current",
+ "bodies": {
+  "init_game": "docs/attempts/game-main/bodies/init_game.c",
+  "force_create_profile": "docs/attempts/game-main/bodies/force_create_profile.c"
+ },
+ "evidence": "Retained complete bodies. init_game: the command-line scan is a do-while entered directly as the original does, get_configfile_path is called after the hiscore-table loop and init_control as the line table shows, and menu_sounds[0] and [1] are assigned last from datafile entries 11 and 12 rather than first from 0 and 13 (5646 -> 5666 of 5788). force_create_profile: y and ok are declared but unused at function scope while res and buf[129] live in the nested loop block, matching the DWARF live ranges exactly."
+}

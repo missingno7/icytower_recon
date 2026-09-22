@@ -69,14 +69,16 @@ def region_map(new_text, own, body_path):
     historical ones, so per-line comparison across the two files is meaningless; per-region totals are not."""
     import json
     side = Path(str(body_path) + '.regions.json')
-    if not side.exists(): return {}
-    spans = json.loads(side.read_text(encoding='utf-8'))
-    body = Path(body_path).read_text(encoding='utf-8', errors='replace').replace(chr(13) + chr(10), chr(10)).split(chr(10))
+    body_text = Path(body_path).read_text(encoding='utf-8', errors='replace').replace(chr(13) + chr(10), chr(10))
+    # A single retained body has no regions: treat the whole definition as one span so --annotations works.
+    spans = json.loads(side.read_text(encoding='utf-8')) if side.exists() else {'body': [1, len(body_text.split(chr(10)))]}
+    body = body_text.split(chr(10))
     sig = next((k for k, l in enumerate(body) if re.match(r'^[A-Za-z_].*\(.*\)\s*$', l)), 0)
     lines = new_text.replace(chr(13) + chr(10), chr(10)).split(chr(10))
     base = next((k for k, l in enumerate(lines) if l == body[sig]), None)
     if base is None: return {}
     shift = base - sig                          # both sides are 1-based line numbers of the same text
+    region_map.shift = shift
     return {tag: (lo + shift, hi + shift) for tag, (lo, hi) in spans.items()}
 
 
@@ -164,12 +166,8 @@ def main():
     if a.annotations:
         body = ROOT / bodies[a.function]
         ann = annotated_lines(body, regions)
-        shift = None
-        # candidate line numbers in the object are overlay lines; recover the shift from the region map
-        if regions:
-            spans = read_json(Path(str(body) + '.regions.json')) if Path(str(body) + '.regions.json').exists() else {}
-            for tag, (lo, hi) in regions.items():
-                if tag in spans: shift = lo - spans[tag][0]; break
+        # candidate line numbers in the object are overlay lines; region_map recorded the shift
+        shift = getattr(region_map, 'shift', None) if regions else None
         hist = {k[1]: v for k, v in rows_dict(rows).items() if k[0] == own}
         cand_hist = {}
         for (file, line), v in cand.items():

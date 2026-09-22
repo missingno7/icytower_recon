@@ -3,10 +3,12 @@
 void handle_player_collision_combo(int lastX, int lastY)
 {
     Tplayer *p;
-    int floor_y = -12345678;
-    int floor_x1 = 0, floor_x2 = 0;
-    int left_x, left_y, right_x, right_y;
+    int fy1 = -12345678;
+    int fx1 = 0, fx2 = 0;
+    int ilx, ily, irx, iry;
     int solid1, solid2, left, right;
+    int col1 = makecol(255, 0, 0);
+    int col2 = makecol(255, 255, 0);
 
     p = ply[player_id];
     solid1 = is_solid(&map, (int)p->x - 11, (int)p->y);
@@ -37,19 +39,26 @@ void handle_player_collision_combo(int lastX, int lastY)
 
     if (p->status == 2 || p->status == 0)
         p->status = 3;
-    getFloorData(&map, (int)p->y, &floor_y, &floor_x1, &floor_x2);
-    if (floor_y == -12345678) {
-        getFloorData(&map, lastY, &floor_y, &floor_x1, &floor_x2);
-        if (floor_y == -12345678) {
-            floor_y = 0;
-            floor_x1 = 0;
-            floor_x2 = 0;
+    getFloorData(&map, (int)p->y, &fy1, &fx1, &fx2);
+    if (fy1 == -12345678) {
+        getFloorData(&map, lastY, &fy1, &fx1, &fx2);
+        if (fy1 == -12345678) {
+            fy1 = 0;
+            fx1 = 0;
+            fx2 = 0;
         }
     }
-    left = line_intersect(floor_x1, floor_y, floor_x2, floor_y,
-        (int)p->x - 11, (int)p->y + 1, lastX - 11, lastY, &left_x, &left_y);
-    right = line_intersect(floor_x1, floor_y, floor_x2, floor_y,
-        (int)p->x + 11, (int)p->y + 1, lastX + 11, lastY, &right_x, &right_y);
+    if (debug) {
+        if (key[KEY_F2]) {
+            line(screen, fx1, fy1, fx2, fy1, col1);
+            line(screen, (int)p->x - 11, (int)p->y + 1, lastX - 11, lastY, col2);
+            line(screen, (int)p->x + 11, (int)p->y + 1, lastX + 11, lastY, col2);
+        }
+    }
+    left = line_intersect(fx1, fy1, fx2, fy1,
+        (int)p->x - 11, (int)p->y + 1, lastX - 11, lastY, &ilx, &ily);
+    right = line_intersect(fx1, fy1, fx2, fy1,
+        (int)p->x + 11, (int)p->y + 1, lastX + 11, lastY, &irx, &iry);
     if (!left && !right) {
         p->edge = 0;
         return;
@@ -60,9 +69,8 @@ void handle_player_collision_combo(int lastX, int lastY)
 
     play_sound(combo_sound[0], 1, 1);
     p->status = 0;
-    p->sx = 0;
     p->sy = 0;
-    p->y = floor_y - 1;
-    p->x = left ? left_x + 11 : right_x - 11;
+    p->y = fy1 - 1;
+    p->x = left ? ilx + 11 : irx - 11;
     p->rotate = 0;
 }
