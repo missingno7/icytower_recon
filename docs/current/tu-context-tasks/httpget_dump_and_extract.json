@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "httpget_dump_and_extract",
+  "source": "src/httpget.c",
+  "sources": [
+    "src/httpget.c"
+  ],
+  "target": "game-httpget",
+  "affected_targets": [
+    "game-httpget"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-httpget",
+    "source": "src/httpget.c",
+    "order": "historical",
+    "add": [
+      "dumpHTTPResponse"
+    ],
+    "bodies": {
+      "dumpHTTPResponse": "docs/attempts/game-httpget/bodies/dumpHTTPResponse.c",
+      "extractHTTPResponse": "docs/attempts/game-httpget/bodies/extractHTTPResponse.c"
+    },
+    "declarations": {
+      "includes_after": {
+        "stdlib.h": [
+          "stdio.h"
+        ]
+      },
+      "evidence": "dumpHTTPResponse calls fprintf on a FILE *, so the unit needs <stdio.h>. The historical CU plainly had it; our httpget.c lacked it only because every function that uses stdio was among the deliberately absent ones."
+    },
+    "evidence": "Closes the last MISSING function in the project, and closes it by the route section 10 of docs/tu-context-analysis.md predicted. extractHTTPResponse's line reader is not a call in the original: the DWARF puts extractLine's own locals last and c in lexical blocks INSIDE extractHTTPResponse, so the historical source wrote the scan loop out at the call site, and in the zero-trip 'if (...) { do {...} while (...); }' shape that makes GCC fold the entry test down to a bare test of the byte count. Writing the first of the two sites out that way reproduces the original's preheader at offset 70 byte for byte, 'mov <count>,%edx; test %edx,%edx; jle', including its register: that single peephole scratch is the one the cursor arithmetic said was missing. dumpHTTPResponse, reconstructed from its line table (48 prologue, 49 fprintf, 50 loop guard and back edge, 51 fprintf, 53 epilogue) with the unsigned back edge that iNumHeaders forces and the 8-byte HTTPHeader stride, then takes cx instead of dx and becomes exact. extractHTTPResponse itself moves 918 -> 924 of 923 and stays DIFFER; HTTPFetchInternal becomes exact as well. Gains dumpHTTPResponse and HTTPFetchInternal, no losses, and the historical predecessor count goes 8 -> 10 of 10."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {
+      "includes_after": {
+        "stdlib.h": [
+          "stdio.h"
+        ]
+      },
+      "evidence": "dumpHTTPResponse calls fprintf on a FILE *, so the unit needs <stdio.h>. The historical CU plainly had it; our httpget.c lacked it only because every function that uses stdio was among the deliberately absent ones.",
+      "removed_text": []
+    },
+    "order": [
+      "getSocketError",
+      "destroyHTTPResponse",
+      "dumpHTTPResponse",
+      "extractLine",
+      "extractHTTPResponse",
+      "HTTPFetchInternal",
+      "SplitURL",
+      "HTTPGet",
+      "HTTPHead",
+      "HTTPRequest",
+      "httpGetLastModified"
+    ],
+    "definition_order_with_static": [
+      [
+        "getSocketError",
+        false
+      ],
+      [
+        "destroyHTTPResponse",
+        false
+      ],
+      [
+        "dumpHTTPResponse",
+        false
+      ],
+      [
+        "extractLine",
+        true
+      ],
+      [
+        "extractHTTPResponse",
+        false
+      ],
+      [
+        "HTTPFetchInternal",
+        false
+      ],
+      [
+        "SplitURL",
+        false
+      ],
+      [
+        "HTTPGet",
+        false
+      ],
+      [
+        "HTTPHead",
+        false
+      ],
+      [
+        "HTTPRequest",
+        false
+      ],
+      [
+        "httpGetLastModified",
+        false
+      ]
+    ],
+    "bodies": {
+      "dumpHTTPResponse": {
+        "path": "docs/attempts/game-httpget/bodies/dumpHTTPResponse.c",
+        "identity": {
+          "size": 1008,
+          "sha256": "2bc628d551bd640959a4a5a51187f937db0783d28a311f60f42eb7c8169928e3"
+        }
+      },
+      "extractHTTPResponse": {
+        "path": "docs/attempts/game-httpget/bodies/extractHTTPResponse.c",
+        "identity": {
+          "size": 2518,
+          "sha256": "c22f49d1d5fcaf4f0205ba6b94c250e1e9c7e66e2a793bf145461e2a81711d8a"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  },
+  "source_identities": {
+    "src/httpget.c": {
+      "size": 8192,
+      "sha256": "56c9f9e60380411d2e5da2f9dc33085ada3359ad4d2a7a03c9ce71fbd2659bee"
+    }
+  },
+  "new_text_identity": {
+    "size": 9896,
+    "sha256": "8b5863899c6dcba54b097f703933cc257e96f0e85befc32dd8e91d9a8c7c43f7"
+  },
+  "new_header_identities": {},
+  "preserved_definitions": [
+    "HTTPFetchInternal",
+    "HTTPGet",
+    "HTTPHead",
+    "HTTPRequest",
+    "SplitURL",
+    "destroyHTTPResponse",
+    "extractLine",
+    "getSocketError",
+    "httpGetLastModified"
+  ],
+  "replaced_definitions": [
+    "dumpHTTPResponse",
+    "extractHTTPResponse"
+  ],
+  "body_edit_allowed": false,
+  "state": "TU_CONTEXT_TRANSACTION",
+  "begin_command": "python tools/tu_context_task.py begin httpget_dump_and_extract",
+  "apply_command": "python tools/tu_context_task.py apply httpget_dump_and_extract",
+  "verification_command": "python tools/tu_context_task.py check httpget_dump_and_extract",
+  "promotion_command": "python tools/tu_context_task.py promote httpget_dump_and_extract",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+}

@@ -38,14 +38,33 @@ def plan(name, spec_path):
     new, edits, headers = build_text(target, source, spec)
     text = (ROOT / source).read_bytes().decode('cp1252')
     old_isl = {i['name']: i for i in islands(text)}; new_isl = {i['name']: i for i in islands(new)}
-    if set(old_isl) != set(new_isl): raise ValueError('Definition set changed: ' + str(set(old_isl) ^ set(new_isl)))
+    # A transaction may ADD a definition the production file deliberately omits -- a historical
+    # function an unresolved-ownership CU leaves out until the oracle proves it independently.  It
+    # must be named in `add`, must be one of the retained bodies, and must be MISSING in the ledger,
+    # so a definition can never appear by accident and nothing already emitted can vanish.
+    declared_add = set(spec.get('add') or [])
+    added = set(new_isl) - set(old_isl)
+    if added != declared_add: raise ValueError('Definition set changed: ' + str(added ^ declared_add))
+    if set(old_isl) - set(new_isl): raise ValueError('Definitions removed: ' + str(set(old_isl) - set(new_isl)))
+    for n in sorted(declared_add):
+        if n not in edits['bodies']: raise ValueError('Added definition without a retained body: ' + n)
+        if ledger[source]['functions'].get(n) != 'MISSING': raise ValueError('Added definition is not MISSING in the ledger: ' + n)
     statics = set(edits['statics'])
     preserved = [n for n in old_isl if n not in edits['bodies'] and island_key(old_isl[n], n in statics) == island_key(new_isl[n], n in statics)]
-    if len(preserved) != len(old_isl) - len(edits['bodies']): raise ValueError('A definition island changed without a retained body: ' + str([n for n in old_isl if n not in edits['bodies'] and n not in preserved]))
+    replaced_here = [n for n in edits['bodies'] if n in old_isl]   # an ADDED body replaces no island
+    if len(preserved) != len(old_isl) - len(replaced_here): raise ValueError('A definition island changed without a retained body: ' + str([n for n in old_isl if n not in edits['bodies'] and n not in preserved]))
     for n in edits['bodies']:
         if island_key(new_isl[n], n in statics, definition_only=True) != island_key({'text': retained_body(ROOT / edits['bodies'][n]['path'])['text']}, n in statics): raise ValueError('Planned island differs from retained body: ' + n)
     from source_scope import sanitized
-    if len(re.findall(FORBIDDEN, sanitized(new), re.M)) > len(re.findall(FORBIDDEN, sanitized(text), re.M)): raise ValueError('Transaction introduces forbidden code-generation directives')
+    # The generated forward-declaration block only repeats each definition's own signature, so an
+    # attribute already carried by a definition is counted once, where the author wrote it.
+    def directives(t):
+        m = re.search(r'/\* Forward declarations; definitions follow in their original source order\. \*/', t)
+        if m:
+            end = t.find('\n\n', m.end())
+            t = t[:m.start()] + t[(end if end >= 0 else len(t)):]
+        return len(re.findall(FORBIDDEN, sanitized(t), re.M))
+    if directives(new) > directives(text): raise ValueError('Transaction introduces forbidden code-generation directives')
     files = [source] + sorted(headers)
     card = {'schema': 1, 'task_kind': 'TU_CONTEXT', 'function': name, 'source': source, 'sources': files, 'target': target, 'affected_targets': [target],
             'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': {f: identity(ROOT / f) for f in files},
@@ -146,7 +165,10 @@ def _acceptance(s, report, old):
     if report.get('unresolved_text_relocations') and not old.get('unresolved_text_relocations'): raise ValueError('Unresolved text relocations appeared')
     text = (ROOT / card['source']).read_bytes().decode('cp1252'); isl = {i['name']: i for i in islands(text)}
     old_isl = {i['name']: i for i in islands(s['source_text'])}; statics = set(card['edits']['statics'])
-    if set(isl) != set(old_isl): raise ValueError('Definition set changed')
+    # Only the definitions the plan declared as additions may be new, and nothing may disappear.
+    declared_add = set(card['spec'].get('add') or [])
+    if set(isl) - set(old_isl) != declared_add: raise ValueError('Definition set changed: ' + str((set(isl) - set(old_isl)) ^ declared_add))
+    if set(old_isl) - set(isl): raise ValueError('Definitions removed: ' + str(set(old_isl) - set(isl)))
     for n in card['preserved_definitions']:
         if island_key(isl[n], n in statics) != island_key(old_isl[n], n in statics): raise ValueError('Preserved definition changed: ' + n)
     for n, b in card['edits']['bodies'].items():

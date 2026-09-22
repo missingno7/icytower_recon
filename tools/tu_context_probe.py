@@ -129,6 +129,12 @@ def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unliste
     are appended in current order (keep_unlisted='end')."""
     bodies = bodies or {}
     isl = islands(text); byname = {i['name']: i for i in isl}
+    # A retained body whose name has no island in the production source is an ADDED definition: a
+    # historical function this file deliberately omits (an unresolved-ownership CU emits only what
+    # the oracle has independently proved).  It takes its place from `order` like any other.
+    added = [n for n in order if n not in byname and n in bodies]
+    for n in added:
+        byname[n] = {'name': n, 'start': 0, 'def_start': 0, 'end': 0, 'signature': bodies[n]['signature'], 'text': '', 'added': True}
     unknown = [n for n in order if n not in byname]
     if unknown: raise ValueError('Unknown definitions in order: ' + ', '.join(unknown))
     nl = '\r\n' if '\r\n' in text else '\n'
@@ -153,10 +159,10 @@ def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unliste
     for n in seq:
         i = byname[n]; t = i['text']
         if n in bodies:
-            lead = text[i['start']:i['def_start']]
+            lead = '' if i.get('added') else text[i['start']:i['def_start']]
             t = lead + bodies[n]['text']
         if n in statics and not i.get('macro'):
-            lead = text[i['start']:i['def_start']]; body_text = bodies[n]['text'] if n in bodies else text[i['def_start']:i['end']]
+            lead = '' if i.get('added') else text[i['start']:i['def_start']]; body_text = bodies[n]['text'] if n in bodies else text[i['def_start']:i['end']]
             if not body_text.lstrip().startswith('static'): t = lead + 'static ' + body_text.lstrip()
         defs.append(t.strip('\r\n'))
     block = ''
@@ -317,11 +323,14 @@ def build_text(target, source, spec):
     unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == source)
     isl = islands(text); current = [i['name'] for i in isl]
     order = spec.get('order', 'current')
+    bodies = {n: retained_body(ROOT / p) for n, p in (spec.get('bodies') or {}).items()}
+    # A retained body with no island in the production source is an added definition and takes its
+    # historical place; it is not filtered out with the names this file does not define.
+    emitted = set(current) | set(bodies)
     if order == 'historical':
         order, lines = historical_order(unit, source)
-        order = [n for n in order if n in set(current)]
-    elif order == 'current': order = current
-    bodies = {n: retained_body(ROOT / p) for n, p in (spec.get('bodies') or {}).items()}
+        order = [n for n in order if n in emitted]
+    elif order == 'current': order = current + [n for n in bodies if n not in set(current)]
     for n, b in bodies.items():
         if b['name'] != n: raise ValueError('Retained body defines ' + b['name'] + ' not ' + n)
     statics = spec.get('statics') or []
