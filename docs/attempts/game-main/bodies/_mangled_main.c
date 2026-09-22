@@ -11,8 +11,10 @@ int _mangled_main(int argc, char **argv)
     int must_fade;
     int play_again;
     int redraw_menu;
+    HMODULE hDebugLibrary;
 
-    if (!LoadLibraryA("exchndl.dll"))
+    hDebugLibrary = LoadLibraryA("exchndl.dll");
+    if (!hDebugLibrary)
         printf("No exception handler present, RPTs will not be generated");
     allegro_init();
     register_png_file_type();
