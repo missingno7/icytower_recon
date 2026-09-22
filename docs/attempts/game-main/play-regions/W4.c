@@ -82,175 +82,175 @@ int play(void)
 
     /* lines 4374..4426: recording gates a small profile play-time update vs. the full
      * gameData stats snapshot + itrcheck-gated XML dump. */
-    if (recording) {
-        diff = endTime - startTime;
-        if (diff > 0)
-            profile->seconds_spent_playing += diff;
+    if (recording) {                                                           /* 4374 */
+        diff = endTime - startTime;                                            /* 4375 */
+        if (diff > 0)                                                          /* 4376 */
+            profile->seconds_spent_playing += diff;                           /* 4377 */
     } else {
-        gameData->score = ply[player_id]->level * 10 + ply[player_id]->score;
-        gameData->floor = ply[player_id]->level;
-        gameData->combo = ply[player_id]->best_combo;
-        gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
-        gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
-        for (i = 0; i < 5; i++)
+        gameData->score = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4389 */
+        gameData->floor = ply[player_id]->level;                               /* 4390 */
+        gameData->combo = ply[player_id]->best_combo;                          /* 4391 */
+        gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4392 */
+        gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4393 */
+        for (i = 0; i < 5; i++)                                                /* 4395 */
             gameData->ccc[i] = ply[player_id]->ccc[i];
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 5; i++)                                                /* 4398 */
             gameData->jc[i] = ply[player_id]->jcTop[i];
         {
             int keys_pressed[7];
-            int key_flag[7] = { 16, 1, 2, 4, 8, 32, 128 };
+            int key_flag[7] = { 16, 1, 2, 4, 8, 32, 128 };                     /* 4403 */
             int last_keys[7];
             int k;
 
-            for (k = 0; k < 7; k++)
+            for (k = 0; k < 7; k++)                                            /* 4402 */
                 keys_pressed[k] = time_cheat_count;
-            if (demo->size > 0) {
-                for (k = 0; k < 7; k++)
+            if (demo->size > 0) {                                              /* 4406 */
+                for (k = 0; k < 7; k++)                                        /* 4404 */
                     last_keys[k] = 0;
-                for (i = 0; i < demo->size; i++) {
-                    int flags = demo->data[i].key_flags;
-                    for (k = 0; k < 7; k++) {
-                        int f = key_flag[k] & flags;
-                        if (!last_keys[k] && f)
-                            keys_pressed[k]++;
-                        last_keys[k] = f;
+                for (i = 0; i < demo->size; i++) {                             /* 4406 */
+                    int flags = demo->data[i].key_flags;                       /* 4406 */
+                    for (k = 0; k < 7; k++) {                                  /* 4408 */
+                        int f = key_flag[k] & flags;                           /* 4409 */
+                        if (!last_keys[k] && f)                                /* 4409 */
+                            keys_pressed[k]++;                                 /* 4410 */
+                        last_keys[k] = f;                                      /* 4412 */
                     }
                 }
             }
-            gameData->jump = keys_pressed[0];
-            gameData->left = keys_pressed[1];
-            gameData->right = keys_pressed[2];
+            gameData->jump = keys_pressed[0];                                  /* 4416 */
+            gameData->left = keys_pressed[1];                                  /* 4417 */
+            gameData->right = keys_pressed[2];                                 /* 4418 */
         }
-        if (itrcheck) {
-            char *xmlStr = getGameDataXML(gameData);
-            printf("%s", xmlStr);
-            free(xmlStr);
+        if (itrcheck) {                                                       /* 4421 */
+            char *xmlStr = getGameDataXML(gameData);                          /* 4422 */
+            printf("%s", xmlStr);                                             /* 4423 */
+            free(xmlStr);                                                     /* 4424 */
         }
     }
 
     /* lines 4456..4458 */
-    log2file(" play ended");
-    fast_forward = 0;
-    fast_fast_forward = 0;
+    log2file(" play ended");                                                  /* 4456 */
+    fast_forward = 0;                                                         /* 4457 */
+    fast_fast_forward = 0;                                                    /* 4458 */
 
     /* lines 4500..4534: demo/profile stat snapshot, only when recording && !quit */
-    if (recording) {
-        if (!quit) {
-            demo->score = ply[player_id]->level * 10 + ply[player_id]->score;
-            demo->floor = ply[player_id]->level;
-            demo->combo = ply[player_id]->best_combo;
-            demo->rejump = options.jump_hold;
-            demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
-            demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
-            for (i = 0; i < 5; i++)
+    if (recording) {                                                          /* 4500 */
+        if (!quit) {                                                          /* 4500 */
+            demo->score = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4503 */
+            demo->floor = ply[player_id]->level;                               /* 4504 */
+            demo->combo = ply[player_id]->best_combo;                         /* 4505 */
+            demo->rejump = options.jump_hold;                                  /* 4506 */
+            demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4507 */
+            demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4508 */
+            for (i = 0; i < 5; i++)                                            /* 4510 */
                 demo->ccc[i] = ply[player_id]->ccc[i];
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < 5; i++)                                            /* 4513 */
                 demo->jc[i] = ply[player_id]->jcTop[i];
 
-            if (!is_playing_custom_game) {
-                profile->games_played++;
-                profile->total_floors += demo->floor;
-                profile->total_score += demo->score;
-                profile->total_combos += numComboJumps;
-                profile->total_combo_floors += totComboFloors;
-                for (i = 0; i < 5; i++) {
-                    if (demo->ccc[i] > 0) {
-                        profile->cccNum[i]++;
-                        profile->cccTotal[i] += demo->ccc[i];
+            if (!is_playing_custom_game) {                                    /* 4519 */
+                profile->games_played++;                                      /* 4520 */
+                profile->total_floors += demo->floor;                         /* 4522 */
+                profile->total_score += demo->score;                          /* 4523 */
+                profile->total_combos += numComboJumps;                       /* 4524 */
+                profile->total_combo_floors += totComboFloors;                /* 4525 */
+                for (i = 0; i < 5; i++) {                                      /* 4526 */
+                    if (demo->ccc[i] > 0) {                                    /* 4527 */
+                        profile->cccNum[i]++;                                  /* 4528 */
+                        profile->cccTotal[i] += demo->ccc[i];                  /* 4529 */
                     }
                 }
             } else {
-                profile->custom_games_played++;
+                profile->custom_games_played++;                               /* 4534 */
             }
 
             /* lines 4541..4624: replay directory + per-category replay files */
-            if (!file_exists(replay_directory, -1, NULL))
-                mkdir(replay_directory);
+            if (!file_exists(replay_directory, -1, NULL))                     /* 4541 */
+                mkdir(replay_directory);                                      /* 4543 */
 
-            if (!is_playing_custom_game) {
+            if (!is_playing_custom_game) {                                    /* 4550 */
                 int rank;
 
-                if (demo->floor > profile->best_floor) {
-                    profile->best_floor = demo->floor;
-                    myDeleteFile(replay_directory, profile->best_replay_names[2]);
-                    sprintf(profile->best_replay_names[2], "%s_best_floor_%d.itr",
+                if (demo->floor > profile->best_floor) {                      /* 4551 */
+                    profile->best_floor = demo->floor;                        /* 4552 */
+                    myDeleteFile(replay_directory, profile->best_replay_names[2]);  /* 4553 */
+                    sprintf(profile->best_replay_names[2], "%s_best_floor_%d.itr",  /* 4554 */
                             profile->handle, demo->floor);
-                    save_replay(replay_directory, profile->best_replay_names[2], demo,
+                    save_replay(replay_directory, profile->best_replay_names[2], demo,  /* 4555 */
                                 rec_pos + 2, 1);
-                    new_personal_best[2] = 1;
+                    new_personal_best[2] = 1;                                  /* 4556 */
                 }
-                if (demo->combo > profile->best_combo) {
-                    profile->best_combo = demo->combo;
-                    myDeleteFile(replay_directory, profile->best_replay_names[1]);
-                    sprintf(profile->best_replay_names[1], "%s_best_combo_%d.itr",
+                if (demo->combo > profile->best_combo) {                      /* 4559 */
+                    profile->best_combo = demo->combo;                        /* 4560 */
+                    myDeleteFile(replay_directory, profile->best_replay_names[1]);  /* 4561 */
+                    sprintf(profile->best_replay_names[1], "%s_best_combo_%d.itr",  /* 4562 */
                             profile->handle, demo->combo);
-                    save_replay(replay_directory, profile->best_replay_names[1], demo,
+                    save_replay(replay_directory, profile->best_replay_names[1], demo,  /* 4563 */
                                 rec_pos + 2, 1);
-                    new_personal_best[1] = 1;
+                    new_personal_best[1] = 1;                                  /* 4564 */
                 }
-                if (demo->score > profile->best_score) {
-                    profile->best_score = demo->score;
-                    myDeleteFile(replay_directory, profile->best_replay_names[0]);
-                    sprintf(profile->best_replay_names[0], "%s_best_score_%d.itr",
+                if (demo->score > profile->best_score) {                      /* 4567 */
+                    profile->best_score = demo->score;                        /* 4568 */
+                    myDeleteFile(replay_directory, profile->best_replay_names[0]);  /* 4569 */
+                    sprintf(profile->best_replay_names[0], "%s_best_score_%d.itr",  /* 4570 */
                             profile->handle, demo->score);
-                    save_replay(replay_directory, profile->best_replay_names[0], demo,
+                    save_replay(replay_directory, profile->best_replay_names[0], demo,  /* 4571 */
                                 rec_pos + 2, 1);
-                    new_personal_best[0] = 1;
+                    new_personal_best[0] = 1;                                  /* 4572 */
                 }
-                if (ply[player_id]->no_combo_top_floor > profile->no_combo_top_floor) {
-                    profile->no_combo_top_floor = ply[player_id]->no_combo_top_floor;
-                    myDeleteFile(replay_directory, profile->best_replay_names[4]);
-                    sprintf(profile->best_replay_names[4], "%s_best_no_combo_%d.itr",
+                if (ply[player_id]->no_combo_top_floor > profile->no_combo_top_floor) {  /* 4575 */
+                    profile->no_combo_top_floor = ply[player_id]->no_combo_top_floor;  /* 4576 */
+                    myDeleteFile(replay_directory, profile->best_replay_names[4]);  /* 4577 */
+                    sprintf(profile->best_replay_names[4], "%s_best_no_combo_%d.itr",  /* 4578 */
                             profile->handle, ply[player_id]->no_combo_top_floor);
-                    save_replay(replay_directory, profile->best_replay_names[4], demo,
+                    save_replay(replay_directory, profile->best_replay_names[4], demo,  /* 4579 */
                                 rec_pos + 2, 1);
-                    new_personal_best[4] = 1;
+                    new_personal_best[4] = 1;                                  /* 4580 */
                 }
-                if (ply[player_id]->biggest_lost_combo > profile->biggest_lost_combo) {
-                    profile->biggest_lost_combo = ply[player_id]->biggest_lost_combo;
-                    myDeleteFile(replay_directory, profile->best_replay_names[3]);
-                    sprintf(profile->best_replay_names[3], "%s_best_lost_combo_%d.itr",
+                if (ply[player_id]->biggest_lost_combo > profile->biggest_lost_combo) {  /* 4583 */
+                    profile->biggest_lost_combo = ply[player_id]->biggest_lost_combo;  /* 4584 */
+                    myDeleteFile(replay_directory, profile->best_replay_names[3]);  /* 4585 */
+                    sprintf(profile->best_replay_names[3], "%s_best_lost_combo_%d.itr",  /* 4586 */
                             profile->handle, ply[player_id]->biggest_lost_combo);
-                    save_replay(replay_directory, profile->best_replay_names[3], demo,
+                    save_replay(replay_directory, profile->best_replay_names[3], demo,  /* 4587 */
                                 rec_pos + 2, 1);
-                    new_personal_best[3] = 1;
+                    new_personal_best[3] = 1;                                  /* 4588 */
                 }
-                for (rank = 1; rank < 6; rank++) {
-                    if (ply[player_id]->ccc[rank - 1] > profile->ccc[rank - 1]) {
-                        profile->ccc[rank - 1] = ply[player_id]->ccc[rank - 1];
-                        myDeleteFile(replay_directory, profile->best_replay_names[4 + rank]);
-                        sprintf(profile->best_replay_names[4 + rank], "%s_best_cc%d_%d.itr",
+                for (rank = 1; rank < 6; rank++) {                             /* 4591 */
+                    if (ply[player_id]->ccc[rank - 1] > profile->ccc[rank - 1]) {  /* 4592 */
+                        profile->ccc[rank - 1] = ply[player_id]->ccc[rank - 1];  /* 4593 */
+                        myDeleteFile(replay_directory, profile->best_replay_names[4 + rank]);  /* 4594 */
+                        sprintf(profile->best_replay_names[4 + rank], "%s_best_cc%d_%d.itr",  /* 4595 */
                                 profile->handle, rank, ply[player_id]->ccc[rank - 1]);
-                        save_replay(replay_directory, profile->best_replay_names[4 + rank],
+                        save_replay(replay_directory, profile->best_replay_names[4 + rank],  /* 4596 */
                                     demo, rec_pos + 2, 1);
-                        new_personal_best[4 + rank] = 1;
+                        new_personal_best[4 + rank] = 1;                       /* 4597 */
                     }
                 }
-                for (rank = 1; rank < 6; rank++) {
-                    if (ply[player_id]->jcTop[rank - 1] > profile->jc[rank - 1]) {
-                        profile->jc[rank - 1] = ply[player_id]->jcTop[rank - 1];
-                        myDeleteFile(replay_directory, profile->best_replay_names[9 + rank]);
-                        sprintf(profile->best_replay_names[9 + rank], "%s_best_jj%d_%d.itr",
+                for (rank = 1; rank < 6; rank++) {                             /* 4601 */
+                    if (ply[player_id]->jcTop[rank - 1] > profile->jc[rank - 1]) {  /* 4602 */
+                        profile->jc[rank - 1] = ply[player_id]->jcTop[rank - 1];  /* 4603 */
+                        myDeleteFile(replay_directory, profile->best_replay_names[9 + rank]);  /* 4604 */
+                        sprintf(profile->best_replay_names[9 + rank], "%s_best_jj%d_%d.itr",  /* 4605 */
                                 profile->handle, rank, ply[player_id]->jcTop[rank - 1]);
-                        save_replay(replay_directory, profile->best_replay_names[9 + rank],
+                        save_replay(replay_directory, profile->best_replay_names[9 + rank],  /* 4606 */
                                     demo, rec_pos + 2, 1);
-                        new_personal_best[9 + rank] = 1;
+                        new_personal_best[9 + rank] = 1;                       /* 4607 */
                     }
                 }
             }
 
-            if (save_replay(replay_directory, "last_game.itr", demo, rec_pos + 2, 1) < 0) {
-                my_alert("Failed to save replay.", "(last_game.itr)", 0, 1);
-                uberChecksum = 0;
+            if (save_replay(replay_directory, "last_game.itr", demo, rec_pos + 2, 1) < 0) {  /* 4613 */
+                my_alert("Failed to save replay.", "(last_game.itr)", 0, 1);  /* 4614 */
+                uberChecksum = 0;                                             /* 4615 */
             } else {
                 char fbuf[2048];
                 Treplay *rr;
 
-                sprintf(fbuf, "%slast_game.itr", replay_directory);
-                rr = load_replay(fbuf);
-                if (rr) {
-                    uberChecksum = calc_replay_checksum(demo);
-                    destroy_replay(rr);
+                sprintf(fbuf, "%slast_game.itr", replay_directory);          /* 4620 */
+                rr = load_replay(fbuf);                                      /* 4621 */
+                if (rr) {                                                    /* 4622 */
+                    uberChecksum = calc_replay_checksum(demo);               /* 4623 */
+                    destroy_replay(rr);                                     /* 4624 */
                 }
             }
         }
@@ -259,52 +259,52 @@ int play(void)
     }
 
     /* lines 4641..4643 */
-    if (!quit) {
-        save_profile(profile);
+    if (!quit) {                                                             /* 4643 */
+        save_profile(profile);                                               /* 4641 */
 
         /* lines 4650..4683: highscore qualification */
-        if (!closeButtonClicked) {
+        if (!closeButtonClicked) {                                           /* 4643 */
             int rank;   /* qualify, qualifyValue, gotHigh and gameover_bmp_id live in the enclosing
                          * DWARF block 133269, which opens here and runs into REGION W5 */
 
-            for (i = 0; i < 15; i++)
+            for (i = 0; i < 15; i++)                                         /* 4650 */
                 qualify[i] = 0;
-            qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;
-            qualifyValue[2] = ply[player_id]->level;
-            qualifyValue[1] = ply[player_id]->best_combo;
-            qualifyValue[3] = ply[player_id]->biggest_lost_combo;
-            qualifyValue[4] = ply[player_id]->no_combo_top_floor;
-            for (i = 0; i < 5; i++) {
-                qualifyValue[5 + i] = ply[player_id]->ccc[i];
-                qualifyValue[10 + i] = ply[player_id]->jcTop[i];
+            qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4652 */
+            qualifyValue[2] = ply[player_id]->level;                         /* 4653 */
+            qualifyValue[1] = ply[player_id]->best_combo;                    /* 4654 */
+            qualifyValue[3] = ply[player_id]->biggest_lost_combo;            /* 4655 */
+            qualifyValue[4] = ply[player_id]->no_combo_top_floor;            /* 4656 */
+            for (i = 0; i < 5; i++) {                                        /* 4657 */
+                qualifyValue[5 + i] = ply[player_id]->ccc[i];                /* 4658 */
+                qualifyValue[10 + i] = ply[player_id]->jcTop[i];             /* 4659 */
             }
-            quit = 0;
+            quit = 0;                                                       /* 4657 */
             gotHigh = 0;
-            for (rank = 0; rank < 15; rank++) {
-                qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);
-                gotHigh += qualify[rank];
+            for (rank = 0; rank < 15; rank++) {                              /* 4662 */
+                qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);  /* 4663 */
+                gotHigh += qualify[rank];                                    /* 4664 */
             }
 
-            if (recording) {
-                gameover_bmp_id = (gotHigh > 0) ? 0x3e : 0x37;
+            if (recording) {                                                /* 4668 */
+                gameover_bmp_id = (gotHigh > 0) ? 0x3e : 0x37;               /* 4670 */
             } else {
-                gotHigh = 0;
-                gameover_bmp_id = 0x37;
+                gotHigh = 0;                                                /* 4668 */
+                gameover_bmp_id = 0x37;                                     /* 4668 */
             }
-            if (is_playing_custom_game)
+            if (is_playing_custom_game)                                     /* 4671 */
                 gameover_bmp_id = 0x37;
 
-            if (gotHigh) {
-                if (!is_playing_custom_game) {
-                    log2file(" player qualified for highscore");
-                    play_sound(sounds[7], 0, 0);
+            if (gotHigh) {                                                  /* 4673 */
+                if (!is_playing_custom_game) {                              /* 4673 */
+                    log2file(" player qualified for highscore");            /* 4674 */
+                    play_sound(sounds[7], 0, 0);                            /* 4675 */
                 }
             } else {
-                log2file(" player did not qualify for highscore");
-                play_sound(speaker[1], 0, 0);
+                log2file(" player did not qualify for highscore");          /* 4678 */
+                play_sound(speaker[1], 0, 0);                               /* 4679 */
             }
 
-            if (debug) {
+            if (debug) {                                                    /* 4683 */
                 /* continues in REGION W5 */
             }
         }

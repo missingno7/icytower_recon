@@ -56,54 +56,54 @@ void draw_frame(BITMAP *bmp)
         }   /* closes the for (cx = 0; ...) loop opened in D1.c (2547) */
     }       /* closes the `{ Tfloor *room = ...; ... }` scope opened in D1.c */
 
-    for (fo = 0; fo < 512; fo++) {          /* ? loop index reuses fo; not otherwise evidenced as the star-loop counter */
-        if (stars[fo].intensity) {
-            draw_sprite(swap_screen, data[stars[fo].color + 0x75].dat, fixtoi(stars[fo].x), fixtoi(stars[fo].y));
+    for (fo = 0; fo < 512; fo++) {          /* 2580: loop index reuses fo; not otherwise evidenced as the star-loop counter */
+        if (stars[fo].intensity) {           /* 2581 */
+            draw_sprite(swap_screen, data[stars[fo].color + 0x75].dat, fixtoi(stars[fo].x), fixtoi(stars[fo].y));  /* 2582 */
         }
     }
 
-    if (ply[player_id]->status) {
-        if (ply[player_id]->status == 3) {
-            if (ply[player_id]->sy > 3.0)              /* ? fucompp/fnstsw compare direction inferred, not asserted */
+    if (ply[player_id]->status) {                       /* 2589 */
+        if (ply[player_id]->status == 3) {                /* 2590 */
+            if (ply[player_id]->sy > 3.0)              /* 2590: fucompp/fnstsw compare direction inferred, not asserted */
                 p_im = 7;
             else
                 p_im = 6;
         }
-        else if (ply[player_id]->status == 2) {
-            if (ply[player_id]->sy > 3.0)               /* ? */
+        else if (ply[player_id]->status == 2) {           /* 2591 */
+            if (ply[player_id]->sy > 3.0)               /* 2591 */
                 p_im = 7;
             else
                 p_im = 6;
         }
-        else if (ply[player_id]->status == 1) {
-            if (ply[player_id]->sy < -3.0)               /* ? */
+        else if (ply[player_id]->status == 1) {            /* 2592 */
+            if (ply[player_id]->sy < -3.0)               /* 2592 */
                 p_im = 5;
             else
                 p_im = 6;
         }
         else {
-            p_im = 6;
+            p_im = 6;                                       /* 2594: default fallthrough, `mov $0x6,%esi` at offset 1852 */
         }
 
-        if ((unsigned)(p_im - 5) <= 2) {          /* 2594/2595: range test on p_im, not p_im==6 -- p_im is
+        if ((unsigned)(p_im - 5) <= 2) {          /* 2594: range test on p_im, not p_im==6 -- p_im is
                                                     * only ever 5/6/7 here so the compiler couldn't fold it away */
             if (ply[player_id]->sx != 0.0) {      /* 2594: fucom vs 0.0 */
                 if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {   /* 2594: outer +-0.02 band */
-                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595/2597: inner +-0.01 band */
-                        p_im = 8;
+                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595: inner +-0.01 band */
+                        p_im = 8;                                                       /* 2595 */
                     }
                 }
             }
         }
 
-        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
+        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)  /* 2597 */
             ply[player_id]->frame = 0;
 
-        if (ply[player_id]->frame > 3)
+        if (ply[player_id]->frame > 3)                              /* 2599 */
             ply[player_id]->frame = 0;
 
         fo = 0;                                             /* reuse fo as the custom.frame[] base index for this player's pose */
-        if (custom.frame[0] == 0) {
+        if (custom.frame[0] == 0) {                          /* 2605 */
             p_im = 1;                                       /* ? base-index selection below is only approximately reconstructed */
         }
 

@@ -222,11 +222,11 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
-                             qualifyValue, is_playing_custom_game ? 0 : recording); /* 4810 */
+                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                             qualifyValue, is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
-                    textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
-                                       320, (int)(hy * 2.0 + 80.0), -1, -1);            /* 4812 */
+                    /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
+                                       320, (int)(hy * 2.0 + 80.0), -1, -1);
                     if (pos >= 1)                                                       /* 4814 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[0],
                                            300, (int)(hy * 2.0 + 120.0), -1, -1);

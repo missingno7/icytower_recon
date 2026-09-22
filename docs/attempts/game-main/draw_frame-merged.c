@@ -162,54 +162,54 @@ void draw_frame(BITMAP *bmp)
         }   /* closes the for (cx = 0; ...) loop opened in D1.c (2547) */
     }       /* closes the `{ Tfloor *room = ...; ... }` scope opened in D1.c */
 
-    for (fo = 0; fo < 512; fo++) {          /* ? loop index reuses fo; not otherwise evidenced as the star-loop counter */
-        if (stars[fo].intensity) {
-            draw_sprite(swap_screen, data[stars[fo].color + 0x75].dat, fixtoi(stars[fo].x), fixtoi(stars[fo].y));
+    for (fo = 0; fo < 512; fo++) {          /* 2580: loop index reuses fo; not otherwise evidenced as the star-loop counter */
+        if (stars[fo].intensity) {           /* 2581 */
+            draw_sprite(swap_screen, data[stars[fo].color + 0x75].dat, fixtoi(stars[fo].x), fixtoi(stars[fo].y));  /* 2582 */
         }
     }
 
-    if (ply[player_id]->status) {
-        if (ply[player_id]->status == 3) {
-            if (ply[player_id]->sy > 3.0)              /* ? fucompp/fnstsw compare direction inferred, not asserted */
+    if (ply[player_id]->status) {                       /* 2589 */
+        if (ply[player_id]->status == 3) {                /* 2590 */
+            if (ply[player_id]->sy > 3.0)              /* 2590: fucompp/fnstsw compare direction inferred, not asserted */
                 p_im = 7;
             else
                 p_im = 6;
         }
-        else if (ply[player_id]->status == 2) {
-            if (ply[player_id]->sy > 3.0)               /* ? */
+        else if (ply[player_id]->status == 2) {           /* 2591 */
+            if (ply[player_id]->sy > 3.0)               /* 2591 */
                 p_im = 7;
             else
                 p_im = 6;
         }
-        else if (ply[player_id]->status == 1) {
-            if (ply[player_id]->sy < -3.0)               /* ? */
+        else if (ply[player_id]->status == 1) {            /* 2592 */
+            if (ply[player_id]->sy < -3.0)               /* 2592 */
                 p_im = 5;
             else
                 p_im = 6;
         }
         else {
-            p_im = 6;
+            p_im = 6;                                       /* 2594: default fallthrough, `mov $0x6,%esi` at offset 1852 */
         }
 
-        if ((unsigned)(p_im - 5) <= 2) {          /* 2594/2595: range test on p_im, not p_im==6 -- p_im is
+        if ((unsigned)(p_im - 5) <= 2) {          /* 2594: range test on p_im, not p_im==6 -- p_im is
                                                     * only ever 5/6/7 here so the compiler couldn't fold it away */
             if (ply[player_id]->sx != 0.0) {      /* 2594: fucom vs 0.0 */
                 if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {   /* 2594: outer +-0.02 band */
-                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595/2597: inner +-0.01 band */
-                        p_im = 8;
+                    if (ply[player_id]->sx >= -0.01 && ply[player_id]->sx <= 0.01) {  /* 2595: inner +-0.01 band */
+                        p_im = 8;                                                       /* 2595 */
                     }
                 }
             }
         }
 
-        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)
+        if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)  /* 2597 */
             ply[player_id]->frame = 0;
 
-        if (ply[player_id]->frame > 3)
+        if (ply[player_id]->frame > 3)                              /* 2599 */
             ply[player_id]->frame = 0;
 
         fo = 0;                                             /* reuse fo as the custom.frame[] base index for this player's pose */
-        if (custom.frame[0] == 0) {
+        if (custom.frame[0] == 0) {                          /* 2605 */
             p_im = 1;                                       /* ? base-index selection below is only approximately reconstructed */
         }
 
@@ -282,22 +282,22 @@ void draw_frame(BITMAP *bmp)
      * lookup, i.e. the same parallax/floor-tile family as the D1/D2 unrolled loop
      * noted above, not a D3 statement. Still left to D1/D2's owner. */
 
-    draw_sprite(bmp, data[16].dat, 22, 100);
-    if (ply[player_id]->in_combo) {
-        blit(data[15].dat, bmp, 0, 100 - ply[player_id]->in_combo, 33,
+    draw_sprite(bmp, data[16].dat, 22, 100);          /* 2705 */
+    if (ply[player_id]->in_combo) {                    /* 2706 */
+        blit(data[15].dat, bmp, 0, 100 - ply[player_id]->in_combo, 33,   /* 2707 */
              219 - ply[player_id]->in_combo, 16, ply[player_id]->in_combo);
-        draw_sprite(bmp, data[14].dat, -8, 210);
-        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",
+        draw_sprite(bmp, data[14].dat, -8, 210);         /* 2708 */
+        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",   /* 2709 */
                               ply[player_id]->acc_level);
     }
 
-    if (reward_time) {
-        draw_sprite(bmp, data[14].dat, -8, 210);
-        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",
+    if (reward_time) {                                   /* 2711 */
+        draw_sprite(bmp, data[14].dat, -8, 210);           /* 2712 */
+        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",     /* 2713 */
                               ply[player_id]->latest_combo);
     }
 
-    if (hurry_y < 251 || hurry_y > 479) {
+    if (hurry_y < 251 || hurry_y > 479) {                 /* 2717 */
         x = 6;
         y = 10;
         cx = 0;
@@ -308,47 +308,47 @@ void draw_frame(BITMAP *bmp)
         cx = logic_count % 3 - 1;
         cy = (logic_count + 1) % 3 - 1;
     }
-    draw_sprite(bmp, data[12].dat, x, y);
+    draw_sprite(bmp, data[12].dat, x, y);                  /* 2718 */
 
-    if (hurry_y >= 201 && hurry_y <= 479) {
+    if (hurry_y >= 201 && hurry_y <= 479) {                /* 2719 */
         cx = (logic_count + 2) % 3 - 1;
         cy = (logic_count + 3) % 3 - 1;
     }
-    rotate_sprite(bmp, data[13].dat, cx + 34, cy + 28,
+    rotate_sprite(bmp, data[13].dat, cx + 34, cy + 28,      /* 2720 */
                   clock_angle ? ftofix((clock_angle % 1500) * 0.1706666) : 0);
 
-    if (reward_time) {
-        draw_reward(swap_screen);
+    if (reward_time) {                                      /* 2721 */
+        draw_reward(swap_screen);                            /* 2722 */
     }
 
-    textprintf_ex(bmp, data[52].dat, 8, 440, -1, -1, "score: %d",
+    textprintf_ex(bmp, data[52].dat, 8, 440, -1, -1, "score: %d",   /* 2739 */
                   ply[player_id]->level * 10 + ply[player_id]->score);
 
-    if (!recording) {
+    if (!recording) {                                        /* 2742 */
         char myBuf[256];
 
-        if (frame_count & 8) {
-            strcpy(myBuf, "REPLAY");
-            ls = 630 - text_length(data[53].dat, myBuf);
-            textprintf_ex(bmp, data[53].dat, ls + 1, 5, makecol(0, 0, 0), -1, "REPLAY");
-            textprintf_ex(bmp, data[53].dat, ls, 4, makecol(255, 255, 255), -1, "REPLAY");
+        if (frame_count & 8) {                                /* 2746 */
+            strcpy(myBuf, "REPLAY");                            /* 2747 */
+            ls = 630 - text_length(data[53].dat, myBuf);         /* 2748 */
+            textprintf_ex(bmp, data[53].dat, ls + 1, 5, makecol(0, 0, 0), -1, "REPLAY");        /* 2749 */
+            textprintf_ex(bmp, data[53].dat, ls, 4, makecol(255, 255, 255), -1, "REPLAY");       /* 2750 */
         }
 
-        if (is_playing_custom_game) {
-            sprintf(myBuf, "%s Floors", floor_size_selection.caption[demo->floor_size]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 16, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 15, makecol(255, 255, 255), -1);
+        if (is_playing_custom_game) {                          /* 2754 */
+            sprintf(myBuf, "%s Floors", floor_size_selection.caption[demo->floor_size]);  /* 2755 */
+            cx = 630 - text_length(data[53].dat, myBuf);          /* 2756 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 16, makecol(0, 0, 0), -1);          /* 2757 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 15, makecol(255, 255, 255), -1);         /* 2758 */
 
-            sprintf(myBuf, "%s Speed", scroll_speed_selection.caption[demo->start_speed]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 26, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 25, makecol(255, 255, 255), -1);
+            sprintf(myBuf, "%s Speed", scroll_speed_selection.caption[demo->start_speed]);  /* 2760 */
+            cx = 630 - text_length(data[53].dat, myBuf);           /* 2761 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 26, makecol(0, 0, 0), -1);           /* 2762 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 25, makecol(255, 255, 255), -1);          /* 2763 */
 
-            strcpy(myBuf, gravity_selection.caption[demo->gravity]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);
+            strcpy(myBuf, gravity_selection.caption[demo->gravity]);   /* 2765 */
+            cx = 630 - text_length(data[53].dat, myBuf);              /* 2766 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);            /* 2767 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);           /* 2768 */
         }
         /* DWARF lexical block 124048 (myBuf/myPos/vcr/len/scrollerText) has PC ranges
          * covering both this REPLAY/custom-game text (main.c:2742..2768) and D4's
@@ -367,61 +367,61 @@ void draw_frame(BITMAP *bmp)
         BITMAP *vcr;
         char scrollerText[70];
 
-        vcr = data[127].dat;
-        myPos = rec_pos;
-        len = demo->size;
-        ox = 0x27b - vcr->w;
-        y = 0x1db - vcr->h; /* DWARF: `y`'s slot (reg edi) is live 4279..4341, exactly this
+        vcr = data[127].dat;                            /* 2773 */
+        myPos = rec_pos;                                /* 2774 */
+        len = demo->size;                               /* 2774 */
+        ox = 0x27b - vcr->w;                             /* 2776 */
+        y = 0x1db - vcr->h; /* 2777: DWARF: `y`'s slot (reg edi) is live 4279..4341, exactly this
                               * assignment through the dead-check below; the D1-owned `x`
                               * local is NOT live over the matching esi computation here
                               * (its ranges stop at 2234), so that esi temp stays `ox`. */
         draw_sprite(bmp, vcr, ox, y); /* offsets 4282..4315, draw.inl:238 -- the only main.c:2778
                                         * candidate in this range; args are the ox/y just set. */
-        if (!ply[player_id]->dead) {
+        if (!ply[player_id]->dead) {                     /* 2779 */
             /* `y` stays live (edi) through 7594..7837 for these three: is_left/is_fire/is_right
              * each build `y + 5` directly in a register (ecx) while the x-argument is spilled
              * through the `cx` stack slot (-0x178) only as a call-argument temporary. */
-            if (is_left(&ctrl))
+            if (is_left(&ctrl))                          /* 2780 */
                 draw_sprite(bmp, data[128].dat, ox + 0x61, y + 5);
-            if (is_fire(&ctrl))
+            if (is_fire(&ctrl))                           /* 2781 */
                 draw_sprite(bmp, data[130].dat, ox + 0x6b, y + 5);
-            if (is_right(&ctrl))
+            if (is_right(&ctrl))                          /* 2782 */
                 draw_sprite(bmp, data[129].dat, ox + 0x75, y + 5);
         }
         /* Stack-slot evidence (DW_OP_breg5): cx = -0x178(ebp), cy = -0x174(ebp).
          * offset 4338 "add $0xa,%edi; mov %edi,-0x178(%ebp)" stores y+0xa into cx (edi holds y).
          * offset 4347 "lea 0xa(%esi),%edi; mov %edi,-0x174(%ebp)" stores ox+0xa into cy (esi holds ox),
          * and that same edi is the set_clip_rect x1 argument, i.e. cy, not cx. */
-        cx = y + 0xa;
-        cy = ox + 0xa;
-        set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);
-        if (!demo->comment[0])
+        cx = y + 0xa;                                     /* 2784 */
+        cy = ox + 0xa;                                     /* 2785 */
+        set_clip_rect(bmp, cy, 0, 0x26f, 0x1df);            /* 2785 */
+        if (!demo->comment[0])                              /* 2787 */
             sprintf(scrollerText, "%s%s%s", "", " - ", demo->name);
         else
             sprintf(scrollerText, "%s%s%s", demo->comment, " - ", demo->name);
         /* offset 4479 "mov -0x178(%ebp),%edi; add $0x4,%edi" reloads cx (not cy) for the
          * y-coordinate of every textout_ex below; the x-coordinate keeps using ox. */
-        textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,
+        textout_ex(bmp, data[53].dat, demo->name, ox + 0xc - scroll_count / 2,     /* 2788 */
             cx + 4, makecol(150, 150, 160), -1);
-        textout_ex(bmp, data[53].dat, demo->name, ox + 0xd - scroll_count / 2,
+        textout_ex(bmp, data[53].dat, demo->name, ox + 0xd - scroll_count / 2,     /* 2789 */
             cx + 4, makecol(200, 200, 210), -1);
-        if (demo->comment[0]) {
-            textout_ex(bmp, data[53].dat, " - ",
+        if (demo->comment[0]) {                                                    /* 2790 */
+            textout_ex(bmp, data[53].dat, " - ",                                    /* 2791 */
                 ox + 0xc - scroll_count / 2 + text_length(data[53].dat, demo->name),
                 cx + 4, makecol(200, 200, 210), -1);
-            textout_ex(bmp, data[53].dat, demo->comment,
+            textout_ex(bmp, data[53].dat, demo->comment,                            /* 2792 */
                 ox - scroll_count / 2 + 0x1e + text_length(data[53].dat, demo->name),
                 cx + 4, makecol(200, 200, 210), -1);
         }
-        set_clip_rect(bmp, 0, 0, 0x27f, 0x1df);
-        if (demo->comment[0]) {
-            if (scroll_delay > 0) {
-                scroll_delay--;
+        set_clip_rect(bmp, 0, 0, 0x27f, 0x1df);              /* 2794 */
+        if (demo->comment[0]) {                               /* 2796 */
+            if (scroll_delay > 0) {                            /* 2797 */
+                scroll_delay--;                                 /* 2798 */
             }
             else {
-                scroll_count++;
-                if (scroll_count / 2 > text_length(data[53].dat, scrollerText))
-                    scroll_count = -250;
+                scroll_count++;                                 /* 2801 */
+                if (scroll_count / 2 > text_length(data[53].dat, scrollerText))  /* 2802 */
+                    scroll_count = -250;                          /* 2803 */
             }
         }
         /* rectfill is inlined (draw.inl:112, offsets 4801..4895) with no visible mnemonics
@@ -429,26 +429,26 @@ void draw_frame(BITMAP *bmp)
          * cx is the value carrying the y+0xa quantity throughout this scope (used as the
          * y-coordinate for every textout_ex above) and cy carries the ox+0xa quantity (used
          * as set_clip_rect's x1), so the bar rect keeps that same x=cy / y=cx pairing. (?) */
-        rectfill(bmp, cy, cx + 0x1e,
+        rectfill(bmp, cy, cx + 0x1e,                                      /* 2808 */
             cy + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
             cx + 0x1d, makecol(50, 200, 50));
     }
 
-    if (debug && key[KEY_F2]) {
-            textprintf_ex(bmp, font, 0, 0, 15, -1, "FPS:%6d / %d", fps, lps);
-            textprintf_ex(bmp, font, 0, 0xa, 15, -1, "REC:%6d / %d", rec_pos,
+    if (debug && key[KEY_F2]) {                                          /* 2812 */
+            textprintf_ex(bmp, font, 0, 0, 15, -1, "FPS:%6d / %d", fps, lps);  /* 2813 */
+            textprintf_ex(bmp, font, 0, 0xa, 15, -1, "REC:%6d / %d", rec_pos,   /* 2814 */
                 demo->size);
-            textprintf_ex(bmp, font, 0, 0x14, 15, -1, "    %6d  (%d) ",
+            textprintf_ex(bmp, font, 0, 0x14, 15, -1, "    %6d  (%d) ",          /* 2815 */
                 demo->data[rec_pos].key_flags, demo->data[rec_pos].cycle_count);
-            textprintf_ex(bmp, font, 0xc8, 0, 15, -1, "POS: %d, %d",
+            textprintf_ex(bmp, font, 0xc8, 0, 15, -1, "POS: %d, %d",              /* 2816 */
                 (int)ply[player_id]->x, (int)ply[player_id]->y);
-            textprintf_ex(bmp, font, 0xc8, 0xa, 15, -1, " dx: %1.2f",
+            textprintf_ex(bmp, font, 0xc8, 0xa, 15, -1, " dx: %1.2f",              /* 2817 */
                 ply[player_id]->sx);
-            textprintf_ex(bmp, font, 0xc8, 0x14, 15, -1, "rjp: %d",
+            textprintf_ex(bmp, font, 0xc8, 0x14, 15, -1, "rjp: %d",                 /* 2818 */
                 options.jump_hold);
-            textprintf_ex(bmp, font, 0x190, 0, 15, -1, "any: %6d %6d %6d",
+            textprintf_ex(bmp, font, 0x190, 0, 15, -1, "any: %6d %6d %6d",           /* 2819 */
                 any11, any12, any13);
-            textprintf_ex(bmp, font, 0x190, 0xa, 15, -1, "any: %6d %6d %6d",
+            textprintf_ex(bmp, font, 0x190, 0xa, 15, -1, "any: %6d %6d %6d",          /* 2820 */
                 any21, any22, any23);
         }
     /* ? line 2822 tail: fragments at offsets 2246 ("mov $0x2,%edi") and 2556

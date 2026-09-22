@@ -40,22 +40,22 @@ void draw_frame(BITMAP *bmp)
      * lookup, i.e. the same parallax/floor-tile family as the D1/D2 unrolled loop
      * noted above, not a D3 statement. Still left to D1/D2's owner. */
 
-    draw_sprite(bmp, data[16].dat, 22, 100);
-    if (ply[player_id]->in_combo) {
-        blit(data[15].dat, bmp, 0, 100 - ply[player_id]->in_combo, 33,
+    draw_sprite(bmp, data[16].dat, 22, 100);          /* 2705 */
+    if (ply[player_id]->in_combo) {                    /* 2706 */
+        blit(data[15].dat, bmp, 0, 100 - ply[player_id]->in_combo, 33,   /* 2707 */
              219 - ply[player_id]->in_combo, 16, ply[player_id]->in_combo);
-        draw_sprite(bmp, data[14].dat, -8, 210);
-        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",
+        draw_sprite(bmp, data[14].dat, -8, 210);         /* 2708 */
+        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",   /* 2709 */
                               ply[player_id]->acc_level);
     }
 
-    if (reward_time) {
-        draw_sprite(bmp, data[14].dat, -8, 210);
-        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",
+    if (reward_time) {                                   /* 2711 */
+        draw_sprite(bmp, data[14].dat, -8, 210);           /* 2712 */
+        textprintf_centre_ex(bmp, data[50].dat, 42, 210, -1, -1, "%d",     /* 2713 */
                               ply[player_id]->latest_combo);
     }
 
-    if (hurry_y < 251 || hurry_y > 479) {
+    if (hurry_y < 251 || hurry_y > 479) {                 /* 2717 */
         x = 6;
         y = 10;
         cx = 0;
@@ -66,47 +66,47 @@ void draw_frame(BITMAP *bmp)
         cx = logic_count % 3 - 1;
         cy = (logic_count + 1) % 3 - 1;
     }
-    draw_sprite(bmp, data[12].dat, x, y);
+    draw_sprite(bmp, data[12].dat, x, y);                  /* 2718 */
 
-    if (hurry_y >= 201 && hurry_y <= 479) {
+    if (hurry_y >= 201 && hurry_y <= 479) {                /* 2719 */
         cx = (logic_count + 2) % 3 - 1;
         cy = (logic_count + 3) % 3 - 1;
     }
-    rotate_sprite(bmp, data[13].dat, cx + 34, cy + 28,
+    rotate_sprite(bmp, data[13].dat, cx + 34, cy + 28,      /* 2720 */
                   clock_angle ? ftofix((clock_angle % 1500) * 0.1706666) : 0);
 
-    if (reward_time) {
-        draw_reward(swap_screen);
+    if (reward_time) {                                      /* 2721 */
+        draw_reward(swap_screen);                            /* 2722 */
     }
 
-    textprintf_ex(bmp, data[52].dat, 8, 440, -1, -1, "score: %d",
+    textprintf_ex(bmp, data[52].dat, 8, 440, -1, -1, "score: %d",   /* 2739 */
                   ply[player_id]->level * 10 + ply[player_id]->score);
 
-    if (!recording) {
+    if (!recording) {                                        /* 2742 */
         char myBuf[256];
 
-        if (frame_count & 8) {
-            strcpy(myBuf, "REPLAY");
-            ls = 630 - text_length(data[53].dat, myBuf);
-            textprintf_ex(bmp, data[53].dat, ls + 1, 5, makecol(0, 0, 0), -1, "REPLAY");
-            textprintf_ex(bmp, data[53].dat, ls, 4, makecol(255, 255, 255), -1, "REPLAY");
+        if (frame_count & 8) {                                /* 2746 */
+            strcpy(myBuf, "REPLAY");                            /* 2747 */
+            ls = 630 - text_length(data[53].dat, myBuf);         /* 2748 */
+            textprintf_ex(bmp, data[53].dat, ls + 1, 5, makecol(0, 0, 0), -1, "REPLAY");        /* 2749 */
+            textprintf_ex(bmp, data[53].dat, ls, 4, makecol(255, 255, 255), -1, "REPLAY");       /* 2750 */
         }
 
-        if (is_playing_custom_game) {
-            sprintf(myBuf, "%s Floors", floor_size_selection.caption[demo->floor_size]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 16, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 15, makecol(255, 255, 255), -1);
+        if (is_playing_custom_game) {                          /* 2754 */
+            sprintf(myBuf, "%s Floors", floor_size_selection.caption[demo->floor_size]);  /* 2755 */
+            cx = 630 - text_length(data[53].dat, myBuf);          /* 2756 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 16, makecol(0, 0, 0), -1);          /* 2757 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 15, makecol(255, 255, 255), -1);         /* 2758 */
 
-            sprintf(myBuf, "%s Speed", scroll_speed_selection.caption[demo->start_speed]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 26, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 25, makecol(255, 255, 255), -1);
+            sprintf(myBuf, "%s Speed", scroll_speed_selection.caption[demo->start_speed]);  /* 2760 */
+            cx = 630 - text_length(data[53].dat, myBuf);           /* 2761 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 26, makecol(0, 0, 0), -1);           /* 2762 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 25, makecol(255, 255, 255), -1);          /* 2763 */
 
-            strcpy(myBuf, gravity_selection.caption[demo->gravity]);
-            cx = 630 - text_length(data[53].dat, myBuf);
-            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);
-            textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);
+            strcpy(myBuf, gravity_selection.caption[demo->gravity]);   /* 2765 */
+            cx = 630 - text_length(data[53].dat, myBuf);              /* 2766 */
+            textout_ex(bmp, data[53].dat, myBuf, cx + 1, 36, makecol(0, 0, 0), -1);            /* 2767 */
+            textout_ex(bmp, data[53].dat, myBuf, cx, 35, makecol(255, 255, 255), -1);           /* 2768 */
         }
         /* DWARF lexical block 124048 (myBuf/myPos/vcr/len/scrollerText) has PC ranges
          * covering both this REPLAY/custom-game text (main.c:2742..2768) and D4's
