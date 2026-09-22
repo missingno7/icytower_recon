@@ -28,10 +28,11 @@ void draw_frame(BITMAP *bmp)
         max_bg_id = 2;
     } else if (ply[player_id]->level <= 0x15e) {        /* 2506 */
         max_bg_id = 3;
-    } else if (ply[player_id]->level >= 0x259) {        /* 2507 */
-        max_bg_id = 5;
     } else {
-        max_bg_id = 4;
+        max_bg_id = (ply[player_id]->level >= 0x259) + 4; /* 2507: branchless in the
+                                                             * historical binary (cmp/setge/
+                                                             * movzbl/add $0x4), not a
+                                                             * separate else-if/else pair */
     }
 
     {
@@ -86,8 +87,10 @@ void draw_frame(BITMAP *bmp)
 
         for (cx = 0; cx != 0x1e0; cx += 0x10) {      /* 2547 */
             if (!room->empty) {                       /* 2548 */
-                int tile;
-                int rowy = cx + (map.offset & 0xf) - 6; /* ? sign-preserving mod-16 term, 2552 */
+                int f;   /* DWARF: block-scoped int at -0x180(ebp); no separate `rowy`/`tile`
+                          * names are declared by the historical DWARF for this block, so the
+                          * tile index reuses this one slot and the row-y term is recomputed
+                          * inline (cx + (map.offset & 0xf) - 6) at each use, 2552. */
 
                 ls = fo + room->tiles * 3;   /* 2549 */
                 if (ls > 0x2c) {
@@ -97,24 +100,24 @@ void draw_frame(BITMAP *bmp)
                     ls += 3;
                 }
 
-                tile = room->start_tile;     /* 2551 */
+                f = room->start_tile;     /* 2551 */
 
                 /* left edge tile */
-                cy = tile * 16 - 5;          /* 2552, stored at -0x174(%ebp) */
+                cy = f * 16 - 5;          /* 2552, stored at -0x174(%ebp) */
                 x = cy;                      /* ? DWARF tracks a separate `x` over this same span; mirrored here */
-                draw_sprite(bmp, data[ls].dat, x, rowy);
+                draw_sprite(bmp, data[ls].dat, x, cx + (map.offset & 0xf) - 6);
 
                 /* middle tiles: 2553..2556 */
-                for (tile++; tile < room->end_tile; tile++) {
-                    cy = tile * 16;
+                for (f++; f < room->end_tile; f++) {
+                    cy = f * 16;
                     x = cy;                  /* ? */
-                    draw_sprite(bmp, data[ls + 1].dat, x, rowy);
+                    draw_sprite(bmp, data[ls + 1].dat, x, cx + (map.offset & 0xf) - 6);
                 }
 
                 /* right edge tile, 2558 */
-                cy = tile * 16;
+                cy = f * 16;
                 x = cy;                      /* ? */
-                draw_sprite(bmp, data[ls + 2].dat, x, rowy);
+                draw_sprite(bmp, data[ls + 2].dat, x, cx + (map.offset & 0xf) - 6);
 
                 if (debug && !key[KEY_F2]) {  /* 2560 */
                     textprintf_ex(bmp, font, 0x208, cx + (map.offset & 0xf), 15, -1, "%d",
