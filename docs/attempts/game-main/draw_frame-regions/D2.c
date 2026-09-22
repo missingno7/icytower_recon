@@ -145,14 +145,19 @@ void draw_frame(BITMAP *bmp)
 
             /* 2629..2638: a second, overlay draw -- edge==0 reaches this same block
              * directly (2611's `je` target is offset 3115, this block's own start),
-             * so it is duplicated verbatim below for the no-edge case. A single source
-             * copy of this block guarded by `edge != 2` (tried and measured: candidate
-             * drops to 8260/8518, -258, because -O2 keeps ONE compiled copy with a live
-             * runtime guard here instead of duplicating -- the guard is not eliminated
-             * for free the way it is at the historical predecessor edges) does not
-             * reproduce the historical tail duplication, so the block stays written
-             * twice, once per predecessor, matching the two physical copies in the
-             * original (offsets 3115.. and 3115-again via the edge==0 fallthrough). */
+             * so it is duplicated verbatim below for the no-edge case. Re-tried as a
+             * single copy guarded by `edge != 2` (matching the single-fragment shape
+             * function_lines --source-view reports for 2624/2629/2630/2631/2632/2636/
+             * 2638 individually): measured again this pass, candidate still drops to
+             * 8260/8518 (-258) even though the per-line fit for 2629/2630/2636/2638
+             * improves a lot (2638 alone: was +106 over duplicated, only +11 over
+             * merged) -- so the single fragment per line is real, but -O2 still isn't
+             * folding the two textual copies into one compiled copy for free the way
+             * the historical binary's block-layout scatter does; something else in the
+             * function absorbs the missing 300 bytes when this block is merged, and
+             * that something is not evidenced yet. Reverted to the duplicated form,
+             * which lands the whole-function total closer (8560 vs 8518) even though
+             * this block overshoots on its own. */
             if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629: offset 3115..3134 (map.offset), 3416..3433 (y vs 400.0) */
                 customFrame = custom.frame[11];                      /* 2629 */
             }

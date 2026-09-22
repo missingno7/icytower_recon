@@ -126,10 +126,14 @@ int play(void)
                     scroll = start_speeds[demo->start_speed];           /* 3740 */
                 if (scroll) {                                            /* 3742 */
                     map.offset += scroll;                               /* 3751 */
+                    tot_scroll += scroll;                               /* 3752 (local_slot_trace: read+add
+                                                                          * of the ecx slot shared with
+                                                                          * scroll_acc/tot_scroll above) */
                     ply[player_id]->y += scroll;                        /* 3753 */
                     level += scroll;                                    /* 3754 */
                 } else if (step_count & 1) {                            /* 3743 */
                     map.offset++;                                       /* 3744 */
+                    tot_scroll++;                                       /* 3745 (same slot, mirrors 3752) */
                     ply[player_id]->y += 1.0;                           /* 3746 */
                     level++;                                            /* 3747 */
                 }

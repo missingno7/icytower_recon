@@ -50,14 +50,21 @@ void draw_frame(BITMAP *bmp)
             bg_stripe_ids[2] = bg_stripe_ids[1];
             bg_stripe_ids[1] = bg_stripe_ids[0];
 
-            if (new_rand() % 100 > 0x28) {               /* 2517 */
-                bg_stripe_ids[0] = 0;                     /* 2523 */
-            } else {
-                bg_stripe_ids[0] = new_rand() % max_bg_id; /* 2521 */
-                if (bg_stripe_ids[0] == bg_stripe_ids[1] || /* 2522 */
-                    bg_stripe_ids[0] == bg_stripe_ids[2])
-                    bg_stripe_ids[0] = 0;                  /* 2523 */
-            }
+            /* 2523: only ONE physical `movl $0x0,bg_stripe_ids` exists (offsets 336..352),
+             * reached both by the >0x28 branch falling straight through and by the
+             * collision-detected branch's own jump (offset 372/380 both target 4093ec,
+             * the same address) -- a genuine control-flow merge, not two compiled copies,
+             * so the reset is written once and reached from both predecessors. */
+            if (new_rand() % 100 > 0x28)                  /* 2517 */
+                goto reset_stripe;
+            bg_stripe_ids[0] = new_rand() % max_bg_id;     /* 2521 */
+            if (bg_stripe_ids[0] != bg_stripe_ids[1] &&    /* 2522 */
+                bg_stripe_ids[0] != bg_stripe_ids[2])
+                goto skip_reset;
+        reset_stripe:
+            bg_stripe_ids[0] = 0;                          /* 2523 */
+        skip_reset:
+            ;
         }
 
         for (i = 0; i != 4; i++) {                        /* 2529 */

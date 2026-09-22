@@ -311,10 +311,14 @@ int play(void)
                     scroll = start_speeds[demo->start_speed];           /* 3740 */
                 if (scroll) {                                            /* 3742 */
                     map.offset += scroll;                               /* 3751 */
+                    tot_scroll += scroll;                               /* 3752 (local_slot_trace: read+add
+                                                                          * of the ecx slot shared with
+                                                                          * scroll_acc/tot_scroll above) */
                     ply[player_id]->y += scroll;                        /* 3753 */
                     level += scroll;                                    /* 3754 */
                 } else if (step_count & 1) {                            /* 3743 */
                     map.offset++;                                       /* 3744 */
+                    tot_scroll++;                                       /* 3745 (same slot, mirrors 3752) */
                     ply[player_id]->y += 1.0;                           /* 3746 */
                     level++;                                            /* 3747 */
                 }
@@ -1057,12 +1061,16 @@ int play(void)
         /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
          * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
         hy = 480.0f;       /* 4704: panel starts off-screen at 480 and eases up toward 136.0 */
-        int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
+        int alpha_pos;      /* letter-navigation cursor; first write is at 4821 (rank-up reset) */
         char *initials = NULL;
 
         {
-            /* DWARF block (inner): name-entry / rank-up state. */
-            int pos;
+            /* DWARF block (inner): name-entry / rank-up state. alpha_pos (declared in the
+             * enclosing W5 scope, slot -0x930) is reused here as the letter-navigation
+             * cursor: local_slot_trace shows every is_right/is_left/is_fire/backspace/typed
+             * access in this loop (4885, 4886, 4891, 4895, 4896, 4899, 4913..4915, 4876,
+             * 4877) touching the same slot as the 4821 reset and the 4838 easing -- there is
+             * no separate DWARF local for it. */
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
@@ -1119,7 +1127,7 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
+                /* 4704 */ draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
                              qualifyValue,
                              is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
@@ -1178,7 +1186,6 @@ int play(void)
                            640, 30, -1);
             scroll_scroller(&summary_scroller, -150);                                  /* 4782 */
             new_rank_id = get_rank_id(profile);                                        /* 4787 */
-            pos = 0;
             skip_keys = 0;
 
             for (;;) {
@@ -1194,21 +1201,21 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
+                /* 4810 */ draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
                              qualifyValue, is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
-                    if (pos != 0 || (step_count & 4))                                   /* 4814 */
+                    if (alpha_pos != 0 || (step_count & 4))                             /* 4814 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[0],
                                            300, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos != 1 || (step_count & 4))                                   /* 4815 */
+                    if (alpha_pos != 1 || (step_count & 4))                             /* 4815 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[2],
                                            320, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos != 2 || (step_count & 4))                                   /* 4816 */
+                    if (alpha_pos != 2 || (step_count & 4))                             /* 4816 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[4],
                                            340, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos >= 3)                                                       /* 4817 */
+                    if (alpha_pos >= 3)                                                 /* 4817 */
                         textout_centre_ex(swap_screen, data[52].dat, "%",
                                            360, (int)(hy * 2.0 + 120.0), -1, -1);
                 }
@@ -1216,7 +1223,6 @@ int play(void)
                     alpha_pos = 0;                                                       /* 4821 */
                     rank_y = 0x244;
                     skip_keys = 20;
-                    pos = 0;
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
@@ -1257,33 +1263,33 @@ int play(void)
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {     /* 4863 */
                     poll_control(&ctrl, 0);                                                /* 4864 */
                     if (is_right(&ctrl)) {                                                 /* 4884 */
-                        pos++;                                                             /* 4885 */
-                        if (pos >= len)                                                    /* 4886 */
-                            pos = 0;
+                        alpha_pos++;                                                        /* 4885 */
+                        if (alpha_pos >= len)                                               /* 4886 */
+                            alpha_pos = 0;
                     }
                     if (is_left(&ctrl)) {                                                  /* 4889 */
-                        pos--;                                                             /* 4891 */
-                        if (pos < 0)
-                            pos = len;
+                        alpha_pos--;                                                        /* 4891 */
+                        if (alpha_pos < 0)
+                            alpha_pos = len;
                     }
                     if (is_fire(&ctrl)) {                                                  /* 4894 */
-                        if (letters[pos] == (char)0xa4) {                                  /* 4895: blank slot confirmed */
-                            buf[pos * 2] = '.';                                             /* 4896 */
-                            if (pos > 1)                                                    /* 4899 */
-                                pos--;
+                        if (letters[alpha_pos] == (char)0xa4) {                            /* 4895: blank slot confirmed */
+                            buf[alpha_pos * 2] = '.';                                       /* 4896 */
+                            if (alpha_pos > 1)                                              /* 4899 */
+                                alpha_pos--;
                             else
-                                pos++;
+                                alpha_pos++;
                             if (skip_keys != 20)                                            /* 4900 */
                                 skip_keys = 19;                                              /* 4902 */
-                        } else if (pos != 0) {               /* ? best-effort for the non-blank confirm case */
-                            pos++;
+                        } else if (alpha_pos != 0) {         /* ? best-effort for the non-blank confirm case */
+                            alpha_pos++;
                         } else {
-                            pos--;
+                            alpha_pos--;
                         }
                     }
                     if (!is_any(&ctrl) && !key[KEY_DEL] && key[KEY_BACKSPACE]) {            /* 4913 */
-                        if (pos <= 2)
-                            buf[pos * 2] = letters[pos];                                    /* 4915 */
+                        if (alpha_pos <= 2)
+                            buf[alpha_pos * 2] = letters[alpha_pos];                        /* 4915 */
                     }
                 } else {
                     poll_control(&ctrl, 0);                                                 /* 4920 */
@@ -1316,9 +1322,9 @@ int play(void)
                                     }
                                 }
                                 if (matched) {                                               /* 4875 */
-                                    buf[pos * 2] = typed;
-                                    pos++;                                                    /* 4876 */
-                                    if (pos == 3)                                            /* 4877 */
+                                    buf[alpha_pos * 2] = typed;
+                                    alpha_pos++;                                              /* 4876 */
+                                    if (alpha_pos == 3)                                      /* 4877 */
                                         skip_keys = 20;
                                 }
                             }
