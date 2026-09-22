@@ -161,8 +161,16 @@ def main():
     ap.add_argument('--annotations', action='store_true', help="compare per HISTORICAL line, mapping candidate lines through the body's own /* 2551 */ annotations")
     ap.add_argument('--label', help='overlay build label; give each concurrent run its own so two workers do not share one build directory')
     ap.add_argument('--regions', nargs='*', help='TAG=LO-HI per region of the retained body, e.g. W1a=3405-3530 W2=3700-3999')
+    ap.add_argument('--raw-lines', action='store_true', help='force the raw per-line table even for a retained body (its physical line numbers are NOT historical line numbers, so the raw table compares unrelated lines)')
     a = ap.parse_args()
     bodies = dict(b.split('=', 1) for b in a.body)
+    if a.function in bodies and not a.annotations and not a.regions and not a.raw_lines:
+        # A retained body is appended after the skeleton by the overlay layout, so its physical line
+        # numbers bear no relation to the historical ones and the raw table would compare unrelated
+        # lines (it reads as a large deficit on every historical line).  Annotation mode is the only
+        # meaningful per-line view for a retained body, so it is the default here.
+        a.annotations = True
+        print("(retained body: comparing per HISTORICAL line through the body's own /* NNNN */ annotations; --raw-lines overrides)")
     f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order, no_inline=a.no_inline, label=a.label)
     if a.annotations:
         body = ROOT / bodies[a.function]
