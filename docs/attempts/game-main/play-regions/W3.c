@@ -133,7 +133,9 @@ int play(void)
              * (DWARF -0x940(%ebp)) lands on main.c:4031, the loop body's first real statement
              * (source-view 4000..4055: fragments 3987..4024 tagged 4029, 4024..4036 tagged
              * 4031) -- so the assignment and the loop share one combined-init statement. */
-            for (i = 0, midX = next_aight / 2; i < midX; i++) {                 /* 4029/4123 */
+            for (i = 0, midX = next_aight / 2;                                 /* 4029 */
+                 i < midX;                                                     /* 4124 */
+                 i++) {                                                        /* 4123 */
                 int p;                                                          /* 4031 block-local */
                 p = create_particle(stars, (new_rand() % 600) + 20, 480);       /* 4030 */
                 stars[p].sy = -(((new_rand() % 200) << 16) / 5);                /* 4031 */
@@ -169,7 +171,7 @@ int play(void)
             pauseTime = time(NULL);                                            /* 4063 */
             take_screenshot(swap_screen);                                      /* 4064 */
             if (key[KEY_F1]) {                                                 /* 4065 (see report: odd self-target) */
-                addTime = time(NULL) - pauseTime;                              /* 4066-4067 */
+                addTime = time(NULL) - pauseTime;                              /* 4066 */
                 if (addTime > 0)                                               /* 4067 */
                     startTime += addTime;                                      /* 4068 */
             }
@@ -248,7 +250,7 @@ int play(void)
                     while (!keypressed()) {                                    /* 4138 */
                         if (is_any(&ctrl) || is_pause(&ctrl) ||
                             closeButtonClicked || key[KEY_ESC])                /* 4138 */
-                            break;
+                            break;                                            /* 4138 */
                         poll_control(&ctrl, 0);                                /* 4139 */
                         rest(2);                                               /* 4140 */
                     }
@@ -260,8 +262,8 @@ int play(void)
                         log2file("  game quit from esc pause");               /* 4150 */
                         profile->games_quit++;                                /* 4151 */
                         endTime = time(NULL);                                 /* 4152 */
-                        quit = 1;
-                        playing = 0;
+                        quit = 1;                                             /* 4152 */
+                        playing = 0;                                          /* 4152 */
                     }
                     clear_keybuf();                                           /* 4154 */
                     fall_count = fc;                                          /* 4156 */
@@ -316,7 +318,7 @@ int play(void)
                 clear_keybuf();                                               /* 4206 */
                 while (!keypressed()) {                                       /* 4207 */
                     if (is_any(&ctrl) || is_pause(&ctrl) || key[KEY_ESC])      /* 4207 */
-                        break;
+                        break;                                                /* 4207 */
                     poll_control(&ctrl, 0);                                   /* 4208 */
                     rest(2);                                                  /* 4209 */
                 }
@@ -346,12 +348,12 @@ int play(void)
                 poll_control(&rec_ctrl, 0);                                   /* 4251 */
                 if (ply[player_id]->dead) {                                   /* 4253 */
                     log2file("  replay ended after death");                   /* 4255 */
-                    playing = 0;
+                    playing = 0;                                              /* 4255 */
                 }
                 if (key[KEY_ESC]) {                                           /* 4264 */
                     log2file("  quit from replay");                           /* 4265 */
-                    quit = 1;
-                    playing = 0;
+                    quit = 1;                                                 /* 4265 */
+                    playing = 0;                                              /* 4265 */
                 }
                 if (key[KEY_SPACE]) {                                        /* 4271 */
                     if (ply[player_id]->dead == 0) {
@@ -395,7 +397,7 @@ int play(void)
                             fast_forward = 0;                                 /* 4298 */
                             next_floor = ((ply[player_id]->level + 100) / 100) * 100; /* 4299 */
                             if (next_floor > demo->floor - 10)                /* 4301 */
-                                next_floor = demo->floor - 10;
+                                next_floor = demo->floor - 10;                /* 4301 */
                         }
                     }
                 }
@@ -418,7 +420,7 @@ int play(void)
             someCounter++;                                                    /* 4324 */
             ffstep = fast_forward ? 4 : 1;                                   /* 4327 */
             if (fast_fast_forward)                                            /* 4330 */
-                ffstep = 32;
+                ffstep = 32;                                                  /* 4330 */
             if (!quit && someCounter % ffstep == 0) {                        /* 4337 */
                 draw_frame(swap_screen);                                      /* 4338 */
                 if (ply[player_id]->shake) {                                  /* 4346 */
@@ -442,7 +444,7 @@ int play(void)
                 }
                 if (!debug) {                                                 /* 4356 */
                     while (cycle_count == 0)                                  /* 4357 */
-                        rest(2);
+                        rest(2);                                              /* 4357 */
                 } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
                     while (cycle_count <= 7)                                  /* 4361 */
                         rest(2);                                              /* 4363 */

@@ -65,6 +65,19 @@ write set" lesson (doc section 13) likely still applies, but not through that sp
 whatever the four real writers of `fy2`/`ply2`/`pry1`/`pry2` are, they are not simple copies, and
 guessing at them (with or without a copy) moves the function further from target either way.
 
+**Read the three measurements together, not the reverted one in isolation.** 1381 with no geometry
+locals named, 1345 with all eight (four evidenced + four inferred), 1325 with only the four evidenced
+— fewer bytes as more correct statements are added, monotonically. That is not the geometry causing a
+regression; it is the geometry removing duplicated inline computation (the same `(int)ply[player_id]->x
+- 11` etc. recomputed at each of several call sites) that the unnamed-locals baseline was performing by
+accident. The original computes each of these once too, and is nonetheless 1390 bytes. So the 45-to-65
+byte gap was never explained by the baseline's duplication — that duplication was only standing in for
+whatever code is genuinely still missing, and made 1381 look closer to 1390 by luck, not by
+correctness. **The reverted 1381 state below is not a better reconstruction than the 1325 one; it is
+only a luckier-looking byte count.** The real gap is elsewhere in the function (most likely inside
+whatever `fy2`/`ply2`/`pry1`/`pry2` actually are, and/or the block-placement difference below), and it
+should be chased from there, not papered over by reverting the correct geometry work.
+
 ## Block-placement attempt (`if` vs `goto`)
 
 Rewrote `if (solid1 || solid2) { ...; return; }` as `if (solid1 || solid2) goto solid_return;` with

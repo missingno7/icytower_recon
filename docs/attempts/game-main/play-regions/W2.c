@@ -99,34 +99,34 @@ int play(void)
                 old_map_pos = map.offset;                                /* 3717 (evidence: read here) */
                 scroll_acc = (ply[player_id]->y >= 140.0) ? 2 : 1;       /* 3721 */
                 if (ply[player_id]->y >= 120.0)                         /* 3722 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3722 */
                 if (ply[player_id]->y >= 100.0)                         /* 3723 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3723 */
                 if (ply[player_id]->y >= 80.0)                          /* 3724 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3724 */
                 if (ply[player_id]->y >= 60.0)                          /* 3725 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3725 */
                 if (ply[player_id]->y >= 40.0)                          /* 3726 */
-                    scroll_acc += 2;
+                    scroll_acc += 2;                                    /* 3726 */
                 if (ply[player_id]->y >= 20.0)                          /* 3727 */
-                    scroll_acc += 2;
+                    scroll_acc += 2;                                    /* 3727 */
                 if (ply[player_id]->y >= 0.0)                           /* 3728; ? always true for a valid y */
-                    scroll_acc += 3;
+                    scroll_acc += 3;                                    /* 3728 */
                 map.offset = old_map_pos + scroll_acc;                  /* 3729 */
                 ply[player_id]->y += scroll_acc;                        /* 3731 */
                 level += scroll_acc;                                    /* 3732 */
-                tot_scroll = scroll_acc;                                /* shares ecx with scroll_acc through
+                tot_scroll = scroll_acc;                                /* 3732: shares ecx with scroll_acc through
                                                                           * the collision switch below (evidence:
                                                                           * DW_OP_reg1 live range extends to 3823) */
             }
             if (!ply[player_id]->dead)                                  /* 3736 */
-                clock_angle++;
+                clock_angle++;                                          /* 3736 */
             /* 3738..3758: proceed only once the shake accumulator has built up and the
              * player is alive; otherwise reset clock_angle/fall_count (only while alive). */
             if (map.offset <= 100 || ply[player_id]->dead) {            /* 3738 */
                 if (!ply[player_id]->dead) {                            /* 3757 */
                     clock_angle = 0;                                    /* 3758 */
-                    fall_count = 0;
+                    fall_count = 0;                                     /* 3758 */
                 }
             } else {
                 if (scroll == -1)                                       /* 3739 */
@@ -147,9 +147,10 @@ int play(void)
             }
             any13 = map.offset;                                         /* 3763 */
             if (hurry_y + 99 <= 578)                                    /* 3765 */
-                hurry_y -= 2;
+                hurry_y -= 2;                                           /* 3765 */
             if (demo->speed_increase) {                                 /* 3766 */
-                if (!ply[player_id]->dead &&                            /* 3767 */
+                /* 3767 */
+                if (!ply[player_id]->dead &&
                     speeds[next_speed] < fall_count &&
                     scroll > 4) {
                     ply[player_id]->ccc[next_speed] = ply[player_id]->level;  /* 3768 */
@@ -163,7 +164,7 @@ int play(void)
             if (scroll == 5) {                                          /* 3778 */
                 fall_count -= 45;                                       /* 3779 */
                 if (!ply[player_id]->dead)                              /* 3780 */
-                    clock_angle -= 45;
+                    clock_angle -= 45;                                  /* 3780 */
             }
             /* old_map_pos is loaded into %ebx once at 3717 ("mov 0x4f8e18,%ebx") and is
              * never redefined before this point, so it still holds the pre-update
@@ -187,7 +188,7 @@ int play(void)
          * separate store to that address exists between the level updates above and
          * the switch below, so the switch's second argument is simply level's
          * current value carried over under a different DWARF name. */
-        lastY = level;                                                  /* ? evidence: shared slot, no distinct write found */
+        lastY = level;                                                  /* 3814: evidence: shared slot, no distinct write found */
 
         switch (collision_type) {                                       /* 3814 */
         case 3:
@@ -211,17 +212,17 @@ int play(void)
         }
 
         if (ply[player_id]->rotate)                                     /* 3833 */
-            ply[player_id]->angle += 0x80000;
+            ply[player_id]->angle += 0x80000;                           /* 3833 */
         if (ply[player_id]->in_combo) {                                 /* 3837 */
             ply[player_id]->in_combo--;                                 /* 3838 */
-            if (!ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) {  /* 3839..3840 */
+            if (!ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) {  /* 3839 */
                 int rewResult;
                 Tgd_combo c;
 
                 ply[player_id]->score += ply[player_id]->acc_level * ply[player_id]->acc_level;  /* 3841 */
                 rewResult = start_reward(ply[player_id]->acc_level);     /* 3842 */
                 if (recording && !is_playing_custom_game)                /* 3843 */
-                    profile->rewards[rewResult]++;
+                    profile->rewards[rewResult]++;                       /* 3843 */
                 totComboFloors += ply[player_id]->acc_level;             /* 3844 */
                 numComboJumps++;                                         /* 3845 */
                 c.length = ply[player_id]->acc_level;                    /* 3848 */
@@ -235,8 +236,8 @@ int play(void)
         }
 
         if (ply[player_id]->status) {                                   /* 3862 */
-            level = (get_level(&map, (int)ply[player_id]->y) - 1) / 10;  /* 3864..3868 */
-            diff = level - ply[player_id]->level;                       /* 3869..3870 */
+            level = (get_level(&map, (int)ply[player_id]->y) - 1) / 10;  /* 3864 */
+            diff = level - ply[player_id]->level;                       /* 3869 */
             if (diff != 0) {                                             /* 3870 */
                 if (diff == gdLastJumpDiff) {                            /* 3871 */
                     jumpSequence.num++;                                  /* 3882 */
@@ -271,7 +272,7 @@ int play(void)
                             ply[player_id]->acc_level = diff;            /* 3926 */
                             ply[player_id]->acc_jumps = 1;               /* 3927 */
                         }
-                        ply[player_id]->in_combo = 100;                  /* 3923/3928 */
+                        ply[player_id]->in_combo = 100;                  /* 3923 */
                         lastJumpLength = diff;                          /* 3932: shared tail for both arms
                                                                             * above -- offset 6120..6150,
                                                                             * reached by fallthrough from the

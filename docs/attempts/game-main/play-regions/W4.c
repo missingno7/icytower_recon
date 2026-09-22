@@ -100,9 +100,9 @@ int play(void)
         gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4392 */
         gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4393 */
         for (i = 0; i < 5; i++)                                                /* 4395 */
-            gameData->ccc[i] = ply[player_id]->ccc[i];
+            gameData->ccc[i] = ply[player_id]->ccc[i];                        /* 4395 */
         for (i = 0; i < 5; i++)                                                /* 4398 */
-            gameData->jc[i] = ply[player_id]->jcTop[i];
+            gameData->jc[i] = ply[player_id]->jcTop[i];                       /* 4398 */
         {
             int keys_pressed[7];
             int key_flag[7] = { 16, 1, 2, 4, 8, 32, 128 };                     /* 4403 */
@@ -110,7 +110,7 @@ int play(void)
             int k;
 
             for (k = 0; k < 7; k++)                                            /* 4402 */
-                keys_pressed[k] = time_cheat_count;
+                keys_pressed[k] = time_cheat_count;                            /* 4402 */
             if (demo->size > 0) {                                              /* 4406 */
                 for (k = 0; k < 7; k++)                                        /* 4404: rep stos reuses eax
                                                                                     * without reloading it from
@@ -119,7 +119,7 @@ int play(void)
                                                                                     * before it) -- last_keys is
                                                                                     * seeded with time_cheat_count,
                                                                                     * not a literal 0. */
-                    last_keys[k] = time_cheat_count;
+                    last_keys[k] = time_cheat_count;                           /* 4404 */
                 for (i = 0; i < demo->size; i++) {                             /* 4406 */
                     int flags = demo->data[i].key_flags;                       /* 4406 */
                     for (k = 0; k < 7; k++) {                                  /* 4408 */
@@ -168,9 +168,9 @@ int play(void)
             demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4507 */
             demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4508 */
             for (i = 0; i < 5; i++)                                            /* 4510 */
-                demo->ccc[i] = ply[player_id]->ccc[i];
+                demo->ccc[i] = ply[player_id]->ccc[i];                        /* 4510 */
             for (i = 0; i < 5; i++)                                            /* 4513 */
-                demo->jc[i] = ply[player_id]->jcTop[i];
+                demo->jc[i] = ply[player_id]->jcTop[i];                       /* 4513 */
 
             if (!is_playing_custom_game) {                                    /* 4519 */
                 profile->games_played++;                                      /* 4520 */
@@ -282,7 +282,7 @@ int play(void)
     }
 
     /* lines 4641..4643: unconditional, reached from all three predecessors above */
-    syncProfileFromOptions();
+    syncProfileFromOptions();                                                /* 4641 */
     save_profile(profile);                                                   /* 4641 */
 
     /* lines 4643..4683: highscore qualification, guarded by quit && closeButtonClicked */
@@ -292,7 +292,7 @@ int play(void)
                          * DWARF block 133269, which opens here and runs into REGION W5 */
 
             for (i = 0; i < 15; i++)                                         /* 4650 */
-                qualify[i] = 0;
+                qualify[i] = 0;                                             /* 4650 */
             qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4652 */
             qualifyValue[2] = ply[player_id]->level;                         /* 4653 */
             qualifyValue[1] = ply[player_id]->best_combo;                    /* 4654 */
@@ -303,7 +303,7 @@ int play(void)
                 qualifyValue[10 + i] = ply[player_id]->jcTop[i];             /* 4659 */
             }
             quit = 0;                                                       /* 4657 */
-            gotHigh = 0;
+            gotHigh = 0;                                                    /* 4657 */
             for (rank = 0; rank < 15; rank++) {                              /* 4662 */
                 qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);  /* 4663 */
                 gotHigh += qualify[rank];                                    /* 4664 */
@@ -341,7 +341,7 @@ int play(void)
                 gameover_bmp_id = 0x37;                                     /* 4668 */
             }
             if (is_playing_custom_game)                                     /* 4671 */
-                gameover_bmp_id = 0x37;
+                gameover_bmp_id = 0x37;                                     /* 4671 */
 
             if (quit) {                                                     /* 4673: disasm reads -0x93c
                                                                                 * (quit) again here, not
