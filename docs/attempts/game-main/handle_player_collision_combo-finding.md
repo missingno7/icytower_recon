@@ -41,7 +41,23 @@ it does **not** mean the value equals another named variable. I initially inferr
 `fy2 = fy1`, `ply2 = lastY`, `pry1 = ply1`, `pry2 = lastY` (trivial copies) purely from the fact that
 `getFloorData`'s real signature (`src/map.c:105`, `void getFloorData(Tmap*, int cy, int*fy, int*fx1, int*fx2)`)
 only produces one `fy`, so a level floor segment made `fy2 = fy1` look inevitable, and the right-edge
-ray plausibly shares the left edge's `y` values.
+ray plausibly shares the left edge's `y` values. That was a guess from the names, not from the object —
+see the update below.
+
+**Update, from `handle_player_collision_vector` (same DWARF-name family, same missing four):** traced
+the actual `line_intersect` call-argument construction there instruction by instruction instead of
+inferring from names, and it answers this exact question. In `_vector`'s two `line_intersect` calls,
+`by` (arg4) is built with `mov %ebx,0xc(esp)` and `ay` (arg2) with `mov %ebx,%eax` / `mov %eax,0x4(esp)`
+— **the same `ebx` register, holding `fy1`, used twice with no intervening write anywhere in the
+function**. `cy` (arg6) for both calls is the same `edi`, holding `ply1`. `dy` (arg8) for both calls is
+`esi`, holding `lastY` straight from the prologue cache. So in `_vector`, `fy2`/`ply2`/`pry1`/`pry2` are
+not separate written values at all, trivial-copy or otherwise — they are the call sites reusing
+`fy1`/`ply1`/`lastY`'s existing registers directly, which is exactly why they have no `DW_AT_location`:
+there is nothing to locate. This is very likely the same answer for `_combo` (same names, same
+`getFloorData`/`line_intersect` shape), but it was not re-verified against `_combo`'s own disassembly
+in this session — that verification, and testing it (removing the `fy2`/`ply2`/`pry1`/`pry2` locals
+while reusing `fy1`/`ply1`/`lastY` directly in the `line_intersect` argument list rather than through
+copy variables), is the next concrete step here rather than a fourth guess.
 
 ## Measurements (all with fresh `tu_context_probe.py` labels, `--order historical`, empty `losses` throughout — the pre-existing baseline noise `check_beta_tester, line_alert, show_instructions, start_reward, stopGameMusic, uninit_game` never changed across any variant in this file)
 
