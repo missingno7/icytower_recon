@@ -145,16 +145,60 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
                 offset = curr_file_id;
         }
 
+        /* 892: blit target is swap_screen, not screen -- confirmed by the
+         * 0x4dd194 operand at every call in this whole present sequence
+         * (blit, draw_replay_selector's bmp arg, blit_to_screen). */
         if (pageY > targetY)
             pageY -= (pageY - targetY) / 3 + 1;
-        blit(bg, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
-        set_trans_blender(0, 0, 0, (500 - pageY) / 3);
-        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
-        rectfill(screen, 0, 0, SCREEN_W, SCREEN_H, makecol(0, 0, 0));
-        solid_mode();
-        draw_replay_selector(screen, rep, itr_file_list, curr_file_id, offset,
-                             page_size, 120, pageY + 120);
-        blit_to_screen(screen);
+        blit(bg, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);           /* 892 */
+        set_trans_blender(0, 0, 0, (500 - pageY) / 3);                    /* 894 */
+        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                            /* 895 */
+        /* 896: rectfill's bottom-right corner is gfx_driver->w/->h (0x70/0x6c)
+         * when a driver is installed, not the SCREEN_W/SCREEN_H constants. */
+        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,          /* 896 */
+                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        solid_mode();                                                        /* 897 */
+        draw_replay_selector(swap_screen, rep, itr_file_list, curr_file_id,   /* 899 */
+                             offset, page_size, 120, pageY);
+        blit_to_screen(swap_screen);                                          /* 900 */
+        /* 902: a wait loop distinct from the plain checkMenuFocus()/rest(2)
+         * pair the current source has -- spins on cycle_count via rest(2),
+         * and snapshots curr_file_id into a second local (used as the
+         * *second* draw_replay_selector call's `selection` argument below)
+         * before the wait. */
+        if (cycle_count > 0) {
+            int frozen_selection = curr_file_id;                              /* 902 */
+
+            do {
+                rest(2);                                                        /* 902 */
+            } while (cycle_count <= 0);
+
+            /* 904: skip the second pass entirely when rep is NULL. */
+            if (rep) {
+                /* 906/907/908: pageY interpolates toward 510 (not targetY) at
+                 * a fixed 0.2 rate, only while pageY <= 499; cycle_count is
+                 * reset to 0 here (distinct from the reset already implicit
+                 * in the wait loop above). */
+                if (pageY <= 499) {
+                    cycle_count = 0;                                             /* 907 */
+                    pageY = (int)(0.2 * (510 - pageY) + pageY);                    /* 908 */
+                }
+                /* 911..916: a second blit/blend/drawing_mode/rectfill/solid_mode
+                 * pass, identical in shape to 892..897 above. */
+                blit(bg, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);             /* 911 */
+                set_trans_blender(0, 0, 0, (500 - pageY) / 3);                      /* 913 */
+                drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                             /* 914 */
+                rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,           /* 915 */
+                         gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+                solid_mode();                                                        /* 916 */
+                /* 918: rep forced NULL and selection is the frozen snapshot,
+                 * not the live curr_file_id -- confirmed by comparing this
+                 * call's argument slots against 899's directly. */
+                draw_replay_selector(swap_screen, NULL, itr_file_list,               /* 918 */
+                                     frozen_selection, offset, page_size, 120, pageY);
+                blit_to_screen(swap_screen);                                          /* 919 */
+            }
+        }
         checkMenuFocus();
         rest(2);
         (void)ok_to_rename;

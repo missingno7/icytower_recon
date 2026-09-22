@@ -7,17 +7,21 @@ int init_game(int argc, char **argv)
     WSADATA wsaData;
     unsigned short wVersionRequested;
     char cfgfilename[256];
-    char profiles_dir[1024];
+    char profiledir[1024];
     char tmpHandle[32];
     char *replay_path;
-    PACKFILE *cfg;
+    char *checkFile;
+    char *ext;
+    char buf[8];
+    PACKFILE *fp;
     DATAFILE *loader;
     DATAFILE *sfx;
     BITMAP *fldLogo;
-    Tgamepad *pad;
+    Tgamepad *gp;
     int whiteColor;
     int check;
     int i;
+    int last_cc;
 
     tmpHandle[0]=0; /* 1382 */
     init_ok=0; /* 1385 */
@@ -66,20 +70,21 @@ int init_game(int argc, char **argv)
         check=0;
         i=1;
         do {
-            if (argv[i][0]!='-') /* 1494 */
-                replay_path=argv[i];
-            if (!stricmp(argv[i],"-check")) check=1; /* 1497 */
-            else if (!stricmp(argv[i],"-jumps")) cmdline.jumps=1; /* 1500 */
-            else if (!stricmp(argv[i],"-combos")) cmdline.combos=1; /* 1503 */
-            else if (!stricmp(argv[i],"-sd")) cmdline.sd=1; /* 1506 */
-            else if (!stricmp(argv[i],"-keys")) cmdline.keys=1; /* 1509 */
-            else if (!stricmp(argv[i],"-all")) { /* 1512 */
+            checkFile=argv[i]; /* 1494 */
+            if (checkFile[0]!='-')
+                replay_path=checkFile;
+            if (!stricmp(checkFile,"-check")) check=1; /* 1497 */
+            else if (!stricmp(checkFile,"-jumps")) cmdline.jumps=1; /* 1500 */
+            else if (!stricmp(checkFile,"-combos")) cmdline.combos=1; /* 1503 */
+            else if (!stricmp(checkFile,"-sd")) cmdline.sd=1; /* 1506 */
+            else if (!stricmp(checkFile,"-keys")) cmdline.keys=1; /* 1509 */
+            else if (!stricmp(checkFile,"-all")) { /* 1512 */
                 cmdline.jumps=1; /* 1513 */
                 cmdline.combos=1; /* 1514 */
                 cmdline.sd=1; /* 1515 */
                 cmdline.keys=1; /* 1516 */
             }
-            else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1; /* 1518 */
+            else if (!stricmp(checkFile,"-tiny")) cmdline.tiny=1; /* 1518 */
             i++; /* 1493 */
         } while (i<argc); /* 1493 */
         if (!check) { /* 1524 */
@@ -106,7 +111,8 @@ int init_game(int argc, char **argv)
         demo=load_replay(argv[1]); /* 1552 */
         if (!demo) { /* 1553 */
             strcpy(tmpHandle,get_filename(argv[1])); /* 1555 */
-            get_extension(tmpHandle)[-1]=0; /* 1556 */
+            ext=get_extension(tmpHandle); /* 1556 */
+            ext[-1]=0;
             profile=load_profile(tmpHandle); /* 1558 */
             if (!profile) { /* 1559 */
                 tmpHandle[0]=0; /* 1560 */
@@ -136,13 +142,13 @@ int init_game(int argc, char **argv)
     init_control(&ctrl); /* 1591 */
     get_configfile_path(cfgfilename,sizeof(cfgfilename)); /* 1595 */
     log2file("Loading config file"); /* 1597 */
-    cfg=pack_fopen(cfgfilename,"rp"); /* 1598 */
-    if (cfg) { /* 1599 */
-        load_options(&options,cfg); /* 1600 */
+    fp=pack_fopen(cfgfilename,"rp"); /* 1598 */
+    if (fp) { /* 1599 */
+        load_options(&options,fp); /* 1600 */
         for (i=0;i<15;i++) /* 1601 */
-            if (!load_hisc_table(hisc_tables[i],cfg)) /* 1602 */
+            if (!load_hisc_table(hisc_tables[i],fp)) /* 1602 */
                 reset_hisc_table(hisc_tables[i],"Harold",1000,0); /* 1603 */
-        pack_fclose(cfg); /* 1606 */
+        pack_fclose(fp); /* 1606 */
     } else
     {
         log2file("*** failed."); /* 1609 */
@@ -243,24 +249,24 @@ int init_game(int argc, char **argv)
         if (exists("gamepad.txt")) { /* 1763 */
             log2file(" getting values from gamepad.txt"); /* 1766 */
             set_config_file("gamepad.txt"); /* 1767 */
-            pad=get_gamepad(); /* 1765 */
-            pad->up=get_gamepad_value("up"); /* 1768 */
-            pad->left=get_gamepad_value("left"); /* 1769 */
-            pad->right=get_gamepad_value("right"); /* 1770 */
-            pad->down=get_gamepad_value("down"); /* 1771 */
+            gp=get_gamepad(); /* 1765 */
+            gp->up=get_gamepad_value("up"); /* 1768 */
+            gp->left=get_gamepad_value("left"); /* 1769 */
+            gp->right=get_gamepad_value("right"); /* 1770 */
+            gp->down=get_gamepad_value("down"); /* 1771 */
             for (i=1;i<=32;i++) { /* 1772 */
-                sprintf(cfgfilename,"b%d",i); /* 1774 */
-                pad->b[i-1]=get_gamepad_value(cfgfilename); /* 1775 */
+                sprintf(buf,"b%d",i); /* 1774 */
+                gp->b[i-1]=get_gamepad_value(buf); /* 1775 */
             }
         } else {
             log2file(" gamepad.txt is missing, setting defaults"); /* 1780 */
-            pad=get_gamepad(); /* 1779 */
-            pad->up=4; /* 1781 */
-            pad->left=1; /* 1782 */
-            pad->right=2; /* 1783 */
-            pad->down=8; /* 1784 */
+            gp=get_gamepad(); /* 1779 */
+            gp->up=4; /* 1781 */
+            gp->left=1; /* 1782 */
+            gp->right=2; /* 1783 */
+            gp->down=8; /* 1784 */
             for (i=0;i<32;i++) /* 1785 */
-                pad->b[i]=16; /* 1786 */
+                gp->b[i]=16; /* 1786 */
         }
     } else
         log2file(" no gamepad or joystick found, play with keyboard only"); /* 1791 */
@@ -304,15 +310,15 @@ int init_game(int argc, char **argv)
         ((RGB *)data[0].dat)[0].b=0;
         gameover_bmp=data[55].dat; /* 1850 */
         log2file("Checking profile directory"); /* 1855 */
-        get_profiles_dir(profiles_dir,sizeof(profiles_dir)); /* 1858 */
-        if (!file_exists(profiles_dir,FA_DIREC,0)) { /* 1860 */
+        get_profiles_dir(profiledir,sizeof(profiledir)); /* 1858 */
+        if (!file_exists(profiledir,FA_DIREC,0)) { /* 1860 */
             log2file("  does not exist, trying to create"); /* 1861 */
-            mkdir(profiles_dir); /* 1863 */
+            mkdir(profiledir); /* 1863 */
         }
-        if (!file_exists(profiles_dir,FA_DIREC,0)) { /* 1867 */
+        if (!file_exists(profiledir,FA_DIREC,0)) { /* 1867 */
             log2file("  *** failed!"); /* 1868 */
             set_gfx_mode(GFX_TEXT,0,0,0,0); /* 1869 */
-            allegro_message("Failed to create profile directory %s",profiles_dir); /* 1870 */
+            allegro_message("Failed to create profile directory %s",profiledir); /* 1870 */
             return 0; /* 1871 */
         }
         log2file("Checking available profiles"); /* 1876 */
@@ -406,11 +412,11 @@ int init_game(int argc, char **argv)
     draw_progress_bar(); /* 2064 */
     log2file("Welcome to Icy Tower"); /* 2069 */
     draw_progress_bar(); /* 2070 */
-    i=0; /* 2072 */
+    last_cc=0; /* 2072 */
     while (!keypressed() && cycle_count<=149) { /* 2072 */
-        if (!(cycle_count%10) && i!=cycle_count) { /* 2073 */
+        if (!(cycle_count%10) && last_cc!=cycle_count) { /* 2073 */
             draw_progress_bar(); /* 2075 */
-            i=cycle_count; /* 2076 */
+            last_cc=cycle_count; /* 2076 */
         }
         rest(2); /* 2078 */
     }
