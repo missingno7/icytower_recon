@@ -376,3 +376,40 @@ for "introducing" the attribute that the generated prototype merely echoed.
 
 The first transaction through this path promoted `dumpHTTPResponse` exact and `HTTPFetchInternal` with
 it, 7 -> 9 exact in that unit, and took the project's MISSING count to zero.
+
+## 13. Three ways a reconstruction reads as "missing code" when it is not
+
+Most of a session's wasted effort goes into deficits that are not deficits.  Three causes have each
+appeared more than once and each has a cheap check.
+
+**A statement with no `/* NNNN */` annotation is invisible.**  `line_budget --annotations` maps our
+lines to historical ones through those comments and inherits the previous statement's number until a
+new one appears, so an unannotated block is credited to whatever preceded it.  In `play`'s W1b this
+read as lines 3551, 3563, 3565 and 3567 producing zero bytes and led to a conclusion that the whole
+focus-handling branch was being eliminated as dead code; the object in fact contained four
+`voice_stop` references.  Before investigating any zero-byte line, check that the statement carries
+its own annotation.  The same artifact inflated a neighbouring line by 60 bytes in W5 because a
+multi-line statement was annotated on its last physical line instead of its first.
+
+**A tool's silence is not evidence.**  `function_data_refs.py` scans operands matching `0x4c….0x51….`
+only, so it resolves nothing in the `0x4b` range and reported no symbols for `0x4bc020`, `0x4bc024`
+and `0x4bc174`.  Those are `hasFocus`, `lastFocus` and `checkMusicVoiceID`, all plainly listed in
+`evidence/census/globals.json`.  Likewise `dwarf_locations.expression_at()` returns None whenever two
+location-list entries cover a PC, which reads as "this local is not live here" and hides most of a
+real table.  When a tool says nothing, check the tool's range before drawing a conclusion.
+
+**A variable our build can prove constant is one whose other writers are missing.**  This is the
+mirror of the dead-write rule in section 9, and it has now appeared three times.  `aightScore` looked
+dead because its reset at line 4022 was placed outside the `if` that guards it, so it was 0 or 2 on
+every path and GCC deleted the 4016..4019 body outright; the original's `jle` at offset 2373 jumps
+past both of that line's stores, which makes the reset conditional and lets the counter accumulate.
+`quit` regressed `play` by 102 bytes when a single `quit = 0;` was added at line 4668, because the
+original has three writes in that stretch and the middle one, `quit = <register>` at 4662, is a
+value rather than a constant: it is the non-constant write that keeps the variable opaque across the
+seven downstream reads, and the two zeros only make sense with it.  `time_cheat_count` shows the same
+signature in the `rep stos` fills at 4402..4406.
+
+The rule that follows: **never land a partial write set.**  A subset of a variable's writes is worse
+than none, because it hands the optimiser a constant the original never had and the resulting
+deletions are attributed to whatever line happens to own them, misleading everyone else measuring the
+same function.
