@@ -16,7 +16,7 @@ int play(void)
     int scroll_acc;
     int scroll;
     int max_scroll;
-    int speeds[9] = { 1500, 3000, 4500, 6000, 7500, 9000, 10500, 12000, 13500 };
+    int speeds[9] = { 1500, 3000, 4500, 6000, 7500, 9000, 10500, 1800000, 9000000 };
     int next_speed;
     int next_aight;
     int allow_smpl;
