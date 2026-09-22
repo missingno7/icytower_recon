@@ -33,21 +33,27 @@ void blit_to_screen(BITMAP *bmp)
         blit(bmp, screen, 0, 0, 0, y - 480, bmp->w, bmp->h);     /* 2302 */
     }
     else if (blit_mode == 5) {                                 /* 2304 */
-        int x = (int)(ply[player_id]->x - 160.0);                /* 2305 */
-        int y = (int)(ply[player_id]->y - 160.0);                /* 2306 */
-        if (x < 0) x = 0;
-        else if (x > 320) x = 320;
-        if (y < 0) y = 0;
-        else if (y > 240) y = 240;
+        double dx = ply[player_id]->x - 160.0;                   /* 2305 */
+        double dy = ply[player_id]->y - 160.0;                   /* 2306 */
+        int x, y;
+        if (dx <= 0.0) x = 0;
+        else if (dx > 320.0) x = 320;
+        else x = (int)dx;
+        if (dy <= 0.0) y = 0;
+        else if (dy > 240.0) y = 240;
+        else y = (int)dy;
         stretch_blit(bmp, screen, x, y, 320, 240, 0, 0, 640, 480); /* 2307 */
     }
     else if (blit_mode == 6) {                                 /* 2309 */
-        int x = (int)(ply[player_id]->x - 80.0);                 /* 2310 */
-        int y = (int)(ply[player_id]->y - 80.0);                  /* 2311 */
-        if (x < 0) x = 0;
-        else if (x > 520) x = 520;
-        if (y < 0) y = 0;
-        else if (y > 360) y = 360;
+        double dx = ply[player_id]->x - 80.0;                    /* 2310 */
+        double dy = ply[player_id]->y - 80.0;                    /* 2311 */
+        int x, y;
+        if (dx <= 0.0) x = 0;
+        else if (dx > 520.0) x = 520;
+        else x = (int)dx;
+        if (dy <= 0.0) y = 0;
+        else if (dy > 360.0) y = 360;
+        else y = (int)dy;
         stretch_blit(bmp, screen, x, y, 160, 120, 0, 0, 640, 480); /* 2312 */
     }
     else {

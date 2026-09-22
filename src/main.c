@@ -889,6 +889,89 @@ void handle_player_collision_vector_2(int lastX, int lastY);
 void handle_player_collision_combo(int lastX, int lastY);
 int init_game(int argc, char **argv);
 
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
 void line_alert(char *text)
 {
     int color;
@@ -979,35 +1062,59 @@ int my_alert(char *func, char *txt, int choice, int enter_hint)
     Tcontrol *menu_ctrl = &menu_params.ctrl;
     int status = 0;
     int done = 0;
+    int w;
+    int width, height;
 
-    set_trans_blender(0, 0, 0, 158);
-    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
-    rectfill(screen, 0, 0, SCREEN_W - 1, SCREEN_H - 1, makecol(0, 0, 0));
-    solid_mode();
-    blit(screen, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
-    textprintf_centre_ex(screen, data[204].dat, 320, 135, -1, -1, "%s", func ? func : "");
+    w = MAX(text_length(data[51].dat, func ? func : " "),      /* 467 */
+            text_length(data[51].dat, txt ? txt : " "));
+    gui_fg_color = makecol(0, 0, 0);                           /* 470 */
+    gui_bg_color = makecol(255, 255, 255);                     /* 471 */
+    set_trans_blender(0, 0, 0, 158);                           /* 473 */
+    drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                    /* 474 */
+    width = 0;
+    height = 0;
+    if (gfx_driver) {
+        height = gfx_driver->h;
+        width = gfx_driver->w;
+    }
+    rectfill(screen, 0, 0, width, height, makecol(0, 0, 0));   /* 475 */
+    solid_mode();                                              /* 476 */
+    blit(screen, swap_screen, 0, 0, 0, 0, 639, 479); /* 478 */
+    acquire_bitmap(screen);
+    draw_sprite(screen, data[88].dat, 103, 130);                /* 485 */
+    textprintf_centre_ex(screen, data[51].dat, 320, 135, -1, -1, "%s", func); /* 486 */
     if (txt)
-        textout_centre_ex(screen, data[216].dat, txt, 320, 180, makecol(0, 0, 0), -1);
-    while (is_any(&ctrl) || is_any(menu_ctrl) || key[KEY_ESC]) {
+        textout_centre_ex(screen, data[54].dat, txt, 320, 180, makecol(0, 0, 0), -1); /* 487 */
+    if (enter_hint)                                            /* 488 */
+        textout_right_ex(screen, data[54].dat, "(enter to continue)", 520, 200,
+                         makecol(80, 80, 80), -1);              /* 489 */
+    while (is_any(&ctrl) || is_any(menu_ctrl) || key[KEY_ESC]) { /* 493 */
         poll_control(&ctrl, 0); poll_control(menu_ctrl, 0); rest(2);
     }
-    clear_keybuf();
-    while (!done && !closeButtonClicked) {
-        poll_control(&ctrl, 0); poll_control(menu_ctrl, 0);
-        if (is_left(&ctrl) || is_left(menu_ctrl)) status = -1;
-        if (is_right(&ctrl) || is_right(menu_ctrl)) status = 0;
-        if (is_fire(&ctrl) || is_fire(menu_ctrl) || is_enter(menu_ctrl)) done = -1;
-        if (choice) {
-            draw_sprite(screen, data[status == -1 ? 11 : 10].dat, 240, 220);
-            draw_sprite(screen, data[status == -1 ? 8 : 7].dat, 365, 220);
+    clear_keybuf();                                            /* 500 */
+    while (!done && !closeButtonClicked) {                     /* 502 */
+        cycle_count = 0;                                       /* 503 */
+        poll_control(&ctrl, 0); poll_control(menu_ctrl, 0);     /* 504 */
+        if (is_left(&ctrl) || is_left(menu_ctrl)) status = -1;  /* 507 */
+        if (is_right(&ctrl) || is_right(menu_ctrl)) status = 0; /* 510 */
+        if (key[KEY_ESC]) {                                    /* 514 */
+            done = -1;
+            status = 0;
         }
-        if (enter_hint)
-            textout_right_ex(screen, data[216].dat, "Enter", 520, 200,
-                             makecol(80, 80, 80), -1);
-        if (!done) rest(2);
+        if (is_fire(&ctrl) || is_fire(menu_ctrl) || is_enter(menu_ctrl)) done = -1; /* 519 */
+        if (choice) {                                          /* 523 */
+            vsync();                                           /* 525 */
+            draw_sprite(screen, data[status == -1 ? 11 : 10].dat, 240, 220); /* 527 */
+            draw_sprite(screen, data[status == -1 ? 8 : 7].dat, 365, 220);   /* 529 */
+        }
+        if (!cycle_count) rest(2);                             /* 532 */
     }
-    blit(swap_screen, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
-    return status;
+    while (is_any(&ctrl) || is_any(menu_ctrl) || key[KEY_ESC] || key[KEY_ENTER]) { /* 537 */
+        poll_control(&ctrl, 0); poll_control(menu_ctrl, 0); rest(2); /* 538 */
+    }
+    clear_keybuf();                                            /* 543 */
+    blit(swap_screen, screen, 0, 0, 0, 0, 639, 479); /* 545 */
+    return status;                                              /* 548 */
 }
 
 void show_credits(void)
@@ -1527,29 +1634,63 @@ void replaceBadCharacters(char *string, char newChar)
 void blit_to_screen(BITMAP *bmp)
 {
     if (debug) {
-        if (key[56]) blit_mode = 0;
-        if (key[57]) blit_mode = 1;
-        if (key[58]) blit_mode = 2;
-        if (key[59]) blit_mode = 3;
-        if (key[60]) blit_mode = 4;
-        if (key[61]) blit_mode = 5;
-        if (key[62]) blit_mode = 6;
+        if (key[56]) blit_mode = 0;                      /* 2271 */
+        if (key[57]) blit_mode = 1;                       /* 2272 */
+        if (key[58]) blit_mode = 2;                       /* 2273 */
+        if (key[59]) blit_mode = 3;                       /* 2274 */
+        if (key[60]) blit_mode = 4;                       /* 2275 */
+        if (key[61]) blit_mode = 5;                       /* 2276 */
+        if (key[62]) blit_mode = 6;                       /* 2277 */
     }
     acquire_screen();
-    switch (blit_mode) {
-    case 1:
-        draw_sprite_h_flip(screen, bmp, 0, 0);
-        break;
-    case 2:
-        draw_sprite_v_flip(screen, bmp, 0, 0);
-        break;
-    case 5:
-        stretch_blit(bmp, screen, 0, 0, bmp->w, bmp->h,
-                     160, 120, 320, 240);
-        break;
-    default:
+    if (!blit_mode) {                                          /* 2282 */
         blit(bmp, screen, 0, 0, 0, 0, bmp->w, bmp->h);
-        break;
+    }
+    else if (blit_mode == 1) {                                 /* 2285 */
+        draw_sprite_h_flip(screen, bmp, 0, 0);                 /* 2286 */
+    }
+    else if (blit_mode == 2) {                                 /* 2288 */
+        draw_sprite_v_flip(screen, bmp, 0, 0);                 /* 2289 */
+    }
+    else if (blit_mode == 3) {                                 /* 2291 */
+        int y;
+        for (y = 0; y < 480; y++) {                            /* 2293 */
+            int x = fixtoi(fixsin(itofix(y + logic_count * 5)) *
+                            ply[player_id]->level);              /* 2294 */
+            blit(bmp, screen, 0, y, x, y, 640, 1);
+        }
+    }
+    else if (blit_mode == 4) {                                 /* 2297 */
+        int y = ply[player_id]->level % 480;                    /* 2298 */
+        blit(bmp, screen, 0, 0, 0, y, bmp->w, bmp->h);           /* 2301 */
+        blit(bmp, screen, 0, 0, 0, y - 480, bmp->w, bmp->h);     /* 2302 */
+    }
+    else if (blit_mode == 5) {                                 /* 2304 */
+        double dx = ply[player_id]->x - 160.0;                   /* 2305 */
+        double dy = ply[player_id]->y - 160.0;                   /* 2306 */
+        int x, y;
+        if (dx <= 0.0) x = 0;
+        else if (dx > 320.0) x = 320;
+        else x = (int)dx;
+        if (dy <= 0.0) y = 0;
+        else if (dy > 240.0) y = 240;
+        else y = (int)dy;
+        stretch_blit(bmp, screen, x, y, 320, 240, 0, 0, 640, 480); /* 2307 */
+    }
+    else if (blit_mode == 6) {                                 /* 2309 */
+        double dx = ply[player_id]->x - 80.0;                    /* 2310 */
+        double dy = ply[player_id]->y - 80.0;                    /* 2311 */
+        int x, y;
+        if (dx <= 0.0) x = 0;
+        else if (dx > 520.0) x = 520;
+        else x = (int)dx;
+        if (dy <= 0.0) y = 0;
+        else if (dy > 360.0) y = 360;
+        else y = (int)dy;
+        stretch_blit(bmp, screen, x, y, 160, 120, 0, 0, 640, 480); /* 2312 */
+    }
+    else {
+        blit(bmp, screen, 0, 0, 0, 0, bmp->w, bmp->h);
     }
     release_screen();
 }
@@ -1790,14 +1931,12 @@ int do_replay_menu(void)
             log2file("  save replay selected");
             memset(filename,' ',511);
             filename[511]=0;
-            memset(player_name,' ',511);
-            player_name[511]=0;
-            memset(comment,' ',511);
-            comment[511]=0;
             if (isGuest)
                 strcpy(player_name," - ");
             else
                 strcpy(player_name,profile->handle);
+            memset(comment,' ',511);
+            comment[511]=0;
             state=!isGuest;
             while (!closeButtonClicked && state!='*') {
                 stretch_sprite(swap_screen,data[86].dat,120,140,380,200);

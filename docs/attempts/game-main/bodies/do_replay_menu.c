@@ -39,14 +39,12 @@ int do_replay_menu(void)
             log2file("  save replay selected");
             memset(filename,' ',511);
             filename[511]=0;
-            memset(player_name,' ',511);
-            player_name[511]=0;
-            memset(comment,' ',511);
-            comment[511]=0;
             if (isGuest)
                 strcpy(player_name," - ");
             else
                 strcpy(player_name,profile->handle);
+            memset(comment,' ',511);
+            comment[511]=0;
             state=!isGuest;
             while (!closeButtonClicked && state!='*') {
                 stretch_sprite(swap_screen,data[86].dat,120,140,380,200);

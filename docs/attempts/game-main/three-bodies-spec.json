@@ -1,0 +1,11 @@
+{
+ "target": "game-main",
+ "source": "src/main.c",
+ "order": "current",
+ "bodies": {
+  "blit_to_screen": "docs/attempts/game-main/bodies/blit_to_screen.c",
+  "my_alert": "docs/attempts/game-main/bodies/my_alert.c",
+  "do_replay_menu": "docs/attempts/game-main/bodies/do_replay_menu.c"
+ },
+ "evidence": "Retained complete bodies. blit_to_screen regains its if/else chain and the four scaling modes (the fixsin wave over ply[player_id]->level, the wrap-around pair and the two clamped camera windows, whose clamps compare in float before truncating): 466 -> 1239 of 1415. my_alert regains the MAX(text_length,text_length) width, the alert panel graphic, the gui colour setup, vsync, the ESC handling, the key-release wait and the one-off hint text: 1317 -> 1774 of 1770. do_replay_menu drops a memset of player_name that the original does not perform before its strcpy: 2146 -> 2159 of 2661."
+}
