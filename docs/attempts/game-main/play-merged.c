@@ -59,6 +59,13 @@ int play(void)
     int totMusics;
     LARGE_INTEGER li;
     int qpc_freq;
+    /* The reset block at line 3520 also zeroes ebp-0x928, a slot no DWARF local claims:
+     * every other slot that burst writes maps to a named function-level local, and the
+     * twelve function-scope locals whose DWARF location was optimized away are the only
+     * candidates.  Its lifetime (0 at 3520, 1 at 4003/4004, a conditional increment at
+     * 4015, compared with 250 at 4016, 0 at 4022) spans the whole game loop, so it is a
+     * function-level local and not a block local; the name here is provisional. */
+    int aightScore;
 
     rec_ctrl = ctrl;                                   /* line 3439 */
     if (!itrcheck) {                                   /* line 3441 (else-branch placed inline by -O2) */
@@ -115,9 +122,7 @@ int play(void)
     next_floor = -1;
     step_count = 0;
     shake = 0;
-    /* UNRESOLVED: a compiler stack temp at -0x928(%ebp) is also zeroed here as part of the same
-     * reset block (line 3520); it matches no DWARF local in play.json (locals + nested-block locals
-     * all checked) and no global at that PC -- no statement emitted for it. */
+    aightScore = 0;
     game_over = 0;
     allow_smpl = 1;
     next_aight = 50;
@@ -438,7 +443,10 @@ int play(void)
                 if (diff > 0) {                                          /* 3911 */
                     if (diff <= 5)                                       /* 3912 */
                         ply[player_id]->jc[diff - 1]++;                  /* 3913 */
-                    if (diff != 1) {                                     /* 3919 */
+                    if (diff != 1) {                                     /* 3919: dec+je on diff (offset
+                                                                            * 6071/6072) -- the diff==1 case
+                                                                            * jumps straight to offset 15650,
+                                                                            * bypassing this whole block. */
                         if (ply[player_id]->in_combo) {                  /* 3920 */
                             ply[player_id]->acc_level += diff;           /* 3921 */
                             ply[player_id]->acc_jumps++;                 /* 3922 */
@@ -447,16 +455,30 @@ int play(void)
                             ply[player_id]->acc_jumps = 1;               /* 3927 */
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
-                        lastJumpLength = diff;                          /* 3928 tail */
-                    } else if (ply[player_id]->in_combo) {               /* 3932: two-part condition,
-                                                                            * diff==1 (offset 3888) &&
-                                                                            * in_combo!=0 (offset 3897,
-                                                                            * reusing eax from the reload
-                                                                            * at 3916, not a redundant
-                                                                            * re-test of diff) */
-                        ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
+                        lastJumpLength = diff;                          /* 3932: shared tail for both arms
+                                                                            * above -- offset 6120..6150,
+                                                                            * reached by fallthrough from the
+                                                                            * in_combo arm (offset 6113..6120)
+                                                                            * and by "jmp 4131e8" from the
+                                                                            * else arm (offset 7570), which
+                                                                            * targets that same offset 6120.
+                                                                            * local_slot_trace confirms this
+                                                                            * is the ONLY write of diff into
+                                                                            * lastJumpLength's slot. */
+                    } else {
+                        lastJumpLength = 1;                              /* 3928: slot trace shows a literal
+                                                                            * $0x1 store at offset 15650,
+                                                                            * reached only via 3919's diff==1
+                                                                            * jump (offset 6072 je 415722 =
+                                                                            * offset 15650) -- unconditional
+                                                                            * on diff==1, before the in_combo
+                                                                            * test below. */
+                        if (ply[player_id]->in_combo)                   /* 3932: in_combo test at offset
+                                                                            * 3897 (cmpl $0x0,0x40(%eax)),
+                                                                            * reached here via the jmp at
+                                                                            * offset 15660. */
+                            ply[player_id]->in_combo = 1;                /* 3933: store, evidenced after
                                                                             * the test at offset 3903 */
-                        lastJumpLength = diff;                          /* 3932 tail: offset 6120..6150 */
                     }
                 }
                 /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
@@ -473,6 +495,10 @@ int play(void)
                         ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3949 */
                     ply[player_id]->jc[i] = 0;                             /* 3952 */
                 }
+                lastJumpLength = 0;                                     /* 3945: slot trace shows a second
+                                                                            * write to lastJumpLength's slot
+                                                                            * here (offset 4454), missing from
+                                                                            * this block until now. */
                 ply[player_id]->level = level;                          /* 3962 */
                 if (!numComboJumps &&                                    /* 3967 */
                     ply[player_id]->no_combo_top_floor < ply[player_id]->level)
@@ -499,39 +525,49 @@ int play(void)
 
         add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
         {
-            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it.
-             * Both arms fall through unconditionally into the y<900 combo body below (traced
-             * from the tail-duplicated machine code at offsets 2266..2304 / 5797..5848: the
-             * no_combo_top_floor update is the only part actually gated). See report. */
-            int aightScore;
+            /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
+             * block zeroes, so it is declared with play's other locals, not here: as a block
+             * local re-initialised every iteration GCC could prove it never passed 250 and
+             * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
+             * the y<900 combo body below (traced from the tail-duplicated machine code at
+             * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
+             * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
+             * only part actually gated). */
 
             if (numComboJumps) {                                               /* 4003 */
                 lastJumpLength = 0;
+                aightScore = 1;                                                 /* 4003 */
             } else {
                 if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
                     ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
                 lastJumpLength = 0;
+                aightScore = 1;                                                 /* 4004 */
             }
-            aightScore = 1;
             if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
                 play_sound(speaker[1], 0, 0);                                   /* 4012 */
                 game_over = 2;
             }
-            aightScore++;                                                       /* 4015 */
+            if (aightScore)                                                     /* 4015 */
+                aightScore++;                                                   /* 4015 */
             if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
                 play_sound(sounds[6], 1, 0);                                    /* 4017 */
                 if (custom.falling)                                            /* 4018 */
                     stop_sample(custom.falling);                               /* 4019 */
             }
             ply[player_id]->shake = 0x18;                                       /* 4022 */
-            aightScore = 0;
+            aightScore = 0;                                                     /* 4022 */
             if (next_aight > ply[player_id]->level) {                           /* 4027 */
                 play_sound(sounds[2], 0, 0);                                    /* 4028 */
             }
         }
         if (!options.flash) {                                                  /* 4029 */
-            midX = next_aight / 2;                                             /* 4031 */
-            for (i = 0; i < midX; i++) {                                       /* 4029/4123 */
+            /* midX = next_aight / 2 is evaluated as the loop bound: the shr/add/sar division
+             * (rounding toward zero) is credited to main.c:4029 itself (the compiler folds it
+             * into the for-init/condition), while the spill store to midX's own stack slot
+             * (DWARF -0x940(%ebp)) lands on main.c:4031, the loop body's first real statement
+             * (source-view 4000..4055: fragments 3987..4024 tagged 4029, 4024..4036 tagged
+             * 4031) -- so the assignment and the loop share one combined-init statement. */
+            for (i = 0, midX = next_aight / 2; i < midX; i++) {                 /* 4029/4123 */
                 int p;                                                          /* 4031 block-local */
                 p = create_particle(stars, (new_rand() % 600) + 20, 480);       /* 4030 */
                 stars[p].sy = -(((new_rand() % 200) << 16) / 5);                /* 4031 */
@@ -744,7 +780,7 @@ int play(void)
                         log2file("  replay paused");                          /* 4272 */
                         while (key[KEY_SPACE])                                /* 4273: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);
-                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
+                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&          /* 4274: pause-wait loop */
                                !key[KEY_ESC] && !key[KEY_UP]) {               /* 4274: pause-wait loop */
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
@@ -770,7 +806,13 @@ int play(void)
                                 next_floor = demo->floor - 10;
                         }
                     }
-                    if (ply[player_id]->level >= next_floor) {                /* 4309 */
+                    /* source-view 4270..4320: the level>=next_floor test (fragments 3390..3412)
+                     * falls straight into the reset; the level<next_floor case instead jumps to
+                     * a second, out-of-line test of ply[player_id]->dead (fragments 7984..7999)
+                     * that also reaches the reset when dead != 0 -- one condition, two tested
+                     * terms ORed, not just the level compare. */
+                    if (ply[player_id]->level >= next_floor ||
+                        ply[player_id]->dead) {                              /* 4309 */
                         fast_fast_forward = 0;                                /* 4310 */
                         next_floor = -1;
                     }
@@ -810,8 +852,8 @@ int play(void)
                     while (cycle_count == 0)                                  /* 4357 */
                         rest(2);
                 } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
-                    while (cycle_count <= 7)                                  /* 4361/4363 */
-                        rest(2);
+                    while (cycle_count <= 7)                                  /* 4361 */
+                        rest(2);                                              /* 4363 */
                 }
             }
         }
@@ -1385,7 +1427,12 @@ int play(void)
                     while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */
                         /* ? the two-stage key test at these lines (checked twice, once before
                          * and once after the fall-through) may debounce a stale press; no
-                         * distinguishing branch structure survives at the C level */
+                         * distinguishing branch structure survives at the C level. Tried an
+                         * explicit do-while to force the compiler to emit a separate entry test
+                         * and loop-back test (matching the original's distinct instruction
+                         * sequences at 4986 vs 4987); GCC canonicalized `if(cond) do{}while(cond);`
+                         * back into a single shared test (40 bytes at 4986, still 0 at 4987) --
+                         * worse than the plain while's single ~28-byte test, so reverted. */
                     }
                 }
             }

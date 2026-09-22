@@ -59,6 +59,13 @@ int play(void)
     int totMusics;
     LARGE_INTEGER li;
     int qpc_freq;
+    /* The reset block at line 3520 also zeroes ebp-0x928, a slot no DWARF local claims:
+     * every other slot that burst writes maps to a named function-level local, and the
+     * twelve function-scope locals whose DWARF location was optimized away are the only
+     * candidates.  Its lifetime (0 at 3520, 1 at 4003/4004, a conditional increment at
+     * 4015, compared with 250 at 4016, 0 at 4022) spans the whole game loop, so it is a
+     * function-level local and not a block local; the name here is provisional. */
+    int aightScore;
 
     /* REGION W1a: lines 3405..3530 (locals init, rank, recording setup, first frame, music, timers) */
     rec_ctrl = ctrl;                                   /* line 3439 */
@@ -116,9 +123,7 @@ int play(void)
     next_floor = -1;
     step_count = 0;
     shake = 0;
-    /* UNRESOLVED: a compiler stack temp at -0x928(%ebp) is also zeroed here as part of the same
-     * reset block (line 3520); it matches no DWARF local in play.json (locals + nested-block locals
-     * all checked) and no global at that PC -- no statement emitted for it. */
+    aightScore = 0;
     game_over = 0;
     allow_smpl = 1;
     next_aight = 50;

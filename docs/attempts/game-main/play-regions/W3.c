@@ -59,6 +59,13 @@ int play(void)
     int totMusics;
     LARGE_INTEGER li;
     int qpc_freq;
+    /* The reset block at line 3520 also zeroes ebp-0x928, a slot no DWARF local claims:
+     * every other slot that burst writes maps to a named function-level local, and the
+     * twelve function-scope locals whose DWARF location was optimized away are the only
+     * candidates.  Its lifetime (0 at 3520, 1 at 4003/4004, a conditional increment at
+     * 4015, compared with 250 at 4016, 0 at 4022) spans the whole game loop, so it is a
+     * function-level local and not a block local; the name here is provisional. */
+    int aightScore;
 
     /* REGION W1a: lines 3405..3530 (locals init, rank, recording setup, first frame, music, timers) */
 
@@ -70,39 +77,49 @@ int play(void)
         /* REGION W3: lines 4000..4369 (combo sounds, quit/pause screens, screenshots, frame draw and pacing) */
         add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
         {
-            /* aightScore: compiler-only stack temp (-0x928(%ebp)), no DWARF local covers it.
-             * Both arms fall through unconditionally into the y<900 combo body below (traced
-             * from the tail-duplicated machine code at offsets 2266..2304 / 5797..5848: the
-             * no_combo_top_floor update is the only part actually gated). See report. */
-            int aightScore;
+            /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
+             * block zeroes, so it is declared with play's other locals, not here: as a block
+             * local re-initialised every iteration GCC could prove it never passed 250 and
+             * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
+             * the y<900 combo body below (traced from the tail-duplicated machine code at
+             * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
+             * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
+             * only part actually gated). */
 
             if (numComboJumps) {                                               /* 4003 */
                 lastJumpLength = 0;
+                aightScore = 1;                                                 /* 4003 */
             } else {
                 if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
                     ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
                 lastJumpLength = 0;
+                aightScore = 1;                                                 /* 4004 */
             }
-            aightScore = 1;
             if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
                 play_sound(speaker[1], 0, 0);                                   /* 4012 */
                 game_over = 2;
             }
-            aightScore++;                                                       /* 4015 */
+            if (aightScore)                                                     /* 4015 */
+                aightScore++;                                                   /* 4015 */
             if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
                 play_sound(sounds[6], 1, 0);                                    /* 4017 */
                 if (custom.falling)                                            /* 4018 */
                     stop_sample(custom.falling);                               /* 4019 */
             }
             ply[player_id]->shake = 0x18;                                       /* 4022 */
-            aightScore = 0;
+            aightScore = 0;                                                     /* 4022 */
             if (next_aight > ply[player_id]->level) {                           /* 4027 */
                 play_sound(sounds[2], 0, 0);                                    /* 4028 */
             }
         }
         if (!options.flash) {                                                  /* 4029 */
-            midX = next_aight / 2;                                             /* 4031 */
-            for (i = 0; i < midX; i++) {                                       /* 4029/4123 */
+            /* midX = next_aight / 2 is evaluated as the loop bound: the shr/add/sar division
+             * (rounding toward zero) is credited to main.c:4029 itself (the compiler folds it
+             * into the for-init/condition), while the spill store to midX's own stack slot
+             * (DWARF -0x940(%ebp)) lands on main.c:4031, the loop body's first real statement
+             * (source-view 4000..4055: fragments 3987..4024 tagged 4029, 4024..4036 tagged
+             * 4031) -- so the assignment and the loop share one combined-init statement. */
+            for (i = 0, midX = next_aight / 2; i < midX; i++) {                 /* 4029/4123 */
                 int p;                                                          /* 4031 block-local */
                 p = create_particle(stars, (new_rand() % 600) + 20, 480);       /* 4030 */
                 stars[p].sy = -(((new_rand() % 200) << 16) / 5);                /* 4031 */
@@ -315,7 +332,7 @@ int play(void)
                         log2file("  replay paused");                          /* 4272 */
                         while (key[KEY_SPACE])                                /* 4273: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);
-                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
+                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&          /* 4274: pause-wait loop */
                                !key[KEY_ESC] && !key[KEY_UP]) {               /* 4274: pause-wait loop */
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
@@ -341,7 +358,13 @@ int play(void)
                                 next_floor = demo->floor - 10;
                         }
                     }
-                    if (ply[player_id]->level >= next_floor) {                /* 4309 */
+                    /* source-view 4270..4320: the level>=next_floor test (fragments 3390..3412)
+                     * falls straight into the reset; the level<next_floor case instead jumps to
+                     * a second, out-of-line test of ply[player_id]->dead (fragments 7984..7999)
+                     * that also reaches the reset when dead != 0 -- one condition, two tested
+                     * terms ORed, not just the level compare. */
+                    if (ply[player_id]->level >= next_floor ||
+                        ply[player_id]->dead) {                              /* 4309 */
                         fast_fast_forward = 0;                                /* 4310 */
                         next_floor = -1;
                     }
@@ -381,8 +404,8 @@ int play(void)
                     while (cycle_count == 0)                                  /* 4357 */
                         rest(2);
                 } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
-                    while (cycle_count <= 7)                                  /* 4361/4363 */
-                        rest(2);
+                    while (cycle_count <= 7)                                  /* 4361 */
+                        rest(2);                                              /* 4363 */
                 }
             }
         }

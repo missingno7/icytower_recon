@@ -168,6 +168,18 @@ void draw_frame(BITMAP *bmp)
                     customFrame = custom.frame[10];
             }
             ox = -(customFrame->w / 2);                              /* 2636 */
+            /* 2638: fldl 0x10(%esi)/fldz/fucompp guards the draw. A second,
+             * larger physical copy of this same test exists at offset
+             * 3187..3285 vs a `jne` target of 0x40b26a (offset 8142..8245,
+             * draw.inl:280) that calls draw_sprite_h_flip instead of
+             * draw_sprite with the same ox/oy -- i.e. this is really
+             * `sx == 0.0 ? draw_sprite(...) : draw_sprite_h_flip(...)`.
+             * Writing that else arm here (in either or both textual copies
+             * of this duplicated block) raises the candidate total past
+             * historical (8518 -> 8545 with both, 8545 -> still over with
+             * one), so it is left as the single-call form pending a source
+             * shape that reproduces the byte count instead of just the
+             * call. */
             if (ply[player_id]->sx == 0.0) {                          /* 2638: fldl 0x10(%esi)/fldz/fucompp guards the draw */
                 oy = (int)ply[player_id]->y + oy;
                 ox = (int)ply[player_id]->x + ox;
@@ -217,13 +229,18 @@ void draw_frame(BITMAP *bmp)
         /* 2651: fldl 0x10(%edx)/fldz/fucompp guards the draw, then the fistpl-truncated y and x
          * are added onto the running oy/ox and the draw call issued -- offsets 2686..2786, all one
          * historical source line per function_lines --source-view. */
-        if (ply[player_id]->sx == 0) {                  /* 2651 */
-            oy = (int)ply[player_id]->y + oy;            /* 2651 */
-            ox = (int)ply[player_id]->x + ox;            /* 2651 */
+        /* 2651: sx!=0.0 arm (jne target 0x40b189 = offset 7917) reuses this same
+         * ox/oy computation (ecx/edi carry the untruncated oy/ox bases through
+         * unchanged, edx stays &ply[player_id] for both the x/y loads and, after
+         * the vtable reload, esi stays customFrame) and only swaps the call from
+         * *0x44(vtable) (draw_sprite) to *0x50(vtable) (draw_sprite_h_flip,
+         * offset 7917..8024), rejoining the same 409d9f continuation either way. */
+        oy = (int)ply[player_id]->y + oy;            /* 2651 */
+        ox = (int)ply[player_id]->x + ox;            /* 2651 */
+        if (ply[player_id]->sx == 0)                  /* 2651 */
             draw_sprite(bmp, customFrame, ox, oy);       /* 2651, draw.inl:238 */
-        }
-        /* ? ply[player_id]->sx != 0.0 (jne to offset 7917) leaves this region entirely --
-         * not reconstructed here, out of scope for D2 (historical lines end at 2651). */
+        else
+            draw_sprite_h_flip(bmp, customFrame, ox, oy);  /* 2651, draw.inl:280, offset 7917..8024 */
     }
 
     /* REGION D3: lines 2652..2768 (scroller, hurry bar, replay overlay, custom mode text) */

@@ -59,6 +59,13 @@ int play(void)
     int totMusics;
     LARGE_INTEGER li;
     int qpc_freq;
+    /* The reset block at line 3520 also zeroes ebp-0x928, a slot no DWARF local claims:
+     * every other slot that burst writes maps to a named function-level local, and the
+     * twelve function-scope locals whose DWARF location was optimized away are the only
+     * candidates.  Its lifetime (0 at 3520, 1 at 4003/4004, a conditional increment at
+     * 4015, compared with 250 at 4016, 0 at 4022) spans the whole game loop, so it is a
+     * function-level local and not a block local; the name here is provisional. */
+    int aightScore;
 
     /* REGION W1a: lines 3405..3530 (locals init, rank, recording setup, first frame, music, timers) */
 
@@ -253,7 +260,10 @@ int play(void)
                 if (diff > 0) {                                          /* 3911 */
                     if (diff <= 5)                                       /* 3912 */
                         ply[player_id]->jc[diff - 1]++;                  /* 3913 */
-                    if (diff != 1) {                                     /* 3919 */
+                    if (diff != 1) {                                     /* 3919: dec+je on diff (offset
+                                                                            * 6071/6072) -- the diff==1 case
+                                                                            * jumps straight to offset 15650,
+                                                                            * bypassing this whole block. */
                         if (ply[player_id]->in_combo) {                  /* 3920 */
                             ply[player_id]->acc_level += diff;           /* 3921 */
                             ply[player_id]->acc_jumps++;                 /* 3922 */
@@ -262,20 +272,30 @@ int play(void)
                             ply[player_id]->acc_jumps = 1;               /* 3927 */
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
+                        lastJumpLength = diff;                          /* 3932: shared tail for both arms
+                                                                            * above -- offset 6120..6150,
+                                                                            * reached by fallthrough from the
+                                                                            * in_combo arm (offset 6113..6120)
+                                                                            * and by "jmp 4131e8" from the
+                                                                            * else arm (offset 7570), which
+                                                                            * targets that same offset 6120.
+                                                                            * local_slot_trace confirms this
+                                                                            * is the ONLY write of diff into
+                                                                            * lastJumpLength's slot. */
+                    } else {
                         lastJumpLength = 1;                              /* 3928: slot trace shows a literal
-                                                                            * $0x1 store here (offset 15650),
-                                                                            * not a reload of diff -- distinct
-                                                                            * from the 3932 tail below, which
-                                                                            * does store diff (offset 6139). */
-                    } else if (ply[player_id]->in_combo) {               /* 3932: two-part condition,
-                                                                            * diff==1 (offset 3888) &&
-                                                                            * in_combo!=0 (offset 3897,
-                                                                            * reusing eax from the reload
-                                                                            * at 3916, not a redundant
-                                                                            * re-test of diff) */
-                        ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
+                                                                            * $0x1 store at offset 15650,
+                                                                            * reached only via 3919's diff==1
+                                                                            * jump (offset 6072 je 415722 =
+                                                                            * offset 15650) -- unconditional
+                                                                            * on diff==1, before the in_combo
+                                                                            * test below. */
+                        if (ply[player_id]->in_combo)                   /* 3932: in_combo test at offset
+                                                                            * 3897 (cmpl $0x0,0x40(%eax)),
+                                                                            * reached here via the jmp at
+                                                                            * offset 15660. */
+                            ply[player_id]->in_combo = 1;                /* 3933: store, evidenced after
                                                                             * the test at offset 3903 */
-                        lastJumpLength = diff;                          /* 3932 tail: offset 6120..6150 */
                     }
                 }
                 /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
