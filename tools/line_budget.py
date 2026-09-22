@@ -110,6 +110,19 @@ def region_bytes(out_dir, fn, report, regions):
     return out
 
 
+def annotated_lines(body_path, region_spans, own='main.c'):
+    """{candidate line number in the body: historical line} from the `/* 2551 */` or `/* line 2551 */`
+    annotations the reconstruction carries.  A statement inherits the last annotation above it, which is
+    how a reconstruction whose own line numbers differ can still be compared with the historical line
+    table.  Annotations are the author's claim about provenance, not evidence."""
+    out = {}; cur = None
+    for k, line in enumerate(Path(body_path).read_text(encoding='utf-8', errors='replace').replace(chr(13) + chr(10), chr(10)).split(chr(10)), 1):
+        m = re.findall(r'/\*\s*(?:lines?\s*)?(\d{3,4})', line)
+        if m: cur = int(m[-1])
+        if cur: out[k] = cur
+    return out
+
+
 def budget(target, source, fn, bodies, order='historical', top=40, no_inline=False):
     from experiment import compare
     from recovery_pipeline import OBJDUMP
@@ -143,10 +156,36 @@ def main():
     ap.add_argument('--top', type=int, default=40, help='show the N largest deficits (0 = every line)')
     ap.add_argument('--lines', help='only lines in this inclusive range, e.g. 3700-3999')
     ap.add_argument('--no-inline', action='store_true', help='measure with inlining off (diagnostic only): makes a body far smaller than its original comparable with history, which inlined none of these callees')
+    ap.add_argument('--annotations', action='store_true', help="compare per HISTORICAL line, mapping candidate lines through the body's own /* 2551 */ annotations")
     ap.add_argument('--regions', nargs='*', help='TAG=LO-HI per region of the retained body, e.g. W1a=3405-3530 W2=3700-3999')
     a = ap.parse_args()
     bodies = dict(b.split('=', 1) for b in a.body)
     f, report, rows, regions, cand, own, per_region = budget(a.target, a.source, a.function, bodies, a.order, no_inline=a.no_inline)
+    if a.annotations:
+        body = ROOT / bodies[a.function]
+        ann = annotated_lines(body, regions)
+        shift = None
+        # candidate line numbers in the object are overlay lines; recover the shift from the region map
+        if regions:
+            spans = read_json(Path(str(body) + '.regions.json')) if Path(str(body) + '.regions.json').exists() else {}
+            for tag, (lo, hi) in regions.items():
+                if tag in spans: shift = lo - spans[tag][0]; break
+        hist = {k[1]: v for k, v in rows_dict(rows).items() if k[0] == own}
+        cand_hist = {}
+        for (file, line), v in cand.items():
+            if file != own or shift is None: continue
+            h = ann.get(line - shift)
+            if h: cand_hist[h] = cand_hist.get(h, 0) + v
+        keys = sorted(set(hist) | set(cand_hist))
+        rowsh = [(h, hist.get(h, 0), cand_hist.get(h, 0)) for h in keys]
+        if a.lines:
+            lo, hi = (int(x) for x in a.lines.split('-')); rowsh = [r for r in rowsh if lo <= r[0] <= hi]
+        print('%s: candidate %s of %s bytes; annotated lines: historical %d, candidate %d'
+              % (a.function, f.get('candidate_size'), f['original_size'], sum(r[1] for r in rowsh), sum(r[2] for r in rowsh)))
+        print('%8s %10s %10s %8s' % ('line', 'historical', 'candidate', 'delta'))
+        ordered = sorted(rowsh, key=lambda r: r[2] - r[1])[:a.top] if a.top else sorted(rowsh)
+        for h, hv, cv in ordered: print('%8d %10d %10d %8d' % (h, hv, cv, cv - hv))
+        return
     if a.regions:
         ranges = dict(x.split('=', 1) for x in a.regions)
         print('%s: candidate %s of %s bytes' % (a.function, f.get('candidate_size'), f['original_size']))
