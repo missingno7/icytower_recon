@@ -365,6 +365,13 @@ int play(void)
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */
+                            /* main.c:4278's own jne loops back to its OWN fragment's start
+                             * (offset 10425 == 0x4142b9 - 0x411a00), with nothing else between --
+                             * a bare debounce spin on key[KEY_F1] alone, no poll_control() call
+                             * (unlike the KEY_SPACE debounce loops at 4273/4281), that was simply
+                             * missing from this block. */
+                            while (key[KEY_F1])                                /* 4278 */
+                                ;
                         }
                         while (key[KEY_SPACE])                                /* 4281: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);

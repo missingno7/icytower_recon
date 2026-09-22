@@ -114,7 +114,21 @@ int play(void)
                     scroll_acc += 3;                                    /* 3728 */
                 map.offset = old_map_pos + scroll_acc;                  /* 3729 */
                 ply[player_id]->y += scroll_acc;                        /* 3731 */
-                level += scroll_acc;                                    /* 3732 */
+                level = midY + scroll_acc;                              /* 3732: midY's own DWARF location
+                                                                          * list (DW_OP_reg7/edi) is live
+                                                                          * 3471..3641, i.e. continuously
+                                                                          * through the whole scroll_acc
+                                                                          * ladder above and up to the final
+                                                                          * "lea (%ecx,%edi,1),%edi; mov
+                                                                          * %edi,-0x92c(%ebp)" at offset
+                                                                          * 3638..3641 -- edi is never
+                                                                          * reloaded from level's own slot
+                                                                          * first, so this is an overwrite
+                                                                          * from midY+scroll_acc, not level's
+                                                                          * old value incremented (contrast
+                                                                          * the other branch's 3754, which is
+                                                                          * "add %esi,-0x92c(%ebp)", a true
+                                                                          * increment of the existing level). */
                 tot_scroll = scroll_acc;                                /* 3732: shares ecx with scroll_acc through
                                                                           * the collision switch below (evidence:
                                                                           * DW_OP_reg1 live range extends to 3823) */

@@ -288,8 +288,8 @@ int play(void)
                 create_particle(stars, (int)ply[player_id]->x, (int)ply[player_id]->y - 16);  /* 3708 */
             } else {
                 for (i = 0; i < 512; i++) {                             /* 3711 */
-                    if (stars[i].intensity)
-                        update_particle(&stars[i]);
+                    if (stars[i].intensity)                             /* 3711 */
+                        update_particle(&stars[i]);                     /* 3711 */
                 }
             }
             /* 3717..3732: fall-height "shake" accumulator. old_map_pos captures map.offset
@@ -307,34 +307,48 @@ int play(void)
                 old_map_pos = map.offset;                                /* 3717 (evidence: read here) */
                 scroll_acc = (ply[player_id]->y >= 140.0) ? 2 : 1;       /* 3721 */
                 if (ply[player_id]->y >= 120.0)                         /* 3722 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3722 */
                 if (ply[player_id]->y >= 100.0)                         /* 3723 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3723 */
                 if (ply[player_id]->y >= 80.0)                          /* 3724 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3724 */
                 if (ply[player_id]->y >= 60.0)                          /* 3725 */
-                    scroll_acc++;
+                    scroll_acc++;                                       /* 3725 */
                 if (ply[player_id]->y >= 40.0)                          /* 3726 */
-                    scroll_acc += 2;
+                    scroll_acc += 2;                                    /* 3726 */
                 if (ply[player_id]->y >= 20.0)                          /* 3727 */
-                    scroll_acc += 2;
+                    scroll_acc += 2;                                    /* 3727 */
                 if (ply[player_id]->y >= 0.0)                           /* 3728; ? always true for a valid y */
-                    scroll_acc += 3;
+                    scroll_acc += 3;                                    /* 3728 */
                 map.offset = old_map_pos + scroll_acc;                  /* 3729 */
                 ply[player_id]->y += scroll_acc;                        /* 3731 */
-                level += scroll_acc;                                    /* 3732 */
-                tot_scroll = scroll_acc;                                /* shares ecx with scroll_acc through
+                level = midY + scroll_acc;                              /* 3732: midY's own DWARF location
+                                                                          * list (DW_OP_reg7/edi) is live
+                                                                          * 3471..3641, i.e. continuously
+                                                                          * through the whole scroll_acc
+                                                                          * ladder above and up to the final
+                                                                          * "lea (%ecx,%edi,1),%edi; mov
+                                                                          * %edi,-0x92c(%ebp)" at offset
+                                                                          * 3638..3641 -- edi is never
+                                                                          * reloaded from level's own slot
+                                                                          * first, so this is an overwrite
+                                                                          * from midY+scroll_acc, not level's
+                                                                          * old value incremented (contrast
+                                                                          * the other branch's 3754, which is
+                                                                          * "add %esi,-0x92c(%ebp)", a true
+                                                                          * increment of the existing level). */
+                tot_scroll = scroll_acc;                                /* 3732: shares ecx with scroll_acc through
                                                                           * the collision switch below (evidence:
                                                                           * DW_OP_reg1 live range extends to 3823) */
             }
             if (!ply[player_id]->dead)                                  /* 3736 */
-                clock_angle++;
+                clock_angle++;                                          /* 3736 */
             /* 3738..3758: proceed only once the shake accumulator has built up and the
              * player is alive; otherwise reset clock_angle/fall_count (only while alive). */
             if (map.offset <= 100 || ply[player_id]->dead) {            /* 3738 */
                 if (!ply[player_id]->dead) {                            /* 3757 */
                     clock_angle = 0;                                    /* 3758 */
-                    fall_count = 0;
+                    fall_count = 0;                                     /* 3758 */
                 }
             } else {
                 if (scroll == -1)                                       /* 3739 */
@@ -355,9 +369,10 @@ int play(void)
             }
             any13 = map.offset;                                         /* 3763 */
             if (hurry_y + 99 <= 578)                                    /* 3765 */
-                hurry_y -= 2;
+                hurry_y -= 2;                                           /* 3765 */
             if (demo->speed_increase) {                                 /* 3766 */
-                if (!ply[player_id]->dead &&                            /* 3767 */
+                /* 3767 */
+                if (!ply[player_id]->dead &&
                     speeds[next_speed] < fall_count &&
                     scroll > 4) {
                     ply[player_id]->ccc[next_speed] = ply[player_id]->level;  /* 3768 */
@@ -371,7 +386,7 @@ int play(void)
             if (scroll == 5) {                                          /* 3778 */
                 fall_count -= 45;                                       /* 3779 */
                 if (!ply[player_id]->dead)                              /* 3780 */
-                    clock_angle -= 45;
+                    clock_angle -= 45;                                  /* 3780 */
             }
             /* old_map_pos is loaded into %ebx once at 3717 ("mov 0x4f8e18,%ebx") and is
              * never redefined before this point, so it still holds the pre-update
@@ -395,7 +410,7 @@ int play(void)
          * separate store to that address exists between the level updates above and
          * the switch below, so the switch's second argument is simply level's
          * current value carried over under a different DWARF name. */
-        lastY = level;                                                  /* ? evidence: shared slot, no distinct write found */
+        lastY = level;                                                  /* 3814: evidence: shared slot, no distinct write found */
 
         switch (collision_type) {                                       /* 3814 */
         case 3:
@@ -419,17 +434,17 @@ int play(void)
         }
 
         if (ply[player_id]->rotate)                                     /* 3833 */
-            ply[player_id]->angle += 0x80000;
+            ply[player_id]->angle += 0x80000;                           /* 3833 */
         if (ply[player_id]->in_combo) {                                 /* 3837 */
             ply[player_id]->in_combo--;                                 /* 3838 */
-            if (!ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) {  /* 3839..3840 */
+            if (!ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) {  /* 3839 */
                 int rewResult;
                 Tgd_combo c;
 
                 ply[player_id]->score += ply[player_id]->acc_level * ply[player_id]->acc_level;  /* 3841 */
                 rewResult = start_reward(ply[player_id]->acc_level);     /* 3842 */
                 if (recording && !is_playing_custom_game)                /* 3843 */
-                    profile->rewards[rewResult]++;
+                    profile->rewards[rewResult]++;                       /* 3843 */
                 totComboFloors += ply[player_id]->acc_level;             /* 3844 */
                 numComboJumps++;                                         /* 3845 */
                 c.length = ply[player_id]->acc_level;                    /* 3848 */
@@ -443,8 +458,8 @@ int play(void)
         }
 
         if (ply[player_id]->status) {                                   /* 3862 */
-            level = (get_level(&map, (int)ply[player_id]->y) - 1) / 10;  /* 3864..3868 */
-            diff = level - ply[player_id]->level;                       /* 3869..3870 */
+            level = (get_level(&map, (int)ply[player_id]->y) - 1) / 10;  /* 3864 */
+            diff = level - ply[player_id]->level;                       /* 3869 */
             if (diff != 0) {                                             /* 3870 */
                 if (diff == gdLastJumpDiff) {                            /* 3871 */
                     jumpSequence.num++;                                  /* 3882 */
@@ -479,7 +494,7 @@ int play(void)
                             ply[player_id]->acc_level = diff;            /* 3926 */
                             ply[player_id]->acc_jumps = 1;               /* 3927 */
                         }
-                        ply[player_id]->in_combo = 100;                  /* 3923/3928 */
+                        ply[player_id]->in_combo = 100;                  /* 3923 */
                         lastJumpLength = diff;                          /* 3932: shared tail for both arms
                                                                             * above -- offset 6120..6150,
                                                                             * reached by fallthrough from the
@@ -591,7 +606,7 @@ int play(void)
         }
         if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
             play_sound(speaker[1], 0, 0);                                   /* 4012 */
-            game_over = 2;
+            game_over = 2;                                                  /* 4012 */
         }
         if (aightScore)                                                     /* 4015 */
             aightScore++;                                                   /* 4015 */
@@ -618,7 +633,9 @@ int play(void)
              * (DWARF -0x940(%ebp)) lands on main.c:4031, the loop body's first real statement
              * (source-view 4000..4055: fragments 3987..4024 tagged 4029, 4024..4036 tagged
              * 4031) -- so the assignment and the loop share one combined-init statement. */
-            for (i = 0, midX = next_aight / 2; i < midX; i++) {                 /* 4029/4123 */
+            for (i = 0, midX = next_aight / 2;                                 /* 4029 */
+                 i < midX;                                                     /* 4124 */
+                 i++) {                                                        /* 4123 */
                 int p;                                                          /* 4031 block-local */
                 p = create_particle(stars, (new_rand() % 600) + 20, 480);       /* 4030 */
                 stars[p].sy = -(((new_rand() % 200) << 16) / 5);                /* 4031 */
@@ -629,7 +646,7 @@ int play(void)
         else
             next_aight += 50;                                                  /* 4037 */
         if (ply[player_id]->edge == 0)                                        /* 4042 */
-            ply[player_id]->edge_drawn = 0;
+            ply[player_id]->edge_drawn = 0;                                   /* 4042 */
         if (ply[player_id]->edge_drawn != 0) {                                 /* 4043 */
             if (ply[player_id]->edge_drawn == 11 && ply[player_id]->status == 0) /* 4044 */
                 play_sound(custom.edge, 1, 1);                                 /* 4044 tail */
@@ -638,7 +655,7 @@ int play(void)
         }
         if (!debug) {                                                          /* 4049 */
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
-                playing = 0;
+                playing = 0;                                                  /* 4056 */
         } else if (ply[player_id]->dead <= 99) {                               /* 4050 */
             /* esi is confirmed as `playing` here (its DWARF range covers offsets 2860..2903,
              * exactly this store). Re-measured after `playing` gained its first real assignments
@@ -647,14 +664,14 @@ int play(void)
              * two `playing = 0;` epilogues (this one and 4056's) are no longer degenerate; the
              * remaining spread is consistent with the two still sharing code the historical
              * binary kept separate, not a missing statement. */
-            playing = 0;
+            playing = 0;                                                     /* 4050 */
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int pauseTime, addTime; /* DWARF block 132550 [4560..4780]: pauseTime, addTime */
             pauseTime = time(NULL);                                            /* 4063 */
             take_screenshot(swap_screen);                                      /* 4064 */
             if (key[KEY_F1]) {                                                 /* 4065 (see report: odd self-target) */
-                addTime = time(NULL) - pauseTime;                              /* 4066-4067 */
+                addTime = time(NULL) - pauseTime;                              /* 4066 */
                 if (addTime > 0)                                               /* 4067 */
                     startTime += addTime;                                      /* 4068 */
             }
@@ -677,14 +694,14 @@ int play(void)
         }
         update_frame();                                                       /* 4100 */
         if (!quit && closeButtonClicked) {                                    /* 4104 */
-            quit = 1;
-            playing = 0;
+            quit = 1;                                                        /* 4104 */
+            playing = 0;                                                     /* 4104 */
         }
         if (recording) {                                                      /* 4109 */
             if (key[KEY_ESC]) {                                               /* 4110 */
                 if (ply[player_id]->dead) {                                   /* 4111 */
                     log2file("  player quit after dying");                    /* 4112 */
-                    playing = 0;
+                    playing = 0;                                              /* 4112 */
                 } else {
                     /* REGION W3a: ESC pause screen, lines 4117..4182 */
                     int pauseTime, fc, ca, addTime; /* block-scoped DWARF locals (block 132596), not in the 52-local skeleton */
@@ -733,7 +750,7 @@ int play(void)
                     while (!keypressed()) {                                    /* 4138 */
                         if (is_any(&ctrl) || is_pause(&ctrl) ||
                             closeButtonClicked || key[KEY_ESC])                /* 4138 */
-                            break;
+                            break;                                            /* 4138 */
                         poll_control(&ctrl, 0);                                /* 4139 */
                         rest(2);                                               /* 4140 */
                     }
@@ -745,8 +762,8 @@ int play(void)
                         log2file("  game quit from esc pause");               /* 4150 */
                         profile->games_quit++;                                /* 4151 */
                         endTime = time(NULL);                                 /* 4152 */
-                        quit = 1;
-                        playing = 0;
+                        quit = 1;                                             /* 4152 */
+                        playing = 0;                                          /* 4152 */
                     }
                     clear_keybuf();                                           /* 4154 */
                     fall_count = fc;                                          /* 4156 */
@@ -801,7 +818,7 @@ int play(void)
                 clear_keybuf();                                               /* 4206 */
                 while (!keypressed()) {                                       /* 4207 */
                     if (is_any(&ctrl) || is_pause(&ctrl) || key[KEY_ESC])      /* 4207 */
-                        break;
+                        break;                                                /* 4207 */
                     poll_control(&ctrl, 0);                                   /* 4208 */
                     rest(2);                                                  /* 4209 */
                 }
@@ -831,12 +848,12 @@ int play(void)
                 poll_control(&rec_ctrl, 0);                                   /* 4251 */
                 if (ply[player_id]->dead) {                                   /* 4253 */
                     log2file("  replay ended after death");                   /* 4255 */
-                    playing = 0;
+                    playing = 0;                                              /* 4255 */
                 }
                 if (key[KEY_ESC]) {                                           /* 4264 */
                     log2file("  quit from replay");                           /* 4265 */
-                    quit = 1;
-                    playing = 0;
+                    quit = 1;                                                 /* 4265 */
+                    playing = 0;                                              /* 4265 */
                 }
                 if (key[KEY_SPACE]) {                                        /* 4271 */
                     if (ply[player_id]->dead == 0) {
@@ -848,6 +865,13 @@ int play(void)
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */
+                            /* main.c:4278's own jne loops back to its OWN fragment's start
+                             * (offset 10425 == 0x4142b9 - 0x411a00), with nothing else between --
+                             * a bare debounce spin on key[KEY_F1] alone, no poll_control() call
+                             * (unlike the KEY_SPACE debounce loops at 4273/4281), that was simply
+                             * missing from this block. */
+                            while (key[KEY_F1])                                /* 4278 */
+                                ;
                         }
                         while (key[KEY_SPACE])                                /* 4281: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);
@@ -880,7 +904,7 @@ int play(void)
                             fast_forward = 0;                                 /* 4298 */
                             next_floor = ((ply[player_id]->level + 100) / 100) * 100; /* 4299 */
                             if (next_floor > demo->floor - 10)                /* 4301 */
-                                next_floor = demo->floor - 10;
+                                next_floor = demo->floor - 10;                /* 4301 */
                         }
                     }
                 }
@@ -903,7 +927,7 @@ int play(void)
             someCounter++;                                                    /* 4324 */
             ffstep = fast_forward ? 4 : 1;                                   /* 4327 */
             if (fast_fast_forward)                                            /* 4330 */
-                ffstep = 32;
+                ffstep = 32;                                                  /* 4330 */
             if (!quit && someCounter % ffstep == 0) {                        /* 4337 */
                 draw_frame(swap_screen);                                      /* 4338 */
                 if (ply[player_id]->shake) {                                  /* 4346 */
@@ -927,7 +951,7 @@ int play(void)
                 }
                 if (!debug) {                                                 /* 4356 */
                     while (cycle_count == 0)                                  /* 4357 */
-                        rest(2);
+                        rest(2);                                              /* 4357 */
                 } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
                     while (cycle_count <= 7)                                  /* 4361 */
                         rest(2);                                              /* 4363 */
@@ -959,9 +983,9 @@ int play(void)
         gameData->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4392 */
         gameData->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4393 */
         for (i = 0; i < 5; i++)                                                /* 4395 */
-            gameData->ccc[i] = ply[player_id]->ccc[i];
+            gameData->ccc[i] = ply[player_id]->ccc[i];                        /* 4395 */
         for (i = 0; i < 5; i++)                                                /* 4398 */
-            gameData->jc[i] = ply[player_id]->jcTop[i];
+            gameData->jc[i] = ply[player_id]->jcTop[i];                       /* 4398 */
         {
             int keys_pressed[7];
             int key_flag[7] = { 16, 1, 2, 4, 8, 32, 128 };                     /* 4403 */
@@ -969,7 +993,7 @@ int play(void)
             int k;
 
             for (k = 0; k < 7; k++)                                            /* 4402 */
-                keys_pressed[k] = time_cheat_count;
+                keys_pressed[k] = time_cheat_count;                            /* 4402 */
             if (demo->size > 0) {                                              /* 4406 */
                 for (k = 0; k < 7; k++)                                        /* 4404: rep stos reuses eax
                                                                                     * without reloading it from
@@ -978,7 +1002,7 @@ int play(void)
                                                                                     * before it) -- last_keys is
                                                                                     * seeded with time_cheat_count,
                                                                                     * not a literal 0. */
-                    last_keys[k] = time_cheat_count;
+                    last_keys[k] = time_cheat_count;                           /* 4404 */
                 for (i = 0; i < demo->size; i++) {                             /* 4406 */
                     int flags = demo->data[i].key_flags;                       /* 4406 */
                     for (k = 0; k < 7; k++) {                                  /* 4408 */
@@ -1027,9 +1051,9 @@ int play(void)
             demo->no_combo_top_floor = ply[player_id]->no_combo_top_floor;     /* 4507 */
             demo->biggest_lost_combo = ply[player_id]->biggest_lost_combo;     /* 4508 */
             for (i = 0; i < 5; i++)                                            /* 4510 */
-                demo->ccc[i] = ply[player_id]->ccc[i];
+                demo->ccc[i] = ply[player_id]->ccc[i];                        /* 4510 */
             for (i = 0; i < 5; i++)                                            /* 4513 */
-                demo->jc[i] = ply[player_id]->jcTop[i];
+                demo->jc[i] = ply[player_id]->jcTop[i];                       /* 4513 */
 
             if (!is_playing_custom_game) {                                    /* 4519 */
                 profile->games_played++;                                      /* 4520 */
@@ -1141,7 +1165,7 @@ int play(void)
     }
 
     /* lines 4641..4643: unconditional, reached from all three predecessors above */
-    syncProfileFromOptions();
+    syncProfileFromOptions();                                                /* 4641 */
     save_profile(profile);                                                   /* 4641 */
 
     /* lines 4643..4683: highscore qualification, guarded by quit && closeButtonClicked */
@@ -1151,7 +1175,7 @@ int play(void)
                          * DWARF block 133269, which opens here and runs into REGION W5 */
 
             for (i = 0; i < 15; i++)                                         /* 4650 */
-                qualify[i] = 0;
+                qualify[i] = 0;                                             /* 4650 */
             qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4652 */
             qualifyValue[2] = ply[player_id]->level;                         /* 4653 */
             qualifyValue[1] = ply[player_id]->best_combo;                    /* 4654 */
@@ -1162,7 +1186,7 @@ int play(void)
                 qualifyValue[10 + i] = ply[player_id]->jcTop[i];             /* 4659 */
             }
             quit = 0;                                                       /* 4657 */
-            gotHigh = 0;
+            gotHigh = 0;                                                    /* 4657 */
             for (rank = 0; rank < 15; rank++) {                              /* 4662 */
                 qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);  /* 4663 */
                 gotHigh += qualify[rank];                                    /* 4664 */
@@ -1200,7 +1224,7 @@ int play(void)
                 gameover_bmp_id = 0x37;                                     /* 4668 */
             }
             if (is_playing_custom_game)                                     /* 4671 */
-                gameover_bmp_id = 0x37;
+                gameover_bmp_id = 0x37;                                     /* 4671 */
 
             if (quit) {                                                     /* 4673: disasm reads -0x93c
                                                                                 * (quit) again here, not
@@ -1254,29 +1278,18 @@ int play(void)
             len = strlen(letters) - 1;                                              /* 4688 */
             isGuest = !stricmp(profile->handle, "guest");                           /* 4692 */
 
-            for (i = 0; i < 15; i++)
-                qualify[i] = 0;
-            qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;
-            qualifyValue[2] = ply[player_id]->level;
-            qualifyValue[1] = ply[player_id]->best_combo;
-            qualifyValue[3] = ply[player_id]->biggest_lost_combo;
-            qualifyValue[4] = ply[player_id]->no_combo_top_floor;
-            for (i = 0; i < 5; i++) {
-                qualifyValue[5 + i] = ply[player_id]->ccc[i];
-                qualifyValue[10 + i] = ply[player_id]->jcTop[i];
-            }
-            gotHigh = 0;
-            for (i = 0; i < 15; i++) {
-                qualify[i] = qualify_hisc_table(hisc_tables[i], qualifyValue[i]);
-                gotHigh += qualify[i];
-            }
-            if (!recording || is_playing_custom_game)
-                gotHigh = 0;
-            /* the three tables above live in DWARF block 133269 (main.c:4650..end), the same
-             * lexical block as REGION W4's highscore accounting; that region's own copies go
-             * out of scope at its closing brace right before this marker, so this region
-             * cannot see the values its own draw_results()/enter_hisc_table() calls need and
-             * recomputes them identically to main.c:4650..4679 (out of this region's reach) */
+            /* qualify, qualifyValue and gotHigh are NOT recomputed here: they are declared in
+             * the enclosing DWARF block 133269, which opens in REGION W4 at main.c:4650 and
+             * does not close until the end of the function, so W4's own computation (main.c
+             * 4650-4664, and the recording/is_playing_custom_game handling through 4671) is
+             * still in scope and still holds. A prior pass at this region assumed the opposite
+             * ("this region cannot see the values") and inserted an unannotated fourteen-
+             * statement duplicate of W4's block here; function_lines.py --source-view 4650 4687
+             * shows the original computes qualify[]/qualifyValue[]/gotHigh exactly ONCE, entirely
+             * within W4's own address range (offsets 9327-9497), with nothing resembling it
+             * again before 4687. The duplicate also disagreed with W4's real logic (W4 only
+             * zeroes gotHigh when !recording, never when is_playing_custom_game while recording
+             * -- the deleted duplicate zeroed it in both cases). Removed. */
 
             /* results screen: slide the results panel in and wait for the
              * highscore chime / fade timer (4695..4737). */
@@ -1291,11 +1304,12 @@ int play(void)
                 hy = hy + (136.0 - hy) * 0.1;                                        /* 4699 */
                 update_frame();                                                      /* 4700 */
                 for (i = 0; i < 512; i++)                                            /* 4701 */
-                    update_particle(&stars[i]);  /* ? original also walks characters[] as the loop bound */
+                    update_particle(&stars[i]);  /* 4701: original also walks characters[] as the loop bound */
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
+                /* 4704 */
+                draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
                              qualifyValue,
                              is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
@@ -1318,12 +1332,12 @@ int play(void)
                 if (key[KEY_F1]) {                                                    /* 4725 */
                     take_screenshot(swap_screen);                                     /* 4726 */
                 }
-                if (key[KEY_TAB] && key[KEY_LSHIFT]) {                                /* 4729..4731 */
+                if (key[KEY_TAB] && key[KEY_LSHIFT]) {                                /* 4731 */
                     rest(2);                                                          /* 4734 */
                     if (cycle_count == 0)
                         continue;
                 }
-                if (ply[player_id]->shake == 0 && falling > 0)  /* ? approximated loop-exit predicate */
+                if (ply[player_id]->shake == 0 && falling > 0)  /* 4734: approximated loop-exit predicate */
                     break;
             }
             ply[player_id]->dead = 0;                                                 /* 4737 */
@@ -1404,7 +1418,8 @@ int play(void)
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
-                    current_rank_id = new_rank_id; /* ? */
+                    current_rank_id = new_rank_id; /* 4823: no distinct historical line found between
+                                                      4823 and 4827 for this write; inherits 4823. */
                     /* Tried: moving this draw_sprite/textout_ex/easing out of the if-block to
                      * run unconditionally every frame (on the theory that evidence/census/
                      * line-mappings.json shows exactly two draw.inl:238 sites in the whole
@@ -1478,7 +1493,9 @@ int play(void)
                                 alpha_pos++;
                             if (skip_keys != 20)                                            /* 4900 */
                                 skip_keys = 19;                                              /* 4902 */
-                        } else if (alpha_pos != 0) {         /* ? best-effort for the non-blank confirm case */
+                        } else if (alpha_pos != 0) {         /* 4902: best-effort for the non-blank confirm
+                                                                 case; no distinct historical line found,
+                                                                 inherits the last real number (4902). */
                             alpha_pos++;
                         } else {
                             alpha_pos--;
@@ -1510,8 +1527,8 @@ int play(void)
                                     typed = '!';
                                     matched = 1;
                                 } else if (k != 0x20) {                                      /* 4870: '@' (ascii 64) is dropped */
-                                    for (i = 0; i < len; i++) {                              /* 4871..4872: scan letters[] */
-                                        if (letters[i] == (char)k) {
+                                    for (i = 0; i < len; i++) {                              /* 4871: scan letters[] */
+                                        if (letters[i] == (char)k) {                          /* 4872 */
                                             typed = letters[i];
                                             matched = 1;
                                             break;
@@ -1528,7 +1545,7 @@ int play(void)
                         }
                     }
                 }
-                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929..4931: operand order swapped
+                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929: operand order swapped
                      * from the 4731 occurrence -- function_lines.py source-view shows 4929 testing
                      * key[KEY_LSHIFT] first (4731 tests key[KEY_TAB] first), so the two blocks are
                      * not byte-identical in the original and the compiler does not fold them. */
@@ -1582,7 +1599,7 @@ int play(void)
                                        320, 0x1b8, -1, -1);
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
-                    while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */
+                    while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986 */
                         /* ? the two-stage key test at these lines (checked twice, once before
                          * and once after the fall-through) may debounce a stale press; no
                          * distinguishing branch structure survives at the C level. Tried an

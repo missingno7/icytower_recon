@@ -122,29 +122,18 @@ int play(void)
             len = strlen(letters) - 1;                                              /* 4688 */
             isGuest = !stricmp(profile->handle, "guest");                           /* 4692 */
 
-            for (i = 0; i < 15; i++)
-                qualify[i] = 0;
-            qualifyValue[0] = ply[player_id]->level * 10 + ply[player_id]->score;
-            qualifyValue[2] = ply[player_id]->level;
-            qualifyValue[1] = ply[player_id]->best_combo;
-            qualifyValue[3] = ply[player_id]->biggest_lost_combo;
-            qualifyValue[4] = ply[player_id]->no_combo_top_floor;
-            for (i = 0; i < 5; i++) {
-                qualifyValue[5 + i] = ply[player_id]->ccc[i];
-                qualifyValue[10 + i] = ply[player_id]->jcTop[i];
-            }
-            gotHigh = 0;
-            for (i = 0; i < 15; i++) {
-                qualify[i] = qualify_hisc_table(hisc_tables[i], qualifyValue[i]);
-                gotHigh += qualify[i];
-            }
-            if (!recording || is_playing_custom_game)
-                gotHigh = 0;
-            /* the three tables above live in DWARF block 133269 (main.c:4650..end), the same
-             * lexical block as REGION W4's highscore accounting; that region's own copies go
-             * out of scope at its closing brace right before this marker, so this region
-             * cannot see the values its own draw_results()/enter_hisc_table() calls need and
-             * recomputes them identically to main.c:4650..4679 (out of this region's reach) */
+            /* qualify, qualifyValue and gotHigh are NOT recomputed here: they are declared in
+             * the enclosing DWARF block 133269, which opens in REGION W4 at main.c:4650 and
+             * does not close until the end of the function, so W4's own computation (main.c
+             * 4650-4664, and the recording/is_playing_custom_game handling through 4671) is
+             * still in scope and still holds. A prior pass at this region assumed the opposite
+             * ("this region cannot see the values") and inserted an unannotated fourteen-
+             * statement duplicate of W4's block here; function_lines.py --source-view 4650 4687
+             * shows the original computes qualify[]/qualifyValue[]/gotHigh exactly ONCE, entirely
+             * within W4's own address range (offsets 9327-9497), with nothing resembling it
+             * again before 4687. The duplicate also disagreed with W4's real logic (W4 only
+             * zeroes gotHigh when !recording, never when is_playing_custom_game while recording
+             * -- the deleted duplicate zeroed it in both cases). Removed. */
 
             /* results screen: slide the results panel in and wait for the
              * highscore chime / fade timer (4695..4737). */
@@ -159,7 +148,7 @@ int play(void)
                 hy = hy + (136.0 - hy) * 0.1;                                        /* 4699 */
                 update_frame();                                                      /* 4700 */
                 for (i = 0; i < 512; i++)                                            /* 4701 */
-                    update_particle(&stars[i]);  /* ? original also walks characters[] as the loop bound */
+                    update_particle(&stars[i]);  /* 4701: original also walks characters[] as the loop bound */
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
@@ -187,12 +176,12 @@ int play(void)
                 if (key[KEY_F1]) {                                                    /* 4725 */
                     take_screenshot(swap_screen);                                     /* 4726 */
                 }
-                if (key[KEY_TAB] && key[KEY_LSHIFT]) {                                /* 4729..4731 */
+                if (key[KEY_TAB] && key[KEY_LSHIFT]) {                                /* 4731 */
                     rest(2);                                                          /* 4734 */
                     if (cycle_count == 0)
                         continue;
                 }
-                if (ply[player_id]->shake == 0 && falling > 0)  /* ? approximated loop-exit predicate */
+                if (ply[player_id]->shake == 0 && falling > 0)  /* 4734: approximated loop-exit predicate */
                     break;
             }
             ply[player_id]->dead = 0;                                                 /* 4737 */
@@ -273,7 +262,8 @@ int play(void)
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
-                    current_rank_id = new_rank_id; /* ? */
+                    current_rank_id = new_rank_id; /* 4823: no distinct historical line found between
+                                                      4823 and 4827 for this write; inherits 4823. */
                     /* Tried: moving this draw_sprite/textout_ex/easing out of the if-block to
                      * run unconditionally every frame (on the theory that evidence/census/
                      * line-mappings.json shows exactly two draw.inl:238 sites in the whole
@@ -347,7 +337,9 @@ int play(void)
                                 alpha_pos++;
                             if (skip_keys != 20)                                            /* 4900 */
                                 skip_keys = 19;                                              /* 4902 */
-                        } else if (alpha_pos != 0) {         /* ? best-effort for the non-blank confirm case */
+                        } else if (alpha_pos != 0) {         /* 4902: best-effort for the non-blank confirm
+                                                                 case; no distinct historical line found,
+                                                                 inherits the last real number (4902). */
                             alpha_pos++;
                         } else {
                             alpha_pos--;
@@ -379,8 +371,8 @@ int play(void)
                                     typed = '!';
                                     matched = 1;
                                 } else if (k != 0x20) {                                      /* 4870: '@' (ascii 64) is dropped */
-                                    for (i = 0; i < len; i++) {                              /* 4871..4872: scan letters[] */
-                                        if (letters[i] == (char)k) {
+                                    for (i = 0; i < len; i++) {                              /* 4871: scan letters[] */
+                                        if (letters[i] == (char)k) {                          /* 4872 */
                                             typed = letters[i];
                                             matched = 1;
                                             break;
@@ -397,7 +389,7 @@ int play(void)
                         }
                     }
                 }
-                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929..4931: operand order swapped
+                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929: operand order swapped
                      * from the 4731 occurrence -- function_lines.py source-view shows 4929 testing
                      * key[KEY_LSHIFT] first (4731 tests key[KEY_TAB] first), so the two blocks are
                      * not byte-identical in the original and the compiler does not fold them. */
@@ -451,7 +443,7 @@ int play(void)
                                        320, 0x1b8, -1, -1);
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
-                    while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */
+                    while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986 */
                         /* ? the two-stage key test at these lines (checked twice, once before
                          * and once after the fall-through) may debounce a stale press; no
                          * distinguishing branch structure survives at the C level. Tried an

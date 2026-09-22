@@ -47,6 +47,10 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
 
         if (keypressed()) {
             kp = readkey() >> 8;
+            /* switch, not if/else-if: the original dispatches with
+             * `sub $0x3b,%eax; cmp $0x1a,%eax; ja default; jmp *table(,%eax,4)`,
+             * a jump table over kp-59..kp-85. Byte-neutral in this build, but
+             * this is the better-evidenced form -- keep it. */
             switch (kp) {
             case 85:
                 if (profileIndex < numProfiles - 1) {
