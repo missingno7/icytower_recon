@@ -338,3 +338,41 @@ from being exact (section 10).
 
 The converse carries no information: a name we do use may still be used for the wrong thing.  On
 `draw_frame` the tool reports nothing missing, and `draw_frame` is still 12 bytes short.
+
+## 12. Reading the original's DWARF location lists, and what a transaction may add
+
+Three separate passes have now misread the original's `.debug_loc`, so the recipe belongs here.
+`evidence/census/location-lists.json` is a list of tables keyed by `offset`, the value a DWARF local's
+`location` string carries (`0x6c9b (location list)`).  Each entry's `begin` and `end` are relative to
+the **compilation unit's** `low_pc`, not the function's, so for `main.c` the base is 0x406960 (from
+`evidence/census/compilation-units.json`) and an offset inside a function is `BASE + begin - VA`.
+`evidence/census/range-lists.json` holds a lexical block's spans in exactly the same form.
+
+Iterate a table's entries directly and call `dwarf_locations.decode_location` on each
+`expression_hex`.  Do not use `expression_at()` for this: it returns None whenever more than one entry
+covers the PC, which silently hides most of a real table and reads as "the local is not live here".
+
+This is worth the care because a location list answers questions a byte budget cannot.  It said that
+`load_character`'s `filename` parameter lives in `esi` only from offset 31 to 58 and is re-read from
+`ebp+8` for the rest of the function, which is the whole of that function's thirteen differing bytes
+and rules out four source rewrites that had already been tried.  It also distinguishes a local that
+was optimised out from one that is register-resident, which matters: `clockSpeed`, `qpcSpeed` and
+`timeSpeed` have no stack slot at all and are nonetheless real computed values.
+
+### A transaction may now add a definition
+
+`src/httpget.c` has unresolved ownership and therefore emits only what the oracle has independently
+proved, so `dumpHTTPResponse` had no definition to replace.  `TU_CONTEXT` accordingly gained the
+narrowest possible power to add one: a retained body whose name has no island in the production
+source is emitted at its place in the order, provided it is named in the spec's `add` list, is one of
+the retained bodies, and is `MISSING` in the ledger.  Both the plan and the final-state gate check
+that exact set, and both still refuse any removal, so a definition cannot appear or vanish by
+accident.  Nothing about `FUNCTION_MATCH` or the no-regression rule changed.
+
+One incidental fix came with it: the forbidden-directive count now excludes the generated
+forward-declaration block, which only repeats each definition's own signature.  Without that, any
+transaction on a file containing a historically evidenced `__attribute__` on a definition was rejected
+for "introducing" the attribute that the generated prototype merely echoed.
+
+The first transaction through this path promoted `dumpHTTPResponse` exact and `HTTPFetchInternal` with
+it, 7 -> 9 exact in that unit, and took the project's MISSING count to zero.
