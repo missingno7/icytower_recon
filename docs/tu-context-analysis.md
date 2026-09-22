@@ -236,3 +236,33 @@ So the two functions are not blocked by ordering, declarations or neighbours: th
 the remaining 1310 bytes of `play` and 134 bytes of `draw_frame`.  A function whose scratch finds
 must match exactly is effectively asking for the body itself, which is the right thing to be
 asking for.  The transaction lands when the bodies do.
+
+## 9. Dead writes name their missing readers (2026-09-22)
+
+A reconstruction that writes a value the original writes, and then stops, compiles shorter than the
+original for a reason that looks like a compiler difference and is not: GCC deletes the write because
+nothing reads it, and what is missing is the code that reads it.  Three separate passes wrote off
+`play`'s `rank_y` and `alpha_pos` on exactly this evidence ("the write is dead, the compiler removes
+it, nothing to do"), and one went further and blamed a different original toolchain.
+
+`tools/local_slot_trace.py` settles such a question in one command by listing every instruction in the
+original that touches a local's stack slot, with its historical source line:
+
+| offset | line | access |
+|---|---|---|
+| 12056 | 4821 | `rank_y = 580` |
+| 12391 | draw.inl:238 | a sprite draw reads it |
+| 12503, 12522, 12556 | 4823 | the easing reads it and writes it back |
+| 13756 | draw.inl:238 | a second sprite draw reads it |
+| 13966, 13996, 14023 | 4885, 4886, 4891 | `alpha_pos` incremented, masked, decremented |
+
+So the rank banner is drawn twice from `rank_y`, and `alpha_pos` is the letter-navigation cursor.
+Neither write is dead in the original; both readers are simply absent from the reconstruction.
+
+The same trace disambiguates a stack slot shared between locals of different scopes, which is not a
+detail: `gameover_bmp_id` and `alpha_pos` share `-0x930(%ebp)` in `play`, and the second argument of
+the first `draw_results` call reads that slot while it still holds `gameover_bmp_id`, so a pass that
+assumed `alpha_pos` had written the wrong argument into the reconstruction.
+
+The rule this establishes: when a body compiles short and a local's write looks dead, trace the slot
+before concluding anything.  A dead write is a symptom of missing readers, never a cause in itself.
