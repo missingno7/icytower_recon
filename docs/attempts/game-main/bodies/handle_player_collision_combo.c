@@ -21,24 +21,8 @@ void handle_player_collision_combo(int lastX, int lastY)
     any23 = 0;
     any22 = 0;
     any21 = 0;
-    if (solid1 || solid2) {
-        if (p->status == 1 || p->status == 2)
-            return;
-        if (p->status)
-            play_sound(combo_sound[0], 1, 1);
-        p->status = 0;
-        p->sy = 0;
-        if (solid1) {
-            p->y -= solid1 - 9999;
-            p->rotate = 0;
-            p->edge = solid1 == solid2 ? 0 : 1;
-            return;
-        }
-        p->y -= solid2 - 9999;
-        p->rotate = 0;
-        p->edge = 2;
-        return;
-    }
+    if (solid1 || solid2)
+        goto solid_return;
 
     if (p->status == 2 || p->status == 0)
         p->status = 3;
@@ -85,4 +69,22 @@ void handle_player_collision_combo(int lastX, int lastY)
     p->y = fy1 - 1;
     p->x = left ? ilx + 11 : irx - 11;
     p->rotate = 0;
+    return;
+
+solid_return:
+    if (p->status == 1 || p->status == 2)
+        return;
+    if (p->status)
+        play_sound(combo_sound[0], 1, 1);
+    p->status = 0;
+    p->sy = 0;
+    if (solid1) {
+        p->y -= solid1 - 9999;
+        p->rotate = 0;
+        p->edge = solid1 == solid2 ? 0 : 1;
+        return;
+    }
+    p->y -= solid2 - 9999;
+    p->rotate = 0;
+    p->edge = 2;
 }

@@ -187,11 +187,11 @@ int play(void)
                  * the ratio and the scaled increment across lines 3580-3584. */
                 a = 44000.0f / vgp;                       /* 3580 */
                 if (a > 0.01f) {                          /* line 3583 */
-                    b = a / (50.0f / musicCounter);       /* line 3584: NOT a*50.0f/musicCounter -- the
-                                                            * original computes the intermediate 50.0/musicCounter
-                                                            * first (fidivrl, a REVERSE divide by the int) and
-                                                            * then divides 'a' by that, i.e. a*musicCounter/50.0f,
-                                                            * the reciprocal-shaped formula, not a*50.0f/musicCounter */
+                    b = a / (musicCounter / 50.0f);       /* line 3584: the original computes the intermediate
+                                                            * musicCounter/50.0 first (fidivrl -0x938, a REVERSE
+                                                            * divide of the int by the ST0-resident 50.0) and then
+                                                            * divides 'a' by that -- algebraically a*50.0f/musicCounter,
+                                                            * but this operand order is what reproduces fidivrl */
                     accMusics += b;
                     totMusics++;                          /* line 3585 */
                 }

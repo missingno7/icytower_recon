@@ -1,5 +1,15 @@
 /* Oracle: main.c, 0x407fd8..0x408358.  The legacy mode first tests the
  * current feet, then sweeps a midpoint when the player moved downward. */
+/* Residual 16 bytes over (910 vs 894), CLOSED: our dX still gets spilled to
+ * -0x3c(%ebp) and reloaded twice for dX/2, while the original's DW_AT_location
+ * list for dX decodes to three pure-register (edi) ranges -- func-offsets
+ * [56,107) [333,338) [472,490), all strictly BEFORE the first call (is_solid
+ * at line 3253/offset 142; verified via function_lines.py --calls-by-line).
+ * So the call-forced-spill hypothesis is DEAD -- do not re-run it. Our own
+ * candidate's dX carries NO DW_AT_location at all (checked via
+ * `objdump --dwarf info` on the candidate .o), unlike dY/midX/midY which do,
+ * so the extra double-reload codegen is a genuine unexplained difference,
+ * not a location-list artifact and not call-driven. */
 void handle_player_collision_old(int lastX, int lastY)
 {
     int dX, dY, midX, midY;
