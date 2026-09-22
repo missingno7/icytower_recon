@@ -84,7 +84,7 @@ int play(void)
     {
         /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
          * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
-        hy = 0.0f;         /* slides in toward 136.0 */
+        hy = 480.0f;       /* 4704: panel starts off-screen at 480 and eases up toward 136.0 */
         int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
         char *initials = NULL;
 
@@ -147,9 +147,9 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
                              qualifyValue,
-                             is_playing_custom_game ? 0 : recording);
+                             is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
                     /* 4706 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
@@ -222,23 +222,27 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
-                             qualifyValue, is_playing_custom_game ? 0 : recording);
+                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
+                             qualifyValue, is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
-                    if (pos != 0 || (step_count & 4))                                   /* 4814 */
-                        textout_centre_ex(swap_screen, data[52].dat, &buf[0],
-                                           300, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos != 1 || (step_count & 4))                                   /* 4815 */
-                        textout_centre_ex(swap_screen, data[52].dat, &buf[2],
-                                           320, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos != 2 || (step_count & 4))                                   /* 4816 */
-                        textout_centre_ex(swap_screen, data[52].dat, &buf[4],
-                                           340, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (pos >= 3)                                                       /* 4817 */
-                        textout_centre_ex(swap_screen, data[52].dat, "%",
-                                           360, (int)(hy * 2.0 + 120.0), -1, -1);
+                    {
+                        int entryY = (int)(hy * 2.0 + 120.0);   /* shared by 4814..4817 */
+
+                        if (pos != 0 || (step_count & 4))                              /* 4814 */
+                            textout_centre_ex(swap_screen, data[52].dat, &buf[0],
+                                               300, entryY, -1, -1);
+                        if (pos != 1 || (step_count & 4))                              /* 4815 */
+                            textout_centre_ex(swap_screen, data[52].dat, &buf[2],
+                                               320, entryY, -1, -1);
+                        if (pos != 2 || (step_count & 4))                              /* 4816 */
+                            textout_centre_ex(swap_screen, data[52].dat, &buf[4],
+                                               340, entryY, -1, -1);
+                        if (pos >= 3)                                                  /* 4817 */
+                            textout_centre_ex(swap_screen, data[52].dat, "%",
+                                               360, entryY, -1, -1);
+                    }
                 }
                 if (new_rank_id != current_rank_id) {                                   /* 4820 */
                     alpha_pos = 0;                                                       /* 4821 */
@@ -266,7 +270,7 @@ int play(void)
                                         makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* 4838: decay approximation */
+                alpha_pos = alpha_pos + (int)(-alpha_pos * 0.1);  /* 4838 */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */

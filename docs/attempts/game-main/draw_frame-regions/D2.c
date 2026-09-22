@@ -145,7 +145,14 @@ void draw_frame(BITMAP *bmp)
 
             /* 2629..2638: a second, overlay draw -- edge==0 reaches this same block
              * directly (2611's `je` target is offset 3115, this block's own start),
-             * so it is duplicated verbatim below for the no-edge case. */
+             * so it is duplicated verbatim below for the no-edge case. A single source
+             * copy of this block guarded by `edge != 2` (tried and measured: candidate
+             * drops to 8260/8518, -258, because -O2 keeps ONE compiled copy with a live
+             * runtime guard here instead of duplicating -- the guard is not eliminated
+             * for free the way it is at the historical predecessor edges) does not
+             * reproduce the historical tail duplication, so the block stays written
+             * twice, once per predecessor, matching the two physical copies in the
+             * original (offsets 3115.. and 3115-again via the edge==0 fallthrough). */
             if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629: offset 3115..3134 (map.offset), 3416..3433 (y vs 400.0) */
                 customFrame = custom.frame[11];                      /* 2629 */
             }

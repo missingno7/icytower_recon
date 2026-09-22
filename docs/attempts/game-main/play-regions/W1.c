@@ -136,7 +136,9 @@ int play(void)
                                                             * so it is known non-zero here; the value is
                                                             * constant-folded away and emits no code */
 
-    while (playing && !closeButtonClicked) {   /* lines 3534..3536 */
+    while (playing && !closeButtonClicked) {   /* 3536 (3534 tests playing; both tests and both loop
+                                                 * entry/back-edge copies compile to this one physical
+                                                 * line, so its bytes are credited to the larger 3536) */
         /* REGION W1b: lines 3540..3699 (per-frame counters, music sync, debug timing, speed steps) */
         cycle_count = 0;                                 /* line 3540 */
         logic_count++;                                   /* line 3542 */
@@ -189,18 +191,18 @@ int play(void)
                 lastMusicPos = vgp;                       /* line 3585 (tail) */
             }
         }
-        if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595-3597 */
-            if (time_cheat_count == 1000) {
+        if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595 */
+            if (time_cheat_count == 1000) {                          /* 3597 */
                 /* lines 3604-3661: periodic clock()/QueryPerformanceCounter()/time() cross-check,
                  * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
                  * below are a best-effort reconstruction (see report); the calls and field targets are
                  * evidenced directly. */
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                if (clockElapsed > 0) {
+                if (clockElapsed > 0) {                             /* 3606 */
                     totClockTimes = 1.0 / clockElapsed;
                 } else {
-                    totClockTimes = -0.05;                          /* line 3610 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
                 qpc_freq = li.LowPart;
@@ -232,16 +234,16 @@ int play(void)
         }
         if (debug) {                                      /* line 3681 */
             /* lines 3682-3691: ten combo-length reward tiers, keyed to the number-row keys */
-            if (key[KEY_1]) { if (allow_smpl) start_reward(5); }
-            if (key[KEY_2]) { if (allow_smpl) start_reward(7); }
-            if (key[KEY_3]) { if (allow_smpl) start_reward(15); }
-            if (key[KEY_4]) { if (allow_smpl) start_reward(25); }
-            if (key[KEY_5]) { if (allow_smpl) start_reward(35); }
-            if (key[KEY_6]) { if (allow_smpl) start_reward(50); }
-            if (key[KEY_7]) { if (allow_smpl) start_reward(70); }
-            if (key[KEY_8]) { if (allow_smpl) start_reward(100); }
-            if (key[KEY_9]) { if (allow_smpl) start_reward(140); }
-            if (key[KEY_0]) { if (allow_smpl) start_reward(200); }
+            if (key[KEY_1]) { if (allow_smpl) start_reward(5); }      /* 3682 */
+            if (key[KEY_2]) { if (allow_smpl) start_reward(7); }      /* 3683 */
+            if (key[KEY_3]) { if (allow_smpl) start_reward(15); }     /* 3684 */
+            if (key[KEY_4]) { if (allow_smpl) start_reward(25); }     /* 3685 */
+            if (key[KEY_5]) { if (allow_smpl) start_reward(35); }     /* 3686 */
+            if (key[KEY_6]) { if (allow_smpl) start_reward(50); }     /* 3687 */
+            if (key[KEY_7]) { if (allow_smpl) start_reward(70); }     /* 3688 */
+            if (key[KEY_8]) { if (allow_smpl) start_reward(100); }    /* 3689 */
+            if (key[KEY_9]) { if (allow_smpl) start_reward(140); }    /* 3690 */
+            if (key[KEY_0]) { if (allow_smpl) start_reward(200); }    /* 3691 */
             /* line 3692 */
             allow_smpl = !(key[KEY_1] || key[KEY_2] || key[KEY_3] ||
                            key[KEY_4] || key[KEY_5] || key[KEY_6] ||

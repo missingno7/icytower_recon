@@ -313,10 +313,10 @@ int play(void)
                 if (key[KEY_SPACE]) {                                        /* 4271 */
                     if (ply[player_id]->dead == 0) {
                         log2file("  replay paused");                          /* 4272 */
-                        if (key[KEY_SPACE])                                   /* 4273 */
+                        while (key[KEY_SPACE])                                /* 4273: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);
-                        if (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
-                            !key[KEY_ESC] && !key[KEY_UP]) {                  /* 4274 */
+                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
+                               !key[KEY_ESC] && !key[KEY_UP]) {               /* 4274: pause-wait loop */
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */

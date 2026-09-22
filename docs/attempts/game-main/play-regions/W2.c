@@ -241,10 +241,10 @@ int play(void)
                 diff = level - ply[player_id]->level;                   /* 3893 */
                 if (diff != lastJumpLength)                             /* 3896 */
                     lastJumpLength = 0;                                 /* 3897 */
-                for (i = 0; i < 5; i++) {                                /* 3897..3904 */
-                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])
-                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                    ply[player_id]->jc[i] = 0;
+                for (i = 0; i < 5; i++) {                                /* 3897 */
+                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])   /* 3900 */
+                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3901 */
+                    ply[player_id]->jc[i] = 0;                             /* 3904 */
                 }
                 if (diff > 0) {                                          /* 3911 */
                     if (diff <= 5)                                       /* 3912 */
@@ -260,7 +260,7 @@ int play(void)
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
                         lastJumpLength = diff;                          /* 3928 tail */
                     } else if (ply[player_id]->in_combo) {               /* 3932 */
-                        lastJumpLength = diff;
+                        lastJumpLength = diff;                          /* 3932 */
                     }
                 }
                 ply[player_id]->in_combo = 1;  /* 3933; ? overwrites the in_combo=100 set just above, evidenced as-is */
@@ -270,10 +270,10 @@ int play(void)
 
             if (ply[player_id]->in_combo) {                              /* 3943 */
                 ply[player_id]->in_combo = 1;
-                for (i = 0; i < 5; i++) {                                /* 3945..3952 */
-                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])
-                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                    ply[player_id]->jc[i] = 0;
+                for (i = 0; i < 5; i++) {                                /* 3945 */
+                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])   /* 3948 */
+                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3949 */
+                    ply[player_id]->jc[i] = 0;                             /* 3952 */
                 }
                 ply[player_id]->level = level;                          /* 3962 */
                 if (!numComboJumps &&                                    /* 3967 */
@@ -291,10 +291,10 @@ int play(void)
             ply[player_id]->dead = 1;                                    /* 3982 */
             play_sound(custom.falling, 0, 1);                            /* 3983 */
             endTime = time(0);                                           /* 3985 */
-            for (i = 0; i < 5; i++) {                                    /* 3988..3995 */
-                if (ply[player_id]->jc[i] <= ply[player_id]->jcTop[i])
-                    ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                ply[player_id]->jc[i] = 0;
+            for (i = 0; i < 5; i++) {                                    /* 3988 */
+                if (ply[player_id]->jc[i] <= ply[player_id]->jcTop[i])       /* 3991 */
+                    ply[player_id]->jcTop[i] = ply[player_id]->jc[i];        /* 3992 */
+                ply[player_id]->jc[i] = 0;                                   /* 3995 */
             }
             jumpSequence.dist = gdLastJumpDiff;                          /* 3999 */
         }
