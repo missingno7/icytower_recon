@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "create_replay_name",
+  "source": "src/replay.c",
+  "sources": [
+    "src/replay.c"
+  ],
+  "target": "game-replay",
+  "affected_targets": [
+    "game-replay"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-replay",
+    "source": "src/replay.c",
+    "order": "current",
+    "bodies": {
+      "create_replay": "docs/attempts/game-replay/bodies/create_replay.c"
+    },
+    "evidence": "create_replay's default replay name is \"Harold\", not \"replay\". The original copies from 0x4d7a7e with ecx = 7, and the bytes at that address in assets/icytower15.exe are the six characters Harold followed by a NUL -- exactly the seven the rep movsb moves. The neighbouring six-byte header copy was already right and is unchanged: widening it to seven turns two inlined movs into a rep movsb and costs four bytes, which was tried and reverted. 254 of 254 bytes, no gains and no losses, because this removes a literal content difference rather than a codegen one."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {},
+    "order": [
+      "get_sort_method",
+      "set_sort_method",
+      "create_replay",
+      "destroy_replay",
+      "hash",
+      "calc_replay_checksum_131",
+      "calc_replay_checksum",
+      "get_replay_property",
+      "load_replay",
+      "save_replay",
+      "draw_replay_selector",
+      "add_itr_file",
+      "my_strcmp",
+      "update_file_list",
+      "replay_selector"
+    ],
+    "definition_order_with_static": [
+      [
+        "get_sort_method",
+        false
+      ],
+      [
+        "set_sort_method",
+        false
+      ],
+      [
+        "create_replay",
+        false
+      ],
+      [
+        "destroy_replay",
+        false
+      ],
+      [
+        "hash",
+        false
+      ],
+      [
+        "calc_replay_checksum_131",
+        false
+      ],
+      [
+        "calc_replay_checksum",
+        false
+      ],
+      [
+        "get_replay_property",
+        false
+      ],
+      [
+        "load_replay",
+        false
+      ],
+      [
+        "save_replay",
+        false
+      ],
+      [
+        "draw_replay_selector",
+        false
+      ],
+      [
+        "add_itr_file",
+        false
+      ],
+      [
+        "my_strcmp",
+        false
+      ],
+      [
+        "update_file_list",
+        false
+      ],
+      [
+        "replay_selector",
+        false
+      ]
+    ],
+    "bodies": {
+      "create_replay": {
+        "path": "docs/attempts/game-replay/bodies/create_replay.c",
+        "identity": {
+          "size": 678,
+          "sha256": "c28d12c8d83f8aa8e260b0516a0698feb7a3fe49da42a1c4acfbd161fc2b3c3a"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  },
+  "source_identities": {
+    "src/replay.c": {
+      "size": 24691,
+      "sha256": "8693cba2c133ad46422435c00394c3b45fa6e9d2a295ff32abe50c8263c2c3b6"
+    }
+  },
+  "new_text_identity": {
+    "size": 25543,
+    "sha256": "ffc00fcff6d0b4bb092cff24afa9a2e39409b444a3af6f12293cebcd5e6a5f74"
+  },
+  "new_header_identities": {},
+  "preserved_definitions": [
+    "add_itr_file",
+    "calc_replay_checksum",
+    "calc_replay_checksum_131",
+    "destroy_replay",
+    "draw_replay_selector",
+    "get_replay_property",
+    "get_sort_method",
+    "hash",
+    "load_replay",
+    "my_strcmp",
+    "replay_selector",
+    "save_replay",
+    "set_sort_method",
+    "update_file_list"
+  ],
+  "replaced_definitions": [
+    "create_replay"
+  ],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin create_replay_name",
+  "apply_command": "python tools/tu_context_task.py apply create_replay_name",
+  "verification_command": "python tools/tu_context_task.py check create_replay_name",
+  "promotion_command": "python tools/tu_context_task.py promote create_replay_name",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/create_replay_name.json"
+}

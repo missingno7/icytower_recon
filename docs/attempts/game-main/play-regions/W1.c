@@ -152,23 +152,23 @@ int play(void)
         time_cheat_count++;                               /* line 3545 */
         musicCounter++;                                   /* line 3546 */
         if (!itrcheck) {                                  /* line 3549 */
-            if (hasFocus != lastFocus) {                  /* line 3550-3551 */
-                if (hasFocus) {
+            if (hasFocus != lastFocus) {                  /* 3550 */
+                if (hasFocus) {                            /* 3551 */
                     /* line 3552-3559: gaining focus, restart the background track */
-                    if (bg_beat) {
+                    if (bg_beat) {                          /* 3552 */
                         checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1); /* 3553 */
                     }
-                    startGameMusic();                                             /* 3559 */
-                    totMusics = 0;
-                    accMusics = 0.0f;
-                    musicCounter = 0;
+                    startGameMusic();                       /* 3559 */
+                    totMusics = 0;                          /* 3559 */
+                    accMusics = 0.0f;                       /* 3559 */
+                    musicCounter = 0;                       /* 3559 */
                 } else {
                     /* line 3562-3567: losing focus, stop the background track */
-                    if (checkMusicVoiceID >= 0) {
-                        voice_stop(checkMusicVoiceID);
+                    if (checkMusicVoiceID >= 0) {           /* 3562 */
+                        voice_stop(checkMusicVoiceID);      /* 3563 */
                     }
-                    checkMusicVoiceID = -1;
-                    stopGameMusic();
+                    checkMusicVoiceID = -1;                 /* 3565 */
+                    stopGameMusic();                        /* 3567 */
                 }
             }
             lastFocus = hasFocus;                         /* line 3569 */
@@ -187,9 +187,13 @@ int play(void)
                  * gated on that ratio being > 0.01 (x87 fucompp/fnstsw/test $0x45 idiom); see report
                  * for the derivation of the comparison direction. The two named DWARF temps a/b hold
                  * the ratio and the scaled increment across lines 3580-3584. */
-                a = 44000.0f / vgp;                       /* lines 3580-3583 */
+                a = 44000.0f / vgp;                       /* 3580 */
                 if (a > 0.01f) {                          /* line 3583 */
-                    b = a * 50.0f / musicCounter;         /* line 3584 */
+                    b = a / (musicCounter / 50.0f);       /* line 3584: the original computes the intermediate
+                                                            * musicCounter/50.0 first (fidivrl -0x938, a REVERSE
+                                                            * divide of the int by the ST0-resident 50.0) and then
+                                                            * divides 'a' by that -- algebraically a*50.0f/musicCounter,
+                                                            * but this operand order is what reproduces fidivrl */
                     accMusics += b;
                     totMusics++;                          /* line 3585 */
                 }
@@ -211,14 +215,25 @@ int play(void)
 
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                clockSpeed = 1000.0 / (50.0 * clockElapsed);        /* line 3605 (tail) */
+                clockSpeed = (50.0 * clockElapsed) / 1000.0;        /* line 3605 (tail); confirmed against
+                                                                      * the real toolchain: this direction
+                                                                      * (not 1000.0/(50*clockElapsed)) is what
+                                                                      * actually emits fdivr %st,%st(1) -- the
+                                                                      * reciprocal form silently emits the same
+                                                                      * byte count via plain fdiv, which is why
+                                                                      * the swap wasn't caught by bytes alone. */
                 if (clockSpeed > 0.0) {                             /* 3606 */
-                    totClockTimes = 1000.0 * clockSpeed / clockSpeed / 20.0; /* 3606 */
+                    totClockTimes = 1000.0 / (1000.0 * clockSpeed) / 20.0; /* 3606: reuses the same
+                                                                      * 1000.0 already resident from 3605
+                                                                      * (GCC folds this to a single flds,
+                                                                      * confirmed via the real toolchain) --
+                                                                      * this is 1.0/clockSpeed/20.0, a genuine
+                                                                      * rate (1/clockElapsed), not a constant. */
                 } else {
-                    totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* 3606 (== -1.0/20.0, guard-fail sentinel) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
-                qpc_freq = li.LowPart;
+                qpc_freq = li.LowPart;                               /* line 3611 */
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
@@ -236,7 +251,7 @@ int play(void)
                     demo->tc_s_data[demo->tc_posts] = 50.0 * accMusics / totMusics; /* line 3641 */
                 }
                 if (demo->tc_posts <= 97) {                         /* line 3643 */
-                    demo->tc_posts++;
+                    demo->tc_posts++;                               /* line 3643 */
                 }
                 clockTimeStart = clock();                           /* line 3654 */
                 QueryPerformanceCounter(&li);                       /* line 3656 */

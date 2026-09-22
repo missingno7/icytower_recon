@@ -101,7 +101,12 @@ int play(void)
              * cursor: local_slot_trace shows every is_right/is_left/is_fire/backspace/typed
              * access in this loop (4885, 4886, 4891, 4895, 4896, 4899, 4913..4915, 4876,
              * 4877) touching the same slot as the 4821 reset and the 4838 easing -- there is
-             * no separate DWARF local for it. */
+             * no separate DWARF local for it. scrollerY (declared just below, unlike
+             * alpha_pos) is NOT read from the earlier results loop -- its DWARF register
+             * range (evidence/census/location-lists.json) starts at offset 12095, inside
+             * this inner block, so it does not need the outer scope alpha_pos needs. */
+            int scrollerY;   /* ticker-bar Y offset; %ebx from the 4821 reset (-20) through the
+                               * 4831-4838 easing -- was wrongly conflated with alpha_pos before. */
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
@@ -257,6 +262,11 @@ int play(void)
                     alpha_pos = 0;                                                       /* 4821 */
                     rank_y = 0x244;
                     skip_keys = 20;
+                    scrollerY = -20;      /* 4821: DWARF-confirmed via evidence/census/location-lists.json --
+                                            * scrollerY lives in %ebx from offset 12095 (right after this
+                                            * reset) through 13795, spanning the rectfill block (4831-4833)
+                                            * and the 4838 easing below, which were both wrongly using
+                                            * alpha_pos until this fix. */
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
@@ -276,17 +286,30 @@ int play(void)
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
                     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                              /* 4829 */
                     set_trans_blender(0, 0, 0, 110);                                     /* 4830 */
-                    rectfill(swap_screen, 0, 0, 639, 20, makecol(0, 0, 0));              /* 4831 */
-                    rectfill(swap_screen, 0, 0, 639, 18, makecol(0, 0, 0));              /* 4832 */
-                    rectfill(swap_screen, 0, 0, 639, 16, makecol(0, 0, 0));              /* 4833 */
+                    /* 4831-4833: original computes these through draw.inl's inlined rectfill,
+                     * with y1=scrollerY and y2=scrollerY+20/+18/+16 (confirmed via
+                     * `lea 0x14(%ebx),%eax` / `lea 0x12(%ebx),%eax` / `lea 0x10(%ebx),%eax`
+                     * at offsets 13301/13375/13449, all inside scrollerY's DWARF-register
+                     * range) -- not the constants this used to hardcode. */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 20, makecol(0, 0, 0)); /* 4831 */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 18, makecol(0, 0, 0)); /* 4832 */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 16, makecol(0, 0, 0)); /* 4833 */
                     solid_mode();                                                         /* 4834 */
-                    /* 4835 */ draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
+                    /* 4835/4836: the draw_scroller 4th argument is 0xc(%esp)=%ebx at offsets
+                     * 13519/13584, both inside scrollerY's register range -- not alpha_pos. */
+                    draw_scroller(&summary_scroller, swap_screen, 1, scrollerY,          /* 4835 */
                                    makecol(150, 150, 150));
-                    /* 4836 */ if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
+                    if (!draw_scroller(&summary_scroller, swap_screen, 0, scrollerY,     /* 4836 */
                                         makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = alpha_pos + (int)(-alpha_pos * 0.1);  /* 4838 */
+                /* 4838: this easing computation (ebx=ebx+(int)(-ebx*0.1)) sits at offset
+                 * 13633-13707, inside scrollerY's DWARF register range (13150-13795), not
+                 * alpha_pos's (alpha_pos's own local_slot_trace has no access at 4838 at all).
+                 * scrollerTargetY has no DWARF location (eliminated), consistent with the
+                 * target being the constant 0 folded into this formula, the same way
+                 * hyTarget==136.0 and rankTargetY==320 are already folded into hy/rank_y. */
+                scrollerY = scrollerY + (int)(-scrollerY * 0.1);  /* 4838 */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */

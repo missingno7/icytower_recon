@@ -658,6 +658,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "create_replay",
+      "status": "CODEGEN_SIMILAR",
+      "state": "CODEGEN_SIMILAR",
+      "priority": 33,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+      "first_difference": {
+        "offset": 44,
+        "original_va": 4312340,
+        "candidate_byte": 0,
+        "original_byte": 208
+      },
+      "verification_command": "python tools/check_function.py game-replay create_replay",
+      "begin_command": "python tools/grinder_task.py begin game-replay create_replay",
+      "promotion_command": "python tools/promote_function.py game-replay create_replay",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
+      "size": 254,
+      "candidate_card": "docs/current/functions/replay/create_replay.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "start_reward",
@@ -1639,31 +1664,6 @@
       "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "create_replay",
-      "status": "CODEGEN_SIMILAR",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-      "first_difference": {
-        "offset": 44,
-        "original_va": 4312340,
-        "candidate_byte": 0,
-        "original_byte": 208
-      },
-      "verification_command": "python tools/check_function.py game-replay create_replay",
-      "begin_command": "python tools/grinder_task.py begin game-replay create_replay",
-      "promotion_command": "python tools/promote_function.py game-replay create_replay",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 254,
-      "candidate_card": "docs/current/functions/replay/create_replay.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
     },
     {
       "source": "src/profile.c",

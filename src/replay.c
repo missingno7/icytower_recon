@@ -87,6 +87,23 @@ int my_strcmp(const void *c, const void *d);
 void update_file_list(char *path);
 Treplay *replay_selector(Tcontrol *ctrl, char *path);
 
+/* Forward declarations; definitions follow in their original source order. */
+int get_sort_method(void);
+void set_sort_method(int sm);
+Treplay *create_replay(int size);
+void destroy_replay(Treplay *r);
+unsigned int hash(unsigned int a);
+int calc_replay_checksum_131(Treplay *r);
+int calc_replay_checksum(Treplay *r);
+int get_replay_property(const char *filename, int property);
+Treplay *load_replay(const char *filename);
+int save_replay(const char *path, const char *file, Treplay *r, int size, int make_new_date);
+void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list, int selection, int offset, int max_posts, int x, int y);
+int add_itr_file(const char *filename, int attrib, void *param);
+int my_strcmp(const void *c, const void *d);
+void update_file_list(char *path);
+Treplay *replay_selector(Tcontrol *ctrl, char *path);
+
 int get_sort_method(void) { return sort_method; }
 
 void set_sort_method(int sm) { sort_method = sm; }
@@ -109,7 +126,7 @@ Treplay *create_replay(int size)
         r->name[i] = 0;
     for (i = 0; i < 32; i++)
         r->name[i] = 0;
-    strcpy(r->name, "replay");
+    strcpy(r->name, "Harold");
     strcpy(r->date, "no date");
     r->data = malloc(r->size * sizeof(Treplay_data) + 32);
     if (!r->data) {

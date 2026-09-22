@@ -150,23 +150,23 @@ int play(void)
         time_cheat_count++;                               /* line 3545 */
         musicCounter++;                                   /* line 3546 */
         if (!itrcheck) {                                  /* line 3549 */
-            if (hasFocus != lastFocus) {                  /* line 3550-3551 */
-                if (hasFocus) {
+            if (hasFocus != lastFocus) {                  /* 3550 */
+                if (hasFocus) {                            /* 3551 */
                     /* line 3552-3559: gaining focus, restart the background track */
-                    if (bg_beat) {
+                    if (bg_beat) {                          /* 3552 */
                         checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1); /* 3553 */
                     }
-                    startGameMusic();                                             /* 3559 */
-                    totMusics = 0;
-                    accMusics = 0.0f;
-                    musicCounter = 0;
+                    startGameMusic();                       /* 3559 */
+                    totMusics = 0;                          /* 3559 */
+                    accMusics = 0.0f;                       /* 3559 */
+                    musicCounter = 0;                       /* 3559 */
                 } else {
                     /* line 3562-3567: losing focus, stop the background track */
-                    if (checkMusicVoiceID >= 0) {
-                        voice_stop(checkMusicVoiceID);
+                    if (checkMusicVoiceID >= 0) {           /* 3562 */
+                        voice_stop(checkMusicVoiceID);      /* 3563 */
                     }
-                    checkMusicVoiceID = -1;
-                    stopGameMusic();
+                    checkMusicVoiceID = -1;                 /* 3565 */
+                    stopGameMusic();                        /* 3567 */
                 }
             }
             lastFocus = hasFocus;                         /* line 3569 */
@@ -185,9 +185,13 @@ int play(void)
                  * gated on that ratio being > 0.01 (x87 fucompp/fnstsw/test $0x45 idiom); see report
                  * for the derivation of the comparison direction. The two named DWARF temps a/b hold
                  * the ratio and the scaled increment across lines 3580-3584. */
-                a = 44000.0f / vgp;                       /* lines 3580-3583 */
+                a = 44000.0f / vgp;                       /* 3580 */
                 if (a > 0.01f) {                          /* line 3583 */
-                    b = a * 50.0f / musicCounter;         /* line 3584 */
+                    b = a / (50.0f / musicCounter);       /* line 3584: NOT a*50.0f/musicCounter -- the
+                                                            * original computes the intermediate 50.0/musicCounter
+                                                            * first (fidivrl, a REVERSE divide by the int) and
+                                                            * then divides 'a' by that, i.e. a*musicCounter/50.0f,
+                                                            * the reciprocal-shaped formula, not a*50.0f/musicCounter */
                     accMusics += b;
                     totMusics++;                          /* line 3585 */
                 }
@@ -209,14 +213,25 @@ int play(void)
 
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                clockSpeed = 1000.0 / (50.0 * clockElapsed);        /* line 3605 (tail) */
+                clockSpeed = (50.0 * clockElapsed) / 1000.0;        /* line 3605 (tail); confirmed against
+                                                                      * the real toolchain: this direction
+                                                                      * (not 1000.0/(50*clockElapsed)) is what
+                                                                      * actually emits fdivr %st,%st(1) -- the
+                                                                      * reciprocal form silently emits the same
+                                                                      * byte count via plain fdiv, which is why
+                                                                      * the swap wasn't caught by bytes alone. */
                 if (clockSpeed > 0.0) {                             /* 3606 */
-                    totClockTimes = 1000.0 * clockSpeed / clockSpeed / 20.0; /* 3606 */
+                    totClockTimes = 1000.0 / (1000.0 * clockSpeed) / 20.0; /* 3606: reuses the same
+                                                                      * 1000.0 already resident from 3605
+                                                                      * (GCC folds this to a single flds,
+                                                                      * confirmed via the real toolchain) --
+                                                                      * this is 1.0/clockSpeed/20.0, a genuine
+                                                                      * rate (1/clockElapsed), not a constant. */
                 } else {
-                    totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* 3606 (== -1.0/20.0, guard-fail sentinel) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
-                qpc_freq = li.LowPart;
+                qpc_freq = li.LowPart;                               /* line 3611 */
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
@@ -234,7 +249,7 @@ int play(void)
                     demo->tc_s_data[demo->tc_posts] = 50.0 * accMusics / totMusics; /* line 3641 */
                 }
                 if (demo->tc_posts <= 97) {                         /* line 3643 */
-                    demo->tc_posts++;
+                    demo->tc_posts++;                               /* line 3643 */
                 }
                 clockTimeStart = clock();                           /* line 3654 */
                 QueryPerformanceCounter(&li);                       /* line 3656 */
@@ -1152,17 +1167,44 @@ int play(void)
                 qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);  /* 4663 */
                 gotHigh += qualify[rank];                                    /* 4664 */
             }
+            quit = gotHigh;                                                 /* 4662: local_slot_trace shows
+                                                                                * THREE writes to quit's slot
+                                                                                * in this stretch (9446/4657
+                                                                                * const 0, 9503/4662 a VALUE,
+                                                                                * 9522/4668 const 0 again) and
+                                                                                * seven reads after them. At
+                                                                                * offset 9503 ("mov %esi,
+                                                                                * -0x93c(%ebp)") esi is the
+                                                                                * gotHigh accumulator, still
+                                                                                * live from "add %eax,%esi"
+                                                                                * at offset 9495 (line 4664) --
+                                                                                * quit is reused from here on
+                                                                                * to carry gotHigh's value
+                                                                                * through the rest of the
+                                                                                * function; the 4670/4673 tests
+                                                                                * below read quit, not gotHigh,
+                                                                                * from this point on. */
 
             if (recording) {                                                /* 4668 */
-                gameover_bmp_id = (gotHigh > 0) ? 0x3e : 0x37;               /* 4670 */
+                gameover_bmp_id = (quit > 0) ? 0x3e : 0x37;                  /* 4670: disasm reads -0x93c
+                                                                                * (quit's slot) here, not
+                                                                                * gotHigh's esi. */
             } else {
+                quit = 0;                                                   /* 4668: second const-0 write to
+                                                                                * quit's slot (offset 9522),
+                                                                                * distinct from gotHigh (whose
+                                                                                * own DW_OP_reg6/esi location
+                                                                                * list keeps it separately live
+                                                                                * over this same span). */
                 gotHigh = 0;                                                /* 4668 */
                 gameover_bmp_id = 0x37;                                     /* 4668 */
             }
             if (is_playing_custom_game)                                     /* 4671 */
                 gameover_bmp_id = 0x37;
 
-            if (gotHigh) {                                                  /* 4673 */
+            if (quit) {                                                     /* 4673: disasm reads -0x93c
+                                                                                * (quit) again here, not
+                                                                                * gotHigh. */
                 if (!is_playing_custom_game) {                              /* 4673 */
                     log2file(" player qualified for highscore");            /* 4674 */
                     play_sound(sounds[7], 0, 0);                            /* 4675 */
@@ -1191,7 +1233,12 @@ int play(void)
              * cursor: local_slot_trace shows every is_right/is_left/is_fire/backspace/typed
              * access in this loop (4885, 4886, 4891, 4895, 4896, 4899, 4913..4915, 4876,
              * 4877) touching the same slot as the 4821 reset and the 4838 easing -- there is
-             * no separate DWARF local for it. */
+             * no separate DWARF local for it. scrollerY (declared just below, unlike
+             * alpha_pos) is NOT read from the earlier results loop -- its DWARF register
+             * range (evidence/census/location-lists.json) starts at offset 12095, inside
+             * this inner block, so it does not need the outer scope alpha_pos needs. */
+            int scrollerY;   /* ticker-bar Y offset; %ebx from the 4821 reset (-20) through the
+                               * 4831-4838 easing -- was wrongly conflated with alpha_pos before. */
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
@@ -1347,6 +1394,11 @@ int play(void)
                     alpha_pos = 0;                                                       /* 4821 */
                     rank_y = 0x244;
                     skip_keys = 20;
+                    scrollerY = -20;      /* 4821: DWARF-confirmed via evidence/census/location-lists.json --
+                                            * scrollerY lives in %ebx from offset 12095 (right after this
+                                            * reset) through 13795, spanning the rectfill block (4831-4833)
+                                            * and the 4838 easing below, which were both wrongly using
+                                            * alpha_pos until this fix. */
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
@@ -1366,17 +1418,30 @@ int play(void)
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
                     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                              /* 4829 */
                     set_trans_blender(0, 0, 0, 110);                                     /* 4830 */
-                    rectfill(swap_screen, 0, 0, 639, 20, makecol(0, 0, 0));              /* 4831 */
-                    rectfill(swap_screen, 0, 0, 639, 18, makecol(0, 0, 0));              /* 4832 */
-                    rectfill(swap_screen, 0, 0, 639, 16, makecol(0, 0, 0));              /* 4833 */
+                    /* 4831-4833: original computes these through draw.inl's inlined rectfill,
+                     * with y1=scrollerY and y2=scrollerY+20/+18/+16 (confirmed via
+                     * `lea 0x14(%ebx),%eax` / `lea 0x12(%ebx),%eax` / `lea 0x10(%ebx),%eax`
+                     * at offsets 13301/13375/13449, all inside scrollerY's DWARF-register
+                     * range) -- not the constants this used to hardcode. */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 20, makecol(0, 0, 0)); /* 4831 */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 18, makecol(0, 0, 0)); /* 4832 */
+                    rectfill(swap_screen, 0, scrollerY, 639, scrollerY + 16, makecol(0, 0, 0)); /* 4833 */
                     solid_mode();                                                         /* 4834 */
-                    /* 4835 */ draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
+                    /* 4835/4836: the draw_scroller 4th argument is 0xc(%esp)=%ebx at offsets
+                     * 13519/13584, both inside scrollerY's register range -- not alpha_pos. */
+                    draw_scroller(&summary_scroller, swap_screen, 1, scrollerY,          /* 4835 */
                                    makecol(150, 150, 150));
-                    /* 4836 */ if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
+                    if (!draw_scroller(&summary_scroller, swap_screen, 0, scrollerY,     /* 4836 */
                                         makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = alpha_pos + (int)(-alpha_pos * 0.1);  /* 4838 */
+                /* 4838: this easing computation (ebx=ebx+(int)(-ebx*0.1)) sits at offset
+                 * 13633-13707, inside scrollerY's DWARF register range (13150-13795), not
+                 * alpha_pos's (alpha_pos's own local_slot_trace has no access at 4838 at all).
+                 * scrollerTargetY has no DWARF location (eliminated), consistent with the
+                 * target being the constant 0 folded into this formula, the same way
+                 * hyTarget==136.0 and rankTargetY==320 are already folded into hy/rank_y. */
+                scrollerY = scrollerY + (int)(-scrollerY * 0.1);  /* 4838 */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */

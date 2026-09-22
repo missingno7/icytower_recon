@@ -1,20 +1,20 @@
 {
   "workflow_states": {
     "FUNCTION_MATCH": 178,
-    "SOURCE_DIFFER": 45,
-    "CODEGEN_SIMILAR": 5,
+    "SOURCE_DIFFER": 44,
+    "CODEGEN_SIMILAR": 6,
     "BODY_MATCH_LAYOUT_BLOCKED": 25
   },
   "difference_classes": {
     "EXACT": 178,
     "SOURCE_CONTROL_FLOW_SHAPE": 9,
-    "RELOCATION_OR_LITERAL_LAYOUT": 4,
+    "RELOCATION_OR_LITERAL_LAYOUT": 5,
     "STACK_FRAME_LAYOUT": 11,
     "SAME_CU_CALL_LAYOUT": 25,
     "COMMON_BSS_LAYOUT": 1,
     "REGISTER_OR_INSTRUCTION_SELECTION": 15,
     "UNKNOWN_SUPERVISOR": 5,
-    "LITERAL_CONTENT_DIFFERENCE": 3,
+    "LITERAL_CONTENT_DIFFERENCE": 2,
     "INSTRUCTION_ORDER": 1,
     "COMPILER_CONTEXT_DEPENDENCY": 1
   },
@@ -471,6 +471,31 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 370,
       "candidate_card": "docs/current/functions/main/show_instructions.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "create_replay",
+      "status": "CODEGEN_SIMILAR",
+      "state": "CODEGEN_SIMILAR",
+      "priority": 33,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+      "first_difference": {
+        "offset": 44,
+        "original_va": 4312340,
+        "candidate_byte": 0,
+        "original_byte": 208
+      },
+      "verification_command": "python tools/check_function.py game-replay create_replay",
+      "begin_command": "python tools/grinder_task.py begin game-replay create_replay",
+      "promotion_command": "python tools/promote_function.py game-replay create_replay",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
+      "size": 254,
+      "candidate_card": "docs/current/functions/replay/create_replay.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1431,31 +1456,6 @@
       "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "create_replay",
-      "status": "CODEGEN_SIMILAR",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-      "first_difference": {
-        "offset": 44,
-        "original_va": 4312340,
-        "candidate_byte": 0,
-        "original_byte": 208
-      },
-      "verification_command": "python tools/check_function.py game-replay create_replay",
-      "begin_command": "python tools/grinder_task.py begin game-replay create_replay",
-      "promotion_command": "python tools/promote_function.py game-replay create_replay",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 254,
-      "candidate_card": "docs/current/functions/replay/create_replay.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
     },
     {
       "source": "src/profile.c",

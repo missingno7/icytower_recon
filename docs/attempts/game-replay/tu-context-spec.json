@@ -1,0 +1,9 @@
+{
+  "target": "game-replay",
+  "source": "src/replay.c",
+  "order": "current",
+  "bodies": {
+    "create_replay": "docs/attempts/game-replay/bodies/create_replay.c"
+  },
+  "evidence": "create_replay's default replay name is \"Harold\", not \"replay\". The original copies from 0x4d7a7e with ecx = 7, and the bytes at that address in assets/icytower15.exe are the six characters Harold followed by a NUL -- exactly the seven the rep movsb moves. The neighbouring six-byte header copy was already right and is unchanged: widening it to seven turns two inlined movs into a rep movsb and costs four bytes, which was tried and reverted. 254 of 254 bytes, no gains and no losses, because this removes a literal content difference rather than a codegen one."
+}

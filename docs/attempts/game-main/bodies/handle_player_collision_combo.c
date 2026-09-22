@@ -4,10 +4,12 @@ void handle_player_collision_combo(int lastX, int lastY)
 {
     Tplayer *p;
     int fy1 = -12345678;
-    int fx1 = 0, fx2 = 0;
+    int fx1 = 0, fx2 = 0, fy2;
     int ilx, ily, irx, iry;
     int solid1, solid2, left, right;
     int col1, col2;
+    int plx1, ply1, plx2, ply2;
+    int prx1, pry1, prx2, pry2;
 
     p = ply[player_id];
     col1 = makecol(255, 0, 0);
@@ -49,6 +51,15 @@ void handle_player_collision_combo(int lastX, int lastY)
             fx2 = 0;
         }
     }
+    plx1 = (int)p->x - 11;
+    ply1 = (int)p->y + 1;
+    plx2 = lastX - 11;
+    ply2 = lastY;
+    fy2 = fy1;
+    prx1 = (int)p->x + 11;
+    pry1 = (int)p->y + 1;
+    prx2 = lastX + 11;
+    pry2 = lastY;
     if (debug) {
         if (key[KEY_F2]) {
             line(screen, fx1, fy1, fx2, fy1, col1);
@@ -56,10 +67,10 @@ void handle_player_collision_combo(int lastX, int lastY)
             line(screen, (int)p->x + 11, (int)p->y + 1, lastX + 11, lastY, col2);
         }
     }
-    left = line_intersect(fx1, fy1, fx2, fy1,
-        (int)p->x - 11, (int)p->y + 1, lastX - 11, lastY, &ilx, &ily);
-    right = line_intersect(fx1, fy1, fx2, fy1,
-        (int)p->x + 11, (int)p->y + 1, lastX + 11, lastY, &irx, &iry);
+    left = line_intersect(fx1, fy1, fx2, fy2,
+        plx1, ply1, plx2, ply2, &ilx, &ily);
+    right = line_intersect(fx1, fy1, fx2, fy2,
+        prx1, pry1, prx2, pry2, &irx, &iry);
     if (!left && !right) {
         p->edge = 0;
         return;

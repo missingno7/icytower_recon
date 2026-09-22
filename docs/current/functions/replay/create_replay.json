@@ -7,10 +7,10 @@
   "historical_va": "0x41cce8",
   "historical_size": 254,
   "status": "CODEGEN_SIMILAR",
-  "state": "SOURCE_DIFFER",
-  "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-  "body_edit_allowed": true,
-  "reason": "Aligned reference instructions address different literal content. Masked body equality does not prove correct source or layout-only blocking.",
+  "state": "CODEGEN_SIMILAR",
+  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+  "body_edit_allowed": false,
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "Treplay * create_replay(int size);",
   "return_type": "Treplay *",
   "parameters": [
@@ -73,21 +73,21 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 95,
-    "body_end_line": 124,
-    "body_sha256": "1a1998e5f60dbb78e8f1d0f79f8a853f771374eb5c42e0791ffdc6e1bdc0dd6a"
+    "body_start_line": 112,
+    "body_end_line": 141,
+    "body_sha256": "450fe154e6924052cc82530af9e074acd667a0b979210fbf8e3a12c25b70e5a7"
   },
   "reference_diagnostics": [],
   "literal_diagnostics": [
     {
       "function_offset": 127,
       "candidate_addend": 152,
-      "classification": "LITERAL_CONTENT_DIFFERENCE",
-      "content_equal": false,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
       "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
       "kind": "C_STRING",
       "historical_operand_va": 5077630,
-      "candidate_hex": "7265706c6179",
+      "candidate_hex": "4861726f6c64",
       "original_hex": "4861726f6c64",
       "candidate_instruction": {
         "address": 3670,
@@ -106,43 +106,28 @@
         "resolution": "section base not independently established",
         "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
         "locations": [
-          5066681,
-          5070376
+          5067767,
+          5077630
         ],
         "occurrence_count": 2,
         "occurrence_count_lower_bound": 2,
         "locations_truncated": false,
         "state": "CONTENT_LOCATION_AMBIGUOUS"
       },
-      "candidate_text": "replay",
+      "candidate_text": "Harold",
       "original_text": "Harold",
       "candidate_source_lines": [
         {
           "file": "src/replay.c",
-          "line": 112,
-          "text": "    strcpy(r->name, \"replay\");"
+          "line": 129,
+          "text": "    strcpy(r->name, \"Harold\");"
         }
       ]
     }
   ],
   "tail_jump_layout": null,
   "instruction_order": null,
-  "source_patterns": [
-    {
-      "id": "repair_literal_content",
-      "changes": [
-        {
-          "start": 3862,
-          "end": 3870,
-          "before": "\"replay\"",
-          "after": "\"Harold\"",
-          "reason": "Correct the unique explicit string token from aligned original/candidate operand content; fresh independent verification required."
-        }
-      ],
-      "reason": "Aligned instructions expose different string payloads; this is a source experiment, not ownership or equality proof.",
-      "application_command": "python tools/apply_pattern.py game-replay create_replay repair_literal_content"
-    }
-  ],
+  "source_patterns": [],
   "frame_layout": null,
   "signedness": {
     "variables": [
@@ -1051,25 +1036,25 @@
       "required_evidence": "literal_diagnostics",
       "confidence": "ALIGNED_CONTENT_OBSERVATION; FRESH_PROOF_REQUIRED",
       "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
         "observed_features": [],
         "evidence_field": "literal_diagnostics",
-        "priority_bonus_eligible": true,
+        "priority_bonus_eligible": false,
         "compiler_scope_matches": true,
         "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -25,
+  "priority": 33,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+  "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
-      "body_edit_allowed": true,
+      "body_edit_allowed": false,
       "known_difference_class": true,
       "source_body_located": true,
       "calls_resolved": true,
@@ -1126,23 +1111,17 @@
       "state": "UNRESOLVED_RELOCATION_OWNER",
       "reason": "section base not independently established",
       "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
+    },
+    {
+      "function_offset": 127,
+      "symbol": ".rdata",
+      "state": "UNRESOLVED_RELOCATION_OWNER",
+      "reason": "section base not independently established",
+      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
     }
   ],
   "local_declaration_tasks": [],
-  "source_pattern_prerequisites": [
-    {
-      "function_offset": 44,
-      "symbol": ".data",
-      "reason": "section base not independently established",
-      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
-    },
-    {
-      "function_offset": 52,
-      "symbol": ".data",
-      "reason": "section base not independently established",
-      "limit": "The generated source recipe does not repair this independent binding; owner/interface evidence is still required."
-    }
-  ],
+  "source_pattern_prerequisites": [],
   "interface_scope": [],
   "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
@@ -1151,7 +1130,7 @@
     "relocation_mismatches": 3,
     "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
-    "ownership_prerequisites": 2,
+    "ownership_prerequisites": 3,
     "reference_diagnostics": 0,
     "literal_diagnostics": 1,
     "literal_dependencies": 1,

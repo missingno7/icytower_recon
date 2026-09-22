@@ -308,17 +308,44 @@ int play(void)
                 qualify[rank] = qualify_hisc_table(hisc_tables[rank], qualifyValue[rank]);  /* 4663 */
                 gotHigh += qualify[rank];                                    /* 4664 */
             }
+            quit = gotHigh;                                                 /* 4662: local_slot_trace shows
+                                                                                * THREE writes to quit's slot
+                                                                                * in this stretch (9446/4657
+                                                                                * const 0, 9503/4662 a VALUE,
+                                                                                * 9522/4668 const 0 again) and
+                                                                                * seven reads after them. At
+                                                                                * offset 9503 ("mov %esi,
+                                                                                * -0x93c(%ebp)") esi is the
+                                                                                * gotHigh accumulator, still
+                                                                                * live from "add %eax,%esi"
+                                                                                * at offset 9495 (line 4664) --
+                                                                                * quit is reused from here on
+                                                                                * to carry gotHigh's value
+                                                                                * through the rest of the
+                                                                                * function; the 4670/4673 tests
+                                                                                * below read quit, not gotHigh,
+                                                                                * from this point on. */
 
             if (recording) {                                                /* 4668 */
-                gameover_bmp_id = (gotHigh > 0) ? 0x3e : 0x37;               /* 4670 */
+                gameover_bmp_id = (quit > 0) ? 0x3e : 0x37;                  /* 4670: disasm reads -0x93c
+                                                                                * (quit's slot) here, not
+                                                                                * gotHigh's esi. */
             } else {
+                quit = 0;                                                   /* 4668: second const-0 write to
+                                                                                * quit's slot (offset 9522),
+                                                                                * distinct from gotHigh (whose
+                                                                                * own DW_OP_reg6/esi location
+                                                                                * list keeps it separately live
+                                                                                * over this same span). */
                 gotHigh = 0;                                                /* 4668 */
                 gameover_bmp_id = 0x37;                                     /* 4668 */
             }
             if (is_playing_custom_game)                                     /* 4671 */
                 gameover_bmp_id = 0x37;
 
-            if (gotHigh) {                                                  /* 4673 */
+            if (quit) {                                                     /* 4673: disasm reads -0x93c
+                                                                                * (quit) again here, not
+                                                                                * gotHigh. */
                 if (!is_playing_custom_game) {                              /* 4673 */
                     log2file(" player qualified for highscore");            /* 4674 */
                     play_sound(sounds[7], 0, 0);                            /* 4675 */
