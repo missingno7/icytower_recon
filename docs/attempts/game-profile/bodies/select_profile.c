@@ -13,6 +13,7 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
     int targetY;
     void *bgbmp;
     char input[256];
+    char buf[128];
 
     old_font = font;
     font = data[54].dat;
@@ -136,6 +137,11 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
         while (!cycle_count)
             rest(2);
         pageY += (int)((targetY - pageY) * 0.2f);
+    }
+
+    if (selectedProfile) {
+        sprintf(buf, "Now using profile '%s'", (char *)selectedProfile + 6);
+        my_alert("Profile Changed!", buf, 0, 1);
     }
 
     targetY = 510;
