@@ -135,7 +135,9 @@ int play(void)
                                                             * so it is known non-zero here; the value is
                                                             * constant-folded away and emits no code */
 
-    while (playing && !closeButtonClicked) {   /* lines 3534..3536 */
+    while (playing && !closeButtonClicked) {   /* 3536 (3534 tests playing; both tests and both loop
+                                                 * entry/back-edge copies compile to this one physical
+                                                 * line, so its bytes are credited to the larger 3536) */
         cycle_count = 0;                                 /* line 3540 */
         logic_count++;                                   /* line 3542 */
         step_count++;                                    /* line 3543 */
@@ -187,18 +189,18 @@ int play(void)
                 lastMusicPos = vgp;                       /* line 3585 (tail) */
             }
         }
-        if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595-3597 */
-            if (time_cheat_count == 1000) {
+        if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595 */
+            if (time_cheat_count == 1000) {                          /* 3597 */
                 /* lines 3604-3661: periodic clock()/QueryPerformanceCounter()/time() cross-check,
                  * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
                  * below are a best-effort reconstruction (see report); the calls and field targets are
                  * evidenced directly. */
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                if (clockElapsed > 0) {
+                if (clockElapsed > 0) {                             /* 3606 */
                     totClockTimes = 1.0 / clockElapsed;
                 } else {
-                    totClockTimes = -0.05;                          /* line 3610 (fallthrough constant) */
+                    totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
                 }
                 QueryPerformanceFrequency(&li);                     /* line 3610 */
                 qpc_freq = li.LowPart;
@@ -230,16 +232,16 @@ int play(void)
         }
         if (debug) {                                      /* line 3681 */
             /* lines 3682-3691: ten combo-length reward tiers, keyed to the number-row keys */
-            if (key[KEY_1]) { if (allow_smpl) start_reward(5); }
-            if (key[KEY_2]) { if (allow_smpl) start_reward(7); }
-            if (key[KEY_3]) { if (allow_smpl) start_reward(15); }
-            if (key[KEY_4]) { if (allow_smpl) start_reward(25); }
-            if (key[KEY_5]) { if (allow_smpl) start_reward(35); }
-            if (key[KEY_6]) { if (allow_smpl) start_reward(50); }
-            if (key[KEY_7]) { if (allow_smpl) start_reward(70); }
-            if (key[KEY_8]) { if (allow_smpl) start_reward(100); }
-            if (key[KEY_9]) { if (allow_smpl) start_reward(140); }
-            if (key[KEY_0]) { if (allow_smpl) start_reward(200); }
+            if (key[KEY_1]) { if (allow_smpl) start_reward(5); }      /* 3682 */
+            if (key[KEY_2]) { if (allow_smpl) start_reward(7); }      /* 3683 */
+            if (key[KEY_3]) { if (allow_smpl) start_reward(15); }     /* 3684 */
+            if (key[KEY_4]) { if (allow_smpl) start_reward(25); }     /* 3685 */
+            if (key[KEY_5]) { if (allow_smpl) start_reward(35); }     /* 3686 */
+            if (key[KEY_6]) { if (allow_smpl) start_reward(50); }     /* 3687 */
+            if (key[KEY_7]) { if (allow_smpl) start_reward(70); }     /* 3688 */
+            if (key[KEY_8]) { if (allow_smpl) start_reward(100); }    /* 3689 */
+            if (key[KEY_9]) { if (allow_smpl) start_reward(140); }    /* 3690 */
+            if (key[KEY_0]) { if (allow_smpl) start_reward(200); }    /* 3691 */
             /* line 3692 */
             allow_smpl = !(key[KEY_1] || key[KEY_2] || key[KEY_3] ||
                            key[KEY_4] || key[KEY_5] || key[KEY_6] ||
@@ -424,10 +426,10 @@ int play(void)
                 diff = level - ply[player_id]->level;                   /* 3893 */
                 if (diff != lastJumpLength)                             /* 3896 */
                     lastJumpLength = 0;                                 /* 3897 */
-                for (i = 0; i < 5; i++) {                                /* 3897..3904 */
-                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])
-                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                    ply[player_id]->jc[i] = 0;
+                for (i = 0; i < 5; i++) {                                /* 3897 */
+                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])   /* 3900 */
+                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3901 */
+                    ply[player_id]->jc[i] = 0;                             /* 3904 */
                 }
                 if (diff > 0) {                                          /* 3911 */
                     if (diff <= 5)                                       /* 3912 */
@@ -442,21 +444,29 @@ int play(void)
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
                         lastJumpLength = diff;                          /* 3928 tail */
-                    } else if (ply[player_id]->in_combo) {               /* 3932 */
-                        lastJumpLength = diff;
+                    } else if (ply[player_id]->in_combo) {               /* 3932: two-part condition,
+                                                                            * diff==1 (offset 3888) &&
+                                                                            * in_combo!=0 (offset 3897,
+                                                                            * reusing eax from the reload
+                                                                            * at 3916, not a redundant
+                                                                            * re-test of diff) */
+                        ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
+                                                                            * the test at offset 3903 */
                     }
                 }
-                ply[player_id]->in_combo = 1;  /* 3933; ? overwrites the in_combo=100 set just above, evidenced as-is */
+                /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
+                 * not a re-test of the line-3932 condition. */
                 if (!ply[player_id]->in_combo)                           /* 3936 */
                     gdComboStart = level;                                /* 3937 */
             }
 
             if (ply[player_id]->in_combo) {                              /* 3943 */
-                ply[player_id]->in_combo = 1;
-                for (i = 0; i < 5; i++) {                                /* 3945..3952 */
-                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])
-                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                    ply[player_id]->jc[i] = 0;
+                ply[player_id]->in_combo = 1;                            /* 3943 (same DWARF row, offset
+                                                                            * 4346, as the test at 4339) */
+                for (i = 0; i < 5; i++) {                                /* 3945 */
+                    if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])   /* 3948 */
+                        ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3949 */
+                    ply[player_id]->jc[i] = 0;                             /* 3952 */
                 }
                 ply[player_id]->level = level;                          /* 3962 */
                 if (!numComboJumps &&                                    /* 3967 */
@@ -474,10 +484,10 @@ int play(void)
             ply[player_id]->dead = 1;                                    /* 3982 */
             play_sound(custom.falling, 0, 1);                            /* 3983 */
             endTime = time(0);                                           /* 3985 */
-            for (i = 0; i < 5; i++) {                                    /* 3988..3995 */
-                if (ply[player_id]->jc[i] <= ply[player_id]->jcTop[i])
-                    ply[player_id]->jcTop[i] = ply[player_id]->jc[i];
-                ply[player_id]->jc[i] = 0;
+            for (i = 0; i < 5; i++) {                                    /* 3988 */
+                if (ply[player_id]->jc[i] <= ply[player_id]->jcTop[i])       /* 3991 */
+                    ply[player_id]->jcTop[i] = ply[player_id]->jc[i];        /* 3992 */
+                ply[player_id]->jc[i] = 0;                                   /* 3995 */
             }
             jumpSequence.dist = gdLastJumpDiff;                          /* 3999 */
         }
@@ -727,10 +737,10 @@ int play(void)
                 if (key[KEY_SPACE]) {                                        /* 4271 */
                     if (ply[player_id]->dead == 0) {
                         log2file("  replay paused");                          /* 4272 */
-                        if (key[KEY_SPACE])                                   /* 4273 */
+                        while (key[KEY_SPACE])                                /* 4273: debounce-wait loop */
                             poll_control(&rec_ctrl, 1);
-                        if (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
-                            !key[KEY_ESC] && !key[KEY_UP]) {                  /* 4274 */
+                        while (!key[KEY_SPACE] && !key[KEY_RIGHT] &&
+                               !key[KEY_ESC] && !key[KEY_UP]) {               /* 4274: pause-wait loop */
                             poll_control(&rec_ctrl, 1);                       /* 4275 */
                             if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */
@@ -1040,7 +1050,7 @@ int play(void)
     {
         /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
          * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
-        hy = 0.0f;         /* slides in toward 136.0 */
+        hy = 480.0f;       /* 4704: panel starts off-screen at 480 and eases up toward 136.0 */
         int alpha_pos = 0; /* first read is data[alpha_pos].dat in the loop below */
         char *initials = NULL;
 
@@ -1049,7 +1059,7 @@ int play(void)
             int pos;
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
-            char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };
+            char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
             int skip_keys;
             int isGuest;
             int new_rank_id;
@@ -1103,9 +1113,9 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
                              qualifyValue,
-                             is_playing_custom_game ? 0 : recording);
+                             is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
                     /* 4706 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
@@ -1178,8 +1188,8 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
-                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)480.0, qualify,
-                             qualifyValue, is_playing_custom_game ? 0 : recording);
+                /* 4810 */ draw_results(swap_screen, data[alpha_pos].dat, (int)hy, qualify,
+                             qualifyValue, is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
@@ -1222,7 +1232,7 @@ int play(void)
                                         makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* 4838: decay approximation */
+                alpha_pos = alpha_pos + (int)(-alpha_pos * 0.1);  /* 4838 */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */

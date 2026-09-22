@@ -93,7 +93,7 @@ int play(void)
             int pos;
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
-            char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };
+            char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
             int skip_keys;
             int isGuest;
             int new_rank_id;
@@ -227,22 +227,18 @@ int play(void)
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
-                    {
-                        int entryY = (int)(hy * 2.0 + 120.0);   /* shared by 4814..4817 */
-
-                        if (pos != 0 || (step_count & 4))                              /* 4814 */
-                            textout_centre_ex(swap_screen, data[52].dat, &buf[0],
-                                               300, entryY, -1, -1);
-                        if (pos != 1 || (step_count & 4))                              /* 4815 */
-                            textout_centre_ex(swap_screen, data[52].dat, &buf[2],
-                                               320, entryY, -1, -1);
-                        if (pos != 2 || (step_count & 4))                              /* 4816 */
-                            textout_centre_ex(swap_screen, data[52].dat, &buf[4],
-                                               340, entryY, -1, -1);
-                        if (pos >= 3)                                                  /* 4817 */
-                            textout_centre_ex(swap_screen, data[52].dat, "%",
-                                               360, entryY, -1, -1);
-                    }
+                    if (pos != 0 || (step_count & 4))                                   /* 4814 */
+                        textout_centre_ex(swap_screen, data[52].dat, &buf[0],
+                                           300, (int)(hy * 2.0 + 120.0), -1, -1);
+                    if (pos != 1 || (step_count & 4))                                   /* 4815 */
+                        textout_centre_ex(swap_screen, data[52].dat, &buf[2],
+                                           320, (int)(hy * 2.0 + 120.0), -1, -1);
+                    if (pos != 2 || (step_count & 4))                                   /* 4816 */
+                        textout_centre_ex(swap_screen, data[52].dat, &buf[4],
+                                           340, (int)(hy * 2.0 + 120.0), -1, -1);
+                    if (pos >= 3)                                                       /* 4817 */
+                        textout_centre_ex(swap_screen, data[52].dat, "%",
+                                           360, (int)(hy * 2.0 + 120.0), -1, -1);
                 }
                 if (new_rank_id != current_rank_id) {                                   /* 4820 */
                     alpha_pos = 0;                                                       /* 4821 */

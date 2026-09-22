@@ -259,17 +259,25 @@ int play(void)
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
                         lastJumpLength = diff;                          /* 3928 tail */
-                    } else if (ply[player_id]->in_combo) {               /* 3932 */
-                        lastJumpLength = diff;                          /* 3932 */
+                    } else if (ply[player_id]->in_combo) {               /* 3932: two-part condition,
+                                                                            * diff==1 (offset 3888) &&
+                                                                            * in_combo!=0 (offset 3897,
+                                                                            * reusing eax from the reload
+                                                                            * at 3916, not a redundant
+                                                                            * re-test of diff) */
+                        ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
+                                                                            * the test at offset 3903 */
                     }
                 }
-                ply[player_id]->in_combo = 1;  /* 3933; ? overwrites the in_combo=100 set just above, evidenced as-is */
+                /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
+                 * not a re-test of the line-3932 condition. */
                 if (!ply[player_id]->in_combo)                           /* 3936 */
                     gdComboStart = level;                                /* 3937 */
             }
 
             if (ply[player_id]->in_combo) {                              /* 3943 */
-                ply[player_id]->in_combo = 1;
+                ply[player_id]->in_combo = 1;                            /* 3943 (same DWARF row, offset
+                                                                            * 4346, as the test at 4339) */
                 for (i = 0; i < 5; i++) {                                /* 3945 */
                     if (ply[player_id]->jc[i] > ply[player_id]->jcTop[i])   /* 3948 */
                         ply[player_id]->jcTop[i] = ply[player_id]->jc[i];  /* 3949 */
