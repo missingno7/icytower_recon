@@ -147,14 +147,14 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
                              qualifyValue,
-                             is_playing_custom_game ? 0 : recording);            /* 4704 */
+                             is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
-                    textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
-                                       320, (int)(hy * 2.0 + 80.0), -1, -1);          /* 4706 */
+                    /* 4706 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
+                                       320, (int)(hy * 2.0 + 80.0), -1, -1);
                 }
-                falling++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
+                falling++;  /* 4709: cmp/sbb idiom on the wait counter, simplified */
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {     /* 4710 */
                     play_sound(sounds[6], 0, 1);                                      /* 4711 */
                     if (custom.falling)                                               /* 4712 */
@@ -162,8 +162,8 @@ int play(void)
                     ply[player_id]->shake = 24;                                       /* 4714 */
                 }
                 if (ply[player_id]->shake) {                                          /* 4716 */
-                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);                             /* 4718 */
+                    /* 4718 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);
                     ply[player_id]->shake--;                                          /* 4720 */
                 }
                 blit_to_screen(swap_screen);                                          /* 4722 */
@@ -210,7 +210,7 @@ int play(void)
             skip_keys = 0;
 
             for (;;) {
-                if (skip_keys == 20)                    /* ? approximated loop-exit predicate, 4792 */
+                if (skip_keys == 20)                    /* 4792: approximated loop-exit predicate */
                     break;
                 if (closeButtonClicked)                                                /* 4793 */
                     break;
