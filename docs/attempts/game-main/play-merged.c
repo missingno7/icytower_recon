@@ -337,12 +337,22 @@ int play(void)
                 if (!ply[player_id]->dead)                              /* 3780 */
                     clock_angle -= 45;
             }
-            /* 3783..3788: a signed-mod-16 cadence check between step_count and the
-             * map.offset accumulator gates the floor add on the historical
-             * evidence, but every traced predecessor of 3789 converges on the call, so
-             * it is written here as effectively unconditional; predicate not fully
-             * resolved. */
-            add_floor(&map);                                            /* 3789 */
+            /* old_map_pos is loaded into %ebx once at 3717 ("mov 0x4f8e18,%ebx") and is
+             * never redefined before this point, so it still holds the pre-update
+             * map.offset snapshot here; %eax is a fresh read of map.offset (offset
+             * 1729/4266, "mov 0x4f8e18,%eax"). Fragments 1717..1753 do the signed
+             * mod-16 (and $0x8000000f + js/dec/or/inc fixup) on both, then
+             * "cmp %eax,%ebx; jle 0xb88" skips add_floor to the cold code at
+             * offset 2952, which is line 3787's "cmp $0xf,%ecx; jg 0x6d9" (%ecx is
+             * scroll_acc, per its DW_OP_reg1 location over 1611..1765): jg jumps
+             * forward into the call at 1753, and falling through duplicates line
+             * 3814's test, i.e. skips the call. So the two tests are an OR: the
+             * mod-16 wrap check runs first, and only when it is false does the
+             * scroll_acc>15 check get evaluated (matching the jle/jg short-circuit
+             * order below). */
+            if (old_map_pos % 16 > map.offset % 16                        /* 3783 */
+                || scroll_acc > 15)                                        /* 3787 */
+                add_floor(&map);                                           /* 3789 */
         }
 
         /* lastY shares level's stack slot (-0x92c(%ebp)/-2348 in the DWARF dump); no
@@ -1059,14 +1069,14 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
+                /* 4704 */ draw_results(swap_screen, data[alpha_pos].dat, 480, qualify,
                              qualifyValue,
-                             is_playing_custom_game ? 0 : recording);            /* 4704 */
+                             is_playing_custom_game ? 0 : recording);
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
-                    textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
-                                       320, (int)(hy * 2.0 + 80.0), -1, -1);          /* 4706 */
+                    /* 4706 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
+                                       320, (int)(hy * 2.0 + 80.0), -1, -1);
                 }
-                falling++;  /* ? cmp/sbb idiom on the wait counter, simplified, 4709 */
+                falling++;  /* 4709: cmp/sbb idiom on the wait counter, simplified */
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {     /* 4710 */
                     play_sound(sounds[6], 0, 1);                                      /* 4711 */
                     if (custom.falling)                                               /* 4712 */
@@ -1074,8 +1084,8 @@ int play(void)
                     ply[player_id]->shake = 24;                                       /* 4714 */
                 }
                 if (ply[player_id]->shake) {                                          /* 4716 */
-                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);                             /* 4718 */
+                    /* 4718 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);
                     ply[player_id]->shake--;                                          /* 4720 */
                 }
                 blit_to_screen(swap_screen);                                          /* 4722 */
@@ -1114,15 +1124,15 @@ int play(void)
 
             /* name entry loop: scroller/rank banner setup and per-frame draw + input
              * (4781..4923). */
-            init_scroller(&summary_scroller, data[54].dat, summary_scroller_message,
-                           640, 30, -1);                                              /* 4781 */
+            /* 4781 */ init_scroller(&summary_scroller, data[54].dat, summary_scroller_message,
+                           640, 30, -1);
             scroll_scroller(&summary_scroller, -150);                                  /* 4782 */
             new_rank_id = get_rank_id(profile);                                        /* 4787 */
             pos = 0;
             skip_keys = 0;
 
             for (;;) {
-                if (skip_keys == 20)                    /* ? approximated loop-exit predicate, 4792 */
+                if (skip_keys == 20)                    /* 4792: approximated loop-exit predicate */
                     break;
                 if (closeButtonClicked)                                                /* 4793 */
                     break;
@@ -1159,9 +1169,9 @@ int play(void)
                     pos = 0;
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
-                    textout_ex(swap_screen, data[52].dat, "rank up!",
-                               20, rank_y + 0x46, -1, -1);                               /* 4822 */
-                    rank_y = rank_y + (int)((320 - rank_y) * 0.1);                       /* 4823 */
+                    /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
+                               20, rank_y + 0x46, -1, -1);
+                    /* 4823 */ rank_y = rank_y + (int)((320 - rank_y) * 0.1);
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
@@ -1171,13 +1181,13 @@ int play(void)
                     rectfill(swap_screen, 0, 0, 639, 18, makecol(0, 0, 0));              /* 4832 */
                     rectfill(swap_screen, 0, 0, 639, 16, makecol(0, 0, 0));              /* 4833 */
                     solid_mode();                                                         /* 4834 */
-                    draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
-                                   makecol(150, 150, 150));                               /* 4835 */
-                    if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
-                                        makecol(200, 200, 200)))                          /* 4836 */
+                    /* 4835 */ draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
+                                   makecol(150, 150, 150));
+                    /* 4836 */ if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
+                                        makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* ? decay approximation, 4838 */
+                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* 4838: decay approximation */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */
@@ -1187,8 +1197,8 @@ int play(void)
                     falling = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
-                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);                                 /* 4855 */
+                    /* 4855 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);
                     ply[player_id]->shake--;                                              /* 4857 */
                 }
                 blit_to_screen(swap_screen);                                              /* 4860 */
@@ -1257,8 +1267,8 @@ int play(void)
                                 if (matched) {                                               /* 4875 */
                                     buf[pos * 2] = typed;
                                     pos++;                                                    /* 4876 */
-                                    if (pos == 3)
-                                        skip_keys = 20;                                       /* 4877 */
+                                    if (pos == 3)                                            /* 4877 */
+                                        skip_keys = 20;
                                 }
                             }
                         }
@@ -1306,13 +1316,13 @@ int play(void)
                     solid_mode();                                                             /* 4977 */
                     draw_sprite(swap_screen, data[58].dat,
                                 320 - ((BITMAP *)data[58].dat)->w / 2, 20);                    /* 4980 (inlined) */
-                    textout_centre_ex(swap_screen, data[54].dat, "A new start floor",
-                                       320, 0x12c, -1, -1);                                    /* 4981 */
-                    textout_centre_ex(swap_screen, data[54].dat, "has been unlocked!",
-                                       320, 0x15e, -1, -1);                                    /* 4982 */
-                    textout_centre_ex(swap_screen, data[54].dat,
+                    /* 4981 */ textout_centre_ex(swap_screen, data[54].dat, "A new start floor",
+                                       320, 0x12c, -1, -1);
+                    /* 4982 */ textout_centre_ex(swap_screen, data[54].dat, "has been unlocked!",
+                                       320, 0x15e, -1, -1);
+                    /* 4983 */ textout_centre_ex(swap_screen, data[54].dat,
                                        "(Get it in the options menu)",
-                                       320, 0x1b8, -1, -1);                                    /* 4983 */
+                                       320, 0x1b8, -1, -1);
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
                     while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */

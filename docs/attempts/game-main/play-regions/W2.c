@@ -154,12 +154,22 @@ int play(void)
                 if (!ply[player_id]->dead)                              /* 3780 */
                     clock_angle -= 45;
             }
-            /* 3783..3788: a signed-mod-16 cadence check between step_count and the
-             * map.offset accumulator gates the floor add on the historical
-             * evidence, but every traced predecessor of 3789 converges on the call, so
-             * it is written here as effectively unconditional; predicate not fully
-             * resolved. */
-            add_floor(&map);                                            /* 3789 */
+            /* old_map_pos is loaded into %ebx once at 3717 ("mov 0x4f8e18,%ebx") and is
+             * never redefined before this point, so it still holds the pre-update
+             * map.offset snapshot here; %eax is a fresh read of map.offset (offset
+             * 1729/4266, "mov 0x4f8e18,%eax"). Fragments 1717..1753 do the signed
+             * mod-16 (and $0x8000000f + js/dec/or/inc fixup) on both, then
+             * "cmp %eax,%ebx; jle 0xb88" skips add_floor to the cold code at
+             * offset 2952, which is line 3787's "cmp $0xf,%ecx; jg 0x6d9" (%ecx is
+             * scroll_acc, per its DW_OP_reg1 location over 1611..1765): jg jumps
+             * forward into the call at 1753, and falling through duplicates line
+             * 3814's test, i.e. skips the call. So the two tests are an OR: the
+             * mod-16 wrap check runs first, and only when it is false does the
+             * scroll_acc>15 check get evaluated (matching the jle/jg short-circuit
+             * order below). */
+            if (old_map_pos % 16 > map.offset % 16                        /* 3783 */
+                || scroll_acc > 15)                                        /* 3787 */
+                add_floor(&map);                                           /* 3789 */
         }
 
         /* lastY shares level's stack slot (-0x92c(%ebp)/-2348 in the DWARF dump); no

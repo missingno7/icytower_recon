@@ -112,32 +112,60 @@ void draw_frame(BITMAP *bmp)
          * same `oy`, never a fresh -(h/2) of the frame actually drawn. */
         oy = 1 - custom.frame[0]->h;
 
-        if (ply[player_id]->edge) {
-            customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];
+        if (ply[player_id]->edge) {                          /* 2611: offset 2341..2346, edge==0 skips straight to offset 3115 (the customFrame block below) */
+            customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];   /* 2612/2615 */
 
-            oy = (int)ply[player_id]->y + oy;               /* 2624/2629 truncation pair, shared by both edge sub-cases */
-
-            if (ply[player_id]->edge == 2) {
-                ox = (int)ply[player_id]->x - customFrame->w + 0xb;   /* 3536/3538: subtracts the *full* w, not w/2 */
-                draw_sprite_h_flip(bmp, customFrame, ox, oy);          /* draw.inl:280, offset 3451..3581 */
+            if (ply[player_id]->edge == 2) {                  /* 2617: offset 2374..2383 */
+                oy = (int)ply[player_id]->y + oy;               /* 2624 */
+                ox = (int)ply[player_id]->x - customFrame->w + 0xb;   /* 2624: subtracts the *full* w, not w/2 */
+                draw_sprite_h_flip(bmp, customFrame, ox, oy);          /* draw.inl:280, offset 3451..3560; edge==2 jumps past the block below entirely */
             }
             else {
-                ox = (int)ply[player_id]->x - 0xb;          /* 2461: no customFrame->w term on this side */
-                draw_sprite(bmp, customFrame, ox, oy);       /* draw.inl:238, offset 2383..2497 */
+                oy = (int)ply[player_id]->y + oy;               /* 2624 */
+                ox = (int)ply[player_id]->x - 0xb;               /* 2624: no customFrame->w term on this side */
+                draw_sprite(bmp, customFrame, ox, oy);            /* draw.inl:238 */
 
-                if (map.offset > 0xc8) {                     /* ? */
-                    if (logic_count <= 11)
-                        fo = 9;
-                    else if (logic_count <= 36)
-                        fo = 10;
+                /* 2629..2638: a second, overlay draw -- edge==0 reaches this same block
+                 * directly (2611's `je` target is offset 3115, this block's own start),
+                 * so it is duplicated verbatim below for the no-edge case. */
+                if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629: offset 3115..3134 (map.offset), 3416..3433 (y vs 400.0) */
+                    customFrame = custom.frame[11];                      /* 2629 */
                 }
                 else {
-                    fo = (ply[player_id]->y > 400.0) ? 11 : 9;   /* ? */
+                    if (logic_count <= 0xb)                              /* 2630 */
+                        customFrame = custom.frame[9];
+                    else if (logic_count > 0x18 && logic_count <= 0x24)  /* 2631/2632 */
+                        customFrame = custom.frame[10];
+                }
+                ox = -(customFrame->w / 2);                              /* 2636 */
+                if (ply[player_id]->sx == 0.0) {                          /* 2638: fldl 0x10(%esi)/fldz/fucompp guards the draw */
+                    oy = (int)ply[player_id]->y + oy;
+                    ox = (int)ply[player_id]->x + ox;
+                    draw_sprite(bmp, customFrame, ox, oy);                /* draw.inl:238, offset 3285..3323 */
                 }
             }
         }
+        else {
+            /* 2629..2638 duplicated for edge==0: 2611's `je` on edge==0 lands directly
+             * at offset 3115, the start of this same customFrame/w2/sx-truncate/draw block. */
+            if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629 */
+                customFrame = custom.frame[11];
+            }
+            else {
+                if (logic_count <= 0xb)                              /* 2630 */
+                    customFrame = custom.frame[9];
+                else if (logic_count > 0x18 && logic_count <= 0x24)  /* 2631/2632 */
+                    customFrame = custom.frame[10];
+            }
+            ox = -(customFrame->w / 2);                              /* 2636 */
+            if (ply[player_id]->sx == 0.0) {                          /* 2638 */
+                oy = (int)ply[player_id]->y + oy;
+                ox = (int)ply[player_id]->x + ox;
+                draw_sprite(bmp, customFrame, ox, oy);
+            }
+        }
 
-        flip = ply[player_id]->rotate;
+        flip = ply[player_id]->rotate;                       /* 2643: test of 0x50(%edx), offset 2652..2657 */
 
         if (flip) {
             customFrame = custom.frame[12];                 /* 2644: bypasses the fo+frame index entirely */

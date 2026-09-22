@@ -202,8 +202,8 @@ int play(void)
 
             /* name entry loop: scroller/rank banner setup and per-frame draw + input
              * (4781..4923). */
-            init_scroller(&summary_scroller, data[54].dat, summary_scroller_message,
-                           640, 30, -1);                                              /* 4781 */
+            /* 4781 */ init_scroller(&summary_scroller, data[54].dat, summary_scroller_message,
+                           640, 30, -1);
             scroll_scroller(&summary_scroller, -150);                                  /* 4782 */
             new_rank_id = get_rank_id(profile);                                        /* 4787 */
             pos = 0;
@@ -247,9 +247,9 @@ int play(void)
                     pos = 0;
                     rank_bmp_id = new_rank_id + 0x4a;
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
-                    textout_ex(swap_screen, data[52].dat, "rank up!",
-                               20, rank_y + 0x46, -1, -1);                               /* 4822 */
-                    rank_y = rank_y + (int)((320 - rank_y) * 0.1);                       /* 4823 */
+                    /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
+                               20, rank_y + 0x46, -1, -1);
+                    /* 4823 */ rank_y = rank_y + (int)((320 - rank_y) * 0.1);
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
@@ -259,13 +259,13 @@ int play(void)
                     rectfill(swap_screen, 0, 0, 639, 18, makecol(0, 0, 0));              /* 4832 */
                     rectfill(swap_screen, 0, 0, 639, 16, makecol(0, 0, 0));              /* 4833 */
                     solid_mode();                                                         /* 4834 */
-                    draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
-                                   makecol(150, 150, 150));                               /* 4835 */
-                    if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
-                                        makecol(200, 200, 200)))                          /* 4836 */
+                    /* 4835 */ draw_scroller(&summary_scroller, swap_screen, 1, alpha_pos,
+                                   makecol(150, 150, 150));
+                    /* 4836 */ if (!draw_scroller(&summary_scroller, swap_screen, 0, alpha_pos,
+                                        makecol(200, 200, 200)))
                         restart_scroller(&summary_scroller);
                 }
-                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* ? decay approximation, 4838 */
+                alpha_pos = (int)(alpha_pos - alpha_pos * 0.1);   /* 4838: decay approximation */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */
                     play_sound(sounds[6], 0, 1);                                          /* 4845 */
@@ -275,8 +275,8 @@ int play(void)
                     falling = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
-                    blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
-                         swap_screen->w, swap_screen->h);                                 /* 4855 */
+                    /* 4855 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
+                         swap_screen->w, swap_screen->h);
                     ply[player_id]->shake--;                                              /* 4857 */
                 }
                 blit_to_screen(swap_screen);                                              /* 4860 */
@@ -345,8 +345,8 @@ int play(void)
                                 if (matched) {                                               /* 4875 */
                                     buf[pos * 2] = typed;
                                     pos++;                                                    /* 4876 */
-                                    if (pos == 3)
-                                        skip_keys = 20;                                       /* 4877 */
+                                    if (pos == 3)                                            /* 4877 */
+                                        skip_keys = 20;
                                 }
                             }
                         }
@@ -394,13 +394,13 @@ int play(void)
                     solid_mode();                                                             /* 4977 */
                     draw_sprite(swap_screen, data[58].dat,
                                 320 - ((BITMAP *)data[58].dat)->w / 2, 20);                    /* 4980 (inlined) */
-                    textout_centre_ex(swap_screen, data[54].dat, "A new start floor",
-                                       320, 0x12c, -1, -1);                                    /* 4981 */
-                    textout_centre_ex(swap_screen, data[54].dat, "has been unlocked!",
-                                       320, 0x15e, -1, -1);                                    /* 4982 */
-                    textout_centre_ex(swap_screen, data[54].dat,
+                    /* 4981 */ textout_centre_ex(swap_screen, data[54].dat, "A new start floor",
+                                       320, 0x12c, -1, -1);
+                    /* 4982 */ textout_centre_ex(swap_screen, data[54].dat, "has been unlocked!",
+                                       320, 0x15e, -1, -1);
+                    /* 4983 */ textout_centre_ex(swap_screen, data[54].dat,
                                        "(Get it in the options menu)",
-                                       320, 0x1b8, -1, -1);                                    /* 4983 */
+                                       320, 0x1b8, -1, -1);
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
                     while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986..4987 */
