@@ -75,42 +75,56 @@ int play(void)
         /* REGION W2: lines 3700..3999 (input, player/particles, collision switch, floors, rewards, combos, level) */
 
         /* REGION W3: lines 4000..4369 (combo sounds, quit/pause screens, screenshots, frame draw and pacing) */
-        add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
-        {
-            /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
-             * block zeroes, so it is declared with play's other locals, not here: as a block
-             * local re-initialised every iteration GCC could prove it never passed 250 and
-             * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
-             * the y<900 combo body below (traced from the tail-duplicated machine code at
-             * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
-             * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
-             * only part actually gated). */
+            add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
+                /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
+                 * block zeroes, so it is declared with play's other locals, not here: as a block
+                 * local re-initialised every iteration GCC could prove it never passed 250 and
+                 * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
+                 * the y<900 combo body below (traced from the tail-duplicated machine code at
+                 * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
+                 * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
+                 * only part actually gated). */
 
-            if (numComboJumps) {                                               /* 4003 */
-                lastJumpLength = 0;
-                aightScore = 1;                                                 /* 4003 */
-            } else {
-                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
-                    ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
-                lastJumpLength = 0;
-                aightScore = 1;                                                 /* 4004 */
-            }
-            if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
-                play_sound(speaker[1], 0, 0);                                   /* 4012 */
-                game_over = 2;
-            }
-            if (aightScore)                                                     /* 4015 */
-                aightScore++;                                                   /* 4015 */
-            if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
-                play_sound(sounds[6], 1, 0);                                    /* 4017 */
-                if (custom.falling)                                            /* 4018 */
-                    stop_sample(custom.falling);                               /* 4019 */
-            }
-            ply[player_id]->shake = 0x18;                                       /* 4022 */
-            aightScore = 0;                                                     /* 4022 */
-            if (next_aight > ply[player_id]->level) {                           /* 4027 */
-                play_sound(sounds[2], 0, 0);                                    /* 4028 */
-            }
+                if (numComboJumps) {                                               /* 4003 */
+                    lastJumpLength = 0;
+                    aightScore = 1;                                                 /* 4003 */
+                } else {
+                    if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
+                        ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
+                    lastJumpLength = 0;
+                    aightScore = 1;                                                 /* 4004 */
+                }
+            /* The `if (y < 540.0 && !dead)` opened in W2 at line 3976 closes here: both of its
+             * `jne`s jump to offset 2940, `mov $0xffffffff,%esi; jmp 412300`, and 0x412300 is
+             * offset 2304, the first instruction of line 4010.  So `add_jump_sequence` and the
+             * 4003/4004 block are inside that `if`, the else arm is this single store, and 4010 is
+             * where the two paths merge.  With this edge in place `aightScore` is no longer 1 on
+             * every path into 4015, which is what let GCC prove 4016's `> 250` test false and
+             * delete 4016..4019 outright. */
+        } else {
+            playing = -1;                                                       /* 4004 */
+        }
+        if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
+            play_sound(speaker[1], 0, 0);                                   /* 4012 */
+            game_over = 2;
+        }
+        if (aightScore)                                                     /* 4015 */
+            aightScore++;                                                   /* 4015 */
+        if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
+            play_sound(sounds[6], 1, 0);                                    /* 4017 */
+            if (custom.falling)                                            /* 4018 */
+                stop_sample(custom.falling);                               /* 4019 */
+            /* 4022 is INSIDE this block, not after it: line 4016's own `jle` at offset
+             * 2373 jumps to offset 2453, past both of these stores, while 4018's `je` at
+             * 2411 jumps to 2421, the first of them.  With the reset conditional the
+             * counter accumulates across frames, which is what makes the `> 250` test
+             * reachable at all; with it unconditional the counter is 0 or 2 on every path
+             * and GCC deletes 4016..4022 outright. */
+            ply[player_id]->shake = 0x18;                                   /* 4022 */
+            aightScore = 0;                                                 /* 4022 */
+        }
+        if (next_aight > ply[player_id]->level) {                           /* 4027 */
+            play_sound(sounds[2], 0, 0);                                    /* 4028 */
         }
         if (!options.flash) {                                                  /* 4029 */
             /* midX = next_aight / 2 is evaluated as the loop bound: the shr/add/sar division

@@ -260,6 +260,14 @@ int play(void)
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
                     current_rank_id = new_rank_id; /* ? */
+                    /* Tried: moving this draw_sprite/textout_ex/easing out of the if-block to
+                     * run unconditionally every frame (on the theory that evidence/census/
+                     * line-mappings.json shows exactly two draw.inl:238 sites in the whole
+                     * function, both here, so rank_y should have two readers). Measured worse
+                     * on every axis: play grew 16556->16678 bytes and this line's own delta
+                     * went from +70 (4820) to +168, so reverted. The second draw.inl:238 site
+                     * (offset 0x35b3, historical) is real but is NOT reached by simply hoisting
+                     * this draw out of the if -- its actual source position is still unknown. */
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
@@ -362,7 +370,10 @@ int play(void)
                         }
                     }
                 }
-                if (key[KEY_TAB] && key[KEY_LSHIFT]) {           /* 4929..4931 */
+                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929..4931: operand order swapped
+                     * from the 4731 occurrence -- function_lines.py source-view shows 4929 testing
+                     * key[KEY_LSHIFT] first (4731 tests key[KEY_TAB] first), so the two blocks are
+                     * not byte-identical in the original and the compiler does not fold them. */
                     rest(2);                                                                 /* 4932 */
                     if (cycle_count == 0)
                         continue;

@@ -323,11 +323,23 @@ int play(void)
             }
         }
 
-        /* 3976..3999: rank-up / top-of-screen handling */
-        if (ply[player_id]->y < 540.0 && !ply[player_id]->dead &&        /* 3976 */
-            ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) { /* 3978 */
-            flash = (itrcheck < 1) ? -1 : 0;  /* 3977; ? consumer of this mask is outside W2 */
-            ply[player_id]->biggest_lost_combo = ply[player_id]->acc_level;  /* 3979 */
+        /* 3976..3999 and on into W3's 4000..4004: ONE `if` whose body crosses the region
+         * boundary, so W2 deliberately leaves its brace open and W3 closes it and writes the
+         * else arm.  Evidence: both `jne`s of line 3976's own fragment, at offsets 2035 and
+         * 2046, jump to offset 2940, which is `mov $0xffffffff,%esi; jmp 412300`, and
+         * 0x412300 is offset 2304, the first instruction of line 4010.  So the outer test has
+         * only the two terms; `in_combo && acc_jumps > 1` is an inner `if` guarding the single
+         * 3979 store (its own `je`/`jle` at 2068 and 2074 target offset 2094, line 3981, not
+         * 2940); the body runs on through `add_jump_sequence` and the 4003/4004 block; 4010 is
+         * the merge point; and the else arm is `playing = -1`.  `esi` is `playing`: play's
+         * DWARF location list puts `playing` in esi from offset 2945, five bytes after that
+         * store, while `falling`'s own ranges do not start until offset 11246.  Line 3977 is
+         * the same variable, not `flash`: `cmpl $0x1,itrcheck; sbb %esi,%esi` yields -1 when
+         * itrcheck is 0 and 0 otherwise. */
+        if (ply[player_id]->y < 540.0 && !ply[player_id]->dead) {        /* 3976 */
+            playing = (itrcheck < 1) ? -1 : 0;                           /* 3977 */
+            if (ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1)   /* 3978 */
+                ply[player_id]->biggest_lost_combo = ply[player_id]->acc_level;  /* 3979 */
             ply[player_id]->in_combo = 0;                                /* 3981 */
             ply[player_id]->dead = 1;                                    /* 3982 */
             play_sound(custom.falling, 0, 1);                            /* 3983 */
@@ -338,7 +350,7 @@ int play(void)
                 ply[player_id]->jc[i] = 0;                                   /* 3995 */
             }
             jumpSequence.dist = gdLastJumpDiff;                          /* 3999 */
-        }
+        /* brace intentionally left open: W3 closes it after the 4003/4004 block */
 
         /* REGION W3: lines 4000..4369 (combo sounds, quit/pause screens, screenshots, frame draw and pacing) */
     }

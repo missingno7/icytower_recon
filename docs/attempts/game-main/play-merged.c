@@ -506,11 +506,23 @@ int play(void)
             }
         }
 
-        /* 3976..3999: rank-up / top-of-screen handling */
-        if (ply[player_id]->y < 540.0 && !ply[player_id]->dead &&        /* 3976 */
-            ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1) { /* 3978 */
-            flash = (itrcheck < 1) ? -1 : 0;  /* 3977; ? consumer of this mask is outside W2 */
-            ply[player_id]->biggest_lost_combo = ply[player_id]->acc_level;  /* 3979 */
+        /* 3976..3999 and on into W3's 4000..4004: ONE `if` whose body crosses the region
+         * boundary, so W2 deliberately leaves its brace open and W3 closes it and writes the
+         * else arm.  Evidence: both `jne`s of line 3976's own fragment, at offsets 2035 and
+         * 2046, jump to offset 2940, which is `mov $0xffffffff,%esi; jmp 412300`, and
+         * 0x412300 is offset 2304, the first instruction of line 4010.  So the outer test has
+         * only the two terms; `in_combo && acc_jumps > 1` is an inner `if` guarding the single
+         * 3979 store (its own `je`/`jle` at 2068 and 2074 target offset 2094, line 3981, not
+         * 2940); the body runs on through `add_jump_sequence` and the 4003/4004 block; 4010 is
+         * the merge point; and the else arm is `playing = -1`.  `esi` is `playing`: play's
+         * DWARF location list puts `playing` in esi from offset 2945, five bytes after that
+         * store, while `falling`'s own ranges do not start until offset 11246.  Line 3977 is
+         * the same variable, not `flash`: `cmpl $0x1,itrcheck; sbb %esi,%esi` yields -1 when
+         * itrcheck is 0 and 0 otherwise. */
+        if (ply[player_id]->y < 540.0 && !ply[player_id]->dead) {        /* 3976 */
+            playing = (itrcheck < 1) ? -1 : 0;                           /* 3977 */
+            if (ply[player_id]->in_combo && ply[player_id]->acc_jumps > 1)   /* 3978 */
+                ply[player_id]->biggest_lost_combo = ply[player_id]->acc_level;  /* 3979 */
             ply[player_id]->in_combo = 0;                                /* 3981 */
             ply[player_id]->dead = 1;                                    /* 3982 */
             play_sound(custom.falling, 0, 1);                            /* 3983 */
@@ -521,44 +533,58 @@ int play(void)
                 ply[player_id]->jc[i] = 0;                                   /* 3995 */
             }
             jumpSequence.dist = gdLastJumpDiff;                          /* 3999 */
+        /* brace intentionally left open: W3 closes it after the 4003/4004 block */
+
+            add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
+                /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
+                 * block zeroes, so it is declared with play's other locals, not here: as a block
+                 * local re-initialised every iteration GCC could prove it never passed 250 and
+                 * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
+                 * the y<900 combo body below (traced from the tail-duplicated machine code at
+                 * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
+                 * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
+                 * only part actually gated). */
+
+                if (numComboJumps) {                                               /* 4003 */
+                    lastJumpLength = 0;
+                    aightScore = 1;                                                 /* 4003 */
+                } else {
+                    if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
+                        ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
+                    lastJumpLength = 0;
+                    aightScore = 1;                                                 /* 4004 */
+                }
+            /* The `if (y < 540.0 && !dead)` opened in W2 at line 3976 closes here: both of its
+             * `jne`s jump to offset 2940, `mov $0xffffffff,%esi; jmp 412300`, and 0x412300 is
+             * offset 2304, the first instruction of line 4010.  So `add_jump_sequence` and the
+             * 4003/4004 block are inside that `if`, the else arm is this single store, and 4010 is
+             * where the two paths merge.  With this edge in place `aightScore` is no longer 1 on
+             * every path into 4015, which is what let GCC prove 4016's `> 250` test false and
+             * delete 4016..4019 outright. */
+        } else {
+            playing = -1;                                                       /* 4004 */
         }
-
-        add_jump_sequence(gameData, &jumpSequence);                             /* 4000 */
-        {
-            /* aightScore lives in the function-level slot ebp-0x928 that the line-3520 reset
-             * block zeroes, so it is declared with play's other locals, not here: as a block
-             * local re-initialised every iteration GCC could prove it never passed 250 and
-             * deleted the whole 4016..4019 body.  Both arms fall through unconditionally into
-             * the y<900 combo body below (traced from the tail-duplicated machine code at
-             * offsets 2266..2304 / 5797..5848: the "lastJumpLength = 0; aightScore = 1;" pair
-             * is machine-duplicated into BOTH arms -- the no_combo_top_floor update is the
-             * only part actually gated). */
-
-            if (numComboJumps) {                                               /* 4003 */
-                lastJumpLength = 0;
-                aightScore = 1;                                                 /* 4003 */
-            } else {
-                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
-                    ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
-                lastJumpLength = 0;
-                aightScore = 1;                                                 /* 4004 */
-            }
-            if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
-                play_sound(speaker[1], 0, 0);                                   /* 4012 */
-                game_over = 2;
-            }
-            if (aightScore)                                                     /* 4015 */
-                aightScore++;                                                   /* 4015 */
-            if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
-                play_sound(sounds[6], 1, 0);                                    /* 4017 */
-                if (custom.falling)                                            /* 4018 */
-                    stop_sample(custom.falling);                               /* 4019 */
-            }
-            ply[player_id]->shake = 0x18;                                       /* 4022 */
-            aightScore = 0;                                                     /* 4022 */
-            if (next_aight > ply[player_id]->level) {                           /* 4027 */
-                play_sound(sounds[2], 0, 0);                                    /* 4028 */
-            }
+        if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
+            play_sound(speaker[1], 0, 0);                                   /* 4012 */
+            game_over = 2;
+        }
+        if (aightScore)                                                     /* 4015 */
+            aightScore++;                                                   /* 4015 */
+        if (aightScore > 250 && aightScore <= ply[player_id]->level * 5) {   /* 4016 */
+            play_sound(sounds[6], 1, 0);                                    /* 4017 */
+            if (custom.falling)                                            /* 4018 */
+                stop_sample(custom.falling);                               /* 4019 */
+            /* 4022 is INSIDE this block, not after it: line 4016's own `jle` at offset
+             * 2373 jumps to offset 2453, past both of these stores, while 4018's `je` at
+             * 2411 jumps to 2421, the first of them.  With the reset conditional the
+             * counter accumulates across frames, which is what makes the `> 250` test
+             * reachable at all; with it unconditional the counter is 0 or 2 on every path
+             * and GCC deletes 4016..4022 outright. */
+            ply[player_id]->shake = 0x18;                                   /* 4022 */
+            aightScore = 0;                                                 /* 4022 */
+        }
+        if (next_aight > ply[player_id]->level) {                           /* 4027 */
+            play_sound(sounds[2], 0, 0);                                    /* 4028 */
         }
         if (!options.flash) {                                                  /* 4029 */
             /* midX = next_aight / 2 is evaluated as the loop bound: the shr/add/sar division
@@ -1271,6 +1297,14 @@ int play(void)
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
                     current_rank_id = new_rank_id; /* ? */
+                    /* Tried: moving this draw_sprite/textout_ex/easing out of the if-block to
+                     * run unconditionally every frame (on the theory that evidence/census/
+                     * line-mappings.json shows exactly two draw.inl:238 sites in the whole
+                     * function, both here, so rank_y should have two readers). Measured worse
+                     * on every axis: play grew 16556->16678 bytes and this line's own delta
+                     * went from +70 (4820) to +168, so reverted. The second draw.inl:238 site
+                     * (offset 0x35b3, historical) is real but is NOT reached by simply hoisting
+                     * this draw out of the if -- its actual source position is still unknown. */
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */
@@ -1373,7 +1407,10 @@ int play(void)
                         }
                     }
                 }
-                if (key[KEY_TAB] && key[KEY_LSHIFT]) {           /* 4929..4931 */
+                if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929..4931: operand order swapped
+                     * from the 4731 occurrence -- function_lines.py source-view shows 4929 testing
+                     * key[KEY_LSHIFT] first (4731 tests key[KEY_TAB] first), so the two blocks are
+                     * not byte-identical in the original and the compiler does not fold them. */
                     rest(2);                                                                 /* 4932 */
                     if (cycle_count == 0)
                         continue;
