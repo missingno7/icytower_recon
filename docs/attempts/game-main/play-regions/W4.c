@@ -112,8 +112,14 @@ int play(void)
             for (k = 0; k < 7; k++)                                            /* 4402 */
                 keys_pressed[k] = time_cheat_count;
             if (demo->size > 0) {                                              /* 4406 */
-                for (k = 0; k < 7; k++)                                        /* 4404 */
-                    last_keys[k] = 0;
+                for (k = 0; k < 7; k++)                                        /* 4404: rep stos reuses eax
+                                                                                    * without reloading it from
+                                                                                    * 4402's time_cheat_count
+                                                                                    * read (offset 7805, no mov
+                                                                                    * before it) -- last_keys is
+                                                                                    * seeded with time_cheat_count,
+                                                                                    * not a literal 0. */
+                    last_keys[k] = time_cheat_count;
                 for (i = 0; i < demo->size; i++) {                             /* 4406 */
                     int flags = demo->data[i].key_flags;                       /* 4406 */
                     for (k = 0; k < 7; k++) {                                  /* 4408 */
@@ -140,7 +146,19 @@ int play(void)
     fast_forward = 0;                                                         /* 4457 */
     fast_fast_forward = 0;                                                    /* 4458 */
 
-    /* lines 4500..4534: demo/profile stat snapshot, only when recording && !quit */
+    /* lines 4500..4643: demo/profile stat snapshot (recording && !quit only), then
+     * syncProfileFromOptions()/save_profile() unconditionally, then the quit/closeButtonClicked
+     * guard around highscore qualification. Traced from three save_profile() call sites all
+     * tagged historical line 4641 (offsets 8235, 9307, 10956): the !recording predecessor
+     * (offset 8179) calls sync+save BEFORE ever testing quit (offset 8240's test comes after
+     * the call, not before it); the recording&&quit predecessor jumps straight past the whole
+     * replay-file block to its own sync+save copy (offset 10900, target of the "jne 414494"
+     * at offset 8315); the recording&&!quit predecessor falls through the replay-file block
+     * into a third sync+save copy (offset 9251) whose *own* trailing test reads
+     * closeButtonClicked directly (offset 9312, "cmpl $0x0,closeButtonClicked") rather than
+     * quit -- because on that path quit was already resolved false by the earlier test at
+     * offset 8308. That is only consistent with sync+save being unconditional statements
+     * textually AFTER this whole if/else, not folded into either arm or gated by !quit. */
     if (recording) {                                                          /* 4500 */
         if (!quit) {                                                          /* 4500 */
             demo->score = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4503 */
@@ -261,15 +279,14 @@ int play(void)
                 }
             }
         }
-    } else {
-        syncProfileFromOptions();
     }
 
-    /* lines 4641..4643 */
-    if (!quit) {                                                             /* 4643 */
-        save_profile(profile);                                               /* 4641 */
+    /* lines 4641..4643: unconditional, reached from all three predecessors above */
+    syncProfileFromOptions();
+    save_profile(profile);                                                   /* 4641 */
 
-        /* lines 4650..4683: highscore qualification */
+    /* lines 4643..4683: highscore qualification, guarded by quit && closeButtonClicked */
+    if (!quit) {                                                             /* 4643 */
         if (!closeButtonClicked) {                                           /* 4643 */
             int rank;   /* qualify, qualifyValue, gotHigh and gameover_bmp_id live in the enclosing
                          * DWARF block 133269, which opens here and runs into REGION W5 */

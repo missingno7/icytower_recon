@@ -196,14 +196,17 @@ int play(void)
             if (!recording) {
                 summary_scroller_message[0] = 0;                                      /* 4743 */
                 if (is_playing_custom_game) {
-                    memcpy(summary_scroller_message,
+                    /* 4746: annotate the statement's FIRST physical line, not just the last --
+                     * an unannotated opening line inherits the previous statement's historical
+                     * line (4743) and misattributes this call's bytes to it. */
+                    memcpy(summary_scroller_message,               /* 4746 */
                            "Custom mode is crazy fun but does not add to your profile. "
                            "Play Classic Mode to compete in the highscore lists and "
                            "climb in rank!", 0x82);                                    /* 4746 */
                 } else if (gotHigh) {
                     memcpy(summary_scroller_message, "New personal records!    ", 0x1a); /* 4753 */
                 } else if (isGuest) {                                                  /* 4770 */
-                    strcpy(summary_scroller_message,
+                    strcpy(summary_scroller_message,                /* 4770 */
                            "You're playing in guest mode. Start a profile and "
                            "record your progress!");
                 } else {

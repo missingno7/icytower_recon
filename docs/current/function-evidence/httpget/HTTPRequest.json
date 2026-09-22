@@ -7,10 +7,10 @@
   "historical_va": "0x4060f0",
   "historical_size": 136,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "HTTPResponse * HTTPRequest(const char *pURL, const char *pMethod);",
   "return_type": "HTTPResponse *",
   "parameters": [
@@ -181,8 +181,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 227,
-    "body_end_line": 242,
+    "body_start_line": 277,
+    "body_end_line": 292,
     "body_sha256": "02b735a540c1c03d865b60dc19ca977053e59701e8e9bb16949a84a039a09320"
   },
   "reference_diagnostics": [],
@@ -404,41 +404,41 @@
     ],
     "candidate": [
       {
-        "address": 2040,
+        "address": 2144,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2041,
+        "address": 2145,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 2043,
+        "address": 2147,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 2044,
+        "address": 2148,
         "bytes": "83ec34",
         "mnemonic": "sub",
         "assembly": "sub    $0x34,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 2047,
+        "address": 2151,
         "bytes": "8b5d08",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%ebx",
         "dwarf_variables": [
           {
-            "die": 2596,
+            "die": 2851,
             "name": "pURL",
             "type": "const char *",
             "base_type": "char",
@@ -543,20 +543,22 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d4a77",
-      "candidate_addend": 331,
+      "candidate_addend": 351,
       "dwarf_type": null,
       "references": [
         119
       ],
-      "placement_confidence": "unique read-only literal or table content",
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 365,
-          "content_equal": false,
+          "logical_size": 385,
+          "content_equal": true,
           "unresolved_initializer_relocations": 0,
-          "independent_section_bases": [],
+          "independent_section_bases": [
+            5064984
+          ],
           "detail_report": "docs/current/reports/game-httpget.json#initialized_data_comparison"
         }
       ],
@@ -636,26 +638,9 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 34,
-      "function_offset": 35,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "SplitURL",
-      "target_va": 4217220,
-      "candidate_target": 244,
-      "candidate_displacement": -1835,
-      "layout_operand_equal": false,
-      "resolved_value": 4294965357,
-      "original_value": 4294965357,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 1,
+  "exact_adjacent_functions": 2,
   "neighbor_layout": [
     {
       "function": "SplitURL",
@@ -666,44 +651,44 @@
     },
     {
       "function": "HTTPFetchInternal",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 1548,
-      "candidate_offset": 1444,
+      "candidate_offset": 1548,
       "size_delta": 0
     },
     {
       "function": "HTTPHead",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2280,
-      "candidate_offset": 2176,
+      "candidate_offset": 2280,
       "size_delta": 0
     },
     {
       "function": "HTTPGet",
       "status": "FUNCTION_MATCH",
       "historical_offset": 2308,
-      "candidate_offset": 2204,
+      "candidate_offset": 2308,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 7,
-    "candidate_position": 6,
+    "candidate_position": 7,
     "historical_predecessor": "HTTPFetchInternal",
     "candidate_predecessor": "HTTPFetchInternal",
     "predecessor_same": true,
-    "predecessor_exact": false,
+    "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 8,
+    "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 41,
+  "priority": 46,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
@@ -734,7 +719,7 @@
   "evidence_report": "docs/current/reports/game-httpget.json",
   "verification_command": "python tools/check_function.py game-httpget HTTPRequest",
   "begin_command": "python tools/grinder_task.py begin game-httpget HTTPRequest",
-  "promotion_command": "python tools/promote_function.py game-httpget HTTPRequest --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-httpget HTTPRequest",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

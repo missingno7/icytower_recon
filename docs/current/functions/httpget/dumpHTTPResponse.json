@@ -6,9 +6,9 @@
   "function": "dumpHTTPResponse",
   "historical_va": "0x405e2c",
   "historical_size": 99,
-  "status": "MISSING",
-  "state": "MISSING",
-  "difference_class": "SOURCE_INCOMPLETE",
+  "status": "FUNCTION_MATCH",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
   "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void dumpHTTPResponse(FILE *pOut, HTTPResponse *pResponse);",
@@ -61,7 +61,11 @@
   ],
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
-  "source_scope": null,
+  "source_scope": {
+    "body_start_line": 58,
+    "body_end_line": 68,
+    "body_sha256": "1fc28ae58cf836a3fee5173340db81bb8ac2e3e0bc6bfc4ef8d642e177227b51"
+  },
   "reference_diagnostics": [],
   "literal_diagnostics": [],
   "tail_jump_layout": null,
@@ -82,20 +86,7 @@
       }
     ],
     "instruction_differences": [],
-    "instruction_count_hypotheses": [
-      {
-        "signed_instruction": "jg",
-        "unsigned_instruction": "ja",
-        "original_counts": [
-          0,
-          1
-        ],
-        "candidate_counts": [
-          0,
-          0
-        ]
-      }
-    ],
+    "instruction_count_hypotheses": [],
     "declaration_differences": [],
     "cast_chains": [],
     "shifts": [],
@@ -108,10 +99,10 @@
   "compiler_flags": [
     "-O2"
   ],
-  "current_candidate_size": null,
+  "current_candidate_size": 99,
   "first_difference": null,
   "mismatch_count": 0,
-  "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
+  "classification_confidence": "MECHANICAL_PROOF",
   "instruction_alignment": null,
   "disassembly": {
     "original": [
@@ -151,7 +142,43 @@
         "dwarf_variables": []
       }
     ],
-    "candidate": []
+    "candidate": [
+      {
+        "address": 1436,
+        "bytes": "55",
+        "mnemonic": "push",
+        "assembly": "push   %ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1437,
+        "bytes": "89e5",
+        "mnemonic": "mov",
+        "assembly": "mov    %esp,%ebp",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1439,
+        "bytes": "57",
+        "mnemonic": "push",
+        "assembly": "push   %edi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1440,
+        "bytes": "56",
+        "mnemonic": "push",
+        "assembly": "push   %esi",
+        "dwarf_variables": []
+      },
+      {
+        "address": 1441,
+        "bytes": "53",
+        "mnemonic": "push",
+        "assembly": "push   %ebx",
+        "dwarf_variables": []
+      }
+    ]
   },
   "relevant_types": [
     {
@@ -212,9 +239,57 @@
       "flags": "x"
     }
   ],
-  "referenced_globals": [],
+  "referenced_globals": [
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d496b",
+      "candidate_addend": 83,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        25
+      ]
+    },
+    {
+      "symbol": ".rdata",
+      "cu": "F:\\projects\\icytower\\trunk\\source\\httpget.c",
+      "section": ".rdata",
+      "size": null,
+      "historical_address": "0x4d4978",
+      "candidate_addend": 96,
+      "dwarf_type": null,
+      "placement_confidence": "independent section base (COFF ownership, symbol, or unique content)",
+      "initial_value": null,
+      "blocker": null,
+      "initializer_blockers": [],
+      "reference_count": 1,
+      "function_offsets": [
+        71
+      ]
+    }
+  ],
   "literal_dependencies": [],
-  "calls": [],
+  "calls": [
+    {
+      "symbol": "_fprintf",
+      "function": "fprintf",
+      "function_offset": 33,
+      "target_va": 4959600,
+      "verified": true,
+      "reference_count": 2,
+      "function_offsets": [
+        33,
+        79
+      ]
+    }
+  ],
   "original_calls": [
     {
       "address": 4218444,
@@ -240,54 +315,54 @@
       "status": "DIFFER",
       "historical_offset": 512,
       "candidate_offset": 512,
-      "size_delta": -5
+      "size_delta": 1
     },
     {
       "function": "getSocketError",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1536,
-      "candidate_offset": 1432,
+      "candidate_offset": 1536,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 4,
-    "candidate_position": 9,
+    "candidate_position": 4,
     "historical_predecessor": "extractHTTPResponse",
-    "candidate_predecessor": "HTTPGet",
-    "predecessor_same": false,
-    "predecessor_exact": true,
+    "candidate_predecessor": "extractHTTPResponse",
+    "predecessor_same": true,
+    "predecessor_exact": false,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 8,
+    "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": -10,
-    "note": "Emission-order context differs from history (candidate predecessor HTTPGet versus historical extractHTTPResponse); part of the mismatch may be a neighbor artifact."
+    "priority_adjustment": 0,
+    "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
   },
   "known_rules": [],
-  "difficulty": "MEDIUM",
-  "priority": 82,
+  "difficulty": "SUPERVISOR",
+  "priority": 42,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "Missing implementation requires supervisor source work; small prototypes are ranked MEDIUM but body-edit admission remains closed.",
+  "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": false,
       "known_difference_class": true,
-      "source_body_located": false,
+      "source_body_located": true,
       "calls_resolved": true,
       "indirect_flow_within_medium_limit": true,
-      "same_size_and_at_most_12_differing_bytes": false,
+      "same_size_and_at_most_12_differing_bytes": true,
       "no_indirect_flow": true,
       "historical_size_at_most_900": true,
       "cheap_difference_class": false
     },
     "observed": {
       "historical_size": 99,
-      "candidate_size": null,
+      "candidate_size": 99,
       "differing_bytes": 0,
       "unresolved_calls": 0,
       "indirect_transfers": 0
@@ -322,11 +397,11 @@
     "literal_diagnostics": 0,
     "literal_dependencies": 0,
     "original_calls": 2,
-    "calls": 0,
-    "calls_groups": 0,
+    "calls": 2,
+    "calls_groups": 1,
     "calls_omitted_groups": 0,
-    "referenced_globals": 0,
-    "referenced_globals_groups": 0,
+    "referenced_globals": 2,
+    "referenced_globals_groups": 2,
     "referenced_globals_omitted_groups": 0
   },
   "evidence_note": "Lists with counts may show only the nearest eight entries. Complete target-only evidence, locations and ownership are in detailed_evidence."

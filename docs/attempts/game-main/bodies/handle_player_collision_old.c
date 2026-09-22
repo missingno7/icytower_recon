@@ -2,25 +2,23 @@
  * current feet, then sweeps a midpoint when the player moved downward. */
 void handle_player_collision_old(int lastX, int lastY)
 {
-    int x, y, dx, dy;
+    int dX, dY, midX, midY;
     int solid1, solid2;
 
     /* 3246 */
-    x = (int)ply[player_id]->x;
-    dx = lastX - x;
-    if (dx < 0) dx = -dx;
+    dX = lastX - (int)ply[player_id]->x;
+    if (dX < 0) dX = -dX;
     /* 3247 */
-    y = (int)ply[player_id]->y;
-    dy = lastY - y;
-    if (dy < 0) dy = -dy;
+    dY = lastY - (int)ply[player_id]->y;
+    if (dY < 0) dY = -dY;
     /* 3248 */
-    if ((int)ply[player_id]->x < lastX) x = lastX - dx / 2;
+    if ((int)ply[player_id]->x < lastX) midX = lastX - dX / 2;
     /* 3249 */
-    else x = lastX + dx / 2;
+    else midX = lastX + dX / 2;
     /* 3250 */
-    if ((int)ply[player_id]->y < lastY) y = lastY - dy / 2;
+    if ((int)ply[player_id]->y < lastY) midY = lastY - dY / 2;
     /* 3251 */
-    else y = lastY + dy / 2;
+    else midY = lastY + dY / 2;
 
     /* 3253 */
     solid1 = is_solid(&map, (int)ply[player_id]->x - 11, (int)ply[player_id]->y);
@@ -40,7 +38,7 @@ void handle_player_collision_old(int lastX, int lastY)
         if (ply[player_id]->status == 2 || ply[player_id]->status == 0)
             ply[player_id]->status = 3;
         /* 3270 */
-        if (y <= lastY)
+        if (midY <= lastY)
             return;
         goto sweep;
     }
@@ -68,21 +66,13 @@ resolve:
             ply[player_id]->edge = 1;
         return;
     }
-    if (solid2) {
-        ply[player_id]->y -= solid2 - 9999;
-        ply[player_id]->rotate = 0;
-        ply[player_id]->edge = 2;
-        return;
-    }
-    ply[player_id]->rotate = 0;
-    ply[player_id]->edge = 0;
-    return;
+    goto check2;
 
 sweep:
     /* 3271 */
-    solid1 = is_solid(&map, x - 11, y);
+    solid1 = is_solid(&map, midX - 11, midY);
     /* 3272 */
-    solid2 = is_solid(&map, x + 11, y);
+    solid2 = is_solid(&map, midX + 11, midY);
     /* 3273 */
     any21 = solid1;
     /* 3274 */
@@ -118,6 +108,7 @@ sweep:
             ply[player_id]->edge = 1;
         return;
     }
+check2:
     /* 3283 */
     if (solid2) {
         ply[player_id]->y -= solid2 - 9999;

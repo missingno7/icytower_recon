@@ -5,6 +5,7 @@
  */
 #include <winsock2.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -19,6 +20,19 @@ HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathT
 void log2file(const char *fmt, ...);
 char *strptime(const char *s, const char *format, struct tm *tm);
 time_t timegm(struct tm *tm);
+
+/* Forward declarations; definitions follow in their original source order. */
+int getSocketError(void);
+void destroyHTTPResponse(HTTPResponse *pResponse);
+void dumpHTTPResponse(FILE *pOut, HTTPResponse *pResponse);
+static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer, int iOutSize);
+HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData, int iResponseBytesCount);
+HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile, const char *pMethod);
+int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort);
+HTTPResponse *HTTPGet(char *pURL);
+HTTPResponse *HTTPHead(char *pURL);
+HTTPResponse *HTTPRequest(const char *pURL, const char *pMethod);
+time_t httpGetLastModified(HTTPResponse *pResponse);
 
 int getSocketError(void)
 {
@@ -37,6 +51,19 @@ void destroyHTTPResponse(HTTPResponse *pResponse)
         free(pResponse->pHeaders);
         free(pResponse->pPayload);
         free(pResponse);
+    }
+}
+
+void dumpHTTPResponse(FILE *pOut, HTTPResponse *pResponse)
+{
+    fprintf(pOut, "HTTP/1.1 %d\n", pResponse->iStatusCode);
+    {
+        int i;
+
+        for (i = 0; i < pResponse->iNumHeaders; i++) {
+            fprintf(pOut, "%s: %s\n", pResponse->pHeaders[i].pHeader,
+                    pResponse->pHeaders[i].pValue);
+        }
     }
 }
 
@@ -73,7 +100,30 @@ HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,
     HTTPResponse *pResponse = malloc(sizeof(HTTPResponse));
 
     memset(pResponse, 0, sizeof(HTTPResponse));
-    i = extractLine(pHTTPData, iResponseBytesCount, linebuf, sizeof(linebuf));
+    {
+        char *pOut = linebuf;
+        int iOutSize = sizeof(linebuf);
+        unsigned char last = 0;
+
+        i = 0;
+        pOut[0] = 0;
+        if (iResponseBytesCount > 0) {
+            do {
+                unsigned char c = pHTTPData[i++];
+
+                if (c == '\n' && last == '\r')
+                    break;
+                if (c != '\r') {
+                    *pOut++ = c;
+                    *pOut = 0;
+                    if (--iOutSize == 1)
+                        break;
+                }
+                last = c;
+            } while (iResponseBytesCount - i > 0);
+        }
+        pOut[--iOutSize] = 0;
+    }
     if (sscanf(linebuf, "HTTP/%s %d", slaskbuf, &pResponse->iStatusCode) != 2) {
         log2file("Malformed HTTP response:\n%s", pHTTPData);
         destroyHTTPResponse(pResponse);

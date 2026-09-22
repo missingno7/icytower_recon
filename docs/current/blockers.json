@@ -1,24 +1,22 @@
 {
   "workflow_states": {
-    "FUNCTION_MATCH": 174,
-    "SOURCE_DIFFER": 47,
+    "FUNCTION_MATCH": 177,
+    "SOURCE_DIFFER": 46,
     "CODEGEN_SIMILAR": 5,
-    "BODY_MATCH_LAYOUT_BLOCKED": 26,
-    "MISSING": 1
+    "BODY_MATCH_LAYOUT_BLOCKED": 25
   },
   "difference_classes": {
-    "EXACT": 174,
+    "EXACT": 177,
     "SOURCE_CONTROL_FLOW_SHAPE": 9,
     "RELOCATION_OR_LITERAL_LAYOUT": 4,
-    "STACK_FRAME_LAYOUT": 12,
-    "SAME_CU_CALL_LAYOUT": 26,
-    "REGISTER_OR_INSTRUCTION_SELECTION": 15,
+    "STACK_FRAME_LAYOUT": 11,
+    "SAME_CU_CALL_LAYOUT": 25,
+    "REGISTER_OR_INSTRUCTION_SELECTION": 16,
     "COMMON_BSS_LAYOUT": 1,
     "UNKNOWN_SUPERVISOR": 5,
     "LITERAL_CONTENT_DIFFERENCE": 3,
     "INSTRUCTION_ORDER": 1,
-    "COMPILER_CONTEXT_DEPENDENCY": 2,
-    "SOURCE_INCOMPLETE": 1
+    "COMPILER_CONTEXT_DEPENDENCY": 1
   },
   "tasks": [
     {
@@ -312,26 +310,6 @@
       "prerequisite_tasks": []
     },
     {
-      "source": "src/httpget.c",
-      "target": "game-httpget",
-      "function": "HTTPRequest",
-      "status": "FUNCTION_MATCH",
-      "state": "BODY_MATCH_LAYOUT_BLOCKED",
-      "priority": 41,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SAME_CU_CALL_LAYOUT",
-      "first_difference": null,
-      "verification_command": "python tools/check_function.py game-httpget HTTPRequest",
-      "begin_command": "python tools/grinder_task.py begin game-httpget HTTPRequest",
-      "promotion_command": "python tools/promote_function.py game-httpget HTTPRequest --claim BODY_MATCH_LAYOUT_BLOCKED",
-      "body_edit_allowed": false,
-      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
-      "size": 136,
-      "candidate_card": "docs/current/functions/httpget/HTTPRequest.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "save_config",
@@ -453,31 +431,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 254,
       "candidate_card": "docs/current/functions/main/check_beta_tester.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/httpget.c",
-      "target": "game-httpget",
-      "function": "HTTPFetchInternal",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 37,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
-      "first_difference": {
-        "offset": 127,
-        "original_va": 4218651,
-        "candidate_byte": 83,
-        "original_byte": 81
-      },
-      "verification_command": "python tools/check_function.py game-httpget HTTPFetchInternal",
-      "begin_command": "python tools/grinder_task.py begin game-httpget HTTPFetchInternal",
-      "promotion_command": "python tools/promote_function.py game-httpget HTTPFetchInternal",
-      "body_edit_allowed": false,
-      "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
-      "size": 594,
-      "candidate_card": "docs/current/functions/httpget/HTTPFetchInternal.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -1325,6 +1278,40 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/httpget.c",
+      "target": "game-httpget",
+      "function": "extractHTTPResponse",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "first_difference": {
+        "offset": 14,
+        "original_va": 4217502,
+        "candidate_byte": 200,
+        "original_byte": 204
+      },
+      "verification_command": "python tools/check_function.py game-httpget extractHTTPResponse",
+      "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
+      "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
+      "body_edit_allowed": true,
+      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+      "size": 923,
+      "candidate_card": "docs/current/functions/httpget/extractHTTPResponse.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": [
+        {
+          "function": "extractHTTPResponse",
+          "candidate_card": "docs/current/interfaces/extractHTTPResponse.json",
+          "difficulty": "SUPERVISOR",
+          "state": "LOCAL_INTERFACE_CONFLICT",
+          "planned_in_caller_cu": true,
+          "limit": "Must reverify the caller after repair; other blockers may remain."
+        }
+      ]
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "_mangled_main",
@@ -1500,40 +1487,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/httpget.c",
-      "target": "game-httpget",
-      "function": "extractHTTPResponse",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4217496,
-        "candidate_byte": 92,
-        "original_byte": 76
-      },
-      "verification_command": "python tools/check_function.py game-httpget extractHTTPResponse",
-      "begin_command": "python tools/grinder_task.py begin game-httpget extractHTTPResponse",
-      "promotion_command": "python tools/promote_function.py game-httpget extractHTTPResponse",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 923,
-      "candidate_card": "docs/current/functions/httpget/extractHTTPResponse.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "extractHTTPResponse",
-          "candidate_card": "docs/current/interfaces/extractHTTPResponse.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]

@@ -197,13 +197,21 @@ int play(void)
         if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595 */
             if (time_cheat_count == 1000) {                          /* 3597 */
                 /* lines 3604-3661: periodic clock()/QueryPerformanceCounter()/time() cross-check,
-                 * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
-                 * below are a best-effort reconstruction (see report); the calls and field targets are
+                 * recorded into the demo replay's time-cheat-detection arrays. DWARF lexical block
+                 * 134356 (3604..3661) declares three doubles our source previously never named:
+                 * clockSpeed, qpcSpeed, timeSpeed -- the per-method rate used to gate/derive each
+                 * tot*Times value below. The exact x87 formulas are a best-effort reconstruction
+                 * from the instruction stream (see report); the calls and field targets are
                  * evidenced directly. */
+                double clockSpeed;  /* DWARF block 134356 [3604..3661] */
+                double qpcSpeed;
+                double timeSpeed;
+
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                if (clockElapsed > 0) {                             /* 3606 */
-                    totClockTimes = 1.0 / clockElapsed;
+                clockSpeed = 1000.0 / (50.0 * clockElapsed);        /* line 3605 (tail) */
+                if (clockSpeed > 0.0) {                             /* 3606 */
+                    totClockTimes = 1000.0 * clockSpeed / clockSpeed / 20.0; /* 3606 */
                 } else {
                     totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
                 }
@@ -212,10 +220,12 @@ int play(void)
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
-                totQPCTimes = qpc_freq / (1000.0 * qpc_elapsed);    /* line 3615 */
+                qpcSpeed = 20.0 / (50.0 * qpc_elapsed / qpc_freq);  /* line 3615 (tail) */
+                totQPCTimes = qpcSpeed;                             /* line 3615 (tail) */
                 timeTimeEnd = time(NULL);                           /* line 3623 */
                 timeElapsed = timeTimeEnd - timeTimeStart;          /* line 3638 */
-                totTimeTimes = 20.0 / (50.0 * timeElapsed);         /* line 3638 */
+                timeSpeed = 20.0 / (50.0 * timeElapsed);            /* line 3638 (tail) */
+                totTimeTimes = timeSpeed;                           /* line 3638 (tail) */
                 demo->tc_c_data[demo->tc_posts] = totClockTimes;    /* line 3636 */
                 demo->tc_q_data[demo->tc_posts] = totQPCTimes;      /* line 3637 */
                 demo->tc_t_data[demo->tc_posts] = totTimeTimes;     /* line 3638 (tail) */
@@ -546,12 +556,12 @@ int play(void)
                  * only part actually gated). */
 
                 if (numComboJumps) {                                               /* 4003 */
-                    lastJumpLength = 0;
+                    lastJumpLength = 0;                                             /* 4003 */
                     aightScore = 1;                                                 /* 4003 */
                 } else {
                     if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
                         ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
-                    lastJumpLength = 0;
+                    lastJumpLength = 0;                                             /* 4004 */
                     aightScore = 1;                                                 /* 4004 */
                 }
             /* The `if (y < 540.0 && !dead)` opened in W2 at line 3976 closes here: both of its
@@ -615,10 +625,14 @@ int play(void)
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
                 playing = 0;
         } else if (ply[player_id]->dead <= 99) {                               /* 4050 */
-            playing = 0;   /* ? traced exactly (jle 4050 target is the shared
-                             * esi=0 tail also reached by the recording check above,
-                             * offsets 2860..2904); which local esi holds here is
-                             * not otherwise confirmed. See report. */
+            /* esi is confirmed as `playing` here (its DWARF range covers offsets 2860..2903,
+             * exactly this store). Re-measured after `playing` gained its first real assignments
+             * this round (the y<540/dead edge and the KEY_SPACE/KEY_RIGHT restructure): 4050 now
+             * measures 29 of 22 historical bytes and 4056 32 of 44 -- together 61 of 66, so the
+             * two `playing = 0;` epilogues (this one and 4056's) are no longer degenerate; the
+             * remaining spread is consistent with the two still sharing code the historical
+             * binary kept separate, not a missing statement. */
+            playing = 0;
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int pauseTime, addTime; /* DWARF block 132550 [4560..4780]: pauseTime, addTime */
@@ -635,8 +649,12 @@ int play(void)
             QueryPerformanceCounter(&li);                                      /* 4085 */
             qpc_start = li.LowPart;                                            /* 4086 */
             timeTimeStart = time(NULL);                                        /* 4090 */
-            lastMusicPos = 0;
-            accMusics = 0.0;
+            lastMusicPos = 0;                                                  /* 4077: folded into the
+                                                                                   musicCounter statement's own
+                                                                                   fragment (offsets 4697..4709,
+                                                                                   right after the fistpl), not a
+                                                                                   separate line-table row */
+            accMusics = 0.0;                                                   /* 4077 */
         }
         if (ply[player_id]->shake) {                                          /* 4094 */
             ply[player_id]->shake--;                                          /* 4095 */
@@ -728,8 +746,10 @@ int play(void)
                     QueryPerformanceCounter(&li);                             /* 4177 */
                     qpc_start = li.LowPart;                                   /* 4178 */
                     timeTimeStart = time(NULL);                               /* 4182 */
-                    lastMusicPos = 0;
-                    accMusics = 0.0;
+                    lastMusicPos = 0;                                         /* 4170: folded into the
+                                                                                  musicCounter statement's own
+                                                                                  fragment, same shape as 4077 */
+                    accMusics = 0.0;                                          /* 4170 */
                 }
             }
             if (is_pause(&ctrl) && ply[player_id]->dead == 0) {               /* 4186 */
@@ -787,8 +807,10 @@ int play(void)
                 QueryPerformanceCounter(&li);                                 /* 4240 */
                 qpc_start = li.LowPart;                                       /* 4241 */
                 timeTimeStart = time(NULL);                                   /* 4245 */
-                lastMusicPos = 0;
-                accMusics = 0.0;
+                lastMusicPos = 0;                                             /* 4233: folded into the
+                                                                                  musicCounter statement's own
+                                                                                  fragment, same shape as 4077 */
+                accMusics = 0.0;                                              /* 4233 */
             }
             if (!itrcheck) {                                                 /* 4249 */
                 poll_control(&rec_ctrl, 0);                                   /* 4251 */
@@ -818,11 +840,25 @@ int play(void)
                         fast_fast_forward = 0;                                /* 4283 */
                         log2file("  replay unpaused");                       /* 4284 */
                     }
+                }
+                /* NOT an else: main.c:4271's own je (SPACE not pressed) lands at offset 5965,
+                 * exactly the reload that starts main.c:4284's tail; the dead!=0 fallthrough at
+                 * offset 3262 lands exactly at 4287's own first fragment; and 4284's own tail
+                 * falls straight into 4287's SECOND fragment (offsets 5971..5984) after finishing
+                 * the pause/unpause sequence. All three paths -- space not pressed, space pressed
+                 * while dead, and space pressed-and-unpaused -- converge on the same KEY_RIGHT
+                 * test, so 4287..4310 run unconditionally after the block above, not only when it
+                 * was skipped. */
+                if (key[KEY_RIGHT]) {                                    /* 4287 */
+                    fast_forward++;                                       /* 4288 */
+                    fast_fast_forward = 0;                                /* 4289 */
                 } else {
-                    if (key[KEY_RIGHT]) {                                    /* 4287 */
-                        fast_forward++;                                       /* 4288 */
-                        fast_fast_forward = 0;                                /* 4289 */
-                    } else if (key[KEY_UP]) {                                /* 4295 */
+                    /* main.c:4287's own je (KEY_RIGHT false) and the post-unpause path's second
+                     * KEY_RIGHT test both land at offset 5984, `movl $0,fast_forward`, tagged
+                     * main.c:4292 -- a real reset shared by both paths, not just the debounce
+                     * tail, missing from this branch until now. */
+                    fast_forward = 0;                                     /* 4292 */
+                    if (key[KEY_UP]) {                                    /* 4295 */
                         if (ply[player_id]->dead == 0 &&
                             ply[player_id]->level < demo->floor - 10) {       /* 4296 */
                             fast_fast_forward++;                              /* 4297 */
@@ -832,16 +868,16 @@ int play(void)
                                 next_floor = demo->floor - 10;
                         }
                     }
-                    /* source-view 4270..4320: the level>=next_floor test (fragments 3390..3412)
-                     * falls straight into the reset; the level<next_floor case instead jumps to
-                     * a second, out-of-line test of ply[player_id]->dead (fragments 7984..7999)
-                     * that also reaches the reset when dead != 0 -- one condition, two tested
-                     * terms ORed, not just the level compare. */
-                    if (ply[player_id]->level >= next_floor ||
-                        ply[player_id]->dead) {                              /* 4309 */
-                        fast_fast_forward = 0;                                /* 4310 */
-                        next_floor = -1;
-                    }
+                }
+                /* source-view 4270..4320: the level>=next_floor test (fragments 3390..3412)
+                 * falls straight into the reset; the level<next_floor case instead jumps to
+                 * a second, out-of-line test of ply[player_id]->dead (fragments 7984..7999)
+                 * that also reaches the reset when dead != 0 -- one condition, two tested
+                 * terms ORed, not just the level compare. */
+                if (ply[player_id]->level >= next_floor ||
+                    ply[player_id]->dead) {                              /* 4309 */
+                    fast_fast_forward = 0;                                /* 4310 */
+                    next_floor = -1;
                 }
             }
         }
@@ -920,8 +956,14 @@ int play(void)
             for (k = 0; k < 7; k++)                                            /* 4402 */
                 keys_pressed[k] = time_cheat_count;
             if (demo->size > 0) {                                              /* 4406 */
-                for (k = 0; k < 7; k++)                                        /* 4404 */
-                    last_keys[k] = 0;
+                for (k = 0; k < 7; k++)                                        /* 4404: rep stos reuses eax
+                                                                                    * without reloading it from
+                                                                                    * 4402's time_cheat_count
+                                                                                    * read (offset 7805, no mov
+                                                                                    * before it) -- last_keys is
+                                                                                    * seeded with time_cheat_count,
+                                                                                    * not a literal 0. */
+                    last_keys[k] = time_cheat_count;
                 for (i = 0; i < demo->size; i++) {                             /* 4406 */
                     int flags = demo->data[i].key_flags;                       /* 4406 */
                     for (k = 0; k < 7; k++) {                                  /* 4408 */
@@ -948,7 +990,19 @@ int play(void)
     fast_forward = 0;                                                         /* 4457 */
     fast_fast_forward = 0;                                                    /* 4458 */
 
-    /* lines 4500..4534: demo/profile stat snapshot, only when recording && !quit */
+    /* lines 4500..4643: demo/profile stat snapshot (recording && !quit only), then
+     * syncProfileFromOptions()/save_profile() unconditionally, then the quit/closeButtonClicked
+     * guard around highscore qualification. Traced from three save_profile() call sites all
+     * tagged historical line 4641 (offsets 8235, 9307, 10956): the !recording predecessor
+     * (offset 8179) calls sync+save BEFORE ever testing quit (offset 8240's test comes after
+     * the call, not before it); the recording&&quit predecessor jumps straight past the whole
+     * replay-file block to its own sync+save copy (offset 10900, target of the "jne 414494"
+     * at offset 8315); the recording&&!quit predecessor falls through the replay-file block
+     * into a third sync+save copy (offset 9251) whose *own* trailing test reads
+     * closeButtonClicked directly (offset 9312, "cmpl $0x0,closeButtonClicked") rather than
+     * quit -- because on that path quit was already resolved false by the earlier test at
+     * offset 8308. That is only consistent with sync+save being unconditional statements
+     * textually AFTER this whole if/else, not folded into either arm or gated by !quit. */
     if (recording) {                                                          /* 4500 */
         if (!quit) {                                                          /* 4500 */
             demo->score = ply[player_id]->level * 10 + ply[player_id]->score;  /* 4503 */
@@ -1069,15 +1123,14 @@ int play(void)
                 }
             }
         }
-    } else {
-        syncProfileFromOptions();
     }
 
-    /* lines 4641..4643 */
-    if (!quit) {                                                             /* 4643 */
-        save_profile(profile);                                               /* 4641 */
+    /* lines 4641..4643: unconditional, reached from all three predecessors above */
+    syncProfileFromOptions();
+    save_profile(profile);                                                   /* 4641 */
 
-        /* lines 4650..4683: highscore qualification */
+    /* lines 4643..4683: highscore qualification, guarded by quit && closeButtonClicked */
+    if (!quit) {                                                             /* 4643 */
         if (!closeButtonClicked) {                                           /* 4643 */
             int rank;   /* qualify, qualifyValue, gotHigh and gameover_bmp_id live in the enclosing
                          * DWARF block 133269, which opens here and runs into REGION W5 */
@@ -1233,14 +1286,17 @@ int play(void)
             if (!recording) {
                 summary_scroller_message[0] = 0;                                      /* 4743 */
                 if (is_playing_custom_game) {
-                    memcpy(summary_scroller_message,
+                    /* 4746: annotate the statement's FIRST physical line, not just the last --
+                     * an unannotated opening line inherits the previous statement's historical
+                     * line (4743) and misattributes this call's bytes to it. */
+                    memcpy(summary_scroller_message,               /* 4746 */
                            "Custom mode is crazy fun but does not add to your profile. "
                            "Play Classic Mode to compete in the highscore lists and "
                            "climb in rank!", 0x82);                                    /* 4746 */
                 } else if (gotHigh) {
                     memcpy(summary_scroller_message, "New personal records!    ", 0x1a); /* 4753 */
                 } else if (isGuest) {                                                  /* 4770 */
-                    strcpy(summary_scroller_message,
+                    strcpy(summary_scroller_message,                /* 4770 */
                            "You're playing in guest mode. Start a profile and "
                            "record your progress!");
                 } else {

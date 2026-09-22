@@ -1,0 +1,15 @@
+{
+  "target": "game-httpget",
+  "source": "src/httpget.c",
+  "order": "historical",
+  "add": ["dumpHTTPResponse"],
+  "bodies": {
+    "dumpHTTPResponse": "docs/attempts/game-httpget/bodies/dumpHTTPResponse.c",
+    "extractHTTPResponse": "docs/attempts/game-httpget/bodies/extractHTTPResponse.c"
+  },
+  "declarations": {
+    "includes_after": {"stdlib.h": ["stdio.h"]},
+    "evidence": "dumpHTTPResponse calls fprintf on a FILE *, so the unit needs <stdio.h>. The historical CU plainly had it; our httpget.c lacked it only because every function that uses stdio was among the deliberately absent ones."
+  },
+  "evidence": "Closes the last MISSING function in the project, and closes it by the route section 10 of docs/tu-context-analysis.md predicted. extractHTTPResponse's line reader is not a call in the original: the DWARF puts extractLine's own locals last and c in lexical blocks INSIDE extractHTTPResponse, so the historical source wrote the scan loop out at the call site, and in the zero-trip 'if (...) { do {...} while (...); }' shape that makes GCC fold the entry test down to a bare test of the byte count. Writing the first of the two sites out that way reproduces the original's preheader at offset 70 byte for byte, 'mov <count>,%edx; test %edx,%edx; jle', including its register: that single peephole scratch is the one the cursor arithmetic said was missing. dumpHTTPResponse, reconstructed from its line table (48 prologue, 49 fprintf, 50 loop guard and back edge, 51 fprintf, 53 epilogue) with the unsigned back edge that iNumHeaders forces and the 8-byte HTTPHeader stride, then takes cx instead of dx and becomes exact. extractHTTPResponse itself moves 918 -> 924 of 923 and stays DIFFER; HTTPFetchInternal becomes exact as well. Gains dumpHTTPResponse and HTTPFetchInternal, no losses, and the historical predecessor count goes 8 -> 10 of 10."
+}

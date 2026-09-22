@@ -1,0 +1,105 @@
+{
+  "task": "httpget_dump_and_extract",
+  "verdict": "ACCEPTABLE",
+  "matches_before": 7,
+  "matches_after": 9,
+  "same_historical_predecessor": 9,
+  "losses": [],
+  "gains": [
+    "HTTPFetchInternal",
+    "dumpHTTPResponse"
+  ],
+  "exact_before": 7,
+  "exact_after": 9,
+  "limit": "Whole-unit final-state check on the applied transaction; not a promotion and not a function proof.",
+  "plan_edits": {
+    "focus": [],
+    "declarations": {
+      "includes_after": {
+        "stdlib.h": [
+          "stdio.h"
+        ]
+      },
+      "evidence": "dumpHTTPResponse calls fprintf on a FILE *, so the unit needs <stdio.h>. The historical CU plainly had it; our httpget.c lacked it only because every function that uses stdio was among the deliberately absent ones.",
+      "removed_text": []
+    },
+    "order": [
+      "getSocketError",
+      "destroyHTTPResponse",
+      "dumpHTTPResponse",
+      "extractLine",
+      "extractHTTPResponse",
+      "HTTPFetchInternal",
+      "SplitURL",
+      "HTTPGet",
+      "HTTPHead",
+      "HTTPRequest",
+      "httpGetLastModified"
+    ],
+    "definition_order_with_static": [
+      [
+        "getSocketError",
+        false
+      ],
+      [
+        "destroyHTTPResponse",
+        false
+      ],
+      [
+        "dumpHTTPResponse",
+        false
+      ],
+      [
+        "extractLine",
+        true
+      ],
+      [
+        "extractHTTPResponse",
+        false
+      ],
+      [
+        "HTTPFetchInternal",
+        false
+      ],
+      [
+        "SplitURL",
+        false
+      ],
+      [
+        "HTTPGet",
+        false
+      ],
+      [
+        "HTTPHead",
+        false
+      ],
+      [
+        "HTTPRequest",
+        false
+      ],
+      [
+        "httpGetLastModified",
+        false
+      ]
+    ],
+    "bodies": {
+      "dumpHTTPResponse": {
+        "path": "docs/attempts/game-httpget/bodies/dumpHTTPResponse.c",
+        "identity": {
+          "size": 1008,
+          "sha256": "2bc628d551bd640959a4a5a51187f937db0783d28a311f60f42eb7c8169928e3"
+        }
+      },
+      "extractHTTPResponse": {
+        "path": "docs/attempts/game-httpget/bodies/extractHTTPResponse.c",
+        "identity": {
+          "size": 2518,
+          "sha256": "c22f49d1d5fcaf4f0205ba6b94c250e1e9c7e66e2a793bf145461e2a81711d8a"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  }
+}

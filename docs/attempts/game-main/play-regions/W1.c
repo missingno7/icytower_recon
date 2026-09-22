@@ -199,13 +199,21 @@ int play(void)
         if (recording && map.offset > 100 && !ply[player_id]->dead) { /* line 3595 */
             if (time_cheat_count == 1000) {                          /* 3597 */
                 /* lines 3604-3661: periodic clock()/QueryPerformanceCounter()/time() cross-check,
-                 * recorded into the demo replay's time-cheat-detection arrays. The exact x87 formulas
-                 * below are a best-effort reconstruction (see report); the calls and field targets are
+                 * recorded into the demo replay's time-cheat-detection arrays. DWARF lexical block
+                 * 134356 (3604..3661) declares three doubles our source previously never named:
+                 * clockSpeed, qpcSpeed, timeSpeed -- the per-method rate used to gate/derive each
+                 * tot*Times value below. The exact x87 formulas are a best-effort reconstruction
+                 * from the instruction stream (see report); the calls and field targets are
                  * evidenced directly. */
+                double clockSpeed;  /* DWARF block 134356 [3604..3661] */
+                double qpcSpeed;
+                double timeSpeed;
+
                 clockTimeEnd = clock();                             /* line 3604 */
                 clockElapsed = clockTimeEnd - clockTimeStart;       /* line 3605 */
-                if (clockElapsed > 0) {                             /* 3606 */
-                    totClockTimes = 1.0 / clockElapsed;
+                clockSpeed = 1000.0 / (50.0 * clockElapsed);        /* line 3605 (tail) */
+                if (clockSpeed > 0.0) {                             /* 3606 */
+                    totClockTimes = 1000.0 * clockSpeed / clockSpeed / 20.0; /* 3606 */
                 } else {
                     totClockTimes = -0.05;                          /* 3606 (fallthrough constant) */
                 }
@@ -214,10 +222,12 @@ int play(void)
                 QueryPerformanceCounter(&li);                       /* line 3612 */
                 qpc_end = li.LowPart;                               /* line 3612 tail */
                 qpc_elapsed = qpc_end - qpc_start;                  /* line 3615 */
-                totQPCTimes = qpc_freq / (1000.0 * qpc_elapsed);    /* line 3615 */
+                qpcSpeed = 20.0 / (50.0 * qpc_elapsed / qpc_freq);  /* line 3615 (tail) */
+                totQPCTimes = qpcSpeed;                             /* line 3615 (tail) */
                 timeTimeEnd = time(NULL);                           /* line 3623 */
                 timeElapsed = timeTimeEnd - timeTimeStart;          /* line 3638 */
-                totTimeTimes = 20.0 / (50.0 * timeElapsed);         /* line 3638 */
+                timeSpeed = 20.0 / (50.0 * timeElapsed);            /* line 3638 (tail) */
+                totTimeTimes = timeSpeed;                           /* line 3638 (tail) */
                 demo->tc_c_data[demo->tc_posts] = totClockTimes;    /* line 3636 */
                 demo->tc_q_data[demo->tc_posts] = totQPCTimes;      /* line 3637 */
                 demo->tc_t_data[demo->tc_posts] = totTimeTimes;     /* line 3638 (tail) */
