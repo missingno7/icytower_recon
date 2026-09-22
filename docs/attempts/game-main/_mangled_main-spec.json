@@ -1,0 +1,9 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "bodies": {
+    "_mangled_main": "docs/attempts/game-main/bodies/_mangled_main.c"
+  },
+  "evidence": "Fixes a startup bug that is very likely why the linked game crashes on launch, and lands the entry point's evidenced locals. The third argument of replace_filename at main.c:5792 is the EMPTY string, not \"data\": the original stores 0x4d4bb3 at offset 111 and the bytes at that address in assets/icytower15.exe are a lone NUL. replace_filename then yields the executable's own directory, which is what the following chdir enters and where profiles/, gamepad.txt and the data/ folder all live; with \"data\" the game chdirs one level too deep and finds none of them. Also names seven of the eight DWARF locals the reconstruction never named: full_path at -0x518 and logfilename at -0x118 are exact stack-slot matches for what were called executable_name and logfile_path, f and play_again are fp and play_result confirmed from their location lists, and hDebugLibrary is a real capture -- its location list decodes to eax live exactly at the LoadLibraryA result check, where our source discarded the handle. menu_x, menu_y and should_chdir stay unnamed: all three have no DW_AT_location and there is no second chdir call or any branch around the existing unconditional one, so no guard was invented for them. No gains and no losses."
+}

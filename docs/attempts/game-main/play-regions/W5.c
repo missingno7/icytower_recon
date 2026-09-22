@@ -262,8 +262,15 @@ int play(void)
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
-                    current_rank_id = new_rank_id; /* 4823: no distinct historical line found between
-                                                      4823 and 4827 for this write; inherits 4823. */
+                    /* current_rank_id = new_rank_id was here in an earlier pass, but
+                     * local_slot_trace for current_rank_id shows exactly 3 accesses in the
+                     * whole function -- init at 3441, a write at 3443 (both before region
+                     * W1a), and the single read at 4820 -- with NO write anywhere inside this
+                     * loop. Removed as invented: nothing in the trace supports it, and per
+                     * large-body-reconstruction-pitfalls this makes new_rank_id!=current_rank_id
+                     * loop-invariant-true after the first rank-up, i.e. the block re-triggers
+                     * every frame, which is consistent with the evidence even if it looks like
+                     * a game bug. */
                     /* Tried: moving this draw_sprite/textout_ex/easing out of the if-block to
                      * run unconditionally every frame (on the theory that evidence/census/
                      * line-mappings.json shows exactly two draw.inl:238 sites in the whole

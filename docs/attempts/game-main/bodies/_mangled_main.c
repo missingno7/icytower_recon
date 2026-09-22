@@ -19,7 +19,13 @@ int _mangled_main(int argc, char **argv)
     allegro_init();
     register_png_file_type();
     get_executable_name(full_path, sizeof(full_path));
-    replace_filename(working_directory, full_path, "data",
+    /* The third argument is the EMPTY string, not "data": the original stores
+     * 0x4d4bb3 here (main.c:5792, offset 111) and the bytes at that address in
+     * assets/icytower15.exe are a lone NUL. replace_filename then yields the
+     * executable's own directory, which is what the following chdir enters and
+     * where profiles/, gamepad.txt and the data/ folder all live. With "data"
+     * the game chdirs one level too deep and nothing it needs is found. */
+    replace_filename(working_directory, full_path, "",
                      sizeof(working_directory));
     chdir(working_directory);
     memset(logfilename, 0, sizeof(logfilename));

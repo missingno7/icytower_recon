@@ -7,8 +7,8 @@
   "candidate_addend": 1126,
   "candidate_card": "docs/current/literals/game-main/466.json",
   "source_identity": {
-    "size": 154825,
-    "sha256": "20fc9489e7dff02e36cf9f9d788112a95c1df46371572fa99f0262614b868ad7"
+    "size": 158672,
+    "sha256": "76dff96e70b6a479e851145fab0fce676c89521b1131a1956d59152750fe4a40"
   },
   "consumers": [
     {
@@ -23,13 +23,31 @@
       "candidate_source_lines": [
         {
           "file": "src/main.c",
-          "line": 1862,
+          "line": 1945,
           "text": "    ShellExecuteA(NULL, \"open\", \"rundll32\", cmd, \"\", 4);"
+        }
+      ]
+    },
+    {
+      "function": "_mangled_main",
+      "function_offset": 115,
+      "historical_operand_va": 5065651,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5067077,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2876,
+          "text": "    replace_filename(working_directory, full_path, \"\","
         }
       ]
     }
   ],
   "consumer_functions": [
+    "_mangled_main",
     "open_web_browser"
   ],
   "historical_observed_addresses": [
@@ -79,8 +97,48 @@
       "candidate_source_lines": [
         {
           "file": "src/main.c",
-          "line": 1862,
+          "line": 1945,
           "text": "    ShellExecuteA(NULL, \"open\", \"rundll32\", cmd, \"\", 4);"
+        }
+      ]
+    },
+    {
+      "function_offset": 115,
+      "candidate_addend": 1126,
+      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
+      "content_equal": true,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5065651,
+      "candidate_hex": "",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 37459,
+        "bytes": "c744240866040000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x466,0x8(%esp)"
+      },
+      "original_instruction": {
+        "address": 4284287,
+        "bytes": "c7442408b34b4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4bb3,0x8(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5067077,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "state": "EMPTY_PAYLOAD_NOT_IDENTIFYING",
+        "occurrence_count": null,
+        "locations": []
+      },
+      "candidate_text": "",
+      "original_text": "",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2876,
+          "text": "    replace_filename(working_directory, full_path, \"\","
         }
       ]
     }
