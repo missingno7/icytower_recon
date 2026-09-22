@@ -10,8 +10,6 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
     float view_percentage = max_posts ? (float)num_itr_files / max_posts : 1.0f;
     float view_offset = max_posts ? (float)offset / max_posts : 0.0f;
     char curr_filename[1024];
-    char rbuf[129];
-    int is_dir;
     int show_directory = 0;
     int selected_version = 0;
     int isCustom = 0;
@@ -29,24 +27,20 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
     rect(bmp, x + 7, y + 32, x + w - 7, y + 303, fg);
     solid_mode();
 
-    textout_ex(bmp, data[51].dat, "SELECT REPLAY", x + 10, y - 12, -1, -1);  /* 490 */
-
-    set_clip_rect(bmp, x + 6, 0, x + 290, bmp->h - 1);        /* 509 */
-    for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {  /* 510/514 */
-        Treplay_post *post = &file_list[i];                    /* 516 */
+    set_clip_rect(bmp, x + 10, y + 35, x + 185, y + 300);
+    for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {
+        Treplay_post *post = &file_list[i];
         int row = y + 40 + (i - offset) * fh;
+        char *name = get_filename(post->full_path);
 
-        if (post->parent)                                        /* 516 */
-            strcpy(rbuf, ".. (parent directory)");                  /* 517 */
-        else
-            strcpy(rbuf, get_filename(post->full_path));             /* 519 */
-        is_dir = post->directory;                                  /* 521 */
-        if (i == selection)                                           /* 523 */
-            textprintf_ex(bmp, font, x + 8, row, mg, -1, "> %c %s",      /* 534 */
-                          is_dir ? '}' : '{', rbuf);
-        else
-            textprintf_ex(bmp, font, x + 8, row, is_dir ? mg : fg, -1,    /* 525 */
-                          "  %c %s", is_dir ? '}' : '{', rbuf);
+        if (i == selection)
+            rectfill(bmp, x + 10, row - 1, x + 185, row + fh, mg);
+        if (post->directory) {
+            show_directory = 1;
+            textprintf_ex(bmp, font, x + 14, row, fg, -1, "[%s]", name);
+        } else {
+            textout_ex(bmp, font, name, x + 14, row, fg, -1);
+        }
     }
     set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
 

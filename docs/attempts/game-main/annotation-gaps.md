@@ -174,3 +174,25 @@ Two caveats found while compiling this:
   its only readers are in W2's collision handling, so the write is legitimately dead in the current
   build until W2 is complete enough to read it back. Filed here under W2 for its owner's awareness,
   not as an annotation-gap action item.
+
+
+## Settled: where a `/* NNNN */` annotation must go
+
+Three independent measurements this session, on three different files, agree:
+
+* **A leading comment on its own line, above the statement, always works.** Use this form for every
+  multi-line statement.
+* **A trailing comment on the CLOSING line of a multi-line statement breaks the attribution.** In
+  `select_profile` that hid 105 of one statement's 118 historical bytes, and the false deficit it
+  produced had survived two earlier investigations. In `play`'s W1b the same form measured -138.
+* **A trailing comment on a single-line statement is fine**, and so is the inline
+  `/* NNNN */ call(...)` form before a multi-line call -- that one was measured byte-for-byte
+  identical to the leading-own-line form in W5, so it does not need churning.
+* **Multi-number tokens are not annotations.** `/* lines 3580-3583 */`, `/* 4029/4123 */` and
+  `/* 4729..4731 */` are read as their first number or not at all. Use one number.
+* A `?` placeholder is the same as no annotation: the statement silently inherits the previous
+  line number. That is sometimes the correct number anyway, but it is never stated.
+
+The rule that follows: after any pass that adds or moves statements, re-check annotation placement
+before drawing a conclusion from a per-line deficit. Two of this session's longest investigations
+were chasing bytes that were never missing.

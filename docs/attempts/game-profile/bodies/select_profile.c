@@ -23,7 +23,7 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
     selectedProfile = 0;
     profileIndex = 0;
     offset = 0;
-    page_size = 17;
+    page_size = 16;
     ctrl_wait = 1000;
     pageY = 500;
     targetY = 50;
@@ -77,109 +77,126 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                 }
                 break;
             case 83: {
-                char *name = profiles + profileIndex * 32;
+                char *name = profiles + profileIndex * 32;    /* 777 */
+                /* 777 */
                 if (stricmp(name, "guest") &&
                     stricmp(name, (char *)current_profile + 6)) {
-                    sprintf(input, "Really delete '%s'?", name);
+                    sprintf(input, "Really delete '%s'?", name); /* 779 */
+                    /* 780 */
                     if (my_alert(input, "WARNING: It will be gone forever.",
                                  1, 0)) {
-                        delete_profile(name);
-                        numProfiles = rebuild_profile_list(&profiles);
+                        delete_profile(name);                    /* 782 */
+                        numProfiles = rebuild_profile_list(&profiles); /* 783 */
                         if (profileIndex >= numProfiles)
                             profileIndex = numProfiles - 1;
+                        /* 766 */
+                        offset = numProfiles - page_size;
+                        if (offset < 0)
+                            offset = 0;
                     }
                 }
                 break;
             }
             case 67: {
                 char *name = profiles + profileIndex * 32;
-                play_menu_select();
-                if (!stricmp(name, "CREATE NEW PROFILE")) {
-                    set_trans_blender(0, 0, 0, 158);
-                    drawing_mode(5, 0, 0, 0);
+                play_menu_select();                             /* 791 */
+                if (!stricmp(name, "CREATE NEW PROFILE")) {      /* 792 */
+                    set_trans_blender(0, 0, 0, 158);              /* 794 */
+                    drawing_mode(5, 0, 0, 0);                      /* 795 */
+                    /* 796 */
                     rectfill(swap_screen, 0, 0,
                              SCREEN_W,
                              SCREEN_H,
                              makecol(0, 0, 0));
-                    solid_mode();
-                    input[0] = 0;
-                    draw_sprite(swap_screen, data[88].dat, 100, 140);
+                    solid_mode();                                  /* 797 */
+                    input[0] = 0;                                  /* 800 */
+                    draw_sprite(swap_screen, data[88].dat, 100, 140); /* 801 */
+                    /* 802 */
                     textprintf_ex(swap_screen, data[51].dat, 140, 140,
                                   -1, -1, "Enter profile name:");
+                    /* 803 */
                     textout_right_ex(swap_screen, data[54].dat,
                                       "...and press enter.", 480, 210, 0, -1);
+                    /* 804 */
                     rect(swap_screen, 139, 191, 480, 210,
                          makecol(255, 255, 255));
+                    /* 805 */
                     rectfill(swap_screen, 139, 191, 480, 210,
                              makecol(80, 80, 80));
+                    /* 807 */
                     if (get_string(swap_screen, input, 340, 32, data[54].dat,
                                    140, 191, makecol(0, 0, 0), -1) >= 0 &&
                         input[0]) {
-                        replaceBadCharacters(input, '_');
-                        selectedProfile = create_profile(input, 0);
-                        if (selectedProfile) {
-                            my_alert("CREATE PROFILE", "Profile created!", 0, 1);
+                        replaceBadCharacters(input, '_');               /* 809 */
+                        selectedProfile = create_profile(input, 0);     /* 810 */
+                        if (selectedProfile) {                          /* 811 */
+                            my_alert("CREATE PROFILE", "Profile created!", 0, 1); /* 812 */
                             done = -1;
                         } else {
-                            my_alert("CREATE PROFILE", "Failed to create profile.", 0, 1);
+                            my_alert("CREATE PROFILE", "Failed to create profile.", 0, 1); /* 816 */
                         }
                     }
                 } else {
-                    selectedProfile = load_profile(name);
-                    if (selectedProfile)
+                    selectedProfile = load_profile(name);              /* 823 */
+                    if (selectedProfile)                                /* 824 */
                         done = -1;
                     else
+                        /* 825 */
                         my_alert("SELECT PROFILE",
                                  "The profile you selected is broken.", 0, 1);
                 }
                 break;
             }
             case 59:
-                play_menu_select();
-                clear_keybuf();
-                done = -1;
+                play_menu_select();                             /* 772 */
+                clear_keybuf();                                  /* 773 */
+                done = -1;                                       /* 773 */
                 break;
             }
         }
 
-        blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);
-        set_trans_blender(0, 0, 0, (500 - pageY) / 3);
-        drawing_mode(5, 0, 0, 0);
+        blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);           /* 838 */
+        set_trans_blender(0, 0, 0, (500 - pageY) / 3);              /* 840 */
+        drawing_mode(5, 0, 0, 0);                                    /* 841 */
+        /* 842 */
         rectfill(swap_screen, 0, 0, SCREEN_W,
                  SCREEN_H, makecol(0, 0, 0));
-        solid_mode();
+        solid_mode();                                                 /* 843 */
+        /* 844 */
         draw_profile_selector(swap_screen, (char *)current_profile + 6,
                               profiles, numProfiles, profileIndex, offset,
-                              page_size, 16, pageY);
-        blit_to_screen(swap_screen);
-        while (!cycle_count)
+                              page_size, 140, pageY);
+        blit_to_screen(swap_screen);                                  /* 845 */
+        while (!cycle_count)                                          /* 847 */
             rest(2);
-        pageY += (int)((targetY - pageY) * 0.2f);
+        pageY += (int)((targetY - pageY) * 0.2f);                     /* 836 */
     }
 
-    if (selectedProfile) {
-        sprintf(buf, "Now using profile '%s'", (char *)selectedProfile + 6);
-        my_alert("Profile Changed!", buf, 0, 1);
+    if (selectedProfile) {                                            /* 850 */
+        sprintf(buf, "Now using profile '%s'", (char *)selectedProfile + 6); /* 852 */
+        my_alert("Profile Changed!", buf, 0, 1);                       /* 853 */
     }
 
     targetY = 510;
-    while (pageY <= 499) {
-        cycle_count = 0;
-        pageY += (int)((targetY - pageY) * 0.2f);
-        blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);
-        set_trans_blender(0, 0, 0, (500 - pageY) / 3);
-        drawing_mode(5, 0, 0, 0);
+    while (pageY <= 499) {                                             /* 858 */
+        cycle_count = 0;                                                /* 859 */
+        pageY += (int)((targetY - pageY) * 0.2f);                       /* 860 */
+        blit(bgbmp, swap_screen, 0, 0, 0, 0, 640, 480);                 /* 863 */
+        set_trans_blender(0, 0, 0, (500 - pageY) / 3);                  /* 865 */
+        drawing_mode(5, 0, 0, 0);                                        /* 866 */
+        /* 867 */
         rectfill(swap_screen, 0, 0, SCREEN_W,
                  SCREEN_H, makecol(0, 0, 0));
-        solid_mode();
+        solid_mode();                                                     /* 868 */
+        /* 870 */
         draw_profile_selector(swap_screen, (char *)current_profile + 6,
                               profiles, numProfiles, profileIndex, offset,
-                              page_size, 16, pageY);
-        blit_to_screen(swap_screen);
-        while (!cycle_count)
+                              page_size, 140, pageY);
+        blit_to_screen(swap_screen);                                      /* 872 */
+        while (!cycle_count)                                              /* 874 */
             rest(2);
     }
-    destroy_bitmap(bgbmp);
-    font = old_font;
-    return selectedProfile;
+    destroy_bitmap(bgbmp);                                                 /* 878 */
+    font = old_font;                                                       /* 880 */
+    return selectedProfile;                                                /* 884 */
 }

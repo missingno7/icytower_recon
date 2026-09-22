@@ -3,30 +3,30 @@
  * shutdown recovered from the original control-flow branches. */
 int _mangled_main(int argc, char **argv)
 {
-    char executable_name[1024];
-    char logfile_path[256];
-    FILE *fp;
+    char full_path[1024];
+    char logfilename[256];
+    FILE *f;
     int i;
     int ret;
     int must_fade;
-    int play_result;
+    int play_again;
     int redraw_menu;
 
     if (!LoadLibraryA("exchndl.dll"))
         printf("No exception handler present, RPTs will not be generated");
     allegro_init();
     register_png_file_type();
-    get_executable_name(executable_name, sizeof(executable_name));
-    replace_filename(working_directory, executable_name, "data",
+    get_executable_name(full_path, sizeof(full_path));
+    replace_filename(working_directory, full_path, "data",
                      sizeof(working_directory));
     chdir(working_directory);
-    memset(logfile_path, 0, sizeof(logfile_path));
-    get_logfile_path(logfile_path, sizeof(logfile_path));
-    fp = fopen(logfile_path, "wt");
-    if (fp) {
-        fprintf(fp, "Icy Tower v%s - log file\n----------------------------\n",
+    memset(logfilename, 0, sizeof(logfilename));
+    get_logfile_path(logfilename, sizeof(logfilename));
+    f = fopen(logfilename, "wt");
+    if (f) {
+        fprintf(f, "Icy Tower v%s - log file\n----------------------------\n",
                 "1.5.1");
-        fclose(fp);
+        fclose(f);
     }
     for (i = 0; i < argc; i++)
         if (!stricmp(argv[i], "-check"))
@@ -101,14 +101,14 @@ int _mangled_main(int argc, char **argv)
                 demo=NULL;
             }
             do {
-                play_result=0;
+                play_again=0;
                 if (new_game()) {
-                    play_result=play();
+                    play_again=play();
                     end_game();
                     fadeOut(16);
                 } else
                     fadeOut(16);
-            } while (play_result && !closeButtonClicked);
+            } while (play_again && !closeButtonClicked);
             if (bg_menu)
                 play_sample(bg_menu, options.msc_volume, 128, 1000, 1);
             must_fade=1;
