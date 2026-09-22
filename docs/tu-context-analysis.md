@@ -217,3 +217,22 @@ applies: both stack frames are 16 bytes short, which is the next thing to fix.  
 order the unit stands at 54 exact with `draw_progress_bar` and `start_reward` gained and `run_demo`
 and `stopGameMusic` lost, both to the scratch cursor.  The losses move as the bodies grow, so the
 transaction lands when they reach zero, not before.
+
+## 8. What the last two losses require (2026-09-22)
+
+With `play` at 16110 of 17420 bytes and `draw_frame` at 8384 of 8518, both at their historical
+emission positions and with every historical call edge present, the historical order still costs
+`run_demo` and `stopGameMusic`.  The peephole dumps say exactly why, and the answer is not a
+context question any more:
+
+`play` performs 65 peephole scratch finds and is emitted directly before `run_demo`.  Its last
+find leaves the cursor on `si`, so `run_demo` picks `dx, cx`; it is exact only when it picks
+`cx, bx`, which needs the cursor to arrive on `ax`.  One find more or fewer anywhere inside
+`play` moves it.  `stopGameMusic` sits after `draw_frame` and `handle_player_input` and is exact
+only when its single find is `cx` instead of `ax`, which likewise depends on `draw_frame`'s eleven
+finds being the historical ones.
+
+So the two functions are not blocked by ordering, declarations or neighbours: they are blocked by
+the remaining 1310 bytes of `play` and 134 bytes of `draw_frame`.  A function whose scratch finds
+must match exactly is effectively asking for the body itself, which is the right thing to be
+asking for.  The transaction lands when the bodies do.
