@@ -15,11 +15,11 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
     char input[256];
     char buf[128];
 
-    old_font = font;
-    font = data[54].dat;
-    bgbmp = create_bitmap(640, 480);
-    blit(screen, bgbmp, 0, 0, 0, 0, 640, 480);
-    clear_keybuf();
+    old_font = font;                                   /* 710 */
+    font = data[54].dat;                                /* 711 */
+    bgbmp = create_bitmap(640, 480);                    /* 720 */
+    blit(screen, bgbmp, 0, 0, 0, 0, 640, 480);           /* 721 */
+    clear_keybuf();                                     /* 723 */
     selectedProfile = 0;
     profileIndex = 0;
     offset = 0;
@@ -29,40 +29,40 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
     targetY = 50;
     done = 0;
 
-    while (!closeButtonClicked && !done) {
-        cycle_count = 0;
-        checkMenuFocus();
-        poll_control(ctrl, 1);
-        if (is_any(ctrl) && !ctrl_wait) {
-            if (is_down(ctrl))
+    while (!closeButtonClicked && !done) {              /* 724 */
+        cycle_count = 0;                                 /* 725 */
+        checkMenuFocus();                                /* 727 */
+        poll_control(ctrl, 1);                            /* 730 */
+        if (is_any(ctrl) && !ctrl_wait) {                /* 731 */
+            if (is_down(ctrl))                            /* 732 */
                 simulate_keypress(0x5500);
-            else if (is_up(ctrl))
+            else if (is_up(ctrl))                         /* 733 */
                 simulate_keypress(0x5400);
-            else if (is_fire(ctrl))
+            else if (is_fire(ctrl))                       /* 734 */
                 simulate_keypress(0x4300);
             ctrl_wait = 20;
         }
-        if (ctrl_wait > 0)
-            ctrl_wait--;
+        if (ctrl_wait > 0)                                /* 737 */
+            ctrl_wait--;                                  /* 738 */
 
-        if (keypressed()) {
-            kp = readkey() >> 8;
+        if (keypressed()) {                              /* 742 */
+            kp = readkey() >> 8;                          /* 743 */
             /* switch, not if/else-if: the original dispatches with
              * `sub $0x3b,%eax; cmp $0x1a,%eax; ja default; jmp *table(,%eax,4)`,
              * a jump table over kp-59..kp-85. Byte-neutral in this build, but
              * this is the better-evidenced form -- keep it. */
-            switch (kp) {
+            switch (kp) {                                 /* 744 */
             case 85:
-                if (profileIndex < numProfiles - 1) {
-                    profileIndex++;
-                    if (profileIndex >= offset + page_size)
+                if (profileIndex < numProfiles - 1) {    /* 747 */
+                    profileIndex++;                        /* 748 */
+                    if (profileIndex >= offset + page_size) /* 749 */
                         offset++;
-                    play_menu_move();
-                } else {
-                    profileIndex = numProfiles - 1;
+                    play_menu_move();                      /* 762 */
+                } else {                                   /* 759 */
+                    profileIndex = numProfiles - 1;        /* 760 */
                     offset = numProfiles - page_size;
-                    if (offset < 0)
-                        offset = 0;
+                    if (offset < 0)                        /* 761 */
+                        offset = 0;                        /* 762 */
                 }
                 break;
             case 84:
