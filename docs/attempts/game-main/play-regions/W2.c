@@ -267,6 +267,7 @@ int play(void)
                                                                             * re-test of diff) */
                         ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
                                                                             * the test at offset 3903 */
+                        lastJumpLength = diff;                          /* 3932 tail: offset 6120..6150 */
                     }
                 }
                 /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
