@@ -452,6 +452,7 @@ int play(void)
                                                                             * re-test of diff) */
                         ply[player_id]->in_combo = 1;                    /* 3933: store, evidenced after
                                                                             * the test at offset 3903 */
+                        lastJumpLength = diff;                          /* 3932 tail: offset 6120..6150 */
                     }
                 }
                 /* 3910..3923 reloads player_id/ply[player_id] for this next statement's test,
@@ -503,8 +504,8 @@ int play(void)
             if (numComboJumps) {                                               /* 4003 */
                 lastJumpLength = 0;
             } else {
-                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003/4004 */
-                    ply[player_id]->no_combo_top_floor = ply[player_id]->level;
+                if (ply[player_id]->no_combo_top_floor < ply[player_id]->level) /* 4003 */
+                    ply[player_id]->no_combo_top_floor = ply[player_id]->level; /* 4004 */
                 lastJumpLength = 0;
             }
             aightScore = 1;
@@ -745,6 +746,11 @@ int play(void)
                             if (key[KEY_F1])                                  /* 4276 */
                                 take_screenshot(swap_screen);                 /* 4277 */
                         }
+                        while (key[KEY_SPACE])                                /* 4281: debounce-wait loop */
+                            poll_control(&rec_ctrl, 1);
+                        fast_forward = 0;                                     /* 4282 */
+                        fast_fast_forward = 0;                                /* 4283 */
+                        log2file("  replay unpaused");                       /* 4284 */
                     }
                 } else {
                     if (key[KEY_RIGHT]) {                                    /* 4287 */
