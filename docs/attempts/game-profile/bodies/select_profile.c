@@ -47,7 +47,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
 
         if (keypressed()) {
             kp = readkey() >> 8;
-            if (kp == 85) {
+            switch (kp) {
+            case 85:
                 if (profileIndex < numProfiles - 1) {
                     profileIndex++;
                     if (profileIndex >= offset + page_size)
@@ -59,7 +60,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     if (offset < 0)
                         offset = 0;
                 }
-            } else if (kp == 84) {
+                break;
+            case 84:
                 if (profileIndex > 0) {
                     profileIndex--;
                     if (offset > profileIndex)
@@ -69,7 +71,8 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     profileIndex = 0;
                     offset = 0;
                 }
-            } else if (kp == 83) {
+                break;
+            case 83: {
                 char *name = profiles + profileIndex * 32;
                 if (stricmp(name, "guest") &&
                     stricmp(name, (char *)current_profile + 6)) {
@@ -82,7 +85,9 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                             profileIndex = numProfiles - 1;
                     }
                 }
-            } else if (kp == 67) {
+                break;
+            }
+            case 67: {
                 char *name = profiles + profileIndex * 32;
                 play_menu_select();
                 if (!stricmp(name, "CREATE NEW PROFILE")) {
@@ -97,6 +102,12 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     draw_sprite(swap_screen, data[88].dat, 100, 140);
                     textprintf_ex(swap_screen, data[51].dat, 140, 140,
                                   -1, -1, "Enter profile name:");
+                    textout_right_ex(swap_screen, data[54].dat,
+                                      "...and press enter.", 480, 210, 0, -1);
+                    rect(swap_screen, 139, 191, 480, 210,
+                         makecol(255, 255, 255));
+                    rectfill(swap_screen, 139, 191, 480, 210,
+                             makecol(80, 80, 80));
                     if (get_string(swap_screen, input, 340, 32, data[54].dat,
                                    140, 191, makecol(0, 0, 0), -1) >= 0 &&
                         input[0]) {
@@ -117,10 +128,13 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                         my_alert("SELECT PROFILE",
                                  "The profile you selected is broken.", 0, 1);
                 }
-            } else if (kp == 59) {
+                break;
+            }
+            case 59:
                 play_menu_select();
                 clear_keybuf();
                 done = -1;
+                break;
             }
         }
 

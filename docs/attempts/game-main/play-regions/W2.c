@@ -80,8 +80,8 @@ int play(void)
                 create_particle(stars, (int)ply[player_id]->x, (int)ply[player_id]->y - 16);  /* 3708 */
             } else {
                 for (i = 0; i < 512; i++) {                             /* 3711 */
-                    if (stars[i].intensity)
-                        update_particle(&stars[i]);
+                    if (stars[i].intensity)                             /* 3711 */
+                        update_particle(&stars[i]);                     /* 3711 */
                 }
             }
             /* 3717..3732: fall-height "shake" accumulator. old_map_pos captures map.offset

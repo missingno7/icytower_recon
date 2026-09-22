@@ -106,7 +106,7 @@ int play(void)
         }
         if (ply[player_id]->y < 900.0 && !game_over) {                      /* 4010 */
             play_sound(speaker[1], 0, 0);                                   /* 4012 */
-            game_over = 2;
+            game_over = 2;                                                  /* 4012 */
         }
         if (aightScore)                                                     /* 4015 */
             aightScore++;                                                   /* 4015 */
@@ -144,7 +144,7 @@ int play(void)
         else
             next_aight += 50;                                                  /* 4037 */
         if (ply[player_id]->edge == 0)                                        /* 4042 */
-            ply[player_id]->edge_drawn = 0;
+            ply[player_id]->edge_drawn = 0;                                   /* 4042 */
         if (ply[player_id]->edge_drawn != 0) {                                 /* 4043 */
             if (ply[player_id]->edge_drawn == 11 && ply[player_id]->status == 0) /* 4044 */
                 play_sound(custom.edge, 1, 1);                                 /* 4044 tail */
@@ -153,7 +153,7 @@ int play(void)
         }
         if (!debug) {                                                          /* 4049 */
             if (recording && ply[player_id]->dead > 100)                       /* 4056 */
-                playing = 0;
+                playing = 0;                                                  /* 4056 */
         } else if (ply[player_id]->dead <= 99) {                               /* 4050 */
             /* esi is confirmed as `playing` here (its DWARF range covers offsets 2860..2903,
              * exactly this store). Re-measured after `playing` gained its first real assignments
@@ -162,7 +162,7 @@ int play(void)
              * two `playing = 0;` epilogues (this one and 4056's) are no longer degenerate; the
              * remaining spread is consistent with the two still sharing code the historical
              * binary kept separate, not a missing statement. */
-            playing = 0;
+            playing = 0;                                                     /* 4050 */
         }
         if (!itrcheck && key[KEY_F1]) {                                        /* 4062 */
             int pauseTime, addTime; /* DWARF block 132550 [4560..4780]: pauseTime, addTime */
@@ -192,14 +192,14 @@ int play(void)
         }
         update_frame();                                                       /* 4100 */
         if (!quit && closeButtonClicked) {                                    /* 4104 */
-            quit = 1;
-            playing = 0;
+            quit = 1;                                                        /* 4104 */
+            playing = 0;                                                     /* 4104 */
         }
         if (recording) {                                                      /* 4109 */
             if (key[KEY_ESC]) {                                               /* 4110 */
                 if (ply[player_id]->dead) {                                   /* 4111 */
                     log2file("  player quit after dying");                    /* 4112 */
-                    playing = 0;
+                    playing = 0;                                              /* 4112 */
                 } else {
                     /* REGION W3a: ESC pause screen, lines 4117..4182 */
                     int pauseTime, fc, ca, addTime; /* block-scoped DWARF locals (block 132596), not in the 52-local skeleton */

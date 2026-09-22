@@ -163,7 +163,8 @@ int play(void)
                 if (hurry_y + 99 <= 578)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
-                /* 4704 */ draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
+                /* 4704 */
+                draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
                              qualifyValue,
                              is_playing_custom_game ? 0 : (recording != 0));
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) { /* 4705 */
