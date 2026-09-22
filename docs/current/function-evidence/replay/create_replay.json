@@ -8,7 +8,7 @@
   "historical_size": 254,
   "status": "CODEGEN_SIMILAR",
   "state": "CODEGEN_SIMILAR",
-  "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+  "difference_class": "STATIC_DATA_LAYOUT",
   "body_edit_allowed": false,
   "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "Treplay * create_replay(int size);",
@@ -173,58 +173,12 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 112,
-    "body_end_line": 141,
+    "body_start_line": 131,
+    "body_end_line": 160,
     "body_sha256": "450fe154e6924052cc82530af9e074acd667a0b979210fbf8e3a12c25b70e5a7"
   },
   "reference_diagnostics": [],
-  "literal_diagnostics": [
-    {
-      "function_offset": 127,
-      "candidate_addend": 152,
-      "classification": "CONTENT_EQUAL_OWNER_UNPROVEN",
-      "content_equal": true,
-      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
-      "kind": "C_STRING",
-      "historical_operand_va": 5077630,
-      "candidate_hex": "4861726f6c64",
-      "original_hex": "4861726f6c64",
-      "candidate_instruction": {
-        "address": 3670,
-        "bytes": "be98000000",
-        "mnemonic": "mov",
-        "assembly": "mov    $0x98,%esi"
-      },
-      "original_instruction": {
-        "address": 4312422,
-        "bytes": "be7e7a4d00",
-        "mnemonic": "mov",
-        "assembly": "mov    $0x4d7a7e,%esi"
-      },
-      "placement_evidence": {
-        "resolved_target": null,
-        "resolution": "section base not independently established",
-        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
-        "locations": [
-          5067767,
-          5077630
-        ],
-        "occurrence_count": 2,
-        "occurrence_count_lower_bound": 2,
-        "locations_truncated": false,
-        "state": "CONTENT_LOCATION_AMBIGUOUS"
-      },
-      "candidate_text": "Harold",
-      "original_text": "Harold",
-      "candidate_source_lines": [
-        {
-          "file": "src/replay.c",
-          "line": 129,
-          "text": "    strcpy(r->name, \"Harold\");"
-        }
-      ]
-    }
-  ],
+  "literal_diagnostics": [],
   "tail_jump_layout": null,
   "instruction_order": null,
   "source_patterns": [],
@@ -463,7 +417,7 @@
       "nearest_branches": [
         {
           "offset": 37,
-          "instruction": "je     eba <_create_replay+0xe2>",
+          "instruction": "je     104e <_create_replay+0xe2>",
           "encoding_bytes": 6,
           "kind": "conditional",
           "condition": "zero/equal",
@@ -495,7 +449,7 @@
         },
         {
           "offset": 105,
-          "instruction": "jne    e38 <_create_replay+0x60>",
+          "instruction": "jne    fcc <_create_replay+0x60>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "nonzero/not equal",
@@ -527,7 +481,7 @@
         },
         {
           "offset": 121,
-          "instruction": "jne    e48 <_create_replay+0x70>",
+          "instruction": "jne    fdc <_create_replay+0x70>",
           "encoding_bytes": 2,
           "kind": "conditional",
           "condition": "nonzero/not equal",
@@ -574,14 +528,14 @@
     "candidate_byte": 0,
     "original_byte": 208
   },
-  "mismatch_count": 9,
+  "mismatch_count": 6,
   "classification_confidence": "CONSERVATIVE_HYPOTHESIS",
   "instruction_alignment": {
     "state": "DIAGNOSTIC_SEQUENCE_ALIGNMENT",
     "original_instruction_count": 74,
     "candidate_instruction_count": 74,
-    "changed_group_count": 3,
-    "shown_group_count": 3,
+    "changed_group_count": 2,
+    "shown_group_count": 2,
     "hunks": [
       {
         "kind": "replace",
@@ -605,7 +559,7 @@
           "function_offset": 43,
           "instructions": [
             {
-              "address": 3587,
+              "address": 3991,
               "bytes": "a100000000",
               "mnemonic": "mov",
               "assembly": "mov    0x0,%eax"
@@ -636,41 +590,10 @@
           "function_offset": 50,
           "instructions": [
             {
-              "address": 3594,
+              "address": 3998,
               "bytes": "66a104000000",
               "mnemonic": "mov",
               "assembly": "mov    0x4,%ax"
-            }
-          ],
-          "omitted_instructions": 0
-        }
-      },
-      {
-        "kind": "replace",
-        "original": {
-          "instruction_start": 37,
-          "instruction_end": 38,
-          "function_offset": 126,
-          "instructions": [
-            {
-              "address": 4312422,
-              "bytes": "be7e7a4d00",
-              "mnemonic": "mov",
-              "assembly": "mov    $0x4d7a7e,%esi"
-            }
-          ],
-          "omitted_instructions": 0
-        },
-        "candidate": {
-          "instruction_start": 37,
-          "instruction_end": 38,
-          "function_offset": 126,
-          "instructions": [
-            {
-              "address": 3670,
-              "bytes": "be98000000",
-              "mnemonic": "mov",
-              "assembly": "mov    $0x98,%esi"
             }
           ],
           "omitted_instructions": 0
@@ -763,13 +686,13 @@
     ],
     "candidate": [
       {
-        "address": 3573,
+        "address": 3977,
         "bytes": "8945e4",
         "mnemonic": "mov",
         "assembly": "mov    %eax,-0x1c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 12224,
+            "die": 12207,
             "name": "r",
             "type": "Treplay *",
             "base_type": null,
@@ -785,56 +708,56 @@
         ]
       },
       {
-        "address": 3576,
+        "address": 3980,
         "bytes": "85c0",
         "mnemonic": "test",
         "assembly": "test   %eax,%eax",
         "dwarf_variables": []
       },
       {
-        "address": 3578,
+        "address": 3982,
         "bytes": "8b55e0",
         "mnemonic": "mov",
         "assembly": "mov    -0x20(%ebp),%edx",
         "dwarf_variables": []
       },
       {
-        "address": 3581,
+        "address": 3985,
         "bytes": "0f84b7000000",
         "mnemonic": "je",
-        "assembly": "je     eba <_create_replay+0xe2>",
+        "assembly": "je     104e <_create_replay+0xe2>",
         "dwarf_variables": []
       },
       {
-        "address": 3587,
+        "address": 3991,
         "bytes": "a100000000",
         "mnemonic": "mov",
         "assembly": "mov    0x0,%eax",
         "dwarf_variables": []
       },
       {
-        "address": 3592,
+        "address": 3996,
         "bytes": "8903",
         "mnemonic": "mov",
         "assembly": "mov    %eax,(%ebx)",
         "dwarf_variables": []
       },
       {
-        "address": 3594,
+        "address": 3998,
         "bytes": "66a104000000",
         "mnemonic": "mov",
         "assembly": "mov    0x4,%ax",
         "dwarf_variables": []
       },
       {
-        "address": 3600,
+        "address": 4004,
         "bytes": "66894304",
         "mnemonic": "mov",
         "assembly": "mov    %ax,0x4(%ebx)",
         "dwarf_variables": []
       },
       {
-        "address": 3604,
+        "address": 4008,
         "bytes": "c683a800000000",
         "mnemonic": "movb",
         "assembly": "movb   $0x0,0xa8(%ebx)",
@@ -1006,45 +929,29 @@
       "cu": "F:\\projects\\icytower\\trunk\\source\\replay.c",
       "section": ".rdata",
       "size": null,
-      "historical_address": null,
-      "candidate_addend": 152,
+      "historical_address": "0x4d7a7e",
+      "candidate_addend": 153,
       "dwarf_type": null,
       "references": [
         127
       ],
-      "placement_confidence": "section base not independently established",
+      "placement_confidence": "unique read-only literal or table content",
       "object_owners": [],
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 820,
+          "logical_size": 832,
           "content_equal": false,
           "unresolved_initializer_relocations": 12,
           "independent_section_bases": [],
           "detail_report": "docs/current/reports/game-replay.json#initialized_data_comparison"
         }
       ],
-      "blocker": "RELOCATION_OWNER_BLOCKED",
+      "blocker": null,
       "initializer_blockers": []
     }
   ],
-  "literal_dependencies": [
-    {
-      "candidate_section": ".rdata",
-      "candidate_addend": 152,
-      "candidate_card": "docs/current/literals/game-replay/98.json",
-      "placement_confidence": "UNPROVEN",
-      "multiple_historical_addresses": false,
-      "function_offsets": [
-        127
-      ],
-      "peer_function_count": 0,
-      "peer_functions": [],
-      "historical_address_count": 1,
-      "unaligned_reference_count": 0,
-      "limit": "Shared pool evidence only. Do not edit peer functions or infer an owner binding from these references."
-    }
-  ],
+  "literal_dependencies": [],
   "calls": [
     {
       "symbol": "_malloc",
@@ -1092,7 +999,7 @@
   "relocation_mismatches": [
     {
       "section": 1,
-      "offset": 3588,
+      "offset": 3992,
       "symbol_index": 22,
       "symbol": ".data",
       "type": 6,
@@ -1109,7 +1016,7 @@
         "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 3587,
+          "address": 3991,
           "bytes": "a100000000",
           "mnemonic": "mov",
           "assembly": "mov    0x0,%eax"
@@ -1126,7 +1033,7 @@
     },
     {
       "section": 1,
-      "offset": 3596,
+      "offset": 4000,
       "symbol_index": 22,
       "symbol": ".data",
       "type": 6,
@@ -1143,7 +1050,7 @@
         "reason": "Same instruction byte field; this encoding is not supported for operand interpretation.",
         "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
         "candidate_instruction": {
-          "address": 3594,
+          "address": 3998,
           "bytes": "66a104000000",
           "mnemonic": "mov",
           "assembly": "mov    0x4,%ax"
@@ -1154,40 +1061,6 @@
           "mnemonic": "mov",
           "assembly": "mov    0x4d7dd4,%ax"
         }
-      }
-    },
-    {
-      "section": 1,
-      "offset": 3671,
-      "symbol_index": 32,
-      "symbol": ".rdata",
-      "type": 6,
-      "function_offset": 127,
-      "addend": 152,
-      "target_va": null,
-      "resolution": "section base not independently established",
-      "resolved_value": null,
-      "original_value": 5077630,
-      "equal": false,
-      "comparison_context": {
-        "state": "ALIGNED_OPERAND",
-        "original_value_is_operand": true,
-        "reason": "Same decoded instruction extent and encoding outside the supported relocation operand. Ownership and target equality remain separate proofs.",
-        "limit": "Diagnostic only. Raw original_value is a fixed-offset byte window unless operand alignment is established; never an independent target binding.",
-        "candidate_instruction": {
-          "address": 3670,
-          "bytes": "be98000000",
-          "mnemonic": "mov",
-          "assembly": "mov    $0x98,%esi"
-        },
-        "original_instruction_at_offset": {
-          "address": 4312422,
-          "bytes": "be7e7a4d00",
-          "mnemonic": "mov",
-          "assembly": "mov    $0x4d7a7e,%esi"
-        },
-        "operand_kind": "IMMEDIATE_OR_LITERAL",
-        "original_operand_value": 5077630
       }
     }
   ],
@@ -1200,20 +1073,20 @@
       "status": "DIFFER",
       "historical_offset": 1196,
       "candidate_offset": 1196,
-      "size_delta": -1379
+      "size_delta": -975
     },
     {
       "function": "load_replay",
       "status": "DIFFER",
       "historical_offset": 5180,
-      "candidate_offset": 3800,
+      "candidate_offset": 4204,
       "size_delta": 12
     },
     {
       "function": "get_replay_property",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 10392,
-      "candidate_offset": 8080,
+      "candidate_offset": 9068,
       "size_delta": 0
     }
   ],
@@ -1258,7 +1131,7 @@
       "applicability": {
         "basis": "HISTORICAL_EXAMPLE_ONLY",
         "observed_features": [],
-        "evidence_field": "literal_diagnostics",
+        "evidence_field": null,
         "priority_bonus_eligible": false,
         "compiler_scope_matches": true,
         "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
@@ -1287,7 +1160,7 @@
     "observed": {
       "historical_size": 254,
       "candidate_size": 254,
-      "differing_bytes": 9,
+      "differing_bytes": 6,
       "unresolved_calls": 0,
       "indirect_transfers": 0
     },
@@ -1327,13 +1200,6 @@
     {
       "function_offset": 52,
       "symbol": ".data",
-      "state": "UNRESOLVED_RELOCATION_OWNER",
-      "reason": "section base not independently established",
-      "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."
-    },
-    {
-      "function_offset": 127,
-      "symbol": ".rdata",
       "state": "UNRESOLVED_RELOCATION_OWNER",
       "reason": "section base not independently established",
       "limit": "Resolve ownership or a verified source recipe first; this does not prove a layout-only body match."

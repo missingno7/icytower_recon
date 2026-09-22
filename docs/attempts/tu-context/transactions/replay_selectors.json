@@ -1,0 +1,223 @@
+{
+  "task": "replay_selectors",
+  "plan": {
+    "schema": 1,
+    "task_kind": "TU_CONTEXT",
+    "function": "replay_selectors",
+    "source": "src/replay.c",
+    "sources": [
+      "src/replay.c"
+    ],
+    "target": "game-replay",
+    "affected_targets": [
+      "game-replay"
+    ],
+    "difficulty": "CHEAP",
+    "priority": 200,
+    "spec": {
+      "target": "game-replay",
+      "source": "src/replay.c",
+      "order": "historical",
+      "bodies": {
+        "draw_replay_selector": "docs/attempts/game-replay/bodies/draw_replay_selector.c",
+        "replay_selector": "docs/attempts/game-replay/bodies/replay_selector.c"
+      },
+      "declarations": {
+        "add_top_level": [
+          {
+            "name": "swap_screen",
+            "declaration": "extern BITMAP *swap_screen;",
+            "after": "sort_method"
+          },
+          {
+            "name": "cycle_count",
+            "declaration": "extern volatile int cycle_count;",
+            "after": "swap_screen"
+          }
+        ],
+        "evidence": "Both selectors reference globals this translation unit does not declare. swap_screen is defined in src/main.c:78 as BITMAP * and already declared extern the same way in src/hisc.c:22. cycle_count is defined in src/timer.c:15 as volatile int and already declared extern with that exact type in src/profile.c:96; the volatile is the variable's own historically evidenced type, not a codegen directive, and dropping it would let the compiler cache a timer the original re-reads, which would hang the wait loops in an ordinary build."
+      },
+      "evidence": "draw_replay_selector 2347 -> 2751 of 3726 and replay_selector 1902 -> 2489 of 2845, with get_replay_property becoming exact and no losses. Both bodies were rewritten in one pass from their call sites, each argument read from the movl $X,N(%esp) stores before its call and each address resolved to its real global, array element or string literal. The rewrite also removes invented statements that corresponded to no instruction in the original at all -- a selection row rectfill highlight and three header and footer strings -- and corrects two that were wrong rather than missing: set_clip_rect at line 509 takes x+6, 0, x+290, bmp->h-1 rather than x+10, y+35, x+185, y+300, and line 516 tests post->parent at offset 5 rather than post->directory at offset 4. The row loop uses an rbuf[129] with strcpy and the formats \"  %c %s\" and \"> %c %s\" with a '{' or '}' marker keyed on is_dir. In replay_selector the whole present sequence targets swap_screen rather than screen, confirmed by the 0x4dd194 operand at every call in it, the second draw_replay_selector call passes rep = NULL and a pre-wait snapshot of curr_file_id rather than the live value, and the first pass's pageY update is pageY = 0.2 * (25 - pageY) + pageY. Partial implementation measured lower than the baseline because the stack frame only settles once every local is genuinely used, so both bodies were written complete in one pass and measured once."
+    },
+    "edits": {
+      "focus": [],
+      "declarations": {
+        "add_top_level": [
+          {
+            "name": "swap_screen",
+            "declaration": "extern BITMAP *swap_screen;",
+            "after": "sort_method"
+          },
+          {
+            "name": "cycle_count",
+            "declaration": "extern volatile int cycle_count;",
+            "after": "swap_screen"
+          }
+        ],
+        "evidence": "Both selectors reference globals this translation unit does not declare. swap_screen is defined in src/main.c:78 as BITMAP * and already declared extern the same way in src/hisc.c:22. cycle_count is defined in src/timer.c:15 as volatile int and already declared extern with that exact type in src/profile.c:96; the volatile is the variable's own historically evidenced type, not a codegen directive, and dropping it would let the compiler cache a timer the original re-reads, which would hang the wait loops in an ordinary build.",
+        "removed_text": [
+          {
+            "name": "swap_screen",
+            "added": "extern BITMAP *swap_screen;",
+            "after": "sort_method"
+          },
+          {
+            "name": "cycle_count",
+            "added": "extern volatile int cycle_count;",
+            "after": "swap_screen"
+          }
+        ]
+      },
+      "order": [
+        "get_sort_method",
+        "set_sort_method",
+        "create_replay",
+        "destroy_replay",
+        "hash",
+        "calc_replay_checksum_131",
+        "calc_replay_checksum",
+        "get_replay_property",
+        "load_replay",
+        "save_replay",
+        "draw_replay_selector",
+        "add_itr_file",
+        "my_strcmp",
+        "update_file_list",
+        "replay_selector"
+      ],
+      "definition_order_with_static": [
+        [
+          "get_sort_method",
+          false
+        ],
+        [
+          "set_sort_method",
+          false
+        ],
+        [
+          "create_replay",
+          false
+        ],
+        [
+          "destroy_replay",
+          false
+        ],
+        [
+          "hash",
+          false
+        ],
+        [
+          "calc_replay_checksum_131",
+          false
+        ],
+        [
+          "calc_replay_checksum",
+          false
+        ],
+        [
+          "get_replay_property",
+          false
+        ],
+        [
+          "load_replay",
+          false
+        ],
+        [
+          "save_replay",
+          false
+        ],
+        [
+          "draw_replay_selector",
+          false
+        ],
+        [
+          "add_itr_file",
+          false
+        ],
+        [
+          "my_strcmp",
+          false
+        ],
+        [
+          "update_file_list",
+          false
+        ],
+        [
+          "replay_selector",
+          false
+        ]
+      ],
+      "bodies": {
+        "draw_replay_selector": {
+          "path": "docs/attempts/game-replay/bodies/draw_replay_selector.c",
+          "identity": {
+            "size": 9123,
+            "sha256": "64287efc538abf2015fea6d1dff9b1f1201716c9ce0a0763d136300a12add4a6"
+          }
+        },
+        "replay_selector": {
+          "path": "docs/attempts/game-replay/bodies/replay_selector.c",
+          "identity": {
+            "size": 9558,
+            "sha256": "ddf7a5a36769ca528e1b9dd57fa4dbd913afcf2e7ddb2cda7c8ea1f07a75be2d"
+          }
+        }
+      },
+      "statics": [],
+      "prototypes": "auto",
+      "headers": {}
+    },
+    "source_identities": {
+      "src/replay.c": {
+        "size": 25543,
+        "sha256": "ffc00fcff6d0b4bb092cff24afa9a2e39409b444a3af6f12293cebcd5e6a5f74"
+      }
+    },
+    "new_text_identity": {
+      "size": 35858,
+      "sha256": "73d99aea3da12bb730812e43443c1a0dc07b8457c3469c4d0b285ef0a1d20c93"
+    },
+    "new_header_identities": {},
+    "preserved_definitions": [
+      "add_itr_file",
+      "calc_replay_checksum",
+      "calc_replay_checksum_131",
+      "create_replay",
+      "destroy_replay",
+      "get_replay_property",
+      "get_sort_method",
+      "hash",
+      "load_replay",
+      "my_strcmp",
+      "save_replay",
+      "set_sort_method",
+      "update_file_list"
+    ],
+    "replaced_definitions": [
+      "draw_replay_selector",
+      "replay_selector"
+    ],
+    "body_edit_allowed": false,
+    "state": "TU_CONTEXT_TRANSACTION",
+    "begin_command": "python tools/tu_context_task.py begin replay_selectors",
+    "apply_command": "python tools/tu_context_task.py apply replay_selectors",
+    "verification_command": "python tools/tu_context_task.py check replay_selectors",
+    "promotion_command": "python tools/tu_context_task.py promote replay_selectors",
+    "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+  },
+  "result": {
+    "exact_before": 5,
+    "exact_after": 6,
+    "gains": [
+      "get_replay_property"
+    ]
+  },
+  "matches_after": 6,
+  "source_identity_after": {
+    "size": 35858,
+    "sha256": "73d99aea3da12bb730812e43443c1a0dc07b8457c3469c4d0b285ef0a1d20c93"
+  },
+  "report": "docs/current/reports/game-replay.json",
+  "state": "PROMOTED_TU_CONTEXT",
+  "limit": "Whole-unit transaction accepted on its final verified state; every function status inside remains the strict verifier verdict."
+}

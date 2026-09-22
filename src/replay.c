@@ -23,6 +23,8 @@
  */
 
 int sort_method;
+extern BITMAP *swap_screen;
+extern volatile int cycle_count;
 
 typedef struct Treplay_post {
     char *full_path;
@@ -69,6 +71,23 @@ extern void play_menu_move(void);
 extern void play_menu_select(void);
 extern int my_alert(char *func, char *txt, int choice, int enter_hint);
 Treplay *load_replay(const char *filename);
+
+/* Forward declarations; definitions follow in their original source order. */
+int get_sort_method(void);
+void set_sort_method(int sm);
+Treplay *create_replay(int size);
+void destroy_replay(Treplay *r);
+unsigned int hash(unsigned int a);
+int calc_replay_checksum_131(Treplay *r);
+int calc_replay_checksum(Treplay *r);
+int get_replay_property(const char *filename, int property);
+Treplay *load_replay(const char *filename);
+int save_replay(const char *path, const char *file, Treplay *r, int size, int make_new_date);
+void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list, int selection, int offset, int max_posts, int x, int y);
+int add_itr_file(const char *filename, int attrib, void *param);
+int my_strcmp(const void *c, const void *d);
+void update_file_list(char *path);
+Treplay *replay_selector(Tcontrol *ctrl, char *path);
 
 /* Forward declarations; definitions follow in their original source order. */
 int get_sort_method(void);
@@ -433,84 +452,180 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
 {
     int w = 310;
     int h = 305;
+    /* 462 */
     int fh = text_height(font);
     int i;
+    /* 465 */
     int fg = makecol(25, 25, 25);
+    /* 466 */
     int mg = makecol(85, 85, 85);
+    /* 467 */
     float view_percentage = max_posts ? (float)num_itr_files / max_posts : 1.0f;
     float view_offset = max_posts ? (float)offset / max_posts : 0.0f;
-    char curr_filename[1024];
+    char rbuf[129];
+    /* curr_filename: DWARF lists it as `char *` with no location at all (fully
+     * eliminated in the original too), unlike the previous reconstruction's
+     * `char curr_filename[1024]` used for a fabricated "REPLAY SELECTOR: %s"
+     * header that matches no real instruction or string literal. Declared only
+     * to keep the name present; no real use located. */
+    char *curr_filename;
+    int is_dir;
     int show_directory = 0;
     int selected_version = 0;
     int isCustom = 0;
 
+    /* 467 */
     if (view_percentage > 1.0f)
         view_percentage = 1.0f;
+    /* 473 */
     if (data && data[86].dat)
         stretch_sprite(bmp, data[86].dat, x - 15, y - 15, w + 30, h + 30);
     else
         rectfill(bmp, x - 15, y - 15, x + w + 15, y + h + 15, mg);
 
+    /* 476 */
     set_trans_blender(0, 0, 0, 150);
+    /* 477 */
     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+    /* 479 */
     rect(bmp, x + 5, y + 30, x + w - 5, y + 305, fg);
+    /* 479 */
     rect(bmp, x + 7, y + 32, x + w - 7, y + 303, fg);
+    /* 487 */
     solid_mode();
 
-    set_clip_rect(bmp, x + 10, y + 35, x + 185, y + 300);
+    /* 490: textout_ex(bmp, data[51].dat, "SELECT REPLAY", x+10, y-12, -1, -1) --
+     * slots 0=bmp,4=data[51].dat (0x330/0x10=51),8=text,0xc=x+10,0x10=y-12,
+     * 0x14=-1,0x18=-1, all read directly off the movl/mov-before-call chain. */
+    textout_ex(bmp, data[51].dat, "SELECT REPLAY", x + 10, y - 12, -1, -1);
+
+    /* 509: set_clip_rect(bmp,x+6,0,x+0x122,bmp->h-1) -- the current reconstruction's
+     * (x+10,y+35,x+185,y+300) does not match a single one of these four operands. */
+    set_clip_rect(bmp, x + 6, 0, x + 290, bmp->h - 1);
     for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {
+        /* 516: Treplay_post *post = &file_list[i]; cmpb $0,0x5(edx) tests offset 5,
+         * which is Treplay_post.parent (src/replay.c:30), not .directory (offset 4). */
         Treplay_post *post = &file_list[i];
         int row = y + 40 + (i - offset) * fh;
-        char *name = get_filename(post->full_path);
+        char marker;
 
-        if (i == selection)
-            rectfill(bmp, x + 10, row - 1, x + 185, row + fh, mg);
-        if (post->directory) {
-            show_directory = 1;
-            textprintf_ex(bmp, font, x + 14, row, fg, -1, "[%s]", name);
+        if (post->parent) {
+            /* 517: rep movsb copying the literal ".. (parent directory)" (22 bytes)
+             * into the buffer later reused as rbuf (same -0x418(%ebp) slot as the
+             * warning messages at 591/594/597 below). */
+            strcpy(rbuf, ".. (parent directory)");
         } else {
-            textout_ex(bmp, font, name, x + 14, row, fg, -1);
+            /* 519: strcpy(rbuf, get_filename(post->full_path)) -- a real buffer,
+             * not a bare `char *name` as the current source has it. */
+            strcpy(rbuf, get_filename(post->full_path));
+        }
+        /* 521: is_dir = post->directory (movsbl 0x4(%edx),%esi) -- the named-but-
+         * missing local; offset 4, confirmed against the Treplay_post typedef. */
+        is_dir = post->directory;
+        marker = is_dir ? '}' : '{';
+        if (i == selection) {
+            /* 534: textprintf_ex(bmp,font,x+8,row,mg,-1,"> %c %s",marker,rbuf) --
+             * always color mg regardless of is_dir. No rectfill call exists
+             * anywhere in this loop's instruction range: the current source's
+             * `if (i==selection) rectfill(...)` selection highlight corresponds
+             * to no real instruction and is not reproduced here. */
+            textprintf_ex(bmp, font, x + 8, row, mg, -1, "> %c %s", marker, rbuf);
+        } else if (is_dir) {
+            /* 525 (predecessor A): color mg when is_dir. */
+            textprintf_ex(bmp, font, x + 8, row, mg, -1, "  %c %s", marker, rbuf);
+        } else {
+            /* 525 (predecessor B): color fg when !is_dir. */
+            textprintf_ex(bmp, font, x + 8, row, fg, -1, "  %c %s", marker, rbuf);
         }
     }
     set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
 
-    if (selection >= 0 && selection < num_itr_files)
-        strcpy(curr_filename, get_filename(file_list[selection].full_path));
-    else
-        curr_filename[0] = 0;
-    textprintf_ex(bmp, font, x + 12, y + 14, fg, -1, "REPLAY SELECTOR: %s",
-                  curr_filename);
-
+    /* 486/487 (bar): unchanged from the existing reconstruction -- not
+     * re-verified against fresh instruction evidence this pass. */
     if (num_itr_files > max_posts && max_posts > 0) {
         int bar_top = y + 40 + (int)(view_offset * 260.0f);
         int bar_height = (int)(view_percentage * 260.0f);
         rectfill(bmp, x + 190, bar_top, x + 196, bar_top + bar_height, fg);
     }
 
+    /* 546 */
     if (rep) {
+        /* 547 */
         isCustom = is_custom_replay(rep);
-        if (selection >= 0 && selection < num_itr_files)
-            selected_version = file_list[selection].version;
-        set_clip_rect(bmp, x + 205, y + 35, x + w, y + 300);
-        textout_ex(bmp, font, rep->name, x + 210, y + 44, fg, -1);
-        textout_right_ex(bmp, font, rep->date, x + w - 8, y + 44, fg, -1);
-        textprintf_ex(bmp, font, x + 210, y + 68, fg, -1, "Score: %d", rep->score);
-        textprintf_right_ex(bmp, font, x + w - 8, y + 68, fg, -1,
-                            "Floor: %d", rep->floor);
-        textprintf_right_ex(bmp, font, x + w - 8, y + 68 + fh, fg, -1,
-                            "Combo: %d", rep->combo);
-        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 2, fg, -1,
-                      "Version: %d%s", selected_version, isCustom ? " custom" : "");
-        textprintf_ex(bmp, font, x + 210, y + 68 + fh * 3, fg, -1,
-                      "%s", rep->comment);
-        set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
-    } else if (show_directory) {
-        textout_ex(bmp, font, "Select a folder or replay", x + 210, y + 50,
-                   fg, -1);
+        /* 551: set_clip_rect(bmp,x+6,0,x+390-(isCustom?text_length(font,"CUSTOM GAME  "):0),bmp->h-1) --
+         * x+390 from x+0x190 (established for the scrollbar/table region) minus 10;
+         * two historical predecessors (one measuring the label, one using 0) merge
+         * into this one call. */
+        set_clip_rect(bmp, x + 6, 0,
+                      x + 390 - (isCustom ? text_length(font, "CUSTOM GAME  ") : 0),
+                      bmp->h - 1);
+        /* 552: rep->comment falls back to the literal "n/a" when falsy; fg,
+         * y+315, x+10. */
+        textprintf_ex(bmp, font, x + 10, y + 315, fg, -1, "%s",
+                      rep->comment[0] ? rep->comment : "n/a");
+
+        /* 562: a second, explicit `if (rep)` gates the results table below --
+         * confirmed by its own independent null test on the rep parameter. */
+        if (rep) {
+            /* 563: a narrow clip around the NAME column, x+9..x+133. */
+            set_clip_rect(bmp, x + 9, 0, x + 133, bmp->h - 1);
+            /* 564: textprintf_ex(bmp,font,x+10,y+350,fg,-1,"%s",rep->name) --
+             * rep+0xc is rep->name (offsetof(Treplay,name)==12, confirmed
+             * against include/recovered/Treplay.h). */
+            textprintf_ex(bmp, font, x + 10, y + 350, fg, -1, "%s", rep->name);
+            /* 565: full clip reset before the unclipped table. */
+            set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
+            /* 555..559: NAME/SCORE/FLOOR/COMBO/DATE column headers, all row y+335. */
+            textout_ex(bmp, font, "NAME", x + 10, y + 335, fg, -1);
+            textout_right_ex(bmp, font, "SCORE", x + 180, y + 335, fg, -1);
+            textout_right_ex(bmp, font, "FLOOR", x + 230, y + 335, fg, -1);
+            textout_right_ex(bmp, font, "COMBO", x + 280, y + 335, fg, -1);
+            textout_ex(bmp, font, "DATE ", x + 300, y + 335, fg, -1);
+            /* 566..569: the value row for `rep` itself, aligned under the headers
+             * above, row y+350 (offsets 0x50/0x54/0x58/0x2c confirmed against
+             * offsetof(Treplay,score/floor/combo/date) == 80/84/88/44). */
+            textprintf_right_ex(bmp, font, x + 180, y + 350, fg, -1, "%6d", rep->score);
+            textprintf_right_ex(bmp, font, x + 230, y + 350, fg, -1, "%4d", rep->floor);
+            textprintf_right_ex(bmp, font, x + 280, y + 350, fg, -1, "%3d", rep->combo);
+            textprintf_ex(bmp, font, x + 300, y + 350, fg, -1, "%s ", rep->date);
+            if (isCustom) {
+                /* 572/573: right-aligned "CUSTOM GAME" at the same narrowed clip
+                 * edge computed at 551, color mg, row y+315 (the comment row's y). */
+                textprintf_right_ex(bmp, font,
+                                    x + 390 - text_length(font, "CUSTOM GAME  "),
+                                    y + 315, mg, -1, "%s", "CUSTOM GAME");
+            }
+            if (rep->comment[0]) {
+                /* 576/577: a second comment display, distinct from 552's (mg not
+                 * fg, y+370 not y+315, no "n/a" fallback). */
+                textprintf_ex(bmp, font, x + 10, y + 370, mg, -1, "%s", rep->comment);
+            }
+        }
     }
 
-    textout_ex(bmp, font, "Enter: select   Del: delete   Esc: back",
-               x + 12, y + h - fh, fg, -1);
+    /* 583: show_directory gates the folder hint; its own set-site inside the
+     * loop was not located this pass (flagged, not guessed). selected_version's
+     * set-site (presumably file_list[selection].version, matching the prior
+     * reconstruction's guess) was likewise not re-confirmed against fresh
+     * instruction evidence this pass -- flagged, not guessed. */
+    if (show_directory) {
+        /* 585 */
+        textout_ex(bmp, font, "This is a folder. Press ENTER to open it.",
+                  x + 10, y + 350, fg, -1);
+    } else {
+        /* 589/591/594/597: selected_version selects one of three messages into
+         * rbuf (a third reuse of the same buffer as the loop rows and the
+         * ".. (parent directory)" copy), then 599 prints it in a shared call. */
+        if (selected_version == 1)
+            strcpy(rbuf, "You need Icy Tower 1.2 to view this replay.");
+        else if (selected_version == 0x82)
+            strcpy(rbuf, "You need Icy Tower 1.3 to view this replay.");
+        else
+            strcpy(rbuf, "Replay is broken.");
+        /* 599: makecol(0x50,0x14,0x14) = makecol(80,20,20), a color not used
+         * anywhere else in this function. */
+        textout_ex(bmp, font, rbuf, x + 10, y + 350, makecol(80, 20, 20), -1);
+    }
 }
 
 int add_itr_file(const char *filename, int attrib, void *param)
@@ -746,16 +861,68 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
                 offset = curr_file_id;
         }
 
-        if (pageY > targetY)
-            pageY -= (pageY - targetY) / 3 + 1;
-        blit(bg, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
-        set_trans_blender(0, 0, 0, (500 - pageY) / 3);
-        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
-        rectfill(screen, 0, 0, SCREEN_W, SCREEN_H, makecol(0, 0, 0));
-        solid_mode();
-        draw_replay_selector(screen, rep, itr_file_list, curr_file_id, offset,
-                             page_size, 120, pageY + 120);
-        blit_to_screen(screen);
+        /* 889: pageY interpolates toward the literal 25 at a fixed 0.2 rate --
+         * NOT the existing `pageY -= (pageY - targetY) / 3 + 1;` formula this
+         * replaces. Evidenced directly (fldl 0.2; fimul; fiadd; fistp),
+         * unguarded by any `pageY > targetY` test in this fragment (the test
+         * that gated the old formula was not found in this instruction
+         * range and may not exist at all -- flagged, not confirmed absent). */
+        pageY = (int)(0.2 * (25 - pageY) + pageY);
+        /* 892: blit target is swap_screen, not screen -- confirmed by the
+         * 0x4dd194 operand at every call in this whole present sequence
+         * (blit, draw_replay_selector's bmp arg, blit_to_screen). */
+        blit(bg, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);           /* 892 */
+        set_trans_blender(0, 0, 0, (500 - pageY) / 3);                    /* 894 */
+        drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                            /* 895 */
+        /* 896: rectfill's bottom-right corner is gfx_driver->w/->h (0x70/0x6c)
+         * when a driver is installed, not the SCREEN_W/SCREEN_H constants. */
+        rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,          /* 896 */
+                 gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+        solid_mode();                                                        /* 897 */
+        /* 899: y is pageY itself, with no "+120" added at the call site --
+         * the existing reconstruction's `pageY + 120` does not match this
+         * call's own operand (a bare register carrying pageY's value). */
+        draw_replay_selector(swap_screen, rep, itr_file_list, curr_file_id,   /* 899 */
+                             offset, page_size, 120, pageY);
+        blit_to_screen(swap_screen);                                          /* 900 */
+        /* 902: a wait loop distinct from the plain checkMenuFocus()/rest(2)
+         * pair the current source has -- spins on cycle_count via rest(2),
+         * and snapshots curr_file_id into a second local (used as the
+         * *second* draw_replay_selector call's `selection` argument below)
+         * before the wait. */
+        if (cycle_count > 0) {
+            int frozen_selection = curr_file_id;                              /* 902 */
+
+            do {
+                rest(2);                                                        /* 902 */
+            } while (cycle_count <= 0);
+
+            /* 904: skip the second pass entirely when rep is NULL. */
+            if (rep) {
+                /* 906/907/908: pageY interpolates toward 510 (not targetY) at
+                 * a fixed 0.2 rate, only while pageY <= 499; cycle_count is
+                 * reset to 0 here (distinct from the reset already implicit
+                 * in the wait loop above). */
+                if (pageY <= 499) {
+                    cycle_count = 0;                                             /* 907 */
+                    pageY = (int)(0.2 * (510 - pageY) + pageY);                    /* 908 */
+                }
+                /* 911..916: a second blit/blend/drawing_mode/rectfill/solid_mode
+                 * pass, identical in shape to 892..897 above. */
+                blit(bg, swap_screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);             /* 911 */
+                set_trans_blender(0, 0, 0, (500 - pageY) / 3);                      /* 913 */
+                drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                             /* 914 */
+                rectfill(swap_screen, 0, 0, gfx_driver ? gfx_driver->w : 0,           /* 915 */
+                         gfx_driver ? gfx_driver->h : 0, makecol(0, 0, 0));
+                solid_mode();                                                        /* 916 */
+                /* 918: rep forced NULL and selection is the frozen snapshot,
+                 * not the live curr_file_id -- confirmed by comparing this
+                 * call's argument slots against 899's directly. */
+                draw_replay_selector(swap_screen, NULL, itr_file_list,               /* 918 */
+                                     frozen_selection, offset, page_size, 120, pageY);
+                blit_to_screen(swap_screen);                                          /* 919 */
+            }
+        }
         checkMenuFocus();
         rest(2);
         (void)ok_to_rename;

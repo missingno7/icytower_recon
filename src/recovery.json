@@ -2397,7 +2397,7 @@
       "load_replay": "DIFFER",
       "replay_selector": "DIFFER",
       "save_replay": "DIFFER",
-      "get_replay_property": "DIFFER",
+      "get_replay_property": "FUNCTION_MATCH",
       "my_strcmp": "DIFFER",
       "add_itr_file": "DIFFER"
     },
@@ -2407,8 +2407,8 @@
     "cu_match": false,
     "verified_report": "docs/current/reports/game-replay.json",
     "verified_report_identity": {
-      "size": 1535895,
-      "sha256": "62763c62393aad80470a59b221688d100f0955f2638eb4ce816dbd9b6367ca80"
+      "size": 1646064,
+      "sha256": "4e01fc359f7d9a9d47b17483c2666ac6d707606bce97907bbb7e97ec680f603f"
     },
     "function_dimensions": {
       "get_sort_method": {
@@ -2449,17 +2449,17 @@
       "draw_replay_selector": {
         "source": "CANDIDATE",
         "semantic": "UNVERIFIED",
-        "difference": "REGISTER_OR_INSTRUCTION_SELECTION"
+        "difference": "STACK_FRAME_LAYOUT"
       },
       "create_replay": {
         "source": "CANDIDATE",
         "semantic": "UNVERIFIED",
-        "difference": "RELOCATION_OR_LITERAL_LAYOUT"
+        "difference": "STATIC_DATA_LAYOUT"
       },
       "load_replay": {
         "source": "CANDIDATE",
         "semantic": "UNVERIFIED",
-        "difference": "UNKNOWN_SUPERVISOR"
+        "difference": "SOURCE_CONTROL_FLOW_SHAPE"
       },
       "replay_selector": {
         "source": "CANDIDATE",
@@ -2472,9 +2472,9 @@
         "difference": "REGISTER_OR_INSTRUCTION_SELECTION"
       },
       "get_replay_property": {
-        "source": "CANDIDATE",
-        "semantic": "UNVERIFIED",
-        "difference": "RELOCATION_OR_LITERAL_LAYOUT"
+        "source": "RECOVERED",
+        "semantic": "VERIFIED",
+        "difference": "SAME_CU_CALL_LAYOUT"
       },
       "my_strcmp": {
         "source": "CANDIDATE",
@@ -2532,19 +2532,19 @@
       },
       "draw_replay_selector": {
         "state": "SOURCE_DIFFER",
-        "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+        "difference_class": "STACK_FRAME_LAYOUT",
         "body_edit_allowed": true,
         "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
       },
       "create_replay": {
         "state": "CODEGEN_SIMILAR",
-        "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+        "difference_class": "STATIC_DATA_LAYOUT",
         "body_edit_allowed": false,
         "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
       },
       "load_replay": {
         "state": "SOURCE_DIFFER",
-        "difference_class": "UNKNOWN_SUPERVISOR",
+        "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
         "body_edit_allowed": true,
         "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
       },
@@ -2561,10 +2561,10 @@
         "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
       },
       "get_replay_property": {
-        "state": "CODEGEN_SIMILAR",
-        "difference_class": "RELOCATION_OR_LITERAL_LAYOUT",
+        "state": "BODY_MATCH_LAYOUT_BLOCKED",
+        "difference_class": "SAME_CU_CALL_LAYOUT",
         "body_edit_allowed": false,
-        "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+        "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement."
       },
       "my_strcmp": {
         "state": "SOURCE_DIFFER",

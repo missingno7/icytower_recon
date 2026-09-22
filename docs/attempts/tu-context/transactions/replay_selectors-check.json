@@ -1,0 +1,142 @@
+{
+  "task": "replay_selectors",
+  "verdict": "ACCEPTABLE",
+  "matches_before": 5,
+  "matches_after": 6,
+  "same_historical_predecessor": 14,
+  "losses": [],
+  "gains": [
+    "get_replay_property"
+  ],
+  "exact_before": 5,
+  "exact_after": 6,
+  "limit": "Whole-unit final-state check on the applied transaction; not a promotion and not a function proof.",
+  "plan_edits": {
+    "focus": [],
+    "declarations": {
+      "add_top_level": [
+        {
+          "name": "swap_screen",
+          "declaration": "extern BITMAP *swap_screen;",
+          "after": "sort_method"
+        },
+        {
+          "name": "cycle_count",
+          "declaration": "extern volatile int cycle_count;",
+          "after": "swap_screen"
+        }
+      ],
+      "evidence": "Both selectors reference globals this translation unit does not declare. swap_screen is defined in src/main.c:78 as BITMAP * and already declared extern the same way in src/hisc.c:22. cycle_count is defined in src/timer.c:15 as volatile int and already declared extern with that exact type in src/profile.c:96; the volatile is the variable's own historically evidenced type, not a codegen directive, and dropping it would let the compiler cache a timer the original re-reads, which would hang the wait loops in an ordinary build.",
+      "removed_text": [
+        {
+          "name": "swap_screen",
+          "added": "extern BITMAP *swap_screen;",
+          "after": "sort_method"
+        },
+        {
+          "name": "cycle_count",
+          "added": "extern volatile int cycle_count;",
+          "after": "swap_screen"
+        }
+      ]
+    },
+    "order": [
+      "get_sort_method",
+      "set_sort_method",
+      "create_replay",
+      "destroy_replay",
+      "hash",
+      "calc_replay_checksum_131",
+      "calc_replay_checksum",
+      "get_replay_property",
+      "load_replay",
+      "save_replay",
+      "draw_replay_selector",
+      "add_itr_file",
+      "my_strcmp",
+      "update_file_list",
+      "replay_selector"
+    ],
+    "definition_order_with_static": [
+      [
+        "get_sort_method",
+        false
+      ],
+      [
+        "set_sort_method",
+        false
+      ],
+      [
+        "create_replay",
+        false
+      ],
+      [
+        "destroy_replay",
+        false
+      ],
+      [
+        "hash",
+        false
+      ],
+      [
+        "calc_replay_checksum_131",
+        false
+      ],
+      [
+        "calc_replay_checksum",
+        false
+      ],
+      [
+        "get_replay_property",
+        false
+      ],
+      [
+        "load_replay",
+        false
+      ],
+      [
+        "save_replay",
+        false
+      ],
+      [
+        "draw_replay_selector",
+        false
+      ],
+      [
+        "add_itr_file",
+        false
+      ],
+      [
+        "my_strcmp",
+        false
+      ],
+      [
+        "update_file_list",
+        false
+      ],
+      [
+        "replay_selector",
+        false
+      ]
+    ],
+    "bodies": {
+      "draw_replay_selector": {
+        "path": "docs/attempts/game-replay/bodies/draw_replay_selector.c",
+        "identity": {
+          "size": 9123,
+          "sha256": "64287efc538abf2015fea6d1dff9b1f1201716c9ce0a0763d136300a12add4a6"
+        }
+      },
+      "replay_selector": {
+        "path": "docs/attempts/game-replay/bodies/replay_selector.c",
+        "identity": {
+          "size": 9558,
+          "sha256": "ddf7a5a36769ca528e1b9dd57fa4dbd913afcf2e7ddb2cda7c8ea1f07a75be2d"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "auto",
+    "headers": {}
+  }
+}
