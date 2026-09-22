@@ -1,0 +1,9 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "bodies": {
+    "do_replay_menu": "docs/attempts/game-main/bodies/do_replay_menu.c"
+  },
+  "evidence": "2159 to 2643 of 2661 bytes, no gains and no losses. The original contains nine drawSlot calls where our source had three, and grouping the nine by historical line before writing anything showed they fall into three distinct ranges -- 5518..5520, 5537..5539 and 5581..5584 -- so they are three real source call sites, not one the compiler duplicated. Jump-target arithmetic gives each cluster's trigger: 5537..5539, which makes no blit_to_screen call, is reached by direct fallthrough from both outcomes of status == 0's completion, and 5581..5584, which does call blit_to_screen, is reached from all outcomes of both status == 1's and status == 2's completions, so it is written once per state rather than shared through an invented goto. drawSlot is now 9 of 9 and blit_to_screen 2 of 2, matching the original exactly. Separately, status and action are two distinct DWARF locals -- status in edi across nearly the whole function, action in short bursts right after each get_string call -- where our source collapsed them into one variable reused as get_string's return slot; separating them showed the original hard-codes status = 1 after a successful name edit rather than status = action. buffer's true DWARF type is char[1024], not char[2048], and lets_save is left undeclared because it has no DW_AT_location and no other evidence. The residual eighteen bytes are a uniform stack-offset shift from buffer's corrected size plus unresolved-symbol placeholders in the diagnostic comparison."
+}

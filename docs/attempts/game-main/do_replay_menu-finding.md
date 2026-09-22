@@ -95,9 +95,52 @@ a completed fix. The next step is pinning down exactly which `status` transition
 copy 3 (I have copy 2's trigger nailed down; copy 3's is not yet confirmed) before writing the
 duplicated draw calls into source.
 
+## Update: the 502-byte gap was "three times three," not duplication — resolved
+
+Tested the coordinator's alternative reading before writing anything: grouped the nine `drawSlot` call
+sites by historical line via `function_lines --calls-by-line`. They fall into exactly three clusters at
+three distinct historical line ranges — 5518-5520 (already in our source, the loop's top-of-body draw),
+5537-5539, and 5581-5583(+5584 for `blit_to_screen`) — not one or two ranges repeated. That is three
+real source call sites, readable, not compiler duplication to guess at.
+
+Traced what reaches each with jump-target arithmetic on the raw instruction stream:
+- Cluster at 5537-5539 (no `blit_to_screen`) is reached by **direct fallthrough** from both outcomes of
+  `status==0`'s completion (`action++; if (!action) status='*'; else status=1;` — the fallthrough
+  instruction is literally `mov $0x1,%edi`, confirming the earlier-caught bug that it's a hard-coded 1,
+  not `action`) — both the cancel path (via a `jmp` from offset 1852) and the success path (via literal
+  fallthrough from offset 1187) land at offset 1192, the cluster's first `makecol`.
+- Cluster at 5581-5584 (with `blit_to_screen`) is reached from **all outcomes of `status==1`'s and
+  `status==2`'s** completions (five jump/fallthrough paths total, all converging on offset 1606) — the
+  shared "confirm or cancel" redraw the coordinator predicted, serving two different states.
+
+Added both clusters verbatim (identical `drawSlot`/`makecol` arguments to the existing top-of-loop
+draw, matched to each cluster's actual `movl $X,N(%esp)` stores) at the end of the `status==0` block
+(no blit) and at the end of **both** the `status==1` and `status==2` blocks (with blit) — written twice
+since both states reach it, matching the original's own duplication at the source level rather than
+inventing a `goto`. Annotated each with its historical line via a leading `/* NNNN */` comment on its
+own line, per the annotation-gaps rule.
+
+**Result: 2159 → 2643 (18 under 2661), from a fresh `drm-3`/`drm-4` probe.** `drawSlot` count now 9/9,
+`blit_to_screen` 2/2, matching the original exactly. `unused_locals.py`: 0/13 missing. Compile OK,
+`losses` clean/unchanged. Remaining diff (`aligned_view.py diff`) is dominated by two mechanical,
+expected effects, not new gaps: unresolved-symbol placeholders (`0x0` vs real global addresses) in this
+diagnostic comparison, and a uniform stack-offset shift from `buffer`'s correct resize (`2048`→`1024`
+bytes, exactly the `0x400` shift visible on every local declared after it).
+
+## Checked for invented statements (per the coordinator's question)
+
+Compared every call-site function name actually present in the original object
+(`function_lines --calls-by-line`) against every call our source makes: full match except `memset`,
+which the original expresses as an inlined `rep stos` (no `call` instruction, so it doesn't appear in
+that listing) at the exact stack offsets our `memset(fname,...)`/`memset(comment,...)` target — real,
+just not call-based. No function name in our source lacks a real counterpart. Did not do an exhaustive
+per-statement `/* NNNN */` audit of the ~140 lines that predate this session's work (no such annotations
+exist on most of them to cross-check against), so this is a call-level check, not a byte-level one; the
+drawSlot investigation above is the one place a genuine gap of this kind was found and it is now closed.
+
 ## Current state
 
-Body file left with 8/9 locals correctly evidenced and renamed (`status`/`action` separated correctly,
-`buffer` resized to its true DWARF size, `thisChecksum` captured), `lets_save` documented but not
-invented. Compiles clean, `2159/2661` unchanged from baseline (as expected for a pure-naming pass),
-`losses` clean, nothing committed, `src/**` untouched.
+Body file has all 9 DWARF-flagged locals correctly evidenced and used (`status`/`action` separated,
+`buffer` resized to its true DWARF size, `thisChecksum` captured, `lets_save` documented but not
+invented), plus the three-site `drawSlot` structure recovered and annotated. `2643/2661` (18 under),
+`losses` clean, compiles OK, nothing committed, `src/**` untouched.

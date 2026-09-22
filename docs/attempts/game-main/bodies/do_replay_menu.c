@@ -73,7 +73,16 @@ int do_replay_menu(void)
                     if (!action)
                         status='*';
                     else
-                        status=action;
+                        status=1;
+                    /* 5537 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5538 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5539 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
                 }
                 else if (status==1) {
                     if (!fname[0] && pname[0]) {
@@ -89,6 +98,17 @@ int do_replay_menu(void)
                         replaceBadCharacters(fname,'_');
                         status=2;
                     }
+                    /* 5581 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5582 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5583 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
+                    /* 5584 */
+                    blit_to_screen(swap_screen);
                 }
                 else if (status==2) {
                     action=get_string(swap_screen,comment,340,42,data[54].dat,
@@ -99,6 +119,17 @@ int do_replay_menu(void)
                         status=!isGuest;
                     else
                         status=3;
+                    /* 5581 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5582 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5583 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
+                    /* 5584 */
+                    blit_to_screen(swap_screen);
                 }
                 else if (status==3) {
                     sprintf(lastGameFile,"%slast_game.itr",replay_directory);

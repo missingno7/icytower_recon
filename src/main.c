@@ -1470,6 +1470,89 @@ void handle_player_collision_vector_2(int lastX, int lastY);
 void handle_player_collision_combo(int lastX, int lastY);
 int init_game(int argc, char **argv);
 
+/* Forward declarations; definitions follow in their original source order. */
+void line_alert(char *text);
+void fadeIn(BITMAP *bmp, int speed);
+void fadeOut(int speed);
+void show_instructions(void);
+int my_alert(char *func, char *txt, int choice, int enter_hint);
+void show_credits(void);
+char *get_version_str(void);
+Treplay *get_demo(void);
+Tcontrol *get_controls(void);
+int new_rand(void);
+inline void new_srand(int s);
+inline void syncProfileFromOptions(void);
+void syncOptionsFromProfile(void);
+int get_gamepad_value(char *dir);
+void load_sound(SAMPLE **dest, char *fname, BITMAP *bmp, int y);
+void draw_progress_bar(void);
+void take_screenshot(BITMAP *bmp);
+void open_web_browser(const char *pURL);
+void load_new_ad_image(void);
+int ok_to_play(void);
+void switchedFromProgram(void);
+void switchedToProgram(void);
+void clickedCloseButton(void);
+void testWindowResolution(void);
+inline int is_custom_replay(Treplay *r);
+int new_game(void);
+int show_name(char *name, int attribs);
+void play_sound(SAMPLE *s, int pitch, int please_pan);
+void play_jump_sound(Tplayer *p);
+void handle_player_input(Tcontrol *control);
+void play_menu_move(void);
+void play_menu_select(void);
+void drawSlot(BITMAP *dst, int x, int y, char *title, char *text, int color);
+void stopGameMusic(void);
+void replaceBadCharacters(char *string, char newChar);
+void blit_to_screen(BITMAP *bmp);
+void draw_reward(BITMAP *bmp);
+void replay_menu_callback(void);
+void main_menu_callback(void);
+int do_replay_menu(void);
+void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified, int *qValues, int showQ);
+void force_create_profile(void);
+void startMenuMusic(void);
+void stopMenuMusic(void);
+void checkMenuFocus(void);
+int _mangled_main(int argc, char **argv);
+void draw_frame(BITMAP *dst);
+int play(void);
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f, int pos_x, int pos_y, int colour, int bg_color);
+void pwd_garble_string(char *str, int key);
+int line_intersect(int ax, int ay, int bx, int by, int cx, int cy, int dx, int dy, int *ix, int *iy);
+void datafile_callback_slow(DATAFILE *d);
+void datafile_callback(DATAFILE *d);
+void color_map_callback(int pos);
+SAMPLE *getSampleFromOggDatafile(DATAFILE *df, int id);
+void log2file(const char *format, ...);
+void end_game(void);
+void uninit_game(void);
+void save_config(void);
+void change_profile(void);
+inline void update_reward(void);
+void myDeleteFile(char *path, char *file);
+void set_current_avatar(void);
+void update_frame(void);
+int check_dir(const char *filename, int attrib, void *param);
+int load_character(const char *filename, int attrib, void *param);
+void for_each_directory(const char *basedir, int (*cb)(const char *filename, int attrib, void *param));
+void run_demo(char *file_name);
+int add_profile(const char *filename, int attrib, void *param);
+int rebuild_profile_list(Tavailable_profile **profs);
+BITMAP *loadScrambled(char *fileName);
+int check_beta_tester(void);
+int check_characters(void);
+void startGameMusic(void);
+int start_reward(int lev);
+void handle_player_collision_original(int lastX, int lastY);
+void handle_player_collision_old(int lastX, int lastY);
+void handle_player_collision_vector(int lastX, int lastY);
+void handle_player_collision_vector_2(int lastX, int lastY);
+void handle_player_collision_combo(int lastX, int lastY);
+int init_game(int argc, char **argv);
+
 void line_alert(char *text)
 {
     int color;
@@ -2399,13 +2482,15 @@ int do_replay_menu(void)
     int ret = -1;
     int play_again = 0;
     int isGuest = !stricmp("guest",profile->handle);
-    int state = !isGuest;
-    char filename[512];
-    char player_name[512];
+    int status = !isGuest;
+    char fname[512];
+    char pname[512];
     char comment[512];
-    char full_filename[512];
-    char replay_filename[2048];
-    char temporary_filename[2048];
+    char fpath[512];
+    char buffer[1024];
+    char lastGameFile[2048];
+    int action;
+    int thisChecksum;
 
     log2file(" replay_menu launched");
     while (!closeButtonClicked && ret!='l') {
@@ -2418,105 +2503,138 @@ int do_replay_menu(void)
         else if (ret=='|') {
             log2file("  view replay selected");
             fadeOut(16);
-            sprintf(temporary_filename,"%slast_game.itr",replay_directory);
-            run_demo(temporary_filename);
+            sprintf(lastGameFile,"%slast_game.itr",replay_directory);
+            run_demo(lastGameFile);
         }
         else if (ret=='{') {
             log2file("  save replay selected");
-            memset(filename,' ',511);
-            filename[511]=0;
+            memset(fname,' ',511);
+            fname[511]=0;
             if (isGuest)
-                strcpy(player_name," - ");
+                strcpy(pname," - ");
             else
-                strcpy(player_name,profile->handle);
+                strcpy(pname,profile->handle);
             memset(comment,' ',511);
             comment[511]=0;
-            state=!isGuest;
-            while (!closeButtonClicked && state!='*') {
+            status=!isGuest;
+            while (!closeButtonClicked && status!='*') {
                 stretch_sprite(swap_screen,data[86].dat,120,140,380,200);
                 textout_ex(swap_screen,data[51].dat,"SAVE REPLAY",140,150,-1,-1);
                 textout_ex(swap_screen,data[54].dat,"(enter to advance)",320,312,
                            makecol(80,80,80),-1);
-                drawSlot(swap_screen,140,210,"Your name:",player_name,
+                drawSlot(swap_screen,140,210,"Your name:",pname,
                          makecol(50,50,50));
-                drawSlot(swap_screen,140,250,"Filename:",filename,
+                drawSlot(swap_screen,140,250,"Filename:",fname,
                          makecol(50,50,50));
                 drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
                          makecol(50,50,50));
                 blit_to_screen(swap_screen);
-                if (state==0) {
-                    state=get_string(swap_screen,player_name,340,512,data[54].dat,
+                if (status==0) {
+                    action=get_string(swap_screen,pname,340,512,data[54].dat,
                                      140,210,makecol(0,0,0),makecol(255,255,255));
-                    replaceBadCharacters(player_name,'_');
-                    state++;
-                    if (!state)
-                        state='*';
-                }
-                else if (state==1) {
-                    if (!filename[0] && player_name[0]) {
-                        sprintf(filename,"%s_%d_%d_%d",player_name,demo->score,
-                                demo->floor,demo->combo);
-                        replaceBadCharacters(filename,'_');
-                    }
-                    if (get_string(swap_screen,filename,340,512,data[54].dat,
-                                   140,250,makecol(0,0,0),makecol(255,255,255)) == -1)
-                        state='*';
-                    else {
-                        replaceBadCharacters(filename,'_');
-                        state=2;
-                    }
-                }
-                else if (state==2) {
-                    int edit_result;
-
-                    edit_result=get_string(swap_screen,comment,340,42,data[54].dat,
-                                           140,290,makecol(0,0,0),makecol(255,255,255));
-                    if (edit_result == -1)
-                        state='*';
-                    else if (edit_result == -2)
-                        state=!isGuest;
+                    replaceBadCharacters(pname,'_');
+                    action++;
+                    if (!action)
+                        status='*';
                     else
-                        state=3;
+                        status=1;
+                    /* 5537 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5538 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5539 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
                 }
-                else if (state==3) {
-                    sprintf(temporary_filename,"%slast_game.itr",replay_directory);
-                    if (!player_name[0]) {
-                        state=0;
+                else if (status==1) {
+                    if (!fname[0] && pname[0]) {
+                        sprintf(fname,"%s_%d_%d_%d",pname,demo->score,
+                                demo->floor,demo->combo);
+                        replaceBadCharacters(fname,'_');
+                    }
+                    action=get_string(swap_screen,fname,340,512,data[54].dat,
+                                   140,250,makecol(0,0,0),makecol(255,255,255));
+                    if (action == -1)
+                        status='*';
+                    else {
+                        replaceBadCharacters(fname,'_');
+                        status=2;
+                    }
+                    /* 5581 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5582 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5583 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
+                    /* 5584 */
+                    blit_to_screen(swap_screen);
+                }
+                else if (status==2) {
+                    action=get_string(swap_screen,comment,340,42,data[54].dat,
+                                           140,290,makecol(0,0,0),makecol(255,255,255));
+                    if (action == -1)
+                        status='*';
+                    else if (action == -2)
+                        status=!isGuest;
+                    else
+                        status=3;
+                    /* 5581 */
+                    drawSlot(swap_screen,140,210,"Your name:",pname,
+                             makecol(50,50,50));
+                    /* 5582 */
+                    drawSlot(swap_screen,140,250,"Filename:",fname,
+                             makecol(50,50,50));
+                    /* 5583 */
+                    drawSlot(swap_screen,140,290,"Comment: (optional)",comment,
+                             makecol(50,50,50));
+                    /* 5584 */
+                    blit_to_screen(swap_screen);
+                }
+                else if (status==3) {
+                    sprintf(lastGameFile,"%slast_game.itr",replay_directory);
+                    if (!pname[0]) {
+                        status=0;
                         continue;
                     }
-                    if (!filename[0]) {
-                        state=1;
+                    if (!fname[0]) {
+                        status=1;
                         continue;
                     }
                     if (demo)
                         destroy_replay(demo);
-                    demo=load_replay(temporary_filename);
+                    demo=load_replay(lastGameFile);
                     if (!demo) {
                         my_alert("Failed to save replay.",
                                  "Temporary file not found.",0,1);
                         continue;
                     }
-                    if (calc_replay_checksum(demo)!=uberChecksum) {
+                    thisChecksum=calc_replay_checksum(demo);
+                    if (thisChecksum!=uberChecksum) {
                         my_alert("Failed to save replay.",
                                  "Temporary file mismatch.",0,1);
                         continue;
                     }
-                    strncpy(demo->name,player_name,30);
+                    strncpy(demo->name,pname,30);
                     strcpy(demo->comment,comment);
-                    replace_extension(replay_filename,filename,"itr",512);
-                    sprintf(full_filename,"%s%s",replay_directory,replay_filename);
-                    if (exists(full_filename) &&
+                    replace_extension(buffer,fname,"itr",512);
+                    sprintf(fpath,"%s%s",replay_directory,buffer);
+                    if (exists(fpath) &&
                         !my_alert("The file exists.","Do you want to overwrite it?",1,0)) {
-                        state=1;
+                        status=1;
                         continue;
                     }
-                    if (save_replay(replay_directory,replay_filename,demo,demo->size+2,1)<0) {
-                        my_alert("Failed to save replay.",full_filename,0,1);
-                        state=1;
+                    if (save_replay(replay_directory,buffer,demo,demo->size+2,1)<0) {
+                        my_alert("Failed to save replay.",fpath,0,1);
+                        status=1;
                     }
                     else {
                         my_alert("Replay saved.",0,0,1);
-                        state='*';
+                        status='*';
                     }
                 }
             }
