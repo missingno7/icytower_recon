@@ -118,10 +118,12 @@ void draw_frame(BITMAP *bmp)
             textprintf_ex(bmp, font, 0x190, 0xa, 15, -1, "any: %6d %6d %6d",          /* 2820 */
                 any21, any22, any23);
         }
-    /* ? line 2822 tail: fragments at offsets 2246 ("mov $0x2,%edi") and 2556
+    /* line 2822 tail: fragments at offsets 2246 ("mov $0x2,%edi") and 2556
      * ("mov $0x6,%esi") are also attributed to this line by the line table,
      * but they sit far outside this region's byte range and duplicate
      * register-constant setup that reads as spillover from an earlier
      * region's block layout; no call is associated with them, so nothing
-     * is written here beyond the implicit function epilogue. */
+     * is written here beyond the implicit function epilogue, which the
+     * closing brace below inherits this annotation for. */
+    /* 2822 */
 }

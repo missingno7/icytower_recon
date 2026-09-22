@@ -91,7 +91,14 @@ void draw_frame(BITMAP *bmp)
                 int f;   /* DWARF: block-scoped int at -0x180(ebp); no separate `rowy`/`tile`
                           * names are declared by the historical DWARF for this block, so the
                           * tile index reuses this one slot and the row-y term is recomputed
-                          * inline (cx + (map.offset & 0xf) - 6) at each use, 2552. */
+                          * inline (cx + (map.offset & 0xf) - 6) at each use, 2552. Each of the
+                          * three draws (2552/2555/2558) is ~20 bytes short of its historical
+                          * count for the same reason as 2606: the line table charges each with
+                          * a `dec/or $0xfffffff0/inc` abs()-style tail duplicated far away from
+                          * its local computation (2552's local copy at 566..623 plus a second
+                          * copy at 2212..2217; 2555's at 740..780 plus 1964..1969; 2558's at
+                          * 826..876 plus 2224..2229) -- one statement, two compiled copies from
+                          * -O2 block layout, not a missing branch. */
 
                 ls = fo + room->tiles * 3;   /* 2549 */
                 if (ls > 0x2c) {

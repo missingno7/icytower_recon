@@ -31,21 +31,26 @@ void draw_frame(BITMAP *bmp)
      * text belongs to D1/D2's declared ranges, not D3's; nothing to add here. */
 
     /* lines 2698..2699: the scrolling side strips, reconstructed from offsets 2786..3105.
-     * The loop base in %esi runs -124, 0, 124, 248, 372 and exits on `cmp $0x1f0` (496) with a
-     * step of 0x7c (124); the second half's tail jumps back to the first half's entry, so the
-     * two physically duplicated halves are one loop body cross-jumped by -O2. Inside it, the
-     * `idiv $0x54` REMAINDER of map.offset is multiplied by the double 1.476 at 0x4d6d18 and
-     * truncated, giving the scroll offset added to the base; the sprite is data[100].dat and the
-     * two constant arguments in the third slot (x) are 0x235 (565) and 0xffffffc7 (-57), so the
-     * strips are vertical, at the right and left screen edges, sharing one y per iteration.
-     * The vtable slots reached inside the loop are 0x48 (draw_sprite_v_flip) and 0x50
-     * (draw_sprite_vh_flip); the 0x44 (draw_256_sprite) call in the same window belongs to the
-     * 8bpp path of the plain draw_sprite at line 2651. Which edge takes which flip is the one
-     * uncertain part, marked below. */
+     * The loop base in %esi runs -124, 0, 124, 248, 372 and exits on `cmp $0x1f0` (496, line
+     * 2698's `cmp`/`je` test, offsets 2970..2982) with a step of 0x7c (124); the second half's
+     * tail jumps back to the first half's entry, so the two physically duplicated halves are one
+     * loop body cross-jumped by -O2. Inside it, the `idiv $0x54` REMAINDER of map.offset is
+     * multiplied by the double 1.476 at 0x4d6d18 and truncated, giving the scroll offset added to
+     * the base (line 2699's own bytes: the divisor setup at 2824..2836 plus the idiv/float-mult/
+     * data[100] lookup at 2982..3063 -- the mirror computation for the other half is credited by
+     * the line table to the inlined draw.inl:280 body instead, an artifact of the cross-jump, not
+     * a separate main.c statement). The sprite is data[100].dat and the two constant arguments in
+     * the third slot (x) are 0x235 (565) and 0xffffffc7 (-57), so the strips are vertical, at the
+     * right and left screen edges, sharing one y per iteration. Resolved by side-by-side reading
+     * of offsets 2786..3110 (aligned_view sbs): the call reached with x=0x235 uses vtable slot
+     * 0x48 (draw_sprite_v_flip, offset 3097 `call *0x48(%edx)`), and the call reached with
+     * x=0xffffffc7 uses slot 0x50 (draw_sprite_vh_flip, offset 2964 `call *0x50(%ecx)`); the 0x44
+     * (draw_256_sprite) call at offset 2858 in the same window is tail-duplicated code from the
+     * plain draw_sprite at line 2651, not part of this loop. */
     for (cy = -124; cy != 496; cy += 124) {                                    /* 2698 */
-        cx = cy + (int)((map.offset % 84) * 1.476);                             /* 2698 */
-        draw_sprite_v_flip(bmp, data[100].dat, 565, cx);                        /* 2699 ? edge/flip pairing */
-        draw_sprite_vh_flip(bmp, data[100].dat, -57, cx);                       /* 2699 ? */
+        cx = cy + (int)((map.offset % 84) * 1.476);                             /* 2699 */
+        draw_sprite_v_flip(bmp, data[100].dat, 565, cx);                        /* 2699 */
+        draw_sprite_vh_flip(bmp, data[100].dat, -57, cx);                       /* 2699 */
     }
 
     draw_sprite(bmp, data[16].dat, 22, 100);          /* 2705 */

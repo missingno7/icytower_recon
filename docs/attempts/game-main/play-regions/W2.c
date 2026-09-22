@@ -259,7 +259,7 @@ int play(void)
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
                         lastJumpLength = diff;                          /* 3928 tail */
-                    } else if (!ply[player_id]->in_combo) {              /* 3932 */
+                    } else if (ply[player_id]->in_combo) {               /* 3932 */
                         lastJumpLength = diff;
                     }
                 }

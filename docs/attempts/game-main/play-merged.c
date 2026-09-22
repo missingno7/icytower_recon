@@ -144,22 +144,22 @@ int play(void)
         musicCounter++;                                   /* line 3546 */
         if (!itrcheck) {                                  /* line 3549 */
             if (hasFocus != lastFocus) {                  /* line 3550-3551 */
-                if (!hasFocus) {
+                if (hasFocus) {
+                    /* line 3552-3559: gaining focus, restart the background track */
+                    if (bg_beat) {
+                        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1); /* 3553 */
+                    }
+                    startGameMusic();                                             /* 3559 */
+                    totMusics = 0;
+                    accMusics = 0.0f;
+                    musicCounter = 0;
+                } else {
                     /* line 3562-3567: losing focus, stop the background track */
                     if (checkMusicVoiceID >= 0) {
                         voice_stop(checkMusicVoiceID);
                     }
                     checkMusicVoiceID = -1;
                     stopGameMusic();
-                } else {
-                    /* line 3552-3559: gaining focus, restart the background track */
-                    if (bg_beat) {
-                        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1);
-                    }
-                    startGameMusic();
-                    totMusics = 0;
-                    accMusics = 0.0f;
-                    musicCounter = 0;
                 }
             }
             lastFocus = hasFocus;                         /* line 3569 */
@@ -442,7 +442,7 @@ int play(void)
                         }
                         ply[player_id]->in_combo = 100;                  /* 3923/3928 */
                         lastJumpLength = diff;                          /* 3928 tail */
-                    } else if (!ply[player_id]->in_combo) {              /* 3932 */
+                    } else if (ply[player_id]->in_combo) {               /* 3932 */
                         lastJumpLength = diff;
                     }
                 }
@@ -1147,12 +1147,12 @@ int play(void)
                            "climb in rank!", 0x82);                                    /* 4746 */
                 } else if (gotHigh) {
                     memcpy(summary_scroller_message, "New personal records!    ", 0x1a); /* 4753 */
+                } else if (isGuest) {                                                  /* 4770 */
+                    strcpy(summary_scroller_message,
+                           "You're playing in guest mode. Start a profile and "
+                           "record your progress!");
                 } else {
-                    char *tip = "You're playing in guest mode. Start a profile and "
-                                "record your progress!";
-                    if (!isGuest)
-                        tip = hints[new_rand() % 45];                                   /* 4770 */
-                    strcpy(summary_scroller_message, tip);                              /* 4775 */
+                    strcpy(summary_scroller_message, hints[new_rand() % 45]);           /* 4775 */
                 }
             }
 
@@ -1206,6 +1206,7 @@ int play(void)
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
                     /* 4823 */ rank_y = (int)((320 - rank_y) * 0.1 + rank_y);
+                    current_rank_id = new_rank_id; /* ? */
                 }
                 if (summary_scroller_message[0]) {                                       /* 4827 */
                     scroll_scroller(&summary_scroller, -2);                              /* 4828 */

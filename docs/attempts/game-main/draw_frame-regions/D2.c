@@ -68,6 +68,15 @@ void draw_frame(BITMAP *bmp)
      * false arm). Each arm below carries its OWN literal-6 fallback instead of one shared
      * pre-set; on the status==0 edge p_im is left holding whatever it already had, which is
      * exactly the unprovable edge the 2594 range test below needs to survive folding. */
+    /* 2590/2591/2595/2597 all show the same shape as 2606's gap: the line table charges each of
+     * these comparisons far more than one `fldl/fucompp/fnstsw/test` sequence costs (2590: 42 vs
+     * our 9; 2591 has its own separate -3.0/6/7 arm so is not the same statement), because -O2
+     * duplicates the fcompp+branch sequence at every predecessor edge that reaches it (status==3's
+     * arm at offsets 1819..1852 plus a second copy at 3356..3365; 2595's inner-band test appears
+     * at 2561..2608 AND again at 3323..3346; 2597's edge==0/-0.2 test appears at 1869..1924,
+     * 2308..2315, 2608..2615 AND 3365..3391) -- one source comparison, several compiled copies from
+     * jump-threading. Nothing here is missing source logic; a single `if` cannot reproduce a
+     * compiler-side tail duplication without inventing branches this evidence doesn't support. */
     if (ply[player_id]->status) {                       /* 2589 */
         if (ply[player_id]->status == 3) {                /* 2590 */
             if (ply[player_id]->sy > 3.0)              /* 2590: fucompp/fnstsw compare direction inferred, not asserted */

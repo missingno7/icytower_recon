@@ -146,22 +146,22 @@ int play(void)
         musicCounter++;                                   /* line 3546 */
         if (!itrcheck) {                                  /* line 3549 */
             if (hasFocus != lastFocus) {                  /* line 3550-3551 */
-                if (!hasFocus) {
+                if (hasFocus) {
+                    /* line 3552-3559: gaining focus, restart the background track */
+                    if (bg_beat) {
+                        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1); /* 3553 */
+                    }
+                    startGameMusic();                                             /* 3559 */
+                    totMusics = 0;
+                    accMusics = 0.0f;
+                    musicCounter = 0;
+                } else {
                     /* line 3562-3567: losing focus, stop the background track */
                     if (checkMusicVoiceID >= 0) {
                         voice_stop(checkMusicVoiceID);
                     }
                     checkMusicVoiceID = -1;
                     stopGameMusic();
-                } else {
-                    /* line 3552-3559: gaining focus, restart the background track */
-                    if (bg_beat) {
-                        checkMusicVoiceID = play_sample(bg_beat, 0, 128, 1000, 1);
-                    }
-                    startGameMusic();
-                    totMusics = 0;
-                    accMusics = 0.0f;
-                    musicCounter = 0;
                 }
             }
             lastFocus = hasFocus;                         /* line 3569 */
