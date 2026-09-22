@@ -49,14 +49,21 @@ void draw_frame(BITMAP *bmp)
             bg_stripe_ids[2] = bg_stripe_ids[1];
             bg_stripe_ids[1] = bg_stripe_ids[0];
 
-            if (new_rand() % 100 > 0x28) {               /* 2517 */
-                bg_stripe_ids[0] = 0;                     /* 2523 */
-            } else {
-                bg_stripe_ids[0] = new_rand() % max_bg_id; /* 2521 */
-                if (bg_stripe_ids[0] == bg_stripe_ids[1] || /* 2522 */
-                    bg_stripe_ids[0] == bg_stripe_ids[2])
-                    bg_stripe_ids[0] = 0;                  /* 2523 */
-            }
+            /* 2523: only ONE physical `movl $0x0,bg_stripe_ids` exists (offsets 336..352),
+             * reached both by the >0x28 branch falling straight through and by the
+             * collision-detected branch's own jump (offset 372/380 both target 4093ec,
+             * the same address) -- a genuine control-flow merge, not two compiled copies,
+             * so the reset is written once and reached from both predecessors. */
+            if (new_rand() % 100 > 0x28)                  /* 2517 */
+                goto reset_stripe;
+            bg_stripe_ids[0] = new_rand() % max_bg_id;     /* 2521 */
+            if (bg_stripe_ids[0] != bg_stripe_ids[1] &&    /* 2522 */
+                bg_stripe_ids[0] != bg_stripe_ids[2])
+                goto skip_reset;
+        reset_stripe:
+            bg_stripe_ids[0] = 0;                          /* 2523 */
+        skip_reset:
+            ;
         }
 
         for (i = 0; i != 4; i++) {                        /* 2529 */
@@ -257,7 +264,19 @@ void draw_frame(BITMAP *bmp)
 
             /* 2629..2638: a second, overlay draw -- edge==0 reaches this same block
              * directly (2611's `je` target is offset 3115, this block's own start),
-             * so it is duplicated verbatim below for the no-edge case. */
+             * so it is duplicated verbatim below for the no-edge case. Re-tried as a
+             * single copy guarded by `edge != 2` (matching the single-fragment shape
+             * function_lines --source-view reports for 2624/2629/2630/2631/2632/2636/
+             * 2638 individually): measured again this pass, candidate still drops to
+             * 8260/8518 (-258) even though the per-line fit for 2629/2630/2636/2638
+             * improves a lot (2638 alone: was +106 over duplicated, only +11 over
+             * merged) -- so the single fragment per line is real, but -O2 still isn't
+             * folding the two textual copies into one compiled copy for free the way
+             * the historical binary's block-layout scatter does; something else in the
+             * function absorbs the missing 300 bytes when this block is merged, and
+             * that something is not evidenced yet. Reverted to the duplicated form,
+             * which lands the whole-function total closer (8560 vs 8518) even though
+             * this block overshoots on its own. */
             if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629: offset 3115..3134 (map.offset), 3416..3433 (y vs 400.0) */
                 customFrame = custom.frame[11];                      /* 2629 */
             }
