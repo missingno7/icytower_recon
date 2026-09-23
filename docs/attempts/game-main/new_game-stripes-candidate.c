@@ -1,7 +1,6 @@
 int new_game(void)
 {
     int i;
-    Tplayer *p;
 
     log2file(" init new game");
     collision_type = 2;
@@ -27,10 +26,8 @@ int new_game(void)
     if (gameData)
         destroy_game_data(gameData);
     gameData = create_game_data();
-    if (!gameData) {
+    if (!gameData)
         log2file("*** failed to allocate memory for gameData, prepare for crash");
-        return 0;
-    }
     gameData->replay = demo;
 
     if (demo) {
@@ -75,12 +72,11 @@ int new_game(void)
     reset_map(&map);
     for (i = 0; i < 30; i++)
         add_floor(&map);
-    p = ply[player_id];
-    reset_player(p);
-    p->x = 200.0;
-    p->y = 431.0;
-    p->status = 0;
-    p->sx = 0.001;
+    reset_player(ply[player_id]);
+    ply[player_id]->x = 200.0;
+    ply[player_id]->y = 431.0;
+    ply[player_id]->status = 0;
+    ply[player_id]->sx = 0.001;
     reward_time = 0;
     hurry_y = 480;
     if (itrcheck)
