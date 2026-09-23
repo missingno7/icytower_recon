@@ -665,11 +665,10 @@ int play(void)
             int pauseTime, addTime; /* DWARF block 132550 [4560..4780]: pauseTime, addTime */
             pauseTime = time(NULL);                                            /* 4063 */
             take_screenshot(swap_screen);                                      /* 4064 */
-            if (key[KEY_F1]) {                                                 /* 4065 (see report: odd self-target) */
-                addTime = time(NULL) - pauseTime;                              /* 4066 */
-                if (addTime > 0)                                               /* 4067 */
-                    startTime += addTime;                                      /* 4068 */
-            }
+            while (key[KEY_F1]) { }                                            /* 4065: self-target waits for release */
+            addTime = time(NULL) - pauseTime;                                  /* 4066 */
+            if (addTime > 0)                                                   /* 4067 */
+                startTime += addTime;                                          /* 4068 */
             if (gameMusicVoiceID >= 0)                                        /* 4075 */
                 musicCounter = (int)(voice_get_position(gameMusicVoiceID) * 50.0 / 44000.0); /* 4077 */
             clockTimeStart = clock();                                          /* 4083 */
@@ -948,7 +947,9 @@ int play(void)
                     while (cycle_count == 0)                                  /* 4357 */
                         rest(2);                                              /* 4357 */
                 } else if (key[KEY_TAB] && key[KEY_LSHIFT]) {                  /* 4360 */
-                    while (cycle_count <= 7)                                  /* 4361 */
+                    while (cycle_count <= 7) { }                              /* 4361: busy wait */
+                } else {
+                    while (cycle_count == 0)
                         rest(2);                                              /* 4363 */
                 }
             }
@@ -1380,8 +1381,10 @@ int play(void)
                 cycle_count = 0;                                                       /* 4797 */
                 step_count++;                                                          /* 4798 */
                 update_frame();                                                        /* 4800 */
-                if (key[KEY_F1])                                                       /* 4802 */
+                if (key[KEY_F1]) {                                                     /* 4802 */
                     take_screenshot(swap_screen);                                      /* 4803 */
+                    while (key[KEY_F1]) { }                                            /* 4804 */
+                }
                 if (hurry_y + 99 <= 578)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
@@ -1559,9 +1562,10 @@ int play(void)
                      * from the 4731 occurrence -- function_lines.py source-view shows 4929 testing
                      * key[KEY_LSHIFT] first (4731 tests key[KEY_TAB] first), so the two blocks are
                      * not byte-identical in the original and the compiler does not fold them. */
-                    rest(2);                                                                 /* 4932 */
-                    if (cycle_count == 0)
-                        continue;
+                    do {
+                        rest(2);                                                             /* 4932 */
+                    } while (cycle_count == 0);
+                    continue;
                 }
             }
 

@@ -228,27 +228,28 @@ void draw_frame(BITMAP *bmp)
         }
     }
 
-    if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2)  /* 2597 */
+    if (ply[player_id]->sx > 0.2 || ply[player_id]->sx < -0.2) { /* 2597 */
         ply[player_id]->frame = 0;
+        p_im = 1;  /* original offsets 1952 and 3406 follow the two speed-limit resets */
+    }
 
-    if (ply[player_id]->frame > 3)                              /* 2599 */
+    if (ply[player_id]->frame > 3) {                            /* 2599 */
         ply[player_id]->frame = 0;
+        p_im = 1;  /* original offset 6066 follows the overflow reset */
+    }
 
     /* 2605: no comparison precedes the custom.frame[0] loads at 2315 and 2615,
-     * so the earlier null-guard guess is dropped. Original offset 1952, 3406,
-     * and 6066 also write 1 to p_im; their source/control-flow cause is not
-     * yet represented reliably in this candidate. */
+     * so the earlier null-guard guess is dropped. */
     /* 2606: original `1 - custom.frame[0]->h` fragments appear at offsets 1924,
      * 2321/2621, 3391, and 6051. The current source emits a different layout;
      * attribution of the remaining deficit to compiler duplication alone is unproved. */
     oy = 1 - custom.frame[0]->h;                                     /* 2606 */
 
-    flip = 0;                                            /* 2609: p_im==0 skips the edge/flip block entirely --
-                                                            * offset 2631's `test %esi,%esi; je` jumps straight to
-                                                            * offset 2649 (the shared final draw below), so the
-                                                            * edge handling AND the `ply->rotate` read only happen
-                                                            * when p_im is one of the 5/6/7/8 poses. */
-    if (p_im) {                                          /* 2609 */
+    /* 2609: offset 2631's `test %esi,%esi; je` enters the edge-sprite path at
+     * 2329 when p_im==0. Edge sprite calls jump to 2819, after the ordinary
+     * rotate/frame draw. The earlier candidate inverted this condition and
+     * drew through both paths. */
+    if (!p_im) {                                         /* 2609 */
         if (ply[player_id]->edge) {                      /* 2611 */
             customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14]; /* 2612/2615 */
             oy = (int)ply[player_id]->y + oy;           /* 2624 */
@@ -277,17 +278,15 @@ void draw_frame(BITMAP *bmp)
             else
                 draw_sprite_h_flip(bmp, customFrame, ox, oy);
         }
+    } else {
         flip = ply[player_id]->rotate;                  /* 2643 */
-    }
-
-    if (flip) {
+        if (flip) {
         customFrame = custom.frame[12];                 /* 2644: bypasses the p_im+frame index entirely */
         rotate_sprite(bmp, customFrame, (int)ply[player_id]->x, (int)ply[player_id]->y,
                        ply[player_id]->angle);            /* draw.inl:345, offset 6639..6852;
                                                              x/y args not fully traced -- the 200-byte
                                                              inline body wasn't walked past its w/h loads */
-    }
-    else {
+        } else {
         customFrame = custom.frame[p_im + ply[player_id]->frame];   /* 2649/2650: offset 2663 `add 0x3c(%edx),%esi`
                                                             * adds ply->frame onto the still-live p_im (esi,
                                                             * location-list range 2561..2666 covers this add),
@@ -311,6 +310,7 @@ void draw_frame(BITMAP *bmp)
             draw_sprite(bmp, customFrame, ox, oy);       /* 2651, draw.inl:238 */
         else
             draw_sprite_h_flip(bmp, customFrame, ox, oy);  /* 2651, draw.inl:280, offset 7917..8024 */
+        }
     }
 
 
