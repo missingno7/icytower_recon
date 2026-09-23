@@ -35,3 +35,9 @@ being looked for is one that makes the original's body need one more register th
 offsets 58..330, not a difference in this statement sequence -- which is identical.  Anyone picking
 this up should look for a value the original keeps live across that span that our source never
 computes, rather than re-testing surface rewrites of the statements that are already right.
+
+At the 2026-09-23 checkpoint, `python tools/effective_outcomes.py game-main load_character --compact`
+grouped 300 retained whole-TU probes into 15 effective outcomes. Every group still had the same
+330-byte size and first strict mismatch at offset 13. The varied TU context changes alter other
+parts of the effective output, but have not changed the initial register choice; this reinforces
+the need for a concrete local live-value or declaration hypothesis before another probe.

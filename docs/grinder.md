@@ -37,6 +37,10 @@ Continue while a probe yields a new effective output, eliminates a specific
 hypothesis, establishes a type/CFG/context fact, or reveals a missing capability.
 When multiple source forms collapse to the same output, move to declarations,
 interfaces or TU/compiler context rather than spending more cosmetic variants.
+For pass dumps, verify the diagnostic flags preserve the effective object first.
+Report the first observed divergence or convergence as a boundary between saved
+dumps; a pass named by the later dump is not necessarily the cause when snapshots
+are missing between them.
 `python tools/effective_outcomes.py game-main play --pattern 'LABEL*.json'`
 groups saved TU outcomes without debug-byte noise; compare its identities only as
 search evidence. Add `--compact` when a broad pattern covers many probes to
@@ -584,7 +588,8 @@ address (`read-only pool run` resolution); this never consults the tested operan
 `python tools/section_base_constraints.py <comparison.json> --function <name>`
 groups section relocations by the base implied by each historical operand and candidate
 addend. It can expose a placement conflict that independent unique-content resolutions
-hide. This is arithmetic for one hypothetical contiguous section placement; linker
+hide; operands outside the historical section are reported separately. This is arithmetic
+for one hypothetical contiguous section placement; linker
 pooling or distinct original owners can invalidate that model, so it grants no match or
 owner proof.
 
