@@ -67,7 +67,7 @@ def compiler_response(function, report):
         "first": first.get("offset") if isinstance(first, dict) else None,
         "differing_bytes": len(function["difference_offsets"]),
         "unequal_relocations": sum(not item.get("equal", False) for item in function["relocations"]),
-        "frame": frame,
+        "frame": f"0x{frame:x}" if frame is not None else "unknown",
         "branches": branches,
         "calls": calls,
         "relocations": len(function["relocations"]),
