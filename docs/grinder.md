@@ -23,6 +23,11 @@ changes unchanged function code. A production-equivalent `--no-prototypes`
 control was checked before the `change_profile` promotion: 62/82 exact,
 `play` 17,400 bytes, and no unchanged-body code changes. Use `--order historical` or new
 prototypes only when that context change is itself the hypothesis being tested.
+`docs/attempts/research-prototype-context/README.md` records a full-CU
+isolation study: the 16 blocks comprise 15 identical legacy-order lists and
+one later historical-order list. Tested block-count variants preserved all
+63 exact functions after `change_profile`, but changed unresolved `play` and
+tree-optimized `init_game` output; no count is an acceptance shortcut.
 The probe's `code_changed_with_unchanged_body` now compares resolved effective
 bytes, including same-CU call targets. Its separate `raw_code_changed_with_unchanged_body`
 list includes call-displacement changes caused only by moving a target; a function

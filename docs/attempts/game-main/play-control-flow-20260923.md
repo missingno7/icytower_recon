@@ -93,3 +93,13 @@ It preserved the 62 strict functions present before the separate
 and `build/tu-context/game-main/luna-supervisor-play-high-split-production-20260923/`.
 The current production body remains the unsplit source. Pass-level work should
 identify where the two source call sites combine before another local rewrite.
+
+The pass trace now identifies that point. In the production-equivalent split,
+seven `new_rand` calls survive optimized GIMPLE and RTL through `179r.dse2`.
+At `181r.csa`, the high-score arm's call disappears and both non-guest paths
+reach one shared call/hints/strcpy suffix; the destination label gains a second
+use. The full trace is
+`docs/attempts/research-supervisor-play/play-summary-rtl-common-tail-20260923.md`.
+This establishes an RTL common-tail convergence mechanism for the tested
+source. A historical CFG/liveness difference is needed to retain two sites;
+another equivalent textual duplicate is not a useful experiment.
