@@ -85,9 +85,10 @@ def literal_at(exe, va, insn, section=None):
         return {'kind': 'unknown', 'value': None}
     try: data = exe.at_va(va, min(320, available))
     except Exception: return {'kind': 'unknown', 'value': None}
-    if re.match(r'f(ld|add|sub|mul|div|com|ucom)[ls]?\s', insn) or 'movs' in insn:
-        if ('fldl' in insn or re.search(r'f\w+l\s', insn)) and len(data) >= 8: return {'kind': 'double', 'value': struct.unpack_from('<d', data, 0)[0]}
-        if ('flds' in insn or re.search(r'f\w+s\s', insn)) and len(data) >= 4: return {'kind': 'float', 'value': struct.unpack_from('<f', data, 0)[0]}
+    x87 = re.match(r'f(?:ld|add|subr?|mul|divr?|comp?)([sl])\s', insn)
+    if x87:
+        if x87.group(1) == 'l' and len(data) >= 8: return {'kind': 'double', 'value': struct.unpack_from('<d', data, 0)[0]}
+        if x87.group(1) == 's' and len(data) >= 4: return {'kind': 'float', 'value': struct.unpack_from('<f', data, 0)[0]}
     end = data.find(b'\0')
     if end == 0: return {'kind': 'empty_string', 'value': ''}
     s = data[:end] if end >= 0 else data

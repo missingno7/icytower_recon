@@ -186,7 +186,7 @@ int play(void)
                  * for the derivation of the comparison direction. The two named DWARF temps a/b hold
                  * the ratio and the scaled increment across lines 3580-3584. */
                 a = 44000.0f / vgp;                       /* 3580 */
-                if (a > 0.01f) {                          /* line 3583 */
+                if (a > 0.01) {                           /* line 3583: original fldl */
                     b = a / (musicCounter / 50.0f);       /* line 3584: the original computes the intermediate
                                                             * musicCounter/50.0 first (fidivrl -0x938, a REVERSE
                                                             * divide of the int by the ST0-resident 50.0) and then
@@ -1247,7 +1247,7 @@ int play(void)
     {
         /* hy, gotHigh, qualify and qualifyValue are declared in the enclosing DWARF block 133269,
          * which opens in REGION W4 at main.c:4650 and runs to the end of the function. */
-        hy = 480.0f;       /* 4704: panel starts off-screen at 480 and eases up toward 136.0 */
+        hy = 480.0f;       /* 4704: panel starts off-screen at 480 and eases up toward 130.0f */
         int alpha_pos;      /* letter-navigation cursor; first write is at 4821 (rank-up reset) */
         char *initials = NULL;
 
@@ -1300,7 +1300,7 @@ int play(void)
                                      * store into the rank sprite id, which is not yet set */
                 cycle_count = 0;                                                     /* 4696 */
                 ply[player_id]->dead -= 16;                                          /* 4697 */
-                hy = hy + (136.0 - hy) * 0.1;                                        /* 4699 */
+                hy = hy + (130.0f - hy) * 0.1;                                       /* 4699 */
                 update_frame();                                                      /* 4700 */
                 for (i = 0; i < 512; i++)                                            /* 4701 */
                     update_particle(&stars[i]);  /* 4701: original also walks characters[] as the loop bound */
@@ -1463,7 +1463,7 @@ int play(void)
                  * alpha_pos's (alpha_pos's own local_slot_trace has no access at 4838 at all).
                  * scrollerTargetY has no DWARF location (eliminated), consistent with the
                  * target being the constant 0 folded into this formula, the same way
-                 * hyTarget==136.0 and rankTargetY==320 are already folded into hy/rank_y. */
+                 * hyTarget==130.0f and rankTargetY==320 are already folded into hy/rank_y. */
                 scrollerY = scrollerY + (int)(-scrollerY * 0.1);  /* 4838 */
 
                 if (falling <= ply[player_id]->level * 5 && falling <= 250) {         /* 4844 */

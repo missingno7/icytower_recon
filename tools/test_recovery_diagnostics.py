@@ -28,6 +28,12 @@ class DataReferenceTests(unittest.TestCase):
         self.assertEqual(row['kind'], 'literal')
         self.assertEqual(row['literal']['kind'], 'unknown')
 
+    def test_zero_prefixed_float_is_not_an_empty_string(self):
+        row = literal_at(self.exe, 0x4d6da0, 'fsubrs 0x4d6da0')
+        self.assertEqual(row, {'kind': 'float', 'value': 130.0})
+        play_row = next(r for r in refs('game-main', 'play') if r['va'] == '4d6da0')
+        self.assertEqual(play_row['literal'], row)
+
 
 class DwarfLocalTests(unittest.TestCase):
     def test_comments_and_strings_do_not_count_as_usage(self):
