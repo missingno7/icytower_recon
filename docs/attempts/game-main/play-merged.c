@@ -1337,7 +1337,7 @@ int play(void)
                     if (cycle_count == 0)
                         continue;
                 }
-                if (ply[player_id]->shake == 0 && falling > 0)  /* 4734: approximated loop-exit predicate */
+                if (hy <= 140.0f)  /* original offset 11863 compares hy with float 140.0 */
                     break;
             }
             ply[player_id]->dead = 0;                                                 /* 4737 */
@@ -1371,10 +1371,14 @@ int play(void)
                            640, 30, -1);
             scroll_scroller(&summary_scroller, -150);                                  /* 4782 */
             new_rank_id = get_rank_id(profile);                                        /* 4787 */
-            skip_keys = 0;
+            rank_bmp_id = new_rank_id + 0x4a;
+            alpha_pos = 0;
+            rank_y = 0x244;
+            scrollerY = -20;
+            skip_keys = 20;
 
             for (;;) {
-                if (skip_keys == 20)                    /* 4792: approximated loop-exit predicate */
+                if (skip_keys == 0)                     /* 4792: cmp $0, done slot -0x938 */
                     break;
                 if (closeButtonClicked)                                                /* 4793 */
                     break;
@@ -1405,15 +1409,9 @@ int play(void)
                                            360, (int)(hy * 2.0 + 120.0), -1, -1);
                 }
                 if (new_rank_id != current_rank_id) {                                   /* 4820 */
-                    alpha_pos = 0;                                                       /* 4821 */
-                    rank_y = 0x244;
-                    skip_keys = 20;
-                    scrollerY = -20;      /* 4821: DWARF-confirmed via evidence/census/location-lists.json --
-                                            * scrollerY lives in %ebx from offset 12095 (right after this
-                                            * reset) through 13795, spanning the rectfill block (4831-4833)
-                                            * and the 4838 easing below, which were both wrongly using
-                                            * alpha_pos until this fix. */
-                    rank_bmp_id = new_rank_id + 0x4a;
+                    /* 4821: banner state is initialized before the loop, as in
+                     * original offsets 12034..12075. The rank-change branch
+                     * starts with the bitmap lookup at offset 12351. */
                     draw_sprite(swap_screen, data[rank_bmp_id].dat, 20, rank_y);         /* 4821 (inlined) */
                     /* 4822 */ textout_ex(swap_screen, data[52].dat, "rank up!",
                                20, rank_y + 0x46, -1, -1);
