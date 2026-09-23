@@ -2,7 +2,7 @@
   "scope": "Atomic translation-unit context experiment on an isolated overlay; diagnostic only, never a function proof or a production edit.",
   "target": "game-main",
   "source": "src/main.c",
-  "label": "takeover-play-rank-setup-20260923",
+  "label": "takeover-play-custom-fire-20260923",
   "edits": {
     "focus": [
       "play",
@@ -424,11 +424,18 @@
       ]
     ],
     "bodies": {
+      "draw_frame": {
+        "path": "docs/attempts/game-main/draw_frame-merged.c",
+        "identity": {
+          "size": 36087,
+          "sha256": "020e78bcfdcbb24796a4211b0ed24e9cbb09f04d74e1a7b5c5d3b49c9e22e4d9"
+        }
+      },
       "play": {
         "path": "docs/attempts/game-main/play-merged.c",
         "identity": {
-          "size": 120512,
-          "sha256": "85701554a2f7e2a731803d27631da1831449ddce216e71a17cd7f842b85b847e"
+          "size": 120828,
+          "sha256": "7676a83c3fd6331708d647d48267b701bc9801e0585326817f4a5f4a5c85d691"
         }
       }
     },
@@ -448,11 +455,15 @@
   "flags": [
     "-O2"
   ],
-  "overlay_identity": "b92ee73781d46b91673aba06ef59605b316d76eeace3ef5f2b7e00f9f66da81f",
+  "overlay_identity": "cc7b0a19576fb13bf31f052952a4d38384a5c83b816593bbd23740b99cd819f0",
+  "compiled_object_identity": {
+    "size": 211517,
+    "sha256": "8c0080f96519f2c9ab962bbf0a35163c41145ade662297c3d3dbfe76e6927c59"
+  },
   "focus": {
     "play": {
       "status": "DIFFER",
-      "candidate_size": 16699,
+      "candidate_size": 17345,
       "historical_size": 17420,
       "historical_callees": [
         "QueryPerformanceCounter",
@@ -643,7 +654,6 @@
         "acquire_screen",
         "draw_sprite",
         "hline",
-        "readkey",
         "rectfill",
         "release_screen",
         "syncProfileFromOptions",
@@ -1496,12 +1506,12 @@
     },
     {
       "function": "line_alert",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_position": 40,
-      "candidate_position": 41,
+      "candidate_position": 40,
       "historical_predecessor": "handle_player_collision_vector",
-      "candidate_predecessor": "draw_frame",
-      "predecessor_same": false,
+      "candidate_predecessor": "handle_player_collision_vector",
+      "predecessor_same": true,
       "historical_predecessor_exact": false,
       "candidate_predecessor_exact": false,
       "definition_position_historical": 1,
@@ -1517,17 +1527,17 @@
       "function": "draw_frame",
       "status": "DIFFER",
       "historical_position": 41,
-      "candidate_position": 40,
+      "candidate_position": 41,
       "historical_predecessor": "line_alert",
-      "candidate_predecessor": "handle_player_collision_vector",
-      "predecessor_same": false,
-      "historical_predecessor_exact": false,
-      "candidate_predecessor_exact": false,
+      "candidate_predecessor": "line_alert",
+      "predecessor_same": true,
+      "historical_predecessor_exact": true,
+      "candidate_predecessor_exact": true,
       "definition_position_historical": 49,
       "historical_line": 2490,
-      "candidate_size": 985,
+      "candidate_size": 8506,
       "historical_size": 8518,
-      "body_completeness": 0.116,
+      "body_completeness": 0.999,
       "peephole_scratch_finds": null,
       "cursor_dependent": false,
       "historical_prefix_exact_and_in_order": false
@@ -1538,8 +1548,8 @@
       "historical_position": 42,
       "candidate_position": 42,
       "historical_predecessor": "draw_frame",
-      "candidate_predecessor": "line_alert",
-      "predecessor_same": false,
+      "candidate_predecessor": "draw_frame",
+      "predecessor_same": true,
       "historical_predecessor_exact": false,
       "candidate_predecessor_exact": false,
       "definition_position_historical": 48,
@@ -1629,7 +1639,7 @@
     },
     {
       "function": "show_instructions",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_position": 47,
       "candidate_position": 47,
       "historical_predecessor": "fadeIn",
@@ -1639,9 +1649,9 @@
       "candidate_predecessor_exact": true,
       "definition_position_historical": 65,
       "historical_line": 5065,
-      "candidate_size": 374,
+      "candidate_size": 370,
       "historical_size": 370,
-      "body_completeness": 1.011,
+      "body_completeness": 1.0,
       "peephole_scratch_finds": null,
       "cursor_dependent": false,
       "historical_prefix_exact_and_in_order": false
@@ -1654,8 +1664,8 @@
       "historical_predecessor": "show_instructions",
       "candidate_predecessor": "show_instructions",
       "predecessor_same": true,
-      "historical_predecessor_exact": false,
-      "candidate_predecessor_exact": false,
+      "historical_predecessor_exact": true,
+      "candidate_predecessor_exact": true,
       "definition_position_historical": 64,
       "historical_line": 5027,
       "candidate_size": 654,
@@ -1781,7 +1791,7 @@
     },
     {
       "function": "stopGameMusic",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_position": 55,
       "candidate_position": 56,
       "historical_predecessor": "load_sound",
@@ -1806,8 +1816,8 @@
       "historical_predecessor": "stopGameMusic",
       "candidate_predecessor": "stopGameMusic",
       "predecessor_same": true,
-      "historical_predecessor_exact": false,
-      "candidate_predecessor_exact": false,
+      "historical_predecessor_exact": true,
+      "candidate_predecessor_exact": true,
       "definition_position_historical": 19,
       "historical_line": 876,
       "candidate_size": 144,
@@ -2047,7 +2057,7 @@
     },
     {
       "function": "open_web_browser",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_position": 69,
       "candidate_position": 69,
       "historical_predecessor": "uninit_game",
@@ -2072,8 +2082,8 @@
       "historical_predecessor": "open_web_browser",
       "candidate_predecessor": "open_web_browser",
       "predecessor_same": true,
-      "historical_predecessor_exact": false,
-      "candidate_predecessor_exact": false,
+      "historical_predecessor_exact": true,
+      "candidate_predecessor_exact": true,
       "definition_position_historical": 28,
       "historical_line": 980,
       "candidate_size": 254,
@@ -2228,9 +2238,9 @@
       "candidate_predecessor_exact": false,
       "definition_position_historical": 63,
       "historical_line": 3405,
-      "candidate_size": 16699,
+      "candidate_size": 17345,
       "historical_size": 17420,
-      "body_completeness": 0.959,
+      "body_completeness": 0.996,
       "peephole_scratch_finds": null,
       "cursor_dependent": false,
       "historical_prefix_exact_and_in_order": false
@@ -2336,8 +2346,8 @@
       "handle_player_collision_combo",
       "handle_player_collision_vector_2",
       "handle_player_collision_vector",
-      "draw_frame",
       "line_alert",
+      "draw_frame",
       "handle_player_input",
       "blit_to_screen",
       "get_string",
@@ -2381,7 +2391,7 @@
     ]
   },
   "matches_before": 58,
-  "matches_after": 57,
+  "matches_after": 61,
   "emission_order": [
     "get_version_str",
     "get_demo",
@@ -2423,8 +2433,8 @@
     "handle_player_collision_combo",
     "handle_player_collision_vector_2",
     "handle_player_collision_vector",
-    "draw_frame",
     "line_alert",
+    "draw_frame",
     "handle_player_input",
     "blit_to_screen",
     "get_string",
@@ -2552,7 +2562,7 @@
   ],
   "same_historical_predecessor": {
     "before": 31,
-    "after": 76,
+    "after": 79,
     "total": 82
   },
   "longest_exact_historical_prefix": 29,
@@ -2560,13 +2570,11 @@
   "gains": [
     "draw_progress_bar",
     "log2file",
-    "new_game"
+    "new_game",
+    "open_web_browser"
   ],
   "losses": [
-    "line_alert",
-    "run_demo",
-    "show_instructions",
-    "stopGameMusic"
+    "run_demo"
   ],
   "code_changed_with_unchanged_body": [
     "_mangled_main",
@@ -2580,7 +2588,6 @@
     "datafile_callback",
     "datafile_callback_slow",
     "do_replay_menu",
-    "draw_frame",
     "end_game",
     "force_create_profile",
     "get_string",
@@ -2606,21 +2613,20 @@
     "show_credits",
     "show_instructions",
     "start_reward",
-    "stopGameMusic",
     "syncOptionsFromProfile",
     "take_screenshot",
     "testWindowResolution",
     "uninit_game"
   ],
   "size_changes": {
-    "show_instructions": [
-      370,
-      374,
-      370
+    "draw_frame": [
+      985,
+      8506,
+      8518
     ],
     "play": [
       623,
-      16699,
+      17345,
       17420
     ]
   },
@@ -2666,14 +2672,14 @@
     "handle_player_collision_combo": "DIFFER",
     "handle_player_collision_vector_2": "DIFFER",
     "handle_player_collision_vector": "DIFFER",
-    "line_alert": "CODEGEN_SIMILAR",
+    "line_alert": "FUNCTION_MATCH",
     "draw_frame": "DIFFER",
     "handle_player_input": "DIFFER",
     "blit_to_screen": "DIFFER",
     "get_string": "DIFFER",
     "fadeOut": "FUNCTION_MATCH",
     "fadeIn": "FUNCTION_MATCH",
-    "show_instructions": "DIFFER",
+    "show_instructions": "FUNCTION_MATCH",
     "show_credits": "DIFFER",
     "rebuild_profile_list": "FUNCTION_MATCH",
     "syncOptionsFromProfile": "FUNCTION_MATCH",
@@ -2681,7 +2687,7 @@
     "get_gamepad_value": "FUNCTION_MATCH",
     "getSampleFromOggDatafile": "FUNCTION_MATCH",
     "load_sound": "FUNCTION_MATCH",
-    "stopGameMusic": "DIFFER",
+    "stopGameMusic": "FUNCTION_MATCH",
     "startGameMusic": "FUNCTION_MATCH",
     "for_each_directory": "FUNCTION_MATCH",
     "loadScrambled": "FUNCTION_MATCH",
@@ -2695,7 +2701,7 @@
     "save_config": "FUNCTION_MATCH",
     "change_profile": "DIFFER",
     "uninit_game": "FUNCTION_MATCH",
-    "open_web_browser": "DIFFER",
+    "open_web_browser": "FUNCTION_MATCH",
     "check_beta_tester": "FUNCTION_MATCH",
     "check_characters": "FUNCTION_MATCH",
     "init_game": "DIFFER",
@@ -2711,9 +2717,5 @@
   },
   "whole_text_contribution_equal": false,
   "peephole_scratch": null,
-  "report_path": "build/tu-context/game-main/takeover-play-rank-setup-20260923/comparison.json",
-  "compiled_object_identity": {
-    "size": 194005,
-    "sha256": "db80ab17e748960a54617f23f5201d9cf21e744cc654c48203ea1c37f6f60dfa"
-  }
+  "report_path": "build/tu-context/game-main/takeover-play-custom-fire-20260923/comparison.json"
 }

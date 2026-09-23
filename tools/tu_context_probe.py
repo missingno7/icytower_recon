@@ -238,11 +238,14 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     out, ref, build, r = compile_overlay(target, source, new_text, label, dumps, headers, cgraph=bool(edits.get('focus')))
     record = {'scope': 'Atomic translation-unit context experiment on an isolated overlay; diagnostic only, never a function proof or a production edit.',
               'target': target, 'source': source, 'label': label, 'edits': edits,
-              'source_identity': identity(ROOT / source), 'object_identity': build['object'], 'compiler': build['compiler'], 'flags': build['flags'],
+              'source_identity': identity(ROOT / source),
+              'object_identity': build['object'],  # verified production object used as comparison baseline
+              'compiler': build['compiler'], 'flags': build['flags'],
               'overlay_identity': hashlib.sha256(new_text.encode('cp1252')).hexdigest()}
     if r.returncode:
         errors = [l for l in r.stderr.splitlines() if 'error' in l][:8]
         record.update(compile='FAILED', errors=errors); write_json(EVIDENCE / target / (label + '.json'), record); return record
+    record['compiled_object_identity'] = identity(out / 'unit.o')
     report = compare(out / 'unit.o', ref['historical_cu'], ROOT / 'assets/icytower15.exe', OBJDUMP)
     before = {f['name']: f for f in ref['functions']}; after = {f['name']: f for f in report['functions']}
     hist = [f['name'] for f in sorted(report['functions'], key=lambda f: f['va'])]

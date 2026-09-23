@@ -1252,21 +1252,20 @@ int play(void)
         char *initials = NULL;
 
         {
-            /* DWARF block (inner): name-entry / rank-up state. alpha_pos (declared in the
-             * enclosing W5 scope, slot -0x930) is reused here as the letter-navigation
-             * cursor: local_slot_trace shows every is_right/is_left/is_fire/backspace/typed
-             * access in this loop (4885, 4886, 4891, 4895, 4896, 4899, 4913..4915, 4876,
-             * 4877) touching the same slot as the 4821 reset and the 4838 easing -- there is
-             * no separate DWARF local for it. scrollerY (declared just below, unlike
-             * alpha_pos) is NOT read from the earlier results loop -- its DWARF register
-             * range (evidence/census/location-lists.json) starts at offset 12095, inside
-             * this inner block, so it does not need the outer scope alpha_pos needs. */
+            /* DWARF and instructions separate four name-entry variables: alpha_pos
+             * at stack -0x930 indexes letters[], pos in esi indexes buf[], done at
+             * stack -0x938 controls the loop, and skip_keys in edi delays repeat
+             * input. The previous candidate conflated these states. scrollerY is
+             * not read from the earlier results loop; its DWARF register range
+             * starts at offset 12095 in this inner block. */
             int scrollerY;   /* ticker-bar Y offset; %ebx from the 4821 reset (-20) through the
                                * 4831-4838 easing -- was wrongly conflated with alpha_pos before. */
             char letters[31] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .\244";
             int len;
             char buf[8] = { '.', 0, '.', 0, '.', 0, 0, 0 };  /* 4689 */
+            int done;
             int skip_keys;
+            int pos;
             int isGuest;
             int new_rank_id;
             int rank_bmp_id;
@@ -1375,10 +1374,12 @@ int play(void)
             alpha_pos = 0;
             rank_y = 0x244;
             scrollerY = -20;
-            skip_keys = 20;
+            skip_keys = 0;
+            pos = 0;
+            done = 20;
 
             for (;;) {
-                if (skip_keys == 0)                     /* 4792: cmp $0, done slot -0x938 */
+                if (done == 0)                          /* 4792: cmp $0, done slot -0x938 */
                     break;
                 if (closeButtonClicked)                                                /* 4793 */
                     break;
@@ -1395,16 +1396,16 @@ int play(void)
                 if (isGuest && gotHigh && !is_playing_custom_game && !recording) {  /* 4811 */
                     /* 4812 */ textout_centre_ex(swap_screen, data[52].dat, "Enter your initials",
                                        320, (int)(hy * 2.0 + 80.0), -1, -1);
-                    if (alpha_pos != 0 || (step_count & 4))                             /* 4814 */
+                    if (pos != 0 || (step_count & 4))                                   /* 4814 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[0],
                                            300, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (alpha_pos != 1 || (step_count & 4))                             /* 4815 */
+                    if (pos != 1 || (step_count & 4))                                   /* 4815 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[2],
                                            320, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (alpha_pos != 2 || (step_count & 4))                             /* 4816 */
+                    if (pos != 2 || (step_count & 4))                                   /* 4816 */
                         textout_centre_ex(swap_screen, data[52].dat, &buf[4],
                                            340, (int)(hy * 2.0 + 120.0), -1, -1);
-                    if (alpha_pos >= 3)                                                 /* 4817 */
+                    if (pos == 3 && (step_count & 4))                                   /* 4817 */
                         textout_centre_ex(swap_screen, data[52].dat, "%",
                                            360, (int)(hy * 2.0 + 120.0), -1, -1);
                 }
@@ -1477,77 +1478,87 @@ int play(void)
                 }
                 blit_to_screen(swap_screen);                                              /* 4860 */
 
-                if (isGuest && gotHigh && !is_playing_custom_game && !recording) {     /* 4863 */
+                if (isGuest && gotHigh && !is_playing_custom_game && recording) {      /* 4863 */
                     poll_control(&ctrl, 0);                                                /* 4864 */
+                    if (keypressed()) {                                                     /* 4865 */
+                        if (done == 20) {                                                    /* 4865 */
+                            k = readkey() & 0xff;                                            /* 4866 */
+                            k -= 0x20;
+                            if (k == -24)                                                    /* 4867 */
+                                k = (signed char)0xa4;
+                            else if (k == 14)                                               /* 4868 */
+                                k = '.';
+                            else if (k == 1)                                                /* 4869 */
+                                k = '!';
+                            if (k != 0x20) {                                                /* 4870 */
+                                for (i = 0; i < len; i++) {                                 /* 4871 */
+                                    char typed = letters[i];
+                                    if ((signed char)typed == k) {                          /* 4872 */
+                                        buf[pos * 2] = typed;                               /* 4875 */
+                                        pos++;                                              /* 4876 */
+                                        alpha_pos = i;
+                                        skip_keys = 100;
+                                        if (pos == 3)                                      /* 4877 */
+                                            done = 19;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (skip_keys) {
+                        skip_keys--;
+                    } else {
                     if (is_right(&ctrl)) {                                                 /* 4884 */
                         alpha_pos++;                                                        /* 4885 */
-                        if (alpha_pos >= len)                                               /* 4886 */
+                        skip_keys = 8;
+                        if (alpha_pos > len)                                                /* 4886 */
                             alpha_pos = 0;
                     }
                     if (is_left(&ctrl)) {                                                  /* 4889 */
+                        skip_keys = 8;
                         alpha_pos--;                                                        /* 4891 */
                         if (alpha_pos < 0)
                             alpha_pos = len;
                     }
                     if (is_fire(&ctrl)) {                                                  /* 4894 */
                         if (letters[alpha_pos] == (char)0xa4) {                            /* 4895: blank slot confirmed */
-                            buf[alpha_pos * 2] = '.';                                       /* 4896 */
-                            if (alpha_pos > 1)                                              /* 4899 */
-                                alpha_pos--;
-                            else
-                                alpha_pos++;
-                            if (skip_keys != 20)                                            /* 4900 */
-                                skip_keys = 19;                                              /* 4902 */
-                        } else if (alpha_pos != 0) {         /* 4902: best-effort for the non-blank confirm
-                                                                 case; no distinct historical line found,
-                                                                 inherits the last real number (4902). */
-                            alpha_pos++;
-                        } else {
-                            alpha_pos--;
-                        }
-                    }
-                    if (!is_any(&ctrl) && !key[KEY_DEL] && key[KEY_BACKSPACE]) {            /* 4913 */
-                        if (alpha_pos <= 2)
-                            buf[alpha_pos * 2] = letters[alpha_pos];                        /* 4915 */
-                    }
-                } else {
-                    poll_control(&ctrl, 0);                                                 /* 4920 */
-                    if (skip_keys != 20)                                                    /* 4923 */
-                        skip_keys--;
-                    if (isGuest && gotHigh && !is_playing_custom_game) {                /* 4921 */
-                        if (keypressed()) {                                                 /* 4922 */
-                            if (skip_keys == 20) {  /* original 13862/13869 jumps to readkey when done is 20 */
-                                int matched = 0;
-                                char typed = 0;
-
-                                k = readkey() & 0xff;                                        /* 4866 */
-                                k -= 0x20;             /* lowercase ascii -> uppercase letter code */
-                                if (k == -24) {                                              /* 4867: BACKSPACE (ascii 8) */
-                                    typed = (char)0xa4;
-                                    matched = 1;
-                                } else if (k == 14) {                                        /* 4868: '.' (ascii 46) */
-                                    typed = '.';
-                                    matched = 1;
-                                } else if (k == 1) {                                         /* 4869: '!' (ascii 33) */
-                                    typed = '!';
-                                    matched = 1;
-                                } else if (k != 0x20) {                                      /* 4870: '@' (ascii 64) is dropped */
-                                    for (i = 0; i < len; i++) {                              /* 4871: scan letters[] */
-                                        if (letters[i] == (char)k) {                          /* 4872 */
-                                            typed = letters[i];
-                                            matched = 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (matched) {                                               /* 4875 */
-                                    buf[alpha_pos * 2] = typed;
-                                    alpha_pos++;                                              /* 4876 */
-                                    if (alpha_pos == 3)                                      /* 4877 */
-                                        skip_keys = 19;
-                                }
+                            if (pos != 0) {                                                 /* 4895 */
+                                buf[pos * 2] = '.';                                         /* 4896 */
+                                pos--;                                                      /* 4897 */
                             }
+                            skip_keys = 100;
+                        } else if (pos <= 1) {                                              /* 4899 */
+                            pos++;
+                            skip_keys = 100;
+                        } else {
+                            if (done == 20) {                                               /* 4900 */
+                                pos++;                                                      /* 4902 */
+                                done = 19;
+                            }
+                            skip_keys = 100;
                         }
+                    }
+                    if (key[KEY_DEL] || key[KEY_BACKSPACE]) {                               /* 4906 */
+                        buf[pos * 2] = '.';                                                 /* 4907 */
+                        skip_keys = 7;
+                        if (pos != 0)                                                       /* 4908 */
+                            pos--;
+                    } else if (skip_keys > 0) {
+                        skip_keys--;                                                        /* 4912 */
+                    }
+                    }
+                    if (!is_any(&ctrl) && !key[KEY_DEL] && !key[KEY_BACKSPACE])             /* 4913 */
+                        skip_keys = 0;
+                    if (pos <= 2)
+                        buf[pos * 2] = letters[alpha_pos];                                  /* 4915 */
+                }
+                if (done != 20)                                                             /* 4918 */
+                    done--;  /* original 12918..12930, reached from both paths */
+                poll_control(&ctrl, 0);                                                     /* 4920 */
+                if (isGuest && gotHigh && is_playing_custom_game) {                         /* 4921 */
+                    if (keypressed() || is_fire(&ctrl)) {                                   /* 4922 */
+                        if (done == 20)                                                     /* 4923 */
+                            done = 14;  /* original 12956..13003, 13732 */
                     }
                 }
                 if (key[KEY_LSHIFT] && key[KEY_TAB]) {           /* 4929: operand order swapped
