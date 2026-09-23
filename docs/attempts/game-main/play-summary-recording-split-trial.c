@@ -1099,7 +1099,7 @@ int play(void)
                     profile->no_combo_top_floor = ply[player_id]->no_combo_top_floor;  /* 4576 */
                     myDeleteFile(replay_directory, profile->best_replay_names[4]);  /* 4577 */
                     sprintf(profile->best_replay_names[4], "%s_best_no_combo_%d.itr",  /* 4578 */
-                            profile->handle, demo->no_combo_top_floor);
+                            profile->handle, ply[player_id]->no_combo_top_floor);
                     save_replay(replay_directory, profile->best_replay_names[4], demo,  /* 4579 */
                                 rec_pos + 2, 1);
                     new_personal_best[4] = 1;                                  /* 4580 */
@@ -1108,7 +1108,7 @@ int play(void)
                     profile->biggest_lost_combo = ply[player_id]->biggest_lost_combo;  /* 4584 */
                     myDeleteFile(replay_directory, profile->best_replay_names[3]);  /* 4585 */
                     sprintf(profile->best_replay_names[3], "%s_best_lost_combo_%d.itr",  /* 4586 */
-                            profile->handle, demo->biggest_lost_combo);
+                            profile->handle, ply[player_id]->biggest_lost_combo);
                     save_replay(replay_directory, profile->best_replay_names[3], demo,  /* 4587 */
                                 rec_pos + 2, 1);
                     new_personal_best[3] = 1;                                  /* 4588 */
@@ -1353,14 +1353,23 @@ int play(void)
                            "Play Classic Mode to compete in the highscore lists and "
                            "climb in rank!", 0x82);                                    /* 4746 */
                 } else {
-                    if (gotHigh)                                                         /* 4749 */
+                    if (gotHigh) {                                                       /* 4749 */
                         memcpy(summary_scroller_message, "New personal records!    ", 0x1a); /* 4753 */
-                    if (isGuest) {                                                       /* 4770 */
-                        strcpy(summary_scroller_message,
-                               "You're playing in guest mode. Start a profile and "
-                               "record your progress!");
+                        if (isGuest) {
+                            strcpy(summary_scroller_message,
+                                   "You're playing in guest mode. Start a profile and "
+                                   "record your progress!");
+                        } else {
+                            strcpy(summary_scroller_message, hints[new_rand() % 45]);
+                        }
                     } else {
-                        strcpy(summary_scroller_message, hints[new_rand() % 45]);        /* 4775 */
+                        if (isGuest) {                                                   /* 4770 */
+                            strcpy(summary_scroller_message,
+                                   "You're playing in guest mode. Start a profile and "
+                                   "record your progress!");
+                        } else {
+                            strcpy(summary_scroller_message, hints[new_rand() % 45]);    /* 4775 */
+                        }
                     }
                 }
             }
