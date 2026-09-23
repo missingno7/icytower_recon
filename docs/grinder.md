@@ -20,9 +20,13 @@ When probing the already promoted `main.c`, preserve its declaration context:
 --no-prototypes ...`. The maintained file already contains generated forward
 declarations. The probe's default `auto` setting appends another block and
 changes unchanged function code. A production-equivalent `--no-prototypes`
-control was checked against the current report: 62/82 exact, `play` 17,400
-bytes, and no unchanged-body code changes. Use `--order historical` or new
+control was checked before the `change_profile` promotion: 62/82 exact,
+`play` 17,400 bytes, and no unchanged-body code changes. Use `--order historical` or new
 prototypes only when that context change is itself the hypothesis being tested.
+The probe's `code_changed_with_unchanged_body` now compares resolved effective
+bytes, including same-CU call targets. Its separate `raw_code_changed_with_unchanged_body`
+list includes call-displacement changes caused only by moving a target; a function
+in `effective_code_comparison_unavailable` has no such normalized verdict.
 
 Continue while a probe yields a new effective output, eliminates a specific
 hypothesis, establishes a type/CFG/context fact, or reveals a missing capability.

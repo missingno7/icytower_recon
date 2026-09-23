@@ -262,7 +262,18 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     gains = sorted(n for n in before if before[n]['status'] != 'FUNCTION_MATCH' and status_after.get(n) == 'FUNCTION_MATCH')
     losses = sorted(n for n in before if before[n]['status'] == 'FUNCTION_MATCH' and status_after.get(n) != 'FUNCTION_MATCH')
     changed_bodies = set(edits.get('bodies', {}))
-    code_changed = sorted(n for n in before if n in after and n not in changed_bodies and masked_code(before[n]) != masked_code(after[n]))
+    from compiler_context import resolved_candidate
+    raw_code_changed = sorted(n for n in before if n in after and n not in changed_bodies and masked_code(before[n]) != masked_code(after[n]))
+    code_changed = []
+    code_comparison_unavailable = []
+    for n in before:
+        if n not in after or n in changed_bodies:
+            continue
+        old_code, new_code = resolved_candidate(before[n]), resolved_candidate(after[n])
+        if old_code is None or new_code is None:
+            code_comparison_unavailable.append(n)
+        elif old_code != new_code:
+            code_changed.append(n)
     sizes = {n: [before[n].get('candidate_size'), after[n].get('candidate_size'), before[n]['original_size']] for n in before if n in after and before[n].get('candidate_size') != after[n].get('candidate_size')}
     implicit_before = {d['name'] for d in declarations(ref.get('interfaces_aux', '')) if d['kind'] == 'IC'}
     implicit_after = {d['name'] for d in declarations((out / 'interfaces.aux').read_text(errors='replace')) if d['kind'] == 'IC'}
@@ -289,7 +300,10 @@ def evaluate(target, source, new_text, label, edits, dumps=True, headers=None):
     record.update(compile='OK', context_table=table, emission_model=model_check, matches_before=ref['function_matches'], matches_after=report['function_matches'],
                   emission_order=cand, historical_order=hist, same_historical_predecessor={'before': same_before, 'after': same, 'total': len(hist)},
                   longest_exact_historical_prefix=prefix, at_historical_offset=sum(1 for n in hist if after[n].get('candidate_offset') == before[n].get('candidate_offset')),
-                  gains=gains, losses=losses, code_changed_with_unchanged_body=code_changed, size_changes=sizes,
+                  gains=gains, losses=losses, code_changed_with_unchanged_body=code_changed,
+                  raw_code_changed_with_unchanged_body=raw_code_changed,
+                  effective_code_comparison_unavailable=code_comparison_unavailable,
+                  size_changes=sizes,
                   new_implicit_declarations=sorted(implicit_after - implicit_before),
                   statuses=status_after, whole_text_contribution_equal=report.get('whole_text_contribution_equal'),
                   peephole_scratch=finds, report_path=str((out / 'comparison.json').relative_to(ROOT)).replace('\\', '/'))
@@ -396,7 +410,7 @@ def main():
                   'body probe.' % existing)
     new, edits, headers = build_text(a.target, a.source, spec)
     rec = evaluate(a.target, a.source, new, a.label, edits, dumps=not a.no_dumps, headers=headers)
-    keys = ['compile', 'errors', 'matches_before', 'matches_after', 'same_historical_predecessor', 'longest_exact_historical_prefix', 'at_historical_offset', 'gains', 'losses', 'code_changed_with_unchanged_body', 'new_implicit_declarations', 'whole_text_contribution_equal']
+    keys = ['compile', 'errors', 'matches_before', 'matches_after', 'same_historical_predecessor', 'longest_exact_historical_prefix', 'at_historical_offset', 'gains', 'losses', 'code_changed_with_unchanged_body', 'raw_code_changed_with_unchanged_body', 'effective_code_comparison_unavailable', 'new_implicit_declarations', 'whole_text_contribution_equal']
     print(json.dumps({k: rec.get(k) for k in keys if k in rec}, indent=1))
     for n, fr in (rec.get('focus') or {}).items():
         print('focus', n, json.dumps({k: fr[k] for k in ('status', 'candidate_size', 'historical_size', 'historical_position', 'candidate_position')}))

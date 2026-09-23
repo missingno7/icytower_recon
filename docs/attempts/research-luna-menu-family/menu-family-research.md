@@ -53,6 +53,13 @@ Two target-body-preserving experiments tested whether preceding definitions affe
 
 Interpretation: the retained `draw_menu` body variant shifts downstream layout but did not change downstream effective code in this probe. Omitting the direct callee definition does change two effective bytes in `update_game_menu`, while making its oracle mismatch worse. The omission is an artificial callgraph perturbation, not evidence that the historical TU omitted `draw_menu`. Do not manually retune downstream bodies based on these probes.
 
+The diagnostic probe now reports resolved effective code separately from raw
+call-displacement bytes. A fresh control
+`luna-supervisor-menu-effective-normalization-20260923` confirms zero effective
+unchanged-body changes and raw changes in `update_game_menu` and `handle_menu`;
+all resolved comparisons were available. This prevents layout movement from
+being reported as a compiler-context change in future TU experiments.
+
 Artifacts:
 - `docs/attempts/compiler-context/game-menu/update_game_menu.json`, `update_game_menu.jsonl`, and `update_game_menu-rtl.json`
 - `docs/attempts/tu-context/game-menu/luna_menu_current_noproto_baseline.json` and `luna_menu_drawbody_context_v1.json`
