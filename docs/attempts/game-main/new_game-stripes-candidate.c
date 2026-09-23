@@ -46,8 +46,6 @@ int new_game(void)
         if (demo)
             destroy_replay(demo);
         demo = create_replay(64000);
-        if (!demo)
-            return 0;
         strcpy(demo->name, profile->handle);
         if (itrcheck) {
             demo->floor_shrink = options.floor_shrink;
