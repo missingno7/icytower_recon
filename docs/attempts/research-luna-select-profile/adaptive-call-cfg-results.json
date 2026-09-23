@@ -1,0 +1,64 @@
+{
+  "starting_candidate": "scoped_buffers_ui_paths",
+  "historical_evidence": {
+    "select_profile_direct_calls": "Every original call target is present in the scoped candidate except textout_ex; same-CU draw_profile_selector (2x), delete_profile, create_profile, load_profile calls are validated by direct_transfers. The create prompt line was textprintf_ex; oracle calls textout_ex. Original also has a bounded jump table at VA 0x41b009.",
+    "dwarf_lifetimes": "buff[256], new_name[32], buf[128] share DW_OP_fbreg -288 in non-overlapping lexical scopes. Candidate keeps these branch-local lifetimes.",
+    "data_and_indirect_calls": "Candidate contains the restored prompt strings/data use and indirect bitmap callbacks [eax+0x3c], [eax+0x44], [eax+0xbc]; no absent path/callback was identified."
+  },
+  "variants": [
+    {
+      "label": "textout_ex_only",
+      "candidate_bytes": 2991,
+      "historical_bytes": 3070,
+      "first_difference": 12,
+      "exact_functions": [
+        "hash2",
+        "generate_profile_checksum",
+        "get_rank_id",
+        "get_rank",
+        "set_next_rank_message",
+        "profile_data_page_advanced",
+        "profile_data_page_basic",
+        "profile_data_page_extra",
+        "save_profile",
+        "load_profile",
+        "delete_profile"
+      ],
+      "source_backed_delta": "replace textprintf_ex with correctly ordered textout_ex; no output size change"
+    },
+    {
+      "label": "switch_and_textout_ex",
+      "candidate_bytes": 2998,
+      "historical_bytes": 3070,
+      "first_difference": 12,
+      "exact_functions": [
+        "hash2",
+        "generate_profile_checksum",
+        "get_rank_id",
+        "get_rank",
+        "set_next_rank_message",
+        "profile_data_page_advanced",
+        "profile_data_page_basic",
+        "profile_data_page_extra",
+        "save_profile",
+        "load_profile",
+        "delete_profile"
+      ],
+      "source_backed_delta": "restore bounded switch dispatch and textout_ex; 7 bytes larger than scoped candidate"
+    }
+  ],
+  "exact_neighbor_invariant": [
+    "hash2",
+    "generate_profile_checksum",
+    "get_rank_id",
+    "get_rank",
+    "set_next_rank_message",
+    "profile_data_page_advanced",
+    "profile_data_page_basic",
+    "profile_data_page_extra",
+    "save_profile",
+    "load_profile",
+    "delete_profile"
+  ],
+  "overall": "The source-backed call/CFG differences are now represented in the combined overlay but do not resolve the register mismatch at +12 or remaining 72-byte gap. Further size optimization is not justified by current historical evidence."
+}
