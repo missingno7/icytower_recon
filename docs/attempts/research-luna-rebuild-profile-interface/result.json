@@ -1,0 +1,57 @@
+{
+  "task": "rebuild_profile_list interface in game-profile caller CU",
+  "status": "isolated caller declaration resolved; no code emission change",
+  "historical_signature": "int rebuild_profile_list(Tavailable_profile **profs);",
+  "current_wrong_candidate_declaration": "extern int rebuild_profile_list(char **profs); in src/profile.c at line 108",
+  "overlay_resolution": "Move declaration to after the existing late include of recovered/Tavailable_profile.h, spell it as Tavailable_profile **. The existing placement keeps profile_data_page_advanced exact.",
+  "historical_type_facts": {
+    "Tavailable_profile_size": 32,
+    "handle_offset": 0,
+    "source": "locked DWARF and generated include/recovered/Tavailable_profile.h"
+  },
+  "compiler_interface_receipt": "aux-info emits extern int rebuild_profile_list (Tavailable_profile **);",
+  "warnings": "No incompatible-pointer warning for rebuild_profile_list remains in caller compile; unrelated existing warnings remain.",
+  "full_tu": {
+    "function_count": 17,
+    "exact_count": 11,
+    "exact_functions": [
+      "delete_profile",
+      "generate_profile_checksum",
+      "get_rank",
+      "get_rank_id",
+      "hash2",
+      "load_profile",
+      "profile_data_page_advanced",
+      "profile_data_page_basic",
+      "profile_data_page_extra",
+      "save_profile",
+      "set_next_rank_message"
+    ],
+    "exact_set_equal_to_typed_late_header_baseline": true,
+    "select_profile_size": 2698,
+    "select_profile_original_size": 3070,
+    "select_profile_first_difference": {
+      "offset": 12,
+      "original_va": 4304076,
+      "candidate_byte": 161,
+      "original_byte": 139
+    },
+    "select_profile_effective_identity_unchanged": true,
+    "draw_profile_selector_size": 1250,
+    "draw_profile_selector_original_size": 1268,
+    "draw_profile_selector_effective_identity_unchanged": true,
+    "profile_data_page_advanced_exact": true,
+    "object_match": false,
+    "cu_match": false,
+    "object_relocations": 751,
+    "initialized_data_reported": true,
+    "common_allocations_reported": true
+  },
+  "artifacts": {
+    "overlay": "docs\\attempts\\research-luna-rebuild-profile-interface\\overlay\\rebuild_profile_list_typed_late_decl_v1.c",
+    "build": "docs\\attempts\\research-luna-rebuild-profile-interface\\build\\rebuild_profile_list_typed_late_decl_v1",
+    "strict_report": "docs\\attempts\\research-luna-rebuild-profile-interface\\build\\rebuild_profile_list_typed_late_decl_v1\\comparison.json",
+    "aux_info": "docs\\attempts\\research-luna-rebuild-profile-interface\\build\\rebuild_profile_list_typed_late_decl_v1\\interfaces.aux",
+    "provenance": "docs\\attempts\\research-luna-rebuild-profile-interface\\build\\rebuild_profile_list_typed_late_decl_v1\\build-provenance.json"
+  }
+}
