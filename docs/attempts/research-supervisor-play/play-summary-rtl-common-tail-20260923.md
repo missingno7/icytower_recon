@@ -10,6 +10,18 @@ The split source contains two `new_rand() % 45` hint expressions at candidate li
 
 The relevant branches both perform the same sequence on the non-guest path: `new_rand`, `hints[index]`, then `strcpy(summary_scroller_message, ...)`. The high-score arm first writes the “New personal records!” prefix, but that write is overwritten by the shared hint copy on this path. The guest paths remain separate. This is consistent with RTL tail merging, specifically observed at dump stage `181r.csa`; the evidence does not identify a more precise internal subpass name.
 
+Original source-line disassembly further distinguishes the two surviving call
+sites. At function offset 16845 (line 4775), `new_rand` is followed by a
+divide using `%esi` and falls through to the shared `strcpy` argument setup
+at 16867. At offset 16921 (line 4770), the other `new_rand` is followed by a
+divide using `%ecx` and jumps to that same setup at 16867. The retained split
+candidate has only one final call, using `%ecx`. Thus the original already
+shares the copy tail while keeping separate random/divide prefixes with
+different register choices. This does not identify the source cause; the next
+discriminating question is what live value or TU context makes `%esi` available
+on only one historical path. The original windows are reproducible with
+`python tools/function_lines.py game-main play --source-view 4740 4790`.
+
 ## Probe and artifacts
 
 - Production-equivalent TU probe: `docs/attempts/tu-context/game-main/luna-play-pass-summary-split-repro-20260923.json` (current order, `--no-prototypes`; `play` remains `DIFFER`, 17,429 bytes).

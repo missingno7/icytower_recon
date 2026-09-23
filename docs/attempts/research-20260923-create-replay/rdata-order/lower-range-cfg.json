@@ -1,0 +1,69 @@
+{
+  "scope": "Original replay_selector indirect-jump table, derived from historical COFF/PE table words and disassembly; diagnostic source reconstruction only.",
+  "dispatch": {
+    "instruction_va": "0x41d685",
+    "instruction": "jmp *0x4d7b18(,%eax,4)",
+    "key_bias": 3,
+    "max_index": "0x52",
+    "raw_key_range": [
+      3,
+      85
+    ],
+    "entries": 83,
+    "default_target": "0x41d423",
+    "default_entry_count": 72
+  },
+  "lower_range": {
+    "keys": [
+      3,
+      46
+    ],
+    "default_entry_count": 40,
+    "nondefault_entries": [
+      {
+        "key": 3,
+        "enum": "KEY_C",
+        "target": "0x41dadd",
+        "sort_method": 3,
+        "effects": [
+          "set need_to_update"
+        ]
+      },
+      {
+        "key": 6,
+        "enum": "KEY_F",
+        "target": "0x41dab8",
+        "sort_method": 4,
+        "effects": [
+          "set need_to_update"
+        ]
+      },
+      {
+        "key": 14,
+        "enum": "KEY_N",
+        "target": "0x41db27",
+        "sort_method": 1,
+        "effects": [
+          "set need_to_update"
+        ]
+      },
+      {
+        "key": 19,
+        "enum": "KEY_S",
+        "target": "0x41db02",
+        "sort_method": 2,
+        "effects": [
+          "set need_to_update"
+        ]
+      }
+    ]
+  },
+  "evidence": [
+    "Historical replay_selector disassembly: subtract 3, compare index <= 0x52, indirect jump table at 0x4d7b18.",
+    "Decoded historical jump-table target words show four nondefault values within keys 3..46 and default target 0x41d423 for all other keys in that range.",
+    "Locked third_party/allegro-4.4.1/include/allegro/keyboard.h enum maps KEY_C=3, KEY_F=6, KEY_N=14, KEY_S=19.",
+    "Isolated low-sort-keys probe generates an 83-entry / 332-byte relocated table with these source cases."
+  ],
+  "probe": "low-sort-keys-summary.json",
+  "strict_candidate": false
+}

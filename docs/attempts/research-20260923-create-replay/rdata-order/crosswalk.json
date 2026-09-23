@@ -1,0 +1,171 @@
+{
+  "scope": "isolated replay .rdata ownership crosswalk; no maintained edits",
+  "historical_replay_rdata_contribution": {
+    "section": ".rdata",
+    "va_start": "0x4d7960",
+    "evidence": "COFF file group replay.c .rdata contribution value 0x3960"
+  },
+  "selector_jump_table": {
+    "historical": {
+      "va_range": [
+        "0x4d7b18",
+        "0x4d7c64"
+      ],
+      "contribution_offset_range": [
+        "0x1b8",
+        "0x304"
+      ],
+      "bytes": 332,
+      "entry_count": 83,
+      "entries_are": "linked 32-bit .text target VAs",
+      "containing_function": "replay_selector",
+      "xref": "0x41d685: jmp *0x4d7b18(,%eax,4)",
+      "dispatch_range": "readkey>>8 minus 3, compare <= 0x52 (indices 0..82)",
+      "coff_symbols_in_range": []
+    },
+    "candidate": {
+      "object": "build/tu-context/game-replay/create-replay-warning-reachability-20260923/unit.o",
+      "section": ".rdata",
+      "offset_range": [
+        "0x1bc",
+        "0x258"
+      ],
+      "bytes": 156,
+      "entry_count": 39,
+      "entry_relocation_count": 39,
+      "entry_relocation_types": [
+        6
+      ],
+      "entry_relocation_target": ".text",
+      "containing_function": "replay_selector",
+      "xref": [
+        {
+          "text_relocation_offset": "0x1793",
+          "instruction_start": "0x1790",
+          "symbol": ".rdata",
+          "addend": "0x1bc"
+        }
+      ],
+      "dispatch_range": "readkey>>8 minus 0x2f, compare <= 0x26 (indices 0..38)",
+      "coff_symbols_in_range": []
+    },
+    "difference_bytes": 176,
+    "interpretation": "Generated compiler switch-dispatch table, not a source variable or padding. The table's function owner is established by the indirect-jump xrefs and replay_selector extent. No table variable DIE or ordinary COFF symbol exists in either span."
+  },
+  "month_pointer_initializer": {
+    "source_local": "save_replay: char *months[12]",
+    "historical_dwarf": {
+      "type": "char *[12]",
+      "location": "DW_OP_fbreg -84",
+      "address": null
+    },
+    "candidate_dwarf": {
+      "type": "char *[12]",
+      "location": "DW_OP_fbreg -84",
+      "address": null
+    },
+    "historical_coff": {
+      "name": "_C.110.9301",
+      "section": ".rdata",
+      "contribution_offset": "0x440",
+      "bytes": 48,
+      "count": 12,
+      "targets": [
+        "0x3d5b",
+        "0x3d5f",
+        "0x3d63",
+        "0x3d67",
+        "0x3d6b",
+        "0x3d6f",
+        "0x3d73",
+        "0x3d77",
+        "0x3d7b",
+        "0x3d7f",
+        "0x3d83",
+        "0x3d87"
+      ]
+    },
+    "candidate_coff": {
+      "name": "_C.112.9499",
+      "section": ".rdata",
+      "offset": "0x380",
+      "bytes": 48,
+      "count": 12,
+      "relocation_count": 12,
+      "relocation_target": ".rdata",
+      "target_offsets": [
+        "0x34f",
+        "0x353",
+        "0x357",
+        "0x35b",
+        "0x35f",
+        "0x363",
+        "0x367",
+        "0x36b",
+        "0x36f",
+        "0x373",
+        "0x377",
+        "0x37b"
+      ]
+    },
+    "target_order": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "following_header_owner": {
+      "historical": {
+        "name": "_REPLAY_HEADER",
+        "offset": "0x470"
+      },
+      "candidate": {
+        "name": "_replay_header",
+        "offset": "0x3b0"
+      }
+    },
+    "dec_to_pointer_table_zero_bytes": {
+      "historical": 21,
+      "candidate": 1,
+      "delta": 20
+    }
+  },
+  "extra_itr140_literal": {
+    "source_occurrences": [
+      "get_replay_property: memcmp(r_temp.header, \"ITR140\", 3)",
+      "load_replay: memcmp(r_temp.header, \"ITR140\", 6)"
+    ],
+    "candidate_reachability_object": {
+      "literal_offset": "0x128",
+      "length_with_nul": 7,
+      "text_relocations": [
+        {
+          "offset": "0x24d2",
+          "function": "get_replay_property"
+        },
+        {
+          "offset": "0x11dd",
+          "function": "load_replay"
+        }
+      ]
+    },
+    "historical_uses_single_owner": {
+      "owner": "_REPLAY_HEADER",
+      "va": "0x4d7dd0",
+      "references": [
+        "create_replay",
+        "load_replay at 0x41ce58",
+        "get_replay_property at 0x41e2a9"
+      ]
+    },
+    "probe": "Replaced those two explicit string operands with replay_header in isolated overlays; extra +0x128 string disappears, create_replay remains FUNCTION_MATCH and get_replay_property remains FUNCTION_MATCH. Combined probe preserves all six exact neighbors. See header-reference-summary.json and combined-summary.json."
+  }
+}
