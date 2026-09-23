@@ -12,15 +12,17 @@ initializes the active player, and loads the selected custom character. The
 literal messages and direct game API targets come from the original code and
 read-only data.
 
-The current TDM 4.4.1 `-O2` candidate is 1,135 bytes versus the original
-1,139 and remains `DIFFER`. Original offsets 67–117 clear `bg_stripe_ids[4]`
+The current production-order TDM 4.4.1 `-O2` candidate is 1,139 bytes,
+the same length as the original, and remains `DIFFER`. Original offsets
+67–117 clear `bg_stripe_ids[4]`
 through `[0]`, not the five `cmdline` fields the earlier candidate cleared.
 That correction removed the named-data mismatches and moved the first
 difference from offset 69 to 127. Original offsets 142–179 cap
 `best_floor` before dividing and write `floors.value` once after selecting
 the smaller of that cap and `start_floor`; the source now follows that shape.
 The first remaining instruction difference loads `itrcheck` into `esi`
-instead of the original `eax`, shifting the following block by one byte.
+instead of the original `eax`, shifting the following block by one byte
+in the production order.
 The earlier `if (!demo) return 0` immediately after `create_replay(64000)`
 was also removed: the original proceeds directly to copy the profile name,
 with no such check at that point.
@@ -29,6 +31,16 @@ original does at offsets 442–532, rather than carrying an invented local
 pointer. The `gameData` allocation failure path logs and then proceeds to
 the replay assignment in the original; the earlier candidate's `return 0`
 was unsupported and has been removed.
+The original also returns zero when `load_frames` fails, clears
+`jumpSequence` from `num` through `start`, writes and reads
+`is_playing_custom_game` in the replay branches, and resets the scroll
+counters only for an existing replay. These corrections are in active source.
+
+An isolated historical-order probe with the retained `draw_frame` and `play`
+candidates reports this `new_game` body as strict `FUNCTION_MATCH` with all
+1,139 bytes and independently resolved relocations and direct targets.
+That probe loses the existing `run_demo` match. Production-order `new_game`
+remains `DIFFER` at offset 127; its canonical status has not been promoted.
 The fresh whole-CU verifier retains 58/82 main functions exact with no
 regressions. `python tools/recovered_game_link.py --diagnostic` links this
 incomplete source for dependency analysis; ordinary recovered-game linking

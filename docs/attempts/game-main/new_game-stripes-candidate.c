@@ -19,9 +19,9 @@ int new_game(void)
                        profile->start_floor : floors.max;
     }
 
-    jumpSequence.start = 0;
-    jumpSequence.dist = 0;
     jumpSequence.num = 0;
+    jumpSequence.dist = 0;
+    jumpSequence.start = 0;
     gdLastJumpDiff = 0;
     if (gameData)
         destroy_game_data(gameData);
@@ -36,7 +36,9 @@ int new_game(void)
         rejump = demo->rejump;
         rec_seed = demo->random_seed;
         if (is_custom_replay(demo))
-            gdLastJumpDiff = 1;
+            is_playing_custom_game = 1;
+        scroll_count = 0;
+        scroll_delay = 100;
     } else {
         log2file(" setting up for replay recording");
         recording = 1;
@@ -44,7 +46,7 @@ int new_game(void)
             destroy_replay(demo);
         demo = create_replay(64000);
         strcpy(demo->name, profile->handle);
-        if (itrcheck) {
+        if (is_playing_custom_game) {
             demo->floor_shrink = options.floor_shrink;
             demo->floor_size = options.floor_size;
             demo->start_speed = options.start_speed;
@@ -63,8 +65,6 @@ int new_game(void)
         demo->random_seed = rec_seed;
     }
 
-    scroll_count = 0;
-    scroll_delay = 100;
     for (i = 0; i < 15; i++)
         new_personal_best[i] = 0;
     srand(rec_seed);
@@ -87,7 +87,7 @@ int new_game(void)
     init_custom(&custom, characters[curr_char].name,
                 characters[curr_char].uses_datafile);
     if (!load_frames(&custom))
-        return 1;
+        return 0;
     load_sounds(&custom);
     log2file(" cc done");
     if (got_joystick)
