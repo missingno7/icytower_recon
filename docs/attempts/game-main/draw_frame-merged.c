@@ -234,9 +234,10 @@ void draw_frame(BITMAP *bmp)
     if (ply[player_id]->frame > 3)                              /* 2599 */
         ply[player_id]->frame = 0;
 
-    /* 2605: no comparison instructions precede either historical load of custom.frame[0]
-     * (offsets 2315 and 2615 are both bare `mov`s) -- the earlier `if (custom.frame[0] == 0)
-     * p_im = 1;` guess had no instruction support and is dropped. */
+    /* 2605: no comparison precedes the custom.frame[0] loads at 2315 and 2615,
+     * so the earlier null-guard guess is dropped. Original offset 1952, 3406,
+     * and 6066 also write 1 to p_im; their source/control-flow cause is not
+     * yet represented reliably in this candidate. */
     /* 2606: original `1 - custom.frame[0]->h` fragments appear at offsets 1924,
      * 2321/2621, 3391, and 6051. The current source emits a different layout;
      * attribution of the remaining deficit to compiler duplication alone is unproved. */
