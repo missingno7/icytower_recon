@@ -954,7 +954,8 @@ int play(void)
                 }
             }
         }
-        rest(2);                                                             /* 4369 */
+        if (!itrcheck)                                                       /* 4369 */
+            rest(2);
     }
 
     /* lines 4374..4426: recording gates a small profile play-time update vs. the full
@@ -1009,6 +1010,8 @@ int play(void)
             printf("%s", xmlStr);                                             /* 4423 */
             free(xmlStr);                                                     /* 4424 */
         }
+        if (itrcheck)                                                         /* 4426 */
+            return 0;
     }
 
     /* lines 4456..4458 */
