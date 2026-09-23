@@ -1,0 +1,9 @@
+{
+  "remove_top_level": ["get_profile_dir_for_profile"],
+  "add_top_level": [{
+    "name": "get_profile_dir_for_profile",
+    "declaration": "extern int get_profile_dir_for_profile(char *buffer, size_t buflen, const char *profile);",
+    "after": "get_controls"
+  }],
+  "evidence": "Isolated spelling-only hypothesis: replace the existing profile.c unsigned int parameter declaration with the callee CU's DWARF spelling size_t. size_t layout is independently shown in game-profile interface type probe as unsigned int, 4 bytes. Declaration movement to after get_controls is a limitation of this probe; no maintained source/header changed."
+}
