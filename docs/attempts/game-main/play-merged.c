@@ -1338,8 +1338,9 @@ int play(void)
             clear_keybuf();                                                           /* 4738 */
 
             /* summary scroller message: custom/guest/personal-record tip (4742..4775). */
-            if (!recording) {
+            if (!recording)
                 summary_scroller_message[0] = 0;                                      /* 4743 */
+            else {
                 if (is_playing_custom_game) {
                     /* 4746: annotate the statement's FIRST physical line, not just the last --
                      * an unannotated opening line inherits the previous statement's historical
