@@ -1,0 +1,52 @@
+{
+  "task": "game-custom/load_character_bmp",
+  "scope": "Isolated research only; no maintained source, current state, recovery ledger, protected functions, or sibling repository was modified.",
+  "compiler": "locked TDM GCC 4.4.1; -O2; current historical TU order; production-equivalent no generated prototypes",
+  "strict_status": "DIFFER",
+  "candidate_size": 1993,
+  "historical_size": 1992,
+  "first_difference": 134,
+  "exact_functions": 9,
+  "total_functions": 10,
+  "exact_neighbors": [
+    "init_custom",
+    "destroy_custom_data",
+    "loadCustomSoundFILE",
+    "loadCustomSoundDF",
+    "clear_trailing_whitespace",
+    "get_string_data",
+    "load_sounds",
+    "custom_alert",
+    "load_frames"
+  ],
+  "probe": {
+    "label": "research-20260924-load-character-failure-layout-positive",
+    "hypothesis": "Nest the success body under if(fp) and retain the failure log/return as else, to test whether source polarity/nesting shifts the historical cold error block from candidate tail to +0x56d.",
+    "outcome": "DIFFER; 1993 bytes; same 9 exact neighbors; predecessor load_frames remains exact; no gains or losses.",
+    "candidate_object_identity": "35364b790fcc716df27500bb882aff8792fc03a90423d25b1ccc422de58ea72f",
+    "baseline_candidate_object_identity": "35364b790fcc716df27500bb882aff8792fc03a90423d25b1ccc422de58ea72f",
+    "strict_report": "build/tu-context/game-custom/research-20260924-load-character-failure-layout-positive/comparison.json",
+    "receipt": "docs/attempts/tu-context/game-custom/research-20260924-load-character-failure-layout-positive.json"
+  },
+  "historical_evidence": [
+    "Original line table maps first fopen failure log2file to offsets 1389..1413, with return/jump at 1413..1418; the first parser loop follows at 1440.. . This is the path whose entry guard first differs at +134.",
+    "Original source-line evidence maps the [datafile] parser\u2019s whitespace trim loop to offsets 1544..1641. Its loop header at +1548 is naturally 4-byte aligned.",
+    "Historical DWARF has one root-scope FILE *fp, buf[1024], ret, data[1024], filename[1024], ok, i, depth. ok/i/ret location lists span both parser phases; nested 256-byte alert buffers and the DATAFILE locals are in lexical blocks.",
+    "Historical/candidate TU order is identical. load_frames is the exact predecessor, and all nine other functions in the CU are FUNCTION_MATCH."
+  ],
+  "previously_ruled_out": [
+    "Three parser-loop exit formulations (outer ret/ok break, for-break guard, negated while condition) retained in docs/attempts/research-luna-custom-loader all remain 1993-byte DIFFER; two collapse to baseline effective loader identity.",
+    "No-align-loop/label controls did not repair the function; no-align-jumps changed the CU from 9 exact functions to 2, so it is not a candidate.",
+    "Positive-success nesting around the first fopen failure path compiled to the same candidate object identity as the retained baseline; this confirms the layout is GCC-normalized for that source change."
+  ],
+  "established_blocker": "The observed +134 branch displacement/code-layout difference is not controlled by a simple polarity/nesting rewrite; the candidate still has an extra byte and broad source/control-flow difference. Existing source loop rewrites and global alignment controls have already converged or damaged exact neighbors. Available historical evidence gives line tables and lexical scopes, but not the original source spelling/tree/branch probability state that produced this layout. Further free-form local spelling is low-information.",
+  "next_discriminating_experiment": "Only continue if a source-backed local/lifetime/lexical-scope hypothesis can be read directly from historical DWARF or a historical source extract. Otherwise obtain a source or compiler-pass trace that distinguishes original loop/block formation; compare original CFG branch targets and candidate GCC alignment decisions at the [datafile] trim loop. Preserve the nine exact neighbors and reject content/size-only arguments.",
+  "artifacts": [
+    "docs/attempts/research-20260924-load-character-failure-layout/baseline.c",
+    "docs/attempts/research-20260924-load-character-failure-layout/positive-success-else-failure.c",
+    "docs/attempts/research-20260924-load-character-failure-layout/historical.json",
+    "docs/attempts/research-20260924-load-character-failure-layout/historical-blocks.txt",
+    "docs/attempts/research-20260924-load-character-failure-layout/historical-calls-by-line.txt",
+    "docs/attempts/research-20260924-load-character-failure-layout/hypotheses.json"
+  ]
+}

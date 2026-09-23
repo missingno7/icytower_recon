@@ -44,7 +44,11 @@ are missing between them.
 `python tools/effective_outcomes.py game-main play --pattern 'LABEL*.json'`
 groups saved TU outcomes without debug-byte noise; compare its identities only as
 search evidence. Add `--compact` when a broad pattern covers many probes to
-show outcome counts without printing every label. For independently specified
+show outcome counts without printing every label.
+Use `--response --baseline CONTROL_LABEL` to show each effective outcome's
+frame allocation, branch/call counts, differing bytes/relocations, and named
+strict-function gains or losses against a control. These are compiler-response
+diagnostics; only the strict report grants a match. For independently specified
 body hypotheses, [batch_tu_probe.py](../tools/batch_tu_probe.py) compiles an
 adaptive set of isolated TU overlays and groups effective outcomes; see
 [batch-tu-probe.md](batch-tu-probe.md). `python tools/direct_call_counts.py game-main play` compares
