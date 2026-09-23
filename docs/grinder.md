@@ -581,6 +581,12 @@ fresh 25-CU verification; a literal inside an exact body is not edited through t
 Evidence is retained under `docs/attempts/pool-literals/`. The verifier also resolves a
 non-unique literal between two agreeing unique anchors when its bytes recur at the derived
 address (`read-only pool run` resolution); this never consults the tested operand.
+`python tools/section_base_constraints.py <comparison.json> --function <name>`
+groups section relocations by the base implied by each historical operand and candidate
+addend. It can expose a placement conflict that independent unique-content resolutions
+hide. This is arithmetic for one hypothetical contiguous section placement; linker
+pooling or distinct original owners can invalidate that model, so it grants no match or
+owner proof.
 
 An INTERFACE repair whose historical signature is unique may change emitted code in
 functions that are not exact, but only toward history: each changed function must reach
