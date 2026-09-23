@@ -215,6 +215,13 @@ void draw_frame(BITMAP *bmp)
             else
                 p_im = 6;
         }
+    } else {
+        if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
+            ply[player_id]->frame = 0;
+            oy = 1 - custom.frame[0]->h;
+            goto edge_sprite;
+        }
+        p_im = 1;
     }
     /* 2594: reached even when status==0 skipped the whole chain above, leaving p_im
      * unassigned on that edge -- the compiler cannot fold this test away. */
@@ -228,11 +235,15 @@ void draw_frame(BITMAP *bmp)
         }
     }
 
-    if (ply[player_id]->sx < 0.2 && ply[player_id]->sx > -0.2)  /* 2597: original skips reset outside band */
+    if (p_im != 1) {
         ply[player_id]->frame = 0;
-
-    if (ply[player_id]->frame > 3)                              /* 2599 */
-        ply[player_id]->frame = 0;
+    } else {
+        if (ply[player_id]->sx < 0.2 && ply[player_id]->sx > -0.2)
+            ply[player_id]->frame = 0;
+        if (ply[player_id]->frame > 3)
+            ply[player_id]->frame = 0;
+        p_im = 1;
+    }
 
     /* 2605: no comparison precedes the custom.frame[0] loads at 2315 and 2615,
      * so the earlier null-guard guess is dropped. */
@@ -246,6 +257,7 @@ void draw_frame(BITMAP *bmp)
      * rotate/frame draw. The earlier candidate inverted this condition and
      * drew through both paths. */
     if (!p_im) {                                         /* 2609 */
+edge_sprite:
         if (ply[player_id]->edge) {                      /* 2611 */
             customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14]; /* 2612/2615 */
             oy = (int)ply[player_id]->y + oy;           /* 2624 */
