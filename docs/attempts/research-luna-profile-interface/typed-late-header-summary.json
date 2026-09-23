@@ -1,0 +1,130 @@
+{
+  "label": "profile-selector-typed-late-header-v1",
+  "hypothesis": "Moving Tavailable_profile declaration visibility to immediately after profile_data_page_advanced permits historically typed selector interfaces/member expressions while preserving the advanced witness.",
+  "compiler": "TDM GCC 4.4.1 TDM-2",
+  "flags": [
+    "-O2",
+    "-g",
+    "-mfpmath=387",
+    "-m32 (target config)"
+  ],
+  "outcome": "BASELINE_EXACT_SET_PRESERVED_SELECTORS_DIFFER",
+  "strict_function_matches": 11,
+  "functions_total": 17,
+  "baseline_function_matches": 11,
+  "baseline_exact_set_preserved": true,
+  "exact_functions": [
+    "hash2",
+    "generate_profile_checksum",
+    "get_rank_id",
+    "get_rank",
+    "set_next_rank_message",
+    "profile_data_page_advanced",
+    "profile_data_page_basic",
+    "profile_data_page_extra",
+    "save_profile",
+    "load_profile",
+    "delete_profile"
+  ],
+  "gained_exact": [],
+  "lost_exact": [],
+  "profile_data_page_advanced": {
+    "status": "FUNCTION_MATCH",
+    "candidate_size": 332,
+    "original_size": 332,
+    "masked_equal": true,
+    "relocation_resolved_equal": true
+  },
+  "selectors": [
+    {
+      "name": "draw_profile_selector",
+      "status": "DIFFER",
+      "candidate_size": 1250,
+      "original_size": 1268,
+      "first_difference": {
+        "offset": 8,
+        "original_va": 4295900,
+        "candidate_byte": 156,
+        "original_byte": 188
+      },
+      "masked_equal": false,
+      "relocation_resolved_equal": false,
+      "candidate_offset": 960
+    },
+    {
+      "name": "select_profile",
+      "status": "DIFFER",
+      "candidate_size": 2698,
+      "original_size": 3070,
+      "first_difference": {
+        "offset": 12,
+        "original_va": 4304076,
+        "candidate_byte": 161,
+        "original_byte": 139
+      },
+      "masked_equal": false,
+      "relocation_resolved_equal": false,
+      "candidate_offset": 8828
+    }
+  ],
+  "object": {
+    "size": 47464,
+    "sha256": "97e65e8566007e1e7c48b19a36b68dd2c6299176ccb7fb9867cd6591f3516627",
+    "object_match": false,
+    "cu_match": false,
+    "whole_text_contribution_equal": false,
+    "relative_layout_equal": false,
+    "candidate_text_raw_size": 11528,
+    "original_cu_span": 12018
+  },
+  "sections": {
+    ".text": {
+      "raw_size": 11528,
+      "relocation_count": 425,
+      "sha256": "ac6c56f59aa29c0fed1eb307985908e1b0796ecbb974b195087c36f5e10cd573"
+    },
+    ".data": {
+      "raw_size": 416,
+      "relocation_count": 27,
+      "sha256": "135ca1e03aedeb13b9aedbf9d64e7c396ca118691060a7ad5972828b220c1ddb"
+    },
+    ".bss": {
+      "raw_size": 0,
+      "relocation_count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".rdata": {
+      "raw_size": 1860,
+      "relocation_count": 0,
+      "sha256": "cf24a57d328a1cf4dad6b26e8b6c3b63a4ec39c1a4fb11a0ad0d828b836b6b79"
+    }
+  },
+  "initialized_data": [
+    {
+      "section": ".data",
+      "logical_size": 392,
+      "content_equal": false,
+      "unresolved_relocations": 27
+    },
+    {
+      "section": ".rdata",
+      "logical_size": 1860,
+      "content_equal": false,
+      "unresolved_relocations": 0
+    }
+  ],
+  "relocations": {
+    "all_entries_reported": 751,
+    "unresolved_text_relocations": 120,
+    "common_allocations": 0,
+    "object_relocations_report": "build/profile-selector-typed-late-header-v1/comparison.json"
+  },
+  "artifacts": {
+    "candidate": "docs/attempts/research-luna-profile-interface/overlay/profile-typed-late-header.c",
+    "comparison": "docs/attempts/research-luna-profile-interface/build/profile-selector-typed-late-header-v1/comparison.json",
+    "build": "docs/attempts/research-luna-profile-interface/build/profile-selector-typed-late-header-v1/build.json",
+    "interfaces": "docs/attempts/research-luna-profile-interface/build/profile-selector-typed-late-header-v1/interfaces.aux",
+    "object": "docs/attempts/research-luna-profile-interface/build/profile-selector-typed-late-header-v1/unit.o"
+  },
+  "next_blocker": "Both selectors remain DIFFER. The typed declaration/member-view hypothesis is now tested in late visibility context; continue with selector-local CFG/frame/register hypotheses while retaining the late header placement. Do not use this as FUNCTION_MATCH or CU acceptance."
+}

@@ -37,3 +37,22 @@ An isolated cause test added only `#include "recovered/Tavailable_profile.h"` at
 A second control placed that same type include immediately after `profile_data_page_advanced`. That function then retained byte-identical output (same 332-byte function SHA-256 as baseline) and all 11 baseline exact functions remained exact. This isolates the effect to declaration placement/context before that function is emitted. It establishes a declaration-order dependent GCC 4.4.1 whole-TU codegen effect; it does not establish that `profile_data_page_advanced`'s source is wrong. Do not repair that witness function to compensate.
 
 Receipts: strict full-CU reports under `build/profile-current-baseline-v1`, `profile-interface-header-only-v1` plus repeat `v2`, `profile-interface-late-header-v1`, and `profile-selector-typed-interface-v3`. Full disassembly of the witness is retained as `advanced-baseline.asm`, `advanced-early-type.asm`, and `advanced-late-type.asm`. Function-slice hashes/diffs can be regenerated from those COFF objects and reports. Exact identity loss is a context effect; it is not counted as a recovered function.
+
+The coupled typed selector overlay was subsequently compiled with the
+`Tavailable_profile.h` include immediately after the exact advanced witness.
+This preserves all 11/17 baseline exact functions, including
+`profile_data_page_advanced`, with no gains or losses. Both selectors remain
+`DIFFER` (draw 1,250/1,268; select 2,698/3,070), and initialized data and
+relocations are accounted for separately. The isolated candidate is
+`overlay/profile-typed-late-header.c`; compact strict results and artifact
+paths are in `typed-late-header-summary.json`. The placement solves the
+declaration-context regression, not the selector bodies or whole CU.
+
+
+## Typed selector interfaces with late visibility
+
+`overlay/profile-typed-late-header.c` combines the typed selector signatures and `.handle` member/caller expressions with `#include "recovered/Tavailable_profile.h"` placed immediately after `profile_data_page_advanced`. Under TDM-2 `-O2 -g -mfpmath=387`, strict full-CU comparison preserves the baseline exact set: 11/17, with no gains or losses. `profile_data_page_advanced` is again `FUNCTION_MATCH`; the early-include typed overlay lost this witness through the declaration-order code-generation change recorded above. The compiler aux file confirms typed signatures for both selectors.
+
+This is a type/declaration-context result, not a recovered selector body: `draw_profile_selector` remains DIFFER (1250 vs 1268 bytes, first mismatch +8), and `select_profile` remains DIFFER (2698 vs 3070 bytes, first mismatch +12). The full report still distinguishes all CU contents: candidate object 47,464 bytes, `.text` 11,528 raw bytes, `.data` 416 bytes (392 logical, 27 relocations), empty `.bss`, `.rdata` 1,860 bytes, 751 relocations total including 120 unresolved text relocations, and no common allocations. Initialized `.data` and `.rdata` are not proven equal, and neither OBJECT_MATCH nor CU_MATCH holds.
+
+Compact receipt: `typed-late-header-summary.json`; candidate and complete report/build/object/aux artifacts are linked there. Keep late declaration visibility in future selector experiments; the early include deterministically changes `profile_data_page_advanced` despite no edit to its body.
