@@ -11,11 +11,11 @@
     "RELOCATION_OR_LITERAL_LAYOUT": 2,
     "STACK_FRAME_LAYOUT": 14,
     "REGISTER_OR_INSTRUCTION_SELECTION": 11,
-    "UNKNOWN_SUPERVISOR": 3,
+    "COMPILER_CONTEXT_DEPENDENCY": 3,
     "SAME_CU_CALL_LAYOUT": 14,
     "LITERAL_CONTENT_DIFFERENCE": 1,
-    "COMPILER_CONTEXT_DEPENDENCY": 2,
     "INSTRUCTION_ORDER": 1,
+    "UNKNOWN_SUPERVISOR": 2,
     "STATIC_DATA_LAYOUT": 1
   },
   "tasks": [
@@ -365,6 +365,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/main.c",
+      "target": "game-main",
+      "function": "handle_player_input",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 13,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "first_difference": {
+        "offset": 475,
+        "original_va": 4240831,
+        "candidate_byte": 15,
+        "original_byte": 161
+      },
+      "verification_command": "python tools/check_function.py game-main handle_player_input",
+      "begin_command": "python tools/grinder_task.py begin game-main handle_player_input",
+      "promotion_command": "python tools/promote_function.py game-main handle_player_input",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
+      "size": 728,
+      "candidate_card": "docs/current/functions/main/handle_player_input.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/replay.c",
       "target": "game-replay",
       "function": "get_replay_property",
@@ -381,31 +406,6 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, historical_size_at_most_900, cheap_difference_class",
       "size": 1147,
       "candidate_card": "docs/current/functions/replay/get_replay_property.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": []
-    },
-    {
-      "source": "src/main.c",
-      "target": "game-main",
-      "function": "handle_player_input",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": 8,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 475,
-        "original_va": 4240831,
-        "candidate_byte": 15,
-        "original_byte": 161
-      },
-      "verification_command": "python tools/check_function.py game-main handle_player_input",
-      "begin_command": "python tools/grinder_task.py begin game-main handle_player_input",
-      "promotion_command": "python tools/promote_function.py game-main handle_player_input",
-      "body_edit_allowed": true,
-      "routing_reason": "Base eligibility checks not met: known_difference_class, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
-      "size": 728,
-      "candidate_card": "docs/current/functions/main/handle_player_input.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },

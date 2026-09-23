@@ -82541,12 +82541,57 @@
       "reference_source_pattern": null,
       "frame_layout": null,
       "source_body_sha256": "82108bf48bc18508c61b09ba53198b017d29316c7a98b830bb4be314dae4c985",
-      "compiler_context": null,
+      "compiler_context": {
+        "state": "CONFIRMED_CONTEXT_DEPENDENCY",
+        "confidence": "MECHANICALLY_OBSERVED",
+        "dependencies": [
+          {
+            "omitted_function": "draw_frame",
+            "changed_offsets": [
+              21,
+              27,
+              132,
+              138,
+              170,
+              173,
+              328,
+              334,
+              469,
+              472
+            ],
+            "context_difference": {
+              "baseline_size": 728,
+              "candidate_size": 728,
+              "size_delta": 0,
+              "extent_changed": false,
+              "resolved_bytes_comparable": true,
+              "changed_byte_count": 10,
+              "first_changed_offsets": [
+                21,
+                27,
+                132,
+                138,
+                170,
+                173,
+                328,
+                334,
+                469,
+                472
+              ],
+              "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+            },
+            "target_body_unchanged": true
+          }
+        ],
+        "evidence": "docs/attempts/compiler-context/game-main/handle_player_input.json",
+        "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+        "verification_command": "python tools/compiler_probe.py game-main handle_player_input --omit-peer draw_frame"
+      },
       "workflow": {
         "state": "SOURCE_DIFFER",
-        "difference_class": "UNKNOWN_SUPERVISOR",
-        "body_edit_allowed": true,
-        "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+        "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+        "body_edit_allowed": false,
+        "reason": "Route compiler-context sensitivity to supervisor; no body or layout match is claimed."
       }
     },
     {
