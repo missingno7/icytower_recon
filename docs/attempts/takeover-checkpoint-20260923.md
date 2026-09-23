@@ -25,3 +25,7 @@ Record: `docs/attempts/tu-context/game-main/takeover-20260923.json`; object SHA-
 ## Resume commands
 
 `python tools/audit.py`; `python -m unittest discover -s tools -p test_recovery_diagnostics.py -v`; `python tools/recovered_game_link.py --diagnostic`; and the combined probe command above. Re-run `python tools/refresh_recovery.py --verify-all` after meaningful source or verifier changes so the current ledger and link receipt are fresh.
+
+## Later work in this run
+
+After committing the diagnostic corrections as `08dba07f`, the original menu rank/version strings, four rank draws, cursor selection, two fixed-point head bitmap planes, and face-reset ordering were reconstructed in a separate `main_menu_callback` body. The latest historical-order combined probe compiles it to 3,775/3,741 bytes with every original direct call edge present; the original frame allocation and initial instructions now align through offset 72, but it is still `DIFFER`, and the unit still regresses `run_demo`. See `docs/attempts/game-main/main-menu-rank-20260923.md` and the adjacent TU probe records. Production source and recovery statuses remain unchanged by this experiment.

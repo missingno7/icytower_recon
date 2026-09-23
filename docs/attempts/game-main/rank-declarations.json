@@ -1,0 +1,13 @@
+{
+  "add_top_level": [
+    {
+      "name": "get_rank",
+      "declaration": "extern char *get_rank(Tprofile *profile);",
+      "after": "get_rank_id"
+    }
+  ],
+  "includes_after": {
+    "winalleg.h": ["allegro/platform/aintwin.h"]
+  },
+  "evidence": "Original main_menu_callback calls profile.c get_rank(Tprofile_rank *) returning char * four times; the existing main.c declaration for get_rank_id(Tprofile *) is the adjacent interface. The original also writes Allegro's _win_hcursor, declared by vendored aintwin.h, after calling LoadCursorA with IDC_HAND or IDC_ARROW."
+}
