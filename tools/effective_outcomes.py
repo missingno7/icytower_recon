@@ -9,6 +9,7 @@ import argparse
 import glob
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -44,6 +45,35 @@ def effective_identity(function):
     return hashlib.sha256(payload).hexdigest()
 
 
+def compiler_response(function, report):
+    """Small, mechanical search gradient; the strict report remains authoritative."""
+    instructions = function["instructions"]
+    branches = sum(
+        item["mnemonic"].startswith("j") or item["mnemonic"].startswith("loop")
+        for item in instructions
+    )
+    calls = sum(item["mnemonic"].startswith("call") for item in instructions)
+    frame = None
+    for item in instructions[:12]:
+        m = re.fullmatch(r"sub\s+\$0x([0-9a-f]+),%esp", item["assembly"])
+        if m:
+            frame = int(m.group(1), 16)
+            break
+    first = function.get("first_difference")
+    return {
+        "exact": report["function_matches"],
+        "total": report["functions_total"],
+        "bytes": f'{function["candidate_size"]}/{function["original_size"]}',
+        "first": first.get("offset") if isinstance(first, dict) else None,
+        "differing_bytes": len(function["difference_offsets"]),
+        "unequal_relocations": sum(not item.get("equal", False) for item in function["relocations"]),
+        "frame": frame,
+        "branches": branches,
+        "calls": calls,
+        "relocations": len(function["relocations"]),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("target", help="CU target, for example game-main")
@@ -52,6 +82,10 @@ def main():
     parser.add_argument(
         "--compact", action="store_true",
         help="show only the first and latest label for each effective outcome",
+    )
+    parser.add_argument(
+        "--response", action="store_true",
+        help="include compact strict and emitted-code metrics for each outcome",
     )
     args = parser.parse_args()
 
@@ -74,7 +108,8 @@ def main():
         identity = effective_identity(function)
         groups.setdefault(identity, []).append(
             (path.stem, function["status"], function["candidate_size"],
-             function.get("first_difference"))
+             function.get("first_difference"),
+             compiler_response(function, report) if args.response else None)
         )
         count += 1
 
@@ -84,9 +119,14 @@ def main():
             labels = f"{rows[0][0]}, ... ({len(rows) - 2} others) ..., {rows[-1][0]}"
         else:
             labels = ", ".join(row[0] for row in rows)
-        status, size, first = rows[-1][1:]
+        status, size, first = rows[-1][1:4]
         first_offset = first.get("offset") if isinstance(first, dict) else None
         print(f"{identity[:16]}  n={len(rows)}  {status}  size={size}  first={first_offset}")
+        if args.response:
+            response = rows[-1][4]
+            print("  exact={exact}/{total} bytes={bytes} diff={differing_bytes} "
+                  "unequal_reloc={unequal_relocations}/{relocations} "
+                  "frame={frame} branches={branches} calls={calls}".format(**response))
         print(f"  {labels}")
 
 
