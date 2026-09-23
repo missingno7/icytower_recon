@@ -1,0 +1,9 @@
+# `new_game` source correction
+
+Original `new_game` at `0x40dc9c` makes five consecutive `movl $0` writes at offsets 67, 77, 87, 97, and 107 to `bg_stripe_ids[4]` through `[0]`, followed by `last_stripe_y` at 117. The previous active source cleared `cmdline.jumps/combos/sd/keys/tiny` at those sites, which is a wrong data-object mapping despite matching opcode shapes.
+
+The isolated `takeover-new-game-stripes-20260923` current-order probe replaced only those writes: 58/82 main functions stayed exact, no losses, and `new_game`'s first difference moved from offset 69 to 127. Production was corrected and a fresh whole-CU verification kept all 58 matches.
+
+The original then compares `profile->best_floor` to 999 *before* integer division, sets `floors.max` to 9 or the quotient, compares that value to `profile->start_floor`, and writes `floors.value` once. The earlier source divided first, capped later, and could write `floors.value` twice. The isolated `takeover-new-game-floor-value-20260923` probe compiled to 1,132/1,139 bytes with no exact-neighbor losses; original and candidate instructions at offsets 142–179 now agree in operation and register choice except for the one-byte shift from the earlier `itrcheck` load. Production was updated and the fresh all-CU gate again retained 58/82 main exact and 204 strict function matches project-wide.
+
+The first remaining difference is offset 127: `mov itrcheck,%eax` in the original versus `%esi` in the candidate. This is a register/context investigation, not proof that changing the downstream witness or adding a dummy operation is justified. The two source/probe snapshots and failed states are retained; `new_game` remains `DIFFER`.

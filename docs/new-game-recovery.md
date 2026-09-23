@@ -12,9 +12,16 @@ initializes the active player, and loads the selected custom character. The
 literal messages and direct game API targets come from the original code and
 read-only data.
 
-The TDM 4.4.1 `-O2` candidate is 1,127 bytes versus the original 1,139 and
-is classified `DIFFER`. It is linked as normal reconstructed source:
-`python tools\\recovered_game_link.py --compiler tdm-2` no longer reports
-`new_game` or its recovered `reset_player` dependency as unresolved. Further
-work must converge the source shape and code generation; no original code or
-fixed placement is used.
+The current TDM 4.4.1 `-O2` candidate is 1,132 bytes versus the original
+1,139 and remains `DIFFER`. Original offsets 67–117 clear `bg_stripe_ids[4]`
+through `[0]`, not the five `cmdline` fields the earlier candidate cleared.
+That correction removed the named-data mismatches and moved the first
+difference from offset 69 to 127. Original offsets 142–179 cap
+`best_floor` before dividing and write `floors.value` once after selecting
+the smaller of that cap and `start_floor`; the source now follows that shape.
+The first remaining instruction difference loads `itrcheck` into `esi`
+instead of the original `eax`, shifting the following block by one byte.
+The fresh whole-CU verifier retains 58/82 main functions exact with no
+regressions. `python tools/recovered_game_link.py --diagnostic` links this
+incomplete source for dependency analysis; ordinary recovered-game linking
+is gated because other active bodies are synthetic or unmatched.

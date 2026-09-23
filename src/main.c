@@ -2033,20 +2033,17 @@ int new_game(void)
     collision_type = 2;
     new_srand(rand() % 0x18ff8);
     rec_pos = 0;
-    cmdline.jumps = 0;
-    cmdline.combos = 0;
-    cmdline.sd = 0;
-    cmdline.keys = 0;
-    cmdline.tiny = 0;
+    bg_stripe_ids[4] = 0;
+    bg_stripe_ids[3] = 0;
+    bg_stripe_ids[2] = 0;
+    bg_stripe_ids[1] = 0;
+    bg_stripe_ids[0] = 0;
     last_stripe_y = 0;
 
     if (!itrcheck) {
-        floors.max = profile->best_floor / 100;
-        if (floors.max > 9)
-            floors.max = 9;
-        floors.value = floors.max;
-        if (floors.value > profile->start_floor)
-            floors.value = profile->start_floor;
+        floors.max = profile->best_floor > 999 ? 9 : profile->best_floor / 100;
+        floors.value = floors.max > profile->start_floor ?
+                       profile->start_floor : floors.max;
     }
 
     jumpSequence.start = 0;
