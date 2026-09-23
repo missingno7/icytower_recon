@@ -49,6 +49,10 @@ def main():
     parser.add_argument("target", help="CU target, for example game-main")
     parser.add_argument("function")
     parser.add_argument("--pattern", default="*.json", help="probe label glob")
+    parser.add_argument(
+        "--compact", action="store_true",
+        help="show only the first and latest label for each effective outcome",
+    )
     args = parser.parse_args()
 
     root = Path("docs/attempts/tu-context") / args.target
@@ -76,7 +80,10 @@ def main():
 
     print(f"{args.target} {args.function}: {count} probes, {len(groups)} effective outcomes")
     for identity, rows in sorted(groups.items(), key=lambda item: item[1][-1][0]):
-        labels = ", ".join(row[0] for row in rows)
+        if args.compact and len(rows) > 2:
+            labels = f"{rows[0][0]}, ... ({len(rows) - 2} others) ..., {rows[-1][0]}"
+        else:
+            labels = ", ".join(row[0] for row in rows)
         status, size, first = rows[-1][1:]
         first_offset = first.get("offset") if isinstance(first, dict) else None
         print(f"{identity[:16]}  n={len(rows)}  {status}  size={size}  first={first_offset}")

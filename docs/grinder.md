@@ -39,7 +39,11 @@ When multiple source forms collapse to the same output, move to declarations,
 interfaces or TU/compiler context rather than spending more cosmetic variants.
 `python tools/effective_outcomes.py game-main play --pattern 'LABEL*.json'`
 groups saved TU outcomes without debug-byte noise; compare its identities only as
-search evidence. `python tools/direct_call_counts.py game-main play` compares
+search evidence. Add `--compact` when a broad pattern covers many probes to
+show outcome counts without printing every label. For independently specified
+body hypotheses, [batch_tu_probe.py](../tools/batch_tu_probe.py) compiles an
+adaptive set of isolated TU overlays and groups effective outcomes; see
+[batch-tu-probe.md](batch-tu-probe.md). `python tools/direct_call_counts.py game-main play` compares
 original and compiled direct-call multiplicities, resolving COFF relocation and
 same-CU targets; equal counts are diagnostic only. Archive source, compiler output
 and negative trials, and hand off

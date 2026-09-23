@@ -1,0 +1,47 @@
+# `game-profile` viewer and rank interface research (2026-09-23)
+
+## Outcome
+
+No `view_profile` strict candidate. The current interface blockers do have a concrete canonical-type route: use historical `Tprofile *` signatures and the full generated `Tprofile` fields instead of the 140-byte `Tprofile_rank` prefix view. A complete isolated `profile.c` overlay retained the baseline exact set (11/17) and kept `get_rank_id`, `get_rank`, and `set_next_rank_message` as strict `FUNCTION_MATCH` at 75, 82, and 431 bytes. Their aux signatures are `Tprofile *` as in historical DWARF. The viewer itself remains `DIFFER`, 2160/2249 bytes, first mismatch +62.
+
+A separate body overlay added the historical Esc guard to the initial control-drain loop: `while (is_any(get_controls()) || key[KEY_ESC])`. This advances the first raw mismatch to +63, but the function remains 2168/2249 bytes and strict `DIFFER`. The normalized effective outcomes group the plain viewer variants at 2160 bytes and Esc-guard variants at 2168 bytes; no candidate was promoted.
+
+## Type and interface facts
+
+- `Tprofile` is 1360 bytes. The current `Tprofile_rank` view's referenced fields map by offset to canonical members: `score` 76 → `best_floor`; `combo` 80 → `best_combo`; `ccc` 88 → `no_combo_top_floor`; `no_combo_lost` 136 → `ccc[0]`.
+- `docs/current/type-views/view_profile_Tprofile_rank.json` is `PARTIAL_STRUCT_VIEW` because these names are not same-name canonical members. Replacing the view with `Tprofile *` and the corresponding full-record member expressions avoids treating different semantic names as a completed type alias.
+- Current `set_next_rank_message`, `get_rank_id`, and `get_rank` code already matches exactly despite the candidate-only prefix pointer declarations. The typed canonical field overlay preserves these exact bytes and proves that the pointer/type correction need not alter their code.
+- Current `view_profile` interface evidence lists `void *` declarations at `src/menu.c:31` and `src/profile.c:129,148,605`, while historical DWARF says `int view_profile(Tprofile *)`. The research overlay corrects the profile CU declarations/definition only. A complete interface repair still has to update the menu-side declaration and its `profile` object type under the affected dependency closure.
+
+## Viewer CFG finding
+
+Historical `view_profile` offsets +0x2a..+0x47 show `is_any(get_controls())`, then a `key[KEY_ESC]` load/test before returning to the poll loop. The current source only tests `is_any`. The Esc-guard overlay reproduces the extra test/control edge. Its +63 relocation resolves to candidate `_key + 59` at `0x5069c3`, while the original operand is `0x5069d3`; this is a separate 16-byte key symbol placement difference. The body still has other differences: candidate size remains 81 bytes shorter than history with the Esc guard, so this one CFG fact is not an exact candidate or layout-only proof.
+
+The prior Luna typed-selector study remains relevant context: moving `Tavailable_profile` visibility after the exact `profile_data_page_advanced` witness preserves 11/17 exact functions, but the two selectors remain DIFFER. It did not test these rank helper interfaces. The small typed-selector assembly probe showed same `-O2` code for byte-pointer and `.handle` expressions.
+
+## Probe records and failures
+
+- `profile-typed-rank-v2.c`: complete source overlay with typed rank helper/viewer signatures and canonical fields. Receipt: `docs/attempts/tu-context/game-profile/luna-profile-view-typed-rank-v2-20260923.json`; comparison: `build/tu-context/game-profile/luna-profile-view-typed-rank-v2-20260923/comparison.json`.
+- `profile-typed-rank-esc.c`: same, plus Esc guard. Receipt/comparison use label `luna-profile-view-typed-rank-esc-20260923`.
+- `view-profile-esc-guard.c`: body-only guard probe. Receipt/comparison use label `luna-profile-view-esc-guard-20260923`.
+- First generated `profile-typed-rank.c` was a failed source transformation because broad text replacement touched `Tprofile_create` members such as `no_comboTotal`; discard it. The corrected v2 scopes field substitutions to the evidenced rank helpers and compiled.
+
+All artifacts are diagnostic research. No maintained sources, generated current cards, or recovery ledger were edited, and no promotion was attempted.
+
+## Cross-CU signature closure (follow-up)
+
+The source closure for the `view_profile` boundary is `src/profile.c` (two forward declarations and the definition) plus `src/menu.c` (one external declaration and the call at line 356). The `profile` object is defined in `src/main.c` as `Tprofile *`; the menu TU only declares it as `void *`. `main.c` already gives `get_rank_id` the historical `Tprofile *` prototype at line 301, so this closure does not need a `main.c` edit. The generated `include/recovered/Tprofile.h` is already complete (1360 bytes) and was not changed.
+
+An isolated menu overlay added the existing generated header and changed the menu declarations to `extern int view_profile(Tprofile *p);` and `extern Tprofile *profile;`. Its strict report retained all 7/10 baseline `FUNCTION_MATCH` functions and all other statuses. The allocated contribution fingerprint was identical to baseline: `.text` 5744 bytes / 83 relocations, empty `.data` and `.bss`, `.rdata` 768 bytes, common `_stepIn` size 16, and all 217 allocated-section relocations unchanged. The 7 exact menu functions remain exact. This proves the caller-side canonical pointer declaration itself is emission-neutral in this CU; it does not prove CU or object equality.
+
+The existing isolated profile overlay (`profile-typed-rank-v2.c`) changed rank-helper declarations/definitions and the viewer to `Tprofile *`, canonicalized the four rank-field uses, and used the full `handle` field. Strict results remain 11/17 exact functions, with `get_rank_id`, `get_rank`, and `set_next_rank_message` exact at 75, 82, and 431 bytes; no baseline exact function was lost. Its allocated contribution fingerprint also equals the baseline fingerprint: `.data` 416 bytes with 27 relocations, empty `.bss`, `.rdata` 1860 bytes, and all 452 allocated-section relocations unchanged. `view_profile` remains DIFFER (2160/2249 bytes); `object_match` and `cu_match` are false. A follow-up changed all three viewer signatures from `void` to historical `int` on this overlay. That compiled, retained the same 11/17 exact functions and identical allocated contribution fingerprint, and left `view_profile` at 2160/2249 DIFFER. The first attempt changed only the two prototypes and failed with conflicting types at the definition; the corrected probe changes both prototypes and the definition. Thus the canonical field rewrite kept all current exact neighbors and data/relocation ownership, while it did not solve the viewer body.
+
+The minimal source-level recipe, if the interface gate is repaired, is:
+
+1. In `src/profile.c`, use the historical `int view_profile(Tprofile *)` on both forward declarations and the definition; change `get_rank_id`, `get_rank`, and `set_next_rank_message` declarations/definitions to `Tprofile *`; replace rank-view member accesses by the offset-evidenced canonical members (`best_floor`, `best_combo`, `no_combo_top_floor`, `ccc[0]`). The historical viewer return-type change compiled in isolation and preserved the strict exact set and allocated contributions. Keep the viewer's remaining pointer casts/body work separate from its interface signature.
+2. In `src/menu.c`, include `recovered/Tprofile.h`, declare `extern int view_profile(Tprofile *p);`, and declare `extern Tprofile *profile;`.
+3. No generated header change is needed. No `main.c` change is needed for the already-correct `get_rank_id(Tprofile *)` caller declaration.
+
+Current acceptance cannot admit this as one task. `docs/current/interfaces/view_profile.json` is `TYPE_EVIDENCE_INCOMPLETE`; its exact gate is that the candidate type is unavailable at `menu.c:31` and `profile.c:129,148,605`, so the interface planner returns before producing declaration edits. The isolated include proves menu type visibility is sufficient there, but the interface task's typed fallback only supports caller declarations (`typed_interface_tasks.py` explicitly rejects a definition return change), while historical `view_profile` returns `int` and its candidate definition returns `void`. In parallel, `view_profile_Tprofile_rank` is a `PARTIAL_STRUCT_VIEW` type task, rejected for `Unmapped or referenced view member: score` because the offset matches historical `Tprofile.best_floor`, not a same-named `score` member. This prevents the rank helper interfaces from being accepted as canonical `Tprofile *` while their bodies still use `Tprofile_rank` fields. The current interface/type task system therefore needs a reviewed cross-CU signature plus body/type-view repair path; the available declaration-only and strict type-view gates cannot admit the complete source closure. No maintained file or current card was changed.
+
+New isolated menu source and probe receipt: `menu-typed-view-profile.c` and `docs/attempts/tu-context/game-menu/luna-menu-typed-view-profile-20260923.json`; strict comparison: `build/tu-context/game-menu/luna-menu-typed-view-profile-20260923/comparison.json`. Profile strict comparisons are `build/tu-context/game-profile/luna-profile-view-typed-rank-v2-20260923/comparison.json` and `build/tu-context/game-profile/luna-profile-typed-rank-int-view-fixed-20260923/comparison.json`.

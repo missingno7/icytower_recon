@@ -55,7 +55,9 @@ def no_regressions(before,after,body_adaptations=None):
                         and old['workflow']['state']==new['workflow']['state']=='FUNCTION_MATCH'
                         and old['status']==new['status']=='FUNCTION_MATCH'
                         and bool(code(old)) and code(old)==code(new) and fields(old)==fields(new))
-            if not authorized: raise ValueError('Protected function body changed: '+old['name'])
+            if not authorized: raise ValueError(
+                'Protected function source-body hash changed; emitted-code equality alone does not authorize this edit: '
+                +old['name'])
 
 
 

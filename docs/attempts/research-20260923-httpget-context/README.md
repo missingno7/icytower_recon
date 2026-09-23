@@ -49,8 +49,11 @@ correction, not a recovered function body.
 
 The historical `HTTPFetchInternal` DWARF also types `dataPtr` as
 `unsigned char *`. A trial changing that caller-local declaration in the
-maintained source altered the protected exact `HTTPFetchInternal` body, and
-the strict refresh rejected it. The declaration was reverted before the
-successful refresh. Its correction needs an isolated caller/TU context
-transaction that preserves the exact function; the present historical parser
+maintained source changed the protected source-body hash, so strict refresh
+rejected it under the no-protected-body-edit gate. The declaration was
+reverted before the successful refresh. A subsequent isolated TU probe in
+`research-20260923-httpget-caller/` showed that both the current and typed
+caller versions still emit a strict `HTTPFetchInternal` function match with
+no exact-neighbor losses. The rejected edit was a source-protection boundary,
+not a demonstrated codegen regression. The present historical parser
 signature accepts the existing `char *` caller with a compiler diagnostic.
