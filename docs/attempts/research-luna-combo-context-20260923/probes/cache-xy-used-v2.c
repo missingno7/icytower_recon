@@ -1,0 +1,80 @@
+/* Partial recovery of main.c, 0x408358..0x4088c8.  Combo mode uses ordinary
+ * solid-foot correction first, then a floor-segment landing intersection. */
+void handle_player_collision_combo(int lastX, int lastY)
+{
+    Tplayer *p;
+    double cached_x, cached_y;
+    int fy1 = -12345678;
+    int fx1 = 0, fx2 = 0;
+    int ilx, ily, irx, iry;
+    int solid1, solid2, left, right;
+    int col1, col2;
+
+    p = ply[player_id];
+    cached_x = p->x;
+    cached_y = p->y;
+    col1 = makecol(255, 0, 0);
+    col2 = makecol(255, 255, 0);
+    solid1 = is_solid(&map, (int)cached_x - 11, (int)cached_y);
+    solid2 = is_solid(&map, (int)cached_x + 11, (int)cached_y);
+    any11 = solid1;
+    any12 = solid2;
+    any23 = 0;
+    any22 = 0;
+    any21 = 0;
+    if (solid1 || solid2) {
+        if (p->status == 1 || p->status == 2)
+            return;
+        if (p->status)
+            play_sound(combo_sound[0], 1, 1);
+        p->status = 0;
+        p->sy = 0;
+        if (solid1) {
+            p->y -= solid1 - 9999;
+            p->rotate = 0;
+            p->edge = solid1 == solid2 ? 0 : 1;
+            return;
+        }
+        p->y -= solid2 - 9999;
+        p->rotate = 0;
+        p->edge = 2;
+        return;
+    }
+
+    if (p->status == 2 || p->status == 0)
+        p->status = 3;
+    getFloorData(&map, (int)cached_y, &fy1, &fx1, &fx2);
+    if (fy1 == -12345678) {
+        getFloorData(&map, lastY, &fy1, &fx1, &fx2);
+        if (fy1 == -12345678) {
+            fy1 = 0;
+            fx1 = 0;
+            fx2 = 0;
+        }
+    }
+    if (debug) {
+        if (key[KEY_F2]) {
+            line(screen, fx1, fy1, fx2, fy1, col1);
+            line(screen, (int)cached_x - 11, (int)cached_y + 1, lastX - 11, lastY, col2);
+            line(screen, (int)cached_x + 11, (int)cached_y + 1, lastX + 11, lastY, col2);
+        }
+    }
+    left = line_intersect(fx1, fy1, fx2, fy1,
+        (int)cached_x - 11, (int)cached_y + 1, lastX - 11, lastY, &ilx, &ily);
+    right = line_intersect(fx1, fy1, fx2, fy1,
+        (int)cached_x + 11, (int)cached_y + 1, lastX + 11, lastY, &irx, &iry);
+    if (!left && !right) {
+        p->edge = 0;
+        return;
+    }
+    p->edge = left == right ? 0 : (left ? 1 : 2);
+    if (p->status != 2 && p->status != 3)
+        return;
+
+    play_sound(combo_sound[0], 1, 1);
+    p->status = 0;
+    p->sy = 0;
+    p->y = fy1 - 1;
+    p->x = left ? ilx + 11 : irx - 11;
+    p->rotate = 0;
+}
