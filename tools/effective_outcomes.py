@@ -87,10 +87,16 @@ def main():
         "--response", action="store_true",
         help="include compact strict and emitted-code metrics for each outcome",
     )
+    parser.add_argument(
+        "--baseline", help="probe label to compare strict function sets against (with --response)",
+    )
     args = parser.parse_args()
+    if args.baseline and not args.response:
+        parser.error("--baseline requires --response")
 
     root = Path("docs/attempts/tu-context") / args.target
     groups = {}
+    baseline_exact = None
     count = 0
     for path_text in sorted(glob.glob(str(root / args.pattern))):
         path = Path(path_text)
@@ -106,12 +112,19 @@ def main():
         if function is None:
             continue
         identity = effective_identity(function)
+        exact = {item["name"] for item in report["functions"]
+                 if item["status"] == "FUNCTION_MATCH"} if args.response else None
+        if path.stem == args.baseline:
+            baseline_exact = exact
         groups.setdefault(identity, []).append(
             (path.stem, function["status"], function["candidate_size"],
              function.get("first_difference"),
-             compiler_response(function, report) if args.response else None)
+             compiler_response(function, report) if args.response else None, exact)
         )
         count += 1
+
+    if args.baseline and baseline_exact is None:
+        parser.error("baseline label not found in selected probes: " + args.baseline)
 
     print(f"{args.target} {args.function}: {count} probes, {len(groups)} effective outcomes")
     for identity, rows in sorted(groups.items(), key=lambda item: item[1][-1][0]):
@@ -122,11 +135,24 @@ def main():
         status, size, first = rows[-1][1:4]
         first_offset = first.get("offset") if isinstance(first, dict) else None
         print(f"{identity[:16]}  n={len(rows)}  {status}  size={size}  first={first_offset}")
+        statuses = sorted({row[1] for row in rows})
+        if len(statuses) > 1:
+            print("  strict_statuses=" + ",".join(statuses))
         if args.response:
             response = rows[-1][4]
             print("  exact={exact}/{total} bytes={bytes} diff={differing_bytes} "
                   "unequal_reloc={unequal_relocations}/{relocations} "
                   "frame={frame} branches={branches} calls={calls}".format(**response))
+            exact_sets = {frozenset(row[5]) for row in rows}
+            if len(exact_sets) > 1:
+                print(f"  exact_function_sets={len(exact_sets)} within this target-output group")
+            if baseline_exact is not None:
+                for row in rows if len(exact_sets) > 1 else rows[-1:]:
+                    gained = sorted(row[5] - baseline_exact)
+                    lost = sorted(baseline_exact - row[5])
+                    label = row[0] + " " if len(exact_sets) > 1 else ""
+                    print(f"  {label}vs {args.baseline}: gained={','.join(gained) or '-'} "
+                          f"lost={','.join(lost) or '-'}")
         print(f"  {labels}")
 
 
