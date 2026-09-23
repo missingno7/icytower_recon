@@ -1631,14 +1631,15 @@ int play(void)
 
         play_again = 0;                                                                        /* 5002 */
         if (recording) {                                                                        /* 5002 */
-            int wasDebug = debug;  /* original checks debug before do_replay_menu */
-            if (!wasDebug) {                                                                    /* 5002 */
+            if (debug) {                                                                        /* 5002 */
+                play_sound(speaker[2], 0, 0);                 /* 5011 */
+            } else {
                 in_replay_menu = 1;                                                              /* 5003 */
                 play_again = do_replay_menu();                                                   /* 5004 */
                 in_replay_menu = 0;                                                              /* 5005 */
+                if (recording)                                                                   /* 5011 */
+                    play_sound(speaker[2], 0, 0);
             }
-            if (wasDebug || recording)                                                           /* 5011 */
-                play_sound(speaker[2], 0, 0);
             stopGameMusic();                                                                     /* 5013 */
             if (gameMusicVoiceID >= 0)                                                            /* 5014 */
                 voice_stop(gameMusicVoiceID);                                                     /* 5015 */
