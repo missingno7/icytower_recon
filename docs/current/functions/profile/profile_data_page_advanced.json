@@ -541,6 +541,42 @@
         "compiler_scope_matches": true,
         "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
       }
+    },
+    {
+      "id": "whole-tu-declaration-context",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "symptom": "Adding, removing or relocating a type declaration changes emitted code in an unchanged function of the same translation unit.",
+      "known_source_cause": "Declaration visibility or multiplicity changes GCC 4.4.1 compilation state. The precise internal UID or pass cause must be established per case.",
+      "known_fix_pattern": "Compare full-TU overlays with the locked compiler, preserve the exact witness body, and inspect effective code after resolving same-CU call targets. Seek historical declaration evidence before accepting a context edit.",
+      "compiler_scope": {
+        "compiler": "TDM GCC 4.4.1 tdm-2, i386, -O2",
+        "acceptance": "Diagnostic context observation only; strict function, data, relocation and CU gates remain separate.",
+        "compiler_ids": [
+          "tdm-2"
+        ],
+        "required_flags": [
+          "-O2"
+        ]
+      },
+      "example_functions": [
+        "profile_data_page_advanced",
+        "init_game",
+        "replay_selector"
+      ],
+      "evidence": [
+        "docs/attempts/research-luna-profile-interface/README.md",
+        "docs/attempts/research-prototype-context/README.md",
+        "docs/attempts/research-luna-replay-interface/README.md"
+      ],
+      "confidence": "MECHANICALLY_OBSERVED_CONTEXT_ONLY",
+      "applicability": {
+        "basis": "HISTORICAL_EXAMPLE_ONLY",
+        "observed_features": [],
+        "evidence_field": null,
+        "priority_bonus_eligible": false,
+        "compiler_scope_matches": true,
+        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
+      }
     }
   ],
   "difficulty": "SUPERVISOR",

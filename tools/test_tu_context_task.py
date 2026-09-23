@@ -21,7 +21,7 @@ class PlanConstraints(unittest.TestCase):
         old = {i['name']: i for i in islands(self.text)}; cur = {i['name']: i for i in islands(new)}
         self.assertEqual(set(old), set(cur))
         for n in old: self.assertEqual(island_key(old[n]), island_key(cur[n]), n)
-        self.assertNotEqual([i['name'] for i in islands(self.text)], [i['name'] for i in islands(new)])
+        self.assertEqual([i['name'] for i in islands(self.text)], [i['name'] for i in islands(new)])
         self.assertEqual(headers, {}); self.assertEqual(edits['bodies'], {})
 
     def test_retained_body_replaces_only_its_definition(self):
@@ -59,14 +59,20 @@ class GeneratedCards(unittest.TestCase):
     def test_interleaved_unit_becomes_tu_context_card_gated_by_retained_probe(self):
         from source_order import plan_order
         ledger = read_json(ROOT / 'src/recovery.json')
-        unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == SOURCE)
+        unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == 'src/fld_adspot.c')
         card = plan_order(unit, ledger)
         self.assertEqual(card['task_kind'], 'TU_CONTEXT'); self.assertFalse(card['body_edit_allowed'])
-        self.assertIn('tu_context_task.py promote order_main', card['promotion_command'])
+        self.assertIn('tu_context_task.py promote order_fld_adspot', card['promotion_command'])
         if card.get('probe_summary'):
             losses = card['probe_summary']['losses']
             self.assertEqual(card['difficulty'] == 'CHEAP', not losses and not card['probe_summary']['new_implicit_declarations'])
             if losses: self.assertIn(losses[0], card['reason'])
+
+    def test_promoted_main_order_is_not_queued(self):
+        from source_order import plan_order
+        ledger = read_json(ROOT / 'src/recovery.json')
+        unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == SOURCE)
+        self.assertEqual(plan_order(unit, ledger)['status'], 'DEFINITION_ORDER_AGREES')
 
     def test_agreeing_unit_is_not_queued(self):
         from source_order import plan_order

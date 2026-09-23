@@ -12928,12 +12928,41 @@
       "reference_source_pattern": null,
       "frame_layout": null,
       "source_body_sha256": "9404056900fb2de60266dc528e3faef33031ea8604f737732dbda2b4353d393b",
-      "compiler_context": null,
+      "compiler_context": {
+        "state": "CONFIRMED_CONTEXT_DEPENDENCY",
+        "confidence": "MECHANICALLY_OBSERVED",
+        "dependencies": [
+          {
+            "omitted_function": "draw_menu",
+            "changed_offsets": [
+              97,
+              100
+            ],
+            "context_difference": {
+              "baseline_size": 582,
+              "candidate_size": 582,
+              "size_delta": 0,
+              "extent_changed": false,
+              "resolved_bytes_comparable": true,
+              "changed_byte_count": 2,
+              "first_changed_offsets": [
+                97,
+                100
+              ],
+              "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+            },
+            "target_body_unchanged": true
+          }
+        ],
+        "evidence": "docs/attempts/compiler-context/game-menu/update_game_menu.json",
+        "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+        "verification_command": "python tools/compiler_probe.py game-menu update_game_menu --omit-peer draw_menu"
+      },
       "workflow": {
         "state": "SOURCE_DIFFER",
-        "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-        "body_edit_allowed": true,
-        "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality."
+        "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+        "body_edit_allowed": false,
+        "reason": "Route compiler-context sensitivity to supervisor; no body or layout match is claimed."
       }
     },
     {
@@ -21076,8 +21105,8 @@
       "sha256": "f35d64142021fb592af10e31bcfd671785de06d8038a5fd75a27e114cd263795"
     },
     "docs/codegen-rules.json": {
-      "size": 21459,
-      "sha256": "b7a118f853e5c29f290b3535886686538b418711a352b5927a6593eb3dbf6f6e"
+      "size": 22772,
+      "sha256": "f1affdb4e25a51f106f719abd85de67f21bf1f6870a367b00df9efc0450c498f"
     }
   },
   "schema": 4,

@@ -7,16 +7,16 @@
   },
   "difference_classes": {
     "EXACT": 195,
-    "SOURCE_CONTROL_FLOW_SHAPE": 10,
+    "SOURCE_CONTROL_FLOW_SHAPE": 9,
     "RELOCATION_OR_LITERAL_LAYOUT": 2,
     "STACK_FRAME_LAYOUT": 14,
     "REGISTER_OR_INSTRUCTION_SELECTION": 11,
     "UNKNOWN_SUPERVISOR": 3,
     "SAME_CU_CALL_LAYOUT": 14,
     "LITERAL_CONTENT_DIFFERENCE": 1,
+    "COMPILER_CONTEXT_DEPENDENCY": 2,
     "INSTRUCTION_ORDER": 1,
-    "STATIC_DATA_LAYOUT": 1,
-    "COMPILER_CONTEXT_DEPENDENCY": 1
+    "STATIC_DATA_LAYOUT": 1
   },
   "tasks": [
     {
@@ -291,6 +291,31 @@
       "routing_reason": "Base eligibility checks not met: body_edit_allowed, cheap_difference_class",
       "size": 254,
       "candidate_card": "docs/current/functions/replay/create_replay.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/menu.c",
+      "target": "game-menu",
+      "function": "update_game_menu",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": 17,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "first_difference": {
+        "offset": 103,
+        "original_va": 4291395,
+        "candidate_byte": 57,
+        "original_byte": 177
+      },
+      "verification_command": "python tools/check_function.py game-menu update_game_menu",
+      "begin_command": "python tools/grinder_task.py begin game-menu update_game_menu",
+      "promotion_command": "python tools/promote_function.py game-menu update_game_menu",
+      "body_edit_allowed": false,
+      "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
+      "size": 583,
+      "candidate_card": "docs/current/functions/menu/update_game_menu.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -707,18 +732,12 @@
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/update_game_menu.json",
       "size": 0,
-      "prerequisite_for_count": 2,
+      "prerequisite_for_count": 1,
       "prerequisite_for": [
         {
           "source": "src/menu.c",
           "function": "handle_menu",
           "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/menu.c",
-          "function": "update_game_menu",
-          "candidate_card": "docs/current/functions/menu/update_game_menu.json",
           "planned_in_caller_cu": true
         }
       ],
@@ -1457,40 +1476,6 @@
       "prerequisite_for": [],
       "omitted_dependents": 0,
       "dependency_priority_bonus": 0
-    },
-    {
-      "source": "src/menu.c",
-      "target": "game-menu",
-      "function": "update_game_menu",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -30,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "first_difference": {
-        "offset": 103,
-        "original_va": 4291395,
-        "candidate_byte": 57,
-        "original_byte": 177
-      },
-      "verification_command": "python tools/check_function.py game-menu update_game_menu",
-      "begin_command": "python tools/grinder_task.py begin game-menu update_game_menu",
-      "promotion_command": "python tools/promote_function.py game-menu update_game_menu",
-      "body_edit_allowed": true,
-      "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
-      "size": 583,
-      "candidate_card": "docs/current/functions/menu/update_game_menu.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "update_game_menu",
-          "candidate_card": "docs/current/interfaces/update_game_menu.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
     },
     {
       "source": "src/menu.c",

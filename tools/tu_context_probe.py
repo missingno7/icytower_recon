@@ -38,7 +38,7 @@ def islands(text):
     for s in spans:
         sig = re.sub(r'\s+', ' ', text[s['start']:s['body_start']]).strip()
         out.append({'name': s['name'], 'start': s['cstart'], 'def_start': s['start'], 'end': s['end'], 'signature': sig, 'text': text[s['cstart']:s['end']]})
-    m = re.search(r'(?m)^[ \t]*END_OF_MAIN\(\)[ \t]*;?[ \t]*$', clean)
+    m = re.search(r'(?m)^[ \t]*END_OF_MAIN\(\)[ \t]*;?[ \t]*\r?$', clean)
     if m:
         out.append({'name': 'WinMain', 'start': m.start(), 'def_start': m.start(), 'end': m.end(), 'signature': None, 'text': text[m.start():m.end()], 'macro': True})
     out.sort(key=lambda i: i['start'])

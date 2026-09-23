@@ -57,32 +57,6 @@
     },
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/update_game_menu.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/update_game_menu.json",
-      "repair_state": "INTERFACE_REPAIR",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/update_game_menu.json",
-          "source": "src/menu.c",
-          "function": "handle_menu",
-          "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/update_game_menu.json",
-          "source": "src/menu.c",
-          "function": "update_game_menu",
-          "candidate_card": "docs/current/functions/menu/update_game_menu.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/view_profile.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 1,
@@ -196,6 +170,25 @@
           "source": "src/profile.c",
           "function": "view_profile",
           "candidate_card": "docs/current/functions/profile/view_profile.json",
+          "planned_in_caller_cu": true
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
+    },
+    {
+      "kind": "SHARED_INTERFACE_PREREQUISITE",
+      "key": "docs/current/interfaces/update_game_menu.json",
+      "affected_function_count": 1,
+      "planned_in_caller_count": 1,
+      "repair_card": "docs/current/interfaces/update_game_menu.json",
+      "repair_state": "INTERFACE_REPAIR",
+      "examples": [
+        {
+          "prerequisite": "docs/current/interfaces/update_game_menu.json",
+          "source": "src/menu.c",
+          "function": "handle_menu",
+          "candidate_card": "docs/current/functions/menu/handle_menu.json",
           "planned_in_caller_cu": true
         }
       ],
@@ -529,6 +522,25 @@
           "size": 608,
           "body_edit_allowed": true,
           "routing_reason": "Recorded supervisor block: Body already at the historical 608-byte size; sole remaining mismatch is REGISTER_OR_INSTRUCTION_SELECTION at offset 297 (0x416905): candidate loads get_demo()->floor_shrink into %edi where the original uses %esi (mov 0x8c(%eax),%esi/edi then test/je). Source already matches docs/map-experiment.md's prior fixes (unconditional rand() retained in width, float-limit compared before int conversion, lexical int max_w restored to its DWARF-scoped inner block, default-and-refine width-5/4/3-2 ladder order). docs/attempts/game-map/add_floor.jsonl shows 9 prior FAST attempts landing on this identical offset/byte pair, and a -fno-reorder-blocks compiler-flag probe was already tried and rejected (flags are disallowed anyway). No remaining DWARF-evidenced local-declaration or expression-order change was found in this session that plausibly retargets GCC's register allocator for this single flag load without inventing unevidenced locals or reordering evidenced statements; routing to supervisor rather than repeating known-negative experiments."
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-menu:COMPILER_CONTEXT_DEPENDENCY",
+      "target": "game-menu",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "affected_function_count": 1,
+      "examples": [
+        {
+          "source": "src/menu.c",
+          "function": "update_game_menu",
+          "candidate_card": "docs/current/functions/menu/update_game_menu.json",
+          "size": 583,
+          "body_edit_allowed": false,
+          "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class"
         }
       ],
       "omitted_examples": 0,

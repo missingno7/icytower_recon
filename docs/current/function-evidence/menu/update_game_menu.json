@@ -8,9 +8,9 @@
   "historical_size": 583,
   "status": "DIFFER",
   "state": "SOURCE_DIFFER",
-  "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-  "body_edit_allowed": true,
-  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
+  "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+  "body_edit_allowed": false,
+  "reason": "Route compiler-context sensitivity to supervisor; no body or layout match is claimed.",
   "prototype": "int update_game_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl, int x, int y, void **data);",
   "return_type": "int",
   "parameters": [
@@ -1868,14 +1868,14 @@
   },
   "known_rules": [
     {
-      "id": "branch-order",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "symptom": "Branch ordering differs",
-      "known_source_cause": "Independent if statements versus else-if changes reachable blocks",
-      "known_fix_pattern": "Preserve DWARF scopes and independent guards; compare one change at a time",
+      "id": "persistent-peephole-scratch",
+      "difference_class": "COMPILER_CONTEXT_DEPENDENCY",
+      "symptom": "Equal-sized function differs in scratch-register pushes or call argument setup, and an isolated peer-definition change alters its bytes without changing its body.",
+      "known_source_cause": "GCC 4.4.1 peep2_find_free_register retains search_ofs across successful scratch searches; earlier compiled functions can affect later scratch selection. Not every register mismatch is this cause.",
+      "known_fix_pattern": "Keep production flags and protected bodies. Supervisor runs compiler_probe.py and compares focused RTL passes. Resolve historical CU context once; do not keep rewriting the target or mask register bytes.",
       "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
+        "compiler": "TDM GCC 4.4.1, i386, -O2",
+        "acceptance": "Diagnostic only. Strict original bytes and independently resolved operands still determine FUNCTION_MATCH.",
         "compiler_ids": [
           "tdm-2"
         ],
@@ -1884,53 +1884,18 @@
         ]
       },
       "example_functions": [
-        "update_star_field"
+        "HTTPFetchInternal",
+        "draw_scroller"
       ],
-      "evidence": "docs/stars-experiment.md",
-      "confidence": "OBSERVED",
+      "evidence": "docs/compiler-context-evidence.md",
+      "confidence": "MECHANICALLY_OBSERVED",
       "required_features": [
-        "has_multiple_guards"
+        "has_compiler_context"
       ],
       "applicability": {
         "basis": "CURRENT_SYMPTOM_EVIDENCE",
         "observed_features": [
-          "has_multiple_guards"
-        ],
-        "evidence_field": null,
-        "priority_bonus_eligible": true,
-        "compiler_scope_matches": true,
-        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
-      }
-    },
-    {
-      "id": "loop-shape",
-      "difference_class": "SOURCE_CONTROL_FLOW_SHAPE",
-      "symptom": "Backedge or induction sequence differs",
-      "known_source_cause": "Increment placement changes induction folding",
-      "known_fix_pattern": "Match original load/increment order; record unsuccessful alternatives",
-      "compiler_scope": {
-        "compiler": "TDM GCC 4.4.1, i386, -O2, x87",
-        "acceptance": "Hypothesis only; apply only when local evidence agrees and strict verification passes.",
-        "compiler_ids": [
-          "tdm-2"
-        ],
-        "required_flags": [
-          "-O2"
-        ]
-      },
-      "example_functions": [
-        "generate_profile_checksum",
-        "draw_buffer"
-      ],
-      "evidence": "docs/profile-experiment.md",
-      "confidence": "OBSERVED",
-      "required_features": [
-        "has_loop"
-      ],
-      "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
-        "observed_features": [
-          "has_loop"
+          "has_compiler_context"
         ],
         "evidence_field": null,
         "priority_bonus_eligible": true,
@@ -1940,10 +1905,39 @@
     }
   ],
   "difficulty": "SUPERVISOR",
-  "priority": -30,
+  "priority": 17,
   "compound_trials": null,
   "predicate_trials": null,
-  "compiler_context": null,
+  "compiler_context": {
+    "state": "CONFIRMED_CONTEXT_DEPENDENCY",
+    "confidence": "MECHANICALLY_OBSERVED",
+    "dependencies": [
+      {
+        "omitted_function": "draw_menu",
+        "changed_offsets": [
+          97,
+          100
+        ],
+        "context_difference": {
+          "baseline_size": 582,
+          "candidate_size": 582,
+          "size_delta": 0,
+          "extent_changed": false,
+          "resolved_bytes_comparable": true,
+          "changed_byte_count": 2,
+          "first_changed_offsets": [
+            97,
+            100
+          ],
+          "limit": "Candidate trial observation, not production body or layout equality. An extent change alone does not establish its source, padding or branch-layout cause."
+        },
+        "target_body_unchanged": true
+      }
+    ],
+    "evidence": "docs/attempts/compiler-context/game-menu/update_game_menu.json",
+    "reason": "An isolated peer-definition change altered target machine bytes without editing the target body. This is not an original byte-match proof.",
+    "verification_command": "python tools/compiler_probe.py game-menu update_game_menu --omit-peer draw_menu"
+  },
   "compiler_trials": {
     "state": "CURRENT_BASELINE",
     "evidence": "docs/attempts/compiler-context/game-menu/update_game_menu.json",
@@ -2028,10 +2022,10 @@
     "rtl_evidence": "docs/attempts/compiler-context/game-menu/update_game_menu-rtl.json",
     "limit": "Newest result per experiment name, latest record first; archived trials retain their own baseline freshness and line number. No-change results apply only to the recorded input snapshot. Diagnostic memory grants no original-match or edit permission."
   },
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class",
   "routing_evidence": {
     "base_checks": {
-      "body_edit_allowed": true,
+      "body_edit_allowed": false,
       "known_difference_class": true,
       "source_body_located": true,
       "calls_resolved": true,
@@ -2039,7 +2033,7 @@
       "same_size_and_at_most_12_differing_bytes": false,
       "no_indirect_flow": true,
       "historical_size_at_most_900": true,
-      "cheap_difference_class": true
+      "cheap_difference_class": false
     },
     "observed": {
       "historical_size": 583,
