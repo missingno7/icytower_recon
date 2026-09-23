@@ -1,0 +1,81 @@
+{
+  "scope": "Historical PE/CU and isolated candidate replay .rdata neighborhood; diagnostic only.",
+  "historical": {
+    "contribution_va": "0x4d7960",
+    "table_start_offset": "0x1b8",
+    "table_end_exclusive_offset": "0x304",
+    "table_entries": 83,
+    "table_first_target": "0x41dadd",
+    "pretable_owner": {
+      "string": "WARNING: It will be gone forever.",
+      "start_offset": "0x194",
+      "terminator_offset": "0x1b5",
+      "alignment_byte_offsets": [
+        "0x1b6",
+        "0x1b7"
+      ]
+    },
+    "literal_offsets": {
+      "itr": "0x154",
+      "folder_title": "0x158",
+      "empty_string": "0x17a",
+      "delete_question": "0x17b",
+      "warning": "0x194"
+    },
+    "evidence": [
+      "PE bytes at 0x4d7b18 start 83-word table.",
+      "Original disassembly for KEY_F1 table target 0x41db4c reaches file_select_ex at 0x41dbde; refs are 0x4d7ab4, 0x4d7ab8, and 0x4d7ada.",
+      "Original key entries 48..51 repeat default target.",
+      "Original line-table mapping places chooser lines 795-796 before delete-warning lines 858-859."
+    ]
+  },
+  "owner_aligned_candidate": {
+    "table_start_offset": "0x1b4",
+    "table_end_exclusive_offset": "0x300",
+    "table_entries": 83,
+    "header_symbol_offset": "0x470",
+    "original_source_title": "Select a new folder and press OK",
+    "historical_title": "Select a new folder and press OK.",
+    "initial_pool_order": [
+      "warning",
+      "delete_question",
+      "itr",
+      "folder_title"
+    ],
+    "text_reloc_to_table": {
+      "text_offset": "0x1793",
+      "rdata_addend": "0x1b4"
+    }
+  },
+  "source_owner_probe": {
+    "summary": "source-owner-summary.json",
+    "status": {
+      "create_replay": "FUNCTION_MATCH",
+      "get_replay_property": "DIFFER",
+      "replay_selector": "DIFFER"
+    },
+    "header_symbol_offset": "0x470",
+    "table_start_offset": "0x1b4",
+    "pool_offsets": {
+      "itr": "0x154",
+      "folder_title": "0x158",
+      "empty_string_ref": "0x17a",
+      "warning": "0x17c",
+      "delete_question": "0x19e"
+    },
+    "goal_met": false
+  },
+  "period_probe": {
+    "summary": "folder-title-period-summary.json",
+    "status": {
+      "create_replay": "FUNCTION_MATCH",
+      "get_replay_property": "DIFFER",
+      "replay_selector": "DIFFER"
+    },
+    "table_start_offset": "0x1b4",
+    "header_symbol_offset": "0x470",
+    "helper_unequal_relocations": 8
+  },
+  "causal_finding": "No independent 4-byte data owner precedes the table. Table offset follows pooled string ordering/alignment. Source-supported key/line correction and exact title spelling align the earlier literal references but the my_alert warning/delete-question emission order remains reversed; historical cause not established.",
+  "strict_candidate": false
+}

@@ -1,0 +1,7 @@
+{
+  "add_top_level": [
+    {"name": "get_rank", "declaration": "extern char *get_rank(Tprofile *profile);", "after": "get_rank_id"}
+  ],
+  "includes_after": {"allegro.h": ["allegro/platform/aintwin.h"]},
+  "evidence": "The original main CU declares global profile as Tprofile*. Original main_menu_callback DWARF/disassembly passes that pointer unchanged at all four get_rank call sites. The original profile-CU get_rank DIE is also Tprofile*, while reconstructed src/profile.c currently uses Tprofile_rank*; the callee-side candidate conflict remains unresolved. Include the Allegro declaration needed for historical cursor handling."
+}

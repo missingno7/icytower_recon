@@ -1,0 +1,16 @@
+{
+  "remove_top_level": [],
+  "includes_after": {
+    "winalleg.h": [
+      "allegro/platform/aintwin.h"
+    ]
+  },
+  "evidence": "The retained rank-candidate main_menu_callback source calls get_rank(Tprofile *), historically adjacent to get_rank_id(Tprofile *), and writes Allegro _win_hcursor; prior archived declaration-context probe records both source-backed declarations.",
+  "add_top_level": [
+    {
+      "name": "get_rank",
+      "declaration": "extern char *get_rank(Tprofile *profile);",
+      "after": "get_rank_id"
+    }
+  ]
+}
