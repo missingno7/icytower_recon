@@ -216,7 +216,8 @@ void draw_frame(BITMAP *bmp)
     } else {
         if (ply[player_id]->sx > -0.02 && ply[player_id]->sx < 0.02) {
             ply[player_id]->frame = 0;
-            oy = 1 - custom.frame[0]->h;
+            customFrame = custom.frame[0];
+            oy = 1 - customFrame->h;
             goto edge_sprite;
         }
         goto p_im_one_path;
@@ -243,7 +244,8 @@ p_im_one_path:
     /* 2606: original `1 - custom.frame[0]->h` fragments appear at offsets 1924,
      * 2321/2621, 3391, and 6051. The current source emits a different layout;
      * attribution of the remaining deficit to compiler duplication alone is unproved. */
-    oy = 1 - custom.frame[0]->h;                                     /* 2606 */
+    customFrame = custom.frame[0];                                  /* 2605: default for edge==0 */
+    oy = 1 - customFrame->h;                                        /* 2606 */
 
     /* 2609: offset 2631's `test %esi,%esi; je` enters the edge-sprite path at
      * 2329 when p_im==0. Edge sprite calls jump to 2819, after the ordinary
