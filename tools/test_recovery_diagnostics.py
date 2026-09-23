@@ -47,8 +47,9 @@ class DwarfLocalTests(unittest.TestCase):
 class LinkProvenanceTests(unittest.TestCase):
     def test_active_replacements_block_recovered_game_claim(self):
         state = provenance_status()
-        self.assertIn('src/main.c::draw_frame', state['known_synthetic_bodies'])
-        self.assertIn('src/main.c::play', state['known_synthetic_bodies'])
+        blocked = state['known_synthetic_bodies'] + state['known_incomplete_bodies']
+        self.assertIn('src/main.c::draw_frame', blocked)
+        self.assertIn('src/main.c::play', blocked)
         self.assertIn('src/main.c::main_menu_callback', state['known_placeholder_bodies'])
         self.assertIn('src/main.c::play', state['nonmatching_functions'])
 

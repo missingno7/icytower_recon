@@ -7,10 +7,10 @@
   "historical_va": "0x406f78",
   "historical_size": 59,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void checkMenuFocus(void);",
   "return_type": "void",
   "parameters": [],
@@ -19,8 +19,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2828,
-    "body_end_line": 2838,
+    "body_start_line": 6467,
+    "body_end_line": 6477,
     "body_sha256": "417dea2b5558159a4596693491ad0208d6b9686935dc4ece512c8bd043abae75"
   },
   "reference_diagnostics": [],
@@ -90,35 +90,35 @@
     ],
     "candidate": [
       {
-        "address": 11684,
+        "address": 1560,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 11685,
+        "address": 1561,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 11687,
+        "address": 1563,
         "bytes": "83ec08",
         "mnemonic": "sub",
         "assembly": "sub    $0x8,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 11690,
+        "address": 1566,
         "bytes": "8b0d00000000",
         "mnemonic": "mov",
         "assembly": "mov    0x0,%ecx",
         "dwarf_variables": []
       },
       {
-        "address": 11696,
+        "address": 1572,
         "bytes": "85c9",
         "mnemonic": "test",
         "assembly": "test   %ecx,%ecx",
@@ -278,24 +278,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 33,
-      "function_offset": 34,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "startMenuMusic",
-      "target_va": 4222312,
-      "candidate_target": 1032,
-      "candidate_displacement": -10690,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966730,
-      "original_value": 4294966730,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -310,55 +293,55 @@
       "function": "stopMenuMusic",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1532,
-      "candidate_offset": 11656,
+      "candidate_offset": 1532,
       "size_delta": 0
     },
     {
       "function": "drawSlot",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1620,
-      "candidate_offset": 10360,
+      "candidate_offset": 1620,
       "size_delta": 0
     },
     {
       "function": "get_string",
       "status": "DIFFER",
       "historical_offset": 21220,
-      "candidate_offset": 15624,
+      "candidate_offset": 20708,
       "size_delta": 0
     },
     {
       "function": "show_instructions",
       "status": "FUNCTION_MATCH",
       "historical_offset": 23048,
-      "candidate_offset": 36972,
+      "candidate_offset": 22536,
       "size_delta": 0
     },
     {
       "function": "show_credits",
       "status": "DIFFER",
       "historical_offset": 23420,
-      "candidate_offset": 21528,
+      "candidate_offset": 22908,
       "size_delta": 20
     },
     {
       "function": "force_create_profile",
       "status": "DIFFER",
       "historical_offset": 27380,
-      "candidate_offset": 29964,
+      "candidate_offset": 26892,
       "size_delta": -80
     }
   ],
   "emission_order": {
     "historical_position": 23,
-    "candidate_position": 50,
+    "candidate_position": 23,
     "historical_predecessor": "stopMenuMusic",
     "candidate_predecessor": "stopMenuMusic",
     "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
@@ -397,7 +380,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main checkMenuFocus",
   "begin_command": "python tools/grinder_task.py begin game-main checkMenuFocus",
-  "promotion_command": "python tools/promote_function.py game-main checkMenuFocus --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main checkMenuFocus",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],
@@ -454,7 +437,7 @@
   "detailed_evidence": "docs/current/function-evidence/main/checkMenuFocus.json",
   "evidence_counts": {
     "relocation_mismatches": 0,
-    "direct_transfer_mismatches": 1,
+    "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,

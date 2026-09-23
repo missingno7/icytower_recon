@@ -32,7 +32,7 @@ def unresolved_symbols(stderr):
 
 def provenance_status():
     manifest = read_json(ROOT / 'src/reconstruction-provenance.json')
-    known = []; placeholders = []
+    known = []; placeholders = []; incomplete_bodies = []
     for entry in manifest['bodies']:
         source = ROOT / entry['source']
         actual = body_hash(source.read_bytes().decode('cp1252'), entry['function'])
@@ -42,24 +42,27 @@ def provenance_status():
             known.append(entry['source'] + '::' + entry['function'])
         elif entry['kind'] == 'candidate_with_synthetic_slice':
             placeholders.append(entry['source'] + '::' + entry['function'])
+        elif entry['kind'] == 'incomplete_evidence_candidate':
+            incomplete_bodies.append(entry['source'] + '::' + entry['function'])
         else:
             raise ValueError('Unknown provenance kind for ' + entry['function'])
     ledger = read_json(ROOT / 'src/recovery.json')
-    incomplete = [source + '::' + name for source, row in ledger.items()
-                  for name, verdict in row.get('functions', {}).items() if verdict != 'FUNCTION_MATCH']
+    nonmatching = [source + '::' + name for source, row in ledger.items()
+                   for name, verdict in row.get('functions', {}).items() if verdict != 'FUNCTION_MATCH']
     return {'manifest': identity(ROOT / 'src/reconstruction-provenance.json'),
             'known_synthetic_bodies': known, 'known_placeholder_bodies': placeholders,
-            'nonmatching_functions': incomplete,
+            'known_incomplete_bodies': incomplete_bodies,
+            'nonmatching_functions': nonmatching,
             'scope': 'Known-body manifest plus strict ledger; neither is an exhaustive source provenance audit.'}
 
 
 def main(compiler='tdm-2', diagnostic=False):
     provenance = provenance_status()
-    if not diagnostic and (provenance['known_synthetic_bodies'] or provenance['known_placeholder_bodies'] or provenance['nonmatching_functions']):
-        raise RuntimeError('Recovered-game link refused: %d known synthetic bodies, %d candidate placeholder bodies, and %d nonmatching functions. '
+    if not diagnostic and (provenance['known_synthetic_bodies'] or provenance['known_placeholder_bodies'] or provenance['known_incomplete_bodies'] or provenance['nonmatching_functions']):
+        raise RuntimeError('Recovered-game link refused: %d known synthetic bodies, %d candidate placeholder bodies, %d incomplete evidence candidates, and %d nonmatching functions. '
                            'Use --diagnostic only for an explicitly incomplete link.' %
                            (len(provenance['known_synthetic_bodies']), len(provenance['known_placeholder_bodies']),
-                            len(provenance['nonmatching_functions'])))
+                            len(provenance['known_incomplete_bodies']), len(provenance['nonmatching_functions'])))
     verify_inputs(compiler)
     tc = COMPILERS[compiler]
     adir = ROOT / 'build' / 'allegro' / compiler

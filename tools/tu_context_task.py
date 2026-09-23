@@ -28,6 +28,32 @@ PLANS = ROOT / 'docs/current/tu-context-tasks'
 TRANSACTIONS = ROOT / 'docs/attempts/tu-context/transactions'
 CRLF = chr(13) + chr(10); LF = chr(10)
 FORBIDDEN = r'\b(?:asm|__asm__|__asm|__attribute__|volatile)\b|^\s*#\s*pragma'
+PROVENANCE = 'src/reconstruction-provenance.json'
+
+
+def provenance_update(manifest_text, old_source, new_source, source, spec):
+    """Reclassify only explicitly replaced, already tracked bodies in a TU transaction."""
+    from source_scope import body_hash
+    updates = spec.get('provenance') or {}
+    if not updates:
+        return None
+    if set(updates) - set(spec.get('bodies') or {}):
+        raise ValueError('Provenance update names an unreplaced body')
+    manifest = json.loads(manifest_text)
+    entries = {(row['source'], row['function']): row for row in manifest['bodies']}
+    for name, update in updates.items():
+        row = entries.get((source, name))
+        if row is None:
+            raise ValueError('Provenance update requires an existing entry: ' + name)
+        if row['body_sha256'] != body_hash(old_source, name):
+            raise ValueError('Pre-transaction provenance is stale: ' + name)
+        if update.get('kind') != 'incomplete_evidence_candidate' or not update.get('evidence'):
+            raise ValueError('Incomplete candidate requires a concrete evidence description: ' + name)
+        row['kind'] = update['kind']
+        row['body_sha256'] = body_hash(new_source, name)
+        row['evidence'] = update['evidence']
+    manifest['scope'] = 'Known active synthetic slices and incomplete gameplay candidates. Entries identify source bodies, not oracle proof or an exhaustive audit.'
+    return json.dumps(manifest, indent=2, ensure_ascii=False) + '\n'
 
 
 def plan(name, spec_path):
@@ -37,6 +63,8 @@ def plan(name, spec_path):
     if ledger[source]['verified_report'] and read_json(ROOT / ledger[source]['verified_report'])['build']['target'] != target: raise ValueError('target/source mismatch')
     new, edits, headers = build_text(target, source, spec)
     text = (ROOT / source).read_bytes().decode('cp1252')
+    provenance_before = (ROOT / PROVENANCE).read_text(encoding='utf-8')
+    provenance_after = provenance_update(provenance_before, text, new, source, spec)
     old_isl = {i['name']: i for i in islands(text)}; new_isl = {i['name']: i for i in islands(new)}
     # A transaction may ADD a definition the production file deliberately omits -- a historical
     # function an unresolved-ownership CU leaves out until the oracle proves it independently.  It
@@ -77,6 +105,9 @@ def plan(name, spec_path):
         allowed += len(re.findall(FORBIDDEN, decl, re.M))
     if directives(new) - allowed > directives(text): raise ValueError('Transaction introduces forbidden code-generation directives')
     files = [source] + sorted(headers)
+    identities = {f: identity(ROOT / f) for f in files}
+    if provenance_after is not None:
+        identities[PROVENANCE] = identity(ROOT / PROVENANCE)
     card = {'schema': 1, 'task_kind': 'TU_CONTEXT', 'function': name, 'source': source, 'sources': files, 'target': target, 'affected_targets': [target],
             'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': {f: identity(ROOT / f) for f in files},
             'new_text_identity': identity_text(new), 'new_header_identities': {h: identity_text(t) for h, t in headers.items()}, 'preserved_definitions': sorted(preserved), 'replaced_definitions': sorted(edits['bodies']),
@@ -84,6 +115,9 @@ def plan(name, spec_path):
             'begin_command': 'python tools/tu_context_task.py begin ' + name, 'apply_command': 'python tools/tu_context_task.py apply ' + name,
             'verification_command': 'python tools/tu_context_task.py check ' + name, 'promotion_command': 'python tools/tu_context_task.py promote ' + name,
             'reason': 'Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).'}
+    card['source_identities'] = identities
+    if provenance_after is not None:
+        card['provenance_after_identity'] = identity_text(provenance_after)
     PLANS.mkdir(parents=True, exist_ok=True); write_json(PLANS / (name + '.json'), card)
     print('planned TU_CONTEXT', name, ':', len(edits['order']), 'ordered definitions,', len(edits['bodies']), 'retained bodies,', len(preserved), 'byte-preserved islands')
     return card
@@ -124,6 +158,8 @@ def begin(name):
                    'source': source, 'source_text': (ROOT / source).read_bytes().decode('cp1252'), 'verify_only': False,
                    'header_texts': {h: (ROOT / h).read_bytes().decode('cp1252') for h in card['sources'][1:]},
                    'baseline_link': read_json(link) if link.exists() else None}
+        if card.get('provenance_after_identity'):
+            session['provenance_text'] = (ROOT / PROVENANCE).read_text(encoding='utf-8')
         write_json(SESSION, session)
     print('TU_CONTEXT', name, 'session started;', len(card['edits']['order']), 'ordered definitions')
 
@@ -137,6 +173,8 @@ def _session(name):
 
 def validate_scope(session):
     current = snapshot_files(); before = session['files']; source = session['source']; allowed = set(session['plan']['sources'])
+    if session['plan'].get('provenance_after_identity'):
+        allowed.add(PROVENANCE)
     for path in set(current) | set(before):
         if path not in allowed and current.get(path) != before.get(path): raise ValueError('Out-of-scope edit: ' + path)
     text = (ROOT / source).read_bytes().decode('cp1252')
@@ -146,6 +184,13 @@ def validate_scope(session):
         t = (ROOT / h).read_bytes().decode('cp1252')
         if t != old and identity_text(t) != session['plan']['new_header_identities'][h]: raise ValueError('Header differs from both production and planned text: ' + h)
         if (t != old) != (text != session['source_text']): raise ValueError('Transaction files must be applied together: ' + h)
+    if session['plan'].get('provenance_after_identity'):
+        provenance = (ROOT / PROVENANCE).read_text(encoding='utf-8')
+        old = session['provenance_text']
+        if provenance != old and identity_text(provenance) != session['plan']['provenance_after_identity']:
+            raise ValueError('Provenance differs from both the production and planned transaction text')
+        if (provenance != old) != (text != session['source_text']):
+            raise ValueError('Transaction source and provenance must be applied together')
     return text
 
 
@@ -157,8 +202,15 @@ def apply(name):
     if identity_text(new) != card['new_text_identity'] or json.loads(json.dumps(edits)) != card['edits']: raise ValueError('Regenerated transaction differs from the plan; re-plan')
     for h, t in headers.items():
         if identity_text(t) != card['new_header_identities'][h]: raise ValueError('Regenerated header differs from the plan: ' + h)
+    provenance = None
+    if card.get('provenance_after_identity'):
+        provenance = provenance_update(s['provenance_text'], s['source_text'], new, card['source'], card['spec'])
+        if identity_text(provenance) != card['provenance_after_identity']:
+            raise ValueError('Regenerated provenance differs from the plan')
     (ROOT / card['source']).write_bytes(new.encode('cp1252'))
     for h, t in headers.items(): (ROOT / h).write_bytes(t.encode('cp1252'))
+    if provenance is not None:
+        (ROOT / PROVENANCE).write_text(provenance, encoding='utf-8')
     print('applied TU_CONTEXT', name, 'to', ', '.join(card['sources']))
 
 
@@ -186,6 +238,9 @@ def _acceptance(s, report, old):
         if identity(ROOT / b['path']) != b['identity']: raise ValueError('Retained body changed: ' + n)
         if island_key(isl[n], n in statics, definition_only=True) != island_key({'text': retained_body(ROOT / b['path'])['text']}, n in statics):
             raise ValueError('Replaced body does not equal its retained evidence: ' + n)
+    if card.get('provenance_after_identity'):
+        from recovered_game_link import provenance_status
+        provenance_status()
     before_exact = sum(1 for f in old['functions'] if f['status'] == 'FUNCTION_MATCH'); after_exact = report['function_matches']
     return {'exact_before': before_exact, 'exact_after': after_exact,
             'gains': sorted(f['name'] for f in report['functions'] if f['status'] == 'FUNCTION_MATCH' and next(o for o in old['functions'] if o['name'] == f['name'])['status'] != 'FUNCTION_MATCH')}
@@ -242,6 +297,8 @@ def abort(name):
     s = _session(name)
     (ROOT / s['source']).write_bytes(s['source_text'].encode('cp1252'))
     for h, t in s['header_texts'].items(): (ROOT / h).write_bytes(t.encode('cp1252'))
+    if 'provenance_text' in s:
+        (ROOT / PROVENANCE).write_text(s['provenance_text'], encoding='utf-8')
     SESSION.unlink()
     print('aborted; production text restored')
 

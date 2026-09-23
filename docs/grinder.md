@@ -6,6 +6,27 @@ The historical CUs and strict static oracle remain the acceptance boundary. Star
 old experiment notes; `src/recovery.json` is the canonical, receipt-checked ledger.
 Use `--limit 5` for a small batch or `--all` for explicit supervisor inspection.
 
+## Isolated research lane
+
+The three-attempt limit below applies to an active production body task. Longer
+research uses separate candidate files or TU probe overlays under a unique
+`docs/attempts/` directory and unique probe labels. It must not edit maintained
+`src/`, generated current state, accepted bodies or `src/recovery.json`. Workers
+may investigate MEDIUM/SUPERVISOR tasks, types, callers, ABI, compiler passes and
+whole-TU context in this lane. Existing `tu_context_probe.py` compiles historical
+order with explicit body overlays; its result is diagnostic and cannot be promoted.
+
+Continue while a probe yields a new effective output, eliminates a specific
+hypothesis, establishes a type/CFG/context fact, or reveals a missing capability.
+When multiple source forms collapse to the same output, move to declarations,
+interfaces or TU/compiler context rather than spending more cosmetic variants.
+`python tools/effective_outcomes.py game-main play --pattern 'LABEL*.json'`
+groups saved TU outcomes without debug-byte noise; compare its identities only as
+search evidence. Archive source, compiler output and negative trials, and hand off
+the strict status, unique outcomes, established facts, exact blocker and smallest
+artifact paths. Any exact candidate enters the serialized FAST/ACCEPTANCE workflow
+with its ordinary production gates; an isolated probe is never a match claim.
+
 1. Select the highest-ranked CHEAP task and read its `candidate_card` only.
 2. For a FUNCTION_BODY task, run its `begin_command`. This fresh-verifies the CU and snapshots the permitted
    function body and every maintained source/header/tool. One task may be active.

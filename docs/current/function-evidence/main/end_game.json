@@ -7,10 +7,10 @@
   "historical_va": "0x40e110",
   "historical_size": 32,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void end_game(void);",
   "return_type": "void",
   "parameters": [],
@@ -19,8 +19,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 3248,
-    "body_end_line": 3251,
+    "body_start_line": 3583,
+    "body_end_line": 3586,
     "body_sha256": "55a61f50cdf09893fdf46fbdb70295216c29fc5166691bda7879bf903f6b8ea9"
   },
   "reference_diagnostics": [],
@@ -90,38 +90,38 @@
     ],
     "candidate": [
       {
-        "address": 10296,
+        "address": 30072,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 10297,
+        "address": 30073,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 10299,
+        "address": 30075,
         "bytes": "83ec18",
         "mnemonic": "sub",
         "assembly": "sub    $0x18,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 10302,
-        "bytes": "c70424ec010000",
+        "address": 30078,
+        "bytes": "c70424fd040000",
         "mnemonic": "movl",
-        "assembly": "movl   $0x1ec,(%esp)",
+        "assembly": "movl   $0x4fd,(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 10309,
-        "bytes": "e836f7ffff",
+        "address": 30085,
+        "bytes": "e836f9ffff",
         "mnemonic": "call",
-        "assembly": "call   1f80 <_log2file>",
+        "assembly": "call   6ec0 <_log2file>",
         "dwarf_variables": []
       }
     ]
@@ -174,7 +174,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 152,
+          "index": 145,
           "name": "_custom",
           "section": 0,
           "value": 1264,
@@ -201,7 +201,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d501d",
-      "candidate_addend": 492,
+      "candidate_addend": 1277,
       "dwarf_type": null,
       "references": [
         9
@@ -211,7 +211,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5316,
+          "logical_size": 6648,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -255,81 +255,64 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 13,
-      "function_offset": 14,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "log2file",
-      "target_va": 4250200,
-      "candidate_target": 8064,
-      "candidate_displacement": -2250,
-      "layout_operand_equal": false,
-      "resolved_value": 4294965558,
-      "original_value": 4294965558,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
-  "exact_adjacent_functions": 1,
+  "exact_adjacent_functions": 2,
   "neighbor_layout": [
     {
       "function": "log2file",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 28920,
-      "candidate_offset": 8064,
+      "candidate_offset": 28352,
       "size_delta": 0
     },
     {
       "function": "new_game",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 29500,
-      "candidate_offset": 18864,
+      "candidate_offset": 28932,
       "size_delta": 0
     },
     {
       "function": "save_config",
       "status": "FUNCTION_MATCH",
       "historical_offset": 30672,
-      "candidate_offset": 9296,
+      "candidate_offset": 30104,
       "size_delta": 0
     },
     {
       "function": "run_demo",
       "status": "FUNCTION_MATCH",
       "historical_offset": 62636,
-      "candidate_offset": 20004,
+      "candidate_offset": 61076,
       "size_delta": 0
     },
     {
       "function": "_mangled_main",
       "status": "DIFFER",
       "historical_offset": 62896,
-      "candidate_offset": 37344,
+      "candidate_offset": 61336,
       "size_delta": -208
     }
   ],
   "emission_order": {
     "historical_position": 65,
-    "candidate_position": 44,
+    "candidate_position": 65,
     "historical_predecessor": "new_game",
-    "candidate_predecessor": "uninit_game",
-    "predecessor_same": false,
+    "candidate_predecessor": "new_game",
+    "predecessor_same": true,
     "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor uninit_game versus historical new_game); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": 44,
+  "priority": 49,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
@@ -360,7 +343,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main end_game",
   "begin_command": "python tools/grinder_task.py begin game-main end_game",
-  "promotion_command": "python tools/promote_function.py game-main end_game --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main end_game",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

@@ -1,0 +1,94 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 3072,
+  "candidate_card": "docs/current/literals/game-main/c00.json",
+  "source_identity": {
+    "size": 310860,
+    "sha256": "7d69b3b396ecbcae0dc0aa053457b3f16c0a92749cbf746a5a5b5bcda9b80461"
+  },
+  "consumers": [
+    {
+      "function": "init_game",
+      "function_offset": 3331,
+      "historical_operand_va": 5068876,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5068576,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2550,
+          "text": "        log2file(\" no gamepad or joystick found, play with keyboard only\"); /* 1791 */"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "init_game"
+  ],
+  "historical_observed_addresses": [
+    5068876
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "206e6f2067616d65706164206f72206a6f79737469636b20666f756e642c20706c61792077697468206b6579626f617264206f6e6c79",
+      "bytes": 55
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 3331,
+      "candidate_addend": 3072,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5068876,
+      "candidate_hex": "206e6f2067616d65706164206f72206a6f79737469636b20666f756e642c20706c61792077697468206b6579626f617264206f6e6c79",
+      "original_hex": "4661696c656420746f206372656174652070726f66696c65206469726563746f7279202573",
+      "candidate_instruction": {
+        "address": 35148,
+        "bytes": "c70424000c0000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0xc00,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4256988,
+        "bytes": "c704244c584d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d584c,(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5068576,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5068576
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": " no gamepad or joystick found, play with keyboard only",
+      "original_text": "Failed to create profile directory %s",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2550,
+          "text": "        log2file(\" no gamepad or joystick found, play with keyboard only\"); /* 1791 */"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}

@@ -1,0 +1,90 @@
+{
+  "task": "profile shared selector interface",
+  "model_config": "GPT-6 Luna high (research lane)",
+  "status": "TYPE_LAYOUT_BLOCKED cards are caused by candidate declarations spelling aggregate pointers as char pointers; historic layouts are present",
+  "functions": {
+    "draw_profile_selector": {
+      "current_status": "DIFFER / STACK_FRAME_LAYOUT; interface TYPE_EVIDENCE_INCOMPLETE",
+      "historical_signature": "void(BITMAP*, Tprofile*, Tavailable_profile*, int, int, int, int, int, int)",
+      "candidate_signature_core": "void*(bitmap placeholder), char*, char*, five ints",
+      "declaration_sites": [
+        "src/profile.c:130",
+        "src/profile.c:149",
+        "src/profile.c:712"
+      ]
+    },
+    "select_profile": {
+      "current_status": "DIFFER / REGISTER_OR_INSTRUCTION_SELECTION; interface TYPE_EVIDENCE_INCOMPLETE",
+      "historical_signature": "Tprofile*(Tprofile*, Tavailable_profile*, int, Tcontrol*)",
+      "candidate_signature_core": "Tprofile_create*(Tprofile_create*, char*, int, Tprofile_control*)",
+      "declaration_sites": [
+        "src/profile.c:131",
+        "src/profile.c:150",
+        "src/profile.c:765"
+      ]
+    }
+  },
+  "layout_facts": {
+    "Tprofile": {
+      "bytes": 1360,
+      "handle": {
+        "offset": 6,
+        "dimensions": [
+          32
+        ]
+      }
+    },
+    "Tavailable_profile": {
+      "bytes": 32,
+      "handle": {
+        "offset": 0,
+        "dimensions": [
+          32
+        ]
+      }
+    },
+    "target_abi": "i386 cdecl; object pointers are 4 bytes"
+  },
+  "checker_mechanism": "layout_checks() tries to find a candidate type named char and reports it unavailable. This is not missing Tprofile/Tavailable_profile DWARF or generated header evidence.",
+  "probe": "profile-handle-pointer-v1: byte-view and typed .handle variants generated identical -O2 assembly for both current-profile and indexed profile-entry address calculations.",
+  "strict_result": "No promoted/recovered function. No production source, recovery ledger, current generated state, or accepted body changed.",
+  "blocker": "A coupled type-correct overlay compiles but is not exact and changes a previously exact unrelated function when the aggregate type becomes visible before it. Need historical-order TU/context recovery for the type declaration point and selector bodies before any promotion; changing witness function is not justified.",
+  "artifacts": [
+    "docs/attempts/research-luna-profile-interface/README.md",
+    "docs/attempts/research-luna-profile-interface/probe-summary.json",
+    "docs/attempts/research-luna-profile-interface/fixtures/profile-handle-pointer-v1.c",
+    "docs/attempts/research-luna-profile-interface/fixtures/profile-handle-pointer-v1.s",
+    "docs/attempts/research-luna-profile-interface/fixtures/profile-handle-pointer-v1.log",
+    "docs/attempts/research-luna-profile-interface/overlay/profile.c",
+    "docs/attempts/research-luna-profile-interface/overlay/summary.json",
+    "docs/attempts/research-luna-profile-interface/header-only-summary.json",
+    "docs/attempts/research-luna-profile-interface/header-only-repeat-summary.json",
+    "docs/attempts/research-luna-profile-interface/late-header-summary.json",
+    "docs/attempts/research-luna-profile-interface/build/profile-current-baseline-v1/comparison.json",
+    "docs/attempts/research-luna-profile-interface/build/profile-interface-header-only-v1/comparison.json",
+    "docs/attempts/research-luna-profile-interface/build/profile-interface-late-header-v1/comparison.json",
+    "docs/attempts/research-luna-profile-interface/build/profile-selector-typed-interface-v3/comparison.json",
+    "docs/attempts/research-luna-profile-interface/advanced-baseline.asm",
+    "docs/attempts/research-luna-profile-interface/advanced-early-type.asm",
+    "docs/attempts/research-luna-profile-interface/advanced-late-type.asm"
+  ],
+  "coupled_overlay": {
+    "label": "profile-selector-typed-interface-v3",
+    "object_sha256": "357dacdd2478e3104b7854cc83be5389b7d31a934d615445a2e7c450e84e03b9",
+    "function_matches": "10/17 vs baseline 11/17",
+    "changed_functions": {
+      "draw_profile_selector": "DIFFER 1250/1268",
+      "select_profile": "DIFFER 2698/3070"
+    },
+    "lost_exact_neighbor": "profile_data_page_advanced; 332-byte baseline exact, overlay differs first at +229"
+  },
+  "context_mechanism": {
+    "mechanism": "declaration-order dependent GCC whole-TU codegen effect",
+    "experiment": "adding only Tavailable_profile.h before profile_data_page_advanced deterministically changes its adjacent independent initialization order; adding the same type after the witness preserves byte-identical witness code",
+    "baseline_witness_sha256": "8bd83832c08ced8261ec736453291432a6dd6d065bded1738ff573a7fcbac75f",
+    "early_type_witness_sha256": "2fefcfce64b7eac488d05a320c3bd89451d7d476684bf17b55fc658a24ffc60b",
+    "late_type_witness_sha256": "8bd83832c08ced8261ec736453291432a6dd6d065bded1738ff573a7fcbac75f",
+    "header_repeat_object_sha256": "4f31d9b394b347d8763b524e8c29d8e3c35b661f855610d6fc863a45f189ce37",
+    "note": "Do not repair the witness function; it is correct in baseline context. This is compiler context evidence, not a recovered function."
+  }
+}

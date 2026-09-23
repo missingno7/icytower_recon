@@ -7,10 +7,10 @@
   "historical_va": "0x40e130",
   "historical_size": 154,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void save_config(void);",
   "return_type": "void",
   "parameters": [],
@@ -117,8 +117,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 3299,
-    "body_end_line": 3315,
+    "body_start_line": 2711,
+    "body_end_line": 2727,
     "body_sha256": "3c8cc21b59f431db33625e7f9e0b122d84ba04bbc4c7aaf678107ef3c32a7e41"
   },
   "reference_diagnostics": [],
@@ -225,35 +225,35 @@
     ],
     "candidate": [
       {
-        "address": 9296,
+        "address": 30104,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 9297,
+        "address": 30105,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 9299,
+        "address": 30107,
         "bytes": "56",
         "mnemonic": "push",
         "assembly": "push   %esi",
         "dwarf_variables": []
       },
       {
-        "address": 9300,
+        "address": 30108,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 9301,
+        "address": 30109,
         "bytes": "81ec10010000",
         "mnemonic": "sub",
         "assembly": "sub    $0x110,%esp",
@@ -341,7 +341,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 125,
+          "index": 128,
           "name": "_options",
           "section": 0,
           "value": 640,
@@ -374,7 +374,7 @@
       ],
       "coff_symbols": [
         {
-          "index": 164,
+          "index": 195,
           "name": "_hisc_tables",
           "section": 0,
           "value": 64,
@@ -401,7 +401,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5032",
-      "candidate_addend": 263,
+      "candidate_addend": 1298,
       "dwarf_type": null,
       "references": [
         14
@@ -411,7 +411,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5316,
+          "logical_size": 6648,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -427,7 +427,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d504d",
-      "candidate_addend": 290,
+      "candidate_addend": 1325,
       "dwarf_type": null,
       "references": [
         49
@@ -437,7 +437,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5316,
+          "logical_size": 6648,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -453,7 +453,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d5050",
-      "candidate_addend": 293,
+      "candidate_addend": 1328,
       "dwarf_type": null,
       "references": [
         135
@@ -463,7 +463,7 @@
       "initial_value": null,
       "coff_contribution_evidence": [
         {
-          "logical_size": 5316,
+          "logical_size": 6648,
           "content_equal": false,
           "unresolved_initializer_relocations": 5,
           "independent_section_bases": [],
@@ -572,86 +572,60 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 18,
-      "function_offset": 19,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "log2file",
-      "target_va": 4250200,
-      "candidate_target": 8064,
-      "candidate_displacement": -1255,
-      "layout_operand_equal": false,
-      "resolved_value": 4294965521,
-      "original_value": 4294965521,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    },
-    {
-      "instruction_offset": 139,
-      "function_offset": 140,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "log2file",
-      "target_va": 4250200,
-      "candidate_target": 8064,
-      "candidate_displacement": -1376,
-      "layout_operand_equal": false,
-      "resolved_value": 4294965400,
-      "original_value": 4294965400,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 1,
   "neighbor_layout": [
     {
       "function": "log2file",
-      "status": "DIFFER",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 28920,
-      "candidate_offset": 8064,
+      "candidate_offset": 28352,
       "size_delta": 0
     },
     {
       "function": "end_game",
       "status": "FUNCTION_MATCH",
       "historical_offset": 30640,
-      "candidate_offset": 10296,
+      "candidate_offset": 30072,
       "size_delta": 0
     },
     {
       "function": "change_profile",
       "status": "DIFFER",
       "historical_offset": 30828,
-      "candidate_offset": 9452,
+      "candidate_offset": 30260,
       "size_delta": 8
     },
     {
       "function": "uninit_game",
       "status": "FUNCTION_MATCH",
       "historical_offset": 31016,
-      "candidate_offset": 9648,
+      "candidate_offset": 30456,
       "size_delta": 0
+    },
+    {
+      "function": "play",
+      "status": "DIFFER",
+      "historical_offset": 45216,
+      "candidate_offset": 43676,
+      "size_delta": -20
     }
   ],
   "emission_order": {
     "historical_position": 66,
-    "candidate_position": 41,
+    "candidate_position": 66,
     "historical_predecessor": "end_game",
-    "candidate_predecessor": "check_dir",
-    "predecessor_same": false,
+    "candidate_predecessor": "end_game",
+    "predecessor_same": true,
     "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor check_dir versus historical end_game); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
@@ -686,7 +660,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main save_config",
   "begin_command": "python tools/grinder_task.py begin game-main save_config",
-  "promotion_command": "python tools/promote_function.py game-main save_config --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main save_config",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

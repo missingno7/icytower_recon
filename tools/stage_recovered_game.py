@@ -35,6 +35,7 @@ def main():
     if (link.get('scope') != 'Recovered game source link' or not link.get('linked') or
             link.get('provenance') != current or current['known_synthetic_bodies'] or
             current['known_placeholder_bodies'] or
+            current['known_incomplete_bodies'] or
             current['nonmatching_functions'] or not linked.exists() or
             link.get('executable') != identity(linked)):
         raise ValueError('Staging refused: source link is diagnostic, incomplete, or stale')

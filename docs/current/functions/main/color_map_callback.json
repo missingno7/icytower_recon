@@ -7,10 +7,10 @@
   "historical_va": "0x407c20",
   "historical_size": 22,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void color_map_callback(int p);",
   "return_type": "void",
   "parameters": [
@@ -31,8 +31,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 3217,
-    "body_end_line": 3220,
+    "body_start_line": 2120,
+    "body_end_line": 2123,
     "body_sha256": "abb9812b3f2f37df980dcf98565151d5067c50588fd26fe95b25d7ead37c873a"
   },
   "reference_diagnostics": [],
@@ -128,34 +128,34 @@
     ],
     "candidate": [
       {
-        "address": 21456,
+        "address": 4800,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 21457,
+        "address": 4801,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 21459,
+        "address": 4803,
         "bytes": "83ec08",
         "mnemonic": "sub",
         "assembly": "sub    $0x8,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 21462,
+        "address": 4806,
         "bytes": "f645080f",
         "mnemonic": "testb",
         "assembly": "testb  $0xf,0x8(%ebp)",
         "dwarf_variables": [
           {
-            "die": 27145,
+            "die": 21330,
             "name": "pos",
             "type": "int",
             "base_type": "int",
@@ -171,10 +171,10 @@
         ]
       },
       {
-        "address": 21466,
+        "address": 4810,
         "bytes": "7404",
         "mnemonic": "je",
-        "assembly": "je     53e0 <_color_map_callback+0x10>",
+        "assembly": "je     12d0 <_color_map_callback+0x10>",
         "dwarf_variables": []
       }
     ]
@@ -232,63 +232,46 @@
   "original_calls": [],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 17,
-      "function_offset": 18,
-      "opcode": 233,
-      "operand_size": 4,
-      "transfer_kind": "jmp",
-      "target_function": "draw_progress_bar",
-      "target_va": 4225544,
-      "candidate_target": 20968,
-      "candidate_displacement": -510,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966738,
-      "original_value": 4294966738,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
     {
       "function": "draw_progress_bar",
-      "status": "CODEGEN_SIMILAR",
+      "status": "FUNCTION_MATCH",
       "historical_offset": 4264,
-      "candidate_offset": 20968,
+      "candidate_offset": 4264,
       "size_delta": 0
     },
     {
       "function": "datafile_callback",
       "status": "FUNCTION_MATCH",
       "historical_offset": 4788,
-      "candidate_offset": 21480,
+      "candidate_offset": 4788,
       "size_delta": 0
     },
     {
       "function": "start_reward",
       "status": "FUNCTION_MATCH",
       "historical_offset": 4824,
-      "candidate_offset": 6192,
+      "candidate_offset": 4824,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 33,
-    "candidate_position": 69,
+    "candidate_position": 33,
     "historical_predecessor": "datafile_callback",
-    "candidate_predecessor": "draw_progress_bar",
-    "predecessor_same": false,
-    "predecessor_exact": false,
+    "candidate_predecessor": "datafile_callback",
+    "predecessor_same": true,
+    "predecessor_exact": true,
     "historical_prefix_exact": false,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
-    "note": "Emission-order context differs from history (candidate predecessor draw_progress_bar versus historical datafile_callback); part of the mismatch may be a neighbor artifact."
+    "note": "Historical predecessor is emitted in order and exact."
   },
   "known_rules": [],
   "difficulty": "SUPERVISOR",
@@ -323,7 +306,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main color_map_callback",
   "begin_command": "python tools/grinder_task.py begin game-main color_map_callback",
-  "promotion_command": "python tools/promote_function.py game-main color_map_callback --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main color_map_callback",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],
@@ -340,7 +323,7 @@
   "detailed_evidence": "docs/current/function-evidence/main/color_map_callback.json",
   "evidence_counts": {
     "relocation_mismatches": 0,
-    "direct_transfer_mismatches": 1,
+    "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,

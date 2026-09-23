@@ -5,7 +5,7 @@ import json, re, tempfile, unittest
 from pathlib import Path
 from common import ROOT, read_json
 from tu_context_probe import build_text, islands, historical_static, header_edits, retained_body
-from tu_context_task import island_key, FORBIDDEN
+from tu_context_task import island_key, provenance_update, FORBIDDEN
 
 SOURCE = 'src/main.c'; TARGET = 'game-main'
 RETAINED = 'docs/attempts/game-main/handle_player_input-reconstruction.c'
@@ -96,6 +96,28 @@ class IslandKey(unittest.TestCase):
         self.assertEqual(island_key(a, definition_only=True), 'int f(void)\n{\n    return 1;\n}')
         self.assertEqual(island_key({'text': 'static int f(void)\n{\n}'}, static_evidenced=True), 'int f(void)\n{\n}')
         self.assertNotEqual(island_key({'text': 'static int f(void)\n{\n}'}), 'int f(void)\n{\n}')
+
+
+class ProvenanceTransaction(unittest.TestCase):
+    def test_reclassification_is_coupled_to_one_replaced_body(self):
+        from source_scope import body_hash
+        old = 'int f(void) { return 1; }\n'
+        new = 'int f(void) { return 2; }\n'
+        manifest = json.dumps({'bodies': [{'source': 'src/x.c', 'function': 'f',
+                                           'kind': 'synthetic_replacement',
+                                           'body_sha256': body_hash(old, 'f'),
+                                           'evidence': 'old'}]})
+        spec = {'bodies': {'f': 'candidate.c'},
+                'provenance': {'f': {'kind': 'incomplete_evidence_candidate',
+                                     'evidence': 'Observed source paths remain incomplete.'}}}
+        result = json.loads(provenance_update(manifest, old, new, 'src/x.c', spec))
+        row = result['bodies'][0]
+        self.assertEqual(row['body_sha256'], body_hash(new, 'f'))
+        self.assertEqual(row['kind'], 'incomplete_evidence_candidate')
+        with self.assertRaises(ValueError):
+            provenance_update(manifest, old, new, 'src/x.c', {'provenance': spec['provenance']})
+        with self.assertRaises(ValueError):
+            provenance_update(manifest, new, old, 'src/x.c', spec)
 
 
 if __name__ == '__main__':

@@ -6,5 +6,15 @@
   "play": "docs/attempts/game-main/play-merged.c",
   "draw_frame": "docs/attempts/game-main/draw_frame-merged.c"
  },
- "evidence": "The historical definition order of main.c (DWARF decl_line order) together with the reconstructed play and draw_frame bodies. This is the transaction the whole TU_CONTEXT mechanism was built for: it is accepted only when no previously exact function regresses, which currently fails on run_demo alone, whose two peephole scratch registers depend on how many scratches play consumes. Do not promote until the probe reports an empty losses list."
+ "provenance": {
+  "draw_frame": {
+   "kind": "incomplete_evidence_candidate",
+   "evidence": "Retained historical-order body restores observed rendering calls, constants, edge routes and status paths but remains DIFFER at 8203/8518 bytes; the fifth frame-zero height-load path and wider CFG are unresolved. The whole-TU strict gate has not claimed this body."
+  },
+  "play": {
+   "kind": "incomplete_evidence_candidate",
+   "evidence": "Retained historical-order body restores observed gameplay, results, recording, name-entry and debug routes but remains DIFFER at 17400/17420 bytes. The whole-TU strict gate has not claimed this body."
+  }
+ },
+ "evidence": "The historical definition order of main.c (DWARF decl_line order) together with the retained play and draw_frame bodies. The fresh luna-supervisor-play-debug-results-guard-20260923 whole-TU probe has 62/82 strict exact functions, including new_game and run_demo, and an empty losses list. play and draw_frame remain DIFFER; the transaction must preserve all existing exact functions, data owners and the ordinary link before acceptance."
 }

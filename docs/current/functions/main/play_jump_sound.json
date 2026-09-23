@@ -7,10 +7,10 @@
   "historical_va": "0x406ecc",
   "historical_size": 141,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void play_jump_sound(Tplayer *p);",
   "return_type": "void",
   "parameters": [
@@ -31,8 +31,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2149,
-    "body_end_line": 2156,
+    "body_start_line": 2920,
+    "body_end_line": 2927,
     "body_sha256": "4b40f44d9ff1b53fa57f845ce17e676a6b9a700a4e5b29d63c5e8150f696d10d"
   },
   "reference_diagnostics": [],
@@ -117,34 +117,34 @@
     ],
     "candidate": [
       {
-        "address": 6744,
+        "address": 1388,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6745,
+        "address": 1389,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6747,
+        "address": 1391,
         "bytes": "83ec18",
         "mnemonic": "sub",
         "assembly": "sub    $0x18,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 6750,
+        "address": 1394,
         "bytes": "8b4508",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 20817,
+            "die": 19226,
             "name": "p",
             "type": "Tplayer *",
             "base_type": null,
@@ -160,7 +160,7 @@
         ]
       },
       {
-        "address": 6753,
+        "address": 1397,
         "bytes": "dd4018",
         "mnemonic": "fldl",
         "assembly": "fldl   0x18(%eax)",
@@ -261,7 +261,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6cc4",
-      "candidate_addend": 5244,
+      "candidate_addend": 6412,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -278,7 +278,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d6cc8",
-      "candidate_addend": 5248,
+      "candidate_addend": 6416,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -342,56 +342,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 66,
-      "function_offset": 67,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "play_sound",
-      "target_va": 4222372,
-      "candidate_target": 1092,
-      "candidate_displacement": -5723,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966929,
-      "original_value": 4294966929,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    },
-    {
-      "instruction_offset": 100,
-      "function_offset": 101,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "play_sound",
-      "target_va": 4222372,
-      "candidate_target": 1092,
-      "candidate_displacement": -5757,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966895,
-      "original_value": 4294966895,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    },
-    {
-      "instruction_offset": 134,
-      "function_offset": 135,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "play_sound",
-      "target_va": 4222372,
-      "candidate_target": 1092,
-      "candidate_displacement": -5791,
-      "layout_operand_equal": false,
-      "resolved_value": 4294966861,
-      "original_value": 4294966861,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -406,34 +357,34 @@
       "function": "play_menu_move",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1348,
-      "candidate_offset": 6704,
+      "candidate_offset": 1348,
       "size_delta": 0
     },
     {
       "function": "stopMenuMusic",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1532,
-      "candidate_offset": 11656,
+      "candidate_offset": 1532,
       "size_delta": 0
     },
     {
       "function": "handle_player_input",
       "status": "DIFFER",
       "historical_offset": 19076,
-      "candidate_offset": 17512,
+      "candidate_offset": 18740,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 21,
-    "candidate_position": 27,
+    "candidate_position": 21,
     "historical_predecessor": "play_menu_move",
     "candidate_predecessor": "play_menu_move",
     "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
@@ -472,7 +423,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main play_jump_sound",
   "begin_command": "python tools/grinder_task.py begin game-main play_jump_sound",
-  "promotion_command": "python tools/promote_function.py game-main play_jump_sound --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main play_jump_sound",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],
@@ -503,7 +454,7 @@
   "detailed_evidence": "docs/current/function-evidence/main/play_jump_sound.json",
   "evidence_counts": {
     "relocation_mismatches": 0,
-    "direct_transfer_mismatches": 3,
+    "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,

@@ -7,10 +7,10 @@
   "historical_va": "0x406ea4",
   "historical_size": 37,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void play_menu_move(void);",
   "return_type": "void",
   "parameters": [],
@@ -19,8 +19,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 2248,
-    "body_end_line": 2250,
+    "body_start_line": 5887,
+    "body_end_line": 5889,
     "body_sha256": "a2179882c39557a88994292a83f9026b5e5117f2d6c01acab5f55547aea5c551"
   },
   "reference_diagnostics": [],
@@ -90,35 +90,35 @@
     ],
     "candidate": [
       {
-        "address": 6704,
+        "address": 1348,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6705,
+        "address": 1349,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 6707,
+        "address": 1351,
         "bytes": "83ec18",
         "mnemonic": "sub",
         "assembly": "sub    $0x18,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 6710,
+        "address": 1354,
         "bytes": "c744240800000000",
         "mnemonic": "movl",
         "assembly": "movl   $0x0,0x8(%esp)",
         "dwarf_variables": []
       },
       {
-        "address": 6718,
+        "address": 1362,
         "bytes": "c744240400000000",
         "mnemonic": "movl",
         "assembly": "movl   $0x0,0x4(%esp)",
@@ -193,24 +193,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 30,
-      "function_offset": 31,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "play_sound",
-      "target_va": 4222372,
-      "candidate_target": 1092,
-      "candidate_displacement": -5647,
-      "layout_operand_equal": false,
-      "resolved_value": 4294967005,
-      "original_value": 4294967005,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -225,27 +208,27 @@
       "function": "play_menu_select",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1308,
-      "candidate_offset": 6664,
+      "candidate_offset": 1308,
       "size_delta": 0
     },
     {
       "function": "play_jump_sound",
       "status": "FUNCTION_MATCH",
       "historical_offset": 1388,
-      "candidate_offset": 6744,
+      "candidate_offset": 1388,
       "size_delta": 0
     }
   ],
   "emission_order": {
     "historical_position": 20,
-    "candidate_position": 26,
+    "candidate_position": 20,
     "historical_predecessor": "play_menu_select",
     "candidate_predecessor": "play_menu_select",
     "predecessor_same": true,
     "predecessor_exact": true,
-    "historical_prefix_exact": false,
+    "historical_prefix_exact": true,
     "frontier": false,
-    "cu_same_predecessor_count": 31,
+    "cu_same_predecessor_count": 79,
     "cu_function_count": 82,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
     "priority_adjustment": 0,
@@ -284,7 +267,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main play_menu_move",
   "begin_command": "python tools/grinder_task.py begin game-main play_menu_move",
-  "promotion_command": "python tools/promote_function.py game-main play_menu_move --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main play_menu_move",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],
@@ -315,7 +298,7 @@
   "detailed_evidence": "docs/current/function-evidence/main/play_menu_move.json",
   "evidence_counts": {
     "relocation_mismatches": 0,
-    "direct_transfer_mismatches": 1,
+    "direct_transfer_mismatches": 0,
     "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
