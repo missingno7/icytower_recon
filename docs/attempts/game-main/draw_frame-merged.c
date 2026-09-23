@@ -194,8 +194,8 @@ void draw_frame(BITMAP *bmp)
      * arm at offsets 1819..1852 plus a second copy at 3356..3365; 2595's inner-band test appears
      * at 2561..2608 AND again at 3323..3346; 2597's edge==0/-0.2 test appears at 1869..1924,
      * 2308..2315, 2608..2615 AND 3365..3391) -- one source comparison, several compiled copies from
-     * jump-threading. Nothing here is missing source logic; a single `if` cannot reproduce a
-     * compiler-side tail duplication without inventing branches this evidence doesn't support. */
+     * jump-threading. These duplicated instruction fragments do not by themselves prove
+     * extra source branches; the remaining function difference still needs investigation. */
     if (ply[player_id]->status) {                       /* 2589 */
         if (ply[player_id]->status == 3) {                /* 2590 */
             if (ply[player_id]->sy > 3.0)              /* 2590: fucompp/fnstsw compare direction inferred, not asserted */
@@ -237,10 +237,9 @@ void draw_frame(BITMAP *bmp)
     /* 2605: no comparison instructions precede either historical load of custom.frame[0]
      * (offsets 2315 and 2615 are both bare `mov`s) -- the earlier `if (custom.frame[0] == 0)
      * p_im = 1;` guess had no instruction support and is dropped. */
-    /* 2606: `oy` seeded unconditionally from custom.frame[0]'s height; the historical 108 bytes
-     * here against today's ~13 come from this same `1 - custom.frame[0]->h` load being
-     * duplicated by the compiler at each of its several predecessors (offsets 1924, 2321/2621,
-     * 3391, 6051), not from extra source logic this region is missing. */
+    /* 2606: original `1 - custom.frame[0]->h` fragments appear at offsets 1924,
+     * 2321/2621, 3391, and 6051. The current source emits a different layout;
+     * attribution of the remaining deficit to compiler duplication alone is unproved. */
     oy = 1 - custom.frame[0]->h;                                     /* 2606 */
 
     flip = 0;                                            /* 2609: p_im==0 skips the edge/flip block entirely --
@@ -249,84 +248,35 @@ void draw_frame(BITMAP *bmp)
                                                             * edge handling AND the `ply->rotate` read only happen
                                                             * when p_im is one of the 5/6/7/8 poses. */
     if (p_im) {                                          /* 2609 */
-    if (ply[player_id]->edge) {                          /* 2611: offset 2341..2346, edge==0 skips straight to offset 3115 (the customFrame block below) */
-        customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14];   /* 2612/2615 */
-
-        if (ply[player_id]->edge == 2) {                  /* 2617: offset 2374..2383 */
-            oy = (int)ply[player_id]->y + oy;               /* 2624 */
-            ox = (int)ply[player_id]->x - customFrame->w + 0xb;   /* 2624: subtracts the *full* w, not w/2 */
-            draw_sprite_h_flip(bmp, customFrame, ox, oy);          /* draw.inl:280, offset 3451..3560; edge==2 jumps past the block below entirely */
-        }
-        else {
-            oy = (int)ply[player_id]->y + oy;               /* 2624 */
-            ox = (int)ply[player_id]->x - 0xb;               /* 2624: no customFrame->w term on this side */
-            draw_sprite(bmp, customFrame, ox, oy);            /* draw.inl:238 */
-
-            /* 2629..2638: a second, overlay draw -- edge==0 reaches this same block
-             * directly (2611's `je` target is offset 3115, this block's own start),
-             * so it is duplicated verbatim below for the no-edge case. Re-tried as a
-             * single copy guarded by `edge != 2` (matching the single-fragment shape
-             * function_lines --source-view reports for 2624/2629/2630/2631/2632/2636/
-             * 2638 individually): measured again this pass, candidate still drops to
-             * 8260/8518 (-258) even though the per-line fit for 2629/2630/2636/2638
-             * improves a lot (2638 alone: was +106 over duplicated, only +11 over
-             * merged) -- so the single fragment per line is real, but -O2 still isn't
-             * folding the two textual copies into one compiled copy for free the way
-             * the historical binary's block-layout scatter does; something else in the
-             * function absorbs the missing 300 bytes when this block is merged, and
-             * that something is not evidenced yet. Reverted to the duplicated form,
-             * which lands the whole-function total closer (8560 vs 8518) even though
-             * this block overshoots on its own. */
-            if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629: offset 3115..3134 (map.offset), 3416..3433 (y vs 400.0) */
-                customFrame = custom.frame[11];                      /* 2629 */
-            }
-            else {
-                if (logic_count <= 0xb)                              /* 2630 */
-                    customFrame = custom.frame[9];
-                else if (logic_count > 0x18 && logic_count <= 0x24)  /* 2631/2632 */
-                    customFrame = custom.frame[10];
-            }
-            ox = -(customFrame->w / 2);                              /* 2636 */
-            /* 2638: fldl 0x10(%esi)/fldz/fucompp guards the draw. A second,
-             * larger physical copy of this same test exists at offset
-             * 3187..3285 vs a `jne` target of 0x40b26a (offset 8142..8245,
-             * draw.inl:280) that calls draw_sprite_h_flip instead of
-             * draw_sprite with the same ox/oy -- i.e. this is really
-             * `sx == 0.0 ? draw_sprite(...) : draw_sprite_h_flip(...)`.
-             * Writing that else arm here (in either or both textual copies
-             * of this duplicated block) raises the candidate total past
-             * historical (8518 -> 8545 with both, 8545 -> still over with
-             * one), so it is left as the single-call form pending a source
-             * shape that reproduces the byte count instead of just the
-             * call. */
-            if (ply[player_id]->sx == 0.0) {                          /* 2638: fldl 0x10(%esi)/fldz/fucompp guards the draw */
-                oy = (int)ply[player_id]->y + oy;
-                ox = (int)ply[player_id]->x + ox;
-                draw_sprite(bmp, customFrame, ox, oy);                /* draw.inl:238, offset 3285..3323 */
+        if (ply[player_id]->edge) {                      /* 2611 */
+            customFrame = (logic_count & 8) ? custom.frame[13] : custom.frame[14]; /* 2612/2615 */
+            oy = (int)ply[player_id]->y + oy;           /* 2624 */
+            if (ply[player_id]->edge == 2) {            /* 2617 */
+                ox = (int)ply[player_id]->x - customFrame->w + 0xb;
+                draw_sprite_h_flip(bmp, customFrame, ox, oy);
+            } else {
+                ox = (int)ply[player_id]->x - 0xb;
+                draw_sprite(bmp, customFrame, ox, oy);
             }
         }
-    }
-    else {
-        /* 2629..2638 duplicated for edge==0: 2611's `je` on edge==0 lands directly
-         * at offset 3115, the start of this same customFrame/w2/sx-truncate/draw block. */
-        if (map.offset > 0xc8 && ply[player_id]->y > 400.0) {   /* 2629 */
-            customFrame = custom.frame[11];
-        }
-        else {
-            if (logic_count <= 0xb)                              /* 2630 */
-                customFrame = custom.frame[9];
-            else if (logic_count > 0x18 && logic_count <= 0x24)  /* 2631/2632 */
-                customFrame = custom.frame[10];
-        }
-        ox = -(customFrame->w / 2);                              /* 2636 */
-        if (ply[player_id]->sx == 0.0) {                          /* 2638 */
+        /* Both edge==0 and edge==1 enter this one block at original offset 3115;
+         * edge==2 jumps past it. The sx!=0 arm calls vtable +0x50 at 8237. */
+        if (ply[player_id]->edge != 2) {
+            if (map.offset > 0xc8 && ply[player_id]->y > 400.0)
+                customFrame = custom.frame[11];         /* 2629 */
+            else if (logic_count <= 0xb)
+                customFrame = custom.frame[9];          /* 2630 */
+            else if (logic_count > 0x18 && logic_count <= 0x24)
+                customFrame = custom.frame[10];         /* 2631/2632 */
+            ox = -(customFrame->w / 2);                 /* 2636 */
             oy = (int)ply[player_id]->y + oy;
             ox = (int)ply[player_id]->x + ox;
-            draw_sprite(bmp, customFrame, ox, oy);
+            if (ply[player_id]->sx == 0.0)             /* 2638 */
+                draw_sprite(bmp, customFrame, ox, oy);
+            else
+                draw_sprite_h_flip(bmp, customFrame, ox, oy);
         }
-    }
-
-    flip = ply[player_id]->rotate;                       /* 2643: test of 0x50(%edx), offset 2652..2657 */
+        flip = ply[player_id]->rotate;                  /* 2643 */
     }
 
     if (flip) {
@@ -476,7 +426,7 @@ void draw_frame(BITMAP *bmp)
          * and closes the brace itself. */
 
     /* Continues D3's `if (!recording) { ... }` block (DWARF lexical block 124048
-     * covers myBuf through here, up to and including the rectfill() below, as one
+     * covers myBuf through here, up to and including the rect() below, as one
      * shared block, not a nested one); the brace is closed just before the
      * unconditional debug F2 overlay. */
         int myPos;
@@ -547,14 +497,13 @@ void draw_frame(BITMAP *bmp)
                     scroll_count = -250;                          /* 2803 */
             }
         }
-        /* rectfill is inlined (draw.inl:112, offsets 4801..4895) with no visible mnemonics
-         * through the available tools, so its argument order is inferred, not disassembled:
-         * cx is the value carrying the y+0xa quantity throughout this scope (used as the
-         * y-coordinate for every textout_ex above) and cy carries the ox+0xa quantity (used
-         * as set_clip_rect's x1), so the bar rect keeps that same x=cy / y=cx pairing. (?) */
-        rectfill(bmp, cy, cx + 0x1e,                                      /* 2808 */
+        /* Original offsets 4808 and 4863 add 0x13 and 0x14 to cx at
+         * -0x178(ebp); offsets 4876 and 4853 use cy at -0x174(ebp) for x.
+         * The call through GFX_VTABLE +0xbc is rect (draw.inl:112), not rectfill
+         * (+0x3c). The old candidate also shifted both y coordinates by 10. */
+        rect(bmp, cy, cx + 0x14,                                          /* 2808 */
             cy + (myPos * 117 / len > 0x74 ? 0x74 : myPos * 117 / len),
-            cx + 0x1d, makecol(50, 200, 50));
+            cx + 0x13, makecol(50, 200, 50));
     }
 
     if (debug && key[KEY_F2]) {                                          /* 2812 */
