@@ -25,8 +25,8 @@ time_t timegm(struct tm *tm);
 int getSocketError(void);
 void destroyHTTPResponse(HTTPResponse *pResponse);
 void dumpHTTPResponse(FILE *pOut, HTTPResponse *pResponse);
-static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer, int iOutSize);
-HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData, int iResponseBytesCount);
+static inline int extractLine(const unsigned char *pBuffer, int iDataLeft, char *pOutBuffer, int iOutSize);
+HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(const unsigned char *pHTTPData, int iResponseBytesCount);
 HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile, const char *pMethod);
 int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort);
 HTTPResponse *HTTPGet(char *pURL);
@@ -67,15 +67,15 @@ void dumpHTTPResponse(FILE *pOut, HTTPResponse *pResponse)
     }
 }
 
-static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,
+static inline int extractLine(const unsigned char *pBuffer, int iDataLeft, char *pOutBuffer,
                               int iOutSize)
 {
     int bytesRead = 0;
-    char last = 0;
+    unsigned char last = 0;
 
     pOutBuffer[0] = 0;
     while (iDataLeft - bytesRead > 0) {
-        char c = pBuffer[bytesRead++];
+        unsigned char c = pBuffer[bytesRead++];
 
         if (c == '\n' && last == '\r')
             break;
@@ -91,7 +91,7 @@ static inline int extractLine(char *pBuffer, int iDataLeft, char *pOutBuffer,
     return bytesRead;
 }
 
-HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(char *pHTTPData,
+HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(const unsigned char *pHTTPData,
                                                                 int iResponseBytesCount)
 {
     char slaskbuf[1024];

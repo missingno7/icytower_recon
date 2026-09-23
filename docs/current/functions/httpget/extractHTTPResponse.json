@@ -440,17 +440,7 @@
         ]
       }
     ],
-    "declaration_differences": [
-      {
-        "variable": "pHTTPData",
-        "original_type": "const unsigned char *",
-        "candidate_type": "char *",
-        "original_die": 79740,
-        "candidate_die": 1957,
-        "confidence": "UNIQUE_NAME_BUILTIN_DECLARATIONS",
-        "limit": "Type evidence only; not a demonstrated instruction mismatch cause."
-      }
-    ],
+    "declaration_differences": [],
     "cast_chains": [],
     "shifts": [],
     "confidence": "NO_INSTRUCTION_EVIDENCE",
@@ -942,11 +932,11 @@
         "assembly": "mov    %eax,-0x838(%ebp)",
         "dwarf_variables": [
           {
-            "die": 1957,
+            "die": 1968,
             "name": "pHTTPData",
-            "type": "char *",
-            "base_type": "char",
-            "base_encoding": "6\t(signed char)",
+            "type": "const unsigned char *",
+            "base_type": "unsigned char",
+            "base_encoding": "8\t(unsigned char)",
             "location": {
               "kind": "register",
               "register": "eax"
@@ -963,7 +953,7 @@
         "assembly": "mov    %edx,-0x834(%ebp)",
         "dwarf_variables": [
           {
-            "die": 1978,
+            "die": 1989,
             "name": "iResponseBytesCount",
             "type": "int",
             "base_type": "int",
@@ -1550,7 +1540,7 @@
     "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 0,
+    "priority_adjustment": 15,
     "note": "Historical emission-order frontier: every earlier function already matches in order, so this body is compiled in its historical context."
   },
   "known_rules": [
@@ -1630,13 +1620,13 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -20,
+  "difficulty": "MEDIUM",
+  "priority": 92,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": null,
-  "routing_reason": "This CU has an unresolved declaration/type prerequisite; repair that interface before body grinding.",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -1709,38 +1699,8 @@
   "ownership_prerequisites": [],
   "local_declaration_tasks": [],
   "source_pattern_prerequisites": [],
-  "interface_scope": [
-    {
-      "function": "extractHTTPResponse",
-      "source": "src/httpget.c",
-      "blocking": true,
-      "state": "LOCAL_INTERFACE_CONFLICT",
-      "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence."
-    }
-  ],
-  "interface_conflicts": [
-    {
-      "function": "extractHTTPResponse",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "const unsigned char*",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 79696
-        }
-      ],
-      "type_layout_issues": [],
-      "candidate_signatures": [
-        "('HTTPResponse*', ['char*', 'int'])"
-      ],
-      "candidate_card": "docs/current/interfaces/extractHTTPResponse.json"
-    }
-  ],
+  "interface_scope": [],
+  "interface_conflicts": [],
   "edit_scope": "Function body only; use supervisor for prototypes/data/headers or missing implementations.",
   "detailed_evidence": "docs/current/function-evidence/httpget/extractHTTPResponse.json",
   "evidence_counts": {

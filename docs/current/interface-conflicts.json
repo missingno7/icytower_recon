@@ -92,24 +92,6 @@
       "size": 0
     },
     {
-      "function": "extractHTTPResponse",
-      "source": "src/httpget.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: char* -> const unsigned char*",
-      "begin_command": "python tools/interface_task.py begin extractHTTPResponse",
-      "verification_command": "python tools/interface_task.py check extractHTTPResponse",
-      "promotion_command": "python tools/interface_task.py promote extractHTTPResponse",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/extractHTTPResponse.json",
-      "size": 0
-    },
-    {
       "function": "fldads_get_random_ad",
       "source": "src/fld_adspot.c",
       "sources": null,
@@ -11717,13 +11699,13 @@
           "name": "extractHTTPResponse",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*",
+            "const unsigned char*",
             "int"
           ],
-          "declaration": "extern HTTPResponse *extractHTTPResponse (char *, int);",
+          "declaration": "extern HTTPResponse *extractHTTPResponse (const unsigned char *, int);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*",
+            "const unsigned char*",
             "int"
           ],
           "cu": "src/httpget.c",
@@ -11744,13 +11726,13 @@
           "name": "extractHTTPResponse",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*",
+            "const unsigned char*",
             "int"
           ],
-          "declaration": "extern HTTPResponse *extractHTTPResponse (char *pHTTPData, int iResponseBytesCount);",
+          "declaration": "extern HTTPResponse *extractHTTPResponse (const unsigned char *pHTTPData, int iResponseBytesCount);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*",
+            "const unsigned char*",
             "int"
           ],
           "cu": "src/httpget.c",
@@ -11765,9 +11747,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -47835,82 +47817,6 @@
           "line": 450
         }
       ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "extractHTTPResponse",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "const unsigned char*",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 79696
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/httpget.c",
-          "line": 29,
-          "kind": "NC",
-          "name": "extractHTTPResponse",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*",
-            "int"
-          ],
-          "declaration": "extern HTTPResponse *extractHTTPResponse (char *, int);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*",
-            "int"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 94,
-          "kind": "NF",
-          "name": "extractHTTPResponse",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*",
-            "int"
-          ],
-          "declaration": "extern HTTPResponse *extractHTTPResponse (char *pHTTPData, int iResponseBytesCount);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*",
-            "int"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
       "difficulty": "SUPERVISOR",
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
