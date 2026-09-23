@@ -181,10 +181,12 @@ void draw_frame(BITMAP *bmp)
         }
     }
 
-    /* 2589: status==0 branches to a separate narrow-speed check at original offset 2256.
-     * That path reaches the edge sprite directly for -0.02<sx<0.02, or reaches the
-     * ordinary p_im=1 speed/frame route outside that band. Other statuses select
-     * their own pose bases before the 2594 range test. */
+    /* 2589: no pre-set default here -- offset 1813's `je` on status==0 lands at offset 2256,
+     * a point downstream of the elseif chain that never passes through any of the chain's own
+     * `mov $0x6,%esi` instructions (1852 for status==3's false arm, 2556 for status==2's own
+     * false arm). Each arm below carries its OWN literal-6 fallback instead of one shared
+     * pre-set; on the status==0 edge p_im is left holding whatever it already had, which is
+     * exactly the unprovable edge the 2594 range test below needs to survive folding. */
     /* 2590/2591/2595/2597 all show the same shape as 2606's gap: the line table charges each of
      * these comparisons far more than one `fldl/fucompp/fnstsw/test` sequence costs (2590: 42 vs
      * our 9; 2591 has its own separate -3.0/6/7 arm so is not the same statement), because -O2
@@ -221,7 +223,8 @@ void draw_frame(BITMAP *bmp)
         }
         goto p_im_one_path;
     }
-    /* 2594: the status-zero route bypasses this pose-range check. */
+    /* 2594: reached even when status==0 skipped the whole chain above, leaving p_im
+     * unassigned on that edge -- the compiler cannot fold this test away. */
     if ((unsigned)(p_im - 5) <= 2) {          /* 2594: range test on p_im */
         if (ply[player_id]->sx > -0.01 && ply[player_id]->sx < 0.01)
             p_im = 8;                        /* 2595: strict band includes zero */
