@@ -102,7 +102,7 @@ def promote(target,name,claim='FUNCTION_MATCH'):
             source_changed=report['build']['local_inputs']!=old['build']['local_inputs']
             link=None
             if source_changed:
-                print(run([sys.executable,'tools/recovered_game_link.py']),end='')
+                print(run([sys.executable,'tools/recovered_game_link.py','--diagnostic']),end='')
                 link=read_json(ROOT/'build/recovered-game/tdm-2/link.json')
                 baseline=session.get('baseline_link') if session else None
                 if not link['linked'] and (not baseline or baseline.get('linked') or link['unresolved_symbols']!=baseline.get('unresolved_symbols')):

@@ -60,7 +60,7 @@ python tools/experiment.py game-beta game-control game-csv game-timer allegro-ti
 python tools/link_probe.py --compiler tdm-2
 python tools/integration_link.py --compiler tdm-2
 python tools/verify_integration.py
-python tools/recovered_game_link.py
+python tools/recovered_game_link.py --diagnostic
 python tools/build_xiph.py
 python tools/audio_link.py
 python tools/test_pipeline.py
@@ -75,6 +75,10 @@ The modern objdump is an identified analysis tool only. Historical gcc,
 assembler, linker, archiver and resource compiler come from the local lock.
 The census refuses a changed original hash; builds refuse changed locked
 inputs; progress publishing refuses stale source/header or toolchain reports.
+The diagnostic link can include two known synthetic `main.c` replacements and
+one candidate body with a known synthetic slice; the default recovered-game
+link refuses these and all nonmatching functions.
+Ordinary link closure is not recovery proof.
 
 ## Project map
 

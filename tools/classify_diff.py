@@ -19,6 +19,11 @@ def classify(row):
     if row.get('compiler_context'): return 'COMPILER_CONTEXT_DEPENDENCY'
     if row['status'] == 'MISSING':
         return 'SOURCE_INCOMPLETE'
+    # A tiny candidate cannot be reduced to its first frame-allocation byte.
+    # Recover the omitted source and control flow before grinding stack layout.
+    original, candidate = row.get('original_size'), row.get('candidate_size')
+    if original and candidate is not None and original >= 128 and candidate * 2 < original:
+        return 'SOURCE_INCOMPLETE'
     if (row.get('frame_layout') or {}).get('first_mismatch_is_frame_allocation'): return 'STACK_FRAME_LAYOUT'
     if (row.get('instruction_order') or {}).get('all_other_resolved_bytes_equal'): return 'INSTRUCTION_ORDER'
     if row.get('signedness', {}).get('instruction_differences'):

@@ -8,7 +8,7 @@
   "historical_size": 8518,
   "status": "DIFFER",
   "state": "SOURCE_DIFFER",
-  "difference_class": "STACK_FRAME_LAYOUT",
+  "difference_class": "SOURCE_INCOMPLETE",
   "body_edit_allowed": true,
   "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void draw_frame(BITMAP *bmp);",
@@ -2204,41 +2204,9 @@
     "priority_adjustment": 0,
     "note": "Emission-order context differs from history (candidate predecessor draw_reward versus historical line_alert); part of the mismatch may be a neighbor artifact."
   },
-  "known_rules": [
-    {
-      "id": "constant-stack-frame-allocation",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "symptom": "First differing instruction is a constant SUB ESP prologue allocation.",
-      "known_source_cause": "Not established by the allocation alone. Different local widths, spills, outgoing arguments, lifetimes or source expansion can change the frame.",
-      "known_fix_pattern": "Check the attached DWARF local-width evidence and calls before experimenting with register temporaries. Preserve x87 and historical flags; never change a frame size or padding to mask a source mismatch.",
-      "compiler_scope": {
-        "compiler": "Locked i386 TDM-GCC 4.4.1",
-        "acceptance": "Decoded allocation is an observation, not an exact match or source-cause proof.",
-        "compiler_ids": [
-          "tdm-2"
-        ],
-        "required_flags": []
-      },
-      "example_functions": [
-        "main_menu_callback",
-        "profile_data_page_general",
-        "draw_profile_selector"
-      ],
-      "required_evidence": "frame_layout",
-      "confidence": "OBSERVED_ALLOCATION; SOURCE_CAUSE_UNPROVEN",
-      "evidence": "docs/stack-frame-evidence.md",
-      "applicability": {
-        "basis": "CURRENT_SYMPTOM_EVIDENCE",
-        "observed_features": [],
-        "evidence_field": "frame_layout",
-        "priority_bonus_eligible": true,
-        "compiler_scope_matches": true,
-        "limit": "Symptom filtering narrows hypotheses; it does not prove the source cause or authorize a repair. Historical example membership alone is not current applicability."
-      }
-    }
-  ],
+  "known_rules": [],
   "difficulty": "SUPERVISOR",
-  "priority": -420,
+  "priority": -425,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,

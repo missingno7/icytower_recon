@@ -224,7 +224,7 @@ def promote(name):
         report = fresh_verify(target, dest=ROOT / 'build/acceptance' / target)
         result = _acceptance(s, report, old)
         print(run([sys.executable, 'tools/acceptance_tests.py', 'function']), end='')
-        print(run([sys.executable, 'tools/recovered_game_link.py']), end='')
+        print(run([sys.executable, 'tools/recovered_game_link.py', '--diagnostic']), end='')
         link = read_json(ROOT / 'build/recovered-game/tdm-2/link.json')
         if not link['linked']: raise ValueError('Ordinary source link failed: ' + str(link.get('unresolved_symbols')))
         validate_report(report); validate_scope(s)

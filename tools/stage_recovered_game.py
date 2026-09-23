@@ -7,7 +7,8 @@ input.  The stage manifest records exact file identities for review.
 import shutil
 from pathlib import Path
 
-from common import ROOT, identity, write_json
+from common import ROOT, identity, read_json, write_json
+from recovered_game_link import provenance_status
 
 
 COMPILER = 'tdm-2'
@@ -26,6 +27,17 @@ def copy_file(source, destination, stage, manifest):
 
 def main():
     linked = ROOT / 'build' / 'recovered-game' / COMPILER / 'recovered-game.exe'
+    record = ROOT / 'build' / 'recovered-game' / COMPILER / 'link.json'
+    if not record.exists():
+        raise ValueError('No recovered-game link receipt')
+    link = read_json(record)
+    current = provenance_status()
+    if (link.get('scope') != 'Recovered game source link' or not link.get('linked') or
+            link.get('provenance') != current or current['known_synthetic_bodies'] or
+            current['known_placeholder_bodies'] or
+            current['nonmatching_functions'] or not linked.exists() or
+            link.get('executable') != identity(linked)):
+        raise ValueError('Staging refused: source link is diagnostic, incomplete, or stale')
     if not linked.exists():
         raise FileNotFoundError('build the recovered game before staging: ' + str(linked))
     assets = ROOT / 'assets'

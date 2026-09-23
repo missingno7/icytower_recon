@@ -97,11 +97,13 @@ def main():
             print(target,report['function_matches'],'/',report['functions_total'],flush=True)
         link=None
         if a.verify_all:
-            # Fresh verification also refreshes the ordinary recovered-game link record (never executed).
+            # Fresh verification refreshes explicitly diagnostic link closure.
             import subprocess,sys
-            subprocess.run([sys.executable,'tools/recovered_game_link.py'],cwd=ROOT,check=False)
+            subprocess.run([sys.executable,'tools/recovered_game_link.py','--diagnostic'],cwd=ROOT,check=True)
             link_path=ROOT/'build/recovered-game/tdm-2/link.json'
             if link_path.exists(): link=read_json(link_path)
+            if link is not None and link.get('scope') != 'Incomplete diagnostic source link':
+                raise ValueError('Expected a fresh diagnostic source-link record')
             previous=read_json(CURRENT/'link-status.json') if (CURRENT/'link-status.json').exists() else None
             if link is None or (previous and previous.get('linked') and not link['linked']):
                 raise ValueError('Ordinary source link regressed or produced no record')

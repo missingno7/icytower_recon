@@ -1,21 +1,18 @@
-"""DWARF locals of an original function that a reconstruction never mentions (diagnostic only; never a proof).
+"""DWARF local names unmentioned by reconstruction code (diagnostic only; never a proof).
 
-The compiler allocated a stack slot or a register for every local the historical source declared, so a
-local whose name appears nowhere in our reconstruction marks statements we have not recovered.  Unlike a
-byte budget this does not depend on line attribution, cross-jumping or inlining, so it stays meaningful
-while a body is still far from its original size -- in `play` it located a debug-timing block, an
-achievements loop that our source had written as two string copies, and the target variables of an
-easing block that two byte-budget passes had failed to find.
+Optimized DWARF may name a local with no surviving machine location or instructions. A missing
+name is a lead to check scope, location lists, lifetime, and original instructions; it is not
+proof of missing behavior. Comments and string literals in the candidate do not count as usage.
 
     python tools/unused_locals.py game-main play --body docs/attempts/game-main/play-merged.c
     python tools/unused_locals.py game-main draw_frame --body docs/attempts/game-main/draw_frame-merged.c
 
-Each row gives the local's type, its DWARF lexical block, and that block's historical line span, which is
-where the missing statements are.  A name absent here is evidence of a gap; a name present is no evidence
-of anything, since our source may use it for something else entirely.
+Each row gives the local's type, location attribute, lexical block, and historical line span.
+The line span locates an investigation, not necessarily a missing statement.
 """
 import argparse, bisect, json, re
 from common import ROOT, read_json
+from source_scope import sanitized
 
 BASE_OF_CU = {}
 
@@ -49,6 +46,19 @@ def spans(block, base, ranges):
     return [(base + e['begin'], base + e['end']) for e in (table or {}).get('entries', []) if e['kind'] == 'range']
 
 
+def unmentioned(locals_, source):
+    """Keep distinct DWARF locals, and search only C tokens outside comments/literals."""
+    code = sanitized(source)
+    seen, missing = set(), []
+    for local in locals_:
+        key = local.get('die', (local['name'], local.get('scope')))
+        if key in seen: continue
+        seen.add(key)
+        if not re.search(r'\b' + re.escape(local['name']) + r'\b', code):
+            missing.append(local)
+    return len(seen), missing
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('target'); ap.add_argument('function')
@@ -74,19 +84,14 @@ def main():
         ls = [(at(lo), at(hi - 1)) for lo, hi in spans(b, base, ranges)]
         if ls: where[b['die']] = '%d..%d' % (min(x for x, _ in ls), max(y for _, y in ls))
 
-    seen, missing = set(), []
-    for l in ev.get('locals', []):
-        n = l['name']
-        if n in seen: continue
-        seen.add(n)
-        if not re.search(r'\b' + re.escape(n) + r'\b', text):
-            missing.append((l, where.get(l.get('scope'), '')))
+    total, missing = unmentioned(ev.get('locals', []), text)
 
-    print('%s: %d DWARF locals, %d never mentioned in %s' % (a.function, len(seen), len(missing), a.body))
+    print('%s: %d DWARF locals, %d unmentioned in code of %s' % (a.function, total, len(missing), a.body))
     if not missing: return
-    print('%-22s %-14s %-10s %s' % ('local', 'type', 'block', 'historical lines'))
-    for l, span in sorted(missing, key=lambda x: (x[1], x[0]['name'])):
-        print('%-22s %-14s %-10s %s' % (l['name'], l.get('type'), l.get('scope'), span))
+    print('%-22s %-14s %-10s %-22s %s' % ('local', 'type', 'block', 'location', 'historical lines'))
+    for l in sorted(missing, key=lambda x: (where.get(x.get('scope'), ''), x['name'])):
+        print('%-22s %-14s %-10s %-22s %s' % (l['name'], l.get('type'), l.get('scope'),
+                                                 str(l.get('location') or 'none')[:22], where.get(l.get('scope'), '')))
 
 
 if __name__ == '__main__':

@@ -67,43 +67,77 @@ def resolve(va, names, bases=None):
     return None, None, None
 
 
-def literal_at(exe, va, insn):
-    try: data = exe.at_va(va, 320)
-    except Exception: return None
+def data_section(exe, va):
+    """Use the PE's actual virtual ranges; never guess an address prefix."""
+    for section in exe.sections:
+        start = exe.image_base + section['rva']
+        if start <= va < start + section['virtual_size']:
+            return section
+    return None
+
+
+def literal_at(exe, va, insn, section=None):
+    section = section or data_section(exe, va)
+    if not section or section['name'] not in ('.data', '.rdata'):
+        return {'kind': 'unknown', 'value': None}
+    available = section['raw_size'] - (va - exe.image_base - section['rva'])
+    if available <= 0:
+        return {'kind': 'unknown', 'value': None}
+    try: data = exe.at_va(va, min(320, available))
+    except Exception: return {'kind': 'unknown', 'value': None}
     if re.match(r'f(ld|add|sub|mul|div|com|ucom)[ls]?\s', insn) or 'movs' in insn:
-        if 'fldl' in insn or re.search(r'f\w+l\s', insn): return {'kind': 'double', 'value': struct.unpack_from('<d', data, 0)[0]}
-        if 'flds' in insn or re.search(r'f\w+s\s', insn): return {'kind': 'float', 'value': struct.unpack_from('<f', data, 0)[0]}
+        if ('fldl' in insn or re.search(r'f\w+l\s', insn)) and len(data) >= 8: return {'kind': 'double', 'value': struct.unpack_from('<d', data, 0)[0]}
+        if ('flds' in insn or re.search(r'f\w+s\s', insn)) and len(data) >= 4: return {'kind': 'float', 'value': struct.unpack_from('<f', data, 0)[0]}
     end = data.find(b'\0')
+    if end == 0: return {'kind': 'empty_string', 'value': ''}
     s = data[:end] if end >= 0 else data
     if len(s) >= 1 and all(32 <= c < 127 or c in (9, 10, 13) for c in s): return {'kind': 'string', 'value': s.decode('ascii')}
-    return {'kind': 'bytes', 'value': data[:16].hex()}
+    return {'kind': 'unknown', 'value': data[:16].hex()}
+
+
+def reference(exe, va, insn, names, bases, g, scancodes):
+    """Classify even unresolved references so a caller cannot silently drop one."""
+    if va == 0:
+        return {'kind': 'null_pointer', 'value': None}
+    section = data_section(exe, va)
+    if not section:
+        return {'kind': 'unknown', 'value': None, 'section': None}
+    name, owner, delta = resolve(va, names, bases)
+    if name:
+        base = va - delta
+        type_ref = names[base][3] if len(names[base]) > 3 else None
+        return {'kind': 'data_object', 'global': access(name, type_ref, delta, g, scancodes),
+                'owner': owner, 'base_offset': delta, 'section': section['name']}
+    return {'kind': 'literal', 'literal': literal_at(exe, va, insn, section), 'section': section['name']}
 
 
 def refs(target, fn):
     ledger = read_json(ROOT / 'src/recovery.json')
+    rep = None
     for source, entry in ledger.items():
         if not entry.get('verified_report'): continue
         rep = read_json(ROOT / entry['verified_report'])
         if rep['build']['target'] == target: break
+    else: raise ValueError('No verified report for ' + target)
     f = next(x for x in rep['functions'] if x['name'] == fn)
     names = global_names(); bases = sorted(names); exe = Binary(str(ROOT / 'assets/icytower15.exe'))
     out = {}
     for i in original_slice(f['va'], f['original_size']):
         a = i['assembly']
         if re.match(r'(call|j[a-z]+)\s', a): continue
-        for m in re.finditer(r'0x(4[c-f][0-9a-f]{4}|5[0-1][0-9a-f]{4})', a):
+        for m in re.finditer(r'(?<![\w])0x([0-9a-fA-F]+)\b', a):
             va = int(m.group(1), 16)
+            if not exe.image_base <= va < exe.image_base + exe.optional['size_of_image']:
+                continue
+            section = data_section(exe, va)
+            if section and (section['name'] == '.text' or section['name'].startswith('.debug')):
+                continue
             row = out.setdefault(va, {'va': '%x' % va, 'count': 0, 'first_offset': i['address'] - f['va'], 'insn': a})
             row['count'] += 1
     from type_graph import graph
     g = graph(); scancodes = scancode_names()
     for va, row in out.items():
-        name, owner, delta = resolve(va, names, bases)
-        if name:
-            base = va - delta; type_ref = names[base][3] if len(names[base]) > 3 else None
-            row['global'] = access(name, type_ref, delta, g, scancodes)
-            row['owner'] = owner; row['base_offset'] = delta
-        else: row['literal'] = literal_at(exe, va, row['insn'])
+        row.update(reference(exe, va, row['insn'], names, bases, g, scancodes))
     return [out[k] for k in sorted(out)]
 
 
@@ -112,7 +146,7 @@ def main():
     ap.add_argument('target'); ap.add_argument('function'); ap.add_argument('--json')
     a = ap.parse_args(); rows = refs(a.target, a.function)
     for r in rows:
-        what = r.get('global') or (r['literal']['kind'] + ' ' + json.dumps(r['literal']['value']) if r.get('literal') else '?')
+        what = r.get('global') or (r['literal']['kind'] + ' ' + json.dumps(r['literal']['value']) if r.get('literal') else r['kind'])
         print('%s %3d @%-6d %s' % (r['va'], r['count'], r['first_offset'], what))
     if a.json:
         with open(a.json, 'w') as fh: json.dump(rows, fh, indent=1)

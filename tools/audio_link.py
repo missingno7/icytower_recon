@@ -7,7 +7,7 @@ def main(with_custom=False):
     if with_custom:
         # The recovered main CU now depends on the full game tree. Use its ordinary topology.
         from recovered_game_link import main as link_game
-        return link_game()
+        return link_game(diagnostic=True)
     compiler='tdm-2'
     verify_inputs(compiler)
     tc=COMPILERS[compiler]

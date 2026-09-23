@@ -1,11 +1,10 @@
-"""Link all recovered game CUs without fallback code.
+"""Link all available game CUs for diagnosis; gate incomplete recovery by default.
 
-This deliberately unexecuted candidate uses main.c's historical WinMain
-wrapper, so no synthetic entrypoint, original code, or undefined-symbol
-suppression is involved. A successful link establishes ordinary source-link
-closure only; per-function and CU fidelity still require oracle verification.
-A linker failure records the next genuine dependency frontier.
+An ordinary link can contain known synthetic replacements and unmatched game
+functions. It is therefore a diagnostic artifact until source provenance and
+strict function evidence permit a recovered-game claim.
 """
+import argparse
 import os
 import re
 import subprocess
@@ -13,6 +12,7 @@ import subprocess
 from common import ROOT, identity, read_json, write_json
 from build import COMPILERS, verify_inputs
 from link_object_cache import obtain, verify
+from source_scope import body_hash
 
 
 GAME_TARGETS = [
@@ -30,7 +30,36 @@ def unresolved_symbols(stderr):
     return list(dict.fromkeys(names))
 
 
-def main(compiler='tdm-2'):
+def provenance_status():
+    manifest = read_json(ROOT / 'src/reconstruction-provenance.json')
+    known = []; placeholders = []
+    for entry in manifest['bodies']:
+        source = ROOT / entry['source']
+        actual = body_hash(source.read_bytes().decode('cp1252'), entry['function'])
+        if actual != entry['body_sha256']:
+            raise ValueError('Source provenance changed; reclassify ' + entry['source'] + '::' + entry['function'])
+        if entry['kind'] == 'synthetic_replacement':
+            known.append(entry['source'] + '::' + entry['function'])
+        elif entry['kind'] == 'candidate_with_synthetic_slice':
+            placeholders.append(entry['source'] + '::' + entry['function'])
+        else:
+            raise ValueError('Unknown provenance kind for ' + entry['function'])
+    ledger = read_json(ROOT / 'src/recovery.json')
+    incomplete = [source + '::' + name for source, row in ledger.items()
+                  for name, verdict in row.get('functions', {}).items() if verdict != 'FUNCTION_MATCH']
+    return {'manifest': identity(ROOT / 'src/reconstruction-provenance.json'),
+            'known_synthetic_bodies': known, 'known_placeholder_bodies': placeholders,
+            'nonmatching_functions': incomplete,
+            'scope': 'Known-body manifest plus strict ledger; neither is an exhaustive source provenance audit.'}
+
+
+def main(compiler='tdm-2', diagnostic=False):
+    provenance = provenance_status()
+    if not diagnostic and (provenance['known_synthetic_bodies'] or provenance['known_placeholder_bodies'] or provenance['nonmatching_functions']):
+        raise RuntimeError('Recovered-game link refused: %d known synthetic bodies, %d candidate placeholder bodies, and %d nonmatching functions. '
+                           'Use --diagnostic only for an explicitly incomplete link.' %
+                           (len(provenance['known_synthetic_bodies']), len(provenance['known_placeholder_bodies']),
+                            len(provenance['nonmatching_functions'])))
     verify_inputs(compiler)
     tc = COMPILERS[compiler]
     adir = ROOT / 'build' / 'allegro' / compiler
@@ -50,8 +79,8 @@ def main(compiler='tdm-2'):
 
     out = ROOT / 'build' / 'recovered-game' / compiler
     out.mkdir(parents=True, exist_ok=True)
-    exe = out / 'recovered-game.exe'
-    link_map = out / 'recovered-game.map'
+    exe = out / ('diagnostic-game.exe' if diagnostic else 'recovered-game.exe')
+    link_map = out / ('diagnostic-game.map' if diagnostic else 'recovered-game.map')
     (out / 'link.json').unlink(missing_ok=True)
     exe.unlink(missing_ok=True)
     link_map.unlink(missing_ok=True)
@@ -87,7 +116,8 @@ def main(compiler='tdm-2'):
     stderr = result.stderr.decode('utf-8', errors='replace')
     output = result.stdout.decode('utf-8', errors='replace')
     record = {
-        'scope': 'Ordinary recovered game-object link; no synthetic entrypoint, stubs, original-code input, or execution.',
+        'scope': 'Incomplete diagnostic source link' if diagnostic else 'Recovered game source link',
+        'provenance': provenance,
         'compiler': compiler,
         'command': [str(x) for x in args],
         'allegro_report': identity(adir / 'build.json'),
@@ -110,8 +140,15 @@ def main(compiler='tdm-2'):
     if result.returncode:
         print('Recorded unresolved game-link frontier:', ', '.join(record['unresolved_symbols']))
     else:
-        print('Linked', exe, '(not executed)')
+        print('Linked', exe, '(diagnostic; not executed)' if diagnostic else '(not executed)')
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--compiler', default='tdm-2')
+    parser.add_argument('--diagnostic', action='store_true', help='permit and label incomplete source-link closure')
+    args = parser.parse_args()
+    try:
+        main(args.compiler, args.diagnostic)
+    except RuntimeError as exc:
+        raise SystemExit(str(exc))

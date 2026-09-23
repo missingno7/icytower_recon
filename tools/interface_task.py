@@ -298,7 +298,7 @@ def promote(name):
         try:
             ledger,reports,result=verify_interface(session,acceptance=True)
             print(run([sys.executable,'tools/acceptance_tests.py','interface']),end='')
-            run([sys.executable,'tools/recovered_game_link.py'])
+            run([sys.executable,'tools/recovered_game_link.py','--diagnostic'])
             link=read_json(ROOT/'build/recovered-game/tdm-2/link.json'); old=session['baseline_link']
             if not link['linked'] and (not old or old.get('linked') or set(link['unresolved_symbols'])!=set(old['unresolved_symbols'])):
                 raise ValueError('Ordinary link regressed or lacks a baseline')
