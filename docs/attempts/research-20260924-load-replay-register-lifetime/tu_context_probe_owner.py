@@ -19,6 +19,8 @@ verifier (`experiment.compare`), and nothing in this module writes to production
 """
 import argparse, json, os, re, subprocess, hashlib
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
 from common import ROOT, read_json, write_json, identity
 
 EVIDENCE = ROOT / 'docs/attempts/tu-context'
@@ -336,8 +338,10 @@ def focus_report(report, callees, optimized, focus):
 
 def build_text(target, source, spec):
     """Overlay text from an edit spec: order ('historical'|'current'|list), bodies {name: path}, statics ('historical'|list), prototypes."""
-    base = ROOT / (spec.get('research_base') or source)
-    text = base.read_bytes().decode('cp1252')
+    owner_base = os.environ.get('REPLAY_OWNER_BASE')
+    base_path = Path(owner_base) if owner_base else ROOT / source
+    if not base_path.is_absolute(): base_path = ROOT / base_path
+    text = base_path.read_bytes().decode('cp1252')
     unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == source)
     isl = islands(text); current = [i['name'] for i in isl]
     order = spec.get('order', 'current')
@@ -358,7 +362,6 @@ def build_text(target, source, spec):
     full = list(order) + [n for n in current if n not in set(order)]
     cur_static = {i['name'] for i in isl if i.get('signature') and 'static' in i['signature'].split()}
     edits = {'focus': spec.get('focus') or [], 'declarations': ({**spec['declarations'], 'removed_text': layout.removed} if spec.get('declarations') else {}), 'order': order, 'definition_order_with_static': [(n, (n in cur_static) or (n in set(statics))) for n in full], 'bodies': {n: {'path': spec['bodies'][n], 'identity': bodies[n]['identity']} for n in bodies}, 'statics': list(statics), 'prototypes': spec.get('prototypes', 'auto'),
-             'research_base': ({'path': spec['research_base'], 'identity': identity(base)} if spec.get('research_base') else None),
              'headers': {h: {'removed_declarations': v['removed'], 'evidence': v['evidence']} for h, v in headers.items()}}
     return new, edits, {h: v['text'] for h, v in headers.items()}
 
@@ -395,25 +398,17 @@ def main():
     ap.add_argument('--header', action='append', default=[], help='header=name[,name] declarations to remove with historical static evidence')
     ap.add_argument('--focus', action='append', default=[], help='function whose historical-versus-compiled callee sets and positions are reported')
     ap.add_argument('--declarations', help='JSON file: {"remove_top_level": [names], "includes_after": {"allegro.h": ["winalleg.h"]}, "evidence": "..."}')
-    ap.add_argument('--research-base', help='retained complete TU under docs/attempts or build/tu-context; canonical source still identifies the CU')
     a = ap.parse_args()
     order = a.order
     if order not in ('historical', 'current'): order = read_json(Path(order))
     spec = {'order': order, 'bodies': dict(b.split('=', 1) for b in a.body), 'prototypes': 'none' if a.no_prototypes else 'auto'}
-    if a.research_base:
-        candidate_base = (ROOT / a.research_base).resolve()
-        allowed = ((ROOT / 'docs/attempts').resolve(), (ROOT / 'build/tu-context').resolve())
-        if not any(candidate_base.is_relative_to(root) for root in allowed):
-            ap.error('--research-base must be inside docs/attempts or build/tu-context')
-        if not candidate_base.is_file(): ap.error('--research-base file does not exist')
-        spec['research_base'] = candidate_base.relative_to(ROOT).as_posix()
     if a.statics: spec['statics'] = 'historical' if a.statics == 'historical' else a.statics.split(',')
     if a.header: spec['headers'] = {h: names.split(',') for h, names in (x.split('=', 1) for x in a.header)}
     spec['focus'] = a.focus
     if a.declarations: spec['declarations'] = read_json(Path(a.declarations))
     if not a.no_prototypes:
         marker = '/* Forward declarations; definitions follow in their original source order. */'
-        existing = (ROOT / (spec.get('research_base') or a.source)).read_bytes().decode('cp1252').count(marker)
+        existing = (ROOT / a.source).read_bytes().decode('cp1252').count(marker)
         if existing:
             print('CONTEXT WARNING: source already has %d generated forward-declaration block(s); '
                   'auto mode adds another. Use --no-prototypes for a production-equivalent '

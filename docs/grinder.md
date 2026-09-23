@@ -15,6 +15,11 @@ research uses separate candidate files or TU probe overlays under a unique
 may investigate MEDIUM/SUPERVISOR tasks, types, callers, ABI, compiler passes and
 whole-TU context in this lane. Existing `tu_context_probe.py` compiles historical
 order with explicit body overlays; its result is diagnostic and cannot be promoted.
+For a retained complete research TU, pass `--research-base
+docs/attempts/PATH/source.c` to probe that context with the same locked compiler
+and strict comparator. The base must be under `docs/attempts/` or
+`build/tu-context/`; the receipt records its path and content hash. This does
+not change the canonical CU or authorize production promotion.
 When probing the already promoted `main.c`, preserve its declaration context:
 `python tools/tu_context_probe.py game-main src/main.c LABEL --order current
 --no-prototypes ...`. The maintained file already contains generated forward
