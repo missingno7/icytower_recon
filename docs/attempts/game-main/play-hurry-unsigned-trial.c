@@ -363,7 +363,7 @@ int play(void)
                 }
             }
             any13 = map.offset;                                         /* 3763 */
-            if ((unsigned)(hurry_y + 99) <= 578u)                        /* 3765 */
+            if ((unsigned)(hurry_y + 99) <= 578u)                                    /* 3765 */
                 hurry_y -= 2;                                           /* 3765 */
             if (demo->speed_increase) {                                 /* 3766 */
                 /* 3767 */
@@ -1295,7 +1295,7 @@ int play(void)
                 for (i = 0; i < 512; i++)                                            /* 4701 */
                     if (stars[i].intensity)
                         update_particle(&stars[i]);
-                if ((unsigned)(hurry_y + 99) <= 578u)                                 /* 4702 */
+                if ((unsigned)(hurry_y + 99) <= 578u)                                             /* 4702 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                             /* 4703 */
                 /* 4704 */
@@ -1385,7 +1385,7 @@ int play(void)
                     take_screenshot(swap_screen);                                      /* 4803 */
                     while (key[KEY_F1]) { }                                            /* 4804 */
                 }
-                if ((unsigned)(hurry_y + 99) <= 578u)                                   /* 4808 */
+                if ((unsigned)(hurry_y + 99) <= 578u)                                               /* 4808 */
                     hurry_y -= 2;
                 draw_frame(swap_screen);                                               /* 4809 */
                 /* 4810 */ draw_results(swap_screen, data[gameover_bmp_id].dat, (int)hy, qualify,
