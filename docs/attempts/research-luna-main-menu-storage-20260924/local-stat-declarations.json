@@ -1,0 +1,8 @@
+{
+  "add_top_level": [
+    {"name": "get_rank", "declaration": "extern char *get_rank(Tprofile *profile);", "after": "get_rank_id"}
+  ],
+  "includes_after": {"allegro.h": ["allegro/platform/aintwin.h"]},
+  "remove_static_variables": ["face", "count"],
+  "evidence": "Original main_menu_callback DWARF places face and count in this function's static scope; current src/main.c declares both at file scope. This diagnostic overlay removes those two file-scope objects while the retained callback body declares function-local statics. The caller-side get_rank declaration and aintwin include are copied from the retained presentation research."
+}
