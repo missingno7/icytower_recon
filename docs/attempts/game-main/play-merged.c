@@ -1315,8 +1315,10 @@ int play(void)
                     ply[player_id]->shake = 24;                                       /* 4714 */
                 }
                 if (ply[player_id]->shake) {                                          /* 4716 */
+                    acquire_screen();                                                /* 4716: inlined */
                     /* 4718 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
                          swap_screen->w, swap_screen->h);
+                    release_screen();                                                /* 4718: inlined */
                     ply[player_id]->shake--;                                          /* 4720 */
                 }
                 blit_to_screen(swap_screen);                                          /* 4722 */
@@ -1469,8 +1471,10 @@ int play(void)
                     falling = 0;
                 }
                 if (ply[player_id]->shake) {                                              /* 4852 */
+                    acquire_screen();                                                    /* 4852: inlined */
                     /* 4855 */ blit(swap_screen, screen, 0, new_rand() % 8, 0, 0,
                          swap_screen->w, swap_screen->h);
+                    release_screen();                                                    /* 4855: inlined */
                     ply[player_id]->shake--;                                              /* 4857 */
                 }
                 blit_to_screen(swap_screen);                                              /* 4860 */
@@ -1598,9 +1602,17 @@ int play(void)
                     blit(data[126].dat, swap_screen, 0, 0, 0, 0, 640, 480);                   /* 4971 */
                     set_trans_blender(0, 0, 0, 158);                                          /* 4974 */
                     drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);                                   /* 4975 */
-                    if (gfx_driver)                                                            /* 4976 */
-                        rectfill(swap_screen, 0, 0, gfx_driver->w, gfx_driver->h,
-                                 makecol(0, 0, 0));
+                    {                                                                           /* 4976 */
+                        int black = makecol(0, 0, 0);
+                        int width = 0;
+                        int height = 0;
+                        GFX_DRIVER *driver = gfx_driver;
+                        if (driver) {
+                            width = driver->w;
+                            height = driver->h;
+                        }
+                        rectfill(swap_screen, 0, 0, width, height, black);
+                    }
                     solid_mode();                                                             /* 4977 */
                     draw_sprite(swap_screen, data[58].dat,
                                 320 - ((BITMAP *)data[58].dat)->w / 2, 20);                    /* 4980 (inlined) */
@@ -1613,15 +1625,9 @@ int play(void)
                                        320, 0x1b8, -1, -1);
                     play_sound(sounds[2], 0, 0);                                                /* 4984 */
                     fadeIn(swap_screen, 16);                                                   /* 4985 */
+                    while (key[KEY_ESC] || key[KEY_ENTER] || key[KEY_SPACE]) {  /* 4986 */
+                    }
                     while (!key[KEY_ESC] && !key[KEY_ENTER] && !key[KEY_SPACE]) {  /* 4986 */
-                        /* ? the two-stage key test at these lines (checked twice, once before
-                         * and once after the fall-through) may debounce a stale press; no
-                         * distinguishing branch structure survives at the C level. Tried an
-                         * explicit do-while to force the compiler to emit a separate entry test
-                         * and loop-back test (matching the original's distinct instruction
-                         * sequences at 4986 vs 4987); GCC canonicalized `if(cond) do{}while(cond);`
-                         * back into a single shared test (40 bytes at 4986, still 0 at 4987) --
-                         * worse than the plain while's single ~28-byte test, so reverted. */
                     }
                 }
             }
