@@ -262,9 +262,9 @@ edge_sprite:
                 draw_sprite(bmp, customFrame, ox, oy);
             }
         }
-        /* Both edge==0 and edge==1 enter this one block at original offset 3115;
-         * edge==2 jumps past it. The sx!=0 arm calls vtable +0x50 at 8237. */
-        if (ply[player_id]->edge != 2) {
+        /* Only edge==0 enters this block at original offset 3115. Both edge==1
+         * and edge==2 sprite calls jump to offset 2819 afterward. */
+        else {
             if (map.offset > 0xc8 && ply[player_id]->y > 400.0)
                 customFrame = custom.frame[11];         /* 2629 */
             else if (logic_count <= 0xb)
