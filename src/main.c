@@ -2775,11 +2775,13 @@ void change_profile(void)
 {
     Tprofile *newProfile;
 
-    if (profile) {
+    newProfile = profile;
+    if (newProfile) {
         syncProfileFromOptions();
         save_profile(profile);
+        newProfile = profile;
     }
-    newProfile = select_profile(profile, profiles, numProfiles, &ctrl);
+    newProfile = select_profile(newProfile, profiles, numProfiles, &ctrl);
     if (newProfile) {
         if (profile) free(profile);
         profile = newProfile;

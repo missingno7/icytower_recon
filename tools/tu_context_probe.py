@@ -387,6 +387,13 @@ def main():
     if a.header: spec['headers'] = {h: names.split(',') for h, names in (x.split('=', 1) for x in a.header)}
     spec['focus'] = a.focus
     if a.declarations: spec['declarations'] = read_json(Path(a.declarations))
+    if not a.no_prototypes:
+        marker = '/* Forward declarations; definitions follow in their original source order. */'
+        existing = (ROOT / a.source).read_bytes().decode('cp1252').count(marker)
+        if existing:
+            print('CONTEXT WARNING: source already has %d generated forward-declaration block(s); '
+                  'auto mode adds another. Use --no-prototypes for a production-equivalent '
+                  'body probe.' % existing)
     new, edits, headers = build_text(a.target, a.source, spec)
     rec = evaluate(a.target, a.source, new, a.label, edits, dumps=not a.no_dumps, headers=headers)
     keys = ['compile', 'errors', 'matches_before', 'matches_after', 'same_historical_predecessor', 'longest_exact_historical_prefix', 'at_historical_offset', 'gains', 'losses', 'code_changed_with_unchanged_body', 'new_implicit_declarations', 'whole_text_contribution_equal']

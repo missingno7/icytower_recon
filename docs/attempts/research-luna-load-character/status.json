@@ -1,0 +1,43 @@
+{
+  "task": "game-main/load_character",
+  "worker": "GPT-6 Luna/high",
+  "strict_status": "DIFFER",
+  "historical_size": 330,
+  "candidate_size": 330,
+  "first_difference": 13,
+  "whole_tu_baseline": {
+    "order": "current",
+    "generated_prototypes": false,
+    "exact_functions": 62,
+    "total_functions": 82,
+    "losses": [],
+    "target_emission_position_zero_based": 73,
+    "predecessor": "init_game",
+    "predecessor_status": "DIFFER"
+  },
+  "target_mismatch": {
+    "different_byte_positions": 15,
+    "all_differences_are_register_fields": true,
+    "relocations_resolved_equal": 18
+  },
+  "research_probes": {
+    "whole_tu_compiles": 5,
+    "unique_effective_function_outcomes": 1,
+    "effective_identity": "f896246c764546d6",
+    "hypotheses": [
+      {"name": "definition order controls target register allocation", "outcome": "current and historical source-order probes have identical emission order, target position, and target bytes"},
+      {"name": "probe-added prototypes explain target mismatch", "outcome": "production-equivalent --no-prototypes and prototype-enabled probes have identical target bytes; other CU code differs"},
+      {"name": "separate local alias shortens filename parameter live range", "outcome": "log_filename alias source produces identical target bytes"}
+    ],
+    "earlier_local_variants": ["declaration order", "initialized name", "function-scope buf", "nested guard"],
+    "established": [
+      "DWARF types and local/static storage facts match candidate declarations",
+      "all six direct call edges agree",
+      "target immediately follows DIFFER init_game in candidate emission order",
+      "peephole2 dump records scratch finds di and ax in load_character"
+    ],
+    "unresolved": "Whether the historically correct init_game emitted body changes persistent GCC 4.4.1 peephole2 search state to yield the original register assignment"
+  },
+  "probe_count": 5,
+  "stop_reason": "Local allocation spellings and source-order/prototype variations converged to one effective function output; remaining blocker is upstream TU/compiler context."
+}

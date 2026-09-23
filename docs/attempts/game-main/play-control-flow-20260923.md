@@ -1,5 +1,11 @@
 # `play` name-entry and results-loop control flow
 
+Current state: the historical-order `main.c` candidate was promoted in the
+`order_main` TU_CONTEXT transaction. `play` and `draw_frame` are retained in
+production as incomplete evidence candidates and remain `DIFFER`; the four
+new strict matches are reported near the end of this ledger. The older
+production-status sentences below describe the state at each experiment.
+
 The current production `play` body is synthetic and gated from recovered-game linking. This experiment changes only the retained evidence candidate `docs/attempts/game-main/play-merged.c`; it does not promote or integrate `play`.
 
 Three current-source historical-order probes isolate the `run_demo` regression. `takeover-new-game-order-only-20260923` and `takeover-new-game-draw-only-20260923` keep `run_demo` as `FUNCTION_MATCH`. `takeover-new-game-play-only-20260923` changes its unchanged body and reports `DIFFER`, as does the combined `draw_frame`/`play` probe. The changed register at `run_demo` offset 52 and the one-byte shift at 73 are a downstream compiler-context witness; no `run_demo` body edit is justified.
@@ -59,3 +65,31 @@ The original replay filenames at lines 4578 and 4586 format `demo->no_combo_top_
 `takeover-play-collision-guard-trial-20260923` tested an explicit unsigned range guard around the five-case collision switch, preserving the single invalid-type message. The locked GCC still emits only two `collision_type` references, versus three in the original at offsets 1765, 2961, and 2974. The trial compiles `play` DIFFER 17,610/17,420, with 62/82 combined strict matches and no losses. This guard was not integrated; the retained candidate keeps the prior switch. The next useful step is predecessor CFG/source-declaration analysis, not another redundant guard spelling. The earlier summary split trial also stayed separate because GCC merged its branches. Production recovery remains 204 strict game functions, `main.c` 58/82. Latest retained combined probe is `takeover-play-replay-name-demo-fields-20260923`, `play` 17,558/17,420, `draw_frame` 8,203/8,518, 62/82 exact, `new_game` and `run_demo` exact. The repository is ready to push after committing this failed-trial record; unrelated dirty `docs/experiments/*.json` and untracked `docs/attempts/game-timer/` are excluded.
 
 The 4683 `debug` check in the retained candidate was an empty branch, so its results animation ran even when debug mode was active. Original offset 9619 tests `debug`; zero enters the animation at 11105, while nonzero reaches the unlock/epilogue checks at 9632. The isolated `luna-supervisor-play-debug-results-guard-20260923` overlay wraps the animation and initials entry in `if (!debug)` and rejoins before the unlock check. It changes `play` emission to 17,400/17,420 bytes, restores the original total of six `debug` references (candidate previously five), and keeps 62/82 combined historical-order functions exact, including `new_game` and `run_demo`, with no losses. The retained `play-merged.c` now has the byte-identical source of that tested overlay (SHA-256 `c1286fe25b59d44118fc96fcc489567e19f8a53f5cda921ae70d63d9ff021f9f`). `play` itself remains DIFFER; size and reference counts are diagnostics only. A separate `luna-supervisor-play-strcpy-literals-20260923` probe replaced two fixed-length `memcpy` spellings with `strcpy` of the same literals; its effective `play` instruction/relocation/transfer identity is exactly the prior retained candidate (`082fdf1f3139c73a`), so this source-spelling family supplies no answer to the missing seventh `new_rand` site. The probe objects and comparisons are retained under `build/tu-context/game-main/`; `tools/effective_outcomes.py` groups their effective identities without debug-byte noise. Production source and recovery statuses remain unchanged.
+
+The combined historical-order body and provenance update were subsequently accepted as the atomic `order_main` TU_CONTEXT transaction. It gains four strict functions with no losses: `draw_progress_bar`, `log2file`, `new_game`, and `open_web_browser`. The production `play` and `draw_frame` bodies are now the retained incomplete candidates, still DIFFER; the current generated card supersedes the old production-size discussion above. `tools/direct_call_counts.py game-main play` resolves direct-call relocation names in the newly promoted `play` object: the original has 272 direct call sites, the candidate 271, and `new_rand` is the sole multiplicity difference (7 versus 6). This strongly narrows the direct-call topology question to the summary hint duplication, while leaving instruction, data and relocation equality unproved.
+
+The original summary condition at offset 16822 reads stack slot `-0x93c`, which also carries `quit` in the preceding highscore block. The retained source spells `if (gotHigh)`; original DWARF does not locate `gotHigh` at this late offset, so the source variable is not uniquely identified by that read. Two isolated hypotheses changed the condition to `if (quit)`, first with one shared hint/guest selection and then with selections in both arms. They generated new effective `play` identities (`8abf7abf691afd27` and `ea1c3262ab2f6dca`) and sizes 17,555 and 17,584 respectively, but both still emitted six `new_rand` calls and one `hints` reference, with 62 exact TU functions and no losses. The source change is not retained because the late slot read alone cannot distinguish `quit` from a spilled `gotHigh`, and neither experiment establishes the missing compiler mechanism. Probe records and sources are `luna-supervisor-play-summary-quit[-split]-20260923` and `docs/attempts/research-supervisor-play/play-summary-quit[-split].c`. Further summary source spelling is unlikely to help without a liveness/predecessor or compiler-pass fact.
+
+A fresh probe of the now-promoted `src/main.c` exposed a tooling context trap.
+Both `--order historical` and `--order current` with default automatic
+prototypes add another generated forward-declaration block to a source that
+already contains 16; unchanged `play` changes from 17,400 to 17,497 bytes,
+and several other unchanged functions change code even though the strict
+count stays 62. The `--order current --no-prototypes` control reproduces the
+current 17,400-byte `play`, 62/82 strict functions, and reports no
+unchanged-body code changes. These receipts are
+`luna-supervisor-play-pass-current-20260923`,
+`luna-supervisor-play-pass-production-20260923`, and
+`luna-supervisor-play-current-no-protos-20260923`. Subsequent body probes
+must use the latter context unless declaration visibility is the tested
+hypothesis. The default-prototype probes are not valid production baselines.
+
+In that production-equivalent context, the explicit two-arm `gotHigh` summary
+trial `luna-supervisor-play-high-split-production-20260923` emitted a distinct
+17,429-byte `play`, but still only six `new_rand` calls against seven original.
+It preserved the 62 strict functions present before the separate
+`change_profile` promotion. The source and full compiler dumps are retained at
+`docs/attempts/research-supervisor-play/play-summary-high-split-production.c`
+and `build/tu-context/game-main/luna-supervisor-play-high-split-production-20260923/`.
+The current production body remains the unsplit source. Pass-level work should
+identify where the two source call sites combine before another local rewrite.

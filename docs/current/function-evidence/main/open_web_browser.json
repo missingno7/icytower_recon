@@ -7,10 +7,10 @@
   "historical_va": "0x40e510",
   "historical_size": 111,
   "status": "FUNCTION_MATCH",
-  "state": "BODY_MATCH_LAYOUT_BLOCKED",
-  "difference_class": "SAME_CU_CALL_LAYOUT",
+  "state": "FUNCTION_MATCH",
+  "difference_class": "EXACT",
   "body_edit_allowed": false,
-  "reason": "Every function byte equals after independent relocation/target resolution; decoded same-CU displacement depends on other function placement.",
+  "reason": "Proof verdict retained separately; unresolved ownership never proves layout-only equality.",
   "prototype": "void open_web_browser(const char *pURL);",
   "return_type": "void",
   "parameters": [
@@ -156,35 +156,35 @@
     ],
     "candidate": [
       {
-        "address": 31104,
+        "address": 31096,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 31105,
+        "address": 31097,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 31107,
+        "address": 31099,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 31108,
+        "address": 31100,
         "bytes": "81ec24010000",
         "mnemonic": "sub",
         "assembly": "sub    $0x124,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 31114,
+        "address": 31106,
         "bytes": "8b4508",
         "mnemonic": "mov",
         "assembly": "mov    0x8(%ebp),%eax",
@@ -428,24 +428,7 @@
   ],
   "indirect_control_flow": 0,
   "relocation_mismatches": [],
-  "direct_transfer_mismatches": [
-    {
-      "instruction_offset": 50,
-      "function_offset": 51,
-      "opcode": 232,
-      "operand_size": 4,
-      "transfer_kind": "call",
-      "target_function": "log2file",
-      "target_va": 4250200,
-      "candidate_target": 28352,
-      "candidate_displacement": -2807,
-      "layout_operand_equal": false,
-      "resolved_value": 4294964497,
-      "original_value": 4294964497,
-      "equal": true,
-      "resolution": "Unique candidate and historical same-CU function entry"
-    }
-  ],
+  "direct_transfer_mismatches": [],
   "unresolved_call_symbols": 0,
   "exact_adjacent_functions": 2,
   "neighbor_layout": [
@@ -460,21 +443,21 @@
       "function": "uninit_game",
       "status": "FUNCTION_MATCH",
       "historical_offset": 31016,
-      "candidate_offset": 30456,
+      "candidate_offset": 30448,
       "size_delta": 0
     },
     {
       "function": "check_beta_tester",
       "status": "FUNCTION_MATCH",
       "historical_offset": 31776,
-      "candidate_offset": 31216,
+      "candidate_offset": 31208,
       "size_delta": 0
     },
     {
       "function": "main_menu_callback",
       "status": "DIFFER",
       "historical_offset": 38808,
-      "candidate_offset": 38128,
+      "candidate_offset": 38120,
       "size_delta": -838
     }
   ],
@@ -526,7 +509,7 @@
   "evidence_report": "docs/current/reports/game-main.json",
   "verification_command": "python tools/check_function.py game-main open_web_browser",
   "begin_command": "python tools/grinder_task.py begin game-main open_web_browser",
-  "promotion_command": "python tools/promote_function.py game-main open_web_browser --claim BODY_MATCH_LAYOUT_BLOCKED",
+  "promotion_command": "python tools/promote_function.py game-main open_web_browser",
   "callee_interface_scope": {
     "observations": [],
     "blocking_functions": [],

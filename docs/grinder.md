@@ -15,6 +15,14 @@ research uses separate candidate files or TU probe overlays under a unique
 may investigate MEDIUM/SUPERVISOR tasks, types, callers, ABI, compiler passes and
 whole-TU context in this lane. Existing `tu_context_probe.py` compiles historical
 order with explicit body overlays; its result is diagnostic and cannot be promoted.
+When probing the already promoted `main.c`, preserve its declaration context:
+`python tools/tu_context_probe.py game-main src/main.c LABEL --order current
+--no-prototypes ...`. The maintained file already contains generated forward
+declarations. The probe's default `auto` setting appends another block and
+changes unchanged function code. A production-equivalent `--no-prototypes`
+control was checked against the current report: 62/82 exact, `play` 17,400
+bytes, and no unchanged-body code changes. Use `--order historical` or new
+prototypes only when that context change is itself the hypothesis being tested.
 
 Continue while a probe yields a new effective output, eliminates a specific
 hypothesis, establishes a type/CFG/context fact, or reveals a missing capability.
@@ -22,7 +30,10 @@ When multiple source forms collapse to the same output, move to declarations,
 interfaces or TU/compiler context rather than spending more cosmetic variants.
 `python tools/effective_outcomes.py game-main play --pattern 'LABEL*.json'`
 groups saved TU outcomes without debug-byte noise; compare its identities only as
-search evidence. Archive source, compiler output and negative trials, and hand off
+search evidence. `python tools/direct_call_counts.py game-main play` compares
+original and compiled direct-call multiplicities, resolving COFF relocation and
+same-CU targets; equal counts are diagnostic only. Archive source, compiler output
+and negative trials, and hand off
 the strict status, unique outcomes, established facts, exact blocker and smallest
 artifact paths. Any exact candidate enters the serialized FAST/ACCEPTANCE workflow
 with its ordinary production gates; an isolated probe is never a match claim.

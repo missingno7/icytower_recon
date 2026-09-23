@@ -1,0 +1,148 @@
+{
+  "scope": "Isolated research only. No maintained source, generated current state, accepted body or recovery ledger was modified.",
+  "compiler": "tdm-2, -O2",
+  "strict_status": "DIFFER",
+  "workflow": null,
+  "historical_size": 1992,
+  "candidate_size": 1993,
+  "first_difference": {
+    "offset": 134,
+    "original_va": 4207186,
+    "candidate_byte": 241,
+    "original_byte": 227
+  },
+  "meaningful_source_hypotheses": 3,
+  "source_variants": [
+    {
+      "variant": "ret_outer_ok_break",
+      "hypothesis": "Equivalent parser-loop exit formulation may shift GCC block placement or natural alignment before the second parser scan.",
+      "object_sha256": "621214c09d9e8be3355b697f18f69c8dc249e36ffbbc4e16f3874ed95543f95b",
+      "function_size": 1993,
+      "function_status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 241,
+        "original_byte": 227
+      },
+      "functions_exact": 9,
+      "text_equal": false
+    },
+    {
+      "variant": "for_break_guard",
+      "hypothesis": "Equivalent parser-loop exit formulation may shift GCC block placement or natural alignment before the second parser scan.",
+      "object_sha256": "078db8868aa54ae0e821030fefbb580dfa050b0d6eed376b12ec5d710ba6e9ea",
+      "function_size": 1993,
+      "function_status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 241,
+        "original_byte": 227
+      },
+      "functions_exact": 9,
+      "text_equal": false
+    },
+    {
+      "variant": "negative_condition_while",
+      "hypothesis": "Equivalent parser-loop exit formulation may shift GCC block placement or natural alignment before the second parser scan.",
+      "object_sha256": "d39ef2ea664b9f8c324477f37fe47563491415134d359d2f1567f8f29d4261a7",
+      "function_size": 1993,
+      "function_status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 241,
+        "original_byte": 227
+      },
+      "functions_exact": 9,
+      "text_equal": false
+    }
+  ],
+  "alignment_controls": [
+    {
+      "flags_appended_after_O2": [
+        "-fno-align-loops"
+      ],
+      "object_sha256": "d3f159258879fff3f90c9d76783c00ed1f90fd111f3f1f198686e04259820bfa",
+      "function_size": 1993,
+      "status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 241,
+        "original_byte": 227
+      },
+      "exact_functions": 9
+    },
+    {
+      "flags_appended_after_O2": [
+        "-fno-align-labels"
+      ],
+      "object_sha256": "d3f159258879fff3f90c9d76783c00ed1f90fd111f3f1f198686e04259820bfa",
+      "function_size": 1993,
+      "status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 241,
+        "original_byte": 227
+      },
+      "exact_functions": 9
+    },
+    {
+      "flags_appended_after_O2": [
+        "-fno-align-jumps"
+      ],
+      "object_sha256": "6e3cd5f62092422f977ab13a2897d6a10a87c6345d4c0192b06db76ef8591d74",
+      "function_size": 1987,
+      "status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 235,
+        "original_byte": 227
+      },
+      "exact_functions": 2
+    },
+    {
+      "flags_appended_after_O2": [
+        "-fno-align-loops",
+        "-fno-align-labels",
+        "-fno-align-jumps"
+      ],
+      "object_sha256": "6e3cd5f62092422f977ab13a2897d6a10a87c6345d4c0192b06db76ef8591d74",
+      "function_size": 1987,
+      "status": "DIFFER",
+      "first_difference": {
+        "offset": 134,
+        "original_va": 4207186,
+        "candidate_byte": 235,
+        "original_byte": 227
+      },
+      "exact_functions": 2
+    }
+  ],
+  "facts": [
+    "Original and candidate parser loop conditions/back-edge are the same; candidate assembly emits .p2align 2,,3 immediately before the [datafile] whitespace-scan loop. The original loop begins naturally aligned without inserted padding.",
+    "Fresh current-order TU probe keeps 9 exact functions and the same historical predecessor for load_character_bmp; no peer code changed with the body overlay.",
+    "Three equivalent parser-loop exit formulations generated distinct complete COFF object hashes, but only two effective loader instruction/relocation identities: baseline, `while(ret){if(ok)break;}` and the negated equivalent compile to the same loader identity; `for(;;){if(!ret||ok)break;}` produces a second identity. All remain 1993-byte DIFFER.",
+    "A `-fno-align-loops` / `-fno-align-labels` diagnostic control does not change the complete object. `-fno-align-jumps` changes the loader to 1987 bytes and drops CU exact count from 9 to 2, so global alignment switches do not provide a useful recovery path."
+  ],
+  "ruled_out": [
+    "Equivalent while/for exit spelling variants do not suppress the extra alignment contribution; two distinct spellings collapse to the exact same effective loader instruction/relocation identity.",
+    "The direct baseline overlay showed no upstream peer-code or emission-predecessor change, so current mismatch is not explained by whole-TU upstream context."
+  ],
+  "blocker": "Local parser-loop exit spelling search has not found a historically supported source CFG that naturally places the loop head on the historical alignment boundary. Further local rewrites are low-information; next discriminating work is recovering the exact surrounding original branch/fallback source structure or using GCC pass evidence to identify which block placement sets this alignment, then replay that mechanism against similar blockers.",
+  "artifacts": [
+    "baseline.c",
+    "baseline.s",
+    "baseline-artifacts/unit.o",
+    "baseline-artifacts/comparison.json",
+    "baseline-artifacts/custom.c.000i.cgraph",
+    "baseline-artifacts/custom.c.181r.csa",
+    "baseline-artifacts/custom.c.182r.peephole2",
+    "cfg-variants.json",
+    "alignment-controls-ordered.json"
+  ]
+}
