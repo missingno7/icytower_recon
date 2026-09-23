@@ -1516,7 +1516,7 @@ int play(void)
                         skip_keys--;
                     if (isGuest && gotHigh && !is_playing_custom_game) {                /* 4921 */
                         if (keypressed()) {                                                 /* 4922 */
-                            if (skip_keys != 20) {
+                            if (skip_keys == 20) {  /* original 13862/13869 jumps to readkey when done is 20 */
                                 int matched = 0;
                                 char typed = 0;
 
@@ -1544,7 +1544,7 @@ int play(void)
                                     buf[alpha_pos * 2] = typed;
                                     alpha_pos++;                                              /* 4876 */
                                     if (alpha_pos == 3)                                      /* 4877 */
-                                        skip_keys = 20;
+                                        skip_keys = 19;
                                 }
                             }
                         }
