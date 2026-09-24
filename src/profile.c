@@ -144,6 +144,11 @@ int save_profile(Tprofile_create *p);
 int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
 int view_profile(Tprofile*);
 
+#include "recovered/Tavailable_profile.h"
+extern int rebuild_profile_list(Tavailable_profile **profs);
+void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
+Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);
+
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
  * Current recovery status: src/recovery.json and docs/current/.
@@ -505,11 +510,6 @@ char *profile_data_page_advanced(Tprofile_advanced *p)
     return data;
 }
 
-#include "recovered/Tavailable_profile.h"
-extern int rebuild_profile_list(Tavailable_profile **profs);
-void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
-Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);
-
 int save_profile(Tprofile_create *p)
 {
     char file[1024];
@@ -620,7 +620,7 @@ int view_profile(Tprofile *profile)
     int rank;
 
     clear_keybuf();
-    while (is_any(get_controls()))
+    while (is_any(get_controls()) || key[KEY_SPACE])
         poll_control(get_controls(), 0);
     clear_keybuf();
 

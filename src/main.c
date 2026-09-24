@@ -2300,12 +2300,11 @@ int init_game(int argc, char **argv)
     BITMAP *fldLogo;
     Tgamepad *pad;
     int whiteColor;
-    int check;
     int i;
 
     tmpHandle[0]=0; /* 1382 */
     init_ok=0; /* 1385 */
-    log2file("INIT GAME"); /* 1393 */
+    log2file("\nINIT GAME"); /* 1393 */
     packfile_password(NULL); /* 1394 */
     sprintf(title,"Icy Tower v%s","1.5.1"); /* 1395 */
     set_window_title(title); /* 1395 */
@@ -2315,9 +2314,9 @@ int init_game(int argc, char **argv)
     if (LOBYTE(wsaData.wVersion)<2 || HIBYTE(wsaData.wVersion)<2) /* 1407 */
         log2file(" !!! Failed to get proper Winsock version (wanted 2.2, got %d.%d)",
                  LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion)); /* 1408 */
-    curr_char=0; /* 1413 */
+    play_char.max=0; /* 1413 */
     play_char.value=0; /* 1413 */
-    characters=NULL; /* 1414 */
+    play_char.bmp=NULL; /* 1414 */
     eyecandy_selection.value=0; /* 1416 */
     eyecandy_selection.size=3; /* 1417 */
     eyecandy_selection.caption[0]=strdup("Lots"); /* 1418 */
@@ -2346,24 +2345,27 @@ int init_game(int argc, char **argv)
     gravity_selection.caption[2]=strdup("Heavy"); /* 1444 */
     fldads_start(); /* 1448 */
     if (argc>2) { /* 1489 */
+        char *checkFile;
+        int check;
         replay_path=NULL;
         check=0;
         i=1;
         do {
-            if (argv[i][0]!='-') /* 1494 */
-                replay_path=argv[i];
-            if (!stricmp(argv[i],"-check")) check=1; /* 1497 */
-            else if (!stricmp(argv[i],"-jumps")) cmdline.jumps=1; /* 1500 */
-            else if (!stricmp(argv[i],"-combos")) cmdline.combos=1; /* 1503 */
-            else if (!stricmp(argv[i],"-sd")) cmdline.sd=1; /* 1506 */
-            else if (!stricmp(argv[i],"-keys")) cmdline.keys=1; /* 1509 */
-            else if (!stricmp(argv[i],"-all")) { /* 1512 */
+            checkFile=argv[i]; /* 1494 */
+            if (checkFile[0]!='-')
+                replay_path=checkFile;
+            if (!stricmp(checkFile,"-check")) check=1; /* 1497 */
+            else if (!stricmp(checkFile,"-jumps")) cmdline.jumps=1; /* 1500 */
+            else if (!stricmp(checkFile,"-combos")) cmdline.combos=1; /* 1503 */
+            else if (!stricmp(checkFile,"-sd")) cmdline.sd=1; /* 1506 */
+            else if (!stricmp(checkFile,"-keys")) cmdline.keys=1; /* 1509 */
+            else if (!stricmp(checkFile,"-all")) { /* 1512 */
                 cmdline.jumps=1; /* 1513 */
                 cmdline.combos=1; /* 1514 */
                 cmdline.sd=1; /* 1515 */
                 cmdline.keys=1; /* 1516 */
             }
-            else if (!stricmp(argv[i],"-tiny")) cmdline.tiny=1; /* 1518 */
+            else if (!stricmp(checkFile,"-tiny")) cmdline.tiny=1; /* 1518 */
             i++; /* 1493 */
         } while (i<argc); /* 1493 */
         if (!check) { /* 1524 */
@@ -6262,7 +6264,7 @@ int do_replay_menu(void)
             memset(fname,' ',511);
             fname[0]=0;
             memset(pname,' ',511);
-            strcpy(pname,isGuest ? " - " : profile->handle);
+            strcpy(pname,isGuest ? "" : profile->handle);
             memset(comment,' ',511);
             comment[0]=0;
             status=!isGuest;
@@ -6305,12 +6307,11 @@ int do_replay_menu(void)
                     }
                     action=get_string(swap_screen,fname,340,512,data[54].dat,
                                    140,250,makecol(0,0,0),makecol(255,255,255));
+                    replaceBadCharacters(fname,'_');
                     if (action == -1)
                         status='*';
-                    else {
-                        replaceBadCharacters(fname,'_');
+                    else
                         status=2;
-                    }
                     /* 5581 */
                     drawSlot(swap_screen,140,210,"Your name:",pname,
                              makecol(50,50,50));

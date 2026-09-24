@@ -1,0 +1,10 @@
+{
+  "target": "game-profile",
+  "source": "src/profile.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "view_profile": "docs/attempts/research-20260924-view-profile-next/key-space.c"
+  },
+  "evidence": "The historical view_profile disassembly at 0x419aec clears the key buffer at 0x419afb, initially jumps from +0x14 to the condition at +0x2d, and uses the poll_control body at +0x18. The is_any test at +0x3a branches to that poll body at +0x18 when true (0x419b28 -> 0x419b04). The subsequent byte load at 0x419b2a is absolute 0x5069d3; its test branches to the same poll body when nonzero (0x419b31 -> 0x419b04). Otherwise the function clears the key buffer at 0x419b33. This establishes while semantics and logical OR: while (is_any(get_controls()) || key[KEY_SPACE]) poll_control(get_controls(), 0). Allegro's global key is defined by the keyboard.c DIE at 0x506988, typed as a volatile array of char. KEY_SPACE is 75. In the retained current-order/no-prototype full-TU probe, candidate relocation _key + 75 at function offset +63 resolves to 0x506988 + 75 = 0x5069d3 and equals the original operand. The probe preserves all 11 existing FUNCTION_MATCH peers with no gains/losses and all seven existing proven initialized-data owners with no owner regressions. The function remains DIFFER; no function/object/CU match is claimed. Two view_profile .rdata relocation owners remain unresolved at historical offsets +1222 and +1625; do not infer their ownership. A do-while variant is explicitly rejected because it polls before the first input-condition check, unlike the original initial jump to the condition."
+}

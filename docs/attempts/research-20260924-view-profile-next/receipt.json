@@ -1,0 +1,161 @@
+{
+  "task": "view_profile",
+  "scope": "isolated full-TU diagnostic only",
+  "source": "src/profile.c",
+  "compiler": "locked TDM-2",
+  "order": "current",
+  "prototypes": false,
+  "hypothesis": "The historical initial control-drain loop also tests volatile key[KEY_SPACE].",
+  "source_evidence": {
+    "historical_key_address": "0x506988",
+    "KEY_SPACE": 75,
+    "historical_load_address": "0x5069d3",
+    "equation": "0x506988 + 75 = 0x5069d3",
+    "source_identity": "Allegro key declaration is volatile char key[]"
+  },
+  "probes": [
+    {
+      "name": "current baseline",
+      "body": "baseline.c",
+      "receipt": "build/tu-context/game-profile/research-20260924-view-profile-next-baseline/comparison.json",
+      "status": "DIFFER",
+      "candidate_size": 2160,
+      "historical_size": 2249,
+      "first_difference_offset": 62,
+      "exact_functions_before_after": 11,
+      "peer_gains": [],
+      "peer_losses": [],
+      "whole_text_equal": false
+    },
+    {
+      "name": "key space condition",
+      "body": "key-space.c",
+      "receipt": "build/tu-context/game-profile/research-20260924-view-profile-next-keyspace/comparison.json",
+      "status": "DIFFER",
+      "candidate_size": 2168,
+      "historical_size": 2249,
+      "first_difference_offset": 115,
+      "exact_functions_before_after": 11,
+      "peer_gains": [],
+      "peer_losses": [],
+      "whole_text_equal": false
+    }
+  ],
+  "conclusion": "Keep the source-backed key[KEY_SPACE] candidate as a research candidate only. No function or CU match is claimed. No other missing source operation is currently evidenced.",
+  "limits": [
+    "Section-relative .rdata relocation ownership remains unresolved at historical function offsets +1222 and +1625.",
+    "The set_next_rank_message/get_rank_id full-Tprofile versus Tprofile_rank layout conflicts remain separate interface blockers.",
+    "No size target was used."
+  ],
+  "historical_cfg_audit": {
+    "function_va": "0x419aec",
+    "entry_control_flow": [
+      {
+        "address": "0x419afb",
+        "instruction": "call clear_keybuf"
+      },
+      {
+        "address": "0x419b00",
+        "instruction": "jmp 0x419b19",
+        "meaning": "initially enters condition before poll body"
+      },
+      {
+        "address": "0x419b04",
+        "instruction": "call get_controls",
+        "meaning": "poll body begins at function offset +0x18"
+      },
+      {
+        "address": "0x419b14",
+        "instruction": "call poll_control"
+      },
+      {
+        "address": "0x419b19",
+        "instruction": "call get_controls",
+        "meaning": "condition begins at +0x2d"
+      },
+      {
+        "address": "0x419b21",
+        "instruction": "call is_any"
+      },
+      {
+        "address": "0x419b28",
+        "instruction": "jne 0x419b04",
+        "meaning": "true control state repeats poll body"
+      },
+      {
+        "address": "0x419b2a",
+        "instruction": "mov 0x5069d3,%al"
+      },
+      {
+        "address": "0x419b31",
+        "instruction": "jne 0x419b04",
+        "meaning": "nonzero key byte repeats poll body"
+      },
+      {
+        "address": "0x419b33",
+        "instruction": "call clear_keybuf",
+        "meaning": "both conditions false; exit drain loop"
+      }
+    ],
+    "source_form": "while (is_any(get_controls()) || key[KEY_SPACE]) poll_control(get_controls(), 0);",
+    "allegro_key": {
+      "definition_cu": "C:/Lib/allegro4/src/keyboard.c",
+      "historical_address": "0x506988",
+      "dwarf_die": 301341,
+      "type": "volatile char array",
+      "key_space_value": 75
+    },
+    "candidate_relocation": {
+      "symbol": "_key",
+      "addend": 75,
+      "coff_text_offset": 4419,
+      "view_profile_offset": 63,
+      "resolved_va": "0x5069d3",
+      "equals_original": true
+    },
+    "negative_control": {
+      "body": "key-space-do-while.c",
+      "reason": "Changes initial path by polling before the first test; original entry jumps to condition at 0x419b19 before reaching poll body at 0x419b04."
+    }
+  },
+  "proven_ownership_audit": {
+    "baseline_accepted_data_owners": [
+      "jcLabels",
+      "rankLables",
+      "rankFloors",
+      "rankCombos",
+      "rankCCCs",
+      "rankNMLs",
+      "comboNames"
+    ],
+    "candidate_accepted_data_owners": [
+      "jcLabels",
+      "rankLables",
+      "rankFloors",
+      "rankCombos",
+      "rankCCCs",
+      "rankNMLs",
+      "comboNames"
+    ],
+    "rejected_owners": [],
+    "common_symbols": 0,
+    "new_key_symbol_relocation": "inventoried and resolves by name to historical key address",
+    "unresolved_view_profile_relocation_owners": [
+      {
+        "historical_offset": "+1222",
+        "symbol": ".rdata",
+        "state": "UNRESOLVED_RELOCATION_OWNER"
+      },
+      {
+        "historical_offset": "+1625",
+        "symbol": ".rdata",
+        "state": "UNRESOLVED_RELOCATION_OWNER"
+      }
+    ],
+    "function_match": false,
+    "object_match": false,
+    "cu_match": false
+  },
+  "prepared_tu_context_spec": "key-space-tu-context-spec.json",
+  "spec_not_planned": true
+}

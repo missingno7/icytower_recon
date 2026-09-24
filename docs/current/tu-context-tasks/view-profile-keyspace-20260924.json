@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "view-profile-keyspace-20260924",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "target": "game-profile",
+  "affected_targets": [
+    "game-profile"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-profile",
+    "source": "src/profile.c",
+    "order": "current",
+    "prototypes": "none",
+    "bodies": {
+      "view_profile": "docs/attempts/research-20260924-view-profile-next/key-space.c"
+    },
+    "evidence": "The historical view_profile disassembly at 0x419aec clears the key buffer at 0x419afb, initially jumps from +0x14 to the condition at +0x2d, and uses the poll_control body at +0x18. The is_any test at +0x3a branches to that poll body at +0x18 when true (0x419b28 -> 0x419b04). The subsequent byte load at 0x419b2a is absolute 0x5069d3; its test branches to the same poll body when nonzero (0x419b31 -> 0x419b04). Otherwise the function clears the key buffer at 0x419b33. This establishes while semantics and logical OR: while (is_any(get_controls()) || key[KEY_SPACE]) poll_control(get_controls(), 0). Allegro's global key is defined by the keyboard.c DIE at 0x506988, typed as a volatile array of char. KEY_SPACE is 75. In the retained current-order/no-prototype full-TU probe, candidate relocation _key + 75 at function offset +63 resolves to 0x506988 + 75 = 0x5069d3 and equals the original operand. The probe preserves all 11 existing FUNCTION_MATCH peers with no gains/losses and all seven existing proven initialized-data owners with no owner regressions. The function remains DIFFER; no function/object/CU match is claimed. Two view_profile .rdata relocation owners remain unresolved at historical offsets +1222 and +1625; do not infer their ownership. A do-while variant is explicitly rejected because it polls before the first input-condition check, unlike the original initial jump to the condition."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {},
+    "order": [
+      "hash2",
+      "generate_profile_checksum",
+      "create_profile",
+      "get_rank_id",
+      "get_rank",
+      "set_next_rank_message",
+      "delete_profile",
+      "load_profile",
+      "profile_data_page_extra",
+      "profile_data_page_general",
+      "profile_data_page_basic",
+      "profile_data_page_advanced",
+      "save_profile",
+      "draw_buffer",
+      "view_profile",
+      "draw_profile_selector",
+      "select_profile"
+    ],
+    "definition_order_with_static": [
+      [
+        "hash2",
+        false
+      ],
+      [
+        "generate_profile_checksum",
+        false
+      ],
+      [
+        "create_profile",
+        false
+      ],
+      [
+        "get_rank_id",
+        false
+      ],
+      [
+        "get_rank",
+        false
+      ],
+      [
+        "set_next_rank_message",
+        false
+      ],
+      [
+        "delete_profile",
+        false
+      ],
+      [
+        "load_profile",
+        false
+      ],
+      [
+        "profile_data_page_extra",
+        false
+      ],
+      [
+        "profile_data_page_general",
+        false
+      ],
+      [
+        "profile_data_page_basic",
+        false
+      ],
+      [
+        "profile_data_page_advanced",
+        false
+      ],
+      [
+        "save_profile",
+        false
+      ],
+      [
+        "draw_buffer",
+        false
+      ],
+      [
+        "view_profile",
+        false
+      ],
+      [
+        "draw_profile_selector",
+        false
+      ],
+      [
+        "select_profile",
+        false
+      ]
+    ],
+    "bodies": {
+      "view_profile": {
+        "path": "docs/attempts/research-20260924-view-profile-next/key-space.c",
+        "identity": {
+          "size": 3529,
+          "sha256": "615a91b471162396c7f94753fd9256a4a259a311fb18b480e400defdc2636131"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [],
+    "headers": {}
+  },
+  "source_identities": {
+    "src/profile.c": {
+      "size": 31490,
+      "sha256": "1b3defb1cca63984e9f0b92bd0046d291b1d4c4e2c99b42fd2205da34e59b860"
+    }
+  },
+  "new_text_identity": {
+    "size": 31508,
+    "sha256": "6174d0aa0de3c0d8bef5338c50da012b8b24e8403c7b2344878c4c73e4b9cf90"
+  },
+  "new_header_identities": {},
+  "required_generated_headers": {},
+  "preserved_definitions": [
+    "create_profile",
+    "delete_profile",
+    "draw_buffer",
+    "draw_profile_selector",
+    "generate_profile_checksum",
+    "get_rank",
+    "get_rank_id",
+    "hash2",
+    "load_profile",
+    "profile_data_page_advanced",
+    "profile_data_page_basic",
+    "profile_data_page_extra",
+    "profile_data_page_general",
+    "save_profile",
+    "select_profile",
+    "set_next_rank_message"
+  ],
+  "replaced_definitions": [
+    "view_profile"
+  ],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin view-profile-keyspace-20260924",
+  "apply_command": "python tools/tu_context_task.py apply view-profile-keyspace-20260924",
+  "verification_command": "python tools/tu_context_task.py check view-profile-keyspace-20260924",
+  "promotion_command": "python tools/tu_context_task.py promote view-profile-keyspace-20260924",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/view-profile-keyspace-20260924.json"
+}

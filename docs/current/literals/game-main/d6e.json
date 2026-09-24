@@ -1,0 +1,94 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 3438,
+  "candidate_card": "docs/current/literals/game-main/d6e.json",
+  "source_identity": {
+    "size": 311239,
+    "sha256": "79d4a4ea7f8f42208057f1bdb0ca0f169c99be19c9b296f3a147ae5ee966b020"
+  },
+  "consumers": [
+    {
+      "function": "init_game",
+      "function_offset": 2526,
+      "historical_operand_va": 5068699,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5068942,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2607,
+          "text": "        log2file(\"Loading profile\"); /* 1880 */"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "init_game"
+  ],
+  "historical_observed_addresses": [
+    5068699
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "4c6f6164696e672070726f66696c65",
+      "bytes": 16
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 2526,
+      "candidate_addend": 3438,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5068699,
+      "candidate_hex": "4c6f6164696e672070726f66696c65",
+      "original_hex": "646174612f646174612e646174",
+      "candidate_instruction": {
+        "address": 34327,
+        "bytes": "c704246e0d0000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0xd6e,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4256183,
+        "bytes": "c704249b574d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d579b,(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5068942,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5068942
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": "Loading profile",
+      "original_text": "data/data.dat",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2607,
+          "text": "        log2file(\"Loading profile\"); /* 1880 */"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}
