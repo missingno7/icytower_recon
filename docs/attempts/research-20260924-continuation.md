@@ -16,6 +16,15 @@ The transaction and negative variants are archived in
 `research-20260924-draw-selector-residual/` and
 `research-20260924-load-replay-min-context/`.
 
+A second accepted TU transaction, `profile_late_typed_selectors_20260924`,
+restored the historical typed profile selector interfaces and the source-backed
+switch/UI/control path while preserving all 11 exact profile functions. The
+generated `draw_profile_selector`, `select_profile`, and
+`rebuild_profile_list` interface cards now report `AGREE`. Both selector
+bodies remain `DIFFER`; the transaction adds no exact function or byte credit.
+Its late generated-header placement follows the locked GCC witness experiment
+and is handled by the bounded `late_declarations` TU gate.
+
 Other information-bearing results, with no recovery credit:
 
 | Function/front | New evidence | Remaining blocker |

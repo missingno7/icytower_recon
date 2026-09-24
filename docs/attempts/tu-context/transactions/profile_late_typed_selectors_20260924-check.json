@@ -1,0 +1,167 @@
+{
+  "task": "profile_late_typed_selectors_20260924",
+  "verdict": "ACCEPTABLE",
+  "matches_before": 11,
+  "matches_after": 11,
+  "same_historical_predecessor": 16,
+  "losses": [],
+  "gains": [],
+  "exact_before": 11,
+  "exact_after": 11,
+  "limit": "Whole-unit final-state check on the applied transaction; not a promotion and not a function proof.",
+  "plan_edits": {
+    "focus": [],
+    "declarations": {
+      "remove_top_level": [
+        "rebuild_profile_list",
+        "draw_profile_selector",
+        "select_profile",
+        "draw_profile_selector",
+        "select_profile"
+      ],
+      "evidence": "The early char** rebuild declaration and two duplicated early char-pointer prototypes for each selector must be removed so the generated historical Tavailable_profile type can first be introduced after the exact profile_data_page_advanced witness.",
+      "removed_text": [
+        {
+          "name": "rebuild_profile_list",
+          "text": "extern int rebuild_profile_list(char **profs);\n"
+        },
+        {
+          "name": "draw_profile_selector",
+          "text": "void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);\n"
+        },
+        {
+          "name": "select_profile",
+          "text": "Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);\n"
+        },
+        {
+          "name": "draw_profile_selector",
+          "text": "void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);\n"
+        },
+        {
+          "name": "select_profile",
+          "text": "Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);\n"
+        }
+      ]
+    },
+    "order": [
+      "hash2",
+      "generate_profile_checksum",
+      "create_profile",
+      "get_rank_id",
+      "get_rank",
+      "set_next_rank_message",
+      "delete_profile",
+      "load_profile",
+      "profile_data_page_extra",
+      "profile_data_page_general",
+      "profile_data_page_basic",
+      "profile_data_page_advanced",
+      "save_profile",
+      "draw_buffer",
+      "view_profile",
+      "draw_profile_selector",
+      "select_profile"
+    ],
+    "definition_order_with_static": [
+      [
+        "hash2",
+        false
+      ],
+      [
+        "generate_profile_checksum",
+        false
+      ],
+      [
+        "create_profile",
+        false
+      ],
+      [
+        "get_rank_id",
+        false
+      ],
+      [
+        "get_rank",
+        false
+      ],
+      [
+        "set_next_rank_message",
+        false
+      ],
+      [
+        "delete_profile",
+        false
+      ],
+      [
+        "load_profile",
+        false
+      ],
+      [
+        "profile_data_page_extra",
+        false
+      ],
+      [
+        "profile_data_page_general",
+        false
+      ],
+      [
+        "profile_data_page_basic",
+        false
+      ],
+      [
+        "profile_data_page_advanced",
+        false
+      ],
+      [
+        "save_profile",
+        false
+      ],
+      [
+        "draw_buffer",
+        false
+      ],
+      [
+        "view_profile",
+        false
+      ],
+      [
+        "draw_profile_selector",
+        false
+      ],
+      [
+        "select_profile",
+        false
+      ]
+    ],
+    "bodies": {
+      "draw_profile_selector": {
+        "path": "docs/attempts/research-20260924-profile-late-transaction/draw_profile_selector.c",
+        "identity": {
+          "size": 1910,
+          "sha256": "b1c4dab8b8cd63bf22fbb6691558c0c71f2e5c43f65dfd04c434c941765e5c6a"
+        }
+      },
+      "select_profile": {
+        "path": "docs/attempts/research-20260924-select-profile-ctrl-lifetime/any_gated_wait.body.c",
+        "identity": {
+          "size": 6740,
+          "sha256": "bff0c60f8838266a7031bb4724fb88223e14f3fb7d5d11c560cf8c4a0b9f6ba9"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [
+      {
+        "after": "profile_data_page_advanced",
+        "header": "recovered/Tavailable_profile.h",
+        "declarations": [
+          "extern int rebuild_profile_list(Tavailable_profile **profs);",
+          "void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
+          "Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);"
+        ]
+      }
+    ],
+    "headers": {}
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "profile_late_typed_selectors_20260924",
+  "source": "src/profile.c",
+  "sources": [
+    "src/profile.c"
+  ],
+  "target": "game-profile",
+  "affected_targets": [
+    "game-profile"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-profile",
+    "source": "src/profile.c",
+    "order": "current",
+    "prototypes": "none",
+    "bodies": {
+      "draw_profile_selector": "docs/attempts/research-20260924-profile-late-transaction/draw_profile_selector.c",
+      "select_profile": "docs/attempts/research-20260924-select-profile-ctrl-lifetime/any_gated_wait.body.c"
+    },
+    "declarations": {
+      "remove_top_level": [
+        "rebuild_profile_list",
+        "draw_profile_selector",
+        "select_profile",
+        "draw_profile_selector",
+        "select_profile"
+      ],
+      "evidence": "The early char** rebuild declaration and two duplicated early char-pointer prototypes for each selector must be removed so the generated historical Tavailable_profile type can first be introduced after the exact profile_data_page_advanced witness."
+    },
+    "late_declarations": [
+      {
+        "after": "profile_data_page_advanced",
+        "header": "recovered/Tavailable_profile.h",
+        "declarations": [
+          "extern int rebuild_profile_list(Tavailable_profile **profs);",
+          "void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
+          "Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);"
+        ]
+      }
+    ],
+    "evidence": "Historical DWARF gives both selector signatures, the rebuild_profile_list caller signature, and Tavailable_profile.handle[32]. The locked early-header control regresses exact profile_data_page_advanced, while the late-header control preserves all 11 exact profile functions. The retained draw body uses the typed historical interface; the select body restores the observed switch/UI paths, lexical buffers and second is_any(ctrl) call. Both remain DIFFER and receive no recovery credit without strict equality."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {
+      "remove_top_level": [
+        "rebuild_profile_list",
+        "draw_profile_selector",
+        "select_profile",
+        "draw_profile_selector",
+        "select_profile"
+      ],
+      "evidence": "The early char** rebuild declaration and two duplicated early char-pointer prototypes for each selector must be removed so the generated historical Tavailable_profile type can first be introduced after the exact profile_data_page_advanced witness.",
+      "removed_text": [
+        {
+          "name": "rebuild_profile_list",
+          "text": "extern int rebuild_profile_list(char **profs);\n"
+        },
+        {
+          "name": "draw_profile_selector",
+          "text": "void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);\n"
+        },
+        {
+          "name": "select_profile",
+          "text": "Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);\n"
+        },
+        {
+          "name": "draw_profile_selector",
+          "text": "void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);\n"
+        },
+        {
+          "name": "select_profile",
+          "text": "Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);\n"
+        }
+      ]
+    },
+    "order": [
+      "hash2",
+      "generate_profile_checksum",
+      "create_profile",
+      "get_rank_id",
+      "get_rank",
+      "set_next_rank_message",
+      "delete_profile",
+      "load_profile",
+      "profile_data_page_extra",
+      "profile_data_page_general",
+      "profile_data_page_basic",
+      "profile_data_page_advanced",
+      "save_profile",
+      "draw_buffer",
+      "view_profile",
+      "draw_profile_selector",
+      "select_profile"
+    ],
+    "definition_order_with_static": [
+      [
+        "hash2",
+        false
+      ],
+      [
+        "generate_profile_checksum",
+        false
+      ],
+      [
+        "create_profile",
+        false
+      ],
+      [
+        "get_rank_id",
+        false
+      ],
+      [
+        "get_rank",
+        false
+      ],
+      [
+        "set_next_rank_message",
+        false
+      ],
+      [
+        "delete_profile",
+        false
+      ],
+      [
+        "load_profile",
+        false
+      ],
+      [
+        "profile_data_page_extra",
+        false
+      ],
+      [
+        "profile_data_page_general",
+        false
+      ],
+      [
+        "profile_data_page_basic",
+        false
+      ],
+      [
+        "profile_data_page_advanced",
+        false
+      ],
+      [
+        "save_profile",
+        false
+      ],
+      [
+        "draw_buffer",
+        false
+      ],
+      [
+        "view_profile",
+        false
+      ],
+      [
+        "draw_profile_selector",
+        false
+      ],
+      [
+        "select_profile",
+        false
+      ]
+    ],
+    "bodies": {
+      "draw_profile_selector": {
+        "path": "docs/attempts/research-20260924-profile-late-transaction/draw_profile_selector.c",
+        "identity": {
+          "size": 1910,
+          "sha256": "b1c4dab8b8cd63bf22fbb6691558c0c71f2e5c43f65dfd04c434c941765e5c6a"
+        }
+      },
+      "select_profile": {
+        "path": "docs/attempts/research-20260924-select-profile-ctrl-lifetime/any_gated_wait.body.c",
+        "identity": {
+          "size": 6740,
+          "sha256": "bff0c60f8838266a7031bb4724fb88223e14f3fb7d5d11c560cf8c4a0b9f6ba9"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [
+      {
+        "after": "profile_data_page_advanced",
+        "header": "recovered/Tavailable_profile.h",
+        "declarations": [
+          "extern int rebuild_profile_list(Tavailable_profile **profs);",
+          "void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
+          "Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);"
+        ]
+      }
+    ],
+    "headers": {}
+  },
+  "source_identities": {
+    "src/profile.c": {
+      "size": 30867,
+      "sha256": "7b9b7fa80e6a4f938bc6ebe51617b5a6630d5a89cfa689569d5e64ab77ddc887"
+    },
+    "include/recovered/Tavailable_profile.h": {
+      "size": 548,
+      "sha256": "ea6cb9da63e80af685a62a9d2584e8a3f08410767ebb22893a6ee94afc46e47a"
+    }
+  },
+  "new_text_identity": {
+    "size": 31503,
+    "sha256": "124a17b3388a82597aa3147290d5a172be3240a3aecdbf847586c9832b4eeb31"
+  },
+  "new_header_identities": {},
+  "required_generated_headers": {
+    "include/recovered/Tavailable_profile.h": {
+      "size": 548,
+      "sha256": "ea6cb9da63e80af685a62a9d2584e8a3f08410767ebb22893a6ee94afc46e47a"
+    }
+  },
+  "preserved_definitions": [
+    "create_profile",
+    "delete_profile",
+    "draw_buffer",
+    "generate_profile_checksum",
+    "get_rank",
+    "get_rank_id",
+    "hash2",
+    "load_profile",
+    "profile_data_page_advanced",
+    "profile_data_page_basic",
+    "profile_data_page_extra",
+    "profile_data_page_general",
+    "save_profile",
+    "set_next_rank_message",
+    "view_profile"
+  ],
+  "replaced_definitions": [
+    "draw_profile_selector",
+    "select_profile"
+  ],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin profile_late_typed_selectors_20260924",
+  "apply_command": "python tools/tu_context_task.py apply profile_late_typed_selectors_20260924",
+  "verification_command": "python tools/tu_context_task.py check profile_late_typed_selectors_20260924",
+  "promotion_command": "python tools/tu_context_task.py promote profile_late_typed_selectors_20260924",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/profile_late_typed_selectors_20260924.json"
+}

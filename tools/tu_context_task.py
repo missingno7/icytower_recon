@@ -59,6 +59,8 @@ def provenance_update(manifest_text, old_source, new_source, source, spec):
 def plan(name, spec_path):
     from tu_context_probe import build_text, islands, retained_body
     spec = read_json(Path(spec_path)); target = spec['target']; source = spec['source']
+    if spec.get('research_base'):
+        raise ValueError('Research-base overlays are diagnostic only; production transactions must start from maintained source')
     ledger = read_json(ROOT / 'src/recovery.json'); validate_ledger(ledger)
     if ledger[source]['verified_report'] and read_json(ROOT / ledger[source]['verified_report'])['build']['target'] != target: raise ValueError('target/source mismatch')
     new, edits, headers = build_text(target, source, spec)
@@ -66,6 +68,15 @@ def plan(name, spec_path):
     provenance_before = (ROOT / PROVENANCE).read_text(encoding='utf-8')
     provenance_after = provenance_update(provenance_before, text, new, source, spec)
     old_isl = {i['name']: i for i in islands(text)}; new_isl = {i['name']: i for i in islands(new)}
+    old_report = read_json(ROOT / ledger[source]['verified_report'])
+    old_status = {f['name']: f['status'] for f in old_report['functions']}
+    required_headers = {}
+    for item in spec.get('late_declarations') or []:
+        anchor = item['after']
+        if anchor not in old_isl or anchor in edits['bodies'] or old_status.get(anchor) != 'FUNCTION_MATCH':
+            raise ValueError('Late declaration anchor must be an unchanged exact function: ' + anchor)
+        header = 'include/' + item['header']
+        required_headers[header] = identity(ROOT / header)
     # A transaction may ADD a definition the production file deliberately omits -- a historical
     # function an unresolved-ownership CU leaves out until the oracle proves it independently.  It
     # must be named in `add`, must be one of the retained bodies, and must be MISSING in the ledger,
@@ -106,16 +117,16 @@ def plan(name, spec_path):
     if directives(new) - allowed > directives(text): raise ValueError('Transaction introduces forbidden code-generation directives')
     files = [source] + sorted(headers)
     identities = {f: identity(ROOT / f) for f in files}
+    identities.update(required_headers)
     if provenance_after is not None:
         identities[PROVENANCE] = identity(ROOT / PROVENANCE)
     card = {'schema': 1, 'task_kind': 'TU_CONTEXT', 'function': name, 'source': source, 'sources': files, 'target': target, 'affected_targets': [target],
-            'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': {f: identity(ROOT / f) for f in files},
-            'new_text_identity': identity_text(new), 'new_header_identities': {h: identity_text(t) for h, t in headers.items()}, 'preserved_definitions': sorted(preserved), 'replaced_definitions': sorted(edits['bodies']),
+            'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': identities,
+            'new_text_identity': identity_text(new), 'new_header_identities': {h: identity_text(t) for h, t in headers.items()}, 'required_generated_headers': required_headers, 'preserved_definitions': sorted(preserved), 'replaced_definitions': sorted(edits['bodies']),
             'body_edit_allowed': False, 'state': 'TU_CONTEXT_TRANSACTION',
             'begin_command': 'python tools/tu_context_task.py begin ' + name, 'apply_command': 'python tools/tu_context_task.py apply ' + name,
             'verification_command': 'python tools/tu_context_task.py check ' + name, 'promotion_command': 'python tools/tu_context_task.py promote ' + name,
             'reason': 'Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).'}
-    card['source_identities'] = identities
     if provenance_after is not None:
         card['provenance_after_identity'] = identity_text(provenance_after)
     PLANS.mkdir(parents=True, exist_ok=True); write_json(PLANS / (name + '.json'), card)
@@ -173,6 +184,8 @@ def _session(name):
 
 def validate_scope(session):
     current = snapshot_files(); before = session['files']; source = session['source']; allowed = set(session['plan']['sources'])
+    for header, ident in session['plan'].get('required_generated_headers', {}).items():
+        if identity(ROOT / header) != ident: raise ValueError('Required generated header changed: ' + header)
     if session['plan'].get('provenance_after_identity'):
         allowed.add(PROVENANCE)
     for path in set(current) | set(before):

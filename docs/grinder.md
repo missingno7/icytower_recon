@@ -20,6 +20,19 @@ docs/attempts/PATH/source.c` to probe that context with the same locked compiler
 and strict comparator. The base must be under `docs/attempts/` or
 `build/tu-context/`; the receipt records its path and content hash. This does
 not change the canonical CU or authorize production promotion.
+An atomic `TU_CONTEXT` production transaction can accept retained source-backed
+bodies and a generated recovered type header placed immediately after a named,
+unchanged `FUNCTION_MATCH` definition. Its `late_declarations` items list that
+anchor, one existing `recovered/*.h` header, and explicit function prototypes;
+the ordinary declaration recipe removes superseded early prototypes. The
+planner rejects `research_base`, binds the generated header and retained-body
+identities, and the fresh full-CU gate preserves every exact function and proven
+data owner, checks all unchanged bodies, rejects new implicit declarations, and
+requires the ordinary link and acceptance tests. The profile transaction
+`profile_late_typed_selectors_20260924` uses this path because exposing
+`Tavailable_profile` before exact `profile_data_page_advanced` changes GCC
+output. The typed selectors remain `DIFFER`; this context transaction does not
+grant them function matches.
 When probing the already promoted `main.c`, preserve its declaration context:
 `python tools/tu_context_probe.py game-main src/main.c LABEL --order current
 --no-prototypes ...`. The maintained file already contains generated forward

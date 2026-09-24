@@ -42,3 +42,15 @@ The strict reports show every changed operand in the two lost neighbors is a `.r
 Effective-output grouping for the seven probe receipts (`python tools/effective_outcomes.py game-replay create_replay --pattern 'create-replay-*' --compact --response`) found five outcomes. The current/top/historical-order uppercase global probes deduplicate together; the global lower-case and static uppercase probes are separate outcomes; the minimal static lower-case declaration remains the only strict `create_replay` result. This is sufficient to stop: changing definition order or linkage alone did not repair the uppercase-owner outcome.
 
 Additional source artifacts: `header-global-lower.c`, `header-static-upper.c`. Receipts: `create-replay-header-global-lower.json`, `create-replay-header-static-upper.json`, and `create-replay-header-owner-historical-order.json` under `../tu-context/game-replay/`.
+## Explicit six-character initializer follow-up
+
+After the strict replay load promotion, a locked isolated probe declared the
+historical external `REPLAY_HEADER const char[6]` with an explicit six-character
+initializer. It deduplicated with the prior uppercase-owner outcomes:
+`create_replay` remained `CODEGEN_SIMILAR`, first mismatch +127 (two bytes),
+and exact replay functions dropped from 7/15 to 4/15 because unchanged
+`get_replay_property`, `load_replay`, and `update_file_list` acquired different
+`.rdata` relocation targets. The candidate `Harold` target was `0x4d7b9e`
+versus historical `0x4d7a7e`. This rules out string-literal initializer
+extent as the immediate cause. The source is `header-owner-charlist.c` and the
+strict receipt is `../tu-context/game-replay/create-replay-header-charlist-noproto.json`.

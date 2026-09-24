@@ -56,24 +56,6 @@
       "size": 0
     },
     {
-      "function": "draw_profile_selector",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin draw_profile_selector",
-      "verification_command": "python tools/interface_task.py check draw_profile_selector",
-      "promotion_command": "python tools/interface_task.py promote draw_profile_selector",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/draw_profile_selector.json",
-      "size": 0
-    },
-    {
       "function": "draw_replay_selector",
       "source": "src/replay.c",
       "sources": null,
@@ -197,42 +179,6 @@
       "difference_class": "TYPE_LAYOUT_CONFLICT",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/httpGetLastModified.json",
-      "size": 0
-    },
-    {
-      "function": "rebuild_profile_list",
-      "source": "src/main.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin rebuild_profile_list",
-      "verification_command": "python tools/interface_task.py check rebuild_profile_list",
-      "promotion_command": "python tools/interface_task.py promote rebuild_profile_list",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/rebuild_profile_list.json",
-      "size": 0
-    },
-    {
-      "function": "select_profile",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin select_profile",
-      "verification_command": "python tools/interface_task.py check select_profile",
-      "promotion_command": "python tools/interface_task.py promote select_profile",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/select_profile.json",
       "size": 0
     },
     {
@@ -5575,7 +5521,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 117,
+          "line": 116,
           "kind": "NC",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -5602,7 +5548,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 136,
+          "line": 133,
           "kind": "NC",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -5629,7 +5575,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 199,
+          "line": 194,
           "kind": "NF",
           "name": "create_profile",
           "return_type": "Tprofile_create*",
@@ -7196,7 +7142,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 121,
+          "line": 120,
           "kind": "NC",
           "name": "delete_profile",
           "return_type": "void",
@@ -7213,7 +7159,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 140,
+          "line": 137,
           "kind": "NC",
           "name": "delete_profile",
           "return_type": "void",
@@ -7230,7 +7176,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 332,
+          "line": 327,
           "kind": "NF",
           "name": "delete_profile",
           "return_type": "void",
@@ -8763,7 +8709,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 128,
+          "line": 127,
           "kind": "NC",
           "name": "draw_buffer",
           "return_type": "int",
@@ -8786,7 +8732,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 147,
+          "line": 144,
           "kind": "NC",
           "name": "draw_buffer",
           "return_type": "int",
@@ -9365,14 +9311,14 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 130,
+          "line": 510,
           "kind": "NC",
           "name": "draw_profile_selector",
           "return_type": "void",
           "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
+            "BITMAP*",
+            "Tprofile*",
+            "Tavailable_profile*",
             "int",
             "int",
             "int",
@@ -9380,12 +9326,12 @@
             "int",
             "int"
           ],
-          "declaration": "extern void draw_profile_selector (void *, char *, char *, int, int, int, int, int, int);",
+          "declaration": "extern void draw_profile_selector (BITMAP *, Tprofile *, Tavailable_profile *, int, int, int, int, int, int);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
+            "BITMAP*",
+            "Tprofile*",
+            "Tavailable_profile*",
             "int",
             "int",
             "int",
@@ -9398,68 +9344,16 @@
             {
               "position": "parameter 2",
               "historical_type": "Tprofile",
-              "candidate_type": "char",
+              "candidate_type": "Tprofile",
               "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             },
             {
               "position": "parameter 3",
               "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
+              "candidate_type": "Tavailable_profile",
               "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 149,
-          "kind": "NC",
-          "name": "draw_profile_selector",
-          "return_type": "void",
-          "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "declaration": "extern void draw_profile_selector (void *, char *, char *, int, int, int, int, int, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tprofile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             }
           ]
         },
@@ -9470,9 +9364,9 @@
           "name": "draw_profile_selector",
           "return_type": "void",
           "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
+            "BITMAP*",
+            "Tprofile*",
+            "Tavailable_profile*",
             "int",
             "int",
             "int",
@@ -9480,12 +9374,12 @@
             "int",
             "int"
           ],
-          "declaration": "extern void draw_profile_selector (void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
+          "declaration": "extern void draw_profile_selector (BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
           "canonical_return_type": "void",
           "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
+            "BITMAP*",
+            "Tprofile*",
+            "Tavailable_profile*",
             "int",
             "int",
             "int",
@@ -9498,92 +9392,23 @@
             {
               "position": "parameter 2",
               "historical_type": "Tprofile",
-              "candidate_type": "char",
+              "candidate_type": "Tprofile",
               "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             },
             {
               "position": "parameter 3",
               "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
+              "candidate_type": "Tavailable_profile",
               "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 130
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 130
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 149
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 149
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 712
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 712
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -13957,7 +13782,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 116,
+          "line": 115,
           "kind": "NC",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -13982,7 +13807,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 135,
+          "line": 132,
           "kind": "NC",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -14007,7 +13832,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 184,
+          "line": 179,
           "kind": "NF",
           "name": "generate_profile_checksum",
           "return_type": "int",
@@ -16938,7 +16763,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 119,
+          "line": 118,
           "kind": "NC",
           "name": "get_rank",
           "return_type": "char*",
@@ -17035,7 +16860,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 138,
+          "line": 135,
           "kind": "NC",
           "name": "get_rank",
           "return_type": "char*",
@@ -17132,7 +16957,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 297,
+          "line": 292,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -17141,590 +16966,6 @@
           ],
           "declaration": "extern char *get_rank (Tprofile_rank *profile);",
           "canonical_return_type": "char*",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 119
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 138
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 297
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "get_rank_id",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 196878
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 301,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 118,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 137,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 283,
-          "kind": "NF",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *profile);",
-          "canonical_return_type": "int",
           "canonical_parameter_types": [
             "Tprofile_rank*"
           ],
@@ -17976,7 +17217,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 137
+          "line": 135
         },
         {
           "position": "parameter 1",
@@ -18058,7 +17299,591 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 283
+          "line": 292
+        }
+      ],
+      "difficulty": "SUPERVISOR",
+      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
+    },
+    {
+      "function": "get_rank_id",
+      "historical": [
+        {
+          "cu": "src/profile.c",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile*"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 196878
+        }
+      ],
+      "candidate_declarations": [
+        {
+          "file": "src/main.c",
+          "line": 301,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile*"
+          ],
+          "cu": "src/main.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile",
+              "header": "include/recovered/Tprofile.h",
+              "status": "AGREE"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 117,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 134,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 278,
+          "kind": "NF",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *profile);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        }
+      ],
+      "status": "CONFLICT",
+      "type_layout_issues": [
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 117
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 134
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 278
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -19076,7 +18901,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 112,
+          "line": 111,
           "kind": "NC",
           "name": "get_string",
           "return_type": "int",
@@ -22035,7 +21860,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 115,
+          "line": 114,
           "kind": "NC",
           "name": "hash2",
           "return_type": "unsigned int",
@@ -22052,7 +21877,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 134,
+          "line": 131,
           "kind": "NC",
           "name": "hash2",
           "return_type": "unsigned int",
@@ -22069,7 +21894,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 174,
+          "line": 169,
           "kind": "NF",
           "name": "hash2",
           "return_type": "unsigned int",
@@ -28806,7 +28631,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 122,
+          "line": 121,
           "kind": "NC",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -28831,7 +28656,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 141,
+          "line": 138,
           "kind": "NC",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -28856,7 +28681,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 349,
+          "line": 344,
           "kind": "NF",
           "name": "load_profile",
           "return_type": "Tprofile_load*",
@@ -33839,7 +33664,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 111,
+          "line": 110,
           "kind": "NC",
           "name": "play_menu_move",
           "return_type": "void",
@@ -34118,7 +33943,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 110,
+          "line": 109,
           "kind": "NC",
           "name": "play_menu_select",
           "return_type": "void",
@@ -34744,7 +34569,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 126,
+          "line": 125,
           "kind": "NC",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -34769,7 +34594,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 145,
+          "line": 142,
           "kind": "NC",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -34794,7 +34619,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 481,
+          "line": 476,
           "kind": "NF",
           "name": "profile_data_page_advanced",
           "return_type": "char*",
@@ -34840,7 +34665,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 125,
+          "line": 124,
           "kind": "NC",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -34865,7 +34690,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 144,
+          "line": 141,
           "kind": "NC",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -34890,7 +34715,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 435,
+          "line": 430,
           "kind": "NF",
           "name": "profile_data_page_basic",
           "return_type": "char*",
@@ -34936,7 +34761,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 123,
+          "line": 122,
           "kind": "NC",
           "name": "profile_data_page_extra",
           "return_type": "char*",
@@ -34961,7 +34786,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 142,
+          "line": 139,
           "kind": "NC",
           "name": "profile_data_page_extra",
           "return_type": "char*",
@@ -34986,7 +34811,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 373,
+          "line": 368,
           "kind": "NF",
           "name": "profile_data_page_extra",
           "return_type": "char*",
@@ -35033,7 +34858,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 124,
+          "line": 123,
           "kind": "NC",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -35060,7 +34885,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 143,
+          "line": 140,
           "kind": "NC",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -35087,7 +34912,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 384,
+          "line": 379,
           "kind": "NF",
           "name": "profile_data_page_general",
           "return_type": "char*",
@@ -36262,46 +36087,33 @@
         },
         {
           "file": "src/profile.c",
-          "line": 108,
+          "line": 509,
           "kind": "NC",
           "name": "rebuild_profile_list",
           "return_type": "int",
           "parameter_types": [
-            "char**"
+            "Tavailable_profile**"
           ],
-          "declaration": "extern int rebuild_profile_list (char **);",
+          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "char**"
+            "Tavailable_profile**"
           ],
           "cu": "src/profile.c",
           "game_type_layouts": [
             {
               "position": "parameter 1",
               "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
+              "candidate_type": "Tavailable_profile",
               "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             }
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 108
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -36835,7 +36647,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 109,
+          "line": 108,
           "kind": "NC",
           "name": "replaceBadCharacters",
           "return_type": "void",
@@ -39231,7 +39043,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 127,
+          "line": 126,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -39256,7 +39068,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 146,
+          "line": 143,
           "kind": "NC",
           "name": "save_profile",
           "return_type": "int",
@@ -39756,21 +39568,21 @@
         },
         {
           "file": "src/profile.c",
-          "line": 131,
+          "line": 511,
           "kind": "NC",
           "name": "select_profile",
           "return_type": "Tprofile_create*",
           "parameter_types": [
             "Tprofile_create*",
-            "char*",
+            "Tavailable_profile*",
             "int",
             "Tprofile_control*"
           ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *, char *, int, Tprofile_control *);",
+          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *, Tavailable_profile *, int, Tprofile_control *);",
           "canonical_return_type": "Tprofile*",
           "canonical_parameter_types": [
             "Tprofile*",
-            "char*",
+            "Tavailable_profile*",
             "int",
             "Tcontrol*"
           ],
@@ -39793,63 +39605,9 @@
             {
               "position": "parameter 2",
               "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
+              "candidate_type": "Tavailable_profile",
               "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tprofile_control",
-              "header": "include/recovered/Tcontrol.h",
               "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 150,
-          "kind": "NC",
-          "name": "select_profile",
-          "return_type": "Tprofile_create*",
-          "parameter_types": [
-            "Tprofile_create*",
-            "char*",
-            "int",
-            "Tprofile_control*"
-          ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *, char *, int, Tprofile_control *);",
-          "canonical_return_type": "Tprofile*",
-          "canonical_parameter_types": [
-            "Tprofile*",
-            "char*",
-            "int",
-            "Tcontrol*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 2",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
             },
             {
               "position": "parameter 4",
@@ -39868,15 +39626,15 @@
           "return_type": "Tprofile_create*",
           "parameter_types": [
             "Tprofile_create*",
-            "char*",
+            "Tavailable_profile*",
             "int",
             "Tprofile_control*"
           ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);",
+          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);",
           "canonical_return_type": "Tprofile*",
           "canonical_parameter_types": [
             "Tprofile*",
-            "char*",
+            "Tavailable_profile*",
             "int",
             "Tcontrol*"
           ],
@@ -39899,10 +39657,9 @@
             {
               "position": "parameter 2",
               "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
+              "candidate_type": "Tavailable_profile",
               "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
+              "status": "AGREE"
             },
             {
               "position": "parameter 4",
@@ -39914,43 +39671,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 131
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 150
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 765
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -40461,7 +40184,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 120,
+          "line": 119,
           "kind": "NC",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -40560,7 +40283,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 139,
+          "line": 136,
           "kind": "NC",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -40659,7 +40382,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 302,
+          "line": 297,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -40839,7 +40562,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 120
+          "line": 119
         },
         {
           "position": "parameter 2",
@@ -40921,7 +40644,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 139
+          "line": 136
         },
         {
           "position": "parameter 2",
@@ -41003,7 +40726,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 302
+          "line": 297
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -46272,7 +45995,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 129,
+          "line": 128,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -46298,7 +46021,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 148,
+          "line": 145,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -46371,7 +46094,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 129
+          "line": 128
         },
         {
           "position": "parameter 1",
@@ -46382,7 +46105,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 148
+          "line": 145
         },
         {
           "position": "parameter 1",
@@ -47186,252 +46909,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "draw_profile_selector",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "void",
-          "parameter_types": [
-            "BITMAP*",
-            "Tprofile*",
-            "Tavailable_profile*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 197221
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/profile.c",
-          "line": 130,
-          "kind": "NC",
-          "name": "draw_profile_selector",
-          "return_type": "void",
-          "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "declaration": "extern void draw_profile_selector (void *, char *, char *, int, int, int, int, int, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tprofile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 149,
-          "kind": "NC",
-          "name": "draw_profile_selector",
-          "return_type": "void",
-          "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "declaration": "extern void draw_profile_selector (void *, char *, char *, int, int, int, int, int, int);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tprofile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 712,
-          "kind": "NF",
-          "name": "draw_profile_selector",
-          "return_type": "void",
-          "parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "declaration": "extern void draw_profile_selector (void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "void*",
-            "char*",
-            "char*",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "int"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tprofile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tprofile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 130
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 130
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 149
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 149
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tprofile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tprofile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 712
-        },
-        {
-          "position": "parameter 3",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 712
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "draw_replay_selector",
       "historical": [
         {
@@ -48213,7 +47690,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 119,
+          "line": 118,
           "kind": "NC",
           "name": "get_rank",
           "return_type": "char*",
@@ -48310,7 +47787,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 138,
+          "line": 135,
           "kind": "NC",
           "name": "get_rank",
           "return_type": "char*",
@@ -48407,7 +47884,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 297,
+          "line": 292,
           "kind": "NF",
           "name": "get_rank",
           "return_type": "char*",
@@ -48416,590 +47893,6 @@
           ],
           "declaration": "extern char *get_rank (Tprofile_rank *profile);",
           "canonical_return_type": "char*",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 119
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 138
-        },
-        {
-          "position": "parameter 1",
-          "historical_type": "Tprofile",
-          "candidate_type": "Tprofile_rank",
-          "header": "include/recovered/Tprofile.h",
-          "status": "MISMATCH",
-          "historical_size": 1360,
-          "candidate_size": 140,
-          "member_difference_count": 37,
-          "first_member_differences": [
-            {
-              "member": "before_ccc",
-              "historical": null,
-              "candidate": {
-                "offset": 84,
-                "size": 4,
-                "type": "unsigned char [4]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_nml",
-              "historical": null,
-              "candidate": {
-                "offset": 92,
-                "size": 44,
-                "type": "unsigned char [44]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "before_score",
-              "historical": null,
-              "candidate": {
-                "offset": 0,
-                "size": 76,
-                "type": "unsigned char [76]",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "best_combo",
-              "historical": {
-                "offset": 80,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_floor",
-              "historical": {
-                "offset": 76,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            },
-            {
-              "member": "best_replay_names",
-              "historical": {
-                "offset": 220,
-                "size": 1024,
-                "type": "char [32][32]",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": null
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 297
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "get_rank_id",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 196878
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 301,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 118,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 137,
-          "kind": "NC",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_rank",
-              "header": "include/recovered/Tprofile.h",
-              "status": "MISMATCH",
-              "historical_size": 1360,
-              "candidate_size": 140,
-              "member_difference_count": 37,
-              "first_member_differences": [
-                {
-                  "member": "before_ccc",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 84,
-                    "size": 4,
-                    "type": "unsigned char [4]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_nml",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 92,
-                    "size": 44,
-                    "type": "unsigned char [44]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "before_score",
-                  "historical": null,
-                  "candidate": {
-                    "offset": 0,
-                    "size": 76,
-                    "type": "unsigned char [76]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "best_combo",
-                  "historical": {
-                    "offset": 80,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_floor",
-                  "historical": {
-                    "offset": 76,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                },
-                {
-                  "member": "best_replay_names",
-                  "historical": {
-                    "offset": 220,
-                    "size": 1024,
-                    "type": "char [32][32]",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": null
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 283,
-          "kind": "NF",
-          "name": "get_rank_id",
-          "return_type": "int",
-          "parameter_types": [
-            "Tprofile_rank*"
-          ],
-          "declaration": "extern int get_rank_id (Tprofile_rank *profile);",
-          "canonical_return_type": "int",
           "canonical_parameter_types": [
             "Tprofile_rank*"
           ],
@@ -49251,7 +48144,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 137
+          "line": 135
         },
         {
           "position": "parameter 1",
@@ -49333,7 +48226,591 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 283
+          "line": 292
+        }
+      ],
+      "difficulty": "SUPERVISOR",
+      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
+    },
+    {
+      "function": "get_rank_id",
+      "historical": [
+        {
+          "cu": "src/profile.c",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile*"
+          ],
+          "variadic": false,
+          "calling_convention": null,
+          "die": 196878
+        }
+      ],
+      "candidate_declarations": [
+        {
+          "file": "src/main.c",
+          "line": 301,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile*"
+          ],
+          "cu": "src/main.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile",
+              "header": "include/recovered/Tprofile.h",
+              "status": "AGREE"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 117,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 134,
+          "kind": "NC",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        },
+        {
+          "file": "src/profile.c",
+          "line": 278,
+          "kind": "NF",
+          "name": "get_rank_id",
+          "return_type": "int",
+          "parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "declaration": "extern int get_rank_id (Tprofile_rank *profile);",
+          "canonical_return_type": "int",
+          "canonical_parameter_types": [
+            "Tprofile_rank*"
+          ],
+          "cu": "src/profile.c",
+          "game_type_layouts": [
+            {
+              "position": "parameter 1",
+              "historical_type": "Tprofile",
+              "candidate_type": "Tprofile_rank",
+              "header": "include/recovered/Tprofile.h",
+              "status": "MISMATCH",
+              "historical_size": 1360,
+              "candidate_size": 140,
+              "member_difference_count": 37,
+              "first_member_differences": [
+                {
+                  "member": "before_ccc",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 84,
+                    "size": 4,
+                    "type": "unsigned char [4]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_nml",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 92,
+                    "size": 44,
+                    "type": "unsigned char [44]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "before_score",
+                  "historical": null,
+                  "candidate": {
+                    "offset": 0,
+                    "size": 76,
+                    "type": "unsigned char [76]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  }
+                },
+                {
+                  "member": "best_combo",
+                  "historical": {
+                    "offset": 80,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_floor",
+                  "historical": {
+                    "offset": 76,
+                    "size": 4,
+                    "type": "int",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                },
+                {
+                  "member": "best_replay_names",
+                  "historical": {
+                    "offset": 220,
+                    "size": 1024,
+                    "type": "char [32][32]",
+                    "qualifiers": [],
+                    "bitfield": false
+                  },
+                  "candidate": null
+                }
+              ],
+              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+            }
+          ]
+        }
+      ],
+      "status": "CONFLICT",
+      "type_layout_issues": [
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 117
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 134
+        },
+        {
+          "position": "parameter 1",
+          "historical_type": "Tprofile",
+          "candidate_type": "Tprofile_rank",
+          "header": "include/recovered/Tprofile.h",
+          "status": "MISMATCH",
+          "historical_size": 1360,
+          "candidate_size": 140,
+          "member_difference_count": 37,
+          "first_member_differences": [
+            {
+              "member": "before_ccc",
+              "historical": null,
+              "candidate": {
+                "offset": 84,
+                "size": 4,
+                "type": "unsigned char [4]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_nml",
+              "historical": null,
+              "candidate": {
+                "offset": 92,
+                "size": 44,
+                "type": "unsigned char [44]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "before_score",
+              "historical": null,
+              "candidate": {
+                "offset": 0,
+                "size": 76,
+                "type": "unsigned char [76]",
+                "qualifiers": [],
+                "bitfield": false
+              }
+            },
+            {
+              "member": "best_combo",
+              "historical": {
+                "offset": 80,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_floor",
+              "historical": {
+                "offset": 76,
+                "size": 4,
+                "type": "int",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            },
+            {
+              "member": "best_replay_names",
+              "historical": {
+                "offset": 220,
+                "size": 1024,
+                "type": "char [32][32]",
+                "qualifiers": [],
+                "bitfield": false
+              },
+              "candidate": null
+            }
+          ],
+          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
+          "cu": "src/profile.c",
+          "file": "src/profile.c",
+          "line": 278
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -49561,784 +49038,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "rebuild_profile_list",
-      "historical": [
-        {
-          "cu": "src/main.c",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 126100
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 304,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 464,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 547,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 630,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 713,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 796,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 879,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 962,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1045,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1128,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1211,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1294,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1377,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1460,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1543,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1626,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 1674,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/main.c",
-          "line": 2243,
-          "kind": "NF",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "declaration": "extern int rebuild_profile_list (Tavailable_profile **profs);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "Tavailable_profile**"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 108,
-          "kind": "NC",
-          "name": "rebuild_profile_list",
-          "return_type": "int",
-          "parameter_types": [
-            "char**"
-          ],
-          "declaration": "extern int rebuild_profile_list (char **);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "char**"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 108
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "select_profile",
-      "historical": [
-        {
-          "cu": "src/profile.c",
-          "return_type": "Tprofile*",
-          "parameter_types": [
-            "Tprofile*",
-            "Tavailable_profile*",
-            "int",
-            "Tcontrol*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 200020
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/main.c",
-          "line": 302,
-          "kind": "NC",
-          "name": "select_profile",
-          "return_type": "Tprofile*",
-          "parameter_types": [
-            "Tprofile*",
-            "Tavailable_profile*",
-            "int",
-            "Tcontrol*"
-          ],
-          "declaration": "extern Tprofile *select_profile (Tprofile *, Tavailable_profile *, int, Tcontrol *);",
-          "canonical_return_type": "Tprofile*",
-          "canonical_parameter_types": [
-            "Tprofile*",
-            "Tavailable_profile*",
-            "int",
-            "Tcontrol*"
-          ],
-          "cu": "src/main.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 2",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "Tavailable_profile",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 131,
-          "kind": "NC",
-          "name": "select_profile",
-          "return_type": "Tprofile_create*",
-          "parameter_types": [
-            "Tprofile_create*",
-            "char*",
-            "int",
-            "Tprofile_control*"
-          ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *, char *, int, Tprofile_control *);",
-          "canonical_return_type": "Tprofile*",
-          "canonical_parameter_types": [
-            "Tprofile*",
-            "char*",
-            "int",
-            "Tcontrol*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 2",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tprofile_control",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 150,
-          "kind": "NC",
-          "name": "select_profile",
-          "return_type": "Tprofile_create*",
-          "parameter_types": [
-            "Tprofile_create*",
-            "char*",
-            "int",
-            "Tprofile_control*"
-          ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *, char *, int, Tprofile_control *);",
-          "canonical_return_type": "Tprofile*",
-          "canonical_parameter_types": [
-            "Tprofile*",
-            "char*",
-            "int",
-            "Tcontrol*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 2",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tprofile_control",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/profile.c",
-          "line": 765,
-          "kind": "NF",
-          "name": "select_profile",
-          "return_type": "Tprofile_create*",
-          "parameter_types": [
-            "Tprofile_create*",
-            "char*",
-            "int",
-            "Tprofile_control*"
-          ],
-          "declaration": "extern Tprofile_create *select_profile (Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);",
-          "canonical_return_type": "Tprofile*",
-          "canonical_parameter_types": [
-            "Tprofile*",
-            "char*",
-            "int",
-            "Tcontrol*"
-          ],
-          "cu": "src/profile.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 1",
-              "historical_type": "Tprofile",
-              "candidate_type": "Tprofile_create",
-              "header": "include/recovered/Tprofile.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 2",
-              "historical_type": "Tavailable_profile",
-              "candidate_type": "char",
-              "header": "include/recovered/Tavailable_profile.h",
-              "status": "UNAVAILABLE",
-              "reason": "Candidate named type layout is missing or ambiguous"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tprofile_control",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 131
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 150
-        },
-        {
-          "position": "parameter 2",
-          "historical_type": "Tavailable_profile",
-          "candidate_type": "char",
-          "header": "include/recovered/Tavailable_profile.h",
-          "status": "UNAVAILABLE",
-          "reason": "Candidate named type layout is missing or ambiguous",
-          "cu": "src/profile.c",
-          "file": "src/profile.c",
-          "line": 765
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "set_next_rank_message",
       "historical": [
         {
@@ -50356,7 +49055,7 @@
       "candidate_declarations": [
         {
           "file": "src/profile.c",
-          "line": 120,
+          "line": 119,
           "kind": "NC",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -50455,7 +49154,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 139,
+          "line": 136,
           "kind": "NC",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -50554,7 +49253,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 302,
+          "line": 297,
           "kind": "NF",
           "name": "set_next_rank_message",
           "return_type": "void",
@@ -50734,7 +49433,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 120
+          "line": 119
         },
         {
           "position": "parameter 2",
@@ -50816,7 +49515,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 139
+          "line": 136
         },
         {
           "position": "parameter 2",
@@ -50898,7 +49597,7 @@
           "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 302
+          "line": 297
         }
       ],
       "difficulty": "SUPERVISOR",
@@ -51422,7 +50121,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 129,
+          "line": 128,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -51448,7 +50147,7 @@
         },
         {
           "file": "src/profile.c",
-          "line": 148,
+          "line": 145,
           "kind": "NC",
           "name": "view_profile",
           "return_type": "void",
@@ -51521,7 +50220,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 129
+          "line": 128
         },
         {
           "position": "parameter 1",
@@ -51532,7 +50231,7 @@
           "reason": "Candidate named type layout is missing or ambiguous",
           "cu": "src/profile.c",
           "file": "src/profile.c",
-          "line": 148
+          "line": 145
         },
         {
           "position": "parameter 1",

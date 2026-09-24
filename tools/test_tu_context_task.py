@@ -4,7 +4,7 @@ changes and forbidden directives, and the island comparison key normalizes nothi
 import json, re, tempfile, unittest
 from pathlib import Path
 from common import ROOT, read_json
-from tu_context_probe import build_text, islands, historical_static, header_edits, retained_body
+from tu_context_probe import build_text, islands, historical_static, header_edits, retained_body, layout
 from tu_context_task import island_key, provenance_update, FORBIDDEN
 
 SOURCE = 'src/main.c'; TARGET = 'game-main'
@@ -82,6 +82,15 @@ class GeneratedCards(unittest.TestCase):
 
 
 class DeclarationEdits(unittest.TestCase):
+    def test_production_plan_rejects_diagnostic_research_base(self):
+        from tu_context_task import plan
+        with tempfile.TemporaryDirectory() as tmp:
+            spec = Path(tmp) / 'research.json'
+            spec.write_text(json.dumps({'target': 'game-profile', 'source': 'src/profile.c',
+                                        'research_base': 'docs/attempts/example.c'}))
+            with self.assertRaisesRegex(ValueError, 'diagnostic only'):
+                plan('forbidden_research_base_test', spec)
+
     def test_removes_only_named_top_level_declarations_and_inserts_includes(self):
         from tu_context_probe import declaration_edits
         text = ('#include <allegro.h>\n#include "x.h"\nextern void *__attribute__((stdcall)) ShellExecuteA(void *hwnd,\n    const char *op);\n'
@@ -92,6 +101,28 @@ class DeclarationEdits(unittest.TestCase):
         self.assertEqual(new, '#include <allegro.h>\n#include <winalleg.h>\n#include "x.h"\nextern int keep(int);\n#define LOBYTE(v) ((v) & 0xff)\nint itrcheck;\n')
         with self.assertRaises(ValueError): declaration_edits(text, {'remove_top_level': ['itrcheck']}, '\n')
         with self.assertRaises(ValueError): declaration_edits(text, {'includes_after': {'nothere.h': ['a.h']}}, '\n')
+
+    def test_duplicate_bare_prototypes_can_be_removed_before_late_type_visibility(self):
+        from tu_context_probe import declaration_edits
+        text = ('void draw_profile_selector(char *p);\n'
+                'void draw_profile_selector(char *p);\n'
+                'int keep(void);\n')
+        new, removed = declaration_edits(text, {'remove_top_level': ['draw_profile_selector', 'draw_profile_selector']}, '\n')
+        self.assertEqual(new, 'int keep(void);\n')
+        self.assertEqual(len(removed), 2)
+
+    def test_generated_header_visibility_can_follow_an_unchanged_definition(self):
+        text = 'int before(void) { return 1; }\nint after(void) { return before(); }\n'
+        late = [{'after': 'before', 'header': 'recovered/Tavailable_profile.h',
+                 'declarations': ['extern int rebuild_profile_list(Tavailable_profile **profs);']}]
+        new = layout(text, ['before', 'after'], prototypes='none', late_declarations=late)
+        self.assertLess(new.index('return 1;'), new.index('#include "recovered/Tavailable_profile.h"'))
+        self.assertLess(new.index('#include "recovered/Tavailable_profile.h"'), new.index('int after(void)'))
+        old = {i['name']: i for i in islands(text)}; cur = {i['name']: i for i in islands(new)}
+        for name in old: self.assertEqual(island_key(old[name]), island_key(cur[name]))
+        with self.assertRaises(ValueError):
+            layout(text, ['before', 'after'], prototypes='none',
+                   late_declarations=[{'after': 'before', 'header': 'private.h', 'declarations': []}])
 
 
 class IslandKey(unittest.TestCase):

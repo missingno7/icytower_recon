@@ -1,0 +1,26 @@
+{
+  "target": "game-profile",
+  "source": "src/profile.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "draw_profile_selector": "docs/attempts/research-20260924-profile-late-transaction/draw_profile_selector.c",
+    "select_profile": "docs/attempts/research-20260924-select-profile-ctrl-lifetime/any_gated_wait.body.c"
+  },
+  "declarations": {
+    "remove_top_level": ["rebuild_profile_list", "draw_profile_selector", "select_profile", "draw_profile_selector", "select_profile"],
+    "evidence": "The early char** rebuild declaration and two duplicated early char-pointer prototypes for each selector must be removed so the generated historical Tavailable_profile type can first be introduced after the exact profile_data_page_advanced witness."
+  },
+  "late_declarations": [
+    {
+      "after": "profile_data_page_advanced",
+      "header": "recovered/Tavailable_profile.h",
+      "declarations": [
+        "extern int rebuild_profile_list(Tavailable_profile **profs);",
+        "void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);",
+        "Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);"
+      ]
+    }
+  ],
+  "evidence": "Historical DWARF gives both selector signatures, the rebuild_profile_list caller signature, and Tavailable_profile.handle[32]. The locked early-header control regresses exact profile_data_page_advanced, while the late-header control preserves all 11 exact profile functions. The retained draw body uses the typed historical interface; the select body restores the observed switch/UI paths, lexical buffers and second is_any(ctrl) call. Both remain DIFFER and receive no recovery credit without strict equality."
+}

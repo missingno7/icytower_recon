@@ -105,7 +105,6 @@ typedef Tcontrol Tprofile_control;
 extern int readkey(void);
 extern void simulate_keypress(int keycode);
 extern int my_alert(char *func, char *txt, int choice, int enter_hint);
-extern int rebuild_profile_list(char **profs);
 extern void replaceBadCharacters(char *string, char newChar);
 extern void play_menu_select(void);
 extern void play_menu_move(void);
@@ -127,8 +126,6 @@ char *profile_data_page_advanced(Tprofile_advanced *p);
 int save_profile(Tprofile_create *p);
 int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
 void view_profile(void *profile);
-void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
-Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);
 
 /* Forward declarations; definitions follow in their original source order. */
 unsigned int hash2(unsigned int a);
@@ -146,8 +143,6 @@ char *profile_data_page_advanced(Tprofile_advanced *p);
 int save_profile(Tprofile_create *p);
 int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
 void view_profile(void *profile);
-void draw_profile_selector(void *bmp, char *current_profile, char *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
-Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles, int numProfiles, Tprofile_control *ctrl);
 
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
@@ -510,6 +505,11 @@ char *profile_data_page_advanced(Tprofile_advanced *p)
     return data;
 }
 
+#include "recovered/Tavailable_profile.h"
+extern int rebuild_profile_list(Tavailable_profile **profs);
+void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles, int numProfiles, int selection, int offset, int max_posts, int x, int y);
+Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles, int numProfiles, Tprofile_control *ctrl);
+
 int save_profile(Tprofile_create *p)
 {
     char file[1024];
@@ -709,7 +709,7 @@ void view_profile(void *profile)
     clear_keybuf();
 }
 
-void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
+void draw_profile_selector(BITMAP *bmp, Tprofile *current_profile, Tavailable_profile *profiles,
                            int numProfiles, int selection, int offset,
                            int max_posts, int x, int y)
 {
@@ -745,8 +745,8 @@ void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
     for (i=1,profile_index=offset;
          i<=max_posts && profile_index<numProfiles;
          i++,profile_index++,row_y+=fh) {
-        profile_name=profiles+profile_index*32;
-        current=stricmp(profile_name,current_profile)==0 ? "(current)" : "";
+        profile_name=profiles[profile_index].handle;
+        current=stricmp(profile_name,current_profile->handle)==0 ? "(current)" : "";
         if (profile_index==selection) {
             drawing_mode(5,0,0,0);
             set_trans_blender(0,0,0,50);
@@ -762,7 +762,7 @@ void draw_profile_selector(void *bmp, char *current_profile, char *profiles,
 
 /* Recovered from profile.c lines 705--867.  The selector owns neither the
  * packed name list nor its input control; it returns a newly loaded profile. */
-Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles,
+Tprofile_create *select_profile(Tprofile_create *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tprofile_control *ctrl)
 {
     Tprofile_create *selectedProfile;
@@ -776,7 +776,6 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
     int pageY;
     int targetY;
     void *bgbmp;
-    char input[256];
 
     old_font = font;
     font = data[54].dat;
@@ -805,12 +804,15 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                 simulate_keypress(0x4300);
             ctrl_wait = 20;
         }
-        if (ctrl_wait > 0)
-            ctrl_wait--;
+        if (is_any(ctrl)) {
+            if (ctrl_wait > 0)
+                ctrl_wait--;
+        }
 
         if (keypressed()) {
             kp = readkey() >> 8;
-            if (kp == 85) {
+            switch (kp) {
+            case 85: {
                 if (profileIndex < numProfiles - 1) {
                     profileIndex++;
                     if (profileIndex >= offset + page_size)
@@ -822,7 +824,9 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     if (offset < 0)
                         offset = 0;
                 }
-            } else if (kp == 84) {
+                break;
+            }
+            case 84: {
                 if (profileIndex > 0) {
                     profileIndex--;
                     if (offset > profileIndex)
@@ -832,12 +836,15 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                     profileIndex = 0;
                     offset = 0;
                 }
-            } else if (kp == 83) {
-                char *name = profiles + profileIndex * 32;
+                break;
+            }
+            case 83: {
+                char *name = profiles[profileIndex].handle;
+                char buff[256];
                 if (stricmp(name, "guest") &&
-                    stricmp(name, (char *)current_profile + 6)) {
-                    sprintf(input, "Really delete '%s'?", name);
-                    if (my_alert(input, "WARNING: It will be gone forever.",
+                    stricmp(name, current_profile->handle)) {
+                    sprintf(buff, "Really delete '%s'?", name);
+                    if (my_alert(buff, "WARNING: It will be gone forever.",
                                  1, 0)) {
                         delete_profile(name);
                         numProfiles = rebuild_profile_list(&profiles);
@@ -845,8 +852,11 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                             profileIndex = numProfiles - 1;
                     }
                 }
-            } else if (kp == 67) {
-                char *name = profiles + profileIndex * 32;
+                break;
+            }
+            case 67: {
+                char *name = profiles[profileIndex].handle;
+                char new_name[32];
                 play_menu_select();
                 if (!stricmp(name, "CREATE NEW PROFILE")) {
                     set_trans_blender(0, 0, 0, 158);
@@ -856,15 +866,21 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                              SCREEN_H,
                              makecol(0, 0, 0));
                     solid_mode();
-                    input[0] = 0;
+                    new_name[0] = 0;
                     draw_sprite(swap_screen, data[88].dat, 100, 140);
-                    textprintf_ex(swap_screen, data[51].dat, 140, 140,
-                                  -1, -1, "Enter profile name:");
-                    if (get_string(swap_screen, input, 340, 32, data[54].dat,
+                    textout_ex(swap_screen, data[51].dat, "Enter profile name:",
+                               140, 140, -1, -1);
+                    textout_right_ex(swap_screen, data[54].dat,
+                                     "...and press enter.", 480, 210, 0, -1);
+                    rect(swap_screen, 139, 191, 480, 210,
+                         makecol(255, 255, 255));
+                    rectfill(swap_screen, 139, 191, 480, 210,
+                             makecol(80, 80, 80));
+                    if (get_string(swap_screen, new_name, 340, 32, data[54].dat,
                                    140, 191, makecol(0, 0, 0), -1) >= 0 &&
-                        input[0]) {
-                        replaceBadCharacters(input, '_');
-                        selectedProfile = create_profile(input, 0);
+                        new_name[0]) {
+                        replaceBadCharacters(new_name, '_');
+                        selectedProfile = create_profile(new_name, 0);
                         if (selectedProfile) {
                             my_alert("CREATE PROFILE", "Profile created!", 0, 1);
                             done = -1;
@@ -880,10 +896,14 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
                         my_alert("SELECT PROFILE",
                                  "The profile you selected is broken.", 0, 1);
                 }
-            } else if (kp == 59) {
+                break;
+            }
+            case 59: {
                 play_menu_select();
                 clear_keybuf();
                 done = -1;
+                break;
+            }
             }
         }
 
@@ -893,13 +913,19 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
         rectfill(swap_screen, 0, 0, SCREEN_W,
                  SCREEN_H, makecol(0, 0, 0));
         solid_mode();
-        draw_profile_selector(swap_screen, (char *)current_profile + 6,
+        draw_profile_selector(swap_screen, current_profile,
                               profiles, numProfiles, profileIndex, offset,
                               page_size, 16, pageY);
         blit_to_screen(swap_screen);
         while (!cycle_count)
             rest(2);
         pageY += (int)((targetY - pageY) * 0.2f);
+    }
+
+    if (selectedProfile) {
+        char buf[128];
+        sprintf(buf, "Now using profile '%s'", selectedProfile->handle);
+        my_alert("Profile Changed!", buf, 0, 1);
     }
 
     targetY = 510;
@@ -912,7 +938,7 @@ Tprofile_create *select_profile(Tprofile_create *current_profile, char *profiles
         rectfill(swap_screen, 0, 0, SCREEN_W,
                  SCREEN_H, makecol(0, 0, 0));
         solid_mode();
-        draw_profile_selector(swap_screen, (char *)current_profile + 6,
+        draw_profile_selector(swap_screen, current_profile,
                               profiles, numProfiles, profileIndex, offset,
                               page_size, 16, pageY);
         blit_to_screen(swap_screen);

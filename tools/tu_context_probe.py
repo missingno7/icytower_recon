@@ -91,7 +91,8 @@ def declaration_edits(skeleton, decl, nl):
                 if nl_at < 0 or not clean[:nl_at].rstrip('\r').endswith('\\'): break
             found = (m.start(), end)
         patterns = [r'(?ms)^[ \t]*typedef[ \t]+struct[^{;]*\{.*?\}[ \t]*' + re.escape(name) + r'[ \t]*;[ \t]*\n?',
-                    r'(?ms)^[ \t]*extern\b[^;{]*?\b' + re.escape(name) + r'[ \t]*\([^;{]*\)[ \t]*;[ \t]*\n?']
+                    r'(?ms)^[ \t]*extern\b[^;{]*?\b' + re.escape(name) + r'[ \t]*\([^;{]*\)[ \t]*;[ \t]*\n?',
+                    r'(?m)^[ \t]*(?!typedef\b|extern\b)[A-Za-z_]\w*(?:[ \t*]+[A-Za-z_]\w*)*[ \t*]+\b' + re.escape(name) + r'[ \t]*\([^;{}\n]*\)[ \t]*;[ \t]*\r?\n?']
         for pat in patterns:
             if found: break
             m = re.search(pat, clean)
@@ -123,7 +124,7 @@ def declaration_edits(skeleton, decl, nl):
     return skeleton, removed
 
 
-def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unlisted='end', declarations=None):
+def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unlisted='end', declarations=None, late_declarations=None):
     """Build the overlay text: skeleton (all non-island text in its original order, with evidenced
     declaration edits), a generated prototype block, then the islands in `order`.  Islands not in `order`
     are appended in current order (keep_unlisted='end')."""
@@ -155,6 +156,20 @@ def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unliste
         if n in bodies: sig = re.sub(r'\s+', ' ', bodies[n]['signature']).strip()
         if n in statics and not sig.startswith('static '): sig = 'static ' + sig
         protos.append(prototype(sig))
+    late_declarations = late_declarations or []
+    late = {}
+    for item in late_declarations:
+        anchor = item['after']
+        if anchor not in seq or anchor in late:
+            raise ValueError('Missing or duplicate late declaration anchor: ' + anchor)
+        header = item['header']
+        if not re.fullmatch(r'recovered/[A-Za-z_]\w*\.h', header) or not (ROOT / 'include' / header).is_file():
+            raise ValueError('Late include must name an existing generated recovered header')
+        declarations = item.get('declarations', [])
+        for declaration in declarations:
+            if not re.fullmatch(r'[^#{};\r\n]+\([^#{};\r\n]*\)[ \t]*;', declaration):
+                raise ValueError('Late declaration must be one function prototype')
+        late[anchor] = ['#include "' + header + '"'] + declarations
     defs = []
     for n in seq:
         i = byname[n]; t = i['text']
@@ -165,6 +180,7 @@ def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unliste
             lead = '' if i.get('added') else text[i['start']:i['def_start']]; body_text = bodies[n]['text'] if n in bodies else text[i['def_start']:i['end']]
             if not body_text.lstrip().startswith('static'): t = lead + 'static ' + body_text.lstrip()
         defs.append(t.strip('\r\n'))
+        if n in late: defs.append(nl.join(late[n]))
     block = ''
     if prototypes == 'auto' and protos:
         block = nl + '/* Forward declarations; definitions follow in their original source order. */' + nl + nl.join(protos) + nl
@@ -353,12 +369,13 @@ def build_text(target, source, spec):
         if b['name'] != n: raise ValueError('Retained body defines ' + b['name'] + ' not ' + n)
     statics = spec.get('statics') or []
     if statics == 'historical': statics = sorted(historical_static(unit) & set(current))
-    new = layout(text, order, bodies, set(statics), spec.get('prototypes', 'auto'), declarations=spec.get('declarations'))
+    new = layout(text, order, bodies, set(statics), spec.get('prototypes', 'auto'), declarations=spec.get('declarations'), late_declarations=spec.get('late_declarations'))
     headers = header_edits(unit, source, statics, spec.get('headers') or {})
     full = list(order) + [n for n in current if n not in set(order)]
     cur_static = {i['name'] for i in isl if i.get('signature') and 'static' in i['signature'].split()}
     edits = {'focus': spec.get('focus') or [], 'declarations': ({**spec['declarations'], 'removed_text': layout.removed} if spec.get('declarations') else {}), 'order': order, 'definition_order_with_static': [(n, (n in cur_static) or (n in set(statics))) for n in full], 'bodies': {n: {'path': spec['bodies'][n], 'identity': bodies[n]['identity']} for n in bodies}, 'statics': list(statics), 'prototypes': spec.get('prototypes', 'auto'),
              'research_base': ({'path': spec['research_base'], 'identity': identity(base)} if spec.get('research_base') else None),
+             'late_declarations': spec.get('late_declarations') or [],
              'headers': {h: {'removed_declarations': v['removed'], 'evidence': v['evidence']} for h, v in headers.items()}}
     return new, edits, {h: v['text'] for h, v in headers.items()}
 
@@ -395,6 +412,7 @@ def main():
     ap.add_argument('--header', action='append', default=[], help='header=name[,name] declarations to remove with historical static evidence')
     ap.add_argument('--focus', action='append', default=[], help='function whose historical-versus-compiled callee sets and positions are reported')
     ap.add_argument('--declarations', help='JSON file: {"remove_top_level": [names], "includes_after": {"allegro.h": ["winalleg.h"]}, "evidence": "..."}')
+    ap.add_argument('--late-declarations', help='JSON file: generated recovered header and prototypes after an exact definition')
     ap.add_argument('--research-base', help='retained complete TU under docs/attempts or build/tu-context; canonical source still identifies the CU')
     a = ap.parse_args()
     order = a.order
@@ -411,6 +429,7 @@ def main():
     if a.header: spec['headers'] = {h: names.split(',') for h, names in (x.split('=', 1) for x in a.header)}
     spec['focus'] = a.focus
     if a.declarations: spec['declarations'] = read_json(Path(a.declarations))
+    if a.late_declarations: spec['late_declarations'] = read_json(Path(a.late_declarations))
     if not a.no_prototypes:
         marker = '/* Forward declarations; definitions follow in their original source order. */'
         existing = (ROOT / (spec.get('research_base') or a.source)).read_bytes().decode('cp1252').count(marker)

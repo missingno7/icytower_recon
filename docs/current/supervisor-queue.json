@@ -5,32 +5,6 @@
   "groups": [
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/draw_profile_selector.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/draw_profile_selector.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/draw_profile_selector.json",
-          "source": "src/profile.c",
-          "function": "draw_profile_selector",
-          "candidate_card": "docs/current/functions/profile/draw_profile_selector.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/draw_profile_selector.json",
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/draw_replay_selector.json",
       "affected_function_count": 2,
       "planned_in_caller_count": 2,
@@ -95,44 +69,6 @@
           "function": "create_profile",
           "candidate_card": "docs/current/functions/profile/create_profile.json",
           "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/rebuild_profile_list.json",
-      "affected_function_count": 1,
-      "planned_in_caller_count": 0,
-      "repair_card": "docs/current/interfaces/rebuild_profile_list.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/rebuild_profile_list.json",
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/select_profile.json",
-      "affected_function_count": 1,
-      "planned_in_caller_count": 1,
-      "repair_card": "docs/current/interfaces/select_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/select_profile.json",
-          "source": "src/profile.c",
-          "function": "select_profile",
-          "candidate_card": "docs/current/functions/profile/select_profile.json",
-          "planned_in_caller_cu": true
         }
       ],
       "omitted_examples": 0,
@@ -326,7 +262,7 @@
           "candidate_card": "docs/current/functions/profile/draw_buffer.json",
           "size": 185,
           "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes"
         },
         {
           "source": "src/profile.c",
@@ -552,6 +488,44 @@
           "size": 1118,
           "body_edit_allowed": true,
           "routing_reason": "Recorded supervisor block: Made real progress but did not reach FUNCTION_MATCH within 3 attempts. Baseline candidate (956 B) had a genuine bug: local DATAFILE *assets in the m->flags&16 block was CANDIDATE_ONLY_DEBUG_DECLARATION (frame_layout.local_inventory) -- no historical DWARF counterpart existed for it, and its presence caused STACK_FRAME_LAYOUT DIFFER (candidate sub esp,0x15c vs historical sub esp,0x16c, first mismatch at offset 8). Attempt 1: removed the unevidenced local and inlined (DATAFILE*)mp->data+mp->fo directly into the three draw_sprite calls -- this made the prologue's stack allocation match exactly (sub /usr/bin/bashx16c,%esp on both sides) and advanced the difference_class from STACK_FRAME_LAYOUT to REGISTER_OR_INSTRUCTION_SELECTION, first difference moving from offset 8 to offset 16: historically mp (0x10(%ebp)) is kept in callee-saved %edi for the whole function (alongside bmp=%esi, m=%ebx), but the candidate demotes mp to %edx and only loads m into %ebx, reloading mp from the stack later. Attempt 2: rephrased the inlined expression as ((DATAFILE*)mp->data)[mp->fo+N] instead of ((DATAFILE*)mp->data+mp->fo)[N] -- byte-identical output, no effect. Attempt 3: swapped the h=mp->font_height-12 / stepIn=dx statement order -- byte-identical output, no effect. The remaining mismatch is a global register-allocation choice (which of bmp/m/mp gets a callee-saved register) that this session found no further DWARF-evidenced or source-legal lever to influence; routing to supervisor. Candidate remains 896 B against the 1118 B historical body."
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-profile:REGISTER_OR_INSTRUCTION_SELECTION",
+      "target": "game-profile",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "affected_function_count": 1,
+      "examples": [
+        {
+          "source": "src/profile.c",
+          "function": "select_profile",
+          "candidate_card": "docs/current/functions/profile/select_profile.json",
+          "size": 3070,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-profile:STACK_FRAME_LAYOUT",
+      "target": "game-profile",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "affected_function_count": 1,
+      "examples": [
+        {
+          "source": "src/profile.c",
+          "function": "draw_profile_selector",
+          "candidate_card": "docs/current/functions/profile/draw_profile_selector.json",
+          "size": 1268,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
       "omitted_examples": 0,
