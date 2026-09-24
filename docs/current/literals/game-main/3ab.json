@@ -1,0 +1,94 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 939,
+  "candidate_card": "docs/current/literals/game-main/3ab.json",
+  "source_identity": {
+    "size": 311651,
+    "sha256": "7b233b8989895730e00b83066fad379034cd89cb5d01a03bfceb007372cc63fe"
+  },
+  "consumers": [
+    {
+      "function": "force_create_profile",
+      "function_offset": 1419,
+      "historical_operand_va": 5066504,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5066415,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 6457,
+          "text": "            my_alert(\"That profile name is taken.\",\"Ooops!\",0,1);"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "force_create_profile"
+  ],
+  "historical_observed_addresses": [
+    5066504
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "546861742070726f66696c65206e616d652069732074616b656e2e",
+      "bytes": 28
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 1419,
+      "candidate_addend": 939,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5066504,
+      "candidate_hex": "546861742070726f66696c65206e616d652069732074616b656e2e",
+      "original_hex": "4f682057656c6c2e2e2e",
+      "candidate_instruction": {
+        "address": 28300,
+        "bytes": "c70424ab030000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x3ab,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4250076,
+        "bytes": "c70424084f4d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d4f08,(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5066415,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5066415
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": "That profile name is taken.",
+      "original_text": "Oh Well...",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 6457,
+          "text": "            my_alert(\"That profile name is taken.\",\"Ooops!\",0,1);"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}
