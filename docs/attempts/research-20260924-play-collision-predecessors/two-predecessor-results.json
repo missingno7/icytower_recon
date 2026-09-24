@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "scope": "isolated historical-order game-main TU probes; no src/current/ledger edits",
+  "forms": ["nested", "valid_edges", "predecessor_labels"],
+  "strict": {
+    "play": {"status": "DIFFER", "size": 17444, "historical_size": 17420, "first_difference": {"offset": 8, "candidate_byte": "0x1c", "original_byte": "0xfc"}},
+    "function_statuses_each": {"FUNCTION_MATCH": 63, "DIFFER": 18, "CODEGEN_SIMILAR": 1},
+    "lost_exact_functions": [],
+    "new_game": "FUNCTION_MATCH",
+    "run_demo": "FUNCTION_MATCH"
+  },
+  "deduplicated_effective_identities": {
+    "dbad870f110b33f8": ["nested", "valid_edges"],
+    "c7f86c9317ba5db5": ["predecessor_labels"]
+  },
+  "collision_type_references": {"candidate_each": 2, "historical": 3, "historical_sites": ["0x4120e5", "0x412591", "0x41259e"]},
+  "first_observed_fold": {
+    "pass": "main.c.084t.pre",
+    "mechanism": "PRE replaces the shared switch selector reload with a PHI of the two predecessor-specific guard values",
+    "previous_snapshot": "main.c.083t.crited has two guard loads plus a separate switch load",
+    "rtl": "expand, dse2, and csa retain only the two check loads"
+  },
+  "limits": ["Dump snapshots bracket pass results and do not describe internal pass microsteps", "No FUNCTION_MATCH, OBJECT_MATCH, or CU_MATCH claim"],
+  "blocker": "The historical binary keeps an independent dispatch reload after two predecessor checks; all tested source topologies allow GCC PRE to forward the two checked values into the switch selector. Current evidence does not justify another distinct CFG form."
+}
