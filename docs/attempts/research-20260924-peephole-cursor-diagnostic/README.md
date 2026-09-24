@@ -1,6 +1,6 @@
 # External peephole2 cursor witness — 2026-09-24
 
-Research only. No verifier compiler, maintained source, current state, or proof output was changed. Script and JSON results live in `build/compiler-research/peephole-cursor/`.
+Research only. No verifier compiler, maintained source, current state, or proof output was changed. The script is archived here; diagnostic JSON results live in `build/compiler-research/peephole-cursor/`.
 
 The locked TDM-2 distribution contains `cc1.exe` and headers but no buildable GCC source. `nm.exe` reports no symbols in `cc1.exe`. The local GCC 4.4.1 `recog.c` reference copy says `peep2_find_free_register` keeps a static `search_ofs`, advances it after success, and resets it after failure. The `i386.c` copy gives the visible 32-bit general register order AX, DX, CX, BX, SI, DI. Exact source provenance against locked `cc1.exe` is unproven.
 
@@ -13,7 +13,8 @@ The same baseline reports no visible scratch choice in `handle_player_collision_
 Reproduce without compiling:
 
 ```powershell
-python build/compiler-research/peephole-cursor/peephole_cursor_diagnostic.py docs/attempts/tu-context/game-main/research-historical-order-load-character-baseline-20260923.json docs/attempts/tu-context/game-main/research-historical-order-load-character-init-snapshot-20260923.json --focus load_character --output build/compiler-research/peephole-cursor/load-character-comparison.json
+python docs/attempts/research-20260924-peephole-cursor-diagnostic/peephole_cursor_diagnostic.py docs/attempts/tu-context/game-main/research-historical-order-load-character-baseline-20260923.json docs/attempts/tu-context/game-main/research-historical-order-load-character-init-snapshot-20260923.json --focus load_character --output build/compiler-research/peephole-cursor/load-character-comparison.json
 ```
 
 An exact locked-compiler trace needs an instrumented compatible `cc1` copy or a symbol/debug map for debugger breakpoints at `peep2_find_free_register`; current dumps cannot reveal `search_ofs`, `live_before`, and rejected registers. The smallest source-side discriminator is a historically supported `init_game` candidate that changes predecessor scratch choices while preserving target CSA. None is currently retained, so no new source compile was justified.
+

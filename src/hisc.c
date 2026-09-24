@@ -167,22 +167,8 @@ int draw_table(BITMAP *dst,int x,int y,char *header,Thisc_table *table)
 void view_scores(Thisc_table **tables,char **names)
 {
     int i;
-    BITMAP *bg;
-    int pageY;
-    int targetY;
-    int dark;
-    int targetDark;
-    int listHeight;
-    int th;
-    int mh;
-    int bh;
-    int lh;
-    int bmpHeight;
-    BITMAP *bmp;
-    int yPos;
-    int done;
-    int canDone;
 
+    BITMAP *bg;
     bg=create_bitmap(SCREEN_W,SCREEN_H);
     blit(screen,bg,0,0,0,0,SCREEN_W,SCREEN_H);
     clear_keybuf();
@@ -190,6 +176,11 @@ void view_scores(Thisc_table **tables,char **names)
         poll_control(get_controls(),0);
     clear_keybuf();
 
+    int pageY;
+    int targetY;
+    int dark;
+    int targetDark;
+    int listHeight;
     listHeight=0;
     for (i=0;i<15;i++) {
         if (tables[i]->posts[0].value) {
@@ -198,11 +189,17 @@ void view_scores(Thisc_table **tables,char **names)
         }
     }
 
+    int th;
+    int mh;
+    int bh;
     th=((BITMAP *)data[66].dat)->h;
     mh=((BITMAP *)data[65].dat)->h;
     bh=((BITMAP *)data[64].dat)->h;
+    int lh;
     lh=listHeight/bh;
+    int bmpHeight;
     bmpHeight=lh>2 ? lh-1 : 2;
+    BITMAP *bmp;
     bmp=create_bitmap(((BITMAP *)data[66].dat)->w,bh+th+bmpHeight*mh);
     clear_to_color(bmp,makecol(255,0,255));
     draw_sprite(bmp,(BITMAP *)data[66].dat,0,0);
@@ -210,6 +207,7 @@ void view_scores(Thisc_table **tables,char **names)
         draw_sprite(bmp,(BITMAP *)data[65].dat,0,th+i*mh);
     draw_sprite(bmp,(BITMAP *)data[64].dat,0,bmp->h-bh);
 
+    int yPos;
     yPos=80;
     for (i=0;i<15;i++) {
         if (tables[i]->posts[0].value) {
@@ -222,6 +220,8 @@ void view_scores(Thisc_table **tables,char **names)
     targetY=0;
     dark=0;
     targetDark=158;
+    int done;
+    int canDone;
     done=0;
     canDone=0;
     while (!closeButtonClicked && !done) {
