@@ -94,7 +94,9 @@ def prototype(signature):
 def declaration_edits(skeleton, decl, nl):
     """Evidenced top-level declaration edits on the skeleton (never inside a definition island):
     `remove_top_level`: names whose hand-written top-level declaration is deleted (an `extern ...;`
-    prototype, a `typedef struct {...} NAME;`, or a `#define NAME` line); `add_top_level`: [{name,
+    prototype, a `typedef struct {...} NAME;`, or a `#define NAME` line);
+    `remove_uninitialized_top_level`: exact simple variable declarations backed by a storage card;
+    `add_top_level`: [{name,
     declaration, after}] inserts a declaration directly after the declaration of an existing name
     (its historical DWARF neighbour); `includes_after`: {header: [names]} inserts `#include <name>`
     lines directly after `#include <header>`.  Evidence is recorded by the caller."""
@@ -119,6 +121,20 @@ def declaration_edits(skeleton, decl, nl):
         if not found: raise ValueError('No removable top-level declaration for ' + name)
         removed.append({'name': name, 'text': skeleton[found[0]:found[1]]})
         skeleton = skeleton[:found[0]] + skeleton[found[1]:]
+    for item in decl.get('remove_uninitialized_top_level', []):
+        name, declaration = item['name'], item['declaration']
+        if not re.fullmatch(r'(?:static\s+)?(?:unsigned\s+)?[A-Za-z_]\w*(?:\s*\*)?\s+' +
+                            re.escape(name) + r'\s*;', declaration):
+            raise ValueError('Only an exact, simple uninitialized declaration may be removed: ' + name)
+        clean = sanitized(skeleton)
+        pattern = r'(?m)^[ \t]*' + re.escape(declaration) + r'[ \t]*(?:\r?\n|$)'
+        matches = list(re.finditer(pattern, clean))
+        if len(matches) != 1:
+            raise ValueError('Expected one exact top-level uninitialized declaration: ' + name)
+        found = matches[0]
+        removed.append({'name': name, 'text': skeleton[found.start():found.end()],
+                        'storage_card': item['storage_card']})
+        skeleton = skeleton[:found.start()] + skeleton[found.end():]
     for item in decl.get('add_top_level', []):
         anchor = item['after']; name = item['name']
         m = re.search(r'(?m)^[A-Za-z_][^;()\n]*\b' + re.escape(anchor) + r'\b', skeleton)

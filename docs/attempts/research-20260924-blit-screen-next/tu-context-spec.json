@@ -1,0 +1,27 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "main_menu_callback": "docs/attempts/research-20260924-blit-screen-next/candidate-old-msc-auto.c",
+    "blit_to_screen": "docs/attempts/research-20260924-blit-screen-next/candidate-static-local.c"
+  },
+  "declarations": {
+    "remove_uninitialized_top_level": [
+      {
+        "name": "blit_mode",
+        "declaration": "int blit_mode;",
+        "to_function": "blit_to_screen",
+        "storage_card": "docs/current/storage/game-main/124685.json"
+      }
+    ]
+  },
+  "provenance": {
+    "main_menu_callback": {
+      "kind": "incomplete_evidence_candidate",
+      "evidence": "The original main.c:5288 instruction trace tests only bg_menu before adjust_sample, and the old_msc local DIE 129968 has no static address. This retained body removes the unsupported static BSS owner and volume-change guard. Other explicitly marked menu text and drawing slices remain incomplete."
+    }
+  },
+  "evidence": "Original DWARF/COFF storage DIE 124685 places int blit_mode as function-static BSS in blit_to_screen at VA 0x4dd324; current source makes it global COMMON. Original line 5288 calls adjust_sample when bg_menu is present with no old_msc compare/write. A controlled whole-TU 2x2 shows both corrections together preserve all 64 exact functions, resolve the blit_mode relocation, and restore draw_progress_bar BSS relocation proof. No FUNCTION_MATCH body is edited."
+}

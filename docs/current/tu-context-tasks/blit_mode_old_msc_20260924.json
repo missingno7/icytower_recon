@@ -1,0 +1,618 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "blit_mode_old_msc_20260924",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "target": "game-main",
+  "affected_targets": [
+    "game-main"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-main",
+    "source": "src/main.c",
+    "order": "current",
+    "prototypes": "none",
+    "bodies": {
+      "main_menu_callback": "docs/attempts/research-20260924-blit-screen-next/candidate-old-msc-auto.c",
+      "blit_to_screen": "docs/attempts/research-20260924-blit-screen-next/candidate-static-local.c"
+    },
+    "declarations": {
+      "remove_uninitialized_top_level": [
+        {
+          "name": "blit_mode",
+          "declaration": "int blit_mode;",
+          "to_function": "blit_to_screen",
+          "storage_card": "docs/current/storage/game-main/124685.json"
+        }
+      ]
+    },
+    "provenance": {
+      "main_menu_callback": {
+        "kind": "incomplete_evidence_candidate",
+        "evidence": "The original main.c:5288 instruction trace tests only bg_menu before adjust_sample, and the old_msc local DIE 129968 has no static address. This retained body removes the unsupported static BSS owner and volume-change guard. Other explicitly marked menu text and drawing slices remain incomplete."
+      }
+    },
+    "evidence": "Original DWARF/COFF storage DIE 124685 places int blit_mode as function-static BSS in blit_to_screen at VA 0x4dd324; current source makes it global COMMON. Original line 5288 calls adjust_sample when bg_menu is present with no old_msc compare/write. A controlled whole-TU 2x2 shows both corrections together preserve all 64 exact functions, resolve the blit_mode relocation, and restore draw_progress_bar BSS relocation proof. No FUNCTION_MATCH body is edited."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {
+      "remove_uninitialized_top_level": [
+        {
+          "name": "blit_mode",
+          "declaration": "int blit_mode;",
+          "to_function": "blit_to_screen",
+          "storage_card": "docs/current/storage/game-main/124685.json"
+        }
+      ],
+      "removed_text": [
+        {
+          "name": "blit_mode",
+          "text": "int blit_mode;\n",
+          "storage_card": "docs/current/storage/game-main/124685.json"
+        }
+      ]
+    },
+    "order": [
+      "log2file",
+      "line_alert",
+      "get_version_str",
+      "myDeleteFile",
+      "my_alert",
+      "load_new_ad_image",
+      "get_demo",
+      "get_controls",
+      "take_screenshot",
+      "pwd_garble_string",
+      "play_sound",
+      "new_rand",
+      "new_srand",
+      "loadScrambled",
+      "check_dir",
+      "load_character",
+      "set_current_avatar",
+      "for_each_directory",
+      "check_characters",
+      "startGameMusic",
+      "stopGameMusic",
+      "load_sound",
+      "draw_progress_bar",
+      "color_map_callback",
+      "datafile_callback",
+      "datafile_callback_slow",
+      "syncOptionsFromProfile",
+      "syncProfileFromOptions",
+      "check_beta_tester",
+      "ok_to_play",
+      "getSampleFromOggDatafile",
+      "get_gamepad_value",
+      "show_name",
+      "add_profile",
+      "rebuild_profile_list",
+      "switchedFromProgram",
+      "switchedToProgram",
+      "clickedCloseButton",
+      "open_web_browser",
+      "init_game",
+      "save_config",
+      "uninit_game",
+      "change_profile",
+      "blit_to_screen",
+      "draw_reward",
+      "update_reward",
+      "start_reward",
+      "play_jump_sound",
+      "handle_player_input",
+      "draw_frame",
+      "update_frame",
+      "end_game",
+      "is_custom_replay",
+      "new_game",
+      "line_intersect",
+      "handle_player_collision_vector",
+      "handle_player_collision_vector_2",
+      "handle_player_collision_combo",
+      "handle_player_collision_old",
+      "handle_player_collision_original",
+      "fadeIn",
+      "fadeOut",
+      "draw_results",
+      "play",
+      "show_credits",
+      "show_instructions",
+      "play_menu_move",
+      "play_menu_select",
+      "testWindowResolution",
+      "main_menu_callback",
+      "run_demo",
+      "replay_menu_callback",
+      "get_string",
+      "replaceBadCharacters",
+      "drawSlot",
+      "do_replay_menu",
+      "force_create_profile",
+      "startMenuMusic",
+      "stopMenuMusic",
+      "checkMenuFocus",
+      "_mangled_main",
+      "WinMain"
+    ],
+    "definition_order_with_static": [
+      [
+        "log2file",
+        false
+      ],
+      [
+        "line_alert",
+        false
+      ],
+      [
+        "get_version_str",
+        false
+      ],
+      [
+        "myDeleteFile",
+        false
+      ],
+      [
+        "my_alert",
+        false
+      ],
+      [
+        "load_new_ad_image",
+        false
+      ],
+      [
+        "get_demo",
+        false
+      ],
+      [
+        "get_controls",
+        false
+      ],
+      [
+        "take_screenshot",
+        false
+      ],
+      [
+        "pwd_garble_string",
+        false
+      ],
+      [
+        "play_sound",
+        false
+      ],
+      [
+        "new_rand",
+        false
+      ],
+      [
+        "new_srand",
+        false
+      ],
+      [
+        "loadScrambled",
+        false
+      ],
+      [
+        "check_dir",
+        false
+      ],
+      [
+        "load_character",
+        false
+      ],
+      [
+        "set_current_avatar",
+        false
+      ],
+      [
+        "for_each_directory",
+        false
+      ],
+      [
+        "check_characters",
+        false
+      ],
+      [
+        "startGameMusic",
+        false
+      ],
+      [
+        "stopGameMusic",
+        false
+      ],
+      [
+        "load_sound",
+        false
+      ],
+      [
+        "draw_progress_bar",
+        false
+      ],
+      [
+        "color_map_callback",
+        false
+      ],
+      [
+        "datafile_callback",
+        false
+      ],
+      [
+        "datafile_callback_slow",
+        false
+      ],
+      [
+        "syncOptionsFromProfile",
+        false
+      ],
+      [
+        "syncProfileFromOptions",
+        false
+      ],
+      [
+        "check_beta_tester",
+        false
+      ],
+      [
+        "ok_to_play",
+        false
+      ],
+      [
+        "getSampleFromOggDatafile",
+        false
+      ],
+      [
+        "get_gamepad_value",
+        false
+      ],
+      [
+        "show_name",
+        false
+      ],
+      [
+        "add_profile",
+        false
+      ],
+      [
+        "rebuild_profile_list",
+        false
+      ],
+      [
+        "switchedFromProgram",
+        false
+      ],
+      [
+        "switchedToProgram",
+        false
+      ],
+      [
+        "clickedCloseButton",
+        false
+      ],
+      [
+        "open_web_browser",
+        false
+      ],
+      [
+        "init_game",
+        false
+      ],
+      [
+        "save_config",
+        false
+      ],
+      [
+        "uninit_game",
+        false
+      ],
+      [
+        "change_profile",
+        false
+      ],
+      [
+        "blit_to_screen",
+        false
+      ],
+      [
+        "draw_reward",
+        false
+      ],
+      [
+        "update_reward",
+        false
+      ],
+      [
+        "start_reward",
+        false
+      ],
+      [
+        "play_jump_sound",
+        false
+      ],
+      [
+        "handle_player_input",
+        false
+      ],
+      [
+        "draw_frame",
+        false
+      ],
+      [
+        "update_frame",
+        false
+      ],
+      [
+        "end_game",
+        false
+      ],
+      [
+        "is_custom_replay",
+        false
+      ],
+      [
+        "new_game",
+        false
+      ],
+      [
+        "line_intersect",
+        false
+      ],
+      [
+        "handle_player_collision_vector",
+        false
+      ],
+      [
+        "handle_player_collision_vector_2",
+        false
+      ],
+      [
+        "handle_player_collision_combo",
+        false
+      ],
+      [
+        "handle_player_collision_old",
+        false
+      ],
+      [
+        "handle_player_collision_original",
+        false
+      ],
+      [
+        "fadeIn",
+        false
+      ],
+      [
+        "fadeOut",
+        false
+      ],
+      [
+        "draw_results",
+        false
+      ],
+      [
+        "play",
+        false
+      ],
+      [
+        "show_credits",
+        false
+      ],
+      [
+        "show_instructions",
+        false
+      ],
+      [
+        "play_menu_move",
+        false
+      ],
+      [
+        "play_menu_select",
+        false
+      ],
+      [
+        "testWindowResolution",
+        false
+      ],
+      [
+        "main_menu_callback",
+        false
+      ],
+      [
+        "run_demo",
+        false
+      ],
+      [
+        "replay_menu_callback",
+        false
+      ],
+      [
+        "get_string",
+        false
+      ],
+      [
+        "replaceBadCharacters",
+        false
+      ],
+      [
+        "drawSlot",
+        false
+      ],
+      [
+        "do_replay_menu",
+        false
+      ],
+      [
+        "force_create_profile",
+        false
+      ],
+      [
+        "startMenuMusic",
+        false
+      ],
+      [
+        "stopMenuMusic",
+        false
+      ],
+      [
+        "checkMenuFocus",
+        false
+      ],
+      [
+        "_mangled_main",
+        false
+      ],
+      [
+        "WinMain",
+        false
+      ]
+    ],
+    "bodies": {
+      "main_menu_callback": {
+        "path": "docs/attempts/research-20260924-blit-screen-next/candidate-old-msc-auto.c",
+        "identity": {
+          "size": 8300,
+          "sha256": "2cf1b415e9fa37636356180b593a0e4f06df32b69454c72207711877e56557b1"
+        }
+      },
+      "blit_to_screen": {
+        "path": "docs/attempts/research-20260924-blit-screen-next/candidate-static-local.c",
+        "identity": {
+          "size": 2899,
+          "sha256": "6cf24de9904f048431678576742130297b3d038250893dd08b1fb0e62800aefc"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [],
+    "headers": {},
+    "data_owner_correction": null
+  },
+  "source_identities": {
+    "src/main.c": {
+      "size": 311717,
+      "sha256": "2a12d635e2fbf74bd0388869fd303a6622b9ee31305e110bc7cfaa41d4c05044"
+    },
+    "src/reconstruction-provenance.json": {
+      "size": 1578,
+      "sha256": "72457fc3a7218c3f91d4311d0eb80616ecca3e376ab45daa773e35634e9e0760"
+    }
+  },
+  "new_text_identity": {
+    "size": 311654,
+    "sha256": "bee055ec1ae6c0dc3cea12de393560b0974302b0cf559cca6dd3cfb55f924533"
+  },
+  "new_header_identities": {},
+  "required_generated_headers": {},
+  "preserved_definitions": [
+    "WinMain",
+    "_mangled_main",
+    "add_profile",
+    "change_profile",
+    "checkMenuFocus",
+    "check_beta_tester",
+    "check_characters",
+    "check_dir",
+    "clickedCloseButton",
+    "color_map_callback",
+    "datafile_callback",
+    "datafile_callback_slow",
+    "do_replay_menu",
+    "drawSlot",
+    "draw_frame",
+    "draw_progress_bar",
+    "draw_results",
+    "draw_reward",
+    "end_game",
+    "fadeIn",
+    "fadeOut",
+    "for_each_directory",
+    "force_create_profile",
+    "getSampleFromOggDatafile",
+    "get_controls",
+    "get_demo",
+    "get_gamepad_value",
+    "get_string",
+    "get_version_str",
+    "handle_player_collision_combo",
+    "handle_player_collision_old",
+    "handle_player_collision_original",
+    "handle_player_collision_vector",
+    "handle_player_collision_vector_2",
+    "handle_player_input",
+    "init_game",
+    "is_custom_replay",
+    "line_alert",
+    "line_intersect",
+    "loadScrambled",
+    "load_character",
+    "load_new_ad_image",
+    "load_sound",
+    "log2file",
+    "myDeleteFile",
+    "my_alert",
+    "new_game",
+    "new_rand",
+    "new_srand",
+    "ok_to_play",
+    "open_web_browser",
+    "play",
+    "play_jump_sound",
+    "play_menu_move",
+    "play_menu_select",
+    "play_sound",
+    "pwd_garble_string",
+    "rebuild_profile_list",
+    "replaceBadCharacters",
+    "replay_menu_callback",
+    "run_demo",
+    "save_config",
+    "set_current_avatar",
+    "show_credits",
+    "show_instructions",
+    "show_name",
+    "startGameMusic",
+    "startMenuMusic",
+    "start_reward",
+    "stopGameMusic",
+    "stopMenuMusic",
+    "switchedFromProgram",
+    "switchedToProgram",
+    "syncOptionsFromProfile",
+    "syncProfileFromOptions",
+    "take_screenshot",
+    "testWindowResolution",
+    "uninit_game",
+    "update_frame",
+    "update_reward"
+  ],
+  "replaced_definitions": [
+    "blit_to_screen",
+    "main_menu_callback"
+  ],
+  "evidence_identities": {
+    "docs/current/storage/game-main/124685.json": {
+      "size": 1346,
+      "sha256": "719541e5b3d67d5d28e0a051e006dbc539e6ee243121a69976b70c8201485274"
+    }
+  },
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin blit_mode_old_msc_20260924",
+  "apply_command": "python tools/tu_context_task.py apply blit_mode_old_msc_20260924",
+  "verification_command": "python tools/tu_context_task.py check blit_mode_old_msc_20260924",
+  "promotion_command": "python tools/tu_context_task.py promote blit_mode_old_msc_20260924",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "provenance_after_identity": {
+    "size": 1646,
+    "sha256": "fa72a81b2047aadb2c5390204f9c67a1e8b7ef5a4da4bd575070e99065ad7809"
+  },
+  "transaction": "docs/attempts/tu-context/transactions/blit_mode_old_msc_20260924.json"
+}

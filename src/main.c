@@ -356,7 +356,6 @@ void play_sound(SAMPLE *s, int pitch, int please_pan);
 /* Oracle: main.c:2267, 0x40b6bc..0x40bc43.  Debug keys select the historical
  * presentation experiments; ordinary play always takes the direct path. */
 int debug;
-int blit_mode;
 
 /* Partial source recovery of main.c:3405, 0x411a00..0x415e0c.  This retains
  * the oracle's real game-state ownership and phase order while the remaining
@@ -2806,6 +2805,7 @@ void change_profile(void)
 
 void blit_to_screen(BITMAP *bmp)
 {
+    static int blit_mode;
     if (debug) {
         if (key[56]) blit_mode = 0;                      /* 2271 */
         if (key[57]) blit_mode = 1;                       /* 2272 */
@@ -5948,7 +5948,7 @@ void testWindowResolution(void)
  * expansion is still classified DIFFER. */
 void main_menu_callback(void)
 {
-    static int old_msc;
+    int old_msc;
     const int scroller_step = -1;
     BITMAP *head_bmp;
     BITMAP *head_shadow;
@@ -6093,9 +6093,8 @@ void main_menu_callback(void)
     options.start_speed = get_selection_value(&scroll_speed_selection); /* 5285 */
     options.floor_size = get_selection_value(&floor_size_selection);  /* 5284 */
     options.gravity = get_selection_value(&gravity_selection);        /* 5283 */
-    if (bg_menu && old_msc != options.msc_volume)                     /* 5288 */
+    if (bg_menu)                     /* 5288 */
         adjust_sample(bg_menu, options.msc_volume, 128, 1000, 1);
-    old_msc = options.msc_volume;
 
     syncProfileFromOptions();                                         /* 972 */
 }

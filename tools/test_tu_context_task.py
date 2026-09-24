@@ -125,6 +125,21 @@ class DeclarationEdits(unittest.TestCase):
         self.assertEqual(new, 'int keep(void);\n')
         self.assertEqual(len(removed), 2)
 
+    def test_uninitialized_owner_removal_requires_one_exact_simple_declaration(self):
+        from tu_context_probe import declaration_edits
+        text = 'int blit_mode;\nint initialized = 1;\nint keep;\n'
+        item = {'name': 'blit_mode', 'declaration': 'int blit_mode;',
+                'storage_card': 'docs/current/storage/game-main/124685.json',
+                'to_function': 'blit_to_screen'}
+        new, removed = declaration_edits(text, {'remove_uninitialized_top_level': [item]}, '\n')
+        self.assertEqual(new, 'int initialized = 1;\nint keep;\n')
+        self.assertEqual(removed[0]['text'], 'int blit_mode;\n')
+        with self.assertRaisesRegex(ValueError, 'one exact'):
+            declaration_edits(text + 'int blit_mode;\n', {'remove_uninitialized_top_level': [item]}, '\n')
+        with self.assertRaisesRegex(ValueError, 'simple uninitialized'):
+            declaration_edits(text, {'remove_uninitialized_top_level':
+                                     [{**item, 'declaration': 'int initialized = 1;'}]}, '\n')
+
     def test_generated_header_visibility_can_follow_an_unchanged_definition(self):
         text = 'int before(void) { return 1; }\nint after(void) { return before(); }\n'
         late = [{'after': 'before', 'header': 'recovered/Tavailable_profile.h',

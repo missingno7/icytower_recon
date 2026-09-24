@@ -33,6 +33,17 @@ requires the ordinary link and acceptance tests. The profile transaction
 `Tavailable_profile` before exact `profile_data_page_advanced` changes GCC
 output. The typed selectors remain `DIFFER`; this context transaction does not
 grant them function matches.
+For an evidenced COMMON-to-function-static BSS correction, a TU_CONTEXT spec may
+use `declarations.remove_uninitialized_top_level` with the exact simple
+declaration, its current storage card, and the owning function. The planner
+requires the card to show the original function-static BSS owner and current
+global COMMON declaration, and requires a retained owner body with the matching
+`static` local. Pair any other body correction in the same transaction and
+accept only if the final whole-TU gate preserves every exact peer and proven
+owner. The `blit_mode_old_msc_20260924` transaction demonstrates why the
+candidate-only `old_msc` BSS declaration and historical `blit_mode` owner had
+to be corrected together; either change alone lost `draw_progress_bar`'s
+strict BSS relocation proof.
 When probing the already promoted `main.c`, preserve its declaration context:
 `python tools/tu_context_probe.py game-main src/main.c LABEL --order current
 --no-prototypes ...`. The maintained file already contains generated forward

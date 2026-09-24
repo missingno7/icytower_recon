@@ -77,6 +77,26 @@ def plan(name, spec_path):
     if ledger[source]['verified_report'] and read_json(ROOT / ledger[source]['verified_report'])['build']['target'] != target: raise ValueError('target/source mismatch')
     new, edits, headers = build_text(target, source, spec)
     text = (ROOT / source).read_bytes().decode('cp1252')
+    storage_evidence = {}
+    for item in (spec.get('declarations') or {}).get('remove_uninitialized_top_level', []):
+        card_path = item['storage_card']
+        card = read_json(ROOT / card_path)
+        original, candidate = card['original'], card['candidate']
+        owner = item['to_function']
+        if (card['source'] != source or card['target'] != target or card['name'] != item['name'] or
+                original['scope'] != ['FUNCTION_STATIC', owner] or
+                candidate['scope'] != ['GLOBAL'] or original['section'] != '.bss' or
+                candidate['section'] != 'COMMON' or original['type'] != candidate['type']):
+            raise ValueError('Uninitialized declaration removal lacks exact historical scope evidence: ' + item['name'])
+        body_path = (spec.get('bodies') or {}).get(owner)
+        if not body_path:
+            raise ValueError('Historical function-static owner needs a retained replacement body: ' + owner)
+        from source_scope import sanitized
+        body = sanitized(retained_body(ROOT / body_path)['text'])
+        if not re.search(r'(?m)^\s*static\s+' + re.escape(original['type']) +
+                         r'\s+' + re.escape(item['name']) + r'\s*;', body):
+            raise ValueError('Retained body lacks historical function-static declaration: ' + item['name'])
+        storage_evidence[card_path] = identity(ROOT / card_path)
     provenance_before = (ROOT / PROVENANCE).read_text(encoding='utf-8')
     provenance_after = provenance_update(provenance_before, text, new, source, spec)
     old_isl = {i['name']: i for i in islands(text)}; new_isl = {i['name']: i for i in islands(new)}
@@ -139,7 +159,7 @@ def plan(name, spec_path):
     files = [source] + sorted(headers)
     identities = {f: identity(ROOT / f) for f in files}
     identities.update(required_headers)
-    evidence_identities = {}
+    evidence_identities = dict(storage_evidence)
     if owner_edit:
         evidence = owner_edit['evidence']
         evidence_identities[evidence] = identity(ROOT / evidence)
