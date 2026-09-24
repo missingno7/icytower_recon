@@ -1,0 +1,184 @@
+{
+  "scope": "Candidate-to-candidate diagnostics only; never original matching or permission to bypass a gate.",
+  "changed_sections": [
+    {
+      "section": ".text",
+      "before": [
+        {
+          "virtual_size": 0,
+          "raw_size": 1580,
+          "characteristics": 1613758496,
+          "sha256": "abcfc5c389d173c8444e6a2aa1448d43063ab338389f325acf449c0ce482445e"
+        }
+      ],
+      "after": [
+        {
+          "virtual_size": 0,
+          "raw_size": 1580,
+          "characteristics": 1613758496,
+          "sha256": "c048f546b82b49eb1f13833d50222b28e73076e039c58828f4ffd0623e4cecab"
+        }
+      ]
+    }
+  ],
+  "changed_functions": [
+    {
+      "function": "fldads_get_random_ad",
+      "status_before": "FUNCTION_MATCH",
+      "status_after": "DIFFER",
+      "workflow_before": null,
+      "workflow_after": null,
+      "offset_before": 1164,
+      "offset_after": 1164,
+      "size_before": 192,
+      "size_after": 192,
+      "emitted_instruction_bytes_equal": false,
+      "source_body_unchanged": false,
+      "original_comparison": {
+        "before": {
+          "status": "FUNCTION_MATCH",
+          "workflow": null,
+          "historical_size": 192,
+          "candidate_size": 192,
+          "body_shape_equal": true,
+          "relocation_resolved_equal": true,
+          "first_difference": null,
+          "relocation_mismatch_count": 0,
+          "relocation_mismatches": [],
+          "omitted_relocation_mismatches": 0,
+          "direct_transfer_mismatch_count": 0,
+          "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+        },
+        "after": {
+          "status": "DIFFER",
+          "workflow": null,
+          "historical_size": 192,
+          "candidate_size": 192,
+          "body_shape_equal": false,
+          "relocation_resolved_equal": false,
+          "first_difference": {
+            "offset": 41,
+            "original_va": 4209441,
+            "candidate_byte": 217,
+            "original_byte": 49
+          },
+          "relocation_mismatch_count": 0,
+          "relocation_mismatches": [],
+          "omitted_relocation_mismatches": 0,
+          "direct_transfer_mismatch_count": 0,
+          "limit": "Diagnostic snapshot of the original oracle, not an acceptance result. Body shape alone never proves relocation ownership or layout-only correctness."
+        }
+      },
+      "first_difference": 41,
+      "differing_byte_count": 4,
+      "difference_offsets": [
+        41,
+        42,
+        43,
+        44
+      ],
+      "disassembly": {
+        "before": [
+          {
+            "address": 1193,
+            "bytes": "0f8e99000000",
+            "mnemonic": "jle",
+            "assembly": "jle    548 <_fldads_get_random_ad+0xbc>"
+          },
+          {
+            "address": 1199,
+            "bytes": "8b1500000000",
+            "mnemonic": "mov",
+            "assembly": "mov    0x0,%edx"
+          },
+          {
+            "address": 1205,
+            "bytes": "31c0",
+            "mnemonic": "xor",
+            "assembly": "xor    %eax,%eax"
+          },
+          {
+            "address": 1207,
+            "bytes": "d9ee",
+            "mnemonic": "fldz",
+            "assembly": "fldz"
+          },
+          {
+            "address": 1209,
+            "bytes": "8d7600",
+            "mnemonic": "lea",
+            "assembly": "lea    0x0(%esi),%esi"
+          }
+        ],
+        "after": [
+          {
+            "address": 1193,
+            "bytes": "0f8e99000000",
+            "mnemonic": "jle",
+            "assembly": "jle    548 <_fldads_get_random_ad+0xbc>"
+          },
+          {
+            "address": 1199,
+            "bytes": "8b1500000000",
+            "mnemonic": "mov",
+            "assembly": "mov    0x0,%edx"
+          },
+          {
+            "address": 1205,
+            "bytes": "d9ee",
+            "mnemonic": "fldz",
+            "assembly": "fldz"
+          },
+          {
+            "address": 1207,
+            "bytes": "31c0",
+            "mnemonic": "xor",
+            "assembly": "xor    %eax,%eax"
+          },
+          {
+            "address": 1209,
+            "bytes": "8d7600",
+            "mnemonic": "lea",
+            "assembly": "lea    0x0(%esi),%esi"
+          }
+        ]
+      },
+      "observation": "INSTRUCTION_PERMUTATION_OBSERVED",
+      "permutation_window": {
+        "start": 41,
+        "end": 45,
+        "before": [
+          {
+            "address": 1205,
+            "bytes": "31c0",
+            "mnemonic": "xor",
+            "assembly": "xor    %eax,%eax"
+          },
+          {
+            "address": 1207,
+            "bytes": "d9ee",
+            "mnemonic": "fldz",
+            "assembly": "fldz"
+          }
+        ],
+        "after": [
+          {
+            "address": 1205,
+            "bytes": "d9ee",
+            "mnemonic": "fldz",
+            "assembly": "fldz"
+          },
+          {
+            "address": 1207,
+            "bytes": "31c0",
+            "mnemonic": "xor",
+            "assembly": "xor    %eax,%eax"
+          }
+        ],
+        "limit": "Same instruction bytes in a different order. Data/flag dependencies, entry points, aliasing and observability are not proven safe; this never permits acceptance."
+      }
+    }
+  ],
+  "metadata_changes": [],
+  "preservation_fingerprint_equal": false
+}

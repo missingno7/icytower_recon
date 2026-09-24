@@ -172,5 +172,74 @@ class TypedCallerTests(unittest.TestCase):
     def test_named_type_with_missing_layout_is_not_bypassed(self):
         with self.assertRaises(ValueError):self.run_plan('extern void f(Tcontrol *p);\n',params=['Tcontrol*'])
 
+    def menu_fixture(self, store='*data = (int)m[pos].data;', call_tail='&data', member_type='void*', member_offset=144,
+                     wrong_history=False, duplicate_history=False):
+        root=Path(tempfile.mkdtemp())
+        (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
+        for name in ('Tmenu','Tmenu_params','Tcontrol'):
+            (root/f'include/recovered/{name}.h').write_text(f'typedef struct {{ int x; }} {name};\n')
+        source=(
+            '#include "recovered/Tmenu.h"\n#include "recovered/Tmenu_params.h"\n#include "recovered/Tcontrol.h"\n'
+            'int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *p, Tcontrol *c, int a, int b, int *data);\n'
+            'int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *p, Tcontrol *c, int a, int b, int *data) { '+store+' return 0; }\n'
+            'void handle_menu(void) { void *data; update_game_menu(0, 0, 0, 0, 0, 0, '+call_tail+'); }\n')
+        (root/'src/menu.c').write_text(source)
+        inputs={'src/menu.c':{}}
+        inputs.update({f'include/recovered/{n}.h':{} for n in ('Tmenu','Tmenu_params','Tcontrol')})
+        (root/'game-menu.json').write_text(json.dumps({'build':{'target':'game-menu','local_inputs':inputs}}))
+        expected=['BITMAP*','Tmenu*','Tmenu_params*','Tcontrol*','int','int','void**']
+        row={'function':'update_game_menu','historical':[{'cu':'src/menu.c','die':101,'return_type':'int','parameter_types':expected,
+                'variadic':False,'calling_convention':None}],
+             'candidate_declarations':[
+                 {'cu':'src/menu.c','file':'src/menu.c','kind':'NC','line':4,'return_type':'int','parameter_types':['void*','Tmenu*','Tmenu_params*','Tcontrol*','int','int','int*']},
+                 {'cu':'src/menu.c','file':'src/menu.c','kind':'NF','line':5,'return_type':'int','parameter_types':['void*','Tmenu*','Tmenu_params*','Tcontrol*','int','int','int*']}],
+             'type_layout_issues':[]}
+        types={1:'int',2:'BITMAP*',3:'Tmenu*',4:'Tmenu_params*',5:'Tcontrol*',6:'int',7:'int',8:'void**',
+               9:'void*'}
+        dies={101:{'offset':101,'tag':'DW_TAG_subprogram','name':'update_game_menu','cu':'src/menu.c','type_ref':1},
+              102:{'offset':102,'tag':'DW_TAG_subprogram','name':'handle_menu','cu':'src/menu.c'},
+              201:{'offset':201,'tag':'DW_TAG_typedef','name':'Tmenu','cu':'src/menu.c','type_ref':202},
+              202:{'offset':202,'tag':'DW_TAG_structure_type','name':'Tmenu','resolved':{'DW_AT_byte_size':'148'}},
+              203:{'offset':203,'tag':'DW_TAG_member','name':'data','parent':202,'type_ref':9,
+                   'resolved':{'DW_AT_data_member_location':f'DW_OP_plus_uconst: {member_offset}'}}}
+        children={101:[{'offset':300+i,'tag':'DW_TAG_formal_parameter','type_ref':ref} for i,ref in enumerate((2,3,4,5,6,7,8))],
+                  102:[{'offset':400,'tag':'DW_TAG_variable','name':'data','type_ref':9}],
+                  202:[{**dies[203],'type_ref':9}]}
+        if member_type!='void*': types[9]=member_type
+        graph=SimpleNamespace(dies=dies,children=children,game_types={n:[{'cu':'src/menu.c','type_ref':202 if n=='Tmenu' else 202}] for n in ('Tmenu','Tmenu_params','Tcontrol')},
+                              size=lambda off:148,member_offset=lambda member:member_offset,
+                              declaration=lambda off:types.get(off,'void'))
+        if wrong_history: types[8]='int*'
+        if duplicate_history: graph.dies[103]={'offset':103,'tag':'DW_TAG_subprogram','name':'update_game_menu','cu':'src/menu.c','type_ref':1}
+        return root,source,row,graph,{'src/menu.c':{'verified_report':'game-menu.json'}}
+
+    def run_menu_plan(self,store='*data = (int)m[pos].data;',call_tail='&data',member_type='void*',member_offset=144,
+                      bitmap=True,wrong_history=False,duplicate_history=False):
+        from typed_interface_tasks import plan
+        root,source,row,g,ledger=self.menu_fixture(store,call_tail,member_type,member_offset,wrong_history,duplicate_history)
+        with patch('typed_interface_tasks.ROOT',root), patch('type_graph.graph',return_value=g), \
+             patch('type_views.library_pointees',return_value={'BITMAP'} if bitmap else set()), \
+             patch('interface_tasks.affected_targets',return_value=['game-menu']):
+            result=plan(row,ledger)
+        source=(root/'src/menu.c').read_bytes().decode('cp1252')
+        return result,patch_text(source,result['changes'])
+
+    def test_update_game_menu_voidpp_slot_requires_full_source_and_dwarf_evidence(self):
+        result,new=self.run_menu_plan()
+        self.assertEqual(new.count('void **data'),1)
+        self.assertIn('BITMAP*, Tmenu*, Tmenu_params*, Tcontrol*, int, int, void**',new)
+        self.assertIn('*data = (int)m[pos].data;',new)  # planner changes declarations only
+        self.assertTrue(all(e['file']=='src/menu.c' for e in result['changes']))
+        for args in (
+            {'store':'*data = (int)(intptr_t)m[pos].data;'},
+            {'call_tail':'data'},
+            {'member_type':'int'},
+            {'member_offset':140},
+            {'bitmap':False},
+            {'wrong_history':True},
+            {'duplicate_history':True},
+        ):
+            with self.assertRaises(ValueError): self.run_menu_plan(**args)
+
 
 if __name__=='__main__':unittest.main()

@@ -13,6 +13,21 @@ from interface_type_probe import interface_typedefs
 STRUCT=re.compile(r'\btypedef\s+struct(?:\s+(\w+))?\s*\{([^{}]*)\}\s*(\w+)\s*;')
 POINTER=re.compile(r'^(\w+)\s*\*$')
 
+HTTPRESPONSE_HISTORICAL_SIGNATURE=(20,(
+    ('iStatusCode',0,False,'base_type',4,'int','5\t(signed)',()),
+    ('iNumHeaders',4,False,'base_type',4,'unsigned int','7\t(unsigned)',()),
+    ('pHeaders',8,False,'pointer_type',4,'HTTPHeader *',None,()),
+    ('pPayload',12,False,'pointer_type',4,'unsigned char *',None,()),
+    ('iPayloadSize',16,False,'base_type',4,'unsigned int','7\t(unsigned)',()),
+))
+HTTPRESPONSE_FLD_ADSPOT_CANDIDATE_SIGNATURE=(20,(
+    ('iStatusCode',0,False,'base_type',4,'int','5\t(signed)',()),
+    ('iNumHeaders',4,False,'base_type',4,'int','5\t(signed)',()),
+    ('pHeaders',8,False,'pointer_type',4,'void *',None,()),
+    ('pPayload',12,False,'pointer_type',4,'unsigned char *',None,()),
+    ('iPayloadSize',16,False,'base_type',4,'int','5\t(signed)',()),
+))
+
 
 def shape_key(node):
     """Layout compatibility for this migration; not a type identity or match oracle."""
@@ -138,6 +153,60 @@ def member_replacement(declaration, repairs, newline, canonical_pointers=()):
     for start,end,name in sorted(edits,reverse=True): text=text[:start]+name+text[end:]
     headers=sorted({name for _,_,name in edits if name in canonical_pointers})
     return ''.join('#include "recovered/'+name+'.h"'+newline for name in headers)+text
+
+
+def layout_signature(node):
+    return (node.get('size'),tuple((m.get('name'),m.get('offset'),m.get('bitfield'),
+        m.get('layout',{}).get('kind'),m.get('layout',{}).get('size'),
+        m.get('layout',{}).get('type'),m.get('layout',{}).get('encoding'),
+        tuple(m.get('layout',{}).get('qualifiers',[]))) for m in node.get('members',[])))
+
+
+def exact_httpresponse_layout(node,signature):
+    return (node.get('kind')=='structure_type' and not node.get('qualifiers')
+            and layout_signature(node)==signature)
+
+
+def httpresponse_inline_replacement(source,alias,match,candidate,expected,text,newline):
+    """The single source-proven HTTPResponse repair that preserves fld_adspot emission.
+
+    Keep the aggregate at its original declaration site: including HTTPResponse.h
+    changes an exact peer's instruction order in this TU. The evidence permits
+    this narrowly-scoped edit only for the known fld_adspot declaration and exact
+    current/historical member graphs; the normal strict interface transaction
+    still proves unchanged emission before promotion.
+    """
+    if source!='src/fld_adspot.c' or alias!='HTTPResponse' or match[1]!='HTTPResponse': return None
+    if not exact_httpresponse_layout(expected,HTTPRESPONSE_HISTORICAL_SIGNATURE): return None
+    if not exact_httpresponse_layout(candidate,HTTPRESPONSE_FLD_ADSPOT_CANDIDATE_SIGNATURE): return None
+    declaration=text[match.start():match.end()]
+    normalized=sanitized(declaration)
+    if declaration!=normalized: return None
+    expected_source=re.compile(
+        r'typedef\s+struct\s+HTTPResponse\s*\{\s*'
+        r'int\s+iStatusCode\s*;\s*int\s+iNumHeaders\s*;\s*void\s*\*\s*pHeaders\s*;\s*'
+        r'unsigned\s+char\s*\*\s*pPayload\s*;\s*int\s+iPayloadSize\s*;\s*'
+        r'\}\s*HTTPResponse\s*;')
+    if not expected_source.fullmatch(normalized): return None
+    if re.search(r'^\s*#\s*include\s*[<"](?:recovered/)?HTTPHeader\.h[>"]',text[:match.start()],re.M): return None
+    replacements=(('int iNumHeaders;','unsigned int iNumHeaders;'),
+                  ('void *pHeaders;','HTTPHeader *pHeaders;'),
+                  ('int iPayloadSize;','unsigned int iPayloadSize;'))
+    fixed=declaration
+    for before,after in replacements:
+        if fixed.count(before)!=1: return None
+        fixed=fixed.replace(before,after,1)
+    return {'after':'#include "recovered/HTTPHeader.h"'+newline+fixed,
+        'pointer_member_repairs':[{'member':'pHeaders','offset':8,'size':4,
+                                   'candidate_type':'void *','historical_type':'HTTPHeader *'}],
+        'member_type_repairs':[{'member':'iNumHeaders','offset':4,'size':4,
+                                'candidate_type':'int','historical_type':'unsigned int'},
+                               {'member':'pHeaders','offset':8,'size':4,
+                                'candidate_type':'void *','historical_type':'HTTPHeader *'},
+                               {'member':'iPayloadSize','offset':16,'size':4,
+                                'candidate_type':'int','historical_type':'unsigned int'}],
+        'compiled_headers':['include/recovered/HTTPHeader.h'],
+        'reason':'Restore the exact historical HTTPResponse member types in place; preserve the source-local declaration order and prove full-CU emission preservation.'}
 
 
 def library_pointees(source,report,g):
@@ -287,10 +356,18 @@ def plan(source,report,match,observations,ledger,texts):
         candidate,normalized=normalize_alias_pointers(candidate,report)
         complete=shape_key(candidate)==shape_key(expected)
         card.update(view_completeness='COMPLETE_LAYOUT' if complete else 'PARTIAL_LAYOUT',alias_normalized_members=normalized)
+        newline='\r\n' if '\r\n' in texts[source] else '\n'
+        inline_repair=httpresponse_inline_replacement(source,alias,match,candidate,expected,texts[source],newline)
         pointer_repairs=[]; signedness_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
         library=library_pointees(source,report,g)
-        retained,ignored=compatible_members(candidate,expected,outside,pointees|library,pointer_repairs,signedness_repairs)
+        if inline_repair:
+            pointer_repairs=inline_repair['pointer_member_repairs']
+            retained=[{'member':m['name'],'offset':m['offset'],'size':m['layout']['size'],'type':m['layout'].get('type')}
+                      for m in expected['members']]
+            ignored=[]
+        else:
+            retained,ignored=compatible_members(candidate,expected,outside,pointees|library,pointer_repairs,signedness_repairs)
         card['signedness_repairs']=signedness_repairs
         if signedness_repairs and pointer_repairs: raise ValueError('Signedness spelling repairs require the whole canonical declaration, not a member-only repair')
         for repair in pointer_repairs:
@@ -340,11 +417,14 @@ def plan(source,report,match,observations,ledger,texts):
             forward_repairs.append(dict(row,header='include/recovered/'+row['type']+'.h',
                 reason='Historical CU DWARF defines this type completely; the generated header restores the complete declaration. Fresh emission preservation remains required.'))
         card['forward_declaration_repairs']=forward_repairs
-        newline='\r\n' if '\r\n' in texts[source] else '\n'
         after='#include "recovered/'+canonical+'.h"'
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
         if pointer_repairs and forward_repairs: raise ValueError('Member-only repair cannot be combined with a forward-declaration repair')
-        if pointer_repairs:
+        if inline_repair:
+            after=inline_repair['after']
+            card.update(repair_mode='INLINE_MEMBER_TYPES',member_type_repairs=inline_repair['member_type_repairs'],
+                compiled_headers=inline_repair['compiled_headers'])
+        elif pointer_repairs:
             original=texts[source][match.start():match.end()]
             after=member_replacement(original,pointer_repairs,newline,pointees)
             name='member_'+Path(source).stem+'_'+alias+'_'+'_'.join(r['member'] for r in pointer_repairs)
@@ -358,11 +438,11 @@ def plan(source,report,match,observations,ledger,texts):
                     candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,pointer_member_repairs=pointer_repairs,
                     affected_targets=targets,difficulty='CHEAP',priority=238,
                     changes=[{'file':source,'start':match.start(),'end':match.end(),'before':texts[source][match.start():match.end()],
-                              'after':after,'reason':'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}]
+                              'after':after,'reason':inline_repair['reason'] if inline_repair else 'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}]
                             +[{'file':source,'start':r['start'],'end':r['end'],'before':texts[source][r['start']:r['end']],
                                'after':'#include "recovered/'+r['type']+'.h"','reason':r['reason']} for r in forward_repairs],
                     compiled_headers=[header.relative_to(ROOT).as_posix()]+[r['header'] for r in forward_repairs] if forward_repairs else card.get('compiled_headers',[header.relative_to(ROOT).as_posix()]),
-                    reason='Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.',
+                    reason=inline_repair['reason'] if inline_repair else 'Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.',
                     edit_scope='Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.')
     except ValueError as exc: card['reason']=str(exc)
     blocked=ROOT/'docs/current/interface-blocks.json'
@@ -403,7 +483,7 @@ def exact_duplicate_tokens(match,card,tokens):
 
 
 def verify_member_pointees(report, plan):
-    if plan.get('repair_mode')!='POINTER_MEMBER_ONLY': return
+    if plan.get('repair_mode') not in ('POINTER_MEMBER_ONLY','INLINE_MEMBER_TYPES'): return
     repairs=plan.get('pointer_member_repairs',[])
     if not repairs: raise ValueError('Member repair must identify at least one historical pointee')
     g=graph(); game=[]
@@ -427,6 +507,8 @@ def verify_member_pointees(report, plan):
 
 
 def verify_view(report,plan):
+    if plan.get('repair_mode')=='INLINE_MEMBER_TYPES':
+        verify_httpresponse_inline_plan(plan)
     verify_member_pointees(report,plan)
     typedefs=[t for t in interface_typedefs(report) if t['name']==plan['alias']]
     if len(typedefs)!=1 or shape_key(typedefs[0]['layout'])!=shape_key(plan['expected_layout']):
@@ -438,6 +520,24 @@ def verify_view(report,plan):
         dependency=ROOT/required
         if dependency.read_text(encoding='utf-8')!=outputs()[dependency]: raise ValueError('Compiled type header differs from DWARF generation')
         if required not in report['build']['local_inputs']: raise ValueError('Generated canonical header is not a compiled dependency')
+
+
+def verify_httpresponse_inline_plan(plan):
+    """Keep the special inline correction bound to its complete historical evidence."""
+    if plan.get('source')!='src/fld_adspot.c' or plan.get('alias')!='HTTPResponse':
+        raise ValueError('Inline member correction is restricted to fld_adspot HTTPResponse')
+    if not exact_httpresponse_layout(plan.get('expected_layout',{}),HTTPRESPONSE_HISTORICAL_SIGNATURE):
+        raise ValueError('Inline HTTPResponse plan differs from its historical member graph')
+    expected=[{'member':'iNumHeaders','offset':4,'size':4,'candidate_type':'int','historical_type':'unsigned int'},
+              {'member':'pHeaders','offset':8,'size':4,'candidate_type':'void *','historical_type':'HTTPHeader *'},
+              {'member':'iPayloadSize','offset':16,'size':4,'candidate_type':'int','historical_type':'unsigned int'}]
+    if plan.get('member_type_repairs')!=expected:
+        raise ValueError('Inline HTTPResponse member repair set is incomplete or ambiguous')
+    pointer={**expected[1],'pointee_evidence':'GENERATED_HISTORICAL_HEADER'}
+    if plan.get('pointer_member_repairs')!=[pointer]:
+        raise ValueError('Inline HTTPResponse pointer repair differs from its historical pointee')
+    if plan.get('compiled_headers')!=['include/recovered/HTTPHeader.h']:
+        raise ValueError('Inline HTTPResponse repair has an unexpected header scope')
 
 
 def publish_views(ledger,check=False):

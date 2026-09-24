@@ -75,6 +75,102 @@ def void_to_int_is_safe(row,declaration,text,source_texts):
     return call_values_unused(sanitized(text),name)
 
 
+def update_game_menu_voidpp_evidence(row, expected, declaration, text, report, g, typed_names):
+    """Prove the one menu CU's int* spelling is a historical void** output slot.
+
+    The result authorizes declaration spans only. It is specific to this recovered
+    interface and requires the original aggregate/local DIEs plus the current store
+    and caller flow; integer/pointer width equivalence is not evidence.
+    """
+    if (row.get('function')!='update_game_menu' or len(row.get('historical',[]))!=1
+            or declaration.get('file')!='src/menu.c' or declaration.get('cu')!='src/menu.c'
+            or declaration.get('kind') not in ('NC','NF')):
+        return False
+    from interfaces import normalize, split_params
+    expected_signature=('int',('BITMAP*','Tmenu*','Tmenu_params*','Tcontrol*','int','int','void**'))
+    if (expected.get('return_type'),tuple(expected.get('parameter_types',())))!=expected_signature:
+        return False
+    if expected.get('variadic') or expected.get('calling_convention') is not None:
+        return False
+    if declaration.get('parameter_types')!=['void*','Tmenu*','Tmenu_params*','Tcontrol*','int','int','int*']:
+        return False
+    if 'BITMAP' not in typed_names or report.get('build',{}).get('target')!='game-menu':
+        return False
+    if 'include/recovered/Tmenu.h' not in report.get('build',{}).get('local_inputs',{}):
+        return False
+    declarations=row.get('candidate_declarations',[])
+    if (len(declarations)!=2 or {d.get('kind') for d in declarations}!={'NC','NF'}
+            or any(d.get('file')!='src/menu.c' or d.get('cu')!='src/menu.c' for d in declarations)):
+        return False
+
+    # Bind the rule to the unique historical definition and complete Tmenu in
+    # the same CU. Tmenu.data is the pointer value stored through the output slot.
+    die=g.dies.get(expected.get('die'))
+    if not die or die.get('tag')!='DW_TAG_subprogram' or die.get('name')!='update_game_menu':
+        return False
+    cu=die.get('cu')
+    updates=[d for d in g.dies.values() if d.get('tag')=='DW_TAG_subprogram'
+             and d.get('name')=='update_game_menu' and d.get('cu')==cu]
+    if len(updates)!=1 or updates[0]['offset']!=die['offset']:
+        return False
+    historical_params=[d for d in g.children.get(die['offset'],[]) if d.get('tag')=='DW_TAG_formal_parameter']
+    if (normalize(g.declaration(die.get('type_ref')))!='int'
+            or [normalize(g.declaration(p.get('type_ref'))) for p in historical_params]
+            !=list(expected_signature[1])):
+        return False
+    menus=[d for d in g.game_types.get('Tmenu',[]) if d.get('cu')==cu]
+    if len(menus)!=1:
+        return False
+    struct=g.dies.get(menus[0].get('type_ref'))
+    if not struct or struct.get('tag')!='DW_TAG_structure_type' or g.size(struct['offset'])!=148:
+        return False
+    members=[m for m in g.children.get(struct['offset'],[]) if m.get('tag')=='DW_TAG_member' and m.get('name')=='data']
+    if (len(members)!=1 or g.member_offset(members[0])!=144
+            or normalize(g.declaration(members[0].get('type_ref')))!='void*'):
+        return False
+    handles=[d for d in g.dies.values() if d.get('tag')=='DW_TAG_subprogram'
+             and d.get('name')=='handle_menu' and d.get('cu')==cu]
+    if len(handles)!=1:
+        return False
+    data_locals=[d for d in g.children.get(handles[0]['offset'],[])
+                 if d.get('tag')=='DW_TAG_variable' and d.get('name')=='data']
+    if len(data_locals)!=1 or normalize(g.declaration(data_locals[0].get('type_ref')))!='void*':
+        return False
+
+    # Match unique source definitions and the exact pointer flow. The store is
+    # evidence only; it is not edited or reinterpreted by this interface task.
+    from source_order import definition_spans
+    spans=definition_spans(text)
+    if sum(s['name']=='update_game_menu' for s in spans)!=1 or sum(s['name']=='handle_menu' for s in spans)!=1:
+        return False
+    by_name={s['name']:s for s in spans}
+    update,handle=by_name['update_game_menu'],by_name['handle_menu']
+    clean=sanitized(text)
+    update_body=clean[update['body_start']:update['end']]
+    handle_body=clean[handle['body_start']:handle['end']]
+    try:
+        from interface_tasks import declaration_site
+        _,param_start,param_end=declaration_site(text,'update_game_menu',declaration['line'])
+    except ValueError:
+        return False
+    params=split_params(clean[param_start:param_end])
+    if len(params)!=7 or not re.fullmatch(r'int\s*\*\s*data',params[6].strip()):
+        return False
+    stores=list(re.finditer(r'\*\s*data\s*=\s*(?:\(\s*int\s*\)\s*)?m\s*\[\s*pos\s*\]\s*\.\s*data\s*;',update_body))
+    if len(stores)!=1 or len(re.findall(r'\bvoid\s*\*\s*data\s*;',handle_body))!=1:
+        return False
+    calls=list(re.finditer(r'\bupdate_game_menu\s*\(',handle_body))
+    if len(calls)!=1:
+        return False
+    opening=handle_body.find('(',calls[0].start()); depth=1; end=opening+1
+    while end<len(handle_body) and depth:
+        depth+=(handle_body[end]=='(')-(handle_body[end]==')'); end+=1
+    if depth:
+        return False
+    args=split_params(handle_body[opening+1:end-1])
+    return len(args)==7 and args[6].strip()=='&data'
+
+
 def plan(row,ledger,source_texts=None):
     from interface_tasks import signature,BUILTINS,prototype,declaration_site,patch_text,affected_targets,source_text,text_identity
     from interfaces import split_params,parameter_type
@@ -162,12 +258,21 @@ def plan(row,ledger,source_texts=None):
             params=text[start:end];parts=split_params(params);actual_types=declaration['parameter_types']
             if len(parts)!=len(expected['parameter_types']) or len(actual_types)!=len(parts): raise ValueError('Typed repair cannot change parameter count')
             edits=[];cursor=0
-            for part,actual_type,wanted in zip(parts,actual_types,expected['parameter_types']):
+            menu_voidpp_slot=update_game_menu_voidpp_evidence(row,expected,declaration,text,report,g,typed_names)
+            for index,(part,actual_type,wanted) in enumerate(zip(parts,actual_types,expected['parameter_types'])):
                 at=params.find(part,cursor)
                 if at<0: raise ValueError('Cannot locate parameter text')
                 cursor=at+len(part)
                 if actual_type==wanted: continue
                 if parameter_type(part)!=actual_type: raise ValueError('Compiler/source parameter disagreement')
+                if index==6 and actual_type=='int*' and wanted=='void**' and menu_voidpp_slot:
+                    spellings=list(re.finditer(r'\bint\s*\*',sanitized(part)))
+                    if len(spellings)!=1: raise ValueError('Output-slot parameter spelling is ambiguous')
+                    span_start=start+at+spellings[0].start()
+                    span_end=start+at+spellings[0].end()
+                    edits.append({'start':span_start,'end':span_end,'before':text[span_start:span_end],'after':'void **',
+                                  'reason':'Restore update_game_menu historical void ** output slot from unique DWARF member/local and caller-store evidence'})
+                    continue
                 pointee=GAME_POINTER.fullmatch(wanted)
                 if actual_type!=placeholder_for(wanted) or not pointee or pointee[1] not in typed_names:
                     raise ValueError('Only evidenced void-pointer placeholders can become named pointers in a definition')
@@ -190,9 +295,11 @@ def plan(row,ledger,source_texts=None):
                 if text[start:end].strip(): raise ValueError('Old-style argument text is not empty')
             else:
                 if len(parts)!=len(expected['parameter_types']): raise ValueError('Typed repair cannot change parameter count')
-                for part,actual_type,wanted in zip(parts,actual_types,expected['parameter_types']):
+                menu_voidpp_slot=update_game_menu_voidpp_evidence(row,expected,declaration,text,report,g,typed_names)
+                for index,(part,actual_type,wanted) in enumerate(zip(parts,actual_types,expected['parameter_types'])):
                     if parameter_type(part)!=actual_type: raise ValueError('Compiler/source parameter disagreement')
-                    if actual_type!=wanted and not (actual_type==placeholder_for(wanted) and GAME_POINTER.fullmatch(wanted)[1] in typed_names):
+                    menu_slot=(index==6 and actual_type=='int*' and wanted=='void**' and menu_voidpp_slot)
+                    if actual_type!=wanted and not (menu_slot or (actual_type==placeholder_for(wanted) and GAME_POINTER.fullmatch(wanted)[1] in typed_names)):
                         raise ValueError('Only evidenced void-pointer placeholders can become named pointers')
             replacement=', '.join(expected['parameter_types'] or ['void'])
             edits=[]

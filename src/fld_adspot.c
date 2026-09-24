@@ -12,16 +12,17 @@ extern void log2file(const char*, ...);
 
 #include "recovered/FLDAdSpot.h"
 
+#include "recovered/HTTPHeader.h"
 typedef struct HTTPResponse {
     int iStatusCode;
-    int iNumHeaders;
-    void *pHeaders;
+    unsigned int iNumHeaders;
+    HTTPHeader *pHeaders;
     unsigned char *pPayload;
-    int iPayloadSize;
+    unsigned int iPayloadSize;
 } HTTPResponse;
 
-extern HTTPResponse *HTTPHead(char *pURL);
-extern HTTPResponse *HTTPGet(char *pURL);
+extern HTTPResponse *HTTPHead(const char *pURL);
+extern HTTPResponse *HTTPGet(const char *pURL);
 extern time_t httpGetLastModified(HTTPResponse *pResponse);
 extern void destroyHTTPResponse(HTTPResponse *pResponse);
 

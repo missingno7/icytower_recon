@@ -29,8 +29,8 @@ static inline int extractLine(const unsigned char *pBuffer, int iDataLeft, char 
 HTTPResponse *__attribute__((regparm(2))) extractHTTPResponse(const unsigned char *pHTTPData, int iResponseBytesCount);
 HTTPResponse *HTTPFetchInternal(const char *pHost, int iPort, const char *pPathToFile, const char *pMethod);
 int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort);
-HTTPResponse *HTTPGet(char *pURL);
-HTTPResponse *HTTPHead(char *pURL);
+HTTPResponse *HTTPGet(const char *pURL);
+HTTPResponse *HTTPHead(const char *pURL);
 HTTPResponse *HTTPRequest(const char *pURL, const char *pMethod);
 time_t httpGetLastModified(HTTPResponse *pResponse);
 
@@ -260,14 +260,14 @@ int SplitURL(const char *pURL, char **ppHost, char **ppPath, int *piPort)
     return 0;
 }
 
-HTTPResponse *HTTPGet(char *pURL)
+HTTPResponse *HTTPGet(const char *pURL)
 {
     return HTTPRequest(pURL, "GET");
 }
 
 /* The line reader was inlined twice into extractHTTPResponse in the original
  * object. It returns consumed input bytes while omitting CR/LF from output. */
-HTTPResponse *HTTPHead(char *pURL)
+HTTPResponse *HTTPHead(const char *pURL)
 {
     return HTTPRequest(pURL, "HEAD");
 }

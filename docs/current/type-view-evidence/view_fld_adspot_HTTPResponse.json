@@ -13,21 +13,21 @@
       "variable": "pResponse",
       "historical_type": "HTTPResponse",
       "historical_die": 48049,
-      "candidate_die": 2029
+      "candidate_die": 2094
     },
     {
       "function": "fldads_update_local_adimg",
       "variable": "pHead",
       "historical_type": "HTTPResponse",
       "historical_die": 48097,
-      "candidate_die": 2077
+      "candidate_die": 2142
     },
     {
       "function": "fldads_threadmain",
       "variable": "pResponse",
       "historical_type": "HTTPResponse",
       "historical_die": 48348,
-      "candidate_die": 2522
+      "candidate_die": 2587
     },
     {
       "function": "HTTPHead",
@@ -36,14 +36,14 @@
       "historical_die": 80757,
       "candidate_declaration": {
         "file": "src/fld_adspot.c",
-        "line": 23,
+        "line": 24,
         "kind": "NC",
         "name": "HTTPHead",
         "return_type": "HTTPResponse*",
         "parameter_types": [
-          "char*"
+          "const char*"
         ],
-        "declaration": "extern HTTPResponse *HTTPHead (char *);"
+        "declaration": "extern HTTPResponse *HTTPHead (const char *);"
       },
       "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     },
@@ -54,29 +54,38 @@
       "historical_die": 80809,
       "candidate_declaration": {
         "file": "src/fld_adspot.c",
-        "line": 24,
+        "line": 25,
         "kind": "NC",
         "name": "HTTPGet",
         "return_type": "HTTPResponse*",
         "parameter_types": [
-          "char*"
+          "const char*"
         ],
-        "declaration": "extern HTTPResponse *HTTPGet (char *);"
+        "declaration": "extern HTTPResponse *HTTPGet (const char *);"
       },
       "evidence_source": "COMPILED_INTERFACE_AND_HISTORICAL_DWARF"
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -25,
-  "changes": [],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/fld_adspot.c",
+      "start": 339,
+      "end": 521,
+      "before": "typedef struct HTTPResponse {\n    int iStatusCode;\n    unsigned int iNumHeaders;\n    HTTPHeader *pHeaders;\n    unsigned char *pPayload;\n    unsigned int iPayloadSize;\n} HTTPResponse;",
+      "after": "#include \"recovered/HTTPResponse.h\"",
+      "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
+    }
+  ],
   "state": "TYPE_VIEW_REPAIR",
   "status": "PARTIAL_STRUCT_VIEW",
   "difference_class": "CANONICAL_TYPE_VIEW",
   "body_edit_allowed": false,
   "source_identities": {
     "src/fld_adspot.c": {
-      "size": 6915,
-      "sha256": "63cae566d113744f2149bcfdbf710bd8b06456042dc3e1166929cb5eae25fb56"
+      "size": 6985,
+      "sha256": "9116d56f22599dfa2e7eb197a067039f693b858948946530f2dd225cbb1f5016"
     }
   },
   "begin_command": "python tools/interface_task.py begin view_fld_adspot_HTTPResponse",
@@ -174,7 +183,7 @@
     {
       "candidate_member": "iNumHeaders",
       "candidate_offset": 4,
-      "candidate_type": "int",
+      "candidate_type": "unsigned int",
       "historical_field_at_offset": {
         "expression": "HTTPResponse.iNumHeaders",
         "offset": 4,
@@ -193,7 +202,7 @@
     {
       "candidate_member": "pHeaders",
       "candidate_offset": 8,
-      "candidate_type": "void *",
+      "candidate_type": "HTTPHeader *",
       "historical_field_at_offset": {
         "expression": "HTTPResponse.pHeaders",
         "offset": 8,
@@ -231,7 +240,7 @@
     {
       "candidate_member": "iPayloadSize",
       "candidate_offset": 16,
-      "candidate_type": "int",
+      "candidate_type": "unsigned int",
       "historical_field_at_offset": {
         "expression": "HTTPResponse.iPayloadSize",
         "offset": 16,
@@ -250,11 +259,56 @@
   ],
   "type_scope": {
     "basis": "GCC_DEPFILE",
-    "maintained_input_count": 4,
+    "maintained_input_count": 5,
     "limit": "Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked."
   },
-  "view_completeness": "PARTIAL_LAYOUT",
+  "view_completeness": "COMPLETE_LAYOUT",
   "alias_normalized_members": [],
-  "reason": "Member differs in offset/type/qualifiers: iNumHeaders",
+  "signedness_repairs": [],
+  "canonical_dependencies": [],
+  "forward_declared_dependencies": [],
+  "forward_declaration_repairs": [],
+  "retained_members": [
+    {
+      "member": "iStatusCode",
+      "offset": 0,
+      "size": 4,
+      "type": "int"
+    },
+    {
+      "member": "iNumHeaders",
+      "offset": 4,
+      "size": 4,
+      "type": "unsigned int"
+    },
+    {
+      "member": "pHeaders",
+      "offset": 8,
+      "size": 4,
+      "type": "HTTPHeader *"
+    },
+    {
+      "member": "pPayload",
+      "offset": 12,
+      "size": 4,
+      "type": "unsigned char *"
+    },
+    {
+      "member": "iPayloadSize",
+      "offset": 16,
+      "size": 4,
+      "type": "unsigned int"
+    }
+  ],
+  "removed_fillers": [],
+  "pointer_member_repairs": [],
+  "affected_targets": [
+    "game-fld-adspot"
+  ],
+  "compiled_headers": [
+    "include/recovered/HTTPResponse.h"
+  ],
+  "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
   "compiler_trials": []
 }

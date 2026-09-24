@@ -6363,12 +6363,14 @@ int do_replay_menu(void)
                     if (!demo) {
                         my_alert("Failed to save replay.",
                                  "Temporary file not found.",0,1);
+                        status=!isGuest;
                         continue;
                     }
                     thisChecksum=calc_replay_checksum(demo);
                     if (thisChecksum!=uberChecksum) {
                         my_alert("Failed to save replay.",
                                  "Temporary file mismatch.",0,1);
+                        status=!isGuest;
                         continue;
                     }
                     strncpy(demo->name,pname,30);

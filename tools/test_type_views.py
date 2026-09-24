@@ -161,6 +161,96 @@ class ViewTests(unittest.TestCase):
         self.assertNotIn('int f',p['changes'][0]['before'])
         self.assertEqual(p['canonical'],'Tprofile')
 
+    def httpresponse_plan(self,source='src/fld_adspot.c',candidate_mutation=None,source_mutation=None):
+        import type_views
+        g=graph(); expected=layout(g,g.game_types['HTTPResponse'][0]['type_ref'])
+        candidate=copy.deepcopy(expected)
+        members={m['name']:m for m in candidate['members']}
+        members['iNumHeaders']['layout']=dict(members['iNumHeaders']['layout'],type='int',encoding='5\t(signed)')
+        members['pHeaders']['layout']['type']='void *'
+        members['iPayloadSize']['layout']=dict(members['iPayloadSize']['layout'],type='int',encoding='5\t(signed)')
+        if candidate_mutation:
+            if candidate_mutation[0]=='$node':
+                candidate[candidate_mutation[1]]=candidate_mutation[2]
+            else:
+                member=members[candidate_mutation[0]]
+                member[candidate_mutation[1]]=candidate_mutation[2] if candidate_mutation[1]!='layout' else member['layout']
+                if candidate_mutation[1]=='layout': member['layout']=dict(member['layout'],**candidate_mutation[2])
+        declaration=('typedef struct HTTPResponse {\n'
+            '    int iStatusCode;\n'
+            '    int iNumHeaders;\n'
+            '    void *pHeaders;\n'
+            '    unsigned char *pPayload;\n'
+            '    int iPayloadSize;\n'
+            '} HTTPResponse;')
+        if source_mutation: declaration=source_mutation(declaration)
+        text='#include "recovered/FLDAdSpot.h"\n'+declaration+'\nHTTPResponse *pResponse;\n'
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
+            (root/'include/recovered/HTTPResponse.h').write_text('#include "HTTPHeader.h"\ntypedef struct HTTPResponse { /* generated */ } HTTPResponse;')
+            (root/'include/recovered/HTTPHeader.h').write_text('typedef struct HTTPHeader { char *pHeader; char *pValue; } HTTPHeader;')
+            path=Path(source); source_file=root/path; source_file.parent.mkdir(parents=True,exist_ok=True); source_file.write_text(text)
+            report={'build':{'target':'game-fld-adspot','local_inputs':{source:{}}},
+                    'candidate_debug':{'typedefs':[{'name':'HTTPResponse','layout':candidate},
+                        {'name':'HTTPHeader','layout':layout(g,g.game_types['HTTPHeader'][0]['type_ref'])}]}}
+            with patch.object(type_views,'ROOT',root),patch.object(type_views,'affected_targets',return_value=['game-fld-adspot']):
+                return plan(source,report,STRUCT.search(text),[{'historical_type':'HTTPResponse'}],{},
+                    {source:text,'include/recovered/HTTPResponse.h':(root/'include/recovered/HTTPResponse.h').read_text(),
+                     'include/recovered/HTTPHeader.h':(root/'include/recovered/HTTPHeader.h').read_text()})
+
+    def test_fld_adspot_httpresponse_retypes_exact_historical_members_in_place(self):
+        p=self.httpresponse_plan()
+        self.assertEqual(p['difficulty'],'CHEAP',p.get('reason'))
+        self.assertEqual(p['repair_mode'],'INLINE_MEMBER_TYPES')
+        self.assertEqual(p['compiled_headers'],['include/recovered/HTTPHeader.h'])
+        self.assertEqual(p['changes'][0]['after'],
+            '#include "recovered/HTTPHeader.h"\n'
+            'typedef struct HTTPResponse {\n'
+            '    int iStatusCode;\n'
+            '    unsigned int iNumHeaders;\n'
+            '    HTTPHeader *pHeaders;\n'
+            '    unsigned char *pPayload;\n'
+            '    unsigned int iPayloadSize;\n'
+            '} HTTPResponse;')
+        self.assertEqual([r['member'] for r in p['member_type_repairs']],
+                         ['iNumHeaders','pHeaders','iPayloadSize'])
+        from type_views import verify_httpresponse_inline_plan
+        verify_httpresponse_inline_plan(p)
+
+    def test_fld_adspot_httpresponse_inline_rule_blocks_nearby_unsafe_layouts(self):
+        mutations=(
+            {'candidate_mutation':('iNumHeaders','offset',8)},
+            {'candidate_mutation':('$node','qualifiers',['const'])},
+            {'candidate_mutation':('$node','kind','union_type')},
+            {'candidate_mutation':('pHeaders','layout',{'size':8})},
+            {'candidate_mutation':('pHeaders','layout',{'qualifiers':['const']})},
+            {'candidate_mutation':('iPayloadSize','layout',{'type':'long unsigned int','encoding':'7\t(unsigned)'})},
+            {'source_mutation':lambda s:s.replace('void *pHeaders;','int *pHeaders;')},
+            {'source_mutation':lambda s:s.replace('int iNumHeaders;','unsigned int iNumHeaders;')},
+            {'source_mutation':lambda s:s.replace('    int iStatusCode;\n    int iNumHeaders;','    int iNumHeaders;\n    int iStatusCode;')},
+            {'source':'src/other.c'},
+        )
+        for options in mutations:
+            p=self.httpresponse_plan(**options)
+            self.assertEqual(p['difficulty'],'SUPERVISOR',p)
+            self.assertEqual(p['changes'],[],p)
+
+    def test_inline_httpresponse_acceptance_requires_exact_repair_and_header_scope(self):
+        from type_views import verify_httpresponse_inline_plan
+        g=graph(); expected=layout(g,g.game_types['HTTPResponse'][0]['type_ref'])
+        plan={'source':'src/fld_adspot.c','alias':'HTTPResponse','expected_layout':expected,
+              'member_type_repairs':[{'member':'iNumHeaders','offset':4,'size':4,'candidate_type':'int','historical_type':'unsigned int'},
+                  {'member':'pHeaders','offset':8,'size':4,'candidate_type':'void *','historical_type':'HTTPHeader *'},
+                  {'member':'iPayloadSize','offset':16,'size':4,'candidate_type':'int','historical_type':'unsigned int'}],
+              'pointer_member_repairs':[{'member':'pHeaders','offset':8,'size':4,'candidate_type':'void *','historical_type':'HTTPHeader *',
+                                         'pointee_evidence':'GENERATED_HISTORICAL_HEADER'}],
+              'compiled_headers':['include/recovered/HTTPHeader.h']}
+        verify_httpresponse_inline_plan(plan)
+        for field,value in [('source','src/other.c'),('compiled_headers',[]),('member_type_repairs',[]),
+                            ('expected_layout',self.expected())]:
+            bad=copy.deepcopy(plan); bad[field]=value
+            with self.assertRaises(ValueError,msg=field): verify_httpresponse_inline_plan(bad)
+
     def test_by_value_sizeof_and_tag_users_require_supervisor(self):
         for extra,other in [('View x;',''),('int n=sizeof(View);',''),('struct View *x;','')]:
             p,_=self.fixture_plan(extra,other)

@@ -1,0 +1,10 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "do_replay_menu": "docs/attempts/research-20260924-do-replay-residual/do_replay_menu-checksum-and-load-reset.c"
+  },
+  "evidence": "Retained complete do_replay_menu body. Relative to the now-maintained source, the only body changes are status=!isGuest after the two failed temporary-replay checks. Original PE initializes the saved status slot at [ebp-0x1824] from 1-isGuest at 0x410fee..0x410ff7. On load failure, original calls my_alert at 0x4119bd then loads that saved slot into EDI at 0x4119c2; on checksum mismatch, it calls my_alert at 0x41180c then performs the same load at 0x411811. DWARF maps status to EDI across these blocks, thisChecksum to EAX through the checksum alert setup, and line rows identify 5631 (mismatch) and 5636 (missing-file alert). These paths therefore restore the initial input status after alerting; the source-level equivalent is status=!isGuest. The current-order/no-prototypes isolated probe emits both exact six-byte reloads, resolves the +0x5a0 branch to historical target +0x884, preserves all 63 exact peer functions, and remains DIFFER at 2657/2661 bytes (first mismatch +2026). This is a research candidate for the serialized TU_CONTEXT gate only; it establishes no FUNCTION_MATCH, BODY_MATCH_LAYOUT_BLOCKED, or object/CU match. The anonymous literal at 0x4d4bb3 used by the guest empty-string path remains owner-unproven."
+}

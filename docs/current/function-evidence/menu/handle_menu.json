@@ -2742,7 +2742,7 @@
         "assembly": "mov    0x10(%ebp),%esi",
         "dwarf_variables": [
           {
-            "die": 11704,
+            "die": 11710,
             "name": "ctrl",
             "type": "Tcontrol *",
             "base_type": null,
@@ -2764,7 +2764,7 @@
         "assembly": "mov    0x14(%ebp),%edi",
         "dwarf_variables": [
           {
-            "die": 11720,
+            "die": 11726,
             "name": "bmp",
             "type": "BITMAP *",
             "base_type": "BITMAP",
@@ -2786,7 +2786,7 @@
         "assembly": "mov    0x24(%ebp),%eax",
         "dwarf_variables": [
           {
-            "die": 11781,
+            "die": 11787,
             "name": "dx",
             "type": "int",
             "base_type": "int",
@@ -2815,7 +2815,7 @@
         "assembly": "movl   $0x0,-0x1c(%ebp)",
         "dwarf_variables": [
           {
-            "die": 11853,
+            "die": 11859,
             "name": "data",
             "type": "void *",
             "base_type": null,
@@ -4751,7 +4751,7 @@
     "cu_same_predecessor_count": 10,
     "cu_function_count": 10,
     "limit": "Compile-order context only. It explains why a body mismatch may be a neighbor artifact; it never proves or masks any byte.",
-    "priority_adjustment": 0,
+    "priority_adjustment": -5,
     "note": "Historical predecessor is emitted in order but does not match yet; its bytes may perturb this body."
   },
   "known_rules": [
@@ -4831,8 +4831,8 @@
       }
     }
   ],
-  "difficulty": "SUPERVISOR",
-  "priority": -30,
+  "difficulty": "MEDIUM",
+  "priority": 40,
   "compound_trials": null,
   "predicate_trials": null,
   "compiler_context": null,
@@ -4892,7 +4892,7 @@
     "rtl_evidence": "docs/attempts/compiler-context/game-menu/handle_menu-rtl.json",
     "limit": "Newest result per experiment name, latest record first; archived trials retain their own baseline freshness and line number. No-change results apply only to the recorded input snapshot. Diagnostic memory grants no original-match or edit permission."
   },
-  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu",
+  "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -4920,69 +4920,8 @@
   "begin_command": "python tools/grinder_task.py begin game-menu handle_menu",
   "promotion_command": "python tools/promote_function.py game-menu handle_menu",
   "callee_interface_scope": {
-    "observations": [
-      {
-        "function": "update_game_menu",
-        "source": "src/menu.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          193
-        ],
-        "candidate_card": "docs/current/interfaces/update_game_menu.json",
-        "local_declarations": [
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "void*",
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "int",
-              "int",
-              "int*"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "void*",
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "int",
-              "int",
-              "int*"
-            ]
-          },
-          {
-            "return_type": "int",
-            "parameter_types": [
-              "void*",
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "int",
-              "int",
-              "int*"
-            ],
-            "canonical_return_type": "int",
-            "canonical_parameter_types": [
-              "void*",
-              "Tmenu*",
-              "Tmenu_params*",
-              "Tcontrol*",
-              "int",
-              "int",
-              "int*"
-            ]
-          }
-        ],
-        "layout_issues": []
-      }
-    ],
-    "blocking_functions": [
-      "update_game_menu"
-    ],
+    "observations": [],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred."
   },
   "storage_declarations": [

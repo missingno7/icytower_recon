@@ -23,25 +23,6 @@
       "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
     },
     {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/update_game_menu.json",
-      "affected_function_count": 1,
-      "planned_in_caller_count": 1,
-      "repair_card": "docs/current/interfaces/update_game_menu.json",
-      "repair_state": "INTERFACE_REPAIR",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/update_game_menu.json",
-          "source": "src/menu.c",
-          "function": "handle_menu",
-          "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
       "kind": "CU_SYMPTOM_INVESTIGATION",
       "key": "game-main:STACK_FRAME_LAYOUT",
       "target": "game-main",
@@ -425,6 +406,25 @@
           "size": 583,
           "body_edit_allowed": false,
           "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-menu:REGISTER_OR_INSTRUCTION_SELECTION",
+      "target": "game-menu",
+      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
+      "affected_function_count": 1,
+      "examples": [
+        {
+          "source": "src/menu.c",
+          "function": "handle_menu",
+          "candidate_card": "docs/current/functions/menu/handle_menu.json",
+          "size": 1120,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900"
         }
       ],
       "omitted_examples": 0,

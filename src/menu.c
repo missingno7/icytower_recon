@@ -47,7 +47,7 @@ void build_menu_string(Tmenu *m, char *dest);
 void build_menu_string(Tmenu *m, char *dest);
 void draw_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, int cx, int y, int dx);
 void reset_menu(Tmenu *m, Tmenu_params *mp, int sel_pos);
-int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl, int x, int y, int *data);
+int update_game_menu(BITMAP*, Tmenu*, Tmenu_params*, Tcontrol*, int, int, void**);
 int handle_menu(Tmenu *menu, Tmenu_params *mp, Tcontrol *ctrl, BITMAP *bmp, void (*callback)(void), int x, int y, int dx);
 void key_to_str(int k, char *dest);
 int get_slider_value(Tmenu_slider *s);
@@ -155,8 +155,8 @@ void reset_menu(Tmenu *m, Tmenu_params *mp, int sel_pos)
     mp->font_height = text_height(mp->font);
 }
 
-int update_game_menu(void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
-                     int x, int y, int *data)
+int update_game_menu(BITMAP *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl,
+                     int x, int y, void **data)
 {
     int num_posts;
     int old_pos;

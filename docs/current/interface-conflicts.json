@@ -2,60 +2,6 @@
   "schema": 2,
   "tasks": [
     {
-      "function": "HTTPGet",
-      "source": "src/httpget.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin HTTPGet",
-      "verification_command": "python tools/interface_task.py check HTTPGet",
-      "promotion_command": "python tools/interface_task.py promote HTTPGet",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/HTTPGet.json",
-      "size": 0
-    },
-    {
-      "function": "HTTPHead",
-      "source": "src/httpget.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin HTTPHead",
-      "verification_command": "python tools/interface_task.py check HTTPHead",
-      "promotion_command": "python tools/interface_task.py promote HTTPHead",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/HTTPHead.json",
-      "size": 0
-    },
-    {
-      "function": "destroyHTTPResponse",
-      "source": "src/httpget.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin destroyHTTPResponse",
-      "verification_command": "python tools/interface_task.py check destroyHTTPResponse",
-      "promotion_command": "python tools/interface_task.py promote destroyHTTPResponse",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/destroyHTTPResponse.json",
-      "size": 0
-    },
-    {
       "function": "fldads_get_random_ad",
       "source": "src/fld_adspot.c",
       "sources": null,
@@ -128,24 +74,6 @@
       "size": 0
     },
     {
-      "function": "httpGetLastModified",
-      "source": "src/httpget.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin httpGetLastModified",
-      "verification_command": "python tools/interface_task.py check httpGetLastModified",
-      "promotion_command": "python tools/interface_task.py promote httpGetLastModified",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/httpGetLastModified.json",
-      "size": 0
-    },
-    {
       "function": "set_next_rank_message",
       "source": "src/profile.c",
       "sources": null,
@@ -179,24 +107,6 @@
       "difference_class": "INTERFACE_DECLARATION",
       "task_kind": "INTERFACE",
       "candidate_card": "docs/current/interfaces/show_name.json",
-      "size": 0
-    },
-    {
-      "function": "update_game_menu",
-      "source": "src/menu.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: void* -> BITMAP*",
-      "begin_command": "python tools/interface_task.py begin update_game_menu",
-      "verification_command": "python tools/interface_task.py check update_game_menu",
-      "promotion_command": "python tools/interface_task.py promote update_game_menu",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/update_game_menu.json",
       "size": 0
     }
   ],
@@ -336,17 +246,17 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 24,
+          "line": 25,
           "kind": "NC",
           "name": "HTTPGet",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *);",
+          "declaration": "extern HTTPResponse *HTTPGet (const char *);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": [
@@ -355,64 +265,7 @@
               "historical_type": "HTTPResponse",
               "candidate_type": "HTTPResponse",
               "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -423,12 +276,12 @@
           "name": "HTTPGet",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *);",
+          "declaration": "extern HTTPResponse *HTTPGet (const char *);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -448,12 +301,12 @@
           "name": "HTTPGet",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *pURL);",
+          "declaration": "extern HTTPResponse *HTTPGet (const char *pURL);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -467,77 +320,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 24
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -557,17 +342,17 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 23,
+          "line": 24,
           "kind": "NC",
           "name": "HTTPHead",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *);",
+          "declaration": "extern HTTPResponse *HTTPHead (const char *);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/fld_adspot.c",
           "game_type_layouts": [
@@ -576,64 +361,7 @@
               "historical_type": "HTTPResponse",
               "candidate_type": "HTTPResponse",
               "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -644,12 +372,12 @@
           "name": "HTTPHead",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *);",
+          "declaration": "extern HTTPResponse *HTTPHead (const char *);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -669,12 +397,12 @@
           "name": "HTTPHead",
           "return_type": "HTTPResponse*",
           "parameter_types": [
-            "char*"
+            "const char*"
           ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *pURL);",
+          "declaration": "extern HTTPResponse *HTTPHead (const char *pURL);",
           "canonical_return_type": "HTTPResponse*",
           "canonical_parameter_types": [
-            "char*"
+            "const char*"
           ],
           "cu": "src/httpget.c",
           "game_type_layouts": [
@@ -688,77 +416,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 23
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -1302,7 +962,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 6485,
+          "line": 6487,
           "kind": "NF",
           "name": "_mangled_main",
           "return_type": "int",
@@ -3446,7 +3106,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 6469,
+          "line": 6471,
           "kind": "NF",
           "name": "checkMenuFocus",
           "return_type": "void",
@@ -7160,7 +6820,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 26,
+          "line": 27,
           "kind": "NC",
           "name": "destroyHTTPResponse",
           "return_type": "void",
@@ -7179,64 +6839,7 @@
               "historical_type": "HTTPResponse",
               "candidate_type": "HTTPResponse",
               "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -7291,77 +6894,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 26
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -12071,7 +11606,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 36,
+          "line": 37,
           "kind": "NF",
           "name": "fldads_destroy_cache",
           "return_type": "void",
@@ -12103,7 +11638,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 60,
+          "line": 61,
           "kind": "NF",
           "name": "fldads_dump_local_cache",
           "return_type": "void",
@@ -12137,7 +11672,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 51,
+          "line": 52,
           "kind": "NF",
           "name": "fldads_get_local_cache_name",
           "return_type": "const char*",
@@ -12175,7 +11710,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 85,
+          "line": 86,
           "kind": "NF",
           "name": "fldads_get_local_filename_from_url",
           "return_type": "const char*",
@@ -12211,7 +11746,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 180,
+          "line": 181,
           "kind": "NF",
           "name": "fldads_get_random_ad",
           "return_type": "const FLDAdSpot*",
@@ -12399,7 +11934,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 90,
+          "line": 91,
           "kind": "NF",
           "name": "fldads_load_cache_from_csv",
           "return_type": "void",
@@ -12443,7 +11978,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 120,
+          "line": 121,
           "kind": "NF",
           "name": "fldads_load_local_cache",
           "return_type": "void",
@@ -12475,7 +12010,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 175,
+          "line": 176,
           "kind": "NF",
           "name": "fldads_start",
           "return_type": "void",
@@ -12522,7 +12057,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 34,
+          "line": 35,
           "kind": "NC",
           "name": "fldads_threadmain",
           "return_type": "void*",
@@ -12539,7 +12074,7 @@
         },
         {
           "file": "src/fld_adspot.c",
-          "line": 205,
+          "line": 206,
           "kind": "NF",
           "name": "fldads_threadmain",
           "return_type": "void*",
@@ -12578,7 +12113,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 160,
+          "line": 161,
           "kind": "NF",
           "name": "fldads_update_cache",
           "return_type": "void",
@@ -12618,7 +12153,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 33,
+          "line": 34,
           "kind": "NC",
           "name": "fldads_update_local_adimg",
           "return_type": "void",
@@ -12635,7 +12170,7 @@
         },
         {
           "file": "src/fld_adspot.c",
-          "line": 129,
+          "line": 130,
           "kind": "NF",
           "name": "fldads_update_local_adimg",
           "return_type": "void",
@@ -13262,7 +12797,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 6401,
+          "line": 6403,
           "kind": "NF",
           "name": "force_create_profile",
           "return_type": "void",
@@ -18803,7 +18338,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 75,
+          "line": 76,
           "kind": "NF",
           "name": "get_url_filename",
           "return_type": "const char*",
@@ -21739,7 +21274,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 25,
+          "line": 26,
           "kind": "NC",
           "name": "httpGetLastModified",
           "return_type": "time_t",
@@ -21758,64 +21293,7 @@
               "historical_type": "HTTPResponse",
               "candidate_type": "HTTPResponse",
               "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
+              "status": "AGREE"
             }
           ]
         },
@@ -21870,77 +21348,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 25
-        }
-      ],
-      "difficulty": "SUPERVISOR",
+      "status": "AGREE",
+      "type_layout_issues": [],
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -42120,7 +41530,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 6457,
+          "line": 6459,
           "kind": "NF",
           "name": "startMenuMusic",
           "return_type": "void",
@@ -42910,7 +42320,7 @@
         },
         {
           "file": "src/main.c",
-          "line": 6463,
+          "line": 6465,
           "kind": "NF",
           "name": "stopMenuMusic",
           "return_type": "void",
@@ -45188,24 +44598,24 @@
           "name": "update_game_menu",
           "return_type": "int",
           "parameter_types": [
-            "void*",
+            "BITMAP*",
             "Tmenu*",
             "Tmenu_params*",
             "Tcontrol*",
             "int",
             "int",
-            "int*"
+            "void**"
           ],
-          "declaration": "extern int update_game_menu (void *, Tmenu *, Tmenu_params *, Tcontrol *, int, int, int *);",
+          "declaration": "extern int update_game_menu (BITMAP *, Tmenu *, Tmenu_params *, Tcontrol *, int, int, void **);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "void*",
+            "BITMAP*",
             "Tmenu*",
             "Tmenu_params*",
             "Tcontrol*",
             "int",
             "int",
-            "int*"
+            "void**"
           ],
           "cu": "src/menu.c",
           "game_type_layouts": [
@@ -45239,24 +44649,24 @@
           "name": "update_game_menu",
           "return_type": "int",
           "parameter_types": [
-            "void*",
+            "BITMAP*",
             "Tmenu*",
             "Tmenu_params*",
             "Tcontrol*",
             "int",
             "int",
-            "int*"
+            "void**"
           ],
-          "declaration": "extern int update_game_menu (void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl, int x, int y, int *data);",
+          "declaration": "extern int update_game_menu (BITMAP *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl, int x, int y, void **data);",
           "canonical_return_type": "int",
           "canonical_parameter_types": [
-            "void*",
+            "BITMAP*",
             "Tmenu*",
             "Tmenu_params*",
             "Tcontrol*",
             "int",
             "int",
-            "int*"
+            "void**"
           ],
           "cu": "src/menu.c",
           "game_type_layouts": [
@@ -45284,9 +44694,9 @@
           ]
         }
       ],
-      "status": "CONFLICT",
+      "status": "AGREE",
       "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
+      "difficulty": null,
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
@@ -45967,669 +45377,6 @@
   ],
   "conflicts": [
     {
-      "function": "HTTPGet",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 80809
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 24,
-          "kind": "NC",
-          "name": "HTTPGet",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 32,
-          "kind": "NC",
-          "name": "HTTPGet",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 263,
-          "kind": "NF",
-          "name": "HTTPGet",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPGet (char *pURL);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 24
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "HTTPHead",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "const char*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 80757
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 23,
-          "kind": "NC",
-          "name": "HTTPHead",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 33,
-          "kind": "NC",
-          "name": "HTTPHead",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 270,
-          "kind": "NF",
-          "name": "HTTPHead",
-          "return_type": "HTTPResponse*",
-          "parameter_types": [
-            "char*"
-          ],
-          "declaration": "extern HTTPResponse *HTTPHead (char *pURL);",
-          "canonical_return_type": "HTTPResponse*",
-          "canonical_parameter_types": [
-            "char*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "return",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "return",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 23
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "destroyHTTPResponse",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "void",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 79477
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 26,
-          "kind": "NC",
-          "name": "destroyHTTPResponse",
-          "return_type": "void",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern void destroyHTTPResponse (HTTPResponse *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 26,
-          "kind": "NC",
-          "name": "destroyHTTPResponse",
-          "return_type": "void",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern void destroyHTTPResponse (HTTPResponse *);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 42,
-          "kind": "NF",
-          "name": "destroyHTTPResponse",
-          "return_type": "void",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern void destroyHTTPResponse (HTTPResponse *pResponse);",
-          "canonical_return_type": "void",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 26
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "fldads_get_random_ad",
       "historical": [
         {
@@ -46644,7 +45391,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 180,
+          "line": 181,
           "kind": "NF",
           "name": "fldads_get_random_ad",
           "return_type": "const FLDAdSpot*",
@@ -46833,7 +45580,7 @@
       "candidate_declarations": [
         {
           "file": "src/fld_adspot.c",
-          "line": 160,
+          "line": 161,
           "kind": "NF",
           "name": "fldads_update_cache",
           "return_type": "void",
@@ -48000,227 +46747,6 @@
       "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
     },
     {
-      "function": "httpGetLastModified",
-      "historical": [
-        {
-          "cu": "src/httpget.c",
-          "return_type": "time_t",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 79362
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/fld_adspot.c",
-          "line": 25,
-          "kind": "NC",
-          "name": "httpGetLastModified",
-          "return_type": "time_t",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern time_t httpGetLastModified (HTTPResponse *);",
-          "canonical_return_type": "time_t",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/fld_adspot.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "MISMATCH",
-              "historical_size": 20,
-              "candidate_size": 20,
-              "member_difference_count": 3,
-              "first_member_differences": [
-                {
-                  "member": "iNumHeaders",
-                  "historical": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 4,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "iPayloadSize",
-                  "historical": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "unsigned int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 16,
-                    "size": 4,
-                    "type": "int",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                },
-                {
-                  "member": "pHeaders",
-                  "historical": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "HTTPHeader *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  },
-                  "candidate": {
-                    "offset": 8,
-                    "size": 4,
-                    "type": "void *",
-                    "qualifiers": [],
-                    "bitfield": false
-                  }
-                }
-              ],
-              "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 35,
-          "kind": "NC",
-          "name": "httpGetLastModified",
-          "return_type": "time_t",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern time_t httpGetLastModified (HTTPResponse *);",
-          "canonical_return_type": "time_t",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/httpget.c",
-          "line": 294,
-          "kind": "NF",
-          "name": "httpGetLastModified",
-          "return_type": "time_t",
-          "parameter_types": [
-            "HTTPResponse*"
-          ],
-          "declaration": "extern time_t httpGetLastModified (HTTPResponse *pResponse);",
-          "canonical_return_type": "time_t",
-          "canonical_parameter_types": [
-            "HTTPResponse*"
-          ],
-          "cu": "src/httpget.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 1",
-              "historical_type": "HTTPResponse",
-              "candidate_type": "HTTPResponse",
-              "header": "include/recovered/HTTPResponse.h",
-              "status": "AGREE"
-            }
-          ]
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [
-        {
-          "position": "parameter 1",
-          "historical_type": "HTTPResponse",
-          "candidate_type": "HTTPResponse",
-          "header": "include/recovered/HTTPResponse.h",
-          "status": "MISMATCH",
-          "historical_size": 20,
-          "candidate_size": 20,
-          "member_difference_count": 3,
-          "first_member_differences": [
-            {
-              "member": "iNumHeaders",
-              "historical": {
-                "offset": 4,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 4,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "iPayloadSize",
-              "historical": {
-                "offset": 16,
-                "size": 4,
-                "type": "unsigned int",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 16,
-                "size": 4,
-                "type": "int",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            },
-            {
-              "member": "pHeaders",
-              "historical": {
-                "offset": 8,
-                "size": 4,
-                "type": "HTTPHeader *",
-                "qualifiers": [],
-                "bitfield": false
-              },
-              "candidate": {
-                "offset": 8,
-                "size": 4,
-                "type": "void *",
-                "qualifiers": [],
-                "bitfield": false
-              }
-            }
-          ],
-          "reason": "Complete aggregate layout/type differs despite any matching declaration spelling",
-          "cu": "src/fld_adspot.c",
-          "file": "src/fld_adspot.c",
-          "line": 25
-        }
-      ],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
       "function": "set_next_rank_message",
       "historical": [
         {
@@ -49125,135 +47651,6 @@
           ],
           "cu": "src/main.c",
           "game_type_layouts": []
-        }
-      ],
-      "status": "CONFLICT",
-      "type_layout_issues": [],
-      "difficulty": "SUPERVISOR",
-      "limit": "Explicit compiled aliases to included generated headers normalize only after complete DWARF layout equality. Same-named game aggregates are also checked by full layout. External library types retain declaration-spelling checks; declaration agreement is not a function or universal type proof."
-    },
-    {
-      "function": "update_game_menu",
-      "historical": [
-        {
-          "cu": "src/menu.c",
-          "return_type": "int",
-          "parameter_types": [
-            "BITMAP*",
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "int",
-            "int",
-            "void**"
-          ],
-          "variadic": false,
-          "calling_convention": null,
-          "die": 159395
-        }
-      ],
-      "candidate_declarations": [
-        {
-          "file": "src/menu.c",
-          "line": 50,
-          "kind": "NC",
-          "name": "update_game_menu",
-          "return_type": "int",
-          "parameter_types": [
-            "void*",
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "int",
-            "int",
-            "int*"
-          ],
-          "declaration": "extern int update_game_menu (void *, Tmenu *, Tmenu_params *, Tcontrol *, int, int, int *);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "void*",
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "int",
-            "int",
-            "int*"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tmenu",
-              "candidate_type": "Tmenu",
-              "header": "include/recovered/Tmenu.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tmenu_params",
-              "candidate_type": "Tmenu_params",
-              "header": "include/recovered/Tmenu_params.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
-        },
-        {
-          "file": "src/menu.c",
-          "line": 158,
-          "kind": "NF",
-          "name": "update_game_menu",
-          "return_type": "int",
-          "parameter_types": [
-            "void*",
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "int",
-            "int",
-            "int*"
-          ],
-          "declaration": "extern int update_game_menu (void *bmp, Tmenu *m, Tmenu_params *mp, Tcontrol *ctrl, int x, int y, int *data);",
-          "canonical_return_type": "int",
-          "canonical_parameter_types": [
-            "void*",
-            "Tmenu*",
-            "Tmenu_params*",
-            "Tcontrol*",
-            "int",
-            "int",
-            "int*"
-          ],
-          "cu": "src/menu.c",
-          "game_type_layouts": [
-            {
-              "position": "parameter 2",
-              "historical_type": "Tmenu",
-              "candidate_type": "Tmenu",
-              "header": "include/recovered/Tmenu.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 3",
-              "historical_type": "Tmenu_params",
-              "candidate_type": "Tmenu_params",
-              "header": "include/recovered/Tmenu_params.h",
-              "status": "AGREE"
-            },
-            {
-              "position": "parameter 4",
-              "historical_type": "Tcontrol",
-              "candidate_type": "Tcontrol",
-              "header": "include/recovered/Tcontrol.h",
-              "status": "AGREE"
-            }
-          ]
         }
       ],
       "status": "CONFLICT",
