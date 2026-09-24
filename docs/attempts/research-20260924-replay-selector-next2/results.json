@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "function": "replay_selector",
+  "question": "Does one source-level movement sound call after the key switch produce the historical single emitted play_menu_move call?",
+  "predictions": {
+    "one_emitted_call": "supports shared-site hypothesis; compare CFG and target residue",
+    "two_emitted_calls_or_collapsed_output": "eliminates source call-placement as the explanation",
+    "peer_loss": "retain diagnostic only"
+  },
+  "compiler": "locked TDM-2 / GCC 4.4.1 -O2",
+  "context": {
+    "emission_order": "current/native",
+    "prototypes": "disabled",
+    "src_replay_sha256": "a3ab23ce1f43d91c7f9e46d15e1f565576af5cc001be4cca1e74f104ac6f32b5",
+    "historical_predecessors": "15/15; replay_selector position 10"
+  },
+  "baseline": {
+    "receipt": "docs/attempts/tu-context/game-replay/replay-selector-next2-control-20260924.json",
+    "body": "docs/attempts/research-20260924-replay-selector-cfg/caller-call-count-candidate.c",
+    "source_sha256": "f5421c77965c1ef75a7aa5331c54cead933435d935db3be899a75eae429d8d1a",
+    "effective_identity": "a68b09981dc86ce7",
+    "bytes": [2791, 2845],
+    "frame": "0x27c",
+    "first_mismatch": 8,
+    "all_j_branches": 75,
+    "call_instructions": 60,
+    "play_menu_move_relocations": 2,
+    "exact_functions": 7,
+    "peers": ["get_sort_method", "set_sort_method", "hash", "destroy_replay", "update_file_list", "load_replay", "get_replay_property"]
+  },
+  "movement_flag": {
+    "receipt": "docs/attempts/tu-context/game-replay/replay-selector-next2-movement-flag-after-switch-20260924.json",
+    "source": "docs/attempts/research-20260924-replay-selector-next2/movement-flag-after-switch.c",
+    "source_sha256": "fefaa4161a4a530c3913f966e2cb3f03ceaa284c0d8a978fe7a2a33ef1a66903",
+    "effective_identity": "e12391350f863e6e",
+    "bytes": [2795, 2845],
+    "frame": "0x27c",
+    "first_mismatch": 8,
+    "all_j_branches": 75,
+    "call_instructions": 60,
+    "play_menu_move_relocations": 2,
+    "exact_functions": 7,
+    "peer_delta": {"gained": [], "lost": []},
+    "source_cgraph_play_menu_move_edges": 1
+  },
+  "historical": {
+    "bytes": 2845,
+    "frame": "0x46c",
+    "all_j_branches": 67,
+    "call_instructions": 59,
+    "play_menu_move_call_instructions": 1,
+    "call_offset": "0x70d"
+  },
+  "decision": "No recovery credit. One source/cgraph edge is expanded into two emitted play_menu_move calls; local call-placement branch closed. No exact peers gained or lost and first residue remains +8, so this does not change the next recovery decision.",
+  "probe_count": 2,
+  "hypothesis_rounds": 1
+}

@@ -1,0 +1,58 @@
+{
+  "task": "calc_replay_checksum",
+  "experiment": "reverse only the two additive terms of the final dynamic replay-data loop",
+  "compiler": "locked TDM-2 GCC 4.4.1",
+  "flags": [
+    "-O2",
+    "-mfpmath=387"
+  ],
+  "whole_tu": true,
+  "order": "historical",
+  "prototypes_added": false,
+  "prediction": "If final-loop operand order changes function-wide register pressure enough to affect the first accumulator assignment, the +21 register destination may change from candidate EDX to historical ECX; the +19 strict first mismatch (the shift immediate) may remain either way. Otherwise the destination remains EDX.",
+  "baseline": {
+    "label": "checksum-further-control-20260924",
+    "source_sha256": "a3ab23ce1f43d91c7f9e46d15e1f565576af5cc001be4cca1e74f104ac6f32b5",
+    "object_sha256": "18a92252720b44f13a70227bd2e36994fa3d83bc30e515943a09ce1af12ff924",
+    "strict_status": "DIFFER",
+    "candidate_size": 675,
+    "historical_size": 676,
+    "first_difference": 19,
+    "differing_positions": 631,
+    "effective_output_id": "6cf09815902f772b"
+  },
+  "variant": {
+    "label": "checksum-further-reverse-final-data-20260924",
+    "source_sha256": "5b7f98fd31e8699f3deea74471a11beeb6d9681008216354007c3e70960cffc",
+    "object_sha256": "98afe89a60947fb74aca986467161bb23715cdbad231ff1cd56d9a2e566fc385",
+    "strict_status": "DIFFER",
+    "candidate_size": 680,
+    "historical_size": 676,
+    "first_difference": 19,
+    "differing_positions": 636,
+    "effective_output_id": "4a554e4bb653fe17",
+    "initial_accumulator_register": "EDX, unchanged",
+    "exact_functions": [
+      "get_sort_method",
+      "set_sort_method",
+      "hash",
+      "destroy_replay",
+      "update_file_list",
+      "load_replay",
+      "get_replay_property"
+    ],
+    "gains": [],
+    "losses": [],
+    "frame_size": 44,
+    "branch_count": 6,
+    "checksum_relocations": 0
+  },
+  "next_decision_changed": false,
+  "stop_reason": "The tested later-loop operand-order cause is eliminated; no new evidence supports another local operand-order search.",
+  "receipts": [
+    "docs/attempts/tu-context/game-replay/checksum-further-control-20260924.json",
+    "docs/attempts/tu-context/game-replay/checksum-further-reverse-final-data-20260924.json",
+    "build/tu-context/game-replay/checksum-further-control-20260924/comparison.json",
+    "build/tu-context/game-replay/checksum-further-reverse-final-data-20260924/comparison.json"
+  ]
+}
