@@ -40,6 +40,50 @@ class TypedCallerTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.run_plan('void f(int *p) {}\n',kind='NF',params=['int*'])
         with self.assertRaises(ValueError):self.run_plan('void f(void *p, int n) {}\n',kind='NF',params=['void*','int'])
 
+    def test_cross_cu_void_to_int_typed_interface_is_bounded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); (root/'src').mkdir(); (root/'include/recovered').mkdir(parents=True)
+            (root/'include/recovered/Tcontrol.h').write_text('typedef struct { int x; } Tcontrol;\n')
+            profile='#include "recovered/Tcontrol.h"\nvoid f(void *p);\nvoid f(void *p) { use(p); }\n'
+            menu='extern void f(void *p);\nvoid caller(void *p) { f(p); }\n'
+            (root/'src/profile.c').write_bytes(profile.encode())
+            (root/'src/menu.c').write_bytes(menu.encode())
+            for target,inputs in (('game-profile',{'src/profile.c':{},'include/recovered/Tcontrol.h':{}}),
+                                  ('game-menu',{'src/menu.c':{}})):
+                (root/(target+'.json')).write_text(json.dumps({'build':{'target':target,'local_inputs':inputs}}))
+            row={'function':'f','historical':[{'cu':'src/profile.c','return_type':'int','parameter_types':['Tcontrol*'],'variadic':False,'calling_convention':None}],
+                 'candidate_declarations':[
+                     {'cu':'src/profile.c','file':'src/profile.c','line':2,'kind':'NC','return_type':'void','parameter_types':['void*']},
+                     {'cu':'src/profile.c','file':'src/profile.c','line':3,'kind':'NF','return_type':'void','parameter_types':['void*']},
+                     {'cu':'src/menu.c','file':'src/menu.c','line':1,'kind':'OC','return_type':'void','parameter_types':['void*']}],
+                 'type_layout_issues':[{'cu':d['cu'],'file':d['file'],'line':d['line'],'status':'UNAVAILABLE','candidate_type':'void'} for d in [
+                     {'cu':'src/profile.c','file':'src/profile.c','line':2},
+                     {'cu':'src/profile.c','file':'src/profile.c','line':3},
+                     {'cu':'src/menu.c','file':'src/menu.c','line':1}]]}
+            ledger={'src/profile.c':{'verified_report':'game-profile.json'},'src/menu.c':{'verified_report':'game-menu.json'}}
+            def targets(_ledger,files): return ['game-menu','game-profile']
+            with patch('typed_interface_tasks.ROOT',root), patch('type_graph.graph',return_value=SimpleNamespace(game_types={'Tcontrol':[]})), \
+                 patch('interface_tasks.affected_targets',side_effect=targets):
+                result=plan(row,ledger)
+            edits={file:[] for file in result['sources']}
+            for edit in result['changes']: edits[edit['file']].append(edit)
+            self.assertEqual(result['sources'],['src/menu.c','src/profile.c'])
+            self.assertEqual(result['affected_targets'],['game-menu','game-profile'])
+            self.assertEqual(patch_text(menu,edits['src/menu.c']),
+                             '#include "recovered/Tcontrol.h"\nextern int f(Tcontrol*);\nvoid caller(void *p) { f(p); }\n')
+            self.assertEqual(patch_text(profile,edits['src/profile.c']),
+                             '#include "recovered/Tcontrol.h"\nint f(Tcontrol*);\nint f(Tcontrol *p) { use(p); }\n')
+            # Neither a returned value nor a definition return statement is authorized.
+            (root/'src/menu.c').write_bytes(b'extern void f(void *p);\nint caller(void *p) { return f(p); }\n')
+            with patch('typed_interface_tasks.ROOT',root), patch('type_graph.graph',return_value=SimpleNamespace(game_types={'Tcontrol':[]})), \
+                 patch('interface_tasks.affected_targets',side_effect=targets):
+                with self.assertRaises(ValueError): plan(row,ledger)
+            (root/'src/menu.c').write_bytes(menu.encode())
+            (root/'src/profile.c').write_bytes(profile.replace('{ use(p); }','{ use(p); return; }').encode())
+            with patch('typed_interface_tasks.ROOT',root), patch('type_graph.graph',return_value=SimpleNamespace(game_types={'Tcontrol':[]})), \
+                 patch('interface_tasks.affected_targets',side_effect=targets):
+                with self.assertRaises(ValueError): plan(row,ledger)
+
     def test_library_typed_prototype_follows_the_includes(self):
         mutate=lambda r:r['historical'][0].update(parameter_types=['BITMAP*'])
         text='/* banner */\n#include <stdio.h>\nextern int z;\n#include <allegro.h>\nint caller(void) { f(0); return 0; }\n'

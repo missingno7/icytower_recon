@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "scope": "isolated diagnostic pass trace; no maintained sources or ledgers changed",
+  "dump_neutrality": {
+    "candidate": "split-guards.c in historical-order TU overlay",
+    "flags": ["none", "-fdump-tree-all", "-fdump-tree-all -fdump-rtl-all"],
+    "play": {"status": "DIFFER", "size": 17416},
+    "function_statuses": {"FUNCTION_MATCH": 63, "DIFFER": 18, "CODEGEN_SIMILAR": 1},
+    "equal_projections": ["play instruction bytes", "play relocations", "play direct transfers", "function status counts", "complete object relocation count"],
+    "result": "byte-neutral effective code for this probe"
+  },
+  "common_guard": {
+    "before": "main.c.056t.phiprop: guard read _598 and switch read _600 are distinct",
+    "after": "main.c.057t.fre: switch operand reuses _598",
+    "first_observed_pass": "FRE (full redundancy elimination)",
+    "limits": "Observed dump boundary only; not an internal pass microtrace"
+  },
+  "path_local_add_floor": {
+    "before": "main.c.179r.dse2 has three collision_type loads",
+    "after": "main.c.181r.csa has two; same add-floor predecessor selector copy disappears",
+    "limits": "No no-floor bounds check exists in this source; not evidence about historical no-floor validation"
+  },
+  "outcome": "mechanism observed; no discriminating new source hypothesis; no FUNCTION_MATCH, OBJECT_MATCH, or CU_MATCH claim",
+  "preserved_neighbors": ["63 exact peers", "new_game", "run_demo"],
+  "partial_compile_excluded": "common-guard-passes/treertl/ did not produce object/comparison and supports no claim"
+}

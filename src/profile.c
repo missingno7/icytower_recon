@@ -65,7 +65,7 @@ extern void solid_mode(void);
 #include "recovered/Tprofile.h"
 typedef Tprofile Tprofile_load;
 
-extern int get_profile_dir_for_profile(char *buffer, unsigned int buflen,
+extern int get_profile_dir_for_profile(char *buffer, size_t buflen,
                                        const char *profile);
 extern Tcontrol *get_controls(void);
 extern void load_control(Tcontrol*, FILE*);
@@ -125,7 +125,7 @@ char *profile_data_page_basic(Tprofile_basic *p);
 char *profile_data_page_advanced(Tprofile_advanced *p);
 int save_profile(Tprofile_create *p);
 int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
-void view_profile(void *profile);
+int view_profile(Tprofile*);
 
 /* Forward declarations; definitions follow in their original source order. */
 unsigned int hash2(unsigned int a);
@@ -142,7 +142,7 @@ char *profile_data_page_basic(Tprofile_basic *p);
 char *profile_data_page_advanced(Tprofile_advanced *p);
 int save_profile(Tprofile_create *p);
 int draw_buffer(BITMAP *bmp, char *buffer, int x, int y);
-void view_profile(void *profile);
+int view_profile(Tprofile*);
 
 /* Historical CU: F:\projects\icytower\trunk\source\profile.c
  * Ownership: GAME
@@ -602,7 +602,7 @@ int draw_buffer(BITMAP *bmp, char *buffer, int x, int y)
     return pos;
 }
 
-void view_profile(void *profile)
+int view_profile(Tprofile *profile)
 {
     char *data_basic;
     char *data_advanced;

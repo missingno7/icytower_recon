@@ -1,4 +1,4 @@
-"""Bounded caller-only prototypes using visible or newly included canonical types."""
+"""Bounded typed declarations using visible or newly included canonical types."""
 import re
 from common import ROOT,read_json,identity
 from source_scope import sanitized
@@ -48,6 +48,33 @@ def call_values_unused(clean,name):
     return True
 
 
+def body_has_return_statement(clean,name,line):
+    """Return whether a function definition contains any return statement."""
+    from interface_tasks import declaration_site
+    _,_,params_end=declaration_site(clean,name,line)
+    opening=clean.find('{',params_end+1)
+    if opening<0: raise ValueError('Definition body is unavailable for return-type review')
+    depth=0
+    for end in range(opening,len(clean)):
+        depth+=(clean[end]=='{')-(clean[end]=='}')
+        if depth==0:
+            return bool(re.search(r'\breturn\b',clean[opening+1:end]))
+    raise ValueError('Definition body is unbalanced')
+
+
+def void_to_int_is_safe(row,declaration,text,source_texts):
+    """Allow only discarded int results and a void definition with no return statement."""
+    from interface_tasks import source_text
+    name=row['function']
+    if declaration['kind']=='NF':
+        if body_has_return_statement(sanitized(text),name,declaration['line']): return False
+        for caller in row['candidate_declarations']:
+            caller_text=source_text(caller['file'],source_texts,ROOT)
+            if caller['kind']!='NF' and not call_values_unused(sanitized(caller_text),name): return False
+        return True
+    return call_values_unused(sanitized(text),name)
+
+
 def plan(row,ledger,source_texts=None):
     from interface_tasks import signature,BUILTINS,prototype,declaration_site,patch_text,affected_targets,source_text,text_identity
     from interfaces import split_params,parameter_type
@@ -82,8 +109,6 @@ def plan(row,ledger,source_texts=None):
         if declaration['kind'] not in ('IC','NC','OC','NF'): raise ValueError('Unsupported declaration kind for a typed repair')
         return_repair=None
         declared_return=declaration.get('canonical_return_type',declaration['return_type'])
-        if declaration['kind']=='NF' and declared_return!=expected['return_type']:
-            raise ValueError('Typed repair cannot change a definition return type')
         if declared_return!=expected['return_type']:
             if declaration['kind']=='IC':
                 # An implicit call declares int; the prototype may restore void or a game pointer only
@@ -93,6 +118,9 @@ def plan(row,ledger,source_texts=None):
                 return_repair='IMPLICIT_VALUES_UNUSED'
             elif typed_return and declaration['return_type']==placeholder_for(expected['return_type']):
                 return_repair=expected['return_type']
+            elif (expected['return_type']=='int' and declaration['return_type']=='void'
+                  and void_to_int_is_safe(row,declaration,source_text(declaration['file'],source_texts,ROOT),source_texts)):
+                return_repair='int'
             else: raise ValueError('Return type change is not a caller-only typed parameter repair')
         if any(x['status']!='UNAVAILABLE' or x['candidate_type'] not in ('void','/*???*/') for x in issues): raise ValueError('Existing aggregate conflicts require a separate repair')
         file=declaration['file']
@@ -114,22 +142,21 @@ def plan(row,ledger,source_texts=None):
                 for source in report['build']['local_inputs']:
                     if source.startswith(('src/','include/')) and re.search(r'\b'+re.escape(type_name)+r'\b',sanitized(source_text(source,source_texts,ROOT))):
                         raise ValueError('Canonical type name already occurs outside its generated header: '+type_name)
-            prefix+='#include "recovered/'+type_name+'.h"'+newline
+                prefix+='#include "recovered/'+type_name+'.h"'+newline
             proof_headers[header]=identity(ROOT/header)
         insertion=len(prefix) if text.startswith(prefix) else 0
         if insertion: prefix=''
         if declaration['kind']=='IC':
             if library_names-library: raise ValueError('Library pointee lacks owning-CU layout evidence: '+', '.join(sorted(library_names-library)))
-            if library_names and not prefix:
-                # A library type is declared by an existing include, so the prototype must follow the
-                # last include that precedes the first definition; the file top would not see the type.
+            if not prefix:
+                # A canonical type already supplied by an include must be visible before this prototype.
                 insertion=after_leading_includes(text)
-                if insertion is None: raise ValueError('No include precedes the first definition for a library-typed prototype')
+                if insertion is None: raise ValueError('No include precedes the first definition for a typed prototype')
             prefix+=prototype(expected,name)+newline
             edits=[]
         elif declaration['kind']=='NF':
-            # Definition: retype only void-pointer placeholder parameters in place. Parameter names,
-            # spacing, the return type and the body are untouched; the emission gate decides.
+            # Definition: retype only void-pointer placeholder parameters. A narrowly checked
+            # void-to-int repair is allowed when all calls discard the result and no return occurs.
             pos,start,end=declaration_site(text,name,declaration['line'])
             if not sanitized(text[end+1:]).lstrip().startswith('{'): raise ValueError('Definition is not followed by its body')
             params=text[start:end];parts=split_params(params);actual_types=declaration['parameter_types']
@@ -149,6 +176,11 @@ def plan(row,ledger,source_texts=None):
                 span_start=start+at+voids[0].start()
                 edits.append({'start':span_start,'end':span_start+4,'before':'void','after':pointee[1],
                               'reason':'Restore the historical parameter type from its void-pointer placeholder; parameter name and body unchanged'})
+            if return_repair:
+                ret=re.search(r'\bvoid\s+$',text[:pos])
+                if not ret: raise ValueError('Cannot safely locate the void definition return type')
+                edits.append({'start':ret.start(),'end':ret.end(),'before':ret[0],'after':'int ',
+                              'reason':'Restore the historical int return type; all callers discard it and the body has no return statement'})
             if not edits: raise ValueError('No definition placeholder to repair')
         else:
             pos,start,end=declaration_site(text,name,declaration['line'])
@@ -167,10 +199,13 @@ def plan(row,ledger,source_texts=None):
             if replacement!=text[start:end]:
                 edits.append({'start':start,'end':end,'before':text[start:end],'after':replacement,'reason':'Restore complete historical caller prototype'})
             if return_repair:
-                ret=re.search(r'\bvoid\s*(\*+)\s*$',text[:pos])
-                if not ret or len(ret[1])!=return_repair.count('*'): raise ValueError('Cannot safely locate the void-pointer return placeholder')
-                edits.append({'start':ret.start(),'end':ret.end(),'before':ret[0],'after':ret[0].replace('void',return_repair.rstrip('*').strip(),1),
-                              'reason':'Restore the historical caller return type from its void-pointer placeholder'})
+                pointer_return=bool(typed_return and return_repair==expected['return_type'])
+                ret=re.search(r'\bvoid\s*(\*+)\s*$' if pointer_return else r'\bvoid\s+$',text[:pos])
+                if not ret or (pointer_return and len(ret[1])!=return_repair.count('*')):
+                    raise ValueError('Cannot safely locate the void caller return placeholder')
+                after=ret[0].replace('void',return_repair.rstrip('*').strip(),1)
+                edits.append({'start':ret.start(),'end':ret.end(),'before':ret[0],'after':after,
+                              'reason':'Restore the historical caller return type after proving the call result is discarded'})
         if prefix: edits.append({'start':insertion,'end':insertion,'before':'','after':prefix,'reason':'Introduce generated historical type visibility and caller prototype'})
         for edit in edits:
             edit.update(file=file,line=declaration['line']);key=(file,edit['start'],edit['end'])

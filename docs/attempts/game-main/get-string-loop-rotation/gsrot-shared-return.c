@@ -1,0 +1,69 @@
+int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
+               int pos_x, int pos_y, int colour, int bg_color)
+{
+    BITMAP *block = create_bitmap(w, text_height(f) + 2);
+    char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789.!_";
+    int i = strlen(string);
+    int tick;
+    int c;
+
+    if (!block)
+        return -1;
+    blit(bmp, block, pos_x - 1, pos_y - 1, 0, 0, block->w, block->h);
+    while (key[KEY_ENTER] || key[KEY_SPACE])
+        ;
+    clear_keybuf();
+    tick = 0;
+    for (;;) {
+        if (closeButtonClicked) {
+            destroy_bitmap(block);
+            return 0;
+        }
+        tick++;
+        cycle_count = 0;
+        checkMenuFocus();
+        string[i] = (tick & 8) ? '|' : ' ';
+        string[i + 1] = 0;
+        vsync();
+        blit(block, bmp, 0, 0, pos_x - 1, pos_y - 1, block->w, block->h);
+        if (bg_color >= 0)
+            rectfill(bmp, pos_x, pos_y, pos_x + block->w - 1,
+                     pos_y + block->h - 3, bg_color);
+        textout_ex(bmp, f, string, pos_x + 2, pos_y, colour, -1);
+        blit_to_screen(bmp);
+        if (!keypressed())
+            continue;
+        c = readkey();
+        switch (c >> 8) {
+        case KEY_ESC:
+            string[i] = 0;
+            c = -1;
+            goto leave_string;
+        case KEY_TAB:
+        case KEY_UP:
+        case KEY_DOWN:
+            string[i] = 0;
+            c = -2;
+            goto leave_string;
+        case KEY_ENTER:
+            string[i] = 0;
+            c = 0;
+            goto leave_string;
+        case KEY_BACKSPACE:
+            i--;
+            if (i < 0)
+                i = 0;
+            break;
+        default:
+            if (i < max_chars - 2 && strchr(letters, c) &&
+                ((c >> 8) != KEY_SPACE || i) &&
+                text_length(f, string) < w - 9)
+                string[i++] = (char)c;
+        }
+        while (!cycle_count)
+            rest(2);
+    }
+leave_string:
+    destroy_bitmap(block);
+    return c;
+}

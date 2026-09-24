@@ -1,0 +1,14 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "handle_player_collision_original": "docs/attempts/collision-sound-family-20260924/retained-bodies/handle_player_collision_original.c",
+    "handle_player_collision_old": "docs/attempts/collision-sound-family-20260924/retained-bodies/handle_player_collision_old.c",
+    "handle_player_collision_combo": "docs/attempts/collision-sound-family-20260924/retained-bodies/handle_player_collision_combo.c",
+    "handle_player_collision_vector_2": "docs/attempts/collision-sound-family-20260924/retained-bodies/handle_player_collision_vector_2.c",
+    "handle_player_collision_vector": "docs/attempts/collision-sound-family-20260924/retained-bodies/handle_player_collision_vector.c"
+  },
+  "evidence": "Original EXE disassembly loads absolute data address 0x4dd300 at every collision-family play_sound argument. Census DWARF places sounds at 0x4dd2e0 and combo_sound at 0x4dd280, so that address is sounds[8] (base + 8*4), not combo_sound[0]. The seven sound loads are: original 0x407f9c; old 0x408200/0x408330; combo 0x408724/0x408850; vector_2 0x408bb4; vector 0x40902c/0x409088. Each retained definition was extracted from the successful isolated all-sounds[8] TU probe and mechanically verified to equal the maintained definition except for exactly these seven token substitutions across the five bodies. The diagnostic TU probe compiled OK with 63/82 FUNCTION_MATCH before/after, no gains/losses; all five collision functions still DIFFER, so these are source-backed relocation-owner corrections and do not confer function proof. Retained-body extraction validation: each body file is exactly one complete definition from the previously probed all-sounds[8] TU; against the maintained src/main.c island, its sole difference is the stated token replacement (per-function counts 1/2/2/1/1)."
+}

@@ -10,10 +10,10 @@
     "SOURCE_CONTROL_FLOW_SHAPE": 8,
     "RELOCATION_OR_LITERAL_LAYOUT": 2,
     "STACK_FRAME_LAYOUT": 14,
-    "REGISTER_OR_INSTRUCTION_SELECTION": 11,
+    "REGISTER_OR_INSTRUCTION_SELECTION": 10,
     "COMPILER_CONTEXT_DEPENDENCY": 3,
     "SAME_CU_CALL_LAYOUT": 15,
-    "LITERAL_CONTENT_DIFFERENCE": 1,
+    "LITERAL_CONTENT_DIFFERENCE": 2,
     "INSTRUCTION_ORDER": 1,
     "UNKNOWN_SUPERVISOR": 2,
     "STATIC_DATA_LAYOUT": 1
@@ -495,35 +495,6 @@
       "prerequisite_tasks": []
     },
     {
-      "function": "get_profile_dir_for_profile",
-      "source": "src/directories.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Requires type/return/body interpretation: unsigned int -> size_t",
-      "begin_command": "python tools/interface_task.py begin get_profile_dir_for_profile",
-      "verification_command": "python tools/interface_task.py check get_profile_dir_for_profile",
-      "promotion_command": "python tools/interface_task.py promote get_profile_dir_for_profile",
-      "state": "INTERFACE_REPAIR",
-      "status": "INTERFACE_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "INTERFACE_DECLARATION",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
-      "size": 0,
-      "prerequisite_for_count": 1,
-      "prerequisite_for": [
-        {
-          "source": "src/profile.c",
-          "function": "create_profile",
-          "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "function": "fldads_get_random_ad",
       "source": "src/fld_adspot.c",
       "sources": null,
@@ -780,76 +751,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "function": "view_profile",
-      "source": "src/profile.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin view_profile",
-      "verification_command": "python tools/interface_task.py check view_profile",
-      "promotion_command": "python tools/interface_task.py promote view_profile",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_EVIDENCE_INCOMPLETE",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_INCOMPLETE",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/view_profile.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/menu.c",
-          "function": "handle_menu",
-          "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "function": "draw_replay_selector",
-      "source": "src/replay.c",
-      "sources": null,
-      "difficulty": "SUPERVISOR",
-      "priority": -20,
-      "reason": "Repair or establish the named aggregate layouts before editing this interface",
-      "begin_command": "python tools/interface_task.py begin draw_replay_selector",
-      "verification_command": "python tools/interface_task.py check draw_replay_selector",
-      "promotion_command": "python tools/interface_task.py promote draw_replay_selector",
-      "state": "TYPE_LAYOUT_BLOCKED",
-      "status": "TYPE_LAYOUT_CONFLICT",
-      "body_edit_allowed": false,
-      "difference_class": "TYPE_LAYOUT_CONFLICT",
-      "task_kind": "INTERFACE",
-      "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
-      "size": 0,
-      "prerequisite_for_count": 2,
-      "prerequisite_for": [
-        {
-          "source": "src/replay.c",
-          "function": "draw_replay_selector",
-          "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "source": "src/replay.c",
-          "function": "replay_selector",
-          "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "get_string",
@@ -861,7 +762,7 @@
       "first_difference": {
         "offset": 91,
         "original_va": 4242591,
-        "candidate_byte": 114,
+        "candidate_byte": 161,
         "original_byte": 155
       },
       "verification_command": "python tools/check_function.py game-main get_string",
@@ -921,6 +822,31 @@
       "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
       "size": 1938,
       "candidate_card": "docs/current/functions/main/_mangled_main.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "replay_selector",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -20,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 9,
+        "original_va": 4313697,
+        "candidate_byte": 2,
+        "original_byte": 4
+      },
+      "verification_command": "python tools/check_function.py game-replay replay_selector",
+      "begin_command": "python tools/grinder_task.py begin game-replay replay_selector",
+      "promotion_command": "python tools/promote_function.py game-replay replay_selector",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 2845,
+      "candidate_card": "docs/current/functions/replay/replay_selector.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
     },
@@ -997,64 +923,6 @@
       "dependency_priority_bonus": 0
     },
     {
-      "task_kind": "TYPE_VIEW",
-      "function": "view_replay_Treplay_post",
-      "source": "src/replay.c",
-      "sources": [
-        "src/replay.c"
-      ],
-      "difficulty": "SUPERVISOR",
-      "priority": -25,
-      "reason": "Non-pointer or size-dependent view use requires supervisor review",
-      "state": "TYPE_VIEW_REPAIR",
-      "status": "PARTIAL_STRUCT_VIEW",
-      "body_edit_allowed": false,
-      "difference_class": "CANONICAL_TYPE_VIEW",
-      "begin_command": "python tools/interface_task.py begin view_replay_Treplay_post",
-      "verification_command": "python tools/interface_task.py check view_replay_Treplay_post",
-      "promotion_command": "python tools/interface_task.py promote view_replay_Treplay_post",
-      "size": 0,
-      "candidate_card": "docs/current/type-views/view_replay_Treplay_post.json",
-      "prerequisite_for_count": 0,
-      "prerequisite_for": [],
-      "omitted_dependents": 0,
-      "dependency_priority_bonus": 0
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "create_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "first_difference": {
-        "offset": 69,
-        "original_va": 4303309,
-        "candidate_byte": 125,
-        "original_byte": 117
-      },
-      "verification_command": "python tools/check_function.py game-profile create_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile create_profile",
-      "promotion_command": "python tools/promote_function.py game-profile create_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: get_profile_dir_for_profile",
-      "size": 823,
-      "candidate_card": "docs/current/functions/profile/create_profile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "get_profile_dir_for_profile",
-          "candidate_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "handle_player_collision_combo",
@@ -1078,116 +946,6 @@
       "candidate_card": "docs/current/functions/main/handle_player_collision_combo.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
-    },
-    {
-      "source": "src/profile.c",
-      "target": "game-profile",
-      "function": "view_profile",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "UNKNOWN_SUPERVISOR",
-      "first_difference": {
-        "offset": 62,
-        "original_va": 4299562,
-        "candidate_byte": 232,
-        "original_byte": 160
-      },
-      "verification_command": "python tools/check_function.py game-profile view_profile",
-      "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
-      "promotion_command": "python tools/promote_function.py game-profile view_profile",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 2249,
-      "candidate_card": "docs/current/functions/profile/view_profile.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "set_next_rank_message",
-          "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "view_profile",
-          "candidate_card": "docs/current/interfaces/view_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "replay_selector",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 9,
-        "original_va": 4313697,
-        "candidate_byte": 2,
-        "original_byte": 4
-      },
-      "verification_command": "python tools/check_function.py game-replay replay_selector",
-      "begin_command": "python tools/grinder_task.py begin game-replay replay_selector",
-      "promotion_command": "python tools/promote_function.py game-replay replay_selector",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 2845,
-      "candidate_card": "docs/current/functions/replay/replay_selector.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_replay_selector",
-          "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
-    },
-    {
-      "source": "src/replay.c",
-      "target": "game-replay",
-      "function": "draw_replay_selector",
-      "status": "DIFFER",
-      "state": "SOURCE_DIFFER",
-      "priority": -25,
-      "difficulty": "SUPERVISOR",
-      "difference_class": "STACK_FRAME_LAYOUT",
-      "first_difference": {
-        "offset": 8,
-        "original_va": 4308576,
-        "candidate_byte": 140,
-        "original_byte": 156
-      },
-      "verification_command": "python tools/check_function.py game-replay draw_replay_selector",
-      "begin_command": "python tools/grinder_task.py begin game-replay draw_replay_selector",
-      "promotion_command": "python tools/promote_function.py game-replay draw_replay_selector",
-      "body_edit_allowed": true,
-      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
-      "size": 3726,
-      "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
-      "task_kind": "FUNCTION_BODY",
-      "prerequisite_tasks": [
-        {
-          "function": "draw_replay_selector",
-          "candidate_card": "docs/current/interfaces/draw_replay_selector.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        }
-      ]
     },
     {
       "task_kind": "STATIC_SCOPE",
@@ -1335,7 +1093,7 @@
       "begin_command": "python tools/grinder_task.py begin game-menu handle_menu",
       "promotion_command": "python tools/promote_function.py game-menu handle_menu",
       "body_edit_allowed": true,
-      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu, view_profile",
+      "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu",
       "size": 1120,
       "candidate_card": "docs/current/functions/menu/handle_menu.json",
       "task_kind": "FUNCTION_BODY",
@@ -1346,14 +1104,6 @@
           "difficulty": "SUPERVISOR",
           "state": "LOCAL_INTERFACE_CONFLICT",
           "planned_in_caller_cu": true,
-          "limit": "Must reverify the caller after repair; other blockers may remain."
-        },
-        {
-          "function": "view_profile",
-          "candidate_card": "docs/current/interfaces/view_profile.json",
-          "difficulty": "SUPERVISOR",
-          "state": "LOCAL_INTERFACE_CONFLICT",
-          "planned_in_caller_cu": false,
           "limit": "Must reverify the caller after repair; other blockers may remain."
         }
       ]
@@ -1758,6 +1508,31 @@
       "prerequisite_tasks": []
     },
     {
+      "source": "src/replay.c",
+      "target": "game-replay",
+      "function": "draw_replay_selector",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -120,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "first_difference": {
+        "offset": 8,
+        "original_va": 4308576,
+        "candidate_byte": 140,
+        "original_byte": 156
+      },
+      "verification_command": "python tools/check_function.py game-replay draw_replay_selector",
+      "begin_command": "python tools/grinder_task.py begin game-replay draw_replay_selector",
+      "promotion_command": "python tools/promote_function.py game-replay draw_replay_selector",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 3726,
+      "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": []
+    },
+    {
       "source": "src/main.c",
       "target": "game-main",
       "function": "main_menu_callback",
@@ -1781,6 +1556,40 @@
       "candidate_card": "docs/current/functions/main/main_menu_callback.json",
       "task_kind": "FUNCTION_BODY",
       "prerequisite_tasks": []
+    },
+    {
+      "source": "src/profile.c",
+      "target": "game-profile",
+      "function": "view_profile",
+      "status": "DIFFER",
+      "state": "SOURCE_DIFFER",
+      "priority": -165,
+      "difficulty": "SUPERVISOR",
+      "difference_class": "UNKNOWN_SUPERVISOR",
+      "first_difference": {
+        "offset": 62,
+        "original_va": 4299562,
+        "candidate_byte": 232,
+        "original_byte": 160
+      },
+      "verification_command": "python tools/check_function.py game-profile view_profile",
+      "begin_command": "python tools/grinder_task.py begin game-profile view_profile",
+      "promotion_command": "python tools/promote_function.py game-profile view_profile",
+      "body_edit_allowed": true,
+      "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first.",
+      "size": 2249,
+      "candidate_card": "docs/current/functions/profile/view_profile.json",
+      "task_kind": "FUNCTION_BODY",
+      "prerequisite_tasks": [
+        {
+          "function": "set_next_rank_message",
+          "candidate_card": "docs/current/interfaces/set_next_rank_message.json",
+          "difficulty": "SUPERVISOR",
+          "state": "LOCAL_INTERFACE_CONFLICT",
+          "planned_in_caller_cu": true,
+          "limit": "Must reverify the caller after repair; other blockers may remain."
+        }
+      ]
     },
     {
       "source": "src/main.c",

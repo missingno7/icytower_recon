@@ -168,7 +168,7 @@
       },
       "candidate": {
         "name": "itr_file_list",
-        "die": 15572,
+        "die": 15542,
         "scope": [
           "GLOBAL"
         ],
@@ -184,7 +184,7 @@
           "element": {
             "kind": "structure_type",
             "size": 24,
-            "type": "struct Treplay_post",
+            "type": "struct {\n    char *full_path;\n    char directory;\n    char parent;\n    int version;\n    int score;\n    int floor;\n    int combo;\n} ",
             "members": [
               {
                 "name": "full_path",
@@ -216,25 +216,6 @@
                   "size": 1,
                   "type": "char",
                   "encoding": "6\t(signed char)"
-                }
-              },
-              {
-                "name": "reserved",
-                "offset": 6,
-                "bitfield": false,
-                "layout": {
-                  "kind": "array_type",
-                  "size": 2,
-                  "type": "char [2]",
-                  "dimensions": [
-                    2
-                  ],
-                  "element": {
-                    "kind": "base_type",
-                    "size": 1,
-                    "type": "char",
-                    "encoding": "6\t(signed char)"
-                  }
                 }
               },
               {
@@ -294,11 +275,11 @@
             "section_name": "COMMON"
           }
         ],
-        "declaration_line": 54,
+        "declaration_line": 44,
         "declaration_file": "src/replay.c",
         "section": "COMMON"
       },
-      "state": "STORAGE_TYPE_DIFFERS",
+      "state": "COMMON_DECLARATION_AGREES",
       "owner_rejection": [],
       "candidate_alternatives": []
     },
@@ -335,7 +316,7 @@
       },
       "candidate": {
         "name": "num_itr_files",
-        "die": 15600,
+        "die": 15570,
         "scope": [
           "GLOBAL"
         ],
@@ -357,7 +338,7 @@
             "section_name": "COMMON"
           }
         ],
-        "declaration_line": 55,
+        "declaration_line": 45,
         "declaration_file": "src/replay.c",
         "section": "COMMON"
       },
@@ -399,7 +380,7 @@
       },
       "candidate": {
         "name": "sort_method",
-        "die": 15490,
+        "die": 15460,
         "scope": [
           "GLOBAL"
         ],
@@ -421,7 +402,7 @@
             "section_name": "COMMON"
           }
         ],
-        "declaration_line": 25,
+        "declaration_line": 26,
         "declaration_file": "src/replay.c",
         "section": "COMMON"
       },
@@ -433,7 +414,7 @@
   "unpaired_candidates": [
     {
       "name": "replay_header",
-      "die": 14636,
+      "die": 14606,
       "scope": [
         "GLOBAL"
       ],
@@ -463,7 +444,7 @@
           "section_name": ".data"
         }
       ],
-      "declaration_line": 56,
+      "declaration_line": 46,
       "declaration_file": "src/replay.c",
       "candidate_offset": 0,
       "section": ".data"
@@ -471,8 +452,7 @@
   ],
   "counts": {
     "CANDIDATE_DECLARATION_MISSING": 1,
-    "COMMON_DECLARATION_AGREES": 2,
-    "STORAGE_TYPE_DIFFERS": 1
+    "COMMON_DECLARATION_AGREES": 3
   },
   "limit": "Declaration correspondence and ownership gaps only. Common declarations do not prove allocation order. Missing names are never silently paired by similar content."
 }

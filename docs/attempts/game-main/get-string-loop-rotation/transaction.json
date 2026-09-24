@@ -1,0 +1,10 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "get_string": "docs/attempts/game-main/get-string-loop-rotation/gsrot-keypressed-guard.c"
+  },
+  "evidence": "The original get_string branch at function offset 502 sends keypressed() false to the cycle_count test at offset 232 and its rest(2) poll at offset 660. The maintained if (!keypressed()) continue instead skips that wait. This retained body changes only the no-key edge to reach the wait through a positive keypressed guard. The isolated current-order GCC 4.4.1 probe preserved all 63 exact main functions but get_string remained DIFFER, so this is a historically supported CFG correction without function-match credit."
+}

@@ -1,3 +1,4 @@
+#include "recovered/Tprofile.h"
 extern int my_alert(char*, char*, int, int);
 /* Historical CU: menu.c; current status: src/recovery.json.
  * Historical function: update_game_menu @ 0x00417adc, 583 bytes
@@ -28,7 +29,7 @@ extern void play_menu_select(void);
 extern void checkMenuFocus(void);
 extern void blit_to_screen(BITMAP *bmp);
 extern void line_alert(char *text);
-extern void view_profile(void *p);
+extern int view_profile(Tprofile*);
 extern void change_profile(void);
 extern void *profile;
 extern int closeButtonClicked;

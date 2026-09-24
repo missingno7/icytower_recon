@@ -5,77 +5,6 @@
   "groups": [
     {
       "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/draw_replay_selector.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 2,
-      "repair_card": "docs/current/interfaces/draw_replay_selector.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/draw_replay_selector.json",
-          "source": "src/replay.c",
-          "function": "draw_replay_selector",
-          "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
-          "planned_in_caller_cu": true
-        },
-        {
-          "prerequisite": "docs/current/interfaces/draw_replay_selector.json",
-          "source": "src/replay.c",
-          "function": "replay_selector",
-          "candidate_card": "docs/current/functions/replay/replay_selector.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/view_profile.json",
-      "affected_function_count": 2,
-      "planned_in_caller_count": 1,
-      "repair_card": "docs/current/interfaces/view_profile.json",
-      "repair_state": "TYPE_LAYOUT_BLOCKED",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/view_profile.json",
-          "source": "src/menu.c",
-          "function": "handle_menu",
-          "candidate_card": "docs/current/functions/menu/handle_menu.json",
-          "planned_in_caller_cu": false
-        },
-        {
-          "prerequisite": "docs/current/interfaces/view_profile.json",
-          "source": "src/profile.c",
-          "function": "view_profile",
-          "candidate_card": "docs/current/functions/profile/view_profile.json",
-          "planned_in_caller_cu": true
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
-      "key": "docs/current/interfaces/get_profile_dir_for_profile.json",
-      "affected_function_count": 1,
-      "planned_in_caller_count": 0,
-      "repair_card": "docs/current/interfaces/get_profile_dir_for_profile.json",
-      "repair_state": "INTERFACE_REPAIR",
-      "examples": [
-        {
-          "prerequisite": "docs/current/interfaces/get_profile_dir_for_profile.json",
-          "source": "src/profile.c",
-          "function": "create_profile",
-          "candidate_card": "docs/current/functions/profile/create_profile.json",
-          "planned_in_caller_cu": false
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Read the repair card and retained failure evidence; solve its declaration/compiler blocker once, then regenerate and reverify dependent callers."
-    },
-    {
-      "kind": "SHARED_INTERFACE_PREREQUISITE",
       "key": "docs/current/interfaces/set_next_rank_message.json",
       "affected_function_count": 1,
       "planned_in_caller_count": 1,
@@ -168,7 +97,7 @@
       "key": "game-main:REGISTER_OR_INSTRUCTION_SELECTION",
       "target": "game-main",
       "difference_class": "REGISTER_OR_INSTRUCTION_SELECTION",
-      "affected_function_count": 5,
+      "affected_function_count": 4,
       "examples": [
         {
           "source": "src/main.c",
@@ -201,14 +130,6 @@
           "size": 1086,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900"
-        },
-        {
-          "source": "src/main.c",
-          "function": "do_replay_menu",
-          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
-          "size": 2661,
-          "body_edit_allowed": true,
-          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900"
         }
       ],
       "omitted_examples": 0,
@@ -244,6 +165,33 @@
           "size": 1770,
           "body_edit_allowed": true,
           "routing_reason": "Base eligibility checks not met: indirect_flow_within_medium_limit, same_size_and_at_most_12_differing_bytes, no_indirect_flow, historical_size_at_most_900"
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-main:LITERAL_CONTENT_DIFFERENCE",
+      "target": "game-main",
+      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
+      "affected_function_count": 2,
+      "examples": [
+        {
+          "source": "src/main.c",
+          "function": "do_replay_menu",
+          "candidate_card": "docs/current/functions/main/do_replay_menu.json",
+          "size": 2661,
+          "body_edit_allowed": true,
+          "routing_reason": "Base eligibility checks not met: same_size_and_at_most_12_differing_bytes, historical_size_at_most_900, cheap_difference_class"
+        },
+        {
+          "source": "src/main.c",
+          "function": "init_game",
+          "candidate_card": "docs/current/functions/main/init_game.json",
+          "size": 5788,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
       "omitted_examples": 0,
@@ -298,6 +246,33 @@
           "size": 360,
           "body_edit_allowed": true,
           "routing_reason": "Recorded supervisor block: Body is 3 bytes shorter (357 vs historical 360) and SOURCE_CONTROL_FLOW_SHAPE at offset 59 (0x41e79b): original uses a long/near je (0f 84, 6 bytes) to the done epilogue where the candidate emits a short je (74, 2 bytes), because GCC's -freorder-blocks placed the directory: block as the fallthrough/hot path and pushed replay_file's malloc/get_replay_property/copy_replay tail to the end of the function, opposite of the historical layout (replay_file tail first, directory later). Tried: (1) flipping the entry branch polarity (if(attrib&FA_DIREC) goto directory; goto replay_file;) -- made it worse, body shrank further to 353 bytes, same first-difference offset; (2) physically reordering the directory:/replay_file: block bodies in source text to match the historical block order while keeping the original branch polarity -- produced byte-for-byte identical candidate output to the unmodified baseline (357 bytes, same first-difference), proving GCC's block placement here is governed by its own static branch-prediction heuristics (likely the PRED_CALL/opcode heuristics demoting the call-heavy replay_file tail), not by source text order. No __builtin_expect, pragma, attribute or compiler-flag lever is permitted to override this. Restored source byte-for-byte; routing to supervisor for compiler-context investigation."
+        }
+      ],
+      "omitted_examples": 0,
+      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
+    },
+    {
+      "kind": "CU_SYMPTOM_INVESTIGATION",
+      "key": "game-replay:STACK_FRAME_LAYOUT",
+      "target": "game-replay",
+      "difference_class": "STACK_FRAME_LAYOUT",
+      "affected_function_count": 2,
+      "examples": [
+        {
+          "source": "src/replay.c",
+          "function": "replay_selector",
+          "candidate_card": "docs/current/functions/replay/replay_selector.json",
+          "size": 2845,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
+        },
+        {
+          "source": "src/replay.c",
+          "function": "draw_replay_selector",
+          "candidate_card": "docs/current/functions/replay/draw_replay_selector.json",
+          "size": 3726,
+          "body_edit_allowed": true,
+          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
       "omitted_examples": 0,
@@ -393,25 +368,6 @@
           "size": 728,
           "body_edit_allowed": false,
           "routing_reason": "Base eligibility checks not met: body_edit_allowed, same_size_and_at_most_12_differing_bytes, cheap_difference_class"
-        }
-      ],
-      "omitted_examples": 0,
-      "next_action": "Inspect the smallest example and its recorded compiler trials; encode a validated lesson or bounded recipe before widening the experiment. Matching symptoms do not prove a shared cause."
-    },
-    {
-      "kind": "CU_SYMPTOM_INVESTIGATION",
-      "key": "game-main:LITERAL_CONTENT_DIFFERENCE",
-      "target": "game-main",
-      "difference_class": "LITERAL_CONTENT_DIFFERENCE",
-      "affected_function_count": 1,
-      "examples": [
-        {
-          "source": "src/main.c",
-          "function": "init_game",
-          "candidate_card": "docs/current/functions/main/init_game.json",
-          "size": 5788,
-          "body_edit_allowed": true,
-          "routing_reason": "Unresolved data/literal relocation owners prevent strict body-only promotion; resolve the recorded ownership prerequisites first."
         }
       ],
       "omitted_examples": 0,

@@ -1,0 +1,117 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 148,
+  "candidate_card": "docs/current/literals/game-main/94.json",
+  "source_identity": {
+    "size": 311183,
+    "sha256": "1420f42d9e30b68d01e929d46939651a34e118669b6009f78d46cce9f02014ef"
+  },
+  "consumers": [
+    {
+      "function": "draw_frame",
+      "function_offset": 4205,
+      "historical_operand_va": null,
+      "historical_operand_alignment": "UNPROVEN",
+      "unaligned_original_field_value": 145227856,
+      "independently_resolved_va": 5065652,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": []
+    },
+    {
+      "function": "draw_frame",
+      "function_offset": 5962,
+      "historical_operand_va": null,
+      "historical_operand_alignment": "UNPROVEN",
+      "unaligned_original_field_value": 4149274948,
+      "independently_resolved_va": 5065652,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": []
+    },
+    {
+      "function": "do_replay_menu",
+      "function_offset": 411,
+      "historical_operand_va": 5065651,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5065652,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 6265,
+          "text": "            strcpy(pname,isGuest ? \" - \" : profile->handle);"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "do_replay_menu",
+    "draw_frame"
+  ],
+  "historical_observed_addresses": [
+    5065651
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "202d20",
+      "bytes": 4
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 411,
+      "candidate_addend": 148,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5065651,
+      "candidate_hex": "202d20",
+      "original_hex": "",
+      "candidate_instruction": {
+        "address": 41426,
+        "bytes": "b894000000",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x94,%eax"
+      },
+      "original_instruction": {
+        "address": 4264242,
+        "bytes": "b8b34b4d00",
+        "mnemonic": "mov",
+        "assembly": "mov    $0x4d4bb3,%eax"
+      },
+      "placement_evidence": {
+        "resolved_target": 5065652,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5065652
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": " - ",
+      "original_text": "",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 6265,
+          "text": "            strcpy(pname,isGuest ? \" - \" : profile->handle);"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}

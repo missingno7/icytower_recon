@@ -29,3 +29,15 @@ This eliminates the simple path-local guard rewrite. Further source spelling in 
 - `build/tu-context/game-main/research-play-collision-split-guard-20260924/comparison.json`
 - Variant disassembly: `build/tu-context/game-main/research-play-collision-split-guard-20260924/unit.o`
 - Historical instruction evidence: original EXE at `0x4120e5..0x4120fe` and `0x412591..0x4125aa`; historical line/block evidence from `function_lines.py` above.
+
+## GCC pass trace (2026-09-24)
+
+Diagnostic dump flags were checked on the isolated `split-guards.c` historical-order TU overlay. Locked TDM-GCC 4.4.1 `-O2 -g -mfpmath=387` no-dump, `-fdump-tree-all`, and `-fdump-tree-all -fdump-rtl-all` builds all had `play` at 17,416 bytes (`DIFFER`), 63 `FUNCTION_MATCH`, 18 `DIFFER`, and one `CODEGEN_SIMILAR`. The three effective `play` instruction projections, function relocation and direct-transfer projections, status counts, and complete object relocation counts were equal. Diagnostic flags were byte-neutral for this probe; raw COFF hashes are not used as code equality.
+
+The archived common-guard trial provides the direct load-folding trace. In `main.c.056t.phiprop`, guard and switch have distinct reads: `_598 = collision_type` feeds the unsigned `> 4` check, while `_600 = collision_type` feeds the switch. The first observed pass boundary that removes the switch's second read is `main.c.057t.fre`: the switch operand becomes `_600 = _598`. This is GCC's FRE pass (full redundancy elimination), and it explains why a common bounds check does not preserve an independent table-index load. The pass dumps bracket the change at FRE; they do not expose a deeper internal substep.
+
+For the path-local add-floor trial, optimized GIMPLE through `main.c.126t.final_cleanup` keeps the add-floor check's load separate from the switch-selector PHI. RTL expansion and `main.c.179r.dse2` still show three `collision_type` loads in `play`; `main.c.181r.csa` is the first observed boundary with two. The dropped load is the selector copy on the same add-floor predecessor as its explicit check. The no-floor predecessor has only a selector load in this source, since no no-floor bounds check is present. This is a separate, later RTL fold and does not establish the historical no-floor check's fate.
+
+Outcome: mechanism observed; no source structure hypothesis tested. The common guard spelling and the add-floor-local guard spelling already fail to preserve three reads. A further test would need to restore the historical two-predecessor validation CFG without repeating those guard forms; the present retained body and line/assembly evidence do not yet identify a distinct source-backed mechanism. Candidate remains `DIFFER` (no function/object/CU match claim). The 63 exact peers, `new_game`, and `run_demo` remain preserved in both predecessor probes.
+
+Artifacts: `run_passes.py`, `passes-nodump/`, `passes-tree/`, `passes-treertl/`, `common-guard-passes/tree/`. The `common-guard-passes/treertl/` compile was interrupted before producing an object/comparison; its partial dumps are not used for claims.

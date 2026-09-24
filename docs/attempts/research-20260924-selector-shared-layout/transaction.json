@@ -1,0 +1,14 @@
+{
+  "target": "game-replay",
+  "source": "src/replay.c",
+  "order": "current",
+  "prototypes": "none",
+  "declarations": {
+    "remove_top_level": ["Treplay_post"],
+    "includes_after": {
+      "allegro.h": ["recovered/Treplay_post.h"]
+    },
+    "evidence": "The local reserved[2] member has no historical DIE. The locked generated Treplay_post header has exactly the seven historical members, size 24 and matching offsets. The isolated full-TU header probe retains all seven exact replay functions and all unchanged non-debug contributions."
+  },
+  "evidence": "Replace the local Treplay_post declaration with the generated historical DWARF type. This is a type-identity correction, not a draw_replay_selector or replay_selector function match. The strict TU gate must preserve all seven exact replay peers, data owners, common/BSS and relocations."
+}

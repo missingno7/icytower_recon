@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 from common import ROOT,read_json
-from interface_tasks import plan_interface,patch_text,contribution_fingerprint
+from interface_tasks import plan_interface,patch_text,contribution_fingerprint,proven_size_t_spelling,text_identity
 from source_scope import function_span
 from instructions import zero_clear_projection
 
@@ -130,6 +130,44 @@ class InterfaceTests(unittest.TestCase):
         for wanted in (['const unsigned char*'],['const char*','int']):
             plan=self.plan('int f(char *s) { return *s; }\n',('int',wanted),('int',['char*']))
             self.assertEqual(plan['difficulty'],'SUPERVISOR')
+
+    def test_size_t_spelling_requires_unsigned_typedef_evidence(self):
+        class Graph:
+            dies={100:{'offset':100,'tag':'DW_TAG_subprogram'},
+                  101:{'tag':'DW_TAG_formal_parameter','type_ref':102},
+                  102:{'tag':'DW_TAG_typedef','name':'size_t','type_ref':103},
+                  103:{'tag':'DW_TAG_base_type','name':'unsigned int',
+                      'resolved':{'DW_AT_byte_size':'4','DW_AT_encoding':'7\t(unsigned)'}}}
+            children={100:[dies[101]]}
+        source='extern void f(unsigned int count);\n'
+        compiled=[{'name':'size_t','layout':{'kind':'base_type','size':4,
+                    'type':'unsigned int','encoding':'7\t(unsigned)'}}]
+        report={'build':{'local_inputs':{'src/a.c':text_identity(source)}}}
+        declaration={'kind':'NC','file':'src/a.c','cu':'src/a.c'}
+        original={'die':100,'parameter_types':['size_t']}
+        with patch('type_graph.graph',return_value=Graph()), \
+             patch('interface_type_probe.interface_typedefs',return_value=compiled):
+            self.assertTrue(proven_size_t_spelling('size_t','unsigned int',original,0,
+                                                    declaration,report,source))
+            self.assertFalse(proven_size_t_spelling('size_t','int',original,0,
+                                                     declaration,report,source))
+            signed_alias=[dict(compiled[0],layout=dict(compiled[0]['layout'],
+                                                       encoding='5\t(signed)'))]
+            with patch('interface_type_probe.interface_typedefs',return_value=signed_alias):
+                self.assertFalse(proven_size_t_spelling('size_t','unsigned int',original,0,
+                                                        declaration,report,source))
+
+    def test_proven_size_t_spelling_edits_only_the_parameter_type(self):
+        text='extern void f(unsigned int count);\n'
+        with patch('interface_tasks.proven_size_t_spelling',return_value=True):
+            plan=self.plan(text,('void',['size_t']),('void',['unsigned int']),kind='NC',cu=True)
+        self.assertEqual(plan['difficulty'],'CHEAP',plan.get('reason'))
+        self.assertEqual(patch_text(text,plan['changes']),'extern void f(size_t count);\n')
+        # Matching width alone is not sufficient: a signed int candidate stays blocked.
+        with patch('interface_tasks.proven_size_t_spelling',return_value=False):
+            signed=self.plan('extern void f(int count);\n',('void',['size_t']),
+                             ('void',['int']),kind='NC',cu=True)
+        self.assertEqual(signed['difficulty'],'SUPERVISOR')
 
     def test_stale_location_and_replacement_rejected(self):
         plan=self.plan('int f(char *s) { return *s; }\n',('int',['const char*']),('int',['char*']),line=42)

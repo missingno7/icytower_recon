@@ -356,8 +356,8 @@
   "variadic": false,
   "calling_convention": "not recorded (i386 C default candidate)",
   "source_scope": {
-    "body_start_line": 210,
-    "body_end_line": 374,
+    "body_start_line": 211,
+    "body_end_line": 375,
     "body_sha256": "cf22588e49b02355733d945de37fa024494a6f66422fc287cce0958bad961e92"
   },
   "reference_diagnostics": [],
@@ -2010,14 +2010,14 @@
   "predicate_trials": null,
   "compiler_context": null,
   "compiler_trials": {
-    "state": "CURRENT_BASELINE",
+    "state": "BASELINE_REQUIRES_REVIEW",
     "evidence": "docs/attempts/compiler-context/game-menu/handle_menu.json",
     "trial_count": 2,
     "trials": [
       {
         "variant": "omit-update_game_menu",
         "target_body_unchanged": true,
-        "baseline_state": "CURRENT_BASELINE",
+        "baseline_state": "BASELINE_REQUIRES_REVIEW",
         "evidence": "docs/attempts/compiler-context/game-menu/handle_menu.json",
         "archive_line": null,
         "difference": {
@@ -2039,7 +2039,7 @@
       {
         "variant": "omit-draw_menu",
         "target_body_unchanged": true,
-        "baseline_state": "CURRENT_BASELINE",
+        "baseline_state": "BASELINE_REQUIRES_REVIEW",
         "evidence": "docs/attempts/compiler-context/game-menu/handle_menu.jsonl",
         "archive_line": 1,
         "difference": {
@@ -2065,7 +2065,7 @@
     "rtl_evidence": "docs/attempts/compiler-context/game-menu/handle_menu-rtl.json",
     "limit": "Newest result per experiment name, latest record first; archived trials retain their own baseline freshness and line number. No-change results apply only to the recorded input snapshot. Diagnostic memory grants no original-match or edit permission."
   },
-  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu, view_profile",
+  "routing_reason": "Called-function interface prerequisites in this CU must be resolved before body grinding: update_game_menu",
   "routing_evidence": {
     "base_checks": {
       "body_edit_allowed": true,
@@ -2152,45 +2152,10 @@
         ],
         "layout_issues": [],
         "call_offset_count": 1
-      },
-      {
-        "function": "view_profile",
-        "source": "src/menu.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          755
-        ],
-        "candidate_card": "docs/current/interfaces/view_profile.json",
-        "local_declarations": [
-          {
-            "return_type": "void",
-            "parameter_types": [
-              "void*"
-            ],
-            "canonical_return_type": "void",
-            "canonical_parameter_types": [
-              "void*"
-            ]
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "parameter 1",
-            "historical_type": "Tprofile",
-            "candidate_type": "void",
-            "header": "include/recovered/Tprofile.h",
-            "status": "UNAVAILABLE",
-            "reason": "Candidate named type layout is missing or ambiguous"
-          }
-        ],
-        "call_offset_count": 1
       }
     ],
     "blocking_functions": [
-      "update_game_menu",
-      "view_profile"
+      "update_game_menu"
     ],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
     "omitted_observations": 0
@@ -2220,7 +2185,7 @@
   "evidence_counts": {
     "relocation_mismatches": 35,
     "direct_transfer_mismatches": 3,
-    "callee_interface_observations": 2,
+    "callee_interface_observations": 1,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 4,

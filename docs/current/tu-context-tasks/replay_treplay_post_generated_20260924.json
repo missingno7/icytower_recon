@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "replay_treplay_post_generated_20260924",
+  "source": "src/replay.c",
+  "sources": [
+    "src/replay.c"
+  ],
+  "target": "game-replay",
+  "affected_targets": [
+    "game-replay"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-replay",
+    "source": "src/replay.c",
+    "order": "current",
+    "prototypes": "none",
+    "declarations": {
+      "remove_top_level": [
+        "Treplay_post"
+      ],
+      "includes_after": {
+        "allegro.h": [
+          "recovered/Treplay_post.h"
+        ]
+      },
+      "evidence": "The local reserved[2] member has no historical DIE. The locked generated Treplay_post header has exactly the seven historical members, size 24 and matching offsets. The isolated full-TU header probe retains all seven exact replay functions and all unchanged non-debug contributions."
+    },
+    "evidence": "Replace the local Treplay_post declaration with the generated historical DWARF type. This is a type-identity correction, not a draw_replay_selector or replay_selector function match. The strict TU gate must preserve all seven exact replay peers, data owners, common/BSS and relocations."
+  },
+  "edits": {
+    "focus": [],
+    "declarations": {
+      "remove_top_level": [
+        "Treplay_post"
+      ],
+      "includes_after": {
+        "allegro.h": [
+          "recovered/Treplay_post.h"
+        ]
+      },
+      "evidence": "The local reserved[2] member has no historical DIE. The locked generated Treplay_post header has exactly the seven historical members, size 24 and matching offsets. The isolated full-TU header probe retains all seven exact replay functions and all unchanged non-debug contributions.",
+      "removed_text": [
+        {
+          "name": "Treplay_post",
+          "text": "typedef struct Treplay_post {\n    char *full_path;\n    char directory;\n    char parent;\n    char reserved[2];\n    int version;\n    int score;\n    int floor;\n    int combo;\n} Treplay_post;\n"
+        }
+      ]
+    },
+    "order": [
+      "get_sort_method",
+      "set_sort_method",
+      "create_replay",
+      "destroy_replay",
+      "hash",
+      "calc_replay_checksum_131",
+      "calc_replay_checksum",
+      "get_replay_property",
+      "load_replay",
+      "save_replay",
+      "draw_replay_selector",
+      "add_itr_file",
+      "my_strcmp",
+      "update_file_list",
+      "replay_selector"
+    ],
+    "definition_order_with_static": [
+      [
+        "get_sort_method",
+        false
+      ],
+      [
+        "set_sort_method",
+        false
+      ],
+      [
+        "create_replay",
+        false
+      ],
+      [
+        "destroy_replay",
+        false
+      ],
+      [
+        "hash",
+        false
+      ],
+      [
+        "calc_replay_checksum_131",
+        false
+      ],
+      [
+        "calc_replay_checksum",
+        false
+      ],
+      [
+        "get_replay_property",
+        false
+      ],
+      [
+        "load_replay",
+        false
+      ],
+      [
+        "save_replay",
+        false
+      ],
+      [
+        "draw_replay_selector",
+        false
+      ],
+      [
+        "add_itr_file",
+        false
+      ],
+      [
+        "my_strcmp",
+        false
+      ],
+      [
+        "update_file_list",
+        false
+      ],
+      [
+        "replay_selector",
+        false
+      ]
+    ],
+    "bodies": {},
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [],
+    "headers": {}
+  },
+  "source_identities": {
+    "src/replay.c": {
+      "size": 35888,
+      "sha256": "644b687c939604180fa089e1ec1852231501cda439d436ea43f896e59129c6d9"
+    },
+    "include/recovered/Treplay_post.h": {
+      "size": 1156,
+      "sha256": "e13d91c1a732b124e0e0e9a39d03f0b258121c331259e8b8145c0bb72325f686"
+    }
+  },
+  "new_text_identity": {
+    "size": 35735,
+    "sha256": "18f1eb7eebad624e91b3fa8f3d4fe9db5f96bf234dd04687a628f40a6b42c50b"
+  },
+  "new_header_identities": {},
+  "required_generated_headers": {
+    "include/recovered/Treplay_post.h": {
+      "size": 1156,
+      "sha256": "e13d91c1a732b124e0e0e9a39d03f0b258121c331259e8b8145c0bb72325f686"
+    }
+  },
+  "preserved_definitions": [
+    "add_itr_file",
+    "calc_replay_checksum",
+    "calc_replay_checksum_131",
+    "create_replay",
+    "destroy_replay",
+    "draw_replay_selector",
+    "get_replay_property",
+    "get_sort_method",
+    "hash",
+    "load_replay",
+    "my_strcmp",
+    "replay_selector",
+    "save_replay",
+    "set_sort_method",
+    "update_file_list"
+  ],
+  "replaced_definitions": [],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin replay_treplay_post_generated_20260924",
+  "apply_command": "python tools/tu_context_task.py apply replay_treplay_post_generated_20260924",
+  "verification_command": "python tools/tu_context_task.py check replay_treplay_post_generated_20260924",
+  "promotion_command": "python tools/tu_context_task.py promote replay_treplay_post_generated_20260924",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/replay_treplay_post_generated_20260924.json"
+}

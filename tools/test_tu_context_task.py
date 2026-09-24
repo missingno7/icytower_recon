@@ -3,9 +3,9 @@ unlisted definition byte-for-byte, replaces only explicitly retained bodies, ref
 changes and forbidden directives, and the island comparison key normalizes nothing inside a body."""
 import json, re, tempfile, unittest
 from pathlib import Path
-from common import ROOT, read_json
+from common import ROOT, read_json, identity
 from tu_context_probe import build_text, islands, historical_static, header_edits, retained_body, layout
-from tu_context_task import island_key, provenance_update, FORBIDDEN
+from tu_context_task import island_key, provenance_update, generated_include_identities, FORBIDDEN
 
 SOURCE = 'src/main.c'; TARGET = 'game-main'
 RETAINED = 'docs/attempts/game-main/handle_player_input-reconstruction.c'
@@ -82,6 +82,16 @@ class GeneratedCards(unittest.TestCase):
 
 
 class DeclarationEdits(unittest.TestCase):
+    def test_generated_early_include_is_identity_bound(self):
+        spec = {'declarations': {'includes_after': {'allegro.h': ['recovered/Treplay_post.h']}}}
+        identities = generated_include_identities(spec)
+        self.assertEqual(list(identities), ['include/recovered/Treplay_post.h'])
+        self.assertEqual(identities['include/recovered/Treplay_post.h'],
+                         identity(ROOT / 'include/recovered/Treplay_post.h'))
+        with self.assertRaisesRegex(ValueError, 'one recovered type header'):
+            generated_include_identities({'declarations': {'includes_after': {
+                'allegro.h': ['recovered/../Treplay_post.h']}}})
+
     def test_production_plan_rejects_diagnostic_research_base(self):
         from tu_context_task import plan
         with tempfile.TemporaryDirectory() as tmp:

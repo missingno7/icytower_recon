@@ -70,6 +70,43 @@ def text_identity(text):
     return {'size':len(raw),'sha256':sha(raw)}
 
 
+def proven_size_t_spelling(old_type, actual_type, original, parameter_index,
+                           declaration, report, source):
+    """Prove the one supported bare size_t/unsigned int spelling repair.
+
+    This intentionally does not equate same-width signed and unsigned types.
+    It requires the exact historical parameter DIE and a retained typedef DIE
+    from the same candidate CU build to agree on the underlying base type.
+    """
+    if (old_type!='size_t' or actual_type!='unsigned int' or declaration.get('kind')!='NC'
+            or declaration.get('cu')!=declaration.get('file') or not declaration.get('file','').startswith('src/')):
+        return False
+    build=report.get('build',{})
+    if build.get('local_inputs',{}).get(declaration['file'])!=text_identity(source):
+        return False
+    from type_graph import graph,number
+    g=graph(); function=g.dies.get(original.get('die'))
+    if not function or function.get('tag')!='DW_TAG_subprogram': return False
+    if parameter_index>=len(original.get('parameter_types',[])): return False
+    parameters=[d for d in g.children.get(function['offset'],[]) if d.get('tag')=='DW_TAG_formal_parameter']
+    if parameter_index>=len(parameters): return False
+    alias=g.dies.get(parameters[parameter_index].get('type_ref'))
+    if not alias or alias.get('tag')!='DW_TAG_typedef' or alias.get('name')!='size_t': return False
+    base=g.dies.get(alias.get('type_ref'))
+    if not base or base.get('tag')!='DW_TAG_base_type' or base.get('name')!='unsigned int': return False
+    base_size=number(base.get('resolved',{}).get('DW_AT_byte_size'))
+    base_encoding=base.get('resolved',{}).get('DW_AT_encoding','').split('\t',1)[0]
+    if base_size!=4 or base_encoding!='7': return False  # DW_ATE_unsigned on the 32-bit target.
+
+    from interface_type_probe import interface_typedefs
+    compiled=[t for t in interface_typedefs(report) if t.get('name')=='size_t']
+    if len(compiled)!=1: return False
+    layout=compiled[0].get('layout',{})
+    encoding=str(layout.get('encoding','')).split('\t',1)[0]
+    return (layout.get('kind')=='base_type' and layout.get('type')=='unsigned int'
+            and layout.get('size')==base_size and encoding==base_encoding)
+
+
 def plan_interface(row, ledger, source_texts=None):
     name=row['function']; old=row['historical']
     card={'schema':1,'task_kind':'INTERFACE','function':name,'source':old[0]['cu'],
@@ -112,10 +149,21 @@ def plan_interface(row, ledger, source_texts=None):
                     parts=split_params(params)
                     if len(parts)!=len(desired[1]): raise ValueError('Parameter count change is not a mechanical qualifier repair')
                     changed=[]
-                    for part,actual_type,expected_type in zip(parts,declaration['parameter_types'],desired[1]):
+                    source_text_value=text
+                    for index,(part,actual_type,expected_type) in enumerate(zip(parts,declaration['parameter_types'],desired[1])):
                         if actual_type==expected_type: changed.append(part); continue
                         if actual_type!='char*' or expected_type!='const char*':
-                            raise ValueError('Requires type/return/body interpretation: '+actual_type+' -> '+expected_type)
+                            source_file=declaration['file']
+                            entry=ledger.get(declaration.get('cu') or source_file,{})
+                            report=read_json(ROOT/entry['verified_report']) if entry.get('verified_report') else {}
+                            if not proven_size_t_spelling(old[0]['parameter_types'][index],actual_type,
+                                                          old[0],index,declaration,report,source_text_value):
+                                raise ValueError('Requires type/return/body interpretation: '+actual_type+' -> '+expected_type)
+                            if parameter_type(part)!=actual_type: raise ValueError('Parameter spelling does not match compiler evidence')
+                            spelling=re.match(r'^(\s*)unsigned\s+int(?=\s+[A-Za-z_]\w*\s*$)',part)
+                            if not spelling: raise ValueError('Cannot safely locate the unsigned int parameter spelling')
+                            changed.append(part[:spelling.start()]+spelling[1]+'size_t'+part[spelling.end():])
+                            continue
                         if parameter_type(part)!=actual_type: raise ValueError('Parameter spelling does not match compiler evidence')
                         changed.append('const '+part)
                     # Preserve whitespace and source line count: insert const in each original parameter span.

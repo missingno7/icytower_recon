@@ -56,6 +56,18 @@ def provenance_update(manifest_text, old_source, new_source, source, spec):
     return json.dumps(manifest, indent=2, ensure_ascii=False) + '\n'
 
 
+def generated_include_identities(spec):
+    result = {}
+    for names in (spec.get('declarations') or {}).get('includes_after', {}).values():
+        for include_name in names:
+            if include_name.startswith('recovered/'):
+                if not re.fullmatch(r'recovered/[A-Za-z_]\w*\.h', include_name):
+                    raise ValueError('Generated include must name one recovered type header')
+                header = 'include/' + include_name
+                result[header] = identity(ROOT / header)
+    return result
+
+
 def plan(name, spec_path):
     from tu_context_probe import build_text, islands, retained_body
     spec = read_json(Path(spec_path)); target = spec['target']; source = spec['source']
@@ -70,7 +82,7 @@ def plan(name, spec_path):
     old_isl = {i['name']: i for i in islands(text)}; new_isl = {i['name']: i for i in islands(new)}
     old_report = read_json(ROOT / ledger[source]['verified_report'])
     old_status = {f['name']: f['status'] for f in old_report['functions']}
-    required_headers = {}
+    required_headers = generated_include_identities(spec)
     for item in spec.get('late_declarations') or []:
         anchor = item['after']
         if anchor not in old_isl or anchor in edits['bodies'] or old_status.get(anchor) != 'FUNCTION_MATCH':

@@ -1,0 +1,29 @@
+Historical original (read-only) disassembly excerpt, from:
+C:\msys64\mingw64\bin\objdump.exe -d --start-address=0x405a90 --stop-address=0x405bc0 assets/icytower15.exe
+
+00405ad6: 8b 95 d4 f7 ff ff       mov    -0x82c(%ebp),%edx
+00405adc: 85 d2                   test   %edx,%edx
+00405ade: 0f 8e 25 03 00 00       jle    0x405e09
+00405ae4: bb 00 04 00 00          mov    $0x400,%ebx
+00405ae9: 8d 95 e8 f7 ff ff       lea    -0x818(%ebp),%edx
+00405aef: 89 95 d8 f7 ff ff       mov    %edx,-0x828(%ebp)  ; output cursor home
+00405af5: 31 c9                   xor    %ecx,%ecx           ; previous byte
+00405af7: c7 85 dc f7 ff ff 00... movl   $0,-0x824(%ebp)    ; i home
+00405b01: 31 f6                   xor    %esi,%esi           ; input index
+00405b03: 8b bd cc f7 ff ff       mov    -0x834(%ebp),%edi
+00405b09: eb 23                   jmp    0x405b2e
+00405b2e: 8a 04 37                mov    (%edi,%esi,1),%al
+00405b31: 46                      inc    %esi
+00405b32: 3c 0a                   cmp    $0xa,%al
+00405b34: 75 d6                   jne    0x405b0c
+00405b36: 80 f9 0d                cmp    $0xd,%cl
+00405b39: 75 e5                   jne    0x405b20
+00405b3b: 89 b5 dc f7 ff ff       mov    %esi,-0x824(%ebp)  ; commit i on CRLF
+00405b41: c6 02 00                movb   $0,(%edx)
+00405b44: 4b                      dec    %ebx
+00405b45: eb 07                   jmp    0x405b4e
+00405b47: 89 b5 dc f7 ff ff       mov    %esi,-0x824(%ebp)  ; commit i on input end
+00405b4d: 4b                      dec    %ebx
+00405b4e: c6 04 1a 00             movb   $0,(%edx,%ebx,1)
+
+The original uses an output pointer in EDX, remaining capacity in EBX, previous byte in CL, and consumed-byte index in ESI. It saves the output cursor at EBP-0x828 and the outer `i` count at EBP-0x824.

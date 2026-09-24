@@ -3761,7 +3761,7 @@ void handle_player_collision_vector(int lastX, int lastY)
         (left_x < -10000 || right_x < -10000 || left_x > 10000 || right_x > 10000))
         return;
 
-    play_sound(combo_sound[0], 1, 1);
+    play_sound(sounds[8], 1, 1);
     p->status = 0;
     p->sy = 0;
     p->y = floor_y - 1;
@@ -3830,7 +3830,7 @@ void handle_player_collision_vector_2(int lastX, int lastY)
     if (p->status != 2 && p->status != 3)
         return;
 
-    play_sound(combo_sound[0], 1, 1);
+    play_sound(sounds[8], 1, 1);
     p->status = 0;
     p->sy = 0;
     p->y = floor_y - 1;
@@ -3863,7 +3863,7 @@ void handle_player_collision_combo(int lastX, int lastY)
         if (p->status == 1 || p->status == 2)
             return;
         if (p->status)
-            play_sound(combo_sound[0], 1, 1);
+            play_sound(sounds[8], 1, 1);
         p->status = 0;
         p->sy = 0;
         if (solid1) {
@@ -3908,7 +3908,7 @@ void handle_player_collision_combo(int lastX, int lastY)
     if (p->status != 2 && p->status != 3)
         return;
 
-    play_sound(combo_sound[0], 1, 1);
+    play_sound(sounds[8], 1, 1);
     p->status = 0;
     p->sy = 0;
     p->y = fy1 - 1;
@@ -3969,7 +3969,7 @@ resolve:
         return;
     /* 3261 */
     if (ply[player_id]->status)
-        play_sound(combo_sound[0], 1, 1);
+        play_sound(sounds[8], 1, 1);
     /* 3262 */
     ply[player_id]->status = 0;
     /* 3263 */
@@ -4019,7 +4019,7 @@ sweep:
     any23 = 1;
     /* 3279 */
     if (ply[player_id]->status)
-        play_sound(combo_sound[0], 1, 1);
+        play_sound(sounds[8], 1, 1);
     /* 3280 */
     ply[player_id]->status = 0;
     /* 3281 */
@@ -4069,7 +4069,7 @@ void handle_player_collision_original(int lastX, int lastY)
     if (ply[player_id]->status==1) return;
     if (ply[player_id]->status==2) return;
     if (ply[player_id]->status)
-        play_sound(combo_sound[0],1,1);
+        play_sound(sounds[8],1,1);
     ply[player_id]->status=0;
     ply[player_id]->sy=0;
     if (solid1) {
@@ -6175,10 +6175,9 @@ int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
                      pos_y + block->h - 3, bg_color);
         textout_ex(bmp, f, string, pos_x + 2, pos_y, colour, -1);
         blit_to_screen(bmp);
-        if (!keypressed())
-            continue;
-        c = readkey();
-        switch (c >> 8) {
+        if (keypressed()) {
+            c = readkey();
+            switch (c >> 8) {
         case KEY_ESC:
             string[i] = 0;
             destroy_bitmap(block);
@@ -6203,6 +6202,7 @@ int get_string(BITMAP *bmp, char *string, int w, int max_chars, FONT *f,
                 ((c >> 8) != KEY_SPACE || i) &&
                 text_length(f, string) < w - 9)
                 string[i++] = (char)c;
+            }
         }
         while (!cycle_count)
             rest(2);
@@ -6233,15 +6233,6 @@ int do_replay_menu(void)
     int ret = -1;
     int play_again = 0;
     int isGuest = !stricmp("guest",profile->handle);
-    int status = !isGuest;
-    char fname[512];
-    char pname[512];
-    char comment[512];
-    char fpath[512];
-    char buffer[1024];
-    char lastGameFile[2048];
-    int action;
-    int thisChecksum;
 
     log2file(" replay_menu launched");
     while (!closeButtonClicked && ret!='l') {
@@ -6250,23 +6241,30 @@ int do_replay_menu(void)
         if (ret=='e') {
             log2file("  play again selected");
             play_again=1;
+            ret='l';
         }
         else if (ret=='|') {
+            char lastGameFile[2048];
             log2file("  view replay selected");
             fadeOut(16);
             sprintf(lastGameFile,"%slast_game.itr",replay_directory);
             run_demo(lastGameFile);
         }
         else if (ret=='{') {
+            char fname[512];
+            char pname[512];
+            char comment[512];
+            char fpath[512];
+            char buffer[1024];
+            int status = !isGuest;
+            int action;
             log2file("  save replay selected");
             memset(fname,' ',511);
-            fname[511]=0;
-            if (isGuest)
-                strcpy(pname," - ");
-            else
-                strcpy(pname,profile->handle);
+            fname[0]=0;
+            memset(pname,' ',511);
+            strcpy(pname,isGuest ? " - " : profile->handle);
             memset(comment,' ',511);
-            comment[511]=0;
+            comment[0]=0;
             status=!isGuest;
             while (!closeButtonClicked && status!='*') {
                 stretch_sprite(swap_screen,data[86].dat,120,140,380,200);
@@ -6347,6 +6345,8 @@ int do_replay_menu(void)
                     blit_to_screen(swap_screen);
                 }
                 else if (status==3) {
+                    char lastGameFile[2048];
+                    int thisChecksum;
                     sprintf(lastGameFile,"%slast_game.itr",replay_directory);
                     if (!pname[0]) {
                         status=0;

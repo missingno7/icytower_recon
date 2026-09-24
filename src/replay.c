@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <allegro.h>
+#include <recovered/Treplay_post.h>
 #include "control.h"
 
 /* Historical CU: replay.c; current status: src/recovery.json.
@@ -25,17 +26,6 @@
 int sort_method;
 extern BITMAP *swap_screen;
 extern volatile int cycle_count;
-
-typedef struct Treplay_post {
-    char *full_path;
-    char directory;
-    char parent;
-    char reserved[2];
-    int version;
-    int score;
-    int floor;
-    int combo;
-} Treplay_post;
 
 extern int stricmp(const char *a, const char *b);
 extern int get_replay_property(const char *file_name, int property);
