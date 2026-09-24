@@ -4,8 +4,12 @@ changes and forbidden directives, and the island comparison key normalizes nothi
 import json, re, tempfile, unittest
 from pathlib import Path
 from common import ROOT, read_json, identity
-from tu_context_probe import build_text, islands, historical_static, header_edits, retained_body, layout
-from tu_context_task import island_key, provenance_update, generated_include_identities, FORBIDDEN
+from tu_context_probe import (build_text, islands, historical_static, header_edits, retained_body,
+                              layout, apply_draw_results_owner_route, DRAW_RESULTS_OWNER_ROUTE,
+                              _CATEGORY_DECL_OLD, _RESULT_CATEGORIES_OLD, _DRAW_RESULTS_REF_OLD)
+from tu_context_task import (island_key, provenance_update, generated_include_identities, FORBIDDEN,
+                             _require_category_names_owner, _require_exact_neighbors_preserved,
+                             _CATEGORY_NAMES_ORIGINAL_BYTES)
 
 SOURCE = 'src/main.c'; TARGET = 'game-main'
 RETAINED = 'docs/attempts/game-main/handle_player_input-reconstruction.c'
@@ -133,6 +137,112 @@ class DeclarationEdits(unittest.TestCase):
         with self.assertRaises(ValueError):
             layout(text, ['before', 'after'], prototypes='none',
                    late_declarations=[{'after': 'before', 'header': 'private.h', 'declarations': []}])
+
+
+class DrawResultsOwnerRoute(unittest.TestCase):
+    def setUp(self):
+        self.text = (ROOT / SOURCE).read_bytes().decode('cp1252')
+        self.spec = {'order': 'current', 'prototypes': 'none',
+                     'data_owner_correction': DRAW_RESULTS_OWNER_ROUTE}
+
+    def test_fixed_route_changes_only_two_data_spans_and_draw_results_reference(self):
+        new, edits, headers = build_text(TARGET, SOURCE, self.spec)
+        old = {i['name']: i for i in islands(self.text)}
+        current = {i['name']: i for i in islands(new)}
+        self.assertEqual(set(old), set(current))
+        self.assertEqual(headers, {})
+        self.assertEqual(edits['data_owner_correction']['changed_functions'], ['draw_results'])
+        for name in old:
+            if name == 'draw_results':
+                self.assertEqual(island_key(current[name]),
+                                 island_key(old[name]).replace(_DRAW_RESULTS_REF_OLD,
+                                                              'category_names[categories[i]]', 1))
+            else:
+                self.assertEqual(island_key(old[name]), island_key(current[name]), name)
+        self.assertIn('char *category_names[15] = {', new)
+        self.assertNotIn('result_categories', new)
+
+    def test_route_is_limited_to_main_and_rejects_combined_edit_kinds(self):
+        with self.assertRaisesRegex(ValueError, 'mis-scoped'):
+            build_text('game-profile', 'src/profile.c', self.spec)
+        for extra in ({'order': ['draw_results']}, {'prototypes': 'auto'}, {'bodies': {'x': RETAINED}},
+                      {'declarations': {'add_top_level': []}}, {'statics': ['draw_results']}):
+            with self.assertRaises(ValueError):
+                build_text(TARGET, SOURCE, {**self.spec, **extra})
+
+    def test_historical_order_is_allowed_without_other_source_mutations(self):
+        new, edits, _ = build_text(TARGET, SOURCE, {**self.spec, 'order': 'historical'})
+        self.assertEqual(edits['prototypes'], 'none')
+        current = {i['name']: i for i in islands(new)}
+        self.assertEqual(current['draw_results']['signature'],
+                         next(i['signature'] for i in islands(self.text) if i['name'] == 'draw_results'))
+
+    def test_route_rejects_missing_ambiguous_nested_or_mistyped_spans(self):
+        source = self.text
+        with self.assertRaisesRegex(ValueError, 'exactly one source span'):
+            apply_draw_results_owner_route(source + '\n' + _CATEGORY_DECL_OLD, TARGET, SOURCE,
+                                           DRAW_RESULTS_OWNER_ROUTE)
+        local_only = source.replace(_CATEGORY_DECL_OLD, 'void local_owner(void) { char *category_names[15]; }', 1)
+        with self.assertRaisesRegex(ValueError, 'file-scope'):
+            apply_draw_results_owner_route(local_only, TARGET, SOURCE, DRAW_RESULTS_OWNER_ROUTE)
+        wrong_extent = source.replace(_CATEGORY_DECL_OLD, 'char *category_names[14];', 1)
+        with self.assertRaisesRegex(ValueError, 'exactly one source span'):
+            apply_draw_results_owner_route(wrong_extent, TARGET, SOURCE, DRAW_RESULTS_OWNER_ROUTE)
+        with self.assertRaisesRegex(ValueError, 'exactly one source span'):
+            apply_draw_results_owner_route(source.replace(_RESULT_CATEGORIES_OLD, _RESULT_CATEGORIES_OLD.replace('[5]', '[6]'), 1),
+                                           TARGET, SOURCE, DRAW_RESULTS_OWNER_ROUTE)
+        with self.assertRaisesRegex(ValueError, 'one draw_results'):
+            duplicated = source.replace(_DRAW_RESULTS_REF_OLD,
+                                        _DRAW_RESULTS_REF_OLD + ' + ' + _DRAW_RESULTS_REF_OLD, 1)
+            apply_draw_results_owner_route(duplicated, TARGET, SOURCE, DRAW_RESULTS_OWNER_ROUTE)
+
+
+class StrictCategoryOwnerGate(unittest.TestCase):
+    def valid_report(self):
+        import struct
+        targets = struct.unpack('<15I', bytes.fromhex(_CATEGORY_NAMES_ORIGINAL_BYTES))
+        relocs = [{'object_offset': i * 4, 'type': 6, 'symbol': '.rdata', 'target_va': targets[i],
+                   'resolution': 'unique read-only initializer literal or table content'} for i in range(15)]
+        owner = {'name': 'category_names', 'scope': ['GLOBAL'], 'original_die': 136974,
+                 'original_va': 4964480, 'section': '.data', 'candidate_offset': 128,
+                 'size': 60, 'dwarf_type': 'char *[15]', 'candidate_type': 'char *[15]',
+                 'proof': 'Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer',
+                 'initializer': 'all initialized bytes equal after independent relocation resolution',
+                 'initial_value': _CATEGORY_NAMES_ORIGINAL_BYTES, 'initializer_relocations': relocs}
+        return {'object_ownership': {'accepted': [owner]}}
+
+    def test_requires_exact_owner_and_all_15_resolved_targets(self):
+        _require_category_names_owner(self.valid_report())
+
+    def test_requires_owner_in_fresh_in_memory_report(self):
+        report = self.valid_report()
+        report['object_ownership']['accepted'][0]['scope'] = ('GLOBAL',)
+        _require_category_names_owner(report)
+
+    def test_rejects_absent_duplicate_wrong_extent_wrong_type_or_bad_target(self):
+        report = self.valid_report()
+        cases = []
+        cases.append({'object_ownership': {'accepted': []}})
+        cases.append({'object_ownership': {'accepted': report['object_ownership']['accepted'] * 2}})
+        for key, value in [('size', 20), ('candidate_type', 'char *[5]'),
+                           ('section', 'COMMON'), ('original_die', 1),
+                           ('initial_value', '00' * 60)]:
+            bad = self.valid_report(); bad['object_ownership']['accepted'][0][key] = value; cases.append(bad)
+        for mutate in (lambda x: x.pop(), lambda x: x[1].update(object_offset=8),
+                       lambda x: x[0].update(target_va=x[0]['target_va'] + 1),
+                       lambda x: x[0].update(resolution='ambiguous')):
+            bad = self.valid_report(); mutate(bad['object_ownership']['accepted'][0]['initializer_relocations']); cases.append(bad)
+        for bad in cases:
+            with self.assertRaises(ValueError): _require_category_names_owner(bad)
+
+    def test_no_exact_peer_losses_is_mandatory(self):
+        before = {'functions': [{'name': 'peer', 'status': 'FUNCTION_MATCH'},
+                                {'name': 'target', 'status': 'DIFFER'}]}
+        _require_exact_neighbors_preserved(before, {'functions': [{'name': 'peer', 'status': 'FUNCTION_MATCH'},
+                                                                  {'name': 'target', 'status': 'FUNCTION_MATCH'}]})
+        with self.assertRaisesRegex(ValueError, 'Exact neighbor regressed: peer'):
+            _require_exact_neighbors_preserved(before, {'functions': [{'name': 'peer', 'status': 'DIFFER'},
+                                                                      {'name': 'target', 'status': 'FUNCTION_MATCH'}]})
 
 
 class IslandKey(unittest.TestCase):

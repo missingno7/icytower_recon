@@ -183,7 +183,13 @@ char *hisc_names[15] = {
     "Single Jump Sequence", "Double Jump Sequence", "Triple Jump Sequence",
     "Quadruple Jump Sequence", "Quintuple Jump Sequence"
 };
-char *category_names[15];
+char *category_names[15] = {
+    "Score", "Best Combo", "Floor", "Lost Combo", "Top Floor, No Combos",
+    "Clock Challenge 1", "Clock Challenge 2", "Clock Challenge 3",
+    "Clock Challenge 4", "Clock Challenge 5", "Single Jump Sequence",
+    "Double Jump Sequence", "Triple Jump Sequence", "Quadruple Jump Sequence",
+    "Quintuple Jump Sequence"
+};
 static int face;
 static int count;
 char scroller_greetings[156] = {
@@ -208,9 +214,6 @@ char init_string[7] = { 0x71, 0x79, 0x75, 0x6a, 0x7d, 0x68, 0x00 };
 Tscroller greeting_scroller;
 char summary_scroller_message[5120];
 Tscroller summary_scroller;
-static char *result_categories[5] = {
-    "Score", "Best Combo", "Floor", "Lost Combo", "Top Floor, No Combos"
-};
 
 /* Initialized menu data recovered from main.c's DWARF declarations and the
  * original .data bytes.  Links stay symbolic so the ordinary linker owns the
@@ -4156,7 +4159,7 @@ void draw_results(BITMAP *bmp, BITMAP *logo, int y, int *qualified,
     draw_sprite(bmp,logo,320-logo->w/2,y);
     for (i=0; i<numCats; i++) {
         textprintf_ex(bmp,data[52].dat,200,y+logo->h+3+pos,-1,-1,"%s:",
-                      result_categories[categories[i]]);
+                      category_names[categories[i]]);
         textprintf_right_ex(bmp,data[52].dat,440,y+logo->h+3+pos,-1,-1,"%d",
                             qValues[categories[i]]);
         if (showQ) {

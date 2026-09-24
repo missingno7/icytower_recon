@@ -101,11 +101,20 @@ def plan(name, spec_path):
         if n not in edits['bodies']: raise ValueError('Added definition without a retained body: ' + n)
         if ledger[source]['functions'].get(n) != 'MISSING': raise ValueError('Added definition is not MISSING in the ledger: ' + n)
     statics = set(edits['statics'])
-    preserved = [n for n in old_isl if n not in edits['bodies'] and island_key(old_isl[n], n in statics) == island_key(new_isl[n], n in statics)]
-    replaced_here = [n for n in edits['bodies'] if n in old_isl]   # an ADDED body replaces no island
+    changed_functions = set(edits['bodies']) | set((edits.get('data_owner_correction') or {}).get('changed_functions', []))
+    preserved = [n for n in old_isl if n not in changed_functions and island_key(old_isl[n], n in statics) == island_key(new_isl[n], n in statics)]
+    replaced_here = [n for n in changed_functions if n in old_isl]   # an ADDED body replaces no island
     if len(preserved) != len(old_isl) - len(replaced_here): raise ValueError('A definition island changed without a retained body: ' + str([n for n in old_isl if n not in edits['bodies'] and n not in preserved]))
     for n in edits['bodies']:
         if island_key(new_isl[n], n in statics, definition_only=True) != island_key({'text': retained_body(ROOT / edits['bodies'][n]['path'])['text']}, n in statics): raise ValueError('Planned island differs from retained body: ' + n)
+    owner_edit = edits.get('data_owner_correction')
+    if owner_edit:
+        name_to_check = 'draw_results'
+        before, after = owner_edit['function_expression']['before'], owner_edit['function_expression']['after']
+        old_body = island_key(old_isl[name_to_check], name_to_check in statics)
+        new_body = island_key(new_isl[name_to_check], name_to_check in statics)
+        if old_body.count(before) != 1 or new_body != old_body.replace(before, after, 1):
+            raise ValueError('The data-owner route changed more than the evidenced draw_results reference')
     from source_scope import sanitized
     # The generated forward-declaration block only repeats each definition's own signature, so an
     # attribute already carried by a definition is counted once, where the author wrote it.
@@ -130,11 +139,16 @@ def plan(name, spec_path):
     files = [source] + sorted(headers)
     identities = {f: identity(ROOT / f) for f in files}
     identities.update(required_headers)
+    evidence_identities = {}
+    if owner_edit:
+        evidence = owner_edit['evidence']
+        evidence_identities[evidence] = identity(ROOT / evidence)
     if provenance_after is not None:
         identities[PROVENANCE] = identity(ROOT / PROVENANCE)
     card = {'schema': 1, 'task_kind': 'TU_CONTEXT', 'function': name, 'source': source, 'sources': files, 'target': target, 'affected_targets': [target],
             'difficulty': 'CHEAP', 'priority': 200, 'spec': spec, 'edits': edits, 'source_identities': identities,
-            'new_text_identity': identity_text(new), 'new_header_identities': {h: identity_text(t) for h, t in headers.items()}, 'required_generated_headers': required_headers, 'preserved_definitions': sorted(preserved), 'replaced_definitions': sorted(edits['bodies']),
+            'new_text_identity': identity_text(new), 'new_header_identities': {h: identity_text(t) for h, t in headers.items()}, 'required_generated_headers': required_headers, 'preserved_definitions': sorted(preserved), 'replaced_definitions': sorted(changed_functions),
+            'evidence_identities': evidence_identities,
             'body_edit_allowed': False, 'state': 'TU_CONTEXT_TRANSACTION',
             'begin_command': 'python tools/tu_context_task.py begin ' + name, 'apply_command': 'python tools/tu_context_task.py apply ' + name,
             'verification_command': 'python tools/tu_context_task.py check ' + name, 'promotion_command': 'python tools/tu_context_task.py promote ' + name,
@@ -173,6 +187,8 @@ def begin(name):
     ledger = read_json(ROOT / 'src/recovery.json'); validate_ledger(ledger)
     for path, ident in card['source_identities'].items():
         if identity(ROOT / path) != ident: raise ValueError('Plan is stale for ' + path + '; re-plan against the current source')
+    for path, ident in card.get('evidence_identities', {}).items():
+        if identity(ROOT / path) != ident: raise ValueError('Plan evidence changed: ' + path)
     for n, b in card['edits']['bodies'].items():
         if identity(ROOT / b['path']) != b['identity']: raise ValueError('Retained body changed since planning: ' + n)
     with promotion_lock():
@@ -198,6 +214,8 @@ def validate_scope(session):
     current = snapshot_files(); before = session['files']; source = session['source']; allowed = set(session['plan']['sources'])
     for header, ident in session['plan'].get('required_generated_headers', {}).items():
         if identity(ROOT / header) != ident: raise ValueError('Required generated header changed: ' + header)
+    for path, ident in session['plan'].get('evidence_identities', {}).items():
+        if identity(ROOT / path) != ident: raise ValueError('Required evidence changed: ' + path)
     if session['plan'].get('provenance_after_identity'):
         allowed.add(PROVENANCE)
     for path in set(current) | set(before):
@@ -239,12 +257,58 @@ def apply(name):
     print('applied TU_CONTEXT', name, 'to', ', '.join(card['sources']))
 
 
+_CATEGORY_NAMES_ORIGINAL_BYTES = '03644d0009644d0014644d001a644d0025644d003a634d004c634d005e634d0070634d0082634d0094634d00a9634d00be634d00d3634d00eb634d00'
+
+
+def _require_exact_neighbors_preserved(before, after):
+    current = {row['name']: row for row in after['functions']}
+    for row in before['functions']:
+        if row['status'] == 'FUNCTION_MATCH' and current.get(row['name'], {}).get('status') != 'FUNCTION_MATCH':
+            raise ValueError('Exact neighbor regressed: ' + row['name'])
+
+
+def _require_category_names_owner(report):
+    """Require the complete historically owned 15-pointer initializer in a fresh strict report."""
+    import struct
+    matches = [owner for owner in report.get('object_ownership', {}).get('accepted', [])
+               if owner.get('name') == 'category_names' and tuple(owner.get('scope') or ()) == ('GLOBAL',)]
+    if len(matches) != 1:
+        raise ValueError('Fresh strict report must accept exactly one GLOBAL category_names owner')
+    owner = matches[0]
+    expected = {
+        'original_die': 136974, 'original_va': 4964480, 'section': '.data',
+        'candidate_offset': 128, 'size': 60, 'dwarf_type': 'char *[15]',
+        'candidate_type': 'char *[15]',
+        'proof': 'Unique CU/scope/name, identical DWARF type graph, COFF owner, storage and complete independently resolved initializer',
+        'initializer': 'all initialized bytes equal after independent relocation resolution',
+    }
+    for key, value in expected.items():
+        if owner.get(key) != value:
+            raise ValueError('category_names owner has unexpected ' + key + ': ' + repr(owner.get(key)))
+    if owner.get('initial_value') != _CATEGORY_NAMES_ORIGINAL_BYTES:
+        raise ValueError('category_names does not contain the complete historical 15-pointer initializer')
+    relocs = owner.get('initializer_relocations')
+    if not isinstance(relocs, list) or len(relocs) != 15:
+        raise ValueError('category_names must have exactly 15 independently resolved initializer relocations')
+    expected_targets = list(struct.unpack('<15I', bytes.fromhex(_CATEGORY_NAMES_ORIGINAL_BYTES)))
+    for index, row in enumerate(relocs):
+        if row.get('object_offset') != index * 4 or row.get('type') != 6:
+            raise ValueError('category_names initializer relocation slot is incomplete or reordered at index ' + str(index))
+        if row.get('symbol') != '.rdata' or row.get('target_va') != expected_targets[index]:
+            raise ValueError('category_names initializer target differs at index ' + str(index))
+        if row.get('resolution') != 'unique read-only initializer literal or table content':
+            raise ValueError('category_names initializer target lacks independent literal resolution at index ' + str(index))
+    return {'owner': 'category_names', 'original_die': owner['original_die'], 'original_va': owner['original_va'],
+            'size': owner['size'], 'initializer_relocations': len(relocs), 'complete_initializer_equal': True}
+
+
 def _acceptance(s, report, old):
     """Strict final-state predicate beyond no_regressions."""
     from interfaces import declarations
     from tu_context_probe import islands, retained_body
     card = s['plan']
     no_regressions(old, report)
+    _require_exact_neighbors_preserved(old, report)
     before_implicit = {d['name'] for d in declarations(old.get('interfaces_aux', '')) if d['kind'] == 'IC'}
     after_implicit = {d['name'] for d in declarations(report.get('interfaces_aux', '')) if d['kind'] == 'IC'}
     if after_implicit - before_implicit: raise ValueError('New implicit declarations: ' + ', '.join(sorted(after_implicit - before_implicit)))
@@ -263,11 +327,22 @@ def _acceptance(s, report, old):
         if identity(ROOT / b['path']) != b['identity']: raise ValueError('Retained body changed: ' + n)
         if island_key(isl[n], n in statics, definition_only=True) != island_key({'text': retained_body(ROOT / b['path'])['text']}, n in statics):
             raise ValueError('Replaced body does not equal its retained evidence: ' + n)
+    owner_edit = card['edits'].get('data_owner_correction')
+    owner_result = None
+    if owner_edit:
+        name = 'draw_results'
+        old_body = island_key(old_isl[name])
+        new_body = island_key(isl[name])
+        before, after = owner_edit['function_expression']['before'], owner_edit['function_expression']['after']
+        if old_body.count(before) != 1 or new_body != old_body.replace(before, after, 1):
+            raise ValueError('Applied category_names route changed more than the evidenced draw_results reference')
+        owner_result = _require_category_names_owner(report)
     if card.get('provenance_after_identity'):
         from recovered_game_link import provenance_status
         provenance_status()
     before_exact = sum(1 for f in old['functions'] if f['status'] == 'FUNCTION_MATCH'); after_exact = report['function_matches']
     return {'exact_before': before_exact, 'exact_after': after_exact,
+            'category_names_owner': owner_result,
             'gains': sorted(f['name'] for f in report['functions'] if f['status'] == 'FUNCTION_MATCH' and next(o for o in old['functions'] if o['name'] == f['name'])['status'] != 'FUNCTION_MATCH')}
 
 

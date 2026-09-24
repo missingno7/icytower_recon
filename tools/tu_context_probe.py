@@ -24,6 +24,25 @@ from common import ROOT, read_json, write_json, identity
 EVIDENCE = ROOT / 'docs/attempts/tu-context'
 OUT = ROOT / 'build/tu-context'
 
+# This is deliberately a single historical data-owner repair, not a general-purpose
+# top-level initializer editor.  The identities are grounded in the retained evidence
+# note and the independently parsed original object/DWARF record.
+DRAW_RESULTS_OWNER_ROUTE = 'draw_results_category_names_20260924'
+DRAW_RESULTS_OWNER_EVIDENCE = 'docs/attempts/game-main/draw-results-owner-correction-20260924.md'
+_CATEGORY_DECL_OLD = 'char *category_names[15];'
+_CATEGORY_DECL_NEW = '''char *category_names[15] = {
+    "Score", "Best Combo", "Floor", "Lost Combo", "Top Floor, No Combos",
+    "Clock Challenge 1", "Clock Challenge 2", "Clock Challenge 3",
+    "Clock Challenge 4", "Clock Challenge 5", "Single Jump Sequence",
+    "Double Jump Sequence", "Triple Jump Sequence", "Quadruple Jump Sequence",
+    "Quintuple Jump Sequence"
+};'''
+_RESULT_CATEGORIES_OLD = '''static char *result_categories[5] = {
+    "Score", "Best Combo", "Floor", "Lost Combo", "Top Floor, No Combos"
+};'''
+_DRAW_RESULTS_REF_OLD = 'result_categories[categories[i]]'
+_DRAW_RESULTS_REF_NEW = 'category_names[categories[i]]'
+
 
 def _spans(text):
     from emission_order import _definition_spans
@@ -122,6 +141,57 @@ def declaration_edits(skeleton, decl, nl):
         if not anchor: raise ValueError('Include anchor not found: ' + header)
         skeleton = skeleton[:anchor.end()] + ''.join('#include <%s>%s' % (n, nl) for n in names) + skeleton[anchor.end():]
     return skeleton, removed
+
+
+def _replace_unique_top_level(text, before, after, name):
+    """Replace one exact, evidenced file-scope data span while preserving its source slot."""
+    from source_scope import sanitized
+    clean = sanitized(text)
+    pattern = r'\r?\n'.join(re.escape(part) for part in before.split('\n'))
+    matches = list(re.finditer(pattern, text))
+    if len(matches) != 1:
+        raise ValueError('Expected exactly one source span for ' + name + '; found ' + str(len(matches)))
+    match = matches[0]; start, end = match.span()
+    if clean[:start].count('{') != clean[:start].count('}'):
+        raise ValueError('Data replacement span is not file-scope: ' + name)
+    # The declaration's actual name/type are fixed by the route.  This also prevents a
+    # caller from using a semantically unrelated exact string as the accepted owner.
+    if name == 'category_names' and before != _CATEGORY_DECL_OLD:
+        raise ValueError('Unexpected category_names source declaration')
+    if name == 'result_categories' and before != _RESULT_CATEGORIES_OLD:
+        raise ValueError('Unexpected result_categories source definition')
+    return text[:start] + after + text[end:]
+
+
+def apply_draw_results_owner_route(text, target, source, route):
+    """Apply the fixed category_names owner repair, with exact top-level spans and one function expression."""
+    if (target, source, route) != ('game-main', 'src/main.c', DRAW_RESULTS_OWNER_ROUTE):
+        raise ValueError('Unknown or mis-scoped data-owner route')
+    nl = '\r\n' if '\r\n' in text else '\n'
+    category_after = _CATEGORY_DECL_NEW.replace('\n', nl)
+    result_before = _RESULT_CATEGORIES_OLD
+    text = _replace_unique_top_level(text, _CATEGORY_DECL_OLD, category_after, 'category_names')
+    text = _replace_unique_top_level(text, result_before, '', 'result_categories')
+
+    from source_scope import function_span
+    start, end = function_span(text, 'draw_results')
+    body = text[start:end]
+    if body.count(_DRAW_RESULTS_REF_OLD) != 1:
+        raise ValueError('Expected one draw_results category table reference')
+    body = body.replace(_DRAW_RESULTS_REF_OLD, _DRAW_RESULTS_REF_NEW, 1)
+    text = text[:start] + body + text[end:]
+    details = {
+        'route': DRAW_RESULTS_OWNER_ROUTE,
+        'evidence': DRAW_RESULTS_OWNER_EVIDENCE,
+        'top_level_replacements': [
+            {'name': 'category_names', 'before': _CATEGORY_DECL_OLD, 'after': category_after},
+            {'name': 'result_categories', 'before': result_before, 'after': ''},
+        ],
+        'function_expression': {'function': 'draw_results', 'before': _DRAW_RESULTS_REF_OLD,
+                               'after': _DRAW_RESULTS_REF_NEW},
+        'changed_functions': ['draw_results'],
+    }
+    return text, details
 
 
 def layout(text, order, bodies=None, statics=(), prototypes='auto', keep_unlisted='end', declarations=None, late_declarations=None):
@@ -354,6 +424,18 @@ def build_text(target, source, spec):
     """Overlay text from an edit spec: order ('historical'|'current'|list), bodies {name: path}, statics ('historical'|list), prototypes."""
     base = ROOT / (spec.get('research_base') or source)
     text = base.read_bytes().decode('cp1252')
+    owner_route = spec.get('data_owner_correction')
+    owner_edit = None
+    if owner_route is not None:
+        forbidden = ('research_base', 'bodies', 'statics', 'declarations', 'late_declarations',
+                     'headers', 'add', 'provenance')
+        if (target, source, owner_route) != ('game-main', 'src/main.c', DRAW_RESULTS_OWNER_ROUTE):
+            raise ValueError('Unknown or mis-scoped data-owner route')
+        if any(spec.get(key) for key in forbidden):
+            raise ValueError('The category_names owner route cannot be combined with other edit kinds')
+        if spec.get('order', 'current') not in ('current', 'historical') or spec.get('prototypes', 'auto') != 'none':
+            raise ValueError('The category_names owner route requires current or historical definition order and no generated prototypes')
+        text, owner_edit = apply_draw_results_owner_route(text, target, source, owner_route)
     unit = next(u for u in read_json(ROOT / 'src/units.json') if u['source'] == source)
     isl = islands(text); current = [i['name'] for i in isl]
     order = spec.get('order', 'current')
@@ -376,7 +458,8 @@ def build_text(target, source, spec):
     edits = {'focus': spec.get('focus') or [], 'declarations': ({**spec['declarations'], 'removed_text': layout.removed} if spec.get('declarations') else {}), 'order': order, 'definition_order_with_static': [(n, (n in cur_static) or (n in set(statics))) for n in full], 'bodies': {n: {'path': spec['bodies'][n], 'identity': bodies[n]['identity']} for n in bodies}, 'statics': list(statics), 'prototypes': spec.get('prototypes', 'auto'),
              'research_base': ({'path': spec['research_base'], 'identity': identity(base)} if spec.get('research_base') else None),
              'late_declarations': spec.get('late_declarations') or [],
-             'headers': {h: {'removed_declarations': v['removed'], 'evidence': v['evidence']} for h, v in headers.items()}}
+             'headers': {h: {'removed_declarations': v['removed'], 'evidence': v['evidence']} for h, v in headers.items()},
+             'data_owner_correction': owner_edit}
     return new, edits, {h: v['text'] for h, v in headers.items()}
 
 
