@@ -6441,25 +6441,27 @@ void force_create_profile(void)
         rectfill(screen,129,240,430,258,makecol(80,80,80));
         blit_to_screen(screen);
         res=get_string(screen,new_name,300,32,data[54].dat,130,240,makecol(0,0,0),-1);
-        if (res<0 || (res>0 && !new_name[0]))
-            continue;
-        if (res==0) {
+        if (res>=-1) {
+            if (res==-1) {
             my_alert("You can create a profile later in the OPTIONS menu.","Oh Well...",0,1);
             profile=load_profile("guest");
             if (!profile)
                 profile=create_profile("guest",1);
             syncOptionsFromProfile();
             break;
+            }
+            if (!new_name[0])
+                continue;
+            replaceBadCharacters(new_name,'_');
+            profile=create_profile(new_name,0);
+            if (!profile) {
+                my_alert("That profile name is taken.","Ooops!",0,1);
+                continue;
+            }
+            sprintf(buf,"Welcome %s!",profile->handle);
+            my_alert(buf,"Your profile has been created!",0,1);
+            break;
         }
-        replaceBadCharacters(new_name,'_');
-        profile=create_profile(new_name,0);
-        if (!profile) {
-            my_alert("That profile name is taken.","Ooops!",0,1);
-            continue;
-        }
-        sprintf(buf,"Welcome %s!",profile->handle);
-        my_alert(buf,"Your profile has been created!",0,1);
-        break;
     }
     destroy_bitmap(bg);
     strcpy(options.lastProfile,profile->handle);
