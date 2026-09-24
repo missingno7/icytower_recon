@@ -1,0 +1,81 @@
+{
+  "compiler": "TDM-GCC 4.4.1 tdm-2",
+  "base_flags": [
+    "-O2",
+    "-g",
+    "-mfpmath=387"
+  ],
+  "diagnostic_flags": [
+    "-fdump-tree-all",
+    "-fdump-rtl-all"
+  ],
+  "comparison": "Each dump build was compared to a no-dump build from the identical source path. The dump and no-dump object hashes, every section hash, every function effective projection/status, and full object relocation lists agree.",
+  "variants": {
+    "control": {
+      "source_sha256": "2a12d635e2fbf74bd0388869fd303a6622b9ee31305e110bc7cfaa41d4c05044",
+      "dump_object_sha256": "9de5c157ae81d60f111cc4d0c1d4c2e39b1d70a97ef02231f57a277c97e97b1e",
+      "no_dump_object_sha256": "9de5c157ae81d60f111cc4d0c1d4c2e39b1d70a97ef02231f57a277c97e97b1e",
+      "same_object_hash": true,
+      "function_projection_equal": true,
+      "all_sections_equal": true,
+      "all_object_relocations_equal": true,
+      "relocation_count": 4450,
+      "target": {
+        "status": "DIFFER",
+        "size": 961,
+        "first_difference": {
+          "offset": 8,
+          "original_va": 4227040,
+          "candidate_byte": 76,
+          "original_byte": 60
+        },
+        "same_between_dump_and_nodump": true
+      }
+    },
+    "dwarf_names": {
+      "source_sha256": "f348d459badc705d0baddcb7ba074d79e086c2e0ce4ad8b3c66363034a4c896f",
+      "dump_object_sha256": "e3b243f57292ff13a3d4ee21cfc195c512c5b5ef82e907010a0a59ebdda38625",
+      "no_dump_object_sha256": "e3b243f57292ff13a3d4ee21cfc195c512c5b5ef82e907010a0a59ebdda38625",
+      "same_object_hash": true,
+      "function_projection_equal": true,
+      "all_sections_equal": true,
+      "all_object_relocations_equal": true,
+      "relocation_count": 4451,
+      "target": {
+        "status": "DIFFER",
+        "size": 910,
+        "first_difference": {
+          "offset": 8,
+          "original_va": 4227040,
+          "candidate_byte": 76,
+          "original_byte": 60
+        },
+        "same_between_dump_and_nodump": true
+      }
+    }
+  },
+  "pass_observation": {
+    "function": "handle_player_collision_old",
+    "earliest_dump_with_ebp_minus_60_home": "172r.ira",
+    "absent_from": [
+      "128r.expand",
+      "154r.reginfo",
+      "159r.combine"
+    ],
+    "control_ira_store_insn": 349,
+    "retained_dwarf_names_ira_store_insn": 325,
+    "location": "-60(%ebp), in frame-relative %sfp slot -36",
+    "final_frame": "0x4c candidate vs 0x3c historical from strict function comparison",
+    "limit": "The candidate slot is visible by IRA, but the complete 16-byte frame reservation is established from the final function prologue; historical GCC pass dumps are unavailable."
+  },
+  "source_shape_difference": {
+    "description": "The current body materializes x/y input-coordinate locals and reuses them as midpoint results; the retained body uses separate dX/dY and midX/midY locals. Thus their first RTL differences are source-shape differences visible by expand, not an isolated compiler pass perturbation.",
+    "no_new_source_hypothesis": "Both forms choose the same -60 dX home by IRA; this comparison does not identify a further source-backed next hypothesis."
+  },
+  "artifacts": {
+    "control_dumps": "build/tu-context/game-main/collision-old-pass-luna-high-20260924/control/main.c.*",
+    "retained_dwarf_dumps": "build/tu-context/game-main/collision-old-pass-luna-high-20260924/dwarf_names/main.c.*",
+    "comparisons": "build/tu-context/game-main/collision-old-pass-luna-high-20260924/{control,dwarf_names}/comparison.json",
+    "no_dump_comparisons": "build/tu-context/game-main/collision-old-pass-luna-high-20260924/{control,dwarf_names}/comparison-nodump.json"
+  }
+}
