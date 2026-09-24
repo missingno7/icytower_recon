@@ -1,0 +1,33 @@
+{
+  "target": "game-replay/calc_replay_checksum",
+  "scope": "isolated research only; no maintained source or recovery status changed",
+  "compiler": "locked TDM-2 GCC 4.4.1",
+  "flags": ["-O2", "-mfpmath=387"],
+  "posts_swap": {
+    "status": "DIFFER",
+    "candidate_size": 671,
+    "historical_size": 676,
+    "first_difference_offset": 21,
+    "historical_va": "0x41bad9",
+    "historical_instruction": "lea 0x11(%edx,%eax),%ecx",
+    "candidate_instruction": "lea 0x11(%edx,%eax),%edx",
+    "historical_modrm": "4c",
+    "candidate_modrm": "54"
+  },
+  "rtl": {
+    "dump_recompile_byte_neutral": true,
+    "virtual_destination": "reg 108 through 168r.asmcons",
+    "first_candidate_hard_register_assignment": "172r.ira: DX",
+    "remains_dx_through": ["174r.postreload", "181r.csa", "182r.peephole2"],
+    "original_rtl_available": false
+  },
+  "split_accumulator_shape": {
+    "status": "DIFFER",
+    "candidate_size": 671,
+    "historical_size": 676,
+    "first_difference_offset": 13,
+    "differing_byte_count": 374,
+    "exact_function_matches": 8
+  },
+  "blocker": "No source or original RTL evidence explains a source-backed way to make GCC allocate the first accumulator to ECX while retaining the remaining historical code."
+}

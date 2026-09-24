@@ -100,10 +100,17 @@ the load result or closes the draw code/relocation gap.
 The 7/15 load match therefore survives several DWARF-backed draw steps, with
 all maintained exact functions preserved. Draw itself is still 3007/3726 or
 3011/3726, and the best observed stack frame is still 16 bytes short of the
-original. No strict draw match or promotion path has been established. The
+original. At this research stage, no strict draw match or promotion path had
+been established. The
 remaining instruction and relocation differences require further source
 recovery; adding unsupported padding or guessing extra locals would not be
 historically supported.
+
+The subsequent `replay_load_draw_historical_20260924` TU transaction used the
+historically ordered selected-row calls and DWARF buffer scopes, passed the
+strict acceptance gate, and promoted `load_replay` as the seventh exact replay
+function. Its retained source, receipt, and unresolved draw-frame result are
+documented in `../research-20260924-draw-selector-residual/README.md`.
 
 ## Artifacts
 

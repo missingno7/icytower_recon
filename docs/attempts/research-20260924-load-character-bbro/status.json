@@ -1,0 +1,64 @@
+{
+  "task": "game-custom/load_character_bmp",
+  "scope": "Isolated compiler-pass research. Maintained src, current state, recovery ledger, and source files were not edited.",
+  "compiler": "locked TDM GCC 4.4.1 tdm-2",
+  "flags": [
+    "-O2",
+    "-g",
+    "-mfpmath=387",
+    "-DALLEGRO_STATICLINK",
+    "-fdump-rtl-bbro"
+  ],
+  "source": {
+    "path": "src/custom.c",
+    "size": 17997,
+    "sha256": "d3f74e4dcc50f167a7e130e5e7c72ba961d38d8acbfd6faa7f60245bc914461c"
+  },
+  "diagnostic_control": {
+    "baseline_object_sha256": "81cb9d9bf3b39d6aa5e2fa6a392c20bc72e960d320103d7e1c9447aaade3fc50",
+    "diagnostic_object_sha256": "9209c6ac9350f068f8f619ebb59812293b9764b32954a29a9afcc3fcfbd78213",
+    "text_section_size": 7280,
+    "text_section_sha256": "3c5d37b4c19df3d34b813c9a8cf92bce04106e1523d0a145ce83c423a4748dbf",
+    "text_section_equal": true,
+    "strict_functions": "9/10 FUNCTION_MATCH",
+    "exact_peers": [
+      "init_custom",
+      "destroy_custom_data",
+      "loadCustomSoundFILE",
+      "loadCustomSoundDF",
+      "clear_trailing_whitespace",
+      "get_string_data",
+      "load_sounds",
+      "custom_alert",
+      "load_frames"
+    ],
+    "focus": "DIFFER; candidate 1993 bytes vs historical 1992; first mismatch +134 (VA 0x403252), candidate 0xF1 vs original 0xE3 in near JE displacement."
+  },
+  "historical_evidence": [
+    "Original +0x84 near JE targets +0x56d, whose line mapping is the fopen-failure log2file at +1389; the return is at +1413..1418 and the [datafile] fgets begins at +1440.",
+    "Candidate equivalent branch targets +0x77b, placing the failure log/return at the tail, over 500 bytes later.",
+    "DWARF gives fp, buf[1024], ret, data[1024], filename[1024], ok, i, and depth root-scope locations/lifetimes; nested alert buffers and datafile locals are separately scoped.",
+    "The RTL BBRO trace assigns the cold failure block to late block 73 (BBRO key -2, changed to -1000102 and visited trace 16); following tracing places blocks 27 through 78 after the main paths. This is consistent with the candidate tail placement."
+  ],
+  "hypotheses_and_trials": [
+    {
+      "hypothesis": "Positive-success nesting with failure log in else may recover the original early failure block placement.",
+      "result": "Existing isolated probe compiled to the same effective object as baseline: no candidate loader output change; all nine peers retained. See research-20260924-load-character-failure-layout artifacts."
+    },
+    {
+      "hypothesis": "RTL BBRO pass output can distinguish whether cold block placement is a candidate compiler layout decision while retaining machine output.",
+      "result": "Confirmed: -fdump-rtl-bbro produced a byte-identical .text section and the strict 9/10 result remained unchanged. The dump shows the failure block as late cold BBRO trace 16."
+    },
+    {
+      "hypothesis": "-fdump-rtl-cfg could provide complementary CFG output.",
+      "result": "Compilation rejected this flag: locked GCC reports unrecognized command line option; no object emitted."
+    }
+  ],
+  "blocker": "The original instruction/line table proves the historical open-failure block was laid out at +0x56d before the [datafile] parser. Candidate GCC trace formation places the same cold block at the function tail. Rewriting success nesting was output-identical. The pass trace explains candidate placement, but available DWARF and call/data evidence do not identify a source spelling, branch-probability fact, or historical CFG construction that makes GCC select the original placement. Do not continue free-form syntax variations.",
+  "next_discriminating_artifact": "Original pre-BBRO GCC CFG/RTL dump or historical source excerpt showing branch/block formation for this function. Otherwise supervisor investigation into candidate-vs-historical GCC block-frequency/trace inputs is required.",
+  "artifacts": {
+    "bbro_dump": "docs/attempts/research-20260924-load-character-bbro/custom.c.187r.bbro",
+    "earlier_guard_probe": "docs/attempts/research-20260924-load-character-failure-layout/README.md",
+    "current_focused_card": "docs/current/functions/custom/load_character_bmp.json"
+  }
+}
