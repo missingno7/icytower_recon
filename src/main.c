@@ -6425,10 +6425,10 @@ void force_create_profile(void)
         char buf[129];
 
         checkMenuFocus();
-        blit(bg,screen,0,0,0,0,gfx_driver->w,gfx_driver->h);
+        blit(bg,screen,0,0,0,0,SCREEN_W,SCREEN_H);
         set_trans_blender(0,0,0,158);
         drawing_mode(DRAW_MODE_TRANS,0,0,0);
-        rectfill(screen,0,0,gfx_driver->w,gfx_driver->h,makecol(0,0,0));
+        rectfill(screen,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
         solid_mode();
         draw_sprite(screen,data[87].dat,100,120);
         textout_ex(screen,data[51].dat,"Welcome to Icy Tower",130,127,-1,-1);
