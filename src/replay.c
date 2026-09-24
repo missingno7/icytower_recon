@@ -486,6 +486,23 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
      * 0x14=-1,0x18=-1, all read directly off the movl/mov-before-call chain. */
     textout_ex(bmp, data[51].dat, "SELECT REPLAY", x + 10, y - 12, -1, -1);
 
+    draw_sprite(bmp, data[89].dat, x + 0x136, y + 0x22);
+    draw_sprite(bmp, data[112].dat, x + 0x137, y + 0x104);
+    switch (sort_method) {
+    case 1:
+        draw_sprite(bmp, data[115].dat, x + 0x112, y + 0x141);
+        break;
+    case 2:
+        draw_sprite(bmp, data[116].dat, x + 0x112, y + 0x163);
+        break;
+    case 3:
+        draw_sprite(bmp, data[113].dat, x + 0x11e, y + 0x163);
+        break;
+    case 4:
+        draw_sprite(bmp, data[114].dat, x + 0x11e, y + 0x141);
+        break;
+    }
+
     /* 509: set_clip_rect(bmp,x+6,0,x+0x122,bmp->h-1) -- the current reconstruction's
      * (x+10,y+35,x+185,y+300) does not match a single one of these four operands. */
     set_clip_rect(bmp, x + 6, 0, x + 290, bmp->h - 1);
@@ -512,11 +529,12 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
         is_dir = post->directory;
         marker = is_dir ? '}' : '{';
         if (i == selection) {
-            /* 534: textprintf_ex(bmp,font,x+8,row,mg,-1,"> %c %s",marker,name) --
-             * always color mg regardless of is_dir. No rectfill call exists
-             * anywhere in this loop's instruction range: the current source's
-             * `if (i==selection) rectfill(...)` selection highlight corresponds
-             * to no real instruction and is not reproduced here. */
+            /* Original offsets 0x568..0x5ec: alpha-50 mode, the inlined
+             * rectfill(vtable+0x3c), solid mode, then selected text. */
+            set_trans_blender(0, 0, 0, 50);
+            drawing_mode(DRAW_MODE_TRANS, 0, 0, 0);
+            rectfill(bmp, x + 7, row, x + 0x125, row + fh - 9, fg);
+            solid_mode();
             textprintf_ex(bmp, font, x + 8, row, mg, -1, "> %c %s", marker, name);
         } else if (is_dir) {
             /* 525 (predecessor A): color mg when is_dir. */

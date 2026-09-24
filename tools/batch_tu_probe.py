@@ -119,6 +119,74 @@ def run_probe(manifest, probe):
     return cached
 
 
+def codegen_diagnostics(function, report, helper):
+    """Mechanical candidate metrics; no inference about the original CFG."""
+    response = helper.compiler_response(function, report)
+    instructions = function["instructions"]
+    base = function["candidate_offset"]
+    relocations = function["relocations"]
+    transfers = function["direct_transfers"]
+    calls = []
+    call_relocation_offsets = set()
+    for insn in instructions:
+        if not insn["mnemonic"].startswith("call"):
+            continue
+        start = insn["address"] - base
+        end = start + len(bytes.fromhex(insn["bytes"]))
+        owned_relocs = [item for item in relocations
+                        if start <= item["function_offset"] < end]
+        owned_transfers = [item for item in transfers
+                           if item["instruction_offset"] == start
+                           and item["transfer_kind"] == "call"]
+        call_relocation_offsets.update(item["function_offset"] for item in owned_relocs)
+        owners = ([item["symbol"] for item in owned_relocs if item.get("symbol")]
+                  + [item["target_function"] for item in owned_transfers
+                     if item.get("target_function")])
+        calls.append(owners[0] if len(owners) == 1 else None)
+    non_call_relocs = [item for item in relocations
+                       if item["function_offset"] not in call_relocation_offsets]
+    first = function.get("first_difference")
+    first_instruction = None
+    if isinstance(first, dict):
+        offset = first["offset"]
+        for insn in instructions:
+            start = insn["address"] - base
+            if start <= offset < start + len(bytes.fromhex(insn["bytes"])):
+                first_instruction = {"offset": start, "mnemonic": insn["mnemonic"],
+                                     "assembly": insn["assembly"],
+                                     "relocation_operand": any(
+                                         item["function_offset"] <= offset < item["function_offset"] + 4
+                                         for item in relocations)}
+                break
+    return {
+        "frame": response["frame"], "branches": response["branches"],
+        "calls": response["calls"], "call_targets": calls,
+        "named_call_targets": sum(target is not None for target in calls),
+        "non_call_relocations": len(non_call_relocs),
+        "unequal_non_call_relocations": sum(not item.get("equal", False) for item in non_call_relocs),
+        "differing_bytes": response["differing_bytes"],
+        "first_candidate_instruction": first_instruction,
+    }
+
+
+def baseline_delta(current, baseline):
+    """Only compare a call sequence when every call has an identified owner."""
+    def frame_value(value):
+        return int(value, 16) if value != "unknown" else None
+    current_frame, baseline_frame = frame_value(current["frame"]), frame_value(baseline["frame"])
+    call_order = None
+    if (current["named_call_targets"] == current["calls"]
+            and baseline["named_call_targets"] == baseline["calls"]):
+        call_order = current["call_targets"] == baseline["call_targets"]
+    return {
+        "frame_bytes": current_frame - baseline_frame if current_frame is not None and baseline_frame is not None else None,
+        "branches": current["branches"] - baseline["branches"],
+        "calls": current["calls"] - baseline["calls"],
+        "non_call_relocations": current["non_call_relocations"] - baseline["non_call_relocations"],
+        "call_target_order_equal": call_order,
+    }
+
+
 def report_row(manifest, probe, receipt):
     record = receipt
     report_path = root_path(record["report_path"])
@@ -141,6 +209,7 @@ def report_row(manifest, probe, receipt):
         "first_mismatch": first.get("offset") if isinstance(first, dict) else None,
         "matches_after": record.get("matches_after"), "gains": record.get("gains", []), "losses": record.get("losses", []),
         "effective_identity": identity,
+        "codegen": codegen_diagnostics(target, report, helper),
     }
 
 
@@ -165,8 +234,20 @@ def main():
         groups.setdefault(row["effective_identity"], []).append(row["name"])
     print("\nBATCH SUMMARY")
     print(f"{manifest['target']} / {manifest['function']}: {len(rows)} probes, {len(groups)} effective outcomes")
+    baseline = rows[0]
     for row in rows:
         print(f"{row['name']}: {row['status']} size={row['candidate_size']}/{row['original_size']} first={row['first_mismatch']} matches={row['matches_after']} gains={row['gains']} losses={row['losses']}")
+        detail = row["codegen"]
+        first = detail["first_candidate_instruction"]
+        region = (f"+{first['offset']}:{first['mnemonic']}"
+                  + ("[reloc]" if first["relocation_operand"] else "")) if first else "unknown"
+        print(f"  codegen frame={detail['frame']} branches={detail['branches']} "
+              f"calls={detail['calls']} named={detail['named_call_targets']} "
+              f"noncall_reloc={detail['unequal_non_call_relocations']}/{detail['non_call_relocations']} "
+              f"diff_bytes={detail['differing_bytes']} first_candidate_insn={region}")
+        row["vs_first_probe"] = baseline_delta(detail, baseline["codegen"])
+        if row is not baseline:
+            print(f"  vs {baseline['name']}: {row['vs_first_probe']}")
     print("effective outcome groups:")
     for identity, names in groups.items():
         print(f"  {identity[:16]}: {', '.join(names)}")

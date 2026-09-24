@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "research_only": true,
+  "target": "game-replay",
+  "source": "src/replay.c",
+  "order": "current",
+  "prototypes": "none",
+  "spec": {
+    "target": "game-replay",
+    "source": "src/replay.c",
+    "order": "current",
+    "bodies": {
+      "draw_replay_selector": "docs/attempts/research-20260924-replay-selector-after-type/retained-draw-replay-selector.c"
+    },
+    "prototypes": "none"
+  },
+  "context": {
+    "accepted_header": "include/recovered/Treplay_post.h",
+    "source_identity": {
+      "size": 35735,
+      "sha256": "18f1eb7eebad624e91b3fa8f3d4fe9db5f96bf234dd04687a628f40a6b42c50b"
+    },
+    "current_source_is_read_only": true
+  },
+  "retained_body": {
+    "path": "docs/attempts/research-20260924-replay-selector-after-type/retained-draw-replay-selector.c",
+    "identity": {
+      "size": 9606,
+      "sha256": "4afeabd3d00b57fe7d7632d745c425d15f504108c27fb90a4a6e9463acfa2fa6"
+    }
+  },
+  "semantic_changes": [
+    {
+      "change": "Insert two unconditional selector sprites and the four-case sort indicator switch after SELECT REPLAY and before initial list clipping.",
+      "evidence": "docs/attempts/research-20260923-draw-replay-selector-frontier/README.md: original line-table/CFG blocks 491-504; data references resolve to data[89] at +0x590, data[112] at +0x700, and sort assets data[115]/[116]/[113]/[114] with recorded coordinates. Original blocks/addresses are listed per arm there."
+    },
+    {
+      "change": "Draw the selected-row alpha rectangle before its selected text call, then restore solid mode.",
+      "evidence": "docs/attempts/research-20260924-draw-selector-residual/original-selected-row.txt: original instructions at 0x41c3c0-0x41c44f call set_trans_blender(alpha=0x32), drawing_mode(mode=5), vtable+0x3c rectfill, and solid_mode; the selected textprintf_ex follows at 0x41c4aa. Stack stores resolve rectangle arguments x+7, row, x+0x125, row+fh-9 and DWARF fg at EBP-0x438. draw.inl:88 identifies vtable+0x3c as rectfill."
+    }
+  ],
+  "probe": {
+    "command": "python tools/tu_context_probe.py game-replay src/replay.c replay-selector-after-type-retained-ordered-20260924 --order current --body draw_replay_selector=docs/attempts/research-20260924-replay-selector-after-type/retained-draw-replay-selector.c --focus draw_replay_selector --no-dumps --no-prototypes",
+    "receipt": "docs/attempts/tu-context/game-replay/replay-selector-after-type-retained-ordered-20260924.json",
+    "report": "build/tu-context/game-replay/replay-selector-after-type-retained-ordered-20260924/comparison.json"
+  },
+  "result": {
+    "status": "DIFFER",
+    "candidate_size": 3772,
+    "historical_size": 3726,
+    "frame": "0x48c vs 0x49c historical",
+    "matches_before": 7,
+    "matches_after": 7,
+    "gains": [],
+    "losses": [],
+    "exact_peers": [
+      "get_sort_method",
+      "set_sort_method",
+      "hash",
+      "destroy_replay",
+      "update_file_list",
+      "load_replay",
+      "get_replay_property"
+    ],
+    "limit": "Research overlay only. No production source, ledger, or generated state was changed. This result does not establish FUNCTION_MATCH or layout-only equality."
+  }
+}

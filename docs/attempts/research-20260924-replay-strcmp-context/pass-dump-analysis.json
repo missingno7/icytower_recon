@@ -1,0 +1,155 @@
+{
+  "scope": "Byte-neutral diagnostics: flags requested dumps only; optimized sections match the corresponding no-dump overlay builds exactly.",
+  "diagnostic_flags": [
+    "-fdump-tree-cfg",
+    "-fdump-tree-optimized",
+    "-fdump-rtl-expand",
+    "-fdump-rtl-bbro",
+    "-fdump-rtl-peephole2"
+  ],
+  "variants": [
+    {
+      "name": "baseline",
+      "strict_status": "DIFFER",
+      "same_code_and_data_sections_as_no_dump_run": {
+        ".bss": true,
+        ".data": true,
+        ".rdata": true,
+        ".text": true
+      },
+      "pass_facts": {
+        "013t.cfg": {
+          "first_two_branch_edges": [
+            [
+              "D.9791 != D.9792",
+              "3",
+              "6"
+            ],
+            [
+              "D.9791 != 0",
+              "4",
+              "5"
+            ]
+          ]
+        },
+        "123t.optimized": {
+          "first_two_branch_edges": [
+            [
+              "D.9791 != b->directory",
+              "3",
+              "5"
+            ],
+            [
+              "D.9791 != 0",
+              "4",
+              "11"
+            ]
+          ]
+        },
+        "128r.expand_first_conditionals": [
+          {
+            "line": "682",
+            "cond_and_target": "(if_then_else (eq (reg:CCZ 17 flags) (const_int 0 [0x0])) (label_ref 18)",
+            "probability": "9032"
+          },
+          {
+            "line": "684",
+            "cond_and_target": "(if_then_else (ne (reg:CCZ 17 flags) (const_int 0 [0x0])) (label_ref 53)",
+            "probability": "5000"
+          },
+          {
+            "line": "696",
+            "cond_and_target": "(if_then_else (ne (reg:CCZ 17 flags) (const_int 0 [0x0])) (label_ref 44)",
+            "probability": "2900"
+          }
+        ],
+        "187r.bbro": {
+          "final_block_order": "2 5 6 9 3 11 12 7 10",
+          "reordered_sequence": [
+            " 2 bb 2  [10000]",
+            " 3 bb 5  [9032]",
+            " 4 bb 6  [6413]",
+            " 5 bb 9  [8925]",
+            " 6 bb 3  [968]",
+            " 7 bb 11  [538]",
+            " 8 bb 12  [1075]",
+            " 9 bb 7  [107]",
+            " 10 bb 10  [537]"
+          ]
+        }
+      }
+    },
+    {
+      "name": "outer_equal_switch",
+      "strict_status": "DIFFER",
+      "same_code_and_data_sections_as_no_dump_run": {
+        ".bss": true,
+        ".data": true,
+        ".rdata": true,
+        ".text": true
+      },
+      "pass_facts": {
+        "013t.cfg": {
+          "first_two_branch_edges": [
+            [
+              "D.9794 == D.9795",
+              "3",
+              "10"
+            ],
+            [
+              "D.9794 != 0",
+              "4",
+              "5"
+            ]
+          ]
+        },
+        "123t.optimized": {
+          "first_two_branch_edges": [
+            [
+              "D.9794 == b->directory",
+              "3",
+              "9"
+            ],
+            [
+              "D.9794 != 0",
+              "4",
+              "5"
+            ]
+          ]
+        },
+        "128r.expand_first_conditionals": [
+          {
+            "line": "674",
+            "cond_and_target": "(if_then_else (ne (reg:CCZ 17 flags) (const_int 0 [0x0])) (label_ref 60)",
+            "probability": "968"
+          },
+          {
+            "line": "675",
+            "cond_and_target": "(if_then_else (eq (reg:CCZ 17 flags) (const_int 0 [0x0])) (label_ref 23)",
+            "probability": "7929"
+          },
+          {
+            "line": "677",
+            "cond_and_target": "(if_then_else (gtu (reg:CC 17 flags) (const_int 0 [0x0])) (label_ref 51)",
+            "probability": "5000"
+          }
+        ],
+        "187r.bbro": {
+          "final_block_order": "2 3 5 6 10 8 9 11 12",
+          "reordered_sequence": [
+            " 2 bb 2  [10000]",
+            " 3 bb 3  [9032]",
+            " 4 bb 5  [7161]",
+            " 5 bb 6  [286]",
+            " 6 bb 10  [336]",
+            " 7 bb 8  [8746]",
+            " 8 bb 9  [968]",
+            " 9 bb 11  [918]",
+            " 10 bb 12  [1254]"
+          ]
+        }
+      }
+    }
+  ],
+  "interpretation": "Source-form branch/CFG differences are already visible in 013t.cfg. Tree optimization merges/forwards common result blocks in 123t.optimized. RTL expand preserves the candidate conditional edges. The 187r.bbro pass emits a chosen linear block order; object bytes then encode different short-branch fallthrough/target choices. This is the pass boundary for physical block layout in these candidates. Historical target proof remains from original disassembly/line-table evidence, not an original compiler dump."
+}
