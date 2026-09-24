@@ -28,6 +28,115 @@ HTTPRESPONSE_FLD_ADSPOT_CANDIDATE_SIGNATURE=(20,(
     ('iPayloadSize',16,False,'base_type',4,'int','5\t(signed)',()),
 ))
 
+FLDADSPOT_CONST_MEMBER_TYPES={
+    'pRemoteImageURL':'const char *',
+    'pLocalImagePath':'const char *',
+    'pVisitURL':'const char *',
+}
+FLDADSPOT_HISTORICAL_MEMBER_TYPES={name:'char *' for name in FLDADSPOT_CONST_MEMBER_TYPES}
+
+
+def fldadspot_const_member_replacement(source,alias,match,candidate,expected,text,canonical,g):
+    """One complete, DWARF-proven FLDAdSpot declaration with three const pointees.
+
+    This is deliberately narrower than general member type repair: the historical CU must
+    define the complete aggregate, both historical DIEs must agree, all four members and
+    offsets must match the generated header, and only these three exact pointer spellings
+    may differ. The ordinary TYPE_VIEW gate still requires unchanged emitted contributions.
+    """
+    if (source!='src/main.c' or alias!='FLDAdSpot' or canonical!='FLDAdSpot'
+            or match[1]!='FLDAdSpot' or not historical_cu_defines(source,canonical,g)):
+        return None
+    if not exact_fldadspot_layout(expected,FLDADSPOT_HISTORICAL_MEMBER_TYPES): return None
+    candidate_expected=json.loads(json.dumps(expected))
+    members={m['name']:m for m in candidate_expected['members']}
+    for member,spelling in FLDADSPOT_CONST_MEMBER_TYPES.items():
+        members[member]['layout']['type']=spelling
+    if shape_key(candidate)!=shape_key(candidate_expected): return None
+    declaration=text[match.start():match.end()]
+    from type_tasks import tokens
+    if tokens(sanitized(declaration))!=tokens(
+            'typedef struct FLDAdSpot { '
+            'const char * pRemoteImageURL ; const char * pLocalImagePath ; '
+            'const char * pVisitURL ; float fFrequency ; } FLDAdSpot ;'):
+        return None
+    corrected=declaration
+    for member in FLDADSPOT_CONST_MEMBER_TYPES:
+        before='const char *'+member
+        after='char *'+member
+        if corrected.count(before)!=1: return None
+        corrected=corrected.replace(before,after,1)
+    repairs=[{'member':member,'offset':members[member]['offset'],'size':4,
+              'candidate_type':FLDADSPOT_CONST_MEMBER_TYPES[member],
+              'historical_type':FLDADSPOT_HISTORICAL_MEMBER_TYPES[member]}
+             for member in FLDADSPOT_CONST_MEMBER_TYPES]
+    return {'after':corrected,
+            'member_type_repairs':repairs,
+            'candidate_layout':candidate,
+            'compiled_headers':[],
+            'reason':'Restore the three FLDAdSpot member pointee types in place from the complete owning-CU DWARF layout; preserve declaration placement and every emitted contribution.'}
+
+
+def exact_fldadspot_layout(node,member_types):
+    expected=[('pRemoteImageURL',0,'pointer_type',4,member_types['pRemoteImageURL'],None),
+              ('pLocalImagePath',4,'pointer_type',4,member_types['pLocalImagePath'],None),
+              ('pVisitURL',8,'pointer_type',4,member_types['pVisitURL'],None),
+              ('fFrequency',12,'base_type',4,'float','4\t(float)')]
+    if node.get('kind')!='structure_type' or node.get('size')!=16 or node.get('qualifiers'): return False
+    members=node.get('members',[])
+    if len(members)!=len(expected): return False
+    for actual,want in zip(members,expected):
+        name,offset,kind,size,spelling,encoding=want; layout_node=actual.get('layout',{})
+        if (actual.get('name')!=name or actual.get('offset')!=offset or actual.get('bitfield')
+                or layout_node.get('kind')!=kind or layout_node.get('size')!=size
+                or layout_node.get('type')!=spelling or layout_node.get('qualifiers')
+                or layout_node.get('encoding')!=encoding): return False
+    return True
+
+
+def validate_fldadspot_member_plan(plan):
+    """Recheck the exact source recipe and DWARF signature before accepting a task."""
+    if (plan.get('source')!='src/main.c' or plan.get('alias')!='FLDAdSpot'
+            or plan.get('canonical')!='FLDAdSpot' or plan.get('header')!='include/recovered/FLDAdSpot.h'
+            or plan.get('repair_mode')!='HISTORICAL_MEMBER_QUALIFIERS'):
+        raise ValueError('FLDAdSpot qualifier repair is outside its exact source/type scope')
+    g=graph(); historical=[layout(g,d['type_ref']) for d in g.game_types.get('FLDAdSpot',[])]
+    if (not historical or not historical_cu_defines('src/main.c','FLDAdSpot',g)
+            or any(not exact_fldadspot_layout(node,FLDADSPOT_HISTORICAL_MEMBER_TYPES) for node in historical)
+            or shape_key(plan.get('expected_layout',{}))!=shape_key(historical[0])):
+        raise ValueError('FLDAdSpot historical member layout is absent, conflicting, or changed')
+    candidate=plan.get('candidate_layout',{})
+    if not exact_fldadspot_layout(candidate,FLDADSPOT_CONST_MEMBER_TYPES):
+        raise ValueError('FLDAdSpot candidate does not have the exact three const-char pointer differences')
+    expected_repairs=[{'member':member,'offset':offset,'size':4,
+                       'candidate_type':FLDADSPOT_CONST_MEMBER_TYPES[member],
+                       'historical_type':'char *'}
+                      for member,offset in (('pRemoteImageURL',0),('pLocalImagePath',4),('pVisitURL',8))]
+    if plan.get('member_type_repairs')!=expected_repairs:
+        raise ValueError('FLDAdSpot member repair set differs from the three evidenced fields')
+    if plan.get('compiled_headers')!=[]:
+        raise ValueError('Inline FLDAdSpot repair must not add generated headers')
+    changes=plan.get('changes',[])
+    if (len(changes)!=1 or changes[0].get('file')!='src/main.c'
+            or not changes[0].get('after')):
+        raise ValueError('FLDAdSpot repair must edit only its local typedef')
+    from type_tasks import tokens
+    expected_before=('typedef struct FLDAdSpot { const char * pRemoteImageURL ; '
+                     'const char * pLocalImagePath ; const char * pVisitURL ; '
+                     'float fFrequency ; } FLDAdSpot ;')
+    if tokens(sanitized(changes[0].get('before','')))!=tokens(expected_before):
+        raise ValueError('FLDAdSpot repair source span differs from the exact local declaration')
+    expected_after=expected_before.replace('const char *','char *')
+    if tokens(sanitized(changes[0]['after']))!=tokens(expected_after):
+        raise ValueError('FLDAdSpot repair must change only the three evidenced pointee qualifiers')
+
+
+def verify_fldadspot_original_candidate(report,plan):
+    validate_fldadspot_member_plan(plan)
+    candidates=[t for t in interface_typedefs(report) if t.get('name')=='FLDAdSpot']
+    if len(candidates)!=1 or shape_key(candidates[0]['layout'])!=shape_key(plan['candidate_layout']):
+        raise ValueError('Baseline candidate DWARF does not prove the planned FLDAdSpot qualifier mismatch')
+
 
 def shape_key(node):
     """Layout compatibility for this migration; not a type identity or match oracle."""
@@ -318,6 +427,18 @@ def global_evidence(report,unit,g):
 
 def plan(source,report,match,observations,ledger,texts):
     g=graph(); alias=match[3]; name='view_'+Path(source).stem+'_'+alias
+    if source=='src/main.c' and alias=='FLDAdSpot' and match[1]=='FLDAdSpot':
+        # The local same-name declaration is itself anchored by the complete FLDAdSpot
+        # definition in this CU's historical DWARF; unrelated equal-shaped view uses
+        # cannot redirect this narrowly-scoped declaration repair to another type.
+        units={u['source']:u for u in read_json(ROOT/'src/units.json')}
+        owning=units.get(source,{}).get('cu_die')
+        historical=[d for d in g.game_types.get(alias,[]) if d.get('cu')==owning]
+        candidates=[t for t in interface_typedefs(report) if t.get('name')==alias]
+        if owning is not None and len(historical)==1 and len(candidates)==1:
+            observations=[{'historical_type':alias,'historical_die':historical[0]['offset'],
+                           'candidate_die':candidates[0]['die'],
+                           'evidence_source':'SAME_NAME_COMPLETE_OWNING_CU_DWARF'}]
     card={'schema':1,'task_kind':'TYPE_VIEW','function':name,'source':source,'sources':[source],
           'alias':alias,'observations':observations,'difficulty':'SUPERVISOR','priority':-25,'changes':[],
           'state':'TYPE_VIEW_REPAIR','status':'PARTIAL_STRUCT_VIEW','difference_class':'CANONICAL_TYPE_VIEW',
@@ -357,11 +478,17 @@ def plan(source,report,match,observations,ledger,texts):
         complete=shape_key(candidate)==shape_key(expected)
         card.update(view_completeness='COMPLETE_LAYOUT' if complete else 'PARTIAL_LAYOUT',alias_normalized_members=normalized)
         newline='\r\n' if '\r\n' in texts[source] else '\n'
+        member_qualifier_repair=fldadspot_const_member_replacement(
+            source,alias,match,candidate,expected,texts[source],canonical,g)
         inline_repair=httpresponse_inline_replacement(source,alias,match,candidate,expected,texts[source],newline)
         pointer_repairs=[]; signedness_repairs=[]
         pointees={name for name in g.game_types if (ROOT/'include/recovered'/(name+'.h')).exists()}
         library=library_pointees(source,report,g)
-        if inline_repair:
+        if member_qualifier_repair:
+            retained=[{'member':m['name'],'offset':m['offset'],'size':m['layout']['size'],'type':m['layout'].get('type')}
+                      for m in expected['members']]
+            ignored=[]
+        elif inline_repair:
             pointer_repairs=inline_repair['pointer_member_repairs']
             retained=[{'member':m['name'],'offset':m['offset'],'size':m['layout']['size'],'type':m['layout'].get('type')}
                       for m in expected['members']]
@@ -393,7 +520,9 @@ def plan(source,report,match,observations,ledger,texts):
         required=set().union(*({n}|generated_dependencies(n,ROOT) for n in game_pointees)) if pointer_repairs else generated_dependencies(canonical,ROOT)
         conflicts=[{'type':declaration[3],'source':path,'header':'include/recovered/'+declaration[3]+'.h'}
                    for path in maintained if not path.startswith('include/recovered/')
-                   for declaration in STRUCT.finditer(sanitized(texts[path])) if declaration[3] in required]
+                   for declaration in STRUCT.finditer(sanitized(texts[path]))
+                   if declaration[3] in required
+                   and not (member_qualifier_repair and path==source and declaration.start()==match.start())]
         card['canonical_dependencies']=conflicts
         # Any other local typedef of a required name (opaque `typedef struct T T;`, `typedef void T;`)
         # also conflicts with the generated complete declaration and has no mechanical child task.
@@ -420,7 +549,20 @@ def plan(source,report,match,observations,ledger,texts):
         after='#include "recovered/'+canonical+'.h"'
         if alias!=canonical: after+=newline+'typedef '+canonical+' '+alias+';'
         if pointer_repairs and forward_repairs: raise ValueError('Member-only repair cannot be combined with a forward-declaration repair')
-        if inline_repair:
+        if member_qualifier_repair:
+            after=member_qualifier_repair['after']
+            card.update(function='view_fld_adspot_FLDAdSpot',repair_mode='HISTORICAL_MEMBER_QUALIFIERS',
+                begin_command='python tools/interface_task.py begin view_fld_adspot_FLDAdSpot',
+                apply_command='python tools/interface_task.py apply view_fld_adspot_FLDAdSpot',
+                verification_command='python tools/interface_task.py check view_fld_adspot_FLDAdSpot',
+                promotion_command='python tools/interface_task.py promote view_fld_adspot_FLDAdSpot',
+                candidate_layout=member_qualifier_repair['candidate_layout'],
+                member_type_repairs=member_qualifier_repair['member_type_repairs'],
+                compiled_headers=member_qualifier_repair['compiled_headers'],
+                reason=member_qualifier_repair['reason'])
+            validate_fldadspot_member_plan(card | {'changes':[{'file':source,'start':match.start(),'end':match.end(),
+                'before':texts[source][match.start():match.end()],'after':after}]})
+        elif inline_repair:
             after=inline_repair['after']
             card.update(repair_mode='INLINE_MEMBER_TYPES',member_type_repairs=inline_repair['member_type_repairs'],
                 compiled_headers=inline_repair['compiled_headers'])
@@ -438,11 +580,11 @@ def plan(source,report,match,observations,ledger,texts):
                     candidate_size=candidate['size'],historical_size=expected['size'],retained_members=retained,removed_fillers=ignored,pointer_member_repairs=pointer_repairs,
                     affected_targets=targets,difficulty='CHEAP',priority=238,
                     changes=[{'file':source,'start':match.start(),'end':match.end(),'before':texts[source][match.start():match.end()],
-                              'after':after,'reason':inline_repair['reason'] if inline_repair else 'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct'}]
+                              'after':after,'reason':(member_qualifier_repair['reason'] if member_qualifier_repair else inline_repair['reason'] if inline_repair else 'Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct')}]
                             +[{'file':source,'start':r['start'],'end':r['end'],'before':texts[source][r['start']:r['end']],
                                'after':'#include "recovered/'+r['type']+'.h"','reason':r['reason']} for r in forward_repairs],
                     compiled_headers=[header.relative_to(ROOT).as_posix()]+[r['header'] for r in forward_repairs] if forward_repairs else card.get('compiled_headers',[header.relative_to(ROOT).as_posix()]),
-                    reason=inline_repair['reason'] if inline_repair else 'Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.',
+                    reason=(member_qualifier_repair['reason'] if member_qualifier_repair else inline_repair['reason'] if inline_repair else 'Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.'),
                     edit_scope='Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.')
     except ValueError as exc: card['reason']=str(exc)
     blocked=ROOT/'docs/current/interface-blocks.json'
@@ -452,6 +594,7 @@ def plan(source,report,match,observations,ledger,texts):
 
 def plans(ledger):
     texts={p.relative_to(ROOT).as_posix():p.read_bytes().decode('cp1252') for folder in ('src','include') for p in (ROOT/folder).rglob('*.[ch]')}
+
     units={u['source']:u for u in read_json(ROOT/'src/units.json')}; cards=[]
     from type_tasks import tokens
     for source,entry in ledger.items():
@@ -461,10 +604,10 @@ def plans(ledger):
         # Only identified upstream vendored CUs keep their upstream declaration text; AMBIGUOUS CUs stay game-owned per the brief.
         vendored=str(units[source].get('classification') or units[source].get('ownership') or 'GAME').startswith('VENDORED')
         for match in matches:
-            if match[3] not in observed: continue
+            if match[3] not in observed and not (source=='src/main.c' and match[1]=='FLDAdSpot' and match[3]=='FLDAdSpot'): continue
             if sum(m[3]==match[3] for m in matches)!=1: continue
             if clean[:match.start()].count('{')!=clean[:match.start()].count('}'): continue
-            card=plan(source,report,match,observed[match[3]],ledger,texts)
+            card=plan(source,report,match,observed.get(match[3],[]),ledger,texts)
             # Exact member-token duplicates have the narrower CANONICAL_TYPE task; a same-name
             # declaration with different spelling but a complete layout stays a TYPE_VIEW.
             if card.get('canonical')==match[3] and exact_duplicate_tokens(match,card,tokens): continue

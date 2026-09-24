@@ -102,38 +102,38 @@
     ],
     "candidate": [
       {
-        "address": 61256,
+        "address": 61344,
         "bytes": "55",
         "mnemonic": "push",
         "assembly": "push   %ebp",
         "dwarf_variables": []
       },
       {
-        "address": 61257,
+        "address": 61345,
         "bytes": "89e5",
         "mnemonic": "mov",
         "assembly": "mov    %esp,%ebp",
         "dwarf_variables": []
       },
       {
-        "address": 61259,
+        "address": 61347,
         "bytes": "53",
         "mnemonic": "push",
         "assembly": "push   %ebx",
         "dwarf_variables": []
       },
       {
-        "address": 61260,
+        "address": 61348,
         "bytes": "83ec14",
         "mnemonic": "sub",
         "assembly": "sub    $0x14,%esp",
         "dwarf_variables": []
       },
       {
-        "address": 61263,
+        "address": 61351,
         "bytes": "e800000000",
         "mnemonic": "call",
-        "assembly": "call   ef54 <_load_new_ad_image+0xc>",
+        "assembly": "call   efac <_load_new_ad_image+0xc>",
         "dwarf_variables": []
       }
     ]
@@ -220,7 +220,7 @@
       "section": ".rdata",
       "size": null,
       "historical_address": "0x4d60d8",
-      "candidate_addend": 5600,
+      "candidate_addend": 5612,
       "dwarf_type": null,
       "placement_confidence": "unique read-only literal or table content",
       "initial_value": null,
@@ -345,7 +345,7 @@
       "target_function": "log2file",
       "target_va": 4250200,
       "candidate_target": 28344,
-      "candidate_displacement": -32949,
+      "candidate_displacement": -33037,
       "layout_operand_equal": false,
       "resolved_value": 4294933383,
       "original_value": 4294933383,
@@ -367,14 +367,14 @@
       "function": "run_demo",
       "status": "FUNCTION_MATCH",
       "historical_offset": 62636,
-      "candidate_offset": 61096,
+      "candidate_offset": 61184,
       "size_delta": 0
     },
     {
       "function": "_mangled_main",
       "status": "DIFFER",
       "historical_offset": 62896,
-      "candidate_offset": 61356,
+      "candidate_offset": 61444,
       "size_delta": -208
     }
   ],
@@ -428,97 +428,8 @@
   "begin_command": "python tools/grinder_task.py begin game-main load_new_ad_image",
   "promotion_command": "python tools/promote_function.py game-main load_new_ad_image --claim BODY_MATCH_LAYOUT_BLOCKED",
   "callee_interface_scope": {
-    "observations": [
-      {
-        "function": "fldads_get_random_ad",
-        "source": "src/main.c",
-        "blocking": true,
-        "state": "LOCAL_INTERFACE_CONFLICT",
-        "reason": "A declaration compiled in this CU differs or lacks complete game-type evidence.",
-        "call_offsets": [
-          8
-        ],
-        "candidate_card": "docs/current/interfaces/fldads_get_random_ad.json",
-        "local_declarations": [
-          {
-            "return_type": "const FLDAdSpot*",
-            "parameter_types": [],
-            "canonical_return_type": "const FLDAdSpot*",
-            "canonical_parameter_types": []
-          }
-        ],
-        "layout_issues": [
-          {
-            "position": "return",
-            "historical_type": "FLDAdSpot",
-            "candidate_type": "FLDAdSpot",
-            "header": "include/recovered/FLDAdSpot.h",
-            "status": "MISMATCH",
-            "historical_size": 16,
-            "candidate_size": 16,
-            "member_difference_count": 3,
-            "first_member_differences": [
-              {
-                "member": "pLocalImagePath",
-                "historical": {
-                  "offset": 4,
-                  "size": 4,
-                  "type": "char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 4,
-                  "size": 4,
-                  "type": "const char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "pRemoteImageURL",
-                "historical": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 0,
-                  "size": 4,
-                  "type": "const char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              },
-              {
-                "member": "pVisitURL",
-                "historical": {
-                  "offset": 8,
-                  "size": 4,
-                  "type": "char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                },
-                "candidate": {
-                  "offset": 8,
-                  "size": 4,
-                  "type": "const char *",
-                  "qualifiers": [],
-                  "bitfield": false
-                }
-              }
-            ],
-            "reason": "Complete aggregate layout/type differs despite any matching declaration spelling"
-          }
-        ],
-        "call_offset_count": 1
-      }
-    ],
-    "blocking_functions": [
-      "fldads_get_random_ad"
-    ],
+    "observations": [],
+    "blocking_functions": [],
     "limit": "Known direct-callee conflicts only. Verified call addresses do not prove declaration/type compatibility. Remote-only conflicts remain visible but do not block a proven local interface; unknown indirect targets are not inferred.",
     "omitted_observations": 0
   },
@@ -560,7 +471,7 @@
   "evidence_counts": {
     "relocation_mismatches": 0,
     "direct_transfer_mismatches": 1,
-    "callee_interface_observations": 1,
+    "callee_interface_observations": 0,
     "ownership_prerequisites": 0,
     "reference_diagnostics": 0,
     "literal_diagnostics": 0,

@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "task_kind": "TU_CONTEXT",
+  "function": "replay_selector_lowkeys_four_cases_20260924",
+  "source": "src/replay.c",
+  "sources": [
+    "src/replay.c"
+  ],
+  "target": "game-replay",
+  "affected_targets": [
+    "game-replay"
+  ],
+  "difficulty": "CHEAP",
+  "priority": 200,
+  "spec": {
+    "target": "game-replay",
+    "source": "src/replay.c",
+    "order": "current",
+    "prototypes": "none",
+    "focus": [
+      "replay_selector"
+    ],
+    "bodies": {
+      "replay_selector": "docs/attempts/research-20260924-selector-lowkeys-next/retained-replay-selector.c"
+    },
+    "evidence": "Only the four KEY_C/KEY_F/KEY_N/KEY_S sort-action cases are added before KEY_UP. Original key dispatch and target actions are recorded in docs/attempts/research-20260923-create-replay/rdata-order/lower-range-cfg.json and summarized in docs/attempts/research-20260924-selector-lowkeys-next/README.md. The complete retained function body is the strict-probed candidate; no header owner, get_replay_property, or other function change is included."
+  },
+  "edits": {
+    "focus": [
+      "replay_selector"
+    ],
+    "declarations": {},
+    "order": [
+      "get_sort_method",
+      "set_sort_method",
+      "create_replay",
+      "destroy_replay",
+      "hash",
+      "calc_replay_checksum_131",
+      "calc_replay_checksum",
+      "get_replay_property",
+      "load_replay",
+      "save_replay",
+      "draw_replay_selector",
+      "add_itr_file",
+      "my_strcmp",
+      "update_file_list",
+      "replay_selector"
+    ],
+    "definition_order_with_static": [
+      [
+        "get_sort_method",
+        false
+      ],
+      [
+        "set_sort_method",
+        false
+      ],
+      [
+        "create_replay",
+        false
+      ],
+      [
+        "destroy_replay",
+        false
+      ],
+      [
+        "hash",
+        false
+      ],
+      [
+        "calc_replay_checksum_131",
+        false
+      ],
+      [
+        "calc_replay_checksum",
+        false
+      ],
+      [
+        "get_replay_property",
+        false
+      ],
+      [
+        "load_replay",
+        false
+      ],
+      [
+        "save_replay",
+        false
+      ],
+      [
+        "draw_replay_selector",
+        false
+      ],
+      [
+        "add_itr_file",
+        false
+      ],
+      [
+        "my_strcmp",
+        false
+      ],
+      [
+        "update_file_list",
+        false
+      ],
+      [
+        "replay_selector",
+        false
+      ]
+    ],
+    "bodies": {
+      "replay_selector": {
+        "path": "docs/attempts/research-20260924-selector-lowkeys-next/retained-replay-selector.c",
+        "identity": {
+          "size": 10033,
+          "sha256": "763d58f879986a7c4110be8cb7f977bea3368de5fd495136eac40a1164fc8bc2"
+        }
+      }
+    },
+    "statics": [],
+    "prototypes": "none",
+    "research_base": null,
+    "late_declarations": [],
+    "headers": {}
+  },
+  "source_identities": {
+    "src/replay.c": {
+      "size": 36192,
+      "sha256": "8cf9f7ced73993c5c5a1b599167706f4790a3ef355bb583ce6f278014c3b6455"
+    }
+  },
+  "new_text_identity": {
+    "size": 36668,
+    "sha256": "a3ab23ce1f43d91c7f9e46d15e1f565576af5cc001be4cca1e74f104ac6f32b5"
+  },
+  "new_header_identities": {},
+  "required_generated_headers": {},
+  "preserved_definitions": [
+    "add_itr_file",
+    "calc_replay_checksum",
+    "calc_replay_checksum_131",
+    "create_replay",
+    "destroy_replay",
+    "draw_replay_selector",
+    "get_replay_property",
+    "get_sort_method",
+    "hash",
+    "load_replay",
+    "my_strcmp",
+    "save_replay",
+    "set_sort_method",
+    "update_file_list"
+  ],
+  "replaced_definitions": [
+    "replay_selector"
+  ],
+  "body_edit_allowed": false,
+  "state": "PROMOTED_TU_CONTEXT",
+  "begin_command": "python tools/tu_context_task.py begin replay_selector_lowkeys_four_cases_20260924",
+  "apply_command": "python tools/tu_context_task.py apply replay_selector_lowkeys_four_cases_20260924",
+  "verification_command": "python tools/tu_context_task.py check replay_selector_lowkeys_four_cases_20260924",
+  "promotion_command": "python tools/tu_context_task.py promote replay_selector_lowkeys_four_cases_20260924",
+  "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression).",
+  "transaction": "docs/attempts/tu-context/transactions/replay_selector_lowkeys_four_cases_20260924.json"
+}

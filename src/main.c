@@ -98,9 +98,9 @@ BITMAP *gameover_bmp;
 #include "recovered/Tmenu_params.h"
 
 typedef struct FLDAdSpot {
-    const char *pRemoteImageURL;
-    const char *pLocalImagePath;
-    const char *pVisitURL;
+    char *pRemoteImageURL;
+    char *pLocalImagePath;
+    char *pVisitURL;
     float fFrequency;
 } FLDAdSpot;
 extern const FLDAdSpot *fldads_get_random_ad(void);
@@ -2446,7 +2446,15 @@ int init_game(int argc, char **argv)
 
     allegro_init(); /* 1623 */
     set_color_depth(32); /* 1624 */
-    if (options.full_screen) { /* 1627 */
+    if (!options.full_screen) { /* 1627 */
+        log2file("Setting windowed mode 640x480"); /* 1628 */
+        if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) { /* 1629 */
+            log2file("*** failed."); /* 1633 */
+            options.full_screen=-1; /* 1634 */
+        } else
+            window=1; /* 1630 */
+    }
+    if (options.full_screen) {
         log2file("Setting fullscreen mode 640x480"); /* 1638 */
         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) { /* 1639 */
             log2file("*** failed."); /* 1643 */
@@ -2455,19 +2463,6 @@ int init_game(int argc, char **argv)
             return 0; /* 1646 */
         }
         window=0; /* 1640 */
-    } else {
-        log2file("Setting windowed mode 640x480"); /* 1628 */
-        if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,640,480,0,0)!=0) { /* 1629 */
-            log2file("*** failed."); /* 1633 */
-            options.full_screen=-1; /* 1634 */
-            if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,640,480,0,0)!=0) { /* 1639 */
-                log2file("*** failed."); /* 1643 */
-                set_gfx_mode(GFX_TEXT,0,0,0,0); /* 1644 */
-                allegro_message("Failed to set graphics mode."); /* 1645 */
-                return 0; /* 1646 */
-            }
-        } else
-            window=1; /* 1630 */
     }
     if (!screen) { /* 1651 */
         log2file("ERROR: screen was not set"); /* 1652 */
@@ -2489,6 +2484,7 @@ int init_game(int argc, char **argv)
     loader=load_datafile("data/loading.dat"); /* 1676 */
     log2file("Loading loader."); /* 1677 */
     if (!loader) { /* 1678 */
+        log2file(" *** failed"); /* 1679 */
         set_gfx_mode(GFX_TEXT,0,0,0,0); /* 1680 */
         allegro_message("Failed to load loader datafile."); /* 1681 */
         return 0; /* 1682 */
@@ -2503,8 +2499,10 @@ int init_game(int argc, char **argv)
     unload_datafile(loader); /* 1715 */
 
     log2file("Setting focus modes"); /* 1721 */
-    set_display_switch_mode(options.full_screen ? SWITCH_BACKAMNESIA :
-                            SWITCH_BACKGROUND); /* 1722 */
+    if (options.full_screen)
+        set_display_switch_mode(SWITCH_BACKAMNESIA); /* 1723 */
+    else
+        set_display_switch_mode(SWITCH_BACKGROUND); /* 1726 */
     log2file("Setting focus callbacks"); /* 1728 */
     set_display_switch_callback(SWITCH_IN,switchedToProgram); /* 1729 */
     set_display_switch_callback(SWITCH_OUT,switchedFromProgram); /* 1730 */
@@ -2613,6 +2611,7 @@ int init_game(int argc, char **argv)
             log2file(" trying to load default profile '%s'","guest"); /* 1887 */
             profile=load_profile("guest"); /* 1888 */
             if (!profile) { /* 1889 */
+                log2file(" profile not found '%s'","guest"); /* 1890 */
                 profile=create_profile("guest",1); /* 1892 */
                 log2file(" created profile '%s'",profile->handle); /* 1893 */
             }
@@ -2672,8 +2671,16 @@ int init_game(int argc, char **argv)
             sounds[8]=getSampleFromOggDatafile(sfx,16); /* 1962 */
             menu_sounds[0]=getSampleFromOggDatafile(sfx,11); /* 1963 */
             menu_sounds[1]=getSampleFromOggDatafile(sfx,12); /* 1964 */
+            jump_sound[0]=NULL; /* 1965 */
+            jump_sound[1]=NULL; /* 1966 */
+            jump_sound[2]=NULL; /* 1967 */
+            sounds[0]=NULL; /* 1968 */
+            sounds[1]=NULL; /* 1969 */
+            sounds[3]=NULL; /* 1970 */
+            sounds[5]=NULL; /* 1971 */
             log2file("Releasing ogg datafile."); /* 1972 */
             unload_datafile(sfx); /* 1973 */
+            sfx=NULL; /* 1974 */
         } else
             log2file(" no sounds loaded"); /* 1932 */
         log2file("Setting menu values"); /* 1978 */

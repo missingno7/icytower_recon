@@ -1,0 +1,40 @@
+{
+  "scope": "research-only isolated source overlay; no production/current/recovery changes",
+  "base": "docs/attempts/research-20260924-selector-lowkeys-headerrefs/headerrefs-source.c",
+  "source": "docs/attempts/research-20260924-selector-lowkeys-owner-poolorder/case-order-source.c",
+  "source_delta": "swap independent get_replay_property cases 3 and 4; preserve selector key cases and file-static uppercase REPLAY_HEADER",
+  "historical_property_literal_order": ["%s:score=%d", "%s:floor=%d", "%s:combo=%d"],
+  "candidate_property_literal_order_after_swap": [
+    {"value": "%s:score=%d", "rdata_offset": "0x3ce"},
+    {"value": "%s:floor=%d", "rdata_offset": "0x3da"},
+    {"value": "%s:combo=%d", "rdata_offset": "0x3e6"}
+  ],
+  "peer_relocations_after_swap": {
+    "all_eight_get_replay_property_literal_targets": "candidate addresses are 4 bytes before historical targets",
+    "prior_combo_delta": -16,
+    "prior_floor_delta": 8,
+    "new_combo_delta": -4,
+    "new_floor_delta": -4
+  },
+  "probe": {
+    "label": "replay-selector-lowkeys-owner-case-order-noprotos-20260924",
+    "receipt": "docs/attempts/tu-context/game-replay/replay-selector-lowkeys-owner-case-order-noprotos-20260924.json",
+    "comparison": "build/tu-context/game-replay/replay-selector-lowkeys-owner-case-order-noprotos-20260924/comparison.json",
+    "object": "build/tu-context/game-replay/replay-selector-lowkeys-owner-case-order-noprotos-20260924/unit.o",
+    "compile": "OK",
+    "matches_before": 7,
+    "matches_after": 7,
+    "create_replay": "FUNCTION_MATCH",
+    "load_replay": "FUNCTION_MATCH",
+    "get_replay_property": "DIFFER"
+  },
+  "separate_selector_table": {
+    "entries": 83,
+    "candidate_range": ".rdata+0x1bc..+0x308",
+    "historical_range": ".rdata+0x1b8..+0x304",
+    "candidate_start_delta": 4,
+    "source_backed_explanation_found": false,
+    "period_only_prompt_trial_moved_table": false
+  },
+  "blocker": "The order of the score/floor/combo source cases explains the -16/+8 pair. The common -4 property string displacement remains unexplained; historical wb is at .rdata+0x34b and the next error string at +0x34e, while candidate has wb at +0x347 and error at +0x34a. No evidence identifies the preceding four-byte item, so no placement or padding workaround was attempted."
+}

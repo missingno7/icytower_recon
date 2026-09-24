@@ -19,6 +19,71 @@ class ViewTests(unittest.TestCase):
         node['members']=[{'name':'before_total_jumps','offset':0,'bitfield':False,'layout':{'kind':'array_type','size':216,'type':'unsigned char [216]','dimensions':[216],'element':{'kind':'base_type','size':1,'type':'unsigned char','encoding':'8\t(unsigned char)'}}},next(m for m in node['members'] if m['name']=='total_jumps')]
         return node
 
+    def fldadspot_type_plan(self,report_mutation=None,source_mutation=None,source='src/main.c'):
+        import type_views
+        ledger=read_json(ROOT/'src/recovery.json'); entry=ledger['src/main.c']
+        report=read_json(ROOT/entry['verified_report'])
+        candidate=next(t for t in report['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')
+        for member in candidate['layout']['members'][:3]: member['layout']['type']='const char *'
+        if report_mutation: report_mutation(report)
+        unit=next(u for u in read_json(ROOT/'src/units.json') if u['source']=='src/main.c')
+        text=(ROOT/'src/main.c').read_bytes().decode('cp1252')
+        for name in ('pRemoteImageURL','pLocalImagePath','pVisitURL'):
+            text=text.replace('    char *'+name+';', '    const char *'+name+';')
+        if source_mutation: text=source_mutation(text)
+        match=STRUCT.search(__import__('source_scope').sanitized(text))
+        observations=type_views.evidence(report,unit)['FLDAdSpot']
+        texts={p:(ROOT/p).read_bytes().decode('cp1252') for p in report['build']['local_inputs'] if (ROOT/p).is_file()}
+        texts['src/main.c']=text
+        return type_views.plan(source,report,match,observations,ledger,texts),report
+
+    def test_fldadspot_const_pointer_members_get_exact_declaration_task(self):
+        from type_views import verify_fldadspot_original_candidate
+        plan,report=self.fldadspot_type_plan()
+        discovered=[p for p in __import__('type_views').plans(read_json(ROOT/'src/recovery.json')) if p['function']=='view_fld_adspot_FLDAdSpot']
+        source_text=(ROOT/'src/main.c').read_bytes().decode('cp1252')
+        self.assertEqual(len(discovered),int('    const char *pRemoteImageURL;' in source_text))
+        if discovered: self.assertEqual(discovered[0]['repair_mode'],'HISTORICAL_MEMBER_QUALIFIERS')
+        self.assertEqual(plan['difficulty'],'CHEAP',plan.get('reason'))
+        self.assertEqual(plan['function'],'view_fld_adspot_FLDAdSpot')
+        self.assertEqual(plan['repair_mode'],'HISTORICAL_MEMBER_QUALIFIERS')
+        self.assertEqual(plan['compiled_headers'],[])
+        self.assertEqual(plan['changes'][0]['after'],
+            plan['changes'][0]['before'].replace('const char *','char *'))
+        self.assertEqual([(r['member'],r['offset'],r['candidate_type'],r['historical_type'])
+                          for r in plan['member_type_repairs']],
+                         [('pRemoteImageURL',0,'const char *','char *'),
+                          ('pLocalImagePath',4,'const char *','char *'),
+                          ('pVisitURL',8,'const char *','char *')])
+        verify_fldadspot_original_candidate(report,plan)
+        fresh=copy.deepcopy(report)
+        next(t for t in fresh['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')['layout']=plan['expected_layout']
+        verify_view(fresh,plan)
+        bad_fresh=copy.deepcopy(fresh)
+        next(t for t in bad_fresh['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')['layout']['members'][0]['offset']=4
+        with self.assertRaises(ValueError): verify_view(bad_fresh,plan)
+
+    def test_fldadspot_member_task_rejects_nearby_types_offsets_and_source(self):
+        mutations=(
+            (lambda r: next(t for t in r['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')['layout']['members'][0].update(offset=4),None,'src/main.c'),
+            (lambda r: next(t for t in r['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')['layout']['members'][3]['layout'].update(type='int',encoding='5\t(signed)'),None,'src/main.c'),
+            (None,lambda s:s.replace('const char *pVisitURL;','char *pVisitURL;'),'src/main.c'),
+            (None,lambda s:s.replace('typedef struct FLDAdSpot {','typedef struct OtherTag {'),'src/main.c'),
+        )
+        for report_mutation,source_mutation,source in mutations:
+            plan,_=self.fldadspot_type_plan(report_mutation,source_mutation,source)
+            self.assertEqual(plan['difficulty'],'SUPERVISOR',plan)
+            self.assertEqual(plan['changes'],[],plan)
+
+    def test_fldadspot_baseline_and_plan_are_rechecked(self):
+        from type_views import verify_fldadspot_original_candidate
+        plan,report=self.fldadspot_type_plan()
+        bad=copy.deepcopy(report)
+        next(t for t in bad['candidate_debug']['typedefs'] if t['name']=='FLDAdSpot')['layout']['members'][0]['layout']['type']='char *'
+        with self.assertRaises(ValueError): verify_fldadspot_original_candidate(bad,plan)
+        bad_plan=copy.deepcopy(plan); bad_plan['member_type_repairs'].pop()
+        with self.assertRaises(ValueError): verify_fldadspot_original_candidate(report,bad_plan)
+
     def test_partial_field_is_proven_at_original_offset(self):
         retained,ignored=compatible_members(self.candidate(),self.expected(),'return p->total_jumps;')
         self.assertEqual((retained[0]['offset'],retained[0]['size']),(216,4))

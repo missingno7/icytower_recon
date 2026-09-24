@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "task_kind": "TYPE_VIEW",
+  "function": "view_main_FLDAdSpot",
+  "source": "src/main.c",
+  "sources": [
+    "src/main.c"
+  ],
+  "alias": "FLDAdSpot",
+  "observations": [
+    {
+      "historical_type": "FLDAdSpot",
+      "historical_die": 115502,
+      "candidate_die": 15805,
+      "evidence_source": "SAME_NAME_COMPLETE_OWNING_CU_DWARF"
+    }
+  ],
+  "difficulty": "CHEAP",
+  "priority": 238,
+  "changes": [
+    {
+      "file": "src/main.c",
+      "start": 2485,
+      "end": 2621,
+      "before": "typedef struct FLDAdSpot {\n    char *pRemoteImageURL;\n    char *pLocalImagePath;\n    char *pVisitURL;\n    float fFrequency;\n} FLDAdSpot;",
+      "after": "#include \"recovered/FLDAdSpot.h\"",
+      "reason": "Unique historical pointer correspondence, compatible field extents and evidenced member types; use the generated canonical struct"
+    }
+  ],
+  "state": "TYPE_VIEW_REPAIR",
+  "status": "PARTIAL_STRUCT_VIEW",
+  "difference_class": "CANONICAL_TYPE_VIEW",
+  "body_edit_allowed": false,
+  "source_identities": {
+    "src/main.c": {
+      "size": 311474,
+      "sha256": "6000299905a3994b554ae7a47e4743b9bdda1845bf6e8c1a86606e18e3d1eebc"
+    }
+  },
+  "begin_command": "python tools/interface_task.py begin view_main_FLDAdSpot",
+  "apply_command": "python tools/interface_task.py apply view_main_FLDAdSpot",
+  "verification_command": "python tools/interface_task.py check view_main_FLDAdSpot",
+  "promotion_command": "python tools/interface_task.py promote view_main_FLDAdSpot",
+  "canonical": "FLDAdSpot",
+  "header": "include/recovered/FLDAdSpot.h",
+  "header_identity": {
+    "size": 874,
+    "sha256": "3e5263b31865a61ca566a7068f2a1cb99a30f61d1bef826fef67a4f6b70f382b"
+  },
+  "expected_layout": {
+    "kind": "structure_type",
+    "size": 16,
+    "type": "struct FLDAdSpot",
+    "members": [
+      {
+        "name": "pRemoteImageURL",
+        "offset": 0,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "char *"
+        }
+      },
+      {
+        "name": "pLocalImagePath",
+        "offset": 4,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "char *"
+        }
+      },
+      {
+        "name": "pVisitURL",
+        "offset": 8,
+        "bitfield": false,
+        "layout": {
+          "kind": "pointer_type",
+          "size": 4,
+          "type": "char *"
+        }
+      },
+      {
+        "name": "fFrequency",
+        "offset": 12,
+        "bitfield": false,
+        "layout": {
+          "kind": "base_type",
+          "size": 4,
+          "type": "float",
+          "encoding": "4\t(float)"
+        }
+      }
+    ]
+  },
+  "candidate_size": 16,
+  "historical_size": 16,
+  "member_correspondence": [
+    {
+      "candidate_member": "pRemoteImageURL",
+      "candidate_offset": 0,
+      "candidate_type": "char *",
+      "historical_field_at_offset": {
+        "expression": "FLDAdSpot.pRemoteImageURL",
+        "offset": 0,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "pRemoteImageURL",
+            "index": 0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "pLocalImagePath",
+      "candidate_offset": 4,
+      "candidate_type": "char *",
+      "historical_field_at_offset": {
+        "expression": "FLDAdSpot.pLocalImagePath",
+        "offset": 4,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "pLocalImagePath",
+            "index": 1
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "pVisitURL",
+      "candidate_offset": 8,
+      "candidate_type": "char *",
+      "historical_field_at_offset": {
+        "expression": "FLDAdSpot.pVisitURL",
+        "offset": 8,
+        "size": 4,
+        "kind": "pointer_type",
+        "type": "char *",
+        "encoding": null,
+        "steps": [
+          {
+            "member": "pVisitURL",
+            "index": 2
+          }
+        ]
+      }
+    },
+    {
+      "candidate_member": "fFrequency",
+      "candidate_offset": 12,
+      "candidate_type": "float",
+      "historical_field_at_offset": {
+        "expression": "FLDAdSpot.fFrequency",
+        "offset": 12,
+        "size": 4,
+        "kind": "base_type",
+        "type": "float",
+        "encoding": "4\t(float)",
+        "steps": [
+          {
+            "member": "fFrequency",
+            "index": 3
+          }
+        ]
+      }
+    }
+  ],
+  "type_scope": {
+    "basis": "GCC_DEPFILE",
+    "maintained_input_count": 38,
+    "limit": "Typedef spellings in unrelated CUs are not shared identity; included uses and affected compile closure remain checked."
+  },
+  "view_completeness": "COMPLETE_LAYOUT",
+  "alias_normalized_members": [],
+  "signedness_repairs": [],
+  "canonical_dependencies": [],
+  "forward_declared_dependencies": [],
+  "forward_declaration_repairs": [],
+  "retained_members": [
+    {
+      "member": "pRemoteImageURL",
+      "offset": 0,
+      "size": 4,
+      "type": "char *"
+    },
+    {
+      "member": "pLocalImagePath",
+      "offset": 4,
+      "size": 4,
+      "type": "char *"
+    },
+    {
+      "member": "pVisitURL",
+      "offset": 8,
+      "size": 4,
+      "type": "char *"
+    },
+    {
+      "member": "fFrequency",
+      "offset": 12,
+      "size": 4,
+      "type": "float"
+    }
+  ],
+  "removed_fillers": [],
+  "pointer_member_repairs": [],
+  "affected_targets": [
+    "game-main"
+  ],
+  "compiled_headers": [
+    "include/recovered/FLDAdSpot.h"
+  ],
+  "reason": "Canonical declaration preserves member extents and restores any evidenced void-pointer placeholders; fresh acceptance must preserve every emitted contribution and body.",
+  "edit_scope": "Replace only this typedef. Do not edit bodies, member expressions, flags, other declarations or initializers.",
+  "compiler_trials": []
+}

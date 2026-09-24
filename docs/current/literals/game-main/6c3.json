@@ -1,0 +1,94 @@
+{
+  "state": "UNRESOLVED_LITERAL_EVIDENCE",
+  "source": "src/main.c",
+  "target": "game-main",
+  "candidate_section": ".rdata",
+  "candidate_section_index": 7,
+  "candidate_addend": 1731,
+  "candidate_card": "docs/current/literals/game-main/6c3.json",
+  "source_identity": {
+    "size": 311474,
+    "sha256": "6000299905a3994b554ae7a47e4743b9bdda1845bf6e8c1a86606e18e3d1eebc"
+  },
+  "consumers": [
+    {
+      "function": "init_game",
+      "function_offset": 3015,
+      "historical_operand_va": 5067712,
+      "historical_operand_alignment": "ALIGNED_LITERAL_OPERAND",
+      "unaligned_original_field_value": null,
+      "independently_resolved_va": 5067235,
+      "relocation_equal": false,
+      "resolution": "unique read-only literal or table content",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2313,
+          "text": "        log2file(\" !!! Failed to setup Winsock\"); /* 1404 */"
+        }
+      ]
+    }
+  ],
+  "consumer_functions": [
+    "init_game"
+  ],
+  "historical_observed_addresses": [
+    5067712
+  ],
+  "multiple_historical_addresses": false,
+  "candidate_payloads": [
+    {
+      "kind": "C_STRING",
+      "hex": "20212121204661696c656420746f2073657475702057696e736f636b",
+      "bytes": 29
+    }
+  ],
+  "observations": [
+    {
+      "function_offset": 3015,
+      "candidate_addend": 1731,
+      "classification": "LITERAL_CONTENT_DIFFERENCE",
+      "content_equal": false,
+      "limit": "Original operand supplies diagnostic comparison only, never an independent target binding.",
+      "kind": "C_STRING",
+      "historical_operand_va": 5067712,
+      "candidate_hex": "20212121204661696c656420746f2073657475702057696e736f636b",
+      "original_hex": "202a2a2a206661696c6564",
+      "candidate_instruction": {
+        "address": 34816,
+        "bytes": "c70424c3060000",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x6c3,(%esp)"
+      },
+      "original_instruction": {
+        "address": 4256672,
+        "bytes": "c70424c0534d00",
+        "mnemonic": "movl",
+        "assembly": "movl   $0x4d53c0,(%esp)"
+      },
+      "placement_evidence": {
+        "resolved_target": 5067235,
+        "resolution": "unique read-only literal or table content",
+        "limit": "Independent content locations are diagnostic only. They do not override an existing section/object binding, establish literal identity, or authorize promotion.",
+        "locations": [
+          5067235
+        ],
+        "occurrence_count": 1,
+        "occurrence_count_lower_bound": 1,
+        "locations_truncated": false,
+        "state": "UNIQUE_CONTENT_AGREES_WITH_RESOLVED_PLACEMENT"
+      },
+      "candidate_text": " !!! Failed to setup Winsock",
+      "original_text": " *** failed",
+      "candidate_source_lines": [
+        {
+          "file": "src/main.c",
+          "line": 2313,
+          "text": "        log2file(\" !!! Failed to setup Winsock\"); /* 1404 */"
+        }
+      ]
+    }
+  ],
+  "placement_confidence": "UNPROVEN",
+  "limit": "Candidate COFF addend sharing only. Only aligned historical operands are addresses; bytes at unaligned candidate offsets remain uninterpreted values. Historical operands are observations, not independent owner bindings. Equal contents, peer references and a single observed address cannot establish placement, source causality, body equality or promotion."
+}

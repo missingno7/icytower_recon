@@ -1,0 +1,143 @@
+{
+  "scope": "read-only owner map from existing PE and isolated candidate object; no source probes",
+  "historical": {
+    "contribution_va": "0x4d7960",
+    "harold_offset": "0x11e",
+    "harold_va": "0x4d7a7e",
+    "switch_table": {
+      "offset_start": "0x1b8",
+      "offset_end": "0x304",
+      "bytes": 332,
+      "dwords": 83
+    },
+    "months_offset": "0x440",
+    "months_bytes": 48,
+    "replay_header_offset": "0x470",
+    "replay_header_va": "0x4d7dd0"
+  },
+  "candidate": {
+    "object": "docs/attempts/research-20260924-create-replay-next/build/game-replay/luna-create-replay-owner-static-upper-current-20260924/unit.o",
+    "rdata_size": "0x3e0",
+    "rdata_relocation_count": 51,
+    "owner_correct_header": {
+      "name": "_REPLAY_HEADER",
+      "storage_class": 3,
+      "section": ".rdata",
+      "offset": "0x3b0",
+      "bytes": "495452313430"
+    },
+    "owner_implied_base": "0x4d7a20",
+    "harold_offset": "0x11e",
+    "harold_va": "0x4d7b3e",
+    "switch_table": {
+      "offset_start": "0x1bc",
+      "offset_end": "0x258",
+      "bytes": 156,
+      "dwords": 39,
+      "dir32_text_relocations": 39
+    },
+    "months_offset": "0x380",
+    "months_bytes": 48
+  },
+  "delta_math": {
+    "missing_switch_entries": 44,
+    "missing_switch_bytes": 176,
+    "candidate_table_starts_later_bytes": 4,
+    "candidate_table_end_earlier_bytes": 172,
+    "extra_original_post_Dec_padding_bytes": 20,
+    "header_displacement_bytes": 192,
+    "equation": "176 - 4 + 20 = 192"
+  },
+  "peer_relocations": [
+    {
+      "function": "create_replay",
+      "offsets": [
+        "0x2c",
+        "0x34"
+      ],
+      "candidate_vas": [
+        "0x4d7dd0",
+        "0x4d7dd4"
+      ],
+      "historical_vas": [
+        "0x4d7dd0",
+        "0x4d7dd4"
+      ],
+      "note": "header owner aligned"
+    },
+    {
+      "function": "create_replay",
+      "offset": "0x7f",
+      "candidate_va": "0x4d7b3e",
+      "historical_va": "0x4d7a7e",
+      "note": "Harold, +192"
+    },
+    {
+      "function": "update_file_list",
+      "offset": "0x4f",
+      "candidate_va": "0x4d7a20",
+      "historical_va": "0x4d7960",
+      "note": "rdata base target, +192"
+    },
+    {
+      "function": "load_replay",
+      "offsets": [
+        "0x10",
+        "0x96"
+      ],
+      "candidate_va": "0x4d7b45",
+      "historical_va": "0x4d7a85",
+      "note": "+192"
+    },
+    {
+      "function": "load_replay",
+      "offset": "0x71",
+      "candidate_va": "0x4d7b48",
+      "historical_va": "0x4d7dd0",
+      "note": "candidate duplicate ITR140 literal, not header owner"
+    },
+    {
+      "function": "get_replay_property",
+      "offsets": [
+        "0x13",
+        "0xe3"
+      ],
+      "candidate_va": "0x4d7b45",
+      "historical_va": "0x4d7a85",
+      "note": "+192"
+    },
+    {
+      "function": "get_replay_property",
+      "offset": "0x66",
+      "candidate_va": "0x4d7b48",
+      "historical_va": "0x4d7dd0",
+      "note": "candidate duplicate ITR140 literal, not header owner"
+    }
+  ],
+  "owner_probe_exact_peers_lost": [
+    "update_file_list",
+    "load_replay",
+    "get_replay_property"
+  ],
+  "duplicate_header_literal": {
+    "candidate_offset": "0x128",
+    "length_with_nul": 7,
+    "references": [
+      "load_replay",
+      "get_replay_property"
+    ],
+    "historical_owner": "_REPLAY_HEADER at 0x4d7dd0",
+    "independent_cause": "hard-coded memcmp operands at src/replay.c:233,312"
+  },
+  "source_snapshot": {
+    "header_decl_line": 46,
+    "memcmp_lines": [
+      233,
+      312
+    ],
+    "months_line": 372,
+    "draw_line": 440,
+    "replay_selector_line": 729,
+    "order_trials": "header/definition order variants already tested; output identity did not change"
+  }
+}

@@ -240,7 +240,9 @@ def verify_interface(session,acceptance=False):
         candidate_check(verify_pointee,reports[session['plan']['source']],session['plan'])
         expected=session['plan']['canonical']; state='CANONICAL_POINTEE_MATCH'
     elif session['plan']['task_kind']=='TYPE_VIEW':
-        from type_views import verify_view
+        from type_views import verify_view,verify_fldadspot_original_candidate
+        if session['plan'].get('repair_mode')=='HISTORICAL_MEMBER_QUALIFIERS':
+            candidate_check(verify_fldadspot_original_candidate,old,session['plan'])
         candidate_check(verify_view,reports[session['plan']['source']],session['plan'])
         expected=session['plan']['canonical']; state='DWARF_MEMBER_MATCH' if session['plan'].get('repair_mode')=='POINTER_MEMBER_ONLY' else 'CANONICAL_VIEW_MATCH'
     elif session['plan']['task_kind']=='CANONICAL_TYPE':

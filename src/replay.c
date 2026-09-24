@@ -781,6 +781,22 @@ Treplay *replay_selector(Tcontrol *ctrl, char *path)
         if (kp) {
             ctrl_wait = 20;
             switch (kp) {
+            case KEY_C:
+                set_sort_method(3);
+                need_to_update = 1;
+                break;
+            case KEY_F:
+                set_sort_method(4);
+                need_to_update = 1;
+                break;
+            case KEY_N:
+                set_sort_method(1);
+                need_to_update = 1;
+                break;
+            case KEY_S:
+                set_sort_method(2);
+                need_to_update = 1;
+                break;
             case KEY_UP:
                 if (curr_file_id > 0) {
                     curr_file_id--;
