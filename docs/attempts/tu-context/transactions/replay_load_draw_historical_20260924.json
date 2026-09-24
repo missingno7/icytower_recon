@@ -1,0 +1,184 @@
+{
+  "task": "replay_load_draw_historical_20260924",
+  "plan": {
+    "schema": 1,
+    "task_kind": "TU_CONTEXT",
+    "function": "replay_load_draw_historical_20260924",
+    "source": "src/replay.c",
+    "sources": [
+      "src/replay.c"
+    ],
+    "target": "game-replay",
+    "affected_targets": [
+      "game-replay"
+    ],
+    "difficulty": "CHEAP",
+    "priority": 200,
+    "spec": {
+      "target": "game-replay",
+      "source": "src/replay.c",
+      "order": "current",
+      "prototypes": "none",
+      "bodies": {
+        "load_replay": "docs/attempts/research-20260924-load-replay-min-context/load-replay-typed-literal.c",
+        "draw_replay_selector": "docs/attempts/research-20260924-draw-selector-residual/draw-selected-stores-after-row.c"
+      },
+      "evidence": "Locked GCC 4.4.1 full-TU research probe draw-residual-stores-after-row-20260924 preserves the six exact replay peers and makes load_replay strict with 1136/1136 bytes and 39/39 relocations. load_replay's PACKFILE * local agrees with historical DWARF. In draw_replay_selector, original instructions at 0x41c4aa..0x41c4d4 render the selected row, then assign get_filename(post->full_path), version, and directory to the historical DWARF locals; the retained draw body follows that order. Its name[1024] and warning rbuf[129] lexical scopes agree with DWARF and use the same observed stack slot. draw_replay_selector remains an incomplete DIFFER body; this transaction claims only the newly strict load_replay result and preservation of existing exact peers."
+    },
+    "edits": {
+      "focus": [],
+      "declarations": {},
+      "order": [
+        "get_sort_method",
+        "set_sort_method",
+        "create_replay",
+        "destroy_replay",
+        "hash",
+        "calc_replay_checksum_131",
+        "calc_replay_checksum",
+        "get_replay_property",
+        "load_replay",
+        "save_replay",
+        "draw_replay_selector",
+        "add_itr_file",
+        "my_strcmp",
+        "update_file_list",
+        "replay_selector"
+      ],
+      "definition_order_with_static": [
+        [
+          "get_sort_method",
+          false
+        ],
+        [
+          "set_sort_method",
+          false
+        ],
+        [
+          "create_replay",
+          false
+        ],
+        [
+          "destroy_replay",
+          false
+        ],
+        [
+          "hash",
+          false
+        ],
+        [
+          "calc_replay_checksum_131",
+          false
+        ],
+        [
+          "calc_replay_checksum",
+          false
+        ],
+        [
+          "get_replay_property",
+          false
+        ],
+        [
+          "load_replay",
+          false
+        ],
+        [
+          "save_replay",
+          false
+        ],
+        [
+          "draw_replay_selector",
+          false
+        ],
+        [
+          "add_itr_file",
+          false
+        ],
+        [
+          "my_strcmp",
+          false
+        ],
+        [
+          "update_file_list",
+          false
+        ],
+        [
+          "replay_selector",
+          false
+        ]
+      ],
+      "bodies": {
+        "load_replay": {
+          "path": "docs/attempts/research-20260924-load-replay-min-context/load-replay-typed-literal.c",
+          "identity": {
+            "size": 2081,
+            "sha256": "f8573a31dc25bc2984311d2065e1f20ecabd451e3d26d67f6cf1ac65dbac97ea"
+          }
+        },
+        "draw_replay_selector": {
+          "path": "docs/attempts/research-20260924-draw-selector-residual/draw-selected-stores-after-row.c",
+          "identity": {
+            "size": 9149,
+            "sha256": "1e4699a9c72becfe3998fa7898d10aae2b27379c14bd9cbaa13da4cfa3e8f378"
+          }
+        }
+      },
+      "statics": [],
+      "prototypes": "none",
+      "research_base": null,
+      "headers": {}
+    },
+    "source_identities": {
+      "src/replay.c": {
+        "size": 35858,
+        "sha256": "73d99aea3da12bb730812e43443c1a0dc07b8457c3469c4d0b285ef0a1d20c93"
+      }
+    },
+    "new_text_identity": {
+      "size": 35888,
+      "sha256": "644b687c939604180fa089e1ec1852231501cda439d436ea43f896e59129c6d9"
+    },
+    "new_header_identities": {},
+    "preserved_definitions": [
+      "add_itr_file",
+      "calc_replay_checksum",
+      "calc_replay_checksum_131",
+      "create_replay",
+      "destroy_replay",
+      "get_replay_property",
+      "get_sort_method",
+      "hash",
+      "my_strcmp",
+      "replay_selector",
+      "save_replay",
+      "set_sort_method",
+      "update_file_list"
+    ],
+    "replaced_definitions": [
+      "draw_replay_selector",
+      "load_replay"
+    ],
+    "body_edit_allowed": false,
+    "state": "TU_CONTEXT_TRANSACTION",
+    "begin_command": "python tools/tu_context_task.py begin replay_load_draw_historical_20260924",
+    "apply_command": "python tools/tu_context_task.py apply replay_load_draw_historical_20260924",
+    "verification_command": "python tools/tu_context_task.py check replay_load_draw_historical_20260924",
+    "promotion_command": "python tools/tu_context_task.py promote replay_load_draw_historical_20260924",
+    "reason": "Atomic translation-unit context transaction: definition order, retained bodies and evidenced declarations are compiled together and accepted only on the final unit state (no exact-function or data-owner regression)."
+  },
+  "result": {
+    "exact_before": 6,
+    "exact_after": 7,
+    "gains": [
+      "load_replay"
+    ]
+  },
+  "matches_after": 7,
+  "source_identity_after": {
+    "size": 35888,
+    "sha256": "644b687c939604180fa089e1ec1852231501cda439d436ea43f896e59129c6d9"
+  },
+  "report": "docs/current/reports/game-replay.json",
+  "state": "PROMOTED_TU_CONTEXT",
+  "limit": "Whole-unit transaction accepted on its final verified state; every function status inside remains the strict verifier verdict."
+}

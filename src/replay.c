@@ -306,7 +306,7 @@ int get_replay_property(const char *filename, int property)
 
 Treplay *load_replay(const char *filename)
 {
-    void *pf;
+    PACKFILE *pf;
     Treplay r_temp;
     Treplay *r;
     int i;
@@ -462,12 +462,9 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
     /* 467 */
     float view_percentage = max_posts ? (float)num_itr_files / max_posts : 1.0f;
     float view_offset = max_posts ? (float)offset / max_posts : 0.0f;
-    char rbuf[129];
-    /* curr_filename: DWARF lists it as `char *` with no location at all (fully
-     * eliminated in the original too), unlike the previous reconstruction's
-     * `char curr_filename[1024]` used for a fabricated "REPLAY SELECTOR: %s"
-     * header that matches no real instruction or string literal. Declared only
-     * to keep the name present; no real use located. */
+    /* Original DWARF identifies curr_filename as char * at EBP-0x448.
+     * The selected-row path stores get_filename(post->full_path) there after
+     * rendering the row. */
     char *curr_filename;
     int is_dir;
     int show_directory = 0;
@@ -503,6 +500,7 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
      * (x+10,y+35,x+185,y+300) does not match a single one of these four operands. */
     set_clip_rect(bmp, x + 6, 0, x + 290, bmp->h - 1);
     for (i = offset; i < num_itr_files && i < offset + max_posts; i++) {
+        char name[1024];
         /* 516: Treplay_post *post = &file_list[i]; cmpb $0,0x5(edx) tests offset 5,
          * which is Treplay_post.parent (src/replay.c:30), not .directory (offset 4). */
         Treplay_post *post = &file_list[i];
@@ -511,31 +509,36 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
 
         if (post->parent) {
             /* 517: rep movsb copying the literal ".. (parent directory)" (22 bytes)
-             * into the buffer later reused as rbuf (same -0x418(%ebp) slot as the
+             * into the buffer later reused as name (same -0x418(%ebp) slot as the
              * warning messages at 591/594/597 below). */
-            strcpy(rbuf, ".. (parent directory)");
+            strcpy(name, ".. (parent directory)");
         } else {
-            /* 519: strcpy(rbuf, get_filename(post->full_path)) -- a real buffer,
+            /* 519: strcpy(name, get_filename(post->full_path)) -- a real buffer,
              * not a bare `char *name` as the current source has it. */
-            strcpy(rbuf, get_filename(post->full_path));
+            strcpy(name, get_filename(post->full_path));
         }
         /* 521: is_dir = post->directory (movsbl 0x4(%edx),%esi) -- the named-but-
          * missing local; offset 4, confirmed against the Treplay_post typedef. */
         is_dir = post->directory;
         marker = is_dir ? '}' : '{';
         if (i == selection) {
-            /* 534: textprintf_ex(bmp,font,x+8,row,mg,-1,"> %c %s",marker,rbuf) --
+            /* 534: textprintf_ex(bmp,font,x+8,row,mg,-1,"> %c %s",marker,name) --
              * always color mg regardless of is_dir. No rectfill call exists
              * anywhere in this loop's instruction range: the current source's
              * `if (i==selection) rectfill(...)` selection highlight corresponds
              * to no real instruction and is not reproduced here. */
-            textprintf_ex(bmp, font, x + 8, row, mg, -1, "> %c %s", marker, rbuf);
+            textprintf_ex(bmp, font, x + 8, row, mg, -1, "> %c %s", marker, name);
         } else if (is_dir) {
             /* 525 (predecessor A): color mg when is_dir. */
-            textprintf_ex(bmp, font, x + 8, row, mg, -1, "  %c %s", marker, rbuf);
+            textprintf_ex(bmp, font, x + 8, row, mg, -1, "  %c %s", marker, name);
         } else {
             /* 525 (predecessor B): color fg when !is_dir. */
-            textprintf_ex(bmp, font, x + 8, row, fg, -1, "  %c %s", marker, rbuf);
+            textprintf_ex(bmp, font, x + 8, row, fg, -1, "  %c %s", marker, name);
+        }
+        if (i == selection) {
+            curr_filename = get_filename(post->full_path);
+            show_directory = post->directory;
+            selected_version = post->version;
         }
     }
     set_clip_rect(bmp, 0, 0, bmp->w - 1, bmp->h - 1);
@@ -613,6 +616,7 @@ void draw_replay_selector(BITMAP *bmp, Treplay *rep, Treplay_post *file_list,
         textout_ex(bmp, font, "This is a folder. Press ENTER to open it.",
                   x + 10, y + 350, fg, -1);
     } else {
+        char rbuf[129];
         /* 589/591/594/597: selected_version selects one of three messages into
          * rbuf (a third reuse of the same buffer as the loop rows and the
          * ".. (parent directory)" copy), then 599 prints it in a shared call. */
