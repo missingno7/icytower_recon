@@ -17,6 +17,7 @@ extern void handle_player_collision_combo(int, int);
 #include <pthread.h>
 #include <direct.h>
 #include <allegro.h>
+#include <allegro/platform/aintwin.h>
 #include <winalleg.h>
 #include "loadpng.h"
 #include "beta.h"
@@ -302,6 +303,7 @@ extern void sort_hisc_table(Thisc_table*);
 extern void enter_hisc_table(Thisc_table*, int, char*);
 extern int save_profile(Tprofile *profile);
 extern int get_rank_id(Tprofile *profile);
+extern char *get_rank(Tprofile *profile);
 extern Tprofile *select_profile(Tprofile *current_profile, Tavailable_profile *profiles,
                                 int numProfiles, Tcontrol *ctrl);
 extern int rebuild_profile_list(Tavailable_profile **profs);
@@ -2807,13 +2809,13 @@ void blit_to_screen(BITMAP *bmp)
 {
     static int blit_mode;
     if (debug) {
-        if (key[56]) blit_mode = 0;                      /* 2271 */
-        if (key[57]) blit_mode = 1;                       /* 2272 */
-        if (key[58]) blit_mode = 2;                       /* 2273 */
-        if (key[59]) blit_mode = 3;                       /* 2274 */
-        if (key[60]) blit_mode = 4;                       /* 2275 */
-        if (key[61]) blit_mode = 5;                       /* 2276 */
-        if (key[62]) blit_mode = 6;                       /* 2277 */
+        if (key[KEY_F2]) blit_mode = 0;                      /* 2271 */
+        if (key[KEY_F3]) blit_mode = 1;                       /* 2272 */
+        if (key[KEY_F4]) blit_mode = 2;                       /* 2273 */
+        if (key[KEY_F5]) blit_mode = 3;                       /* 2274 */
+        if (key[KEY_F6]) blit_mode = 4;                       /* 2275 */
+        if (key[KEY_F7]) blit_mode = 5;                       /* 2276 */
+        if (key[KEY_F8]) blit_mode = 6;                       /* 2277 */
     }
     acquire_screen();
     if (!blit_mode) {                                          /* 2282 */
@@ -5992,11 +5994,10 @@ void main_menu_callback(void)
             }
         }
         lastMouseB = mouse_b;                                        /* 5172 */
-        /* ? 5176/5177/5179: LoadCursorA(NULL, mouseInAd ? IDC_HAND : IDC_ARROW)
-         * stores into the internal Allegro global _win_hcursor.  That global
-         * is declared only in <allegro/platform/aintwin.h>, which main.c does
-         * not include; adding the include/extern is outside this evidence
-         * file, so the cursor swap is left unreconstructed here. */
+        if (mouseInAd)
+            _win_hcursor = LoadCursorA(NULL, IDC_HAND);
+        else
+            _win_hcursor = LoadCursorA(NULL, IDC_ARROW);
     } else {
         lastMouseB = mouse_b;
     }
@@ -6043,31 +6044,36 @@ void main_menu_callback(void)
                        makecol(200, 200, 200)))
         restart_scroller(&greeting_scroller);
 
-    /* ? 5231/5232/5236..5248: the oracle also draws a "v1.5.1"/FUN MODE
-     * version stamp (get_rank/get_rank_id-driven rank line replacing the
-     * simple "Welcome back" text) here; that block is not yet recovered, so
-     * the simpler current welcome text is kept as a placeholder. */
-    if (!profile || !stricmp(profile->handle, "guest")) {
-        textprintf_ex(swap_screen, data[54].dat, 25, 215, makecol(255, 255, 255),
-                      -1, "Welcome to Icy Tower!");
-        textprintf_ex(swap_screen, data[54].dat, 25, 235, makecol(220, 220, 220),
-                      -1, "Play as guest or create a profile from the menu.");
+    textprintf_ex(swap_screen, data[54].dat, 5, 3, makecol(100, 21, 20), -1,
+                  "v%s %s", "1.5.1", debug ? " FUN MODE" : "");
+    textprintf_ex(swap_screen, data[54].dat, 4, 2, makecol(162, 90, 51), -1,
+                  "v%s %s", "1.5.1", debug ? " FUN MODE" : "");
+    if (stricmp(profile->handle, "guest")) {
+        sprintf(welcomeMessage, "Welcome, %%s! %s",
+                get_rank_id(profile) ? "Your rank is %s." : "");
+        textprintf_right_ex(swap_screen, data[54].dat, 638, 3,
+                            makecol(50, 50, 50), -1, welcomeMessage,
+                            profile->handle, get_rank(profile));
+        textprintf_right_ex(swap_screen, data[54].dat, 637, 3,
+                            makecol(50, 50, 50), -1, welcomeMessage,
+                            profile->handle, get_rank(profile));
+        textprintf_right_ex(swap_screen, data[54].dat, 637, 2,
+                            makecol(200, 200, 200), -1, welcomeMessage,
+                            profile->handle, get_rank(profile));
+        textprintf_right_ex(swap_screen, data[54].dat, 636, 2,
+                            makecol(255, 255, 255), -1, welcomeMessage,
+                            profile->handle, get_rank(profile));
     } else {
-        sprintf(welcomeMessage, "Welcome back, %s!", profile->handle);
-        textprintf_ex(swap_screen, data[54].dat, 25, 215, makecol(255, 255, 255),
-                      -1, "%s", welcomeMessage);
-        textprintf_right_ex(swap_screen, data[54].dat, 315, 240,
-                            makecol(220, 220, 220), -1, "Best score: %d",
-                            profile->best_score);
-        textprintf_right_ex(swap_screen, data[54].dat, 315, 260,
-                            makecol(220, 220, 220), -1, "Best floor: %d",
-                            profile->best_floor);
-        textprintf_right_ex(swap_screen, data[54].dat, 315, 280,
-                            makecol(220, 220, 220), -1, "Best combo: %d",
-                            profile->best_combo);
-        textprintf_right_ex(swap_screen, data[54].dat, 315, 300,
-                            makecol(220, 220, 220), -1, "Games played: %d",
-                            profile->games_played);
+        strcpy(welcomeMessage,
+               "Welcome to Icy Tower! Start a profile in the profile menu.");
+        textprintf_right_ex(swap_screen, data[54].dat, 638, 3,
+                            makecol(50, 50, 50), -1, "%s", welcomeMessage);
+        textprintf_right_ex(swap_screen, data[54].dat, 637, 3,
+                            makecol(50, 50, 50), -1, "%s", welcomeMessage);
+        textprintf_right_ex(swap_screen, data[54].dat, 637, 2,
+                            makecol(200, 200, 200), -1, "%s", welcomeMessage);
+        textprintf_right_ex(swap_screen, data[54].dat, 636, 2,
+                            makecol(255, 255, 255), -1, "%s", welcomeMessage);
     }
 
     options.snd_volume = get_slider_value(&snd_volume_slider);        /* 5255 */

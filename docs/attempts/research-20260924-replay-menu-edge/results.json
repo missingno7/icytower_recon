@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "head": "ca7c5e4e",
+  "source_sha256": "bee055ec1ae6c0dc3cea12de393560b0974302b0cf559cca6dd3cfb55f924533",
+  "compiler": "tdm-2 / GCC 4.4.1, -O2",
+  "order": "historical",
+  "prototypes": false,
+  "control": {
+    "receipt": "docs/attempts/tu-context/game-main/replay-menu-isguest-control-20260924.json",
+    "object_sha256": "f31e3b157cd91767c2a2a9a940ed5fd7286e0aa6870357fae75d7ab3b5a0e45e"
+  },
+  "probes": [
+    {
+      "name": "delayed-status-init",
+      "change": "Replace int status = !isGuest with int status; retain the existing assignment after the three buffer initializations.",
+      "receipt": "receipts/replay-menu-edge-delayed-status-20260924.json",
+      "object_sha256": "f31e3b157cd91767c2a2a9a940ed5fd7286e0aa6870357fae75d7ab3b5a0e45e"
+    },
+    {
+      "name": "single-status-init",
+      "change": "Remove the repeated status = !isGuest after buffer initialization, retaining the block-entry initializer.",
+      "receipt": "receipts/replay-menu-edge-single-status-20260924.json",
+      "object_sha256": "f31e3b157cd91767c2a2a9a940ed5fd7286e0aa6870357fae75d7ab3b5a0e45e"
+    }
+  ],
+  "strict_result": {
+    "function": "do_replay_menu",
+    "status": "DIFFER",
+    "candidate_bytes": 2657,
+    "historical_bytes": 2661,
+    "first_difference_offset": 397,
+    "mismatch_bytes": 882,
+    "exact_functions": 64,
+    "total_functions": 82,
+    "historical_predecessors": 79,
+    "total_predecessors": 82,
+    "whole_text_equal": false
+  },
+  "effective_dedup": {
+    "sha256_prefix": "af771be203e85051",
+    "group_size": 2,
+    "variants": [
+      "delayed-status-init",
+      "single-status-init"
+    ]
+  },
+  "edge_audit": {
+    "historical": "Original direct call is call 0x4b2a3c <___chkstk> at VA 0x410fa3.",
+    "candidate": "Emitted candidate call inventory has ___chkstk at function offset +12 with independently resolved target VA 0x4b2a3c.",
+    "finding": "The reported ext_4b2a3c missing edge is an alias/name normalization discrepancy; the direct stack-probe edge exists on both sides.",
+    "memset": "The current source has three memset fills for 511 bytes. Historical evidence records the fname, pname, and comment fills as inline rep stos, and the candidate machine-call inventory has no memset call. The extra edge is a source-level builtin edge, not an emitted call."
+  },
+  "register_lifetime": {
+    "offsets": "+396..+410",
+    "historical_bytes": "8b 95 e0 e7 ff ff",
+    "historical_instruction": "mov -0x1820(%ebp),%edx",
+    "candidate_bytes": "8b bd e0 e7 ff ff",
+    "candidate_instruction": "mov -0x1820(%ebp),%edi",
+    "shared_followup": "test selected register; je to +0x7f8",
+    "local": "isGuest remains DWARF-addressed at EBP-6176 on both sides; selected register is only consumed by the branch test.",
+    "inference": "This is a scratch-register choice at the guest string selection. Changing the redundant status initialization did not change the object, so that lifetime distinction does not account for the current register choice."
+  }
+}

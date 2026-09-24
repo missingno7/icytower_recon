@@ -1,0 +1,26 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "main_menu_callback": "docs/attempts/research-20260924-main-menu-rank-post-cursor/main_menu_callback-rank-presentation.c"
+  },
+  "declarations": {
+    "add_top_level": [
+      {
+        "name": "get_rank",
+        "declaration": "extern char *get_rank(Tprofile *profile);",
+        "after": "get_rank_id"
+      }
+    ],
+    "evidence": "Original main-CU DWARF gives profile type Tprofile* and the call trace at main.c:5237-5241 passes that pointer unchanged to get_rank_id and get_rank. The separate profile-CU callee type view remains unresolved."
+  },
+  "provenance": {
+    "main_menu_callback": {
+      "kind": "incomplete_evidence_candidate",
+      "evidence": "Original main.c:5231-5248 supports the version text, non-guest get_rank_id/get_rank call family, guest welcome literal, and four guest draw calls. The original cursor branch and old_msc work remain. Other callback slices and the cross-CU profile type conflict remain unresolved; this body is not a strict function match."
+    }
+  },
+  "evidence": "Current-order whole-TU isolated probe restored the historical rank call family and guest presentation while retaining 64/82 exact functions. Original line/CFG trace supports the strings, arguments and calls; native strict acceptance is required."
+}

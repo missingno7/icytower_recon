@@ -1,0 +1,22 @@
+{
+  "target": "game-main",
+  "source": "src/main.c",
+  "order": "current",
+  "prototypes": "none",
+  "bodies": {
+    "main_menu_callback": "docs/attempts/research-20260924-main-menu-post-owner/main_menu_callback-cursor-branch.c"
+  },
+  "declarations": {
+    "includes_after": {
+      "allegro.h": ["allegro/platform/aintwin.h"]
+    },
+    "evidence": "Original main.c lines 5176-5179 test mouseInAd, call LoadCursorA(NULL, IDC_HAND) and LoadCursorA(NULL, IDC_ARROW) on separate edges, and store each result to _win_hcursor. The upstream Allegro platform header declares the required internal cursor owner."
+  },
+  "provenance": {
+    "main_menu_callback": {
+      "kind": "incomplete_evidence_candidate",
+      "evidence": "The original instruction trace at lines 5176-5179 supports the restored mouseInAd cursor branch, two LoadCursorA calls and _win_hcursor stores. The earlier old_msc correction remains supported by original line 5288 and unlocated DIE 129968. Other explicitly marked menu text and drawing slices remain incomplete; this body is not a strict function match."
+    }
+  },
+  "evidence": "The original main_menu_callback instruction trace has two LoadCursorA direct calls and _win_hcursor stores under the mouseInAd branch. The retained complete body changes only the previous cursor placeholder to this evidenced true/false branch. The current post-key-correction whole-TU check preserved all 64 exact functions; native final acceptance remains required."
+}

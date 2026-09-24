@@ -1,0 +1,12 @@
+Original decoded CFG (focused card/function_lines):
+  +0x12: je +0x8f (short 74 7b); seven independent key guards begin at +0x14.
+  +0x8d: jne +0x100 (short 75 71), reaching the mode-6 assignment at +0x100; false/fallthrough resumes at +0x8f.
+  Original source-line/symbol view: lines 2271-2277 load key[KEY_F2] through key[KEY_F8].
+
+Accepted numeric candidate CFG (locked whole-TU comparison):
+  +0x12: je +0x93 (short 74 7f).
+  +0x8d: jne +0x144 (near 0f 85 b1 00 00 00), reaching mode-6 assignment at +0x144; false/fallthrough resumes at +0x93.
+  The candidate's wider final conditional accounts for the four-byte shifted join.
+
+Relocation identity result:
+  Candidate numeric key[56..62] used _key addends 56..62. The locked Allegro keyboard header defines KEY_F2..KEY_F8 as 48..54, and historical source-line/symbol evidence names those constants. In the symbolic-key TU probe, the seven _key relocations use addends 48..54 and resolve exactly to the original raw absolute instruction operands (all seven equal=true). The untyped-field warning on the old raw-byte comparator remains relevant; this owner/value conclusion comes from the independent enum and source-symbol evidence as well.
