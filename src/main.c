@@ -6417,8 +6417,8 @@ void force_create_profile(void)
     int ok;
     char new_name[32];
 
-    bg=create_bitmap(gfx_driver->w,gfx_driver->h);
-    blit(screen,bg,0,0,0,0,gfx_driver->w,gfx_driver->h);
+    bg=create_bitmap(SCREEN_W,SCREEN_H);
+    blit(screen,bg,0,0,0,0,SCREEN_W,SCREEN_H);
     memset(new_name,0,sizeof(new_name));
     for (;;) {
         int res;
